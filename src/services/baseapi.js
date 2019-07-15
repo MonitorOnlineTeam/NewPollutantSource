@@ -1,0 +1,19 @@
+/* eslint-disable import/prefer-default-export */
+/**
+ * 功  能：基础数据服务
+ * 创建人：吴建伟
+ * 创建时间：2019.07.14
+ */
+
+import Cookie from 'js-cookie';
+import { post, get } from '@/utils/request';
+import { async } from 'q';
+
+/**
+ * 获取污染物系统污染物
+ * @params {}
+ */
+export async function getPollutantTypeList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
+    return result === null ? { data: null } : result.Datas;
+}
