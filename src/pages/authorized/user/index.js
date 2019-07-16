@@ -209,7 +209,7 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      <Icon type="edit" style={{ fontSize: 16 }} />
+                      <Icon type="edit" style={{ fontSize: 16 }} title="编辑" />
                     </a>
                     </Tooltip>
                     <Divider type="vertical" />
@@ -223,23 +223,21 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      <Icon type="profile" style={{ fontSize: 16 }} />
+                      <Icon type="profile" style={{ fontSize: 16 }} title="详情" />
                     </a>
                     </Tooltip>
                     <Divider type="vertical" />
-                    <Tooltip title="删除">
-                        <Popconfirm
-                        title="确认要删除吗?"
-                        onConfirm={() => {
-                            this.confirm(row['dbo.Base_UserInfo.User_ID']);
-                        }}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                        >
-                        <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
-                        </Popconfirm>
-                    </Tooltip>
+                    <Popconfirm
+                      title="确认要删除吗?"
+                      onConfirm={() => {
+                        this.confirm(row['dbo.Base_UserInfo.User_ID']);
+                      }}
+                      onCancel={this.cancel}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
+                    </Popconfirm>
                   </Fragment>
                 );
               }}
