@@ -1,5 +1,5 @@
 import router from 'umi/router';
-import { queryCurrent, query as queryUsers, getMenuData } from '@/services/user';
+import { queryCurrent, query as queryUsers, getMenuData,getUserInfo } from '@/services/user';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl } from '@/utils/utils';
@@ -147,6 +147,22 @@ export default {
         // }
       }
     },
+    /*获取单个用户实体**/
+    * getUserInfo({
+        payload
+    }, {
+        call,
+        update,
+    }) {
+        const result = yield call(getUserInfo, {
+            ...payload
+        });
+        yield update({
+            requstresult: result.requstresult,
+            editUser: result.data[0]
+        });
+        payload.callback();
+    }
 
   },
 

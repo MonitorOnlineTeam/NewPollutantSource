@@ -30,3 +30,14 @@ export async function getMenuData() {
   // ;
   return result;
 }
+
+// 根据id获取用户实体
+export async function getUserInfo(params) {
+  const body = {
+      UserId: params.UserId
+  };
+  const result = post('/api/rest/PollutantSourceApi/PUserInfo/GetUserInfo', body, null);
+  return result === null ? {
+      data: null
+  } : result;
+}
