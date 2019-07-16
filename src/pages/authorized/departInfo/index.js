@@ -210,7 +210,7 @@ class DepartIndex extends Component {
                                     }
                                 })
                                 this.showModalEdit()
-                            }}>编辑</a>
+                            }}><Icon type="edit" style={{ fontSize: 16 }} title="编辑" /></a>
                             <Divider type="vertical" />
                             <Popconfirm
                                 title="确认要删除吗?"
@@ -236,7 +236,7 @@ class DepartIndex extends Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <a href="#">删除</a>
+                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
                             </Popconfirm>
                             <Divider type="vertical" />
                             <a href="javascript:;" onClick={() => {
@@ -245,7 +245,7 @@ class DepartIndex extends Component {
                                    },()=> {
                                     this.showUserModal()
                                    })
-                            }}>分配用户</a>
+                            }}><Icon type="usergroup-add" style={{ fontSize: 16 }} title="分配用户"/></a>
                             <Divider type="vertical" />
                             <a href="javascript:;" onClick={() => {
                                 this.setState({
@@ -253,7 +253,7 @@ class DepartIndex extends Component {
                                    },()=> {
                                     this.showRegionModal()
                                    })
-                            }}>区域过滤</a>
+                            }}><Icon type="filter" style={{ fontSize: 16 }} title="区域过滤" /></a>
                             <Divider type="vertical" />
                             <a href="javascript:;" onClick={() => {
                                 this.setState({
@@ -261,7 +261,7 @@ class DepartIndex extends Component {
                                    },()=> {
                                     this.showDataModal()
                                    })
-                            }}>数据过滤</a>
+                            }}><Icon type="filter" style={{ fontSize: 16 }} title="数据过滤"/></a>
                         </span>
                 },
             ]
@@ -431,7 +431,7 @@ class DepartIndex extends Component {
         this.setState({
             visibleData: true,
             checkedKey: this.props.RegionByDepID,
-            DataTreeValue: ["0"],
+            DataTreeValue: [],
         })
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
