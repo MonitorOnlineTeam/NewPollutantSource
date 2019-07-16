@@ -253,7 +253,7 @@ class RoleIndex extends Component {
                                     }
                                 })
                                 this.showModalEdit()
-                            }}>编辑</a>
+                            }}><Icon type="edit" style={{ fontSize: 16 }} title="编辑"/></a>
                             <Divider type="vertical" />
                             <Popconfirm
                                 title="确认要删除吗?"
@@ -279,7 +279,7 @@ class RoleIndex extends Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <a href="#">删除</a>
+                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
                             </Popconfirm>
                             <Divider type="vertical" />
                             <a href="javascript:;" onClick={() => {
@@ -290,7 +290,7 @@ class RoleIndex extends Component {
                                     this.showUserModal()
                                 })
 
-                            }}>分配用户</a>
+                            }}><Icon type="usergroup-add"  style={{ fontSize: 16 }} title="分配用户"/></a>
                             <Divider type="vertical" />
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.Roles_ID)
@@ -300,7 +300,7 @@ class RoleIndex extends Component {
                                     this.showMenuModal()
                                 })
 
-                            }}>菜单权限</a>
+                            }}><Icon type="menu"  style={{ fontSize: 16 }} title="菜单权限" /></a>
                         </span>
                 },
             ]

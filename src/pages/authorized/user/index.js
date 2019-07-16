@@ -205,7 +205,7 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      编辑
+                      <Icon type="edit" style={{ fontSize: 16 }} title="编辑" />
                     </a>
                     <Divider type="vertical" />
                     <a
@@ -217,7 +217,7 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      详情
+                      <Icon type="profile" style={{ fontSize: 16 }} title="详情" />
                     </a>
                     <Divider type="vertical" />
                     <Popconfirm
@@ -229,7 +229,7 @@ export default class UserInfoIndex extends Component {
                       okText="是"
                       cancelText="否"
                     >
-                      <a href="#">删除</a>
+                      <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
                     </Popconfirm>
                   </Fragment>
                 );
