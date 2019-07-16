@@ -115,6 +115,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
+            { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
             {
               path: '/autoformmanager',
               name: 'AutoFormManager',
@@ -149,6 +150,18 @@ export default {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId',
                   component: './platformManager/enterprise',
+                },
+                {
+                  name: 'monitorpoint',
+                  path:
+                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+                  component: './platformManager/point',
+                },
+                {
+                  name: 'usestandardlibrary',
+                  path:
+                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+                  component: './platformManager/point/components/setStandard',
                 },
               ],
             },

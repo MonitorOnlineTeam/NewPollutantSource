@@ -59,7 +59,7 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
-                debugger
+                // debugger
                 yield update({
                     RoleInfoOne: result.Datas
                 });
