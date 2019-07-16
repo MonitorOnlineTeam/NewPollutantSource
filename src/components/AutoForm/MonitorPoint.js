@@ -138,7 +138,7 @@ export default class MonitorPoint extends Component {
 
     editMonitorInfo = () => {
         let { key, row } = this.state;
-        // debugger;
+        // ;
         if ((!row || row.length === 0) || row.length > 1) {
             sdlMessage("请选择一行进行操作", 'warning');
             return false;
