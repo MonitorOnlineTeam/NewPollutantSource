@@ -217,6 +217,7 @@ class DailySummaryPage extends PureComponent {
   render() {
     const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
+    const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
     return (
       <PageHeaderWrapper>
