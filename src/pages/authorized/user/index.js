@@ -19,9 +19,11 @@ import {
   message,
   DatePicker,
   InputNumber,
+  Tooltip
 } from 'antd';
 import styles from './style.less';
 import MonitorContent from '@/components/MonitorContent';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import SdlTable from '@/components/AutoForm/Table';
@@ -140,13 +142,14 @@ export default class UserInfoIndex extends Component {
       );
     }
     return (
-      <MonitorContent
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '权限管理', Url: '' },
-          { Name: '用户管理', Url: '/rolesmanager/userinfoindex/UserInfo' },
-        ]}
-      >
+    //   <MonitorContent
+    //     breadCrumbList={[
+    //       { Name: '首页', Url: '/' },
+    //       { Name: '权限管理', Url: '' },
+    //       { Name: '用户管理', Url: '/rolesmanager/userinfoindex/UserInfo' },
+    //     ]}
+    //   >
+    <PageHeaderWrapper>
         <div className={styles.cardTitle}>
           <Card>
             <SearchWrapper
@@ -196,6 +199,7 @@ export default class UserInfoIndex extends Component {
               appendHandleRows={row => {
                 return (
                   <Fragment>
+                    <Tooltip title="编辑">
                     <a
                       onClick={() => {
                         dispatch(
@@ -207,7 +211,9 @@ export default class UserInfoIndex extends Component {
                     >
                       <Icon type="edit" style={{ fontSize: 16 }} title="编辑" />
                     </a>
+                    </Tooltip>
                     <Divider type="vertical" />
+                    <Tooltip title="详情">
                     <a
                       onClick={() => {
                         dispatch(
@@ -219,6 +225,7 @@ export default class UserInfoIndex extends Component {
                     >
                       <Icon type="profile" style={{ fontSize: 16 }} title="详情" />
                     </a>
+                    </Tooltip>
                     <Divider type="vertical" />
                     <Popconfirm
                       title="确认要删除吗?"
@@ -245,7 +252,7 @@ export default class UserInfoIndex extends Component {
             ></SdlTable>
           </Card>
         </div>
-      </MonitorContent>
+        </PageHeaderWrapper>
     );
   }
 }

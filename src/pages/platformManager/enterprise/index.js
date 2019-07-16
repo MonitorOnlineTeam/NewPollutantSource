@@ -14,8 +14,10 @@ import styles from './style.less';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/components/AutoForm/Table';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+// import SdlTable from '@/components/AutoForm/Table';
+import SdlTable from '../../AutoFormManager/Table';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 
 
@@ -40,7 +42,7 @@ export default class MonitorTarget extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //debugger;
+        //;
         if (nextProps.location.pathname != this.props.location.pathname) {
             if (nextProps.match.params.configId !== this.props.routerConfig)
                 this.reloadPage(nextProps.match.params.configId);
@@ -97,13 +99,14 @@ export default class MonitorTarget extends Component {
             />);
         }
         return (
-            <MonitorContent breadCrumbList={
+            <PageHeaderWrapper>
+            {/* <MonitorContent breadCrumbList={
                 [
                     { Name: '首页', Url: '/' },
                     { Name: '平台配置', Url: '' },
                     { Name: '企业管理', Url: '' }
                 ]
-            }>
+            }> */}
                 <div className={styles.cardTitle}>
                     <Card>
 
@@ -133,7 +136,8 @@ export default class MonitorTarget extends Component {
                         </SdlTable>
                     </Card>
                 </div>
-            </MonitorContent>
+            {/* </MonitorContent> */}
+            </PageHeaderWrapper>
         );
     }
 }

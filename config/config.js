@@ -115,6 +115,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
+            { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
             {
               path: '/autoformmanager',
               name: 'AutoFormManager',
@@ -127,17 +128,17 @@ export default {
                 {
                   name: 'add',
                   path: '/autoformmanager/autoformadd/:configId',
-                  component: '../components/AutoForm/AutoFormAdd',
+                  component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
                   path: '/autoformmanager/autoformedit/:configId/:keysParams/:uid',
-                  component: '../components/AutoForm/AutoFormEdit',
+                  component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
                   path: '/autoformmanager/autoformview/:configId/:keysParams',
-                  component: '../components/AutoForm/AutoFormView',
+                  component: './AutoFormManager/AutoFormView',
                 },
               ],
             },
@@ -150,17 +151,46 @@ export default {
                   path: '/platformconfig/monitortarget/:configId',
                   component: './platformManager/enterprise',
                 },
+                {
+                  name: 'monitorpoint',
+                  path:
+                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+                  component: './platformManager/point',
+                },
+                {
+                  name: 'usestandardlibrary',
+                  path:
+                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+                  component: './platformManager/point/components/setStandard',
+                },
               ],
+            },
+            {
+              path: '/report',
+              name: 'report',
+              routes: [
+                {
+                  name: 'dateReportPage',
+                  path: '/report/:reportType',
+                  component: './report/DateReportPage',
+                },
+                {
+                  name: 'summaryReportPage',
+                  path: '/report/summary/:reportType',
+                  component: './report/summaryReportPage',
+                },
+              ]
+
             },
             {
               path: '/rolesmanager',
               name: 'rolesmanager',
-              // redirect: '/AutoFormManager',
+              // redirect: './rolesmanager/user/userinfoindex/UserInfo',
               // component: './authorized/user',
               // authority: ['admin', 'user'],
               routes: [
                 {
-                  name: 'userInfo',
+                  name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
                     {

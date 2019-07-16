@@ -146,7 +146,7 @@ export default Model.extend({
     //手工数据上传数据列表（单独独立）
     *manualUploadQuerydatalist({ payload }, { call, update, put, take, select }) {
       const { upLoadParameters } = yield select(a => a.overview);
-      debugger;
+      // debugger;
       const body = {
         pollutantTypes: upLoadParameters.pollutantTypes,
         pointName: upLoadParameters.pointName,
