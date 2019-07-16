@@ -20,6 +20,7 @@ import {
     Transfer, Switch, Tag, Tree, Radio
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 
@@ -684,14 +685,15 @@ class DepartIndex extends Component {
         return (
             <Fragment>
                 {
-                    <MonitorContent breadCrumbList={
-                        [
-                            { Name: '首页', Url: '/' },
-                            { Name: '权限管理', Url: '' },
-                            { Name: '部门管理', Url: '' },
-                        ]
-                    }
-                    >
+                    // <MonitorContent breadCrumbList={
+                    //     [
+                    //         { Name: '首页', Url: '/' },
+                    //         { Name: '权限管理', Url: '' },
+                    //         { Name: '部门管理', Url: '' },
+                    //     ]
+                    // }
+                    // >
+                    <PageHeaderWrapper>
                         <Card bordered={false}  >
                             <Button type="primary"
                                 onClick={this.showModal}
@@ -940,7 +942,8 @@ class DepartIndex extends Component {
 
                             </Modal>
                         </div>
-                    </MonitorContent>
+                    {/* </MonitorContent> */}
+                    </PageHeaderWrapper>
                 }
             </Fragment>
         );

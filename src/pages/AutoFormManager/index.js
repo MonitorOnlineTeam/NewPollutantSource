@@ -10,12 +10,13 @@ import {
   Spin,
   Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
 } from 'antd';
-import styles from './style.less';
-import MonitorContent from '@/components/MonitorContent';
+import styles from './index.less';
+import MonitorContent from '../../components/MonitorContent/index';
 import { routerRedux } from 'dva/router';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
-import SdlTable from '@/components/AutoForm/Table';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+import SdlTable from './Table';
+import SearchWrapper from './SearchWrapper';
 
 @connect(({ loading, autoForm }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
@@ -80,13 +81,14 @@ export default class AutoFormIndex extends Component {
       />);
     }
     return (
-      <MonitorContent breadCrumbList={
-        [
-          { Name: '首页', Url: '/' },
-          { Name: '系统管理', Url: '' },
-          { Name: 'AutoForm', Url: '' }
-        ]
-      }>
+      // <MonitorContent breadCrumbList={
+      //   [
+      //     { Name: '首页', Url: '/' },
+      //     { Name: '系统管理', Url: '' },
+      //     { Name: 'AutoForm', Url: '' }
+      //   ]
+      // }>
+      <PageHeaderWrapper>
         <div className={styles.cardTitle}>
           <Card>
             <SearchWrapper
@@ -143,7 +145,8 @@ export default class AutoFormIndex extends Component {
             />
           </Card>
         </div>
-      </MonitorContent>
+        </PageHeaderWrapper>
+      // </MonitorContent>
     );
   }
 }

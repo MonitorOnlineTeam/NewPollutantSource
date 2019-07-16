@@ -16,10 +16,12 @@ import {
     message,
     Divider,
     Popconfirm,
+    Tooltip,
     Transfer, Switch, Tag, Select
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 
@@ -244,6 +246,7 @@ class RoleIndex extends Component {
                     key: 'x',
                     render: (text, record) =>
                         <span>
+                            <Tooltip title="编辑">
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.Roles_ID)
                                 this.props.dispatch({
@@ -253,8 +256,10 @@ class RoleIndex extends Component {
                                     }
                                 })
                                 this.showModalEdit()
-                            }}>编辑</a>
+                            }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="删除">
                             <Popconfirm
                                 title="确认要删除吗?"
                                 onConfirm={() => {
@@ -279,9 +284,11 @@ class RoleIndex extends Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <a href="#">删除</a>
+                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
                             </Popconfirm>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="分配用户">
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.Roles_ID)
                                 this.setState({
@@ -290,8 +297,10 @@ class RoleIndex extends Component {
                                     this.showUserModal()
                                 })
 
-                            }}>分配用户</a>
+                            }}><Icon type="user-add" /></a>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="分配用户">
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.Roles_ID)
                                 this.setState({
@@ -300,7 +309,8 @@ class RoleIndex extends Component {
                                     this.showMenuModal()
                                 })
 
-                            }}>菜单权限</a>
+                            }}><Icon type="menu-unfold" /></a>
+                            </Tooltip>
                         </span>
                 },
             ]
@@ -591,14 +601,15 @@ class RoleIndex extends Component {
         return (
             <Fragment>
                 {
-                    <MonitorContent breadCrumbList={
-                        [
-                            { Name: '首页', Url: '/' },
-                            { Name: '权限管理', Url: '' },
-                            { Name: '角色管理', Url: '' },
-                        ]
-                    }
-                    >
+                    // <MonitorContent breadCrumbList={
+                    //     [
+                    //         { Name: '首页', Url: '/' },
+                    //         { Name: '权限管理', Url: '' },
+                    //         { Name: '角色管理', Url: '' },
+                    //     ]
+                    // }
+                    // >
+                    <PageHeaderWrapper>
                         <Card bordered={false}  >
                             <Button type="primary"
                                 onClick={this.showModal}
@@ -812,7 +823,8 @@ class RoleIndex extends Component {
                                 </div>
                             </Modal>
                         </div>
-                    </MonitorContent>
+                    {/* </MonitorContent> */}
+                    </PageHeaderWrapper>
                 }
             </Fragment>
         );

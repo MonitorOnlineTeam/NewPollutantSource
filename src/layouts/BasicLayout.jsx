@@ -14,6 +14,7 @@ import { isAntDesignPro } from '@/utils/utils';
 import logo from '../../public/sdlicon.png';
 import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
+import Cookie from 'js-cookie';
 /**
  * use Authorized check all menu item
  */
@@ -80,7 +81,7 @@ const footerRender = (_, defaultDom) => {
 
 const BasicLayout = props => {
   const { dispatch, children, settings, currentMenu } = props;
-  debugger;
+  ;
   /**
    * constructor
    */
@@ -124,7 +125,19 @@ const BasicLayout = props => {
         logo={logoRender}
         onCollapse={handleMenuCollapse}
         menuItemRender={(menuItemProps, defaultDom) => {
-          // debugger;
+          // console.log("menuItemProps=", menuItemProps)
+          // console.log("defaultDom=", defaultDom)
+          let userCookie = Cookie.get('token');
+          if (menuItemProps.replace && userCookie) {
+            dispatch({
+              type: "global/getBtnAuthority",
+              payload: {
+                Menu_ID: menuItemProps.id,
+                User_ID: JSON.parse(userCookie).User_ID
+              }
+            })
+          }
+
           if (menuItemProps.isUrl) {
             return defaultDom;
           }

@@ -40,7 +40,7 @@ export async function getConditions() {
     const defaults = {};
     const body = Object.assign(defaults, params);
     const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetConditions', body);
-    // debugger;
+    // ;
     return result;
 }
 
