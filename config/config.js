@@ -128,17 +128,17 @@ export default {
                 {
                   name: 'add',
                   path: '/autoformmanager/autoformadd/:configId',
-                  component: '../components/AutoForm/AutoFormAdd',
+                  component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
                   path: '/autoformmanager/autoformedit/:configId/:keysParams/:uid',
-                  component: '../components/AutoForm/AutoFormEdit',
+                  component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
                   path: '/autoformmanager/autoformview/:configId/:keysParams',
-                  component: '../components/AutoForm/AutoFormView',
+                  component: './AutoFormManager/AutoFormView',
                 },
               ],
             },
@@ -166,14 +166,31 @@ export default {
               ],
             },
             {
+              path: '/report',
+              name: 'report',
+              routes: [
+                {
+                  name: 'dateReportPage',
+                  path: '/report/:reportType',
+                  component: './report/DateReportPage',
+                },
+                {
+                  name: 'summaryReportPage',
+                  path: '/report/summary/:reportType',
+                  component: './report/summaryReportPage',
+                },
+              ]
+
+            },
+            {
               path: '/rolesmanager',
               name: 'rolesmanager',
-              // redirect: '/AutoFormManager',
+              // redirect: './rolesmanager/user/userinfoindex/UserInfo',
               // component: './authorized/user',
               // authority: ['admin', 'user'],
               routes: [
                 {
-                  name: 'userInfo',
+                  name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
                     {

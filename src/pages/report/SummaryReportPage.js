@@ -1,0 +1,312 @@
+import React, { PureComponent } from 'react';
+import { connect } from 'dva';
+import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button } from 'antd'
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import moment from 'moment'
+import style from './index.less'
+import SdlCascader from '../AutoFormManager/SdlCascader'
+
+const FormItem = Form.Item;
+const { Option } = Select;
+
+@Form.create()
+@connect(({ loading, report, autoForm }) => ({
+  loading: loading.effects["report/getDailySummaryDataList"],
+  exportLoading: loading.effects["report/summaryReportExcel"],
+  dailySummaryDataList: report.dailySummaryDataList,
+  pollutantList: report.pollutantList,
+  pollutantTypeList: report.pollutantTypeList,
+  enterpriseList: report.enterpriseList,
+  regionList: autoForm.regionList,
+}))
+class DailySummaryPage extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [],
+      currentYear: moment().format("YYYY"),
+      defaultRegionCode: []
+    };
+    this.SELF = {
+      formLayout: {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 18 },
+      },
+      defaultSearchForm: {
+        PollutantSourceType: 1,
+        // Regions: ["110000000", "110100000", "110101000"],
+        EntCode: "",
+        ReportTime: moment()
+      },
+
+    }
+
+    this.export = this.export.bind(this);
+    this.statisticsReport = this.statisticsReport.bind(this);
+  }
+  componentDidMount() {
+    // // 获取汇总日报数据
+    // this.props.dispatch({
+    //   type: "report/getDailySummaryDataList",
+    //   payload: {
+    //     "PollutantSourceType": "2",
+    //     "Regions": "130000000,130200000,130201000",
+    //     "ReportTime": "2019-06-29"
+    //   }
+    // })
+    const { defaultSearchForm } = this.SELF;
+
+    this.props.dispatch({
+      type: 'autoForm/getRegions',
+      callback: (sucRes) => {
+        let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+        this.setState({
+          defaultRegionCode: RegionCode
+        })
+        // 获取污染物类型 = 表头
+        this.props.dispatch({
+          type: "report/getPollutantList",
+          payload: {
+            pollutantTypes: 1,
+            callback: () => {
+              // 获取表格数据
+              this.props.dispatch({
+                type: "report/getDailySummaryDataList",
+                payload: {
+                  "type": this.props.match.params.reportType,
+                  "PollutantSourceType": "1",
+                  "Regions": RegionCode.toString(),
+                  // "Regions": "130000000,130200000,130201000",
+                  "ReportTime": moment().format("YYYY-MM-DD")
+                }
+              })
+            }
+          }
+        })
+      }
+    })
+
+
+    // 获取污染物 - 查询条件
+    this.props.dispatch({
+      type: "report/getPollutantTypeList",
+    })
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.pathname != this.props.location.pathname) {
+      const { form } = this.props;
+      // 获取表格数据
+      this.props.dispatch({
+        type: "report/getDailySummaryDataList",
+        payload: {
+          "type": nextProps.match.params.reportType,
+          "PollutantSourceType": form.getFieldValue("PollutantSourceType"),
+          "Regions": form.getFieldValue("Regions").toString(),
+          "ReportTime": form.getFieldValue("ReportTime") && moment(form.getFieldValue("ReportTime")).format("YYYY-MM-DD")
+        }
+      })
+    }
+    if (this.props.dailySummaryDataList !== nextProps.dailySummaryDataList) {
+      const _columns = [
+        {
+          title: "接口名称",
+          dataIndex: 'PointName',
+        },
+        ...nextProps.pollutantList
+      ]
+      let columns = _columns.map(item => {
+        return {
+          ...item,
+          render: (text, row, index) => {
+            if (text) {
+              const _text = text.split("|");
+              const val = _text[0];
+              const status = _text[1];
+              // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
+              return status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val
+            }
+            return "-"
+          }
+        }
+      })
+      columns.unshift({
+        title: '企业名称',
+        dataIndex: 'EntName',
+        // width: 200,
+        // render: (text, row, index) => {
+        //   if (index === 0) {
+        //     return {
+        //       children: <a href="javascript:;">{text}</a>,
+        //       props: {
+        //         rowSpan: row.rowSpan,
+        //       },
+        //     };
+        //   } else if (text !== nextProps.dailySummaryDataList[index - 1].EntName) {
+        //     return {
+        //       children: <a href="javascript:;">{text}</a>,
+        //       props: {
+        //         rowSpan: row.rowSpan,
+        //       },
+        //     };
+        //   } else {
+        //     return {
+        //       children: <a href="javascript:;">{text}</a>,
+        //       props: {
+        //         rowSpan: 0,
+        //       },
+        //     };
+        //   }
+        // }
+      })
+      this.setState({
+        columns
+      })
+    }
+  }
+
+  statisticsReport() {
+    const { form, match } = this.props;
+    // const { uid, configId, isEdit, keysParams } = this._SELF_;
+    form.validateFields((err, values) => {
+      if (!err) {
+        this.setState({
+          currentYear: values.ReportTime && moment(values.ReportTime).format("YYYY")
+        })
+        // 获取污染物类型 = 表头
+        this.props.dispatch({
+          type: "report/getPollutantList",
+          payload: {
+            pollutantTypes: values.PollutantSourceType,
+            callback: () => {
+              // 获取表格数据
+              this.props.dispatch({
+                type: "report/getDailySummaryDataList",
+                payload: {
+                  "type": match.params.reportType,
+                  "PollutantSourceType": values.PollutantSourceType,
+                  "Regions": values.Regions.toString(),
+                  "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD")
+                }
+              })
+            }
+          }
+        })
+      }
+    })
+  }
+
+  export() {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        this.props.dispatch({
+          type: "report/summaryReportExcel",
+          payload: {
+            ...values,
+            type: reportType === "siteDaily" ? 0 : (reportType === "monthly" ? 1 : 2),
+            Regions: values.Regions.toString(),
+            ReportTime: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
+          }
+        })
+      }
+    })
+  }
+
+  render() {
+    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList } = this.props;
+    const { formLayout, defaultSearchForm, currentDate } = this.SELF;
+    const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
+    return (
+      <PageHeaderWrapper>
+        <Card>
+          <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={6} sm={24}>
+                <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+                  {getFieldDecorator("PollutantSourceType", {
+                    initialValue: defaultSearchForm.PollutantSourceType,
+                    rules: [{
+                      required: true,
+                      message: '请选择污染物类型',
+                    }],
+                  })(
+                    <Select placeholder="请选择污染物类型">
+                      {
+                        pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
+                      }
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={6} sm={24}>
+                <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
+                  {getFieldDecorator("Regions", {
+                    // initialValue: defaultSearchForm.Regions,
+                    initialValue: this.state.defaultRegionCode,
+                    rules: [{
+                      required: true,
+                      message: '请选择省市区',
+                    }],
+                  })(
+                    <SdlCascader
+                      changeOnSelect={false}
+                      data={regionList}
+                      placeholder="请选择"
+                    />
+                  )}
+                </FormItem>
+              </Col>
+              {/* </Row> */}
+              {/* <Row gutter={{ md: 8, lg: 24, x
+              l: 48 }}> */}
+              <Col md={6} sm={24}>
+                <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  {getFieldDecorator("ReportTime", {
+                    initialValue: defaultSearchForm.ReportTime,
+                    rules: [{
+                      required: true,
+                      message: '请填写统计时间',
+                    }],
+                  })(
+                    <DatePicker format={format} style={{ width: "100%" }} />
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={6}>
+                <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                  {/* {getFieldDecorator("", {})( */}
+                  <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
+                  <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
+                  {/* )} */}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <p className={style.title}>{this.state.currentYear}年{reportText}</p>
+          <Table
+            loading={loading}
+            style={{ minHeight: 80 }}
+            size="small"
+            columns={this.state.columns}
+            dataSource={dailySummaryDataList}
+            rowClassName={
+              (record, index, indent) => {
+                if (index === 0 || record.time === "0时") {
+                  return;
+                } else if (index % 2 !== 0 || record.time === "0时") {
+                  return style["light"];
+                }
+              }
+            }
+            bordered
+            pagination={true}
+          />
+        </Card>
+      </PageHeaderWrapper>
+    );
+  }
+}
+
+export default DailySummaryPage;

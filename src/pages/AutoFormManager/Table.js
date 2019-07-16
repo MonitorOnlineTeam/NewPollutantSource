@@ -9,23 +9,25 @@ import {
   Form,
   Badge,
   Progress,
+  Tooltip,
   Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Upload
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import styles from '../index.less';
+import styles from './index.less';
 
 const { confirm } = Modal;
 
 // 默认长度
 const DEFAULT_WIDTH = 180;
 
-@connect(({ loading, autoForm }) => ({
+@connect(({ loading, autoForm, global }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
   searchForm: autoForm.searchForm,
   tableInfo: autoForm.tableInfo,
   opreationButtons: autoForm.opreationButtons,
-  keys: autoForm.keys
+  keys: autoForm.keys,
+  btnsAuthority: global.btnsAuthority
 }))
 
 class SdlTable extends PureComponent {
@@ -117,21 +119,25 @@ class SdlTable extends PureComponent {
   }
 
   _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch } = this.props;
+    const { opreationButtons, keys, dispatch, btnsAuthority } = this.props;
+    console.log('////=', btnsAuthority)
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
     const { btnEl, configId, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
       switch (btn.DISPLAYBUTTON) {
         case "add":
-          return <Button
-            key={btn.DISPLAYBUTTON}
-            icon="plus"
-            type="primary"
-            onClick={() => {
-              this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/AutoFormManager/AutoFormAdd/${configId}`));
-            }}
-          >添加
+          if (btnsAuthority.includes("add")) {
+            return <Button
+              key={btn.DISPLAYBUTTON}
+              icon="plus"
+              type="primary"
+              onClick={() => {
+                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/AutoFormManager/AutoFormAdd/${configId}`));
+              }}
+            >添加
                   </Button>;
+          }
+          break;
         case "alldel":
           return <Button
             disabled={this.state.selectedRowKeys.length <= 0}
@@ -156,6 +162,7 @@ class SdlTable extends PureComponent {
             }}
           >批量删除
                          </Button>;
+          break;
         case "print":
           moreBtns.push({ type: "printer", text: "打印" })
           break;
@@ -245,8 +252,9 @@ class SdlTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
+    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] : 1;
     const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
 
     // 计算长度
@@ -317,7 +325,7 @@ class SdlTable extends PureComponent {
           <div>
             {
               this._SELF_.btnEl.map((item, index) => {
-                if (item.type === "edit") {
+                if (item.type === "edit" && btnsAuthority.includes("edit")) {
                   const filterList = columns.filter(itm => itm.title == "文件")[0] || {};
                   const key = filterList.dataIndex;
                   const fileInfo = record[key] && record[key].split(";")[0];
@@ -326,6 +334,26 @@ class SdlTable extends PureComponent {
                   // const uid = record.
                   return (
                     <Fragment key={item.type}>
+                      <Tooltip title="编辑">
+                        <a onClick={() => {
+                          let postData = {};
+                          keys[configId].map(item => {
+                            if (record[item]) {
+                              postData[item] = record[item]
+                            }
+                          })
+                          dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
+                        }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                        {
+                          this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                        }
+                      </Tooltip>
+                    </Fragment>);
+                }
+                if (item.type === "view" && btnsAuthority.includes("view")) {
+                  // if (item.type === "view") {
+                  return (<Fragment key={item.type}>
+                    <Tooltip title="详情">
                       <a onClick={() => {
                         let postData = {};
                         keys[configId].map(item => {
@@ -333,58 +361,44 @@ class SdlTable extends PureComponent {
                             postData[item] = record[item]
                           }
                         })
-
-                        dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
-                      }}>编辑</a>
+                        dispatch(routerRedux.push(`/AutoFormManager/AutoFormView/${configId}/${JSON.stringify(postData)}`))
+                      }}><Icon type="profile" style={{ fontSize: 16 }} /></a>
                       {
                         this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
                       }
-                    </Fragment>);
-                }
-                if (item.type === "view") {
-                  return (<Fragment key={item.type}>
-                    <a onClick={() => {
-                      let postData = {};
-                      keys[configId].map(item => {
-                        if (record[item]) {
-                          postData[item] = record[item]
-                        }
-                      })
-                      dispatch(routerRedux.push(`/AutoFormManager/AutoFormView/${configId}/${JSON.stringify(postData)}`))
-                    }}>详情</a>
-                    {
-                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                    }
+                    </Tooltip>
                   </Fragment>);
                 }
-                if (item.type === "del") {
+                if (item.type === "del" && btnsAuthority.includes("del")) {
                   return (<Fragment key={item.type}>
-                    <Popconfirm
-                      placement="left"
-                      title="确认是否删除?"
-                      onConfirm={() => {
-                        let postData = {
-                        };
-                        keys[configId].map(item => {
-                          if (record[item]) {
-                            postData[item] = record[item]
-                          }
-                        })
-                        dispatch({
-                          type: "autoForm/del",
-                          payload: {
-                            configId: configId,
-                            FormData: JSON.stringify(postData)
-                          }
-                        })
-                      }}
-                      okText="是"
-                      cancelText="否">
-                      <a href="#"> 删除 </a>
-                    </Popconfirm>
-                    {
-                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                    }
+                    <Tooltip title="删除">
+                      <Popconfirm
+                        placement="left"
+                        title="确认是否删除?"
+                        onConfirm={() => {
+                          let postData = {
+                          };
+                          keys[configId].map(item => {
+                            if (record[item]) {
+                              postData[item] = record[item]
+                            }
+                          })
+                          dispatch({
+                            type: "autoForm/del",
+                            payload: {
+                              configId: configId,
+                              FormData: JSON.stringify(postData)
+                            }
+                          })
+                        }}
+                        okText="是"
+                        cancelText="否">
+                        <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                      </Popconfirm>
+                      {
+                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                      }
+                    </Tooltip>
                   </Fragment>)
                 }
               })
@@ -406,11 +420,12 @@ class SdlTable extends PureComponent {
     }
 
 
-    const rowSelection = {
+    const rowSelection = checkboxOrRadio ? {
+      type: checkboxOrRadio == 1 ? "radio" : "checkbox",
       selections: true,
       selectedRowKeys,
       onChange: this.onSelectChange,
-    };
+    } : false;
     const dataSource = tableInfo[configId] ? tableInfo[configId].dataSource : [];
     // const dataSource = _tabelInfo.dataSource
 
@@ -495,7 +510,8 @@ class SdlTable extends PureComponent {
                   keys = keys.filter(item => item !== index)
                   // keys.splice(index, 1)
                 } else {
-                  keys = keys.concat([index])
+                  // keys = keys.concat([index])
+                  keys = checkboxOrRadio === 1 ? keys.concat([index]) : [index];
                 }
                 // return;
                 this.setState({

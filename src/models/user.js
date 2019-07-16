@@ -24,12 +24,12 @@ import { isUrl } from '@/utils/utils';
 //       //   type: 'saveCurrentUser',
 //       //   payload: response,
 //       // });
-//       debugger;
+//       ;
 //       let currentUser = Cookie.get('token');
 //       if (currentUser) {
 //         const user = JSON.parse(currentUser);
 //         const response = yield call(getMenuData);
-//         debugger;
+//         ;
 //         // if (responseMenu.requstresult === '1') {
 //         //   const cMenu = yield call(formatter, responseMenu.data);
 //         //   yield put({
@@ -119,7 +119,7 @@ export default {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
 
         const response = yield call(getMenuData);
-        // debugger;
+        // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
           yield put({
