@@ -14,6 +14,24 @@ import { async } from 'q';
  * @params {}
  */
 export async function getPollutantTypeList(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
-    return result === null ? { data: null } : result.Datas;
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+    params,
+    null,
+  );
+  return result === null ? { data: null } : result.Datas;
+}
+
+/**获取企业信息
+ *  {
+        parentIDs:'51216eae-8f11-4578-ad63-5127f78f6cca',
+    }
+ */
+export async function querypolluntantentinfolist(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/PPointAndData/GetTargetList',
+    params,
+    null,
+  );
+  return result === null ? { data: null } : result.data;
 }
