@@ -26,34 +26,33 @@ const codeMessage = {
   504: '网关超时。',
 };
 
-
 export function getCookie(name) {
-  const reg = new RegExp(`(^| )${ name }=([^;]*)(;|$)`);
+  const reg = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
   const arr = document.cookie.match(reg);
   if (arr) {
-      return decodeURIComponent(arr[2]);
+    return decodeURIComponent(arr[2]);
   }
   return null;
 }
 
 export function getAuthHeader(ssoToken) {
   return {
-      headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${ssoToken}`,
-          'Content-Type': 'application/json',
-      },
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${ssoToken}`,
+      'Content-Type': 'application/json',
+    },
   };
 }
 
 const checkStatus = response => {
-  if (response.status >= 200 && response.status < 300 || (response.status === 500)) {
-      return response;
+  if ((response.status >= 200 && response.status < 300) || response.status === 500) {
+    return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
-      message: `请求错误 ${response.status}`,//: ${response.url}
-      description: errortext,
+    message: `请求错误 ${response.status}`, //: ${response.url}
+    description: errortext,
   });
   const error = new Error(errortext);
   error.name = response.status;
@@ -69,55 +68,57 @@ async function requestMy(url, options) {
   const ssoToken = `${getCookie('ssoToken')}`;
   const authHeader = getAuthHeader(ssoToken);
 
-  const resp =await fetch(url, { ...options, ...authHeader })
-      .then(checkStatus)
-      .then(parseJSON)
-      .then((data) => ({ data }))
-      .catch(e => {
-          const status = e.name;
-          if (status === 401) {
-              router.push('/user/login');
-              return;
-          }
-          if (status === 403) {
-              router.push('/exception/403');
-              return;
-          }
-          // if (status <= 504 && status >= 500) {
-          //     router.push('/exception/500');
-          //     return;
-          // }
-          if (status >= 404 && status < 422) {
-              router.push('/exception/404');
-          }
-      });
+  const resp = await fetch(url, { ...options, ...authHeader })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data => ({ data }))
+    .catch(e => {
+      const status = e.name;
+      if (status === 401) {
+        router.push('/user/login');
+        return;
+      }
+      if (status === 403) {
+        router.push('/exception/403');
+        return;
+      }
+      // if (status <= 504 && status >= 500) {
+      //     router.push('/exception/500');
+      //     return;
+      // }
+      if (status >= 404 && status < 422) {
+        router.push('/exception/404');
+      }
+    });
 
-  return (resp&&resp.data) || {IsSuccess:false,Datas:null,Message:"服务器内部错误"};
+  return (resp && resp.data) || { IsSuccess: false, Datas: null, Message: '服务器内部错误' };
 }
 
 export async function get(url, params) {
-
+  url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
   if (params) {
-      const paramsArray = [];
-      Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
+    const paramsArray = [];
+    Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
 
-      if (url.indexOf('?') === -1) {
-          if (url.search(/\?/) === -1) {
-              url += `?${paramsArray.join('&')}`;
-          } else {
-              url += `&${paramsArray.join('&')}`;
-          }
+    if (url.indexOf('?') === -1) {
+      if (url.search(/\?/) === -1) {
+        url += `?${paramsArray.join('&')}`;
       } else {
-          url += `&${paramsArray.join('&')}`;
+        url += `&${paramsArray.join('&')}`;
       }
+    } else {
+      url += `&${paramsArray.join('&')}`;
+    }
   }
-  return requestMy(url, {method: 'GET'});
+  return requestMy(url, { method: 'GET' });
 }
 
 export async function post(url, params) {
-  return requestMy(url, {method: 'POST',body: JSON.stringify(params)});
+  return requestMy(url + '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', {
+    method: 'POST',
+    body: JSON.stringify(params),
+  });
 }
-
 
 /**
  * 异常处理程序
