@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -115,6 +115,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
+            { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
             {
               path: '/autoformmanager',
               name: 'AutoFormManager',
@@ -139,8 +140,7 @@ export default {
                   path: '/autoformmanager/autoformview/:configId/:keysParams',
                   component: '../components/AutoForm/AutoFormView',
                 },
-              ]
-
+              ],
             },
             {
               path: '/platformconfig',
@@ -151,8 +151,19 @@ export default {
                   path: '/platformconfig/monitortarget/:configId',
                   component: './platformManager/enterprise',
                 },
-              ]
-
+                {
+                  name: 'monitorpoint',
+                  path:
+                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+                  component: './platformManager/point',
+                },
+                {
+                  name: 'usestandardlibrary',
+                  path:
+                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+                  component: './platformManager/point/components/setStandard',
+                },
+              ],
             },
             {
               path: '/rolesmanager',
@@ -164,7 +175,7 @@ export default {
                 {
                   name: 'userInfo',
                   path: '/rolesmanager/user',
-                  routes:[
+                  routes: [
                     {
                       name: 'index',
                       path: '/rolesmanager/user/userinfoindex/:configId',
@@ -184,13 +195,13 @@ export default {
                       name: 'view',
                       path: '/rolesmanager/user/userinfoview/:userid',
                       component: './authorized/user/UserInfoView',
-                    }
-                  ]
+                    },
+                  ],
                 },
                 {
-                  name:"roleInfo",
-                  path:"/rolesmanager/role",
-                  routes:[
+                  name: 'roleInfo',
+                  path: '/rolesmanager/role',
+                  routes: [
                     {
                       name: 'index',
                       path: '/rolesmanager/role/roleindex',
@@ -201,34 +212,53 @@ export default {
                       path: '/rolesmanager/rolemenu/:roleid',
                       component: './authorized/roleInfo/menu',
                     },
-                  ]
+                  ],
                 },
                 {
-                  name:"departInfo",
-                  path:"/rolesmanager/depart",
-                  routes:[
+                  name: 'departInfo',
+                  path: '/rolesmanager/depart',
+                  routes: [
                     {
                       name: 'index',
                       path: '/rolesmanager/depart/departindex',
                       component: './authorized/departInfo',
                     },
-                  ]
-                }
-              ]
+                  ],
+                },
+              ],
             },
             {
-              path:'/account/settings',
-              name:'settings',
-              routes:[
+              path: '/overview',
+              name: 'overview',
+              // redirect: '/AutoFormManager',
+              // component: './authorized/user',
+              // authority: ['admin', 'user'],
+              routes: [
+                // {
+                //   name: 'datalist',
+                //   path: '/overview/datalist',
+                //   routes:[
+                {
+                  name: 'index',
+                  path: '/overview/datalist',
+                  component: './overView',
+                },
+                //   ]
+                // },
+              ],
+            },
+            {
+              path: '/account/settings',
+              name: 'settings',
+              routes: [
                 {
                   name: 'base',
                   path: '/account/settings',
                   component: './account/settings',
                 },
-              ]
-            }
+              ],
+            },
 
-            ,
             {
               component: '404',
             },
@@ -286,11 +316,10 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
-    "/upload": {
-      target: "http://172.16.9.13:9090/", // 接口的域名
+    '/upload': {
+      target: 'http://172.16.9.13:9090/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-      pathRewrite: { "^/upload/upload": "" } // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
-    }
+      pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    },
   },
-
 };
