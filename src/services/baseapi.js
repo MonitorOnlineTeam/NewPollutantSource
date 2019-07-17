@@ -22,6 +22,17 @@ export async function getPollutantTypeList(params) {
   return result === null ? { data: null } : result.Datas;
 }
 
+// 获取用户按钮权限
+export async function getBtnAuthority(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/AuthorApi/GetButtonByUserID',
+    params,
+    null,
+  );
+  return result === null ? { data: null } : result;
+}
+
+
 /**获取企业信息
  *  {
         parentIDs:'51216eae-8f11-4578-ad63-5127f78f6cca',

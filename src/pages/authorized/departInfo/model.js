@@ -60,7 +60,6 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
-                // debugger
                 yield update({
                     DepartInfoOne: result.Datas
                 });

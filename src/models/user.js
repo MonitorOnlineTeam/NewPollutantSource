@@ -1,5 +1,5 @@
 import router from 'umi/router';
-import { queryCurrent, query as queryUsers, getMenuData } from '@/services/user';
+import { queryCurrent, query as queryUsers, getMenuData,getUserInfo } from '@/services/user';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl } from '@/utils/utils';
@@ -24,12 +24,12 @@ import { isUrl } from '@/utils/utils';
 //       //   type: 'saveCurrentUser',
 //       //   payload: response,
 //       // });
-//       debugger;
+//       ;
 //       let currentUser = Cookie.get('token');
 //       if (currentUser) {
 //         const user = JSON.parse(currentUser);
 //         const response = yield call(getMenuData);
-//         debugger;
+//         ;
 //         // if (responseMenu.requstresult === '1') {
 //         //   const cMenu = yield call(formatter, responseMenu.data);
 //         //   yield put({
@@ -119,7 +119,7 @@ export default {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
 
         const response = yield call(getMenuData);
-        // debugger;
+        // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
           yield put({
@@ -147,6 +147,22 @@ export default {
         // }
       }
     },
+    /*获取单个用户实体**/
+    * getUserInfo({
+        payload
+    }, {
+        call,
+        update,
+    }) {
+        const result = yield call(getUserInfo, {
+            ...payload
+        });
+        yield update({
+            requstresult: result.requstresult,
+            editUser: result.data[0]
+        });
+        payload.callback();
+    }
 
   },
 

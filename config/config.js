@@ -128,17 +128,17 @@ export default {
                 {
                   name: 'add',
                   path: '/autoformmanager/autoformadd/:configId',
-                  component: '../components/AutoForm/AutoFormAdd',
+                  component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
                   path: '/autoformmanager/autoformedit/:configId/:keysParams/:uid',
-                  component: '../components/AutoForm/AutoFormEdit',
+                  component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
                   path: '/autoformmanager/autoformview/:configId/:keysParams',
-                  component: '../components/AutoForm/AutoFormView',
+                  component: './AutoFormManager/AutoFormView',
                 },
               ],
             },
@@ -166,14 +166,31 @@ export default {
               ],
             },
             {
+              path: '/report',
+              name: 'report',
+              routes: [
+                {
+                  name: 'dateReportPage',
+                  path: '/report/:reportType',
+                  component: './report/DateReportPage',
+                },
+                {
+                  name: 'summaryReportPage',
+                  path: '/report/summary/:reportType',
+                  component: './report/summaryReportPage',
+                },
+              ]
+
+            },
+            {
               path: '/rolesmanager',
               name: 'rolesmanager',
-              // redirect: '/AutoFormManager',
+              // redirect: './rolesmanager/user/userinfoindex/UserInfo',
               // component: './authorized/user',
               // authority: ['admin', 'user'],
               routes: [
                 {
-                  name: 'userInfo',
+                  name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
                     {
@@ -312,12 +329,12 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.13:9090/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
     '/upload': {
-      target: 'http://172.16.9.13:9090/', // 接口的域名
+      target: 'http://172.16.9.52:8096/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },

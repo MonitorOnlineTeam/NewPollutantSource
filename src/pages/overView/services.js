@@ -41,7 +41,7 @@ export async function querypollutanttypecode(params) {
 export async function querydatalist(params) {
   if (params.dgimn) params.DGIMNs = params.dgimn;
   const result = await post(
-    '/api/rest/PollutantSourceApi/DataList/AllTypeSummaryList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList',
     params,
     null,
   );

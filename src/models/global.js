@@ -1,9 +1,11 @@
 import { queryNotices } from '@/services/user';
+import { getBtnAuthority } from '../services/baseapi';
 const GlobalModel = {
   namespace: 'global',
   state: {
     collapsed: false,
     notices: [],
+    btnsAuthority: [],
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -66,6 +68,24 @@ const GlobalModel = {
         },
       });
     },
+    // 获取按钮权限
+    * getBtnAuthority({ payload }, { call, put, select }) {
+      // const menuCode = yield select(state => state.menu.menuCode);
+      const result = yield call(getBtnAuthority, payload);
+      if (result.IsSuccess) {
+        const btnsAuthority = result.Datas.map(item => item.Code);
+        console.log('btnsAuthority=',btnsAuthority)
+        yield put({
+          type: "updateState",
+          payload: {
+            btnsAuthority
+          }
+        })
+        // yield update({
+        //   btnsAuthority
+        // })
+      }
+    }
   },
   reducers: {
     changeLayoutCollapsed(
@@ -99,6 +119,13 @@ const GlobalModel = {
         notices: state.notices.filter(item => item.type !== payload),
       };
     },
+
+    updateState(state, { payload }) {
+      return {
+        ...state,
+        ...payload
+      }
+    }
   },
   subscriptions: {
     setup({ history }) {

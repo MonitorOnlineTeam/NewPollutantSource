@@ -24,7 +24,7 @@ class Login extends Component {
   };
   handleSubmit = (err, values) => {
     const { type } = this.state;
-    //debugger;
+    //;
     console.log("values=", values);
     if (!err) {
       const { dispatch } = this.props;
