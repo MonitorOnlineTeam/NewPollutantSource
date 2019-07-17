@@ -209,7 +209,7 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      <Icon type="edit" style={{ fontSize: 16 }} title="编辑" />
+                      <Icon type="edit" style={{ fontSize: 16 }} />
                     </a>
                     </Tooltip>
                     <Divider type="vertical" />
@@ -223,10 +223,11 @@ export default class UserInfoIndex extends Component {
                         );
                       }}
                     >
-                      <Icon type="profile" style={{ fontSize: 16 }} title="详情" />
+                      <Icon type="profile" style={{ fontSize: 16 }} />
                     </a>
                     </Tooltip>
                     <Divider type="vertical" />
+                    <Tooltip title="删除">
                     <Popconfirm
                       title="确认要删除吗?"
                       onConfirm={() => {
@@ -236,8 +237,9 @@ export default class UserInfoIndex extends Component {
                       okText="是"
                       cancelText="否"
                     >
-                      <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
+                      <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
                     </Popconfirm>
+                    </Tooltip>
                   </Fragment>
                 );
               }}
