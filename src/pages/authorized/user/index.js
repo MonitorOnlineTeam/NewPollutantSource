@@ -172,7 +172,7 @@ export default class UserInfoIndex extends Component {
               // columns={columns}
               configId={configId}
               onAdd={() => {
-                dispatch(routerRedux.push('/rolesmanager/userinfoadd'));
+                dispatch(routerRedux.push('/rolesmanager/user/userinfoadd'));
               }}
               rowChange={(key, row) => {
                 this.setState({
@@ -204,7 +204,7 @@ export default class UserInfoIndex extends Component {
                       onClick={() => {
                         dispatch(
                           routerRedux.push(
-                            '/rolesmanager/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'],
+                            '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'],
                           ),
                         );
                       }}
@@ -218,7 +218,7 @@ export default class UserInfoIndex extends Component {
                       onClick={() => {
                         dispatch(
                           routerRedux.push(
-                            '/rolesmanager/userinfoview/' + row['dbo.Base_UserInfo.User_ID'],
+                            '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'],
                           ),
                         );
                       }}
