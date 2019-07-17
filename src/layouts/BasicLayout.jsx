@@ -154,7 +154,9 @@ const BasicLayout = props => {
           },
           ...routers,
         ]}
-        footerRender={footerRender}
+        footerRender={() => {
+          return <div></div>
+        }}
         menuDataRender={menuDataRender}
         formatMessage={formatMessage}
         rightContentRender={rightProps => <RightContent {...rightProps} />}
