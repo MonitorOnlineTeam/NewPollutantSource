@@ -8,9 +8,11 @@ import {
     Table,
     Form,
     Spin,
+    Tooltip,
     Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
 } from 'antd';
 import styles from './style.less';
+import { PointIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -100,7 +102,7 @@ export default class MonitorTarget extends Component {
         }
         return (
             <PageHeaderWrapper>
-            {/* <MonitorContent breadCrumbList={
+                {/* <MonitorContent breadCrumbList={
                 [
                     { Name: '首页', Url: '/' },
                     { Name: '平台配置', Url: '' },
@@ -123,20 +125,24 @@ export default class MonitorTarget extends Component {
                                     key, row
                                 })
                             }}
+                            onAdd={()=>{
+                                dispatch(routerRedux.push(`/platformconfig/monitortarget/add/${configId}`));  
+                            }}
                             appendHandleRows={row => {
                                 return <Fragment>
                                     <Divider type="vertical" />
-                                    <a onClick={() => {
-                                        this.editMonitorInfo('', row);
-                                    }}>维护点信息</a>
-
+                                    <Tooltip title="维护点信息">
+                                        <a onClick={() => {
+                                            this.editMonitorInfo('', row);
+                                        }}><PointIcon />    </a>
+                                    </Tooltip>
                                 </Fragment>
                             }}
                         >
                         </SdlTable>
                     </Card>
                 </div>
-            {/* </MonitorContent> */}
+                {/* </MonitorContent> */}
             </PageHeaderWrapper>
         );
     }

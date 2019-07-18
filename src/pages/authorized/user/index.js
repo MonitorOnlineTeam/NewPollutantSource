@@ -1,116 +1,116 @@
 import React, { Component, Fragment } from 'react';
 import {
-  Button,
-  Input,
-  Card,
-  Row,
-  Col,
-  Table,
-  Form,
-  Spin,
-  Select,
-  Modal,
-  Tag,
-  Divider,
-  Dropdown,
-  Icon,
-  Menu,
-  Popconfirm,
-  message,
-  DatePicker,
-  InputNumber,
-  Tooltip
+    Button,
+    Input,
+    Card,
+    Row,
+    Col,
+    Table,
+    Form,
+    Spin,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Icon,
+    Menu,
+    Popconfirm,
+    message,
+    DatePicker,
+    InputNumber,
+    Tooltip
 } from 'antd';
 import styles from './style.less';
 import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/components/AutoForm/Table';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+import SdlTable from '../../AutoFormManager/Table';
+import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 const { confirm } = Modal;
 
 @connect(({ loading, autoForm }) => ({
-  loading: loading.effects['autoForm/getPageConfig'],
-  autoForm: autoForm,
-  searchConfigItems: autoForm.searchConfigItems,
-  // columns: autoForm.columns,
-  tableInfo: autoForm.tableInfo,
-  searchForm: autoForm.searchForm,
-  routerConfig: autoForm.routerConfig,
+    loading: loading.effects['autoForm/getPageConfig'],
+    autoForm: autoForm,
+    searchConfigItems: autoForm.searchConfigItems,
+    // columns: autoForm.columns,
+    tableInfo: autoForm.tableInfo,
+    searchForm: autoForm.searchForm,
+    routerConfig: autoForm.routerConfig,
 }))
 export default class UserInfoIndex extends Component {
-  constructor(props) {
-    super(props);
-    console.log('1');
-    this.state = {};
-  }
-
-  componentDidMount() {
-    const { match } = this.props;
-    this.reloadPage(match.params.configId);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    //debugger;
-    if (nextProps.location.pathname != this.props.location.pathname) {
-      if (nextProps.match.params.configId !== this.props.routerConfig)
-        this.reloadPage(nextProps.match.params.configId);
+    constructor(props) {
+        super(props);
+        console.log('1');
+        this.state = {};
     }
-  }
 
-  reloadPage = configId => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'autoForm/updateState',
-      payload: {
-        routerConfig: configId,
-      },
-    });
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId: configId,
-      },
-    });
-  };
-  confirm(userid) {
-    this.props.dispatch({
-      type: 'userinfo/deluserandroledep',
-      payload: {
-        User_ID: userid,
-      },
-    });
-  }
-  showConfirm = (selectedRowKeys, selectedRows) => {
-    if (selectedRowKeys.length == 0) {
-      message.error('请至少选中一行');
-      return;
+    componentDidMount() {
+        const { match } = this.props;
+        this.reloadPage(match.params.configId);
     }
-    const { dispatch } = this.props;
-    confirm({
-      title: '是否确认重置密码?',
-      content: '',
-      okText: '确认',
-      cancelText: '取消',
-      onOk() {
-        var str = [];
-        selectedRows.map(item => str.push(item['dbo.Base_UserInfo.User_ID']));
-        console.log(str);
+
+    componentWillReceiveProps(nextProps) {
+        //debugger;
+        if (nextProps.location.pathname != this.props.location.pathname) {
+            if (nextProps.match.params.configId !== this.props.routerConfig)
+                this.reloadPage(nextProps.match.params.configId);
+        }
+    }
+
+    reloadPage = configId => {
+        const { dispatch } = this.props;
         dispatch({
-          type: 'userinfo/resetpwd',
-          payload: {
-            User_ID: str,
-          },
+            type: 'autoForm/updateState',
+            payload: {
+                routerConfig: configId,
+            },
         });
-      },
-      onCancel() {
-        console.log('取消');
-      },
-    });
-  };
+        dispatch({
+            type: 'autoForm/getPageConfig',
+            payload: {
+                configId: configId,
+            },
+        });
+    };
+    confirm(userid) {
+        this.props.dispatch({
+            type: 'userinfo/deluserandroledep',
+            payload: {
+                User_ID: userid,
+            },
+        });
+    }
+    showConfirm = (selectedRowKeys, selectedRows) => {
+        if (selectedRowKeys.length == 0) {
+            message.error('请至少选中一行');
+            return;
+        }
+        const { dispatch } = this.props;
+        confirm({
+            title: '是否确认重置密码?',
+            content: '',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+                var str = [];
+                selectedRows.map(item => str.push(item['dbo.Base_UserInfo.User_ID']));
+                console.log(str);
+                dispatch({
+                    type: 'userinfo/resetpwd',
+                    payload: {
+                        User_ID: str,
+                    },
+                });
+            },
+            onCancel() {
+                console.log('取消');
+            },
+        });
+    };
 
   cancel(e) {
     console.log(e);

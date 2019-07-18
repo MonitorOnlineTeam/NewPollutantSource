@@ -19,8 +19,11 @@ import {
   message,
   DatePicker,
   InputNumber,
+  Tooltip
 } from 'antd';
 import styles from './index.less';
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -339,14 +342,15 @@ export default class MonitorPoint extends Component {
       </Menu>
     );
     return (
-      <MonitorContent
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '平台配置', Url: '' },
-          { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
-          { Name: '维护点信息', Url: '' },
-        ]}
-      >
+      // <MonitorContent
+      //   breadCrumbList={[
+      //     { Name: '首页', Url: '/' },
+      //     { Name: '平台配置', Url: '' },
+      //     { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
+      //     { Name: '维护点信息', Url: '' },
+      //   ]}
+      // >
+      <PageHeaderWrapper>
         <div className={styles.cardTitle}>
           <Card
             title={
@@ -384,43 +388,48 @@ export default class MonitorPoint extends Component {
               appendHandleRows={row => {
                 return (
                   <Fragment>
-                    <a
-                      onClick={() => {
-                        this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
-                      }}
-                    >
-                      编辑
-                    </a>
+                    <Tooltip title="编辑">
+                      <a
+                        onClick={() => {
+                          this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                        }}
+                      >
+                        <EditIcon />
+                      </a>
+                    </Tooltip>
                     <Divider type="vertical" />
-                    <a
-                      onClick={() => {
-                        this.setState({
-                          visible: true,
-                          isEdit: false,
-                          isView: true,
-                          selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
-                        });
-                      }}
-                    >
-                      详情
-                    </a>
+                    <Tooltip title="详情">
+                      <a
+                        onClick={() => {
+                          this.setState({
+                            visible: true,
+                            isEdit: false,
+                            isView: true,
+                            selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
+                          });
+                        }}
+                      >
+                        <DetailIcon />
+                      </a>
+                    </Tooltip>
                     <Divider type="vertical" />
-                    <Popconfirm
-                      title="确认要删除吗?"
-                      onConfirm={() => {
-                        this.delPoint(
-                          row['dbo.T_Bas_CommonPoint.PointCode'],
-                          row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        );
-                      }}
-                      onCancel={this.cancel}
-                      okText="是"
-                      cancelText="否"
-                    >
-                      <a href="#">删除</a>
-                    </Popconfirm>
+                    <Tooltip title="删除">
+                      <Popconfirm
+                        title="确认要删除吗?"
+                        onConfirm={() => {
+                          this.delPoint(
+                            row['dbo.T_Bas_CommonPoint.PointCode'],
+                            row['dbo.T_Bas_CommonPoint.DGIMN'],
+                          );
+                        }}
+                        onCancel={this.cancel}
+                        okText="是"
+                        cancelText="否"
+                      >
+                        <a href="#"><DelIcon /></a>
+                      </Popconfirm>
+                    </Tooltip>
                     <Divider type="vertical" />
-
                     <Dropdown
                       overlay={menu(
                         row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -454,14 +463,15 @@ export default class MonitorPoint extends Component {
                 keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
               />
             ) : (
-              <AutoFormViewItems
-                configId={pointConfigIdEdit}
-                keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-              />
-            )}
+                <AutoFormViewItems
+                  configId={pointConfigIdEdit}
+                  keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                />
+              )}
           </Modal>
         </div>
-      </MonitorContent>
+      {/* </MonitorContent> */}
+      </PageHeaderWrapper>
     );
   }
 }

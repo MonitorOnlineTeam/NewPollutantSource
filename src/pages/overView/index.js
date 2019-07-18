@@ -387,7 +387,7 @@ class dataList extends PureComponent {
         // }
         return (
             <PageHeaderWrapper>
-                <div style={{ width: '100%', height: 'calc(100vh - 65px)', marginTop: 20 }} className={styles.standardList}>
+                <div style={{ width: '100%', height: 'calc(100vh - 65px - 100px - 40px)', marginTop: 20 }} className={styles.standardList}>
                     <Card
                         bordered={false}
                         className={styles.cardextra}
@@ -438,7 +438,7 @@ class dataList extends PureComponent {
                             dataSource={this.props.data}
                             pagination={false}
                             loading={this.props.isloading}
-                            scroll={{ x: gwidth, y: 'calc(100vh - 190px)' }}
+                            scroll={{ x: gwidth }}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {
                         //   if (index === 0) {
