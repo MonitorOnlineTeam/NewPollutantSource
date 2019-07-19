@@ -41,3 +41,21 @@ export async function getUserInfo(params) {
       data: null
   } : result;
 }
+
+//  个人设置编辑用户
+export async function editpersonaluser(params) {
+  const body = {
+      User_ID: params.UserId,
+      User_Name: params.UserName,
+      User_Sex: params.UserSex,
+      Email: params.Email,
+      Phone: params.Phone,
+      SendPush: params.SendPush,
+      AlarmType: params.AlarmType,
+      AlarmTime: params.AlarmTime,
+  };
+  const result = post('/api/rest/PollutantSourceApi/PUserInfo/EditUser', body, null);
+  return result === null ? {
+      data: null
+  } : result;
+}

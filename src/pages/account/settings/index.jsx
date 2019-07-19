@@ -22,21 +22,21 @@ class Settings extends Component {
       base: (
         <FormattedMessage id="account-settings.menuMap.basic" defaultMessage="Basic Settings" />
       ),
-      security: (
-        <FormattedMessage
-          id="account-settings.menuMap.security"
-          defaultMessage="Security Settings"
-        />
-      ),
-      binding: (
-        <FormattedMessage id="account-settings.menuMap.binding" defaultMessage="Account Binding" />
-      ),
-      notification: (
-        <FormattedMessage
-          id="account-settings.menuMap.notification"
-          defaultMessage="New Message Notification"
-        />
-      ),
+      // security: (
+      //   <FormattedMessage
+      //     id="account-settings.menuMap.security"
+      //     defaultMessage="Security Settings"
+      //   />
+      // ),
+      // binding: (
+      //   <FormattedMessage id="account-settings.menuMap.binding" defaultMessage="Account Binding" />
+      // ),
+      // notification: (
+      //   <FormattedMessage
+      //     id="account-settings.menuMap.notification"
+      //     defaultMessage="New Message Notification"
+      //   />
+      //),
     };
     this.state = {
       mode: 'inline',

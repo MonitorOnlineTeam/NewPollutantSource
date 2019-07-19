@@ -109,6 +109,7 @@ const BasicLayout = props => {
 
   const menuDataRender = list => {
     // console.log("user.currentMenu=", currentMenu);
+    
     return currentMenu;
   }
 
@@ -127,7 +128,8 @@ const BasicLayout = props => {
         menuItemRender={(menuItemProps, defaultDom) => {
           // console.log("menuItemProps=", menuItemProps)
           // console.log("defaultDom=", defaultDom)
-          let userCookie = Cookie.get('token');
+   
+          let userCookie = Cookie.get('currentUser');
           if (menuItemProps.replace && userCookie) {
             dispatch({
               type: "global/getBtnAuthority",

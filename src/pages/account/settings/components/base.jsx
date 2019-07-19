@@ -337,7 +337,7 @@ class BaseView extends Component {
   }
 
   componentWillMount() {
-    const userCookie = Cookie.get('token');
+    const userCookie = Cookie.get('currentUser');
     if (userCookie) {
       const user = JSON.parse(userCookie);
       this.props.dispatch({
@@ -364,15 +364,16 @@ class BaseView extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const that = this;
-    const userCookie = Cookie.get('token');
+    const userCookie = Cookie.get('currentUser');
     let user = '';
     if (userCookie) {
       user = JSON.parse(userCookie);
     }
     this.props.form.validateFieldsAndScroll((err, values) => {
+      debugger
       if (!err) {
         that.props.dispatch({
-          type: 'userinfo/editpersonaluser',
+          type: 'user/editpersonaluser',
           payload: {
             UserId: user.User_ID,
             UserName: values.User_Name,
@@ -386,11 +387,11 @@ class BaseView extends Component {
             RolesId: this.state.role_id,
             UserAccount: this.state.user_account,
             DeleteMark: this.state.deletemark,
-            callback: () => {
-              if (this.props.requstresult === '1') {
-                message.success('个人设置更新成功！');
+            callback: (res) => {
+              if (res) {
+                message.success('更新成功！');
               } else {
-                message.error('错误');
+                message.error('更新失败！');
               }
             }
           },
@@ -408,22 +409,22 @@ class BaseView extends Component {
     const {
       getFieldDecorator
     } = form;
-    // const {
-    //   // User_Name: UserName = null,
-    //   User_Sex: UserSex,
-    //   Email,
-    //   Phone,
-    //   AlarmType,
-    //   SendPush,
-    //   AlarmTime,
-    // } = editUser === null ? {} : editUser;
-    debugger
+    const {
+      User_Name: UserName = null,
+      User_Sex: UserSex,
+      Email,
+      Phone,
+      AlarmType,
+      SendPush,
+      AlarmTime,
+    } = !editUser ? {} : editUser;
+    // debugger
     return (
       <div>
-        <Card bordered={false} title="基本设置" style={{ height: 'calc(100vh - 160px)' }} loading={this.props.userinfoloading}>
+        <Card bordered={false} style={{ height: 'calc(100vh - 160px)' }} loading={this.props.userinfoloading}>
           <Form onSubmit={this.handleSubmit}>
             <Row gutter={48} />
-            {/* <Row gutter={48}>
+            <Row gutter={48}>
               <Col span={8}>
                 <FormItem
                   label="姓名"
@@ -543,7 +544,7 @@ class BaseView extends Component {
                   )}
                 </FormItem>
               </Col>
-            </Row> */}
+            </Row>
 
 
             <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
