@@ -244,6 +244,8 @@ class RoleIndex extends Component {
                     title: '操作',
                     dataIndex: '',
                     key: 'x',
+                    align: 'left',
+                    width: '280px',
                     render: (text, record) =>
                         <span>
                             <Tooltip title="编辑">
@@ -300,7 +302,7 @@ class RoleIndex extends Component {
                             }}><Icon type="user-add" /></a>
                             </Tooltip>
                             <Divider type="vertical" />
-                            <Tooltip title="分配用户">
+                            <Tooltip title="菜单权限">
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.Roles_ID)
                                 this.setState({
@@ -575,8 +577,8 @@ class RoleIndex extends Component {
             },
         };
         const rowRadioSelection = {
-            type: 'radio',
-            columnTitle: "选择",
+            type: null,
+            // columnTitle: "选择",
             selectedRowKeys: this.state.rowKeys,
             onChange: (selectedRowKeys, selectedRows) => {
                 this.setState({
@@ -647,7 +649,8 @@ class RoleIndex extends Component {
                                         }}
                                         size="small"
                                         style={{ marginTop: "20px" }}
-                                        defaultExpandAllRows={true} columns={this.state.columns} rowSelection={rowRadioSelection} dataSource={this.props.RoleInfoTree} />
+                                        //rowSelection={rowRadioSelection}
+                                        defaultExpandAllRows={true} columns={this.state.columns}  dataSource={this.props.RoleInfoTree} />
                             }
                         </Card>
                         <div>

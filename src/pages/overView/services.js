@@ -45,7 +45,7 @@ export async function querydatalist(params) {
     params,
     null,
   );
-  return result === null ? { data: null } : result.data;
+  return result === null ? { data: null } : result.Datas;
 }
 
 /**

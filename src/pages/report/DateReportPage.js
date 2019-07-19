@@ -83,6 +83,8 @@ class SiteDailyPage extends PureComponent {
         this.setState({
           defaultRegionCode: RegionCode
         })
+        // 初始化省市区
+        this.props.form.setFieldsValue({ Regions: RegionCode })
         // 根据省市区获取企业
         this.props.dispatch({
           type: 'report/getEnterpriseList',
@@ -109,6 +111,13 @@ class SiteDailyPage extends PureComponent {
                           // // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
                           // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
                           // "ReportTime": "2019-06-29"
+                        }
+                      })
+                    } else {
+                      this.props.dispatch({
+                        type: "report/updateState",
+                        payload: {
+                          dateReportData: []
                         }
                       })
                     }

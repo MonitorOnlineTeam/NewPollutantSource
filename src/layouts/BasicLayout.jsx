@@ -154,14 +154,18 @@ const BasicLayout = props => {
           },
           ...routers,
         ]}
-        footerRender={footerRender}
+        footerRender={() => {
+          return <div></div>
+        }}
         menuDataRender={menuDataRender}
         formatMessage={formatMessage}
         rightContentRender={rightProps => <RightContent {...rightProps} />}
         {...props}
         {...settings}
       >
-        {children}
+          <div style={{margin: "-24px -24px 0px", padding: "24px", overflowY: "auto"}}>
+            {children}
+          </div>
       </ProLayout>
       <SettingDrawer
         settings={settings}

@@ -17,7 +17,7 @@ import {
     Divider,
     Popconfirm,
     Empty,
-    Transfer, Switch, Tag, Tree, Radio
+    Transfer, Switch, Tag, Tree, Radio,Tooltip
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -199,8 +199,11 @@ class DepartIndex extends Component {
                     title: '操作',
                     dataIndex: '',
                     key: 'x',
+                    align: 'left',
+                    width: '280px',
                     render: (text, record) =>
                         <span>
+                             <Tooltip title="编辑">
                             <a href="javascript:;" onClick={() => {
                                 console.log(record.UserGroup_ID)
                                 this.props.dispatch({
@@ -210,8 +213,10 @@ class DepartIndex extends Component {
                                     }
                                 })
                                 this.showModalEdit()
-                            }}><Icon type="edit" style={{ fontSize: 16 }} title="编辑" /></a>
+                            }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="删除">
                             <Popconfirm
                                 title="确认要删除吗?"
                                 onConfirm={() => {
@@ -236,32 +241,40 @@ class DepartIndex extends Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} title="删除" /></a>
+                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                            
                             </Popconfirm>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="分配用户">
                             <a href="javascript:;" onClick={() => {
                                 this.setState({
                                     selectedRowKeys:record
                                    },()=> {
                                     this.showUserModal()
                                    })
-                            }}><Icon type="usergroup-add" style={{ fontSize: 16 }} title="分配用户"/></a>
+                            }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="区域过滤">
                             <a href="javascript:;" onClick={() => {
                                 this.setState({
                                     selectedRowKeys:record
                                    },()=> {
                                     this.showRegionModal()
                                    })
-                            }}><Icon type="filter" style={{ fontSize: 16 }} title="区域过滤" /></a>
+                            }}><Icon type="filter" style={{ fontSize: 16 }}  /></a>
+                            </Tooltip>
                             <Divider type="vertical" />
+                            <Tooltip title="数据过滤">
                             <a href="javascript:;" onClick={() => {
                                 this.setState({
                                     selectedRowKeys:record
                                    },()=> {
                                     this.showDataModal()
                                    })
-                            }}><Icon type="filter" style={{ fontSize: 16 }} title="数据过滤"/></a>
+                            }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
                         </span>
                 },
             ]
@@ -724,7 +737,8 @@ class DepartIndex extends Component {
                                     };
                                 }} 
                                 style={{marginTop:"20px"}}
-                                size="small" columns={this.state.columns} defaultExpandAllRows rowSelection={rowRadioSelection} dataSource={this.props.DepartInfoTree} />
+                                //rowSelection={rowRadioSelection}
+                                size="small" columns={this.state.columns} defaultExpandAllRows  dataSource={this.props.DepartInfoTree} />
 
 
                         </Card>

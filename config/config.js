@@ -117,6 +117,11 @@ export default {
           routes: [
             { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
             {
+              name: 'test',
+              path: '/test',
+              component: './Test/Test',
+            },
+            {
               path: '/autoformmanager',
               name: 'AutoFormManager',
               routes: [
