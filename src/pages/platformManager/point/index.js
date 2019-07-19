@@ -19,7 +19,7 @@ import {
   message,
   DatePicker,
   InputNumber,
-  Tooltip
+  Tooltip,
 } from 'antd';
 import styles from './index.less';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
@@ -389,8 +389,7 @@ export default class MonitorPoint extends Component {
                 this.showModal();
               }}
               searchParams={pointDataWhere}
-              appendHandleRows={row => {
-                return (
+              appendHandleRows={row => (
                   <Fragment>
                     <Tooltip title="编辑">
                       <a
@@ -439,28 +438,12 @@ export default class MonitorPoint extends Component {
                         row['dbo.T_Bas_CommonPoint.DGIMN'],
                         row['dbo.T_Bas_CommonPoint.PointName'],
                         row['dbo.T_Bas_CommonPoint.PointCode'],
-                        row['dbo.T_Bas_CommonPoint.DGIMN'],
-                      );
-                    }}
-                    onCancel={this.cancel}
-                    okText="是"
-                    cancelText="否"
-                  >
-                    <a href="#">删除</a>
-                  </Popconfirm>
-                  <Divider type="vertical" />
-
-                  <Dropdown
-                    overlay={menu(
-                      row['dbo.T_Bas_CommonPoint.DGIMN'],
-                      row['dbo.T_Bas_CommonPoint.PointName'],
-                      row['dbo.T_Bas_CommonPoint.PointCode'],
-                    )}
-                  >
-                    <a>更多</a>
-                  </Dropdown>
-                </Fragment>
-              )}
+                      )}
+                    >
+                      <a>更多</a>
+                    </Dropdown>
+                  </Fragment>
+                )}
             />
           </Card>
           <Modal
