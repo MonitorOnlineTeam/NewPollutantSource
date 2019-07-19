@@ -4,6 +4,7 @@ html,
 body,
 #root {
   height: 100%;
+  overflow-y: hidden;
 }
 
 .colorWeak {
@@ -33,15 +34,65 @@ ol {
   .ant-table {
     width: 100%;
     overflow-x: auto;
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
+
+    &-thead>tr,
+    &-tbody>tr {
+
+      >th,
+      >td {
         white-space: pre;
-        > span {
+
+        >span {
           display: block;
         }
       }
     }
+  }
+}
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #ececec;
+/*滚动条颜色*/
+@scrollbar-thumb-color: #d6d4d4;
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.fixedHeader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9;
+  transition: width 0.2s;
+}
+
+div {
+  &::-webkit-scrollbar-track-piece {
+    -webkit-border-radius: 0;
+  }
+
+  &::-webkit-scrollbar {
+    width: @scrollbar-width;
+    height: @scrollbar-width;
+  }
+
+  &::-webkit-scrollbar-track {
+
+    border-radius: 10px;
+    background-color: @scrollbar-track-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+    outline-offset: -2px;
+    border: 2px solid @scrollbar-thumb-color;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
   }
 }

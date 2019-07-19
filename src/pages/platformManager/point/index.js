@@ -19,8 +19,11 @@ import {
   message,
   DatePicker,
   InputNumber,
+  Tooltip,
 } from 'antd';
 import styles from './index.less';
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -37,7 +40,7 @@ let pointConfigIdEdit = '';
 @connect(({ loading, autoForm, monitorTarget }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
-  autoForm: autoForm,
+  autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
@@ -60,9 +63,9 @@ export default class MonitorPoint extends Component {
   }
 
   componentDidMount() {
-    //1.监控目标ID
-    //2.污染物类型
-    //3.获取监测点数据
+    // 1.监控目标ID
+    // 2.污染物类型
+    // 3.获取监测点数据
     const { dispatch, match } = this.props;
 
     dispatch({
@@ -102,17 +105,17 @@ export default class MonitorPoint extends Component {
 
     switch (type) {
       case 1:
-        //废水
+        // 废水
         pointConfigId = 'WaterOutputNew';
         pointConfigIdEdit = 'WaterOutput';
         break;
       case 2:
-        //废气
+        // 废气
         pointConfigId = 'GasOutputNew';
         pointConfigIdEdit = 'GasOutput';
         break;
       case 3:
-        //噪声
+        // 噪声
         break;
       case 4:
         break;
@@ -145,7 +148,7 @@ export default class MonitorPoint extends Component {
   };
 
   editMonitorInfo = () => {
-    let { key, row } = this.state;
+    const { key, row } = this.state;
     // debugger;
     if (!row || row.length === 0 || row.length > 1) {
       sdlMessage('请选择一行进行操作', 'warning');
@@ -159,7 +162,7 @@ export default class MonitorPoint extends Component {
         params: { configId, targetId, targetName },
       },
     } = this.props;
-    //match.params
+    // match.params
     switch (key) {
       case '1':
         this.props.dispatch(
@@ -177,7 +180,9 @@ export default class MonitorPoint extends Component {
         break;
       case '3':
         this.props.dispatch(
-          routerRedux.push(`/platformconfig/ysymanager/${name}/${code}/${targetId}/${targetName}`),
+          routerRedux.push(
+            `/platformconfig/ysycameramanager/${name}/${code}/${id}/${targetId}/${targetName}`,
+          ),
         );
         break;
       case '4':
@@ -220,14 +225,15 @@ export default class MonitorPoint extends Component {
       isView: false,
     });
   };
+
   onSubmitForm() {
     const { dispatch, match, pointDataWhere, form } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
-        let FormData = {};
-        for (let key in values) {
-          if (values[key] && values[key]['fileList']) {
+        const FormData = {};
+        for (const key in values) {
+          if (values[key] && values[key].fileList) {
             FormData[key] = uid;
           } else {
             FormData[key] = values[key] && values[key].toString();
@@ -239,14 +245,14 @@ export default class MonitorPoint extends Component {
           return false;
         }
         if (this.state.isEdit) {
-          FormData['PointCode'] = this.state.selectedPointCode;
+          FormData.PointCode = this.state.selectedPointCode;
         }
         dispatch({
           type: !this.state.isEdit ? 'monitorTarget/addPoint' : 'monitorTarget/editPoint',
           payload: {
             configId: pointConfigIdEdit,
             targetId: match.params.targetId,
-            FormData: FormData,
+            FormData,
             callback: result => {
               if (result.IsSuccess) {
                 this.setState({
@@ -275,9 +281,9 @@ export default class MonitorPoint extends Component {
       payload: {
         configId: pointConfigIdEdit,
         targetId: match.params.targetId,
-        pollutantType: pollutantType,
-        DGIMN: DGIMN,
-        PointCode: PointCode,
+        pollutantType,
+        DGIMN,
+        PointCode,
         callback: result => {
           if (result.IsSuccess) {
             dispatch({
@@ -292,6 +298,7 @@ export default class MonitorPoint extends Component {
       },
     });
   }
+
   render() {
     const {
       searchConfigItems,
@@ -305,7 +312,7 @@ export default class MonitorPoint extends Component {
       isEdit,
     } = this.props;
     const searchConditions = searchConfigItems[pointConfigId] || [];
-    const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId]['columns'] : [];
+    const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
@@ -339,14 +346,15 @@ export default class MonitorPoint extends Component {
       </Menu>
     );
     return (
-      <MonitorContent
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '平台配置', Url: '' },
-          { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
-          { Name: '维护点信息', Url: '' },
-        ]}
-      >
+      // <MonitorContent
+      //   breadCrumbList={[
+      //     { Name: '首页', Url: '/' },
+      //     { Name: '平台配置', Url: '' },
+      //     { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
+      //     { Name: '维护点信息', Url: '' },
+      //   ]}
+      // >
+      <PageHeaderWrapper>
         <div className={styles.cardTitle}>
           <Card
             title={
@@ -381,46 +389,50 @@ export default class MonitorPoint extends Component {
                 this.showModal();
               }}
               searchParams={pointDataWhere}
-              appendHandleRows={row => {
-                return (
+              appendHandleRows={row => (
                   <Fragment>
-                    <a
-                      onClick={() => {
-                        this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
-                      }}
-                    >
-                      编辑
-                    </a>
+                    <Tooltip title="编辑">
+                      <a
+                        onClick={() => {
+                          this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                        }}
+                      >
+                        <EditIcon />
+                      </a>
+                    </Tooltip>
                     <Divider type="vertical" />
-                    <a
-                      onClick={() => {
-                        this.setState({
-                          visible: true,
-                          isEdit: false,
-                          isView: true,
-                          selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
-                        });
-                      }}
-                    >
-                      详情
-                    </a>
+                    <Tooltip title="详情">
+                      <a
+                        onClick={() => {
+                          this.setState({
+                            visible: true,
+                            isEdit: false,
+                            isView: true,
+                            selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
+                          });
+                        }}
+                      >
+                        <DetailIcon />
+                      </a>
+                    </Tooltip>
                     <Divider type="vertical" />
-                    <Popconfirm
-                      title="确认要删除吗?"
-                      onConfirm={() => {
-                        this.delPoint(
-                          row['dbo.T_Bas_CommonPoint.PointCode'],
-                          row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        );
-                      }}
-                      onCancel={this.cancel}
-                      okText="是"
-                      cancelText="否"
-                    >
-                      <a href="#">删除</a>
-                    </Popconfirm>
+                    <Tooltip title="删除">
+                      <Popconfirm
+                        title="确认要删除吗?"
+                        onConfirm={() => {
+                          this.delPoint(
+                            row['dbo.T_Bas_CommonPoint.PointCode'],
+                            row['dbo.T_Bas_CommonPoint.DGIMN'],
+                          );
+                        }}
+                        onCancel={this.cancel}
+                        okText="是"
+                        cancelText="否"
+                      >
+                        <a href="#"><DelIcon /></a>
+                      </Popconfirm>
+                    </Tooltip>
                     <Divider type="vertical" />
-
                     <Dropdown
                       overlay={menu(
                         row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -431,8 +443,7 @@ export default class MonitorPoint extends Component {
                       <a>更多</a>
                     </Dropdown>
                   </Fragment>
-                );
-              }}
+                )}
             />
           </Card>
           <Modal
@@ -441,27 +452,28 @@ export default class MonitorPoint extends Component {
             onOk={this.onSubmitForm.bind(this)}
             onCancel={this.handleCancel}
             width="60%"
-            destroyOnClose={true}
+            destroyOnClose
           >
             {!this.state.isView ? (
               <SdlForm
                 configId={pointConfigIdEdit}
                 onSubmitForm={this.onSubmitForm.bind(this)}
                 form={this.props.form}
-                noLoad={true}
-                hideBtns={true}
+                noLoad
+                hideBtns
                 isEdit={this.state.isEdit}
                 keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
               />
             ) : (
-              <AutoFormViewItems
-                configId={pointConfigIdEdit}
-                keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-              />
-            )}
+                <AutoFormViewItems
+                  configId={pointConfigIdEdit}
+                  keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                />
+              )}
           </Modal>
         </div>
-      </MonitorContent>
+      {/* </MonitorContent> */}
+      </PageHeaderWrapper>
     );
   }
 }

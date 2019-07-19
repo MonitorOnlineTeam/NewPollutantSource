@@ -117,6 +117,11 @@ export default {
           routes: [
             { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
             {
+              name: 'test',
+              path: '/test',
+              component: './Test/Test',
+            },
+            {
               path: '/autoformmanager',
               name: 'AutoFormManager',
               routes: [
@@ -163,6 +168,17 @@ export default {
                     '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
+                {
+                  name: 'ysyvideo',
+                  path:
+                    '/platformconfig/ysycameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+                  component: './platformManager/ysyvideo/YsyCameraIndex',
+                },
+                {
+                  name: 'ysyshowvideo',
+                  path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
+                  component: './platformManager/ysyvideo/YsyShowVideo',
+                },
               ],
             },
             {
@@ -179,8 +195,7 @@ export default {
                   path: '/report/summary/:reportType',
                   component: './report/summaryReportPage',
                 },
-              ]
-
+              ],
             },
             {
               path: '/rolesmanager',

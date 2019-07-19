@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -120,7 +121,6 @@ class SdlTable extends PureComponent {
 
   _renderHandleButtons() {
     const { opreationButtons, keys, dispatch, btnsAuthority } = this.props;
-    console.log('////=', btnsAuthority)
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
     const { btnEl, configId, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
@@ -343,11 +343,11 @@ class SdlTable extends PureComponent {
                             }
                           })
                           dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
-                        }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
-                        {
-                          this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                        }
+                        }}><EditIcon /></a>
                       </Tooltip>
+                      {
+                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                      }
                     </Fragment>);
                 }
                 if (item.type === "view" && btnsAuthority.includes("view")) {
@@ -362,11 +362,12 @@ class SdlTable extends PureComponent {
                           }
                         })
                         dispatch(routerRedux.push(`/AutoFormManager/AutoFormView/${configId}/${JSON.stringify(postData)}`))
-                      }}><Icon type="profile" style={{ fontSize: 16 }} /></a>
-                      {
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                      }
+                      }}><DetailIcon /></a>
+
                     </Tooltip>
+                    {
+                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                    }
                   </Fragment>);
                 }
                 if (item.type === "del" && btnsAuthority.includes("del")) {
@@ -393,12 +394,12 @@ class SdlTable extends PureComponent {
                         }}
                         okText="是"
                         cancelText="否">
-                        <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                        <a href="#"><DelIcon /></a>
                       </Popconfirm>
-                      {
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                      }
                     </Tooltip>
+                    {
+                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                    }
                   </Fragment>)
                 }
               })

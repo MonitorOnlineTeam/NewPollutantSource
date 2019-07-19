@@ -49,6 +49,7 @@ class DailySummaryPage extends PureComponent {
     // this.props.dispatch({
     //   type: "report/getDailySummaryDataList",
     //   payload: {
+    //     type: "daily",
     //     "PollutantSourceType": "2",
     //     "Regions": "130000000,130200000,130201000",
     //     "ReportTime": "2019-06-29"
