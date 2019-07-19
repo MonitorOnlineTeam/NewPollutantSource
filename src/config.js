@@ -18,17 +18,19 @@ module.exports = {
   apiPrefix: '/mock',
   webSocketPushURL: '172.16.12.152:40005',
   imgaddress: 'http://172.16.12.152:8066/api/upload/',
-  //年度检测报告路径
+  // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
-  //使用文档路径
+  // 使用文档路径
   documentationaddress: 'http://172.16.12.152:8066/api/upload/documentation/',
-  //实时视频地址
+  // 实时视频地址
   realtimevideourl: 'http://172.16.12.152:8066/Video/MonitorLinkCamera/RealtimeCameraReact',
-  //历史视频地址
+  // 历史视频地址
   hisvideourl: 'http://172.16.12.152:8066/Video/MonitorLinkCamera/HistoryCameraReact',
-  //设备运转率标准%
+  // 萤石云视频地址
+  ysyvideourl: 'http://localhost:8082/Web/YsyVideo.html',
+  // 设备运转率标准%
   RunningRate: 90,
-  //传输有效率标准%
+  // 传输有效率标准%
   TransmissionEffectiveRate: 90,
   mainpollutantInfo: [
     {
@@ -84,7 +86,7 @@ module.exports = {
       pollutantCode: 1,
       zspollutant: false,
       unit: 'mg/L',
-      //是否有传输有效率
+      // 是否有传输有效率
       csyxl: false,
       pollutantInfo: [
         //     {
@@ -108,7 +110,7 @@ module.exports = {
       pollutantCode: 10,
       zspollutant: false,
       unit: 'mg/m³',
-      //是否有传输有效率
+      // 是否有传输有效率
       csyxl: false,
       pollutantInfo: [
         {
@@ -122,7 +124,7 @@ module.exports = {
       pollutantCode: 12,
       zspollutant: false,
       unit: 'mg/m³',
-      //是否有传输有效率
+      // 是否有传输有效率
       csyxl: false,
       pollutantInfo: [
         {
@@ -136,7 +138,7 @@ module.exports = {
       pollutantCode: 2,
       zspollutant: true,
       unit: 'mg/m³',
-      //是否有传输有效率
+      // 是否有传输有效率
       csyxl: true,
       pollutantInfo: [
         {

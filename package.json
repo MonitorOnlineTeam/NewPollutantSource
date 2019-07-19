@@ -98,7 +98,7 @@
     "@types/react": "^16.8.19",
     "@types/react-document-title": "^2.0.3",
     "@types/react-dom": "^16.8.4",
-    "@umijs/fabric": "^1.1.0",
+    "@umijs/fabric": "^1.1.9",
     "chalk": "^2.4.2",
     "check-prettier": "^1.0.3",
     "cross-env": "^5.2.0",
