@@ -133,7 +133,8 @@ export default {
                 {
                   name: 'add',
                   path: '/autoformmanager/autoformadd/:configId',
-                  component: './AutoFormManager/AutoFormAdd',
+                  redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  // component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
@@ -151,6 +152,20 @@ export default {
               path: '/platformconfig',
               name: 'platformconfig',
               routes: [
+                {
+                  path: '/platformconfig/autoformmanager',
+                  redirect: '/platformconfig/autoformmanager/:configId',
+                },
+                {
+                  name: 'autoformmanager',
+                  path: '/platformconfig/autoformmanager/:configId',
+                  component: './AutoFormManager',
+                },
+                {
+                  name: 'autoformmanager',
+                  path: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
+                },
                 {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId',
@@ -208,6 +223,10 @@ export default {
                   name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
+                    {
+                      path: '/rolesmanager/user',
+                      redirect: '/rolesmanager/user/userinfoindex/UserInfo',
+                    },
                     {
                       name: 'index',
                       path: '/rolesmanager/user/userinfoindex/:configId',
