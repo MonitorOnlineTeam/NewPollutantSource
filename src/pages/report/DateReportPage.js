@@ -54,7 +54,7 @@ class SiteDailyPage extends PureComponent {
     };
     this.SELF = {
       formLayout: {
-        labelCol: { span: 6 },
+        labelCol: { span: 5 },
         wrapperCol: { span: 18 },
       },
       actionType: props.match.params.reportType,
@@ -299,7 +299,7 @@ class SiteDailyPage extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8} sm={24}>
+              <Col md={4} sm={24}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     initialValue: defaultSearchForm.PollutantSourceType,
@@ -316,7 +316,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8} sm={24}>
+              <Col md={5} sm={24}>
                 <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     initialValue: defaultRegionCode,
@@ -348,7 +348,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8} sm={24}>
+              <Col md={5} sm={24}>
                 <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
                   {getFieldDecorator("EntCode", {
                     initialValue: enterpriseList.length ? enterpriseList[0]["dbo.T_Bas_Enterprise.EntCode"] : undefined,
@@ -369,9 +369,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-            </Row>
-            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8} sm={24}>
+              <Col md={5} sm={24}>
                 <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                   {getFieldDecorator("ReportTime", {
                     initialValue: defaultSearchForm.ReportTime,
@@ -384,12 +382,10 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8}>
+              <Col md={5}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  {/* {getFieldDecorator("", {})( */}
                   <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
                   <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
-                  {/* )} */}
                 </FormItem>
               </Col>
             </Row>

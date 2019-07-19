@@ -385,9 +385,11 @@ class dataList extends PureComponent {
         //     />
         //   );
         // }
+        let scrollXWidth = columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+
         return (
             <PageHeaderWrapper>
-                <div style={{ width: '100%', height: 'calc(100vh - 65px - 100px - 40px)', marginTop: 20 }} className={styles.standardList}>
+                <div style={{ width: '100%', height: 'calc(100vh - 65px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
                     <Card
                         bordered={false}
                         className={styles.cardextra}
@@ -438,7 +440,7 @@ class dataList extends PureComponent {
                             dataSource={this.props.data}
                             pagination={false}
                             loading={this.props.isloading}
-                            scroll={{ x: gwidth }}
+                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 170px)'}}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {
                         //   if (index === 0) {

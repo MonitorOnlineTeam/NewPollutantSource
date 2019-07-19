@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -122,80 +122,102 @@ export default {
               component: './Test/Test',
             },
             {
-              path: '/autoformmanager',
+              path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
+                { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
                 {
                   name: 'index',
-                  path: '/autoformmanager/:configId',
+                  path: '/:parentcode/autoformmanager/:configId/AutoFormList',
                   component: './AutoFormManager',
                 },
                 {
                   name: 'add',
-                  path: '/autoformmanager/autoformadd/:configId',
-                  redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
-                  // component: './AutoFormManager/AutoFormAdd',
+                  path: '/:parentcode/autoformmanager/:configId/autoformadd',
+                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
-                  path: '/autoformmanager/autoformedit/:configId/:keysParams/:uid',
+                  path: '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
                   component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
-                  path: '/autoformmanager/autoformview/:configId/:keysParams',
+                  path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
             },
-            {
-              path: '/platformconfig',
-              name: 'platformconfig',
-              routes: [
-                {
-                  path: '/platformconfig/autoformmanager',
-                  redirect: '/platformconfig/autoformmanager/:configId',
-                },
-                {
-                  name: 'autoformmanager',
-                  path: '/platformconfig/autoformmanager/:configId',
-                  component: './AutoFormManager',
-                },
-                {
-                  name: 'autoformmanager',
-                  path: '/platformconfig/autoformmanager/:configId/autoformadd',
-                  component: './AutoFormManager/AutoFormAdd',
-                },
-                {
-                  name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId',
-                  component: './platformManager/enterprise',
-                },
-                {
-                  name: 'monitorpoint',
-                  path:
-                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
-                  component: './platformManager/point',
-                },
-                {
-                  name: 'usestandardlibrary',
-                  path:
-                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
-                  component: './platformManager/point/components/setStandard',
-                },
-                {
-                  name: 'ysyvideo',
-                  path:
-                    '/platformconfig/ysycameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
-                  component: './platformManager/ysyvideo/YsyCameraIndex',
-                },
-                {
-                  name: 'ysyshowvideo',
-                  path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
-                  component: './platformManager/ysyvideo/YsyShowVideo',
-                },
-              ],
-            },
+            // {
+            //   path: '/platformconfig',
+            //   name: 'platformconfig',
+            //   routes: [
+            //     {
+            //       path: '/platformconfig/autoformmanager',
+            //       redirect: '/platformconfig/autoformmanager/:configId',
+            //     },
+            //     {
+            //       name: 'autoformmanager',
+            //       path: '/platformconfig/autoformmanager/:configId',
+            //       component: './AutoFormManager',
+            //     },
+            //     {
+            //       name: 'autoformmanager',
+            //       path: '/platformconfig/autoformmanager/:configId/autoformadd',
+            //       component: './AutoFormManager/AutoFormAdd',
+            //     },
+            //     {
+            //       name: 'monitortarget',
+            //       path: '/platformconfig/monitortarget',
+            //       // component: './platformManager/enterprise',
+            //       routes: [
+            //         {
+            //           path: '/platformconfig/monitortarget',
+            //           redirect: '/platformconfig/monitortarget/:configId',
+            //         },
+            //         {
+            //           name: 'index',
+            //           path: '/platformconfig/monitortarget/:configId',
+            //           component: './platformManager/enterprise',
+            //         },
+            //         {
+            //           name: 'add',
+            //           path: '/platformconfig/monitortarget/:configId/add',
+            //           component: './AutoFormManager/AutoFormAdd',
+            //         },
+            //         // {
+            //         //   name: 'edit',
+            //         //   path: '/platformconfig/monitortarget/:configId/edit',
+            //         //   component: './AutoFormManager/AutoFormEdit',
+            //         // },
+            //       ]
+            //     },
+            //     // {
+            //     //   name: 'monitorpoint',
+            //     //   path:
+            //     //     '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+            //     //   component: './platformManager/point',
+            //     // },
+            //     // {
+            //     //   name: 'usestandardlibrary',
+            //     //   path:
+            //     //     '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+            //     //   component: './platformManager/point/components/setStandard',
+            //     // },
+            //     {
+            //       name: 'ysyvideo',
+            //       path:
+            //         '/platformconfig/ysycameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+            //       component: './platformManager/ysyvideo/YsyCameraIndex',
+            //     },
+            //     {
+            //       name: 'ysyshowvideo',
+            //       path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
+            //       component: './platformManager/ysyvideo/YsyShowVideo',
+            //     },
+            //   ],
+            // },
             {
               path: '/report',
               name: 'report',
