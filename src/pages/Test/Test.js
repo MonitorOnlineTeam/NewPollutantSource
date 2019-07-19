@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Select, Input, Button } from 'antd';
 
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
+import NavigationTree from '../../components/NavigationTree'
 
 @Form.create()
 class Test extends Component {
@@ -39,7 +40,9 @@ class Test extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
+      <div>
+        <NavigationTree />
+      {/* <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
         <Form.Item label="Note">
           {getFieldDecorator('note', {
             // rules: [{ required: true, message: 'Please input your note!' }],
@@ -53,6 +56,7 @@ class Test extends Component {
             // searchEnterprise={true}
             searchRegion={true}
             onChange={(val)=>{
+              console.log("asdasda",val)
               this.props.form.setFieldsValue({gender: val})
             }}/>
           )}
@@ -62,7 +66,8 @@ class Test extends Component {
             Submit
           </Button>
         </Form.Item>
-      </Form>
+      </Form> */}
+      </div>
     );
   }
 }
