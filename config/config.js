@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -133,7 +133,8 @@ export default {
                 {
                   name: 'add',
                   path: '/autoformmanager/autoformadd/:configId',
-                  component: './AutoFormManager/AutoFormAdd',
+                  redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  // component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
@@ -151,6 +152,20 @@ export default {
               path: '/platformconfig',
               name: 'platformconfig',
               routes: [
+                {
+                  path: '/platformconfig/autoformmanager',
+                  redirect: '/platformconfig/autoformmanager/:configId',
+                },
+                {
+                  name: 'autoformmanager',
+                  path: '/platformconfig/autoformmanager/:configId',
+                  component: './AutoFormManager',
+                },
+                {
+                  name: 'autoformmanager',
+                  path: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
+                },
                 {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId',
@@ -210,7 +225,7 @@ export default {
                   routes: [
                     {
                       path: '/rolesmanager/user',
-                      redirect: '/rolesmanager/user/userinfoindex/UserInfo'
+                      redirect: '/rolesmanager/user/userinfoindex/UserInfo',
                     },
                     {
                       name: 'index',
