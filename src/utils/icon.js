@@ -1,4 +1,5 @@
 import { Icon } from 'antd';
+const scriptUrl = "//at.alicdn.com/t/font_1298443_nwlbb2f4vuf.js";
 const style = {
   fontSize: 16
 }
@@ -11,7 +12,7 @@ export const DelIcon = () => <Icon type="delete" style={{ ...style }} />
 
 // 监测点 - 维护点信息
 export const PointIconConfig = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1298443_1yovucx4if6.js', // 在 iconfont.cn 上生成
-});
+  scriptUrl
+})
 
 export const PointIcon = () => <PointIconConfig type="icon-jiancedianguanli" style={{ ...style }} />
