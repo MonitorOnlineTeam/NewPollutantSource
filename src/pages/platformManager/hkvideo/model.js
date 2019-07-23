@@ -1,31 +1,34 @@
 import Model from '@/utils/model';
-
 import {
-  getysyList,
+  hkvideourl,
   querypollutantlist,
   queryhistorydatalist,
   queryhistorydatalistbyrealtime,
-  AddCameraMonitor,
-  IsTrueSerialNumber,
-  DeleteCamera,
+  updateVideoInfos,
+  addVideoInfo,
+  deleteVideoInfo,
 } from './services';
 import config from '@/config';
-import { formatPollutantPopover } from '@/utils/utils';
-import { message } from 'antd';
+import {
+  formatPollutantPopover,
+} from '@/utils/utils';
+import {
+  message,
+} from 'antd';
 import * as services from '../../../services/autoformapi';
 
 export default Model.extend({
-  namespace: 'video',
+  namespace: 'hkvideo',
   state: {
-    ysyvideoListParameters: {
-      DGIMN: null,
-      realtimevideofullurl: null,
-      hisvideofullurl: null,
-      requstresult: null,
-      list: [],
-      visible: false,
-      pointName: '',
-    },
+   // 视频参数
+   videoListParameters: {
+     DGIMN: null,
+     realtimevideofullurl: null,
+     requstresult: null,
+     list: [],
+     visible: false,
+     pointName: '',
+   },
     hisrealdataList: {
       hisrealdata: [],
       total: 0,
@@ -37,41 +40,50 @@ export default Model.extend({
     hiscolumns: [],
   },
   effects: {
-    /** 萤石云视频链接 */
-    *ysyvideourl({ payload }, { call, update, select }) {
-      const { ysyvideoListParameters } = yield select(state => state.video);
+    /** 海康云视频链接 */
+    * hkvideourl({
+      payload,
+    }, {
+      call,
+      update,
+      select,
+    }) {
+      const {
+        videoListParameters,
+      } = yield select(state => state.hkvideo);
       const body = {
-        VedioCameraID: payload.VedioCameraID,
-      };
-      const result = yield call(getysyList, body);
+        DGIMN: payload.DGIMN,
+      }
+      const result = yield call(hkvideourl, body);
       let temprealurl = 'nodata';
-      if (result.requstresult === '1') {
-        const obj = result.data[0];
-        if (obj) {
+      if (result.IsSuccess && result.Datas.length > 0) {
+        const obj = result.Datas[0];
+        if (obj && obj.IP) {
           if (payload.type === 1) {
-            temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=1`;
+          temprealurl = `${config.realtimevideourl}?ip=${obj.IP}&port=${obj.Device_Port}&userName=${obj.User_Name}&userPwd=${obj.User_Pwd}&cameraNo=${obj.VedioCamera_No}`;
           } else {
-            temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=2`;
+          temprealurl = `${config.hisvideourl}?ip=${obj.IP}&port=${obj.Device_Port}&userName=${obj.User_Name}&userPwd=${obj.User_Pwd}&cameraNo=${obj.VedioCamera_No}`;
           }
         }
         yield update({
-          ysyvideoListParameters: {
-            ...ysyvideoListParameters,
+          videoListParameters: {
+            ...videoListParameters,
             ...{
               requstresult: result.requstresult,
-              list: result.data,
+              list: result.Datas,
               realtimevideofullurl: temprealurl,
             },
           },
         });
       } else {
         yield update({
-          ysyvideoListParameters: {
-            ...ysyvideoListParameters,
+          videoListParameters: {
+            ...videoListParameters,
             ...{
               requstresult: result.requstresult,
               list: [],
               realtimevideofullurl: temprealurl,
+              hisvideofullurl: temphisurl,
             },
           },
         });
@@ -79,7 +91,12 @@ export default Model.extend({
     },
 
     /** 获取实时视频的污染物表头 */
-    *querypollutantlist({ payload }, { call, update }) {
+    * querypollutantlist({
+      payload,
+    }, {
+      call,
+      update,
+    }) {
       const body = {
         DGIMNs: payload.dgimn,
       };
@@ -106,7 +123,12 @@ export default Model.extend({
       });
     },
     /** 获取实时视频的数据 */
-    *queryhistorydatalist({ payload }, { call, update }) {
+    * queryhistorydatalist({
+      payload,
+    }, {
+      call,
+      update,
+    }) {
       const res = yield call(queryhistorydatalist, {
         ...payload,
       });
@@ -122,7 +144,12 @@ export default Model.extend({
       });
     },
     /** 获取历史视频的污染物 */
-    *querypollutantlisthis({ payload }, { call, update }) {
+    * querypollutantlisthis({
+      payload,
+    }, {
+      call,
+      update,
+    }) {
       const body = {
         DGIMNs: payload.dgimn,
       };
@@ -157,11 +184,19 @@ export default Model.extend({
       });
     },
     /** 获取历史视频数据 */
-    *queryhistorydatalisthis({ payload }, { call, update, select }) {
+    * queryhistorydatalisthis({
+      payload,
+    }, {
+      call,
+      update,
+      select,
+    }) {
       const res = yield call(queryhistorydatalistbyrealtime, {
         ...payload,
       });
-      const { hisrealdataList } = yield select(state => state.video);
+      const {
+        hisrealdataList,
+      } = yield select(state => state.hkvideo);
       const realdata = [];
       if (res.data.length > 0) {
         const datas = res.data;
@@ -185,76 +220,30 @@ export default Model.extend({
         },
       });
     },
-    /** 添加摄像头 */
-    *AddDevice({ payload }, { call, put }) {
-      const result = yield call(services.postAutoFromDataAdd, {
-        ...payload,
-        FormData: JSON.stringify(payload.FormData),
-      });
-      if (result.IsSuccess) {
-        yield put({
-          type: 'AddCameraMonitor',
-          payload: {
-            PointCode: payload.PointCode,
-            VedioCameraID: result.Datas,
-          },
-        });
-      } else {
-        message.error(result.Message);
-      }
-      payload.callback(result);
-    },
-    /** 添加摄像头与排口关系表 */
-    *AddCameraMonitor({ payload }, { call, put }) {
-      const result = yield call(AddCameraMonitor, {
-        ...payload,
-      });
-      const pointDataWhere = [
-        {
-          Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
-          Value: payload.PointCode,
-          Where: '$=',
+    /** 更新视频参数 */
+    * updateVideoInfos({ payload }, { call, put, update }) {
+            const result = yield call(updateVideoInfos, { ...payload });
+            yield update({
+                requstresult: result.requstresult,
+                reason: result.reason,
+            });
         },
-      ];
-
-      if (result.IsSuccess) {
-        message.success('添加成功！');
-        yield put({
-          type: 'autoForm/getAutoFormData',
-          payload: {
-            configId: 'CameraMonitor',
-            searchParams: pointDataWhere,
-          },
-        });
-      }
-    },
-    /** 判断序列号是否有效 */
-    *IsTrueSerialNumber({ payload }, { call }) {
-      const result = yield call(IsTrueSerialNumber, {
-        ...payload,
-      });
-      payload.callback(result);
-    },
-    /** 删除摄像头 */
-    * DeleteCamera({ payload }, { call, put }) {
-        const result = yield call(DeleteCamera, { ...payload });
-        const pointDataWhere = [
-        {
-          Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
-          Value: payload.PointCode,
-          Where: '$=',
+        /** 添加视频参数 */
+        * addVideoInfos({ payload }, { call, put, update }) {
+            const result = yield call(addVideoInfo, { ...payload });
+            yield update({
+                requstresult: result.requstresult,
+                reason: result.reason,
+            });
         },
-      ];
-        if (result.Datas) {
-          message.success('删除成功！');
-          yield put({
-          type: 'autoForm/getAutoFormData',
-          payload: {
-            configId: 'CameraMonitor',
-            searchParams: pointDataWhere,
-          },
-        });
-        }
-      },
+        /** 删除视频参数 */
+        * deleteVideoInfo({ payload }, { call, put, update }) {
+            const result = yield call(deleteVideoInfo, { ...payload });
+            yield update({
+                requstresult: result.requstresult,
+                editUser: result.data[0],
+            });
+            payload.callback(result.requstresult);
+        },
   },
 });

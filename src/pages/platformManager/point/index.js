@@ -33,6 +33,7 @@ import { sdlMessage } from '@/utils/utils';
 import PollutantType from '@/components/AutoForm/PollutantType';
 import SdlForm from '@/components/AutoForm/SdlForm';
 import AutoFormViewItems from '@/components/AutoForm/AutoFormViewItems';
+import config from '@/config';
 
 let pointConfigId = '';
 let pointConfigIdEdit = '';
@@ -181,7 +182,7 @@ export default class MonitorPoint extends Component {
       case '3':
         this.props.dispatch(
           routerRedux.push(
-            `/platformconfig/ysycameramanager/${name}/${code}/${id}/${targetId}/${targetName}`,
+            `${config.VideoServer === 0 ? `/platformconfig/hkcameramanager/${name}/${code}/${id}/${targetId}/${targetName}` : `/platformconfig/ysycameramanager/${name}/${code}/${id}/${targetId}/${targetName}`}`,
           ),
         );
         break;

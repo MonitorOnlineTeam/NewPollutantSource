@@ -159,7 +159,7 @@ class YsyShowVideo extends Component {
         frame.postMessage(obj, config.ysyvideourl);
 
         this.child.startPlay(
-          moment(this.state.stoptime, 'YYYY-MM-DD HH:mm:ss'),
+          moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss'),
           moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss'),
         );
       }
@@ -293,6 +293,7 @@ class YsyShowVideo extends Component {
                 frameBorder="0"
                 width="100%"
                 height="100%"
+                scrolling="no"
               />
             </Col>
             <Col

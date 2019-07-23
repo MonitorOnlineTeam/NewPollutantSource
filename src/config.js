@@ -23,11 +23,13 @@ module.exports = {
   // 使用文档路径
   documentationaddress: 'http://172.16.12.152:8066/api/upload/documentation/',
   // 实时视频地址
-  realtimevideourl: 'http://172.16.12.152:8066/Video/MonitorLinkCamera/RealtimeCameraReact',
+  realtimevideourl: 'http://localhost:8082/Web/HkVideo/RealtimeCamera.html',
   // 历史视频地址
-  hisvideourl: 'http://172.16.12.152:8066/Video/MonitorLinkCamera/HistoryCameraReact',
+  hisvideourl: 'http://localhost:8082/Web/HkVideo/HistoryCamera.html',
   // 萤石云视频地址
-  ysyvideourl: 'http://localhost:8082/Web/YsyVideo.html',
+  ysyvideourl: 'http://localhost:8082/Web/YsyVideo/YsyVideo.html',
+  // 视频选择萤石云或海康威视(0：海康，1：萤石云)
+  VideoServer: 0,
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%
