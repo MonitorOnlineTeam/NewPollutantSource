@@ -1,78 +1,9 @@
 import router from 'umi/router';
-import { queryCurrent, query as queryUsers, getMenuData,getUserInfo } from '@/services/user';
+import { queryCurrent, query as queryUsers, getMenuData, getUserInfo, editpersonaluser } from '@/services/user';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl } from '@/utils/utils';
-
-// const UserModel = {
-//   namespace: 'user',
-//   state: {
-//     currentUser: {},
-//   },
-//   effects: {
-//     *fetch(_, { call, put }) {
-//       const response = yield call(queryUsers);
-//       yield put({
-//         type: 'save',
-//         payload: response,
-//       });
-//     },
-
-//     *fetchCurrent(_, { call, put }) {
-//       // const response = yield call(queryCurrent);
-//       // yield put({
-//       //   type: 'saveCurrentUser',
-//       //   payload: response,
-//       // });
-//       ;
-//       let currentUser = Cookie.get('token');
-//       if (currentUser) {
-//         const user = JSON.parse(currentUser);
-//         const response = yield call(getMenuData);
-//         ;
-//         // if (responseMenu.requstresult === '1') {
-//         //   const cMenu = yield call(formatter, responseMenu.data);
-//         //   yield put({
-//         //     type: 'saveCurrentUser',
-//         //     payload: {
-//         //       currentUser: user,
-//         //       currentMenu: cMenu
-//         //     },
-//         //   });
-//         // } else {
-//         //   message.info('菜单获取失败，请联系系统管理员！');
-//         //   yield put({
-//         //     type: 'login/logout',
-//         //   });
-//         // }
-//       }
-//     },
-//   },
-//   reducers: {
-//     saveCurrentUser(state, action) {
-//       return { ...state, currentUser: action.payload || {} };
-//     },
-
-//     changeNotifyCount(
-//       state = {
-//         currentUser: {},
-//       },
-//       action,
-//     ) {
-//       return {
-//         ...state,
-//         currentUser: {
-//           ...state.currentUser,
-//           notifyCount: action.payload.totalCount,
-//           unreadCount: action.payload.unreadCount,
-//         },
-//       };
-//     },
-//   },
-// };
-// export default UserModel;
-
-
+import Model from '@/utils/model';
 
 function formatter(data, parentPath = '') {
   if (data && data.length > 0) {
@@ -94,7 +25,7 @@ function formatter(data, parentPath = '') {
   return [];
 }
 
-export default {
+export default Model.extend({
   namespace: 'user',
 
   state: {
@@ -102,7 +33,8 @@ export default {
     loading: false,
     currentUser: {},
     changepwdRes: '',
-    currentMenu: []
+    currentMenu: [],
+    editUser: null
   },
 
   effects: {
@@ -129,6 +61,8 @@ export default {
               currentMenu: cMenu
             },
           });
+        } else {
+          message.info('菜单获取失败，请联系系统管理员！');
         }
         // if (responseMenu.requstresult === '1') {
         //     const cMenu = yield call(formatter, responseMenu.data);
@@ -149,19 +83,37 @@ export default {
     },
     /*获取单个用户实体**/
     * getUserInfo({
-        payload
+      payload
     }, {
-        call,
-        update,
+      call,
+      update,
     }) {
-        const result = yield call(getUserInfo, {
-            ...payload
-        });
-        yield update({
-            requstresult: result.requstresult,
-            editUser: result.data[0]
-        });
-        payload.callback();
+      const result = yield call(getUserInfo, {
+        ...payload
+      });
+      yield update({
+        requstresult: result.requstresult,
+        editUser: result.data[0]
+      });
+      payload.callback();
+    },
+    /*个人设置编辑信息**/
+    * editpersonaluser({
+      payload
+    }, {
+      call,
+      update,
+    }) {
+      debugger
+      const result = yield call(editpersonaluser, {
+        ...payload
+      });
+      debugger
+      yield update({
+        requstresult: result.requstresult,
+        reason: result.reason
+      });
+      payload.callback(result.requstresult === '1');
     }
 
   },
@@ -184,4 +136,4 @@ export default {
       };
     }
   },
-};
+});

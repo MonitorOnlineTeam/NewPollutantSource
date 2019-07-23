@@ -38,7 +38,6 @@ class DailySummaryPage extends PureComponent {
         EntCode: "",
         ReportTime: moment()
       },
-
     }
 
     this.export = this.export.bind(this);
@@ -112,7 +111,7 @@ class DailySummaryPage extends PureComponent {
     if (this.props.dailySummaryDataList !== nextProps.dailySummaryDataList) {
       const _columns = [
         {
-          title: "接口名称",
+          title: "排口名称",
           dataIndex: 'PointName',
         },
         ...nextProps.pollutantList

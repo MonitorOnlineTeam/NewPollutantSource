@@ -123,7 +123,7 @@ class AutoFormAdd extends Component {
       <Fragment>
         {
           breadcrumb ?
-            <PageHeaderWrapper>
+            <PageHeaderWrapper title="添加">
               {/* // <MonitorContent breadCrumbList={
             //   [
             //     { Name: '首页', Url: '/' },

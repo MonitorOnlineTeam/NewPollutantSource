@@ -125,9 +125,12 @@ export default class MonitorTarget extends Component {
                                     key, row
                                 })
                             }}
-                            onAdd={()=>{
-                                dispatch(routerRedux.push(`/platformconfig/monitortarget/add/${configId}`));  
-                            }}
+                            // onAdd={()=>{
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            // }}
+                            // onEdit={()=>{
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            // }}
                             appendHandleRows={row => {
                                 return <Fragment>
                                     <Divider type="vertical" />

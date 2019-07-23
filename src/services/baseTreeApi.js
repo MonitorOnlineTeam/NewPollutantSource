@@ -1,0 +1,24 @@
+
+import { async } from 'q';
+import { post, get } from '@/utils/request';
+
+// 获取企业+排口
+export async function getentandpoint(params) {
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params);
+    return result === null ? {
+        data: null
+    } : result;
+}
+/**
+ * 【智能监控】获取污染物系统污染物
+ * @params {}
+ */
+export async function getPollutantTypeList(params) {
+    const result = await post(
+        '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+        params,
+        null,
+    );
+    return result 
+}
+

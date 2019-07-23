@@ -46,7 +46,7 @@ export function getAuthHeader(ssoToken) {
 }
 
 const checkStatus = response => {
-  if ((response.status >= 200 && response.status < 300) || response.status === 500) {
+  if ((response.status >= 200 && response.status < 300)) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;

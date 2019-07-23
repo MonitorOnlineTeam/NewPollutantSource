@@ -20,8 +20,9 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import MonitorContent from '../../components/MonitorContent/index';
+// import MonitorContent from '../../components/MonitorContent/index';
 import AutoFormViewItems from './AutoFormViewItems'
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 @connect()
 // @Form.create()
@@ -41,10 +42,10 @@ class AutoFormView extends Component {
     return <AutoFormViewItems
       configId={configId}
       keysParams={keysParams}
-      // appendDataSource={[
-      //   { label: "追加", value: "text" },
-      //   { label: "追加2", value: "text2" }
-      // ]}
+    // appendDataSource={[
+    //   { label: "追加", value: "text" },
+    //   { label: "追加2", value: "text2" }
+    // ]}
     />
   }
 
@@ -54,15 +55,7 @@ class AutoFormView extends Component {
     return (
       <Fragment>
         {
-          breadcrumb ? <MonitorContent breadCrumbList={
-            [
-              { Name: '首页', Url: '/' },
-              { Name: '系统管理', Url: '' },
-              { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
-              { Name: '详情', Url: '' }
-            ]
-          }
-          >
+          breadcrumb ? <PageHeaderWrapper title="详情">
             <Card bordered={false} title="详情" extra={
               <Button
                 style={{ float: "right", marginRight: 10 }}
@@ -74,7 +67,7 @@ class AutoFormView extends Component {
             }>
               {this.renderContent()}
             </Card>
-          </MonitorContent> : <Fragment>
+          </PageHeaderWrapper> : <Fragment>
               <Card>
                 {this.renderContent()}
               </Card>
