@@ -179,6 +179,16 @@ export default {
                   path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
                   component: './platformManager/ysyvideo/YsyShowVideo',
                 },
+                {
+                  name: 'hkvideo',
+                  path: '/platformconfig/hkcameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+                  component: './platformManager/hkvideo/hkCameraIndex',
+                },
+                {
+                  name: 'hkshowvideo',
+                  path: '/platformconfig/hkshowvideo/:pointcode/',
+                  component: './platformManager/hkvideo/HkShowVideo',
+                },
               ],
             },
             {

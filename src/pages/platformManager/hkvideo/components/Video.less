@@ -1,0 +1,51 @@
+.gutterleft {
+  padding: 10px 0;
+}
+
+.videoImage {
+  width: 800px;
+  height: 450px;
+}
+
+.videoComponent {
+  min-width: 700px;
+  max-height: 450px;
+  width: 60%;
+  height: 100%;
+  background: black;
+  margin: auto;
+}
+
+.dataTable {
+  :global {
+    .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+      overflow: hidden;
+      width: 99.7%;
+    }
+
+    .ant-table-body {
+      // min-height: calc(100vh - 58px);
+      height: calc(100vh - 25px);
+      overflow: auto;
+      // overflow-y: scroll;
+    }
+
+    .ant-table-placeholder {
+      position: absolute;
+      top: 50px;
+      width: 100%;
+    }
+  }
+}
+
+.realYunStyle {
+  min-width: 300px;
+  margin-bottom: 24;
+  overflow-x: auto;
+}
+
+.hisYunStyle {
+  min-width: 350px;
+  margin-bottom: 24;
+  overflow-x: auto;
+}
