@@ -683,7 +683,7 @@ class RoleIndex extends Component {
                                                         // showSearch
                                                         style={{ width: 300 }}
                                                         //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
-                                                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                                        dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
                                                         placeholder="请选择父节点"
                                                         allowClear
                                                         treeDefaultExpandAll

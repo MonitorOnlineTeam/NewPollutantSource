@@ -122,27 +122,29 @@ export default {
               component: './Test/Test',
             },
             {
-              path: '/autoformmanager',
+              path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
+                // { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
                 {
                   name: 'index',
-                  path: '/autoformmanager/:configId',
+                  path: '/:parentcode/autoformmanager/:configId',
                   component: './AutoFormManager',
                 },
                 {
                   name: 'add',
-                  path: '/autoformmanager/autoformadd/:configId',
+                  path: '/:parentcode/autoformmanager/:configId/autoformadd',
+                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
                   component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
-                  path: '/autoformmanager/autoformedit/:configId/:keysParams/:uid',
+                  path: '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
                   component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
-                  path: '/autoformmanager/autoformview/:configId/:keysParams',
+                  path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
@@ -219,6 +221,10 @@ export default {
                   name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
+                    {
+                      path: '/rolesmanager/user',
+                      redirect: '/rolesmanager/user/userinfoindex/UserInfo',
+                    },
                     {
                       name: 'index',
                       path: '/rolesmanager/user/userinfoindex/:configId',
@@ -360,7 +366,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.13:9090/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

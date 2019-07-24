@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Form, Select, Input, Button } from 'antd';
-
+import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import NavigationTree from '../../components/NavigationTree'
 
 @Form.create()
+@connect(({ navigationtree, loading }) => ({
+  selectTreeKeys: navigationtree.selectTreeKeys,
+}))
 class Test extends Component {
   // constructor(props, context) {
   //   super(props, context);
@@ -41,7 +44,10 @@ class Test extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <NavigationTree />
+        <NavigationTree choice={false} onItemClick={(value)=>{
+          console.log("test=",value)
+          console.log("test1=",this.props.selectTreeKeys)
+        }} />
       {/* <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
         <Form.Item label="Note">
           {getFieldDecorator('note', {

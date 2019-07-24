@@ -8,11 +8,13 @@ import {
   Form,
   message,
   Popconfirm,
+  Icon,
+  Button,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
-import MonitorContent from '@/components/MonitorContent/index';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '@/components/AutoForm/Table';
 import SearchWrapper from '@/components/AutoForm/SearchWrapper';
 import SdlForm from '@/components/AutoForm/SdlForm';
@@ -123,6 +125,11 @@ class YsyCameraIndex extends Component {
         Value: match.params.Pointcode,
         Where: '$=',
       },
+      {
+        Key: '[dbo]__[T_Bas_CameraMonitor]__MonitorType',
+        Value: 1,
+        Where: '$=',
+      },
     ];
     if (loading) {
       return (
@@ -139,17 +146,19 @@ class YsyCameraIndex extends Component {
       );
     }
     return (
-      <MonitorContent
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '系统管理', Url: '' },
-          { Name: '企业管理', Url: '' },
-          { Name: '排口管理', Url: '' },
-          { Name: '视频管理', Url: '' },
-        ]}
-      >
+      <PageHeaderWrapper>
         <div className={styles.cardTitle}>
-          <Card title={`${match.params.Pointname}-视频管理`}>
+          <Card title={<span>{match.params.Pointname}<Button
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    history.go(-1);
+                  }}
+                  type="link"
+                  size="small"
+                >
+                  <Icon type="rollback" />
+                  返回上级
+                </Button></span>}>
             <SearchWrapper configId="VideoCamera" />
             <SdlTable
               style={{ marginTop: 10 }}
@@ -216,7 +225,7 @@ class YsyCameraIndex extends Component {
             <SdlForm configId="VideoCamera" form={this.props.form} noLoad hideBtns />
           </Modal>
         </div>
-      </MonitorContent>
+      </PageHeaderWrapper>
     );
   }
 }

@@ -4,7 +4,6 @@ import { connect } from "dva";
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import style from './index.less'
-import MonitorContent from '../../components/MonitorContent/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlCascader from '../AutoFormManager/SdlCascader'
 import SearchSelect from '../AutoFormManager/SearchSelect'
@@ -54,8 +53,8 @@ class SiteDailyPage extends PureComponent {
     };
     this.SELF = {
       formLayout: {
-        labelCol: { span: 5 },
-        wrapperCol: { span: 18 },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 17 },
       },
       actionType: props.match.params.reportType,
       defaultSearchForm: {
@@ -299,7 +298,7 @@ class SiteDailyPage extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={4} sm={24}>
+              <Col md={3} sm={24}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     initialValue: defaultSearchForm.PollutantSourceType,
@@ -382,7 +381,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5}>
+              <Col md={6}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                   <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
                   <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
