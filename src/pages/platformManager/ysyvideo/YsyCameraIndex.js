@@ -191,6 +191,7 @@ class YsyCameraIndex extends Component {
                       </Popconfirm>
                     </Tooltip>
                   <Divider type="vertical" />
+                  <Tooltip title="播放">
                   <a
                     onClick={() => {
                       dispatch(
@@ -202,8 +203,9 @@ class YsyCameraIndex extends Component {
                       );
                     }}
                   >
-                    播放
+                    <Icon type="play-circle" theme="twoTone" />
                   </a>
+                  </Tooltip>
                 </Fragment>
               )}
             />

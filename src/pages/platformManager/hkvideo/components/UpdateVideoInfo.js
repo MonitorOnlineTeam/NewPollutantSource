@@ -30,8 +30,9 @@ class UpdateVideoInfo extends Component {
         const flag = true;
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err && flag === true) {
+             console.log('------------------------', values);
                 this.props.dispatch({
-                    type: 'videolist/updateVideoInfos',
+                    type: 'hkvideo/updateVideoInfos',
                     payload: {
                         VedioDevice_Name: values.VedioDevice_Name,
                         VedioDevice_No: values.VedioDevice_No,
@@ -51,12 +52,16 @@ class UpdateVideoInfo extends Component {
                         VedioDevice_ID: values.VedioDevice_ID,
                         CameraMonitorID: values.CameraMonitorID,
                         DGIMN: this.props.dgimn,
+                        callback: result => {
+                            if (result.requstresult === '1') {
+                                this.props.onCancels();
+                                message.success('修改成功');
+                            } else {
+                                message.error(result.reason);
+                            }
+                        },
                     },
                 });
-                this.props.onCancels();
-                message.success('修改成功');
-            } else {
-
             }
         });
     }

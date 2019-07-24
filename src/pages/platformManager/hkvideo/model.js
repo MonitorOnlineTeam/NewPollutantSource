@@ -221,20 +221,14 @@ export default Model.extend({
       });
     },
     /** 更新视频参数 */
-    * updateVideoInfos({ payload }, { call, put, update }) {
+    * updateVideoInfos({ payload }, { call }) {
             const result = yield call(updateVideoInfos, { ...payload });
-            yield update({
-                requstresult: result.requstresult,
-                reason: result.reason,
-            });
+            payload.callback(result);
         },
         /** 添加视频参数 */
         * addVideoInfos({ payload }, { call, put, update }) {
             const result = yield call(addVideoInfo, { ...payload });
-            yield update({
-                requstresult: result.requstresult,
-                reason: result.reason,
-            });
+            payload.callback(result);
         },
         /** 删除视频参数 */
         * deleteVideoInfo({ payload }, { call, put, update }) {

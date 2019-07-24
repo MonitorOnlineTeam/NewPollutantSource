@@ -9,7 +9,7 @@ import {
   Tabs,
   DatePicker,
   message,
-  Tooltip,
+  Icon,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -20,9 +20,9 @@ import styles from './video.less';
 import config from '@/config';
 import HkRealVideoData from './components/HkRealVideoData';
 import HkHisVideoData from './components/HkHisVideoData';
+import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
 
 const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
 
 @connect(({
       hkvideo,
@@ -222,7 +222,17 @@ class HkShowVideo extends Component {
                        <iframe title="实时视频" id="ifm" src={realtimevideofullurl} width="100%" height="100%" scrolling="no"/>
                    </Col>
                    <Col xl={6} lg={24} md={24} sm={24} xs={24}>
-                   <Card className={styles.card}>
+                   <Card className={styles.card} extra={<span><Button
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    history.go(-1);
+                  }}
+                  type="link"
+                  size="small"
+                >
+                  <Icon type="rollback" />
+                  返回上级
+                </Button></span>}>
                        <Tabs
                         defaultActiveKey="1"
                         onChange={key => {
@@ -247,73 +257,64 @@ class HkShowVideo extends Component {
                                             <Row>
                                                 <Col className={styles.gutterleft} span={8}>
                                                  <Button
-                                                    icon = "radius-upleft"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 5)}
-                                                > 左上
+                                                > <Lefttop/>左上
                                                 </Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                   <Button
-                                                    icon = "border-top"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 1)}
-                                                >上&nbsp;&nbsp;&nbsp;
+                                                ><Top/>上&nbsp;&nbsp;&nbsp;
                                                 </Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                   <Button
-                                                    icon = "radius-upright"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 7)}
-                                                > 右上
+                                                ><Righttop/> 右上
                                                 </Button>
                                                 </Col>
                                             </Row>
                                             <Row style={{ marginTop: '10px' }}>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon="border-left"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 3)}
-                                                >左&nbsp;&nbsp;&nbsp;</Button>
+                                                ><Left/>左&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon = "border-inner"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 9)}
-                                                >自动</Button>
+                                                ><Adaption/>自动</Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon="border-right"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 4)}
-                                                >右&nbsp;&nbsp;&nbsp;</Button>
+                                                ><Right/>右&nbsp;&nbsp;&nbsp;</Button>
                                                 </Col>
                                             </Row>
                                             <Row style={{ marginTop: '10px' }}>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon="radius-bottomleft"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 6)}
-                                                >左下</Button>
+                                                ><Leftdown/>左下</Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon="border-bottom"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 2)}
-                                                >下&nbsp;&nbsp;&nbsp;</Button>
+                                                ><Down/>下&nbsp;&nbsp;&nbsp;</Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    icon="radius-bottomright"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 8)}
-                                                >右下</Button>
+                                                ><Rightdown/>右下</Button>
                                                 </Col>
                                             </Row>
                                         </Col>

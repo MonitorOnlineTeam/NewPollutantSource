@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Card, Divider, DatePicker, message, Tooltip, Tabs } from 'antd';
+import {
+  Row,
+  Col,
+  Button,
+  Card,
+  Divider,
+  DatePicker,
+  message,
+  Tooltip,
+  Tabs,
+  Icon,
+} from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import {
@@ -299,7 +310,17 @@ class YsyShowVideo extends Component {
               xs={24}
               style={{ height: '100%' }}
             >
-              <Card className={styles.card}>
+              <Card className={styles.card} extra={<span><Button
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    history.go(-1);
+                  }}
+                  type="link"
+                  size="small"
+                >
+                  <Icon type="rollback" />
+                  返回上级
+                </Button></span>}>
                 <Tabs
                   defaultActiveKey="1"
                   onChange={key => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { routerRedux } from 'dva/router';
-import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Menu, Dropdown, Form } from 'antd';
+import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Tooltip, Popconfirm, Form } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -8,6 +8,7 @@ import Add from './components/AddVideoInfo';
 import Update from './components/UpdateVideoInfo';
 import InfoList from './components/VideoInfoList';
 import styles from './video.less';
+import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
 const { confirm } = Modal;
 @connect(({ loading, hkvideo }) => ({
@@ -65,31 +66,23 @@ const { confirm } = Modal;
         this.child.handleSubmitupdate();
     };
 
-    deleteVideoInfo = record => {
-        confirm({
-            title: '确定要删除吗?',
-            okText: '是',
-            okType: 'danger',
-            cancelText: '否',
-            onOk: () => this.deleteVideoInfobyIndex(record),
-            onCancel() {
-                console.log('Cancel');
-            },
-        });
-    };
 
     deleteVideoInfobyIndex = record => {
-        const { videoListParameters } = this.props;
         this.props.dispatch({
-            type: 'videolist/deleteVideoInfo',
+            type: 'hkvideo/deleteVideoInfo',
             payload: {
-                DGIMN: videoListParameters.DGIMN,
+                DGIMN: this.props.match.params.DGIMN,
                 VedioCamera_ID: record.VedioCamera_ID,
                 VedioDevice_ID: record.VedioDevice_ID,
                 CameraMonitorID: record.CameraMonitorID,
                 callback: result => {
                     if (result === '1') {
-                        this.onChange();
+                         this.props.dispatch({
+                           type: 'hkvideo/hkvideourl',
+                           payload: {
+                             DGIMN: this.props.match.params.DGIMN,
+                           },
+                         });
                         message.success('删除成功！')
                     } else {
                         message.error('删除失败！')
@@ -115,6 +108,7 @@ const { confirm } = Modal;
                 width: '14%',
                 render: (text, record, index) => (
                     <span>
+                     <Tooltip title="详情">
                         <a onClick={() => {
                             this.setState({
                                 visible: true,
@@ -124,8 +118,10 @@ const { confirm } = Modal;
                                 data: record,
                                 footer: null,
                             });
-                        }}>详情</a>
+                        }}><DetailIcon/></a>
+                        </Tooltip>
                         <Divider type="vertical" />
+                        <Tooltip title="编辑">
                         <a onClick={() => {
                                this.setState({
                                 visible: true,
@@ -140,19 +136,22 @@ const { confirm } = Modal;
                                     </Button>
                                 </div>,
                             });
-                        }}>编辑</a>
+                        }}><EditIcon/></a></Tooltip>
                         <Divider type="vertical" />
-                        <a onClick={() => {
-                            this.deleteVideoInfo(record);
-                        }}>删除</a>
+                        <Tooltip title="删除">
+                            <Popconfirm placement="left" title="确定要删除此排口吗？" onConfirm={() => this.deleteVideoInfobyIndex(record)} okText="是" cancelText="否">
+                                <a href="#" > <DelIcon/> </a>
+                            </Popconfirm>
+                        </Tooltip>
                         <Divider type="vertical" />
+                        <Tooltip title="播放">
                         <a onClick={() => {
                             this.props.dispatch(
                         routerRedux.push(
                           `/platformconfig/hkshowvideo/${this.props.match.params.DGIMN}`,
                         ),
                       );
-                    }}>播放</a>
+                    }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>
                     </span>
                 ),
             },
@@ -214,7 +213,7 @@ const { confirm } = Modal;
                             width={this.state.width}
                             onCancel={this.onCancel}>
                             {
-                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={videoListParameters.DGIMN} name={videoListParameters.pointName} onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={videoListParameters.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={videoListParameters.DGIMN} item={this.state.data} onRef={this.onRef1} />
+                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} name={this.props.match.params.Pointname} onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} item={this.state.data} onRef={this.onRef1} />
                             }
 
                         </Modal>

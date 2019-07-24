@@ -27,7 +27,7 @@ class AddVideoInfo extends Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err && flag === true) {
                 this.props.dispatch({
-                    type: 'videolist/addVideoInfos',
+                    type: 'hkvideo/addVideoInfos',
                     payload: {
                         VedioDevice_Name: values.VedioDevice_Name,
                         VedioDevice_No: values.VedioDevice_No,
@@ -44,11 +44,16 @@ class AddVideoInfo extends Component {
                         Longitude: values.Longitude,
                         Latitude: values.Latitude,
                         DGIMN: values.DGIMN,
+                        callback: result => {
+                          if (result.requstresult === '1') {
+                            this.props.onCancels();
+                            message.success('添加成功');
+                          } else {
+                            message.error(result.reason);
+                          }
+                        },
                     },
                 });
-                this.props.onCancels();
-                message.success('添加成功');
-            } else {
             }
         });
     }
