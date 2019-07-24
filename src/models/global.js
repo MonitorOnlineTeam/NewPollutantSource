@@ -6,6 +6,7 @@ const GlobalModel = {
     collapsed: false,
     notices: [],
     btnsAuthority: [],
+    changePwdVisible: false,
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -69,23 +70,33 @@ const GlobalModel = {
       });
     },
     // 获取按钮权限
-    * getBtnAuthority({ payload }, { call, put, select }) {
+    *getBtnAuthority({ payload }, { call, put, select }) {
       // const menuCode = yield select(state => state.menu.menuCode);
       const result = yield call(getBtnAuthority, payload);
       if (result.IsSuccess) {
         const btnsAuthority = result.Datas.map(item => item.Code);
-        console.log('btnsAuthority=',btnsAuthority)
+        console.log('btnsAuthority=', btnsAuthority);
         yield put({
-          type: "updateState",
+          type: 'updateState',
           payload: {
-            btnsAuthority
-          }
-        })
+            btnsAuthority,
+          },
+        });
         // yield update({
         //   btnsAuthority
         // })
       }
-    }
+    },
+    // 获取按钮权限
+    *changePwdModal({ payload }, { call, put, select }) {
+      // const menuCode = yield select(state => state.menu.menuCode);
+      yield put({
+        type: 'updateState',
+        payload: {
+          changePwdVisible: true,
+        },
+      });
+    },
   },
   reducers: {
     changeLayoutCollapsed(
@@ -123,9 +134,9 @@ const GlobalModel = {
     updateState(state, { payload }) {
       return {
         ...state,
-        ...payload
-      }
-    }
+        ...payload,
+      };
+    },
   },
   subscriptions: {
     setup({ history }) {

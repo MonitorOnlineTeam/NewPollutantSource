@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_oc93hoxrzpq.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_cyjkn2locrg.js';
 const style = {
   fontSize: 16,
 }
@@ -31,3 +31,4 @@ export const Righttop = () => <IconConfig type="icon-jiantou_youshang" style={{ 
 export const Leftdown = () => <IconConfig type="icon-jiantou_zuoxia" style={{ ...style }} />
 export const Rightdown = () => <IconConfig type="icon-jiantou_youxia" style={{ ...style }} />
 export const Adaption = () => <IconConfig type="icon-zidong" style={{ ...style }} />
+export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />

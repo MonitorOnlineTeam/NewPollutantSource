@@ -1,18 +1,20 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { CascadeMultiSelect } from 'uxcore';
+import { isEqual } from 'lodash';
 import { connect } from 'dva';
 import styles from './index.less'
 
-@connect(({ region }) => ({
-  enterpriseAndPointList: region.enterpriseAndPointList,
-  level: region.level
+@connect(({ common }) => ({
+  enterpriseAndPointList: common.enterpriseAndPointList,
+  level: common.level
 }))
 class EnterprisePointCascadeMultiSelect extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      options: []
+      options: [],
+      value: null
     };
   }
 
@@ -21,7 +23,7 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
     let type = 1;
     type = searchRegion ? 2 : (searchEnterprise ? 0 : 1);
     dispatch({
-      type: 'region/getEnterpriseAndPoint',
+      type: 'common/getEnterpriseAndPoint',
       payload: {
         RegionCode: "",
         PointMark: type
@@ -30,47 +32,51 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
   }
 
   render() {
-    let { enterpriseAndPointList, searchEnterprise, level, searchRegion } = this.props;
+    let { enterpriseAndPointList, searchEnterprise, level, searchRegion, placeholder, defaultValue } = this.props;
     const config = [{ showSearch: true, checkable: true }, {}, {}, {}, {}];
     const cascadeSize = searchRegion ? level : (searchEnterprise ? level * 1 + 1 : level * 1 + 2);
     // const cascadeSize = searchEnterprise ? level * 1 + 1 : level * 1 + 2;
-    console.log('cascadeSize-', cascadeSize)
-    return (
-      <div>
-        <CascadeMultiSelect
-          className={styles['kuma-cascader-wrapper']}
-          dropdownClassName={'ucms-drop'}
-          config={config}
-          cascadeSize={cascadeSize}
-          notFoundContent={"沒有数据"}
-          options={enterpriseAndPointList}
-          // onSelect={(valueList, labelList, leafList) => {
-          //   console.log("select=", valueList, labelList, leafList);
-          //   this.setState({ demo1: valueList });
-          // }}
-          onItemClick={(item, level) => {
-            if (level === 1 && this.state.currentLevelNode !== item.value) {
-              // if (level === 1) {
-              this.props.dispatch({
-                type: 'region/getEnterpriseAndPoint',
-                payload: {
-                  RegionCode: item.value,
-                  PointMark: searchRegion ? 2 : (searchEnterprise ? 0 : 1)
-                }
-              });
-              this.setState({ currentLevelNode: item.value });
-            }
-          }}
-          onOk={(valueList, labelList, leafList, level) => {
-            console.log("ok=", valueList, labelList, leafList, level);
-            const values = leafList.map(p => p.value);
-            this.props.onChange && this.props.onChange(values);
-          }}
-          // {...this.props}
-        // value={this.state.demo1}
-        />
-      </div>
-    )
+    const props = defaultValue ? { value: defaultValue } : {};
+    console.log('valporps=', props)
+    if (enterpriseAndPointList.length) {
+      return (
+        <div>
+          <CascadeMultiSelect
+            className={styles['kuma-cascader-wrapper']}
+            dropdownClassName={'ucms-drop'}
+            config={config}
+            placeholder={placeholder}
+            cascadeSize={cascadeSize}
+            notFoundContent={"沒有数据"}
+            options={enterpriseAndPointList}
+            // onSelect={(valueList, labelList, leafList) => {
+            //   console.log("select=", valueList, labelList, leafList);
+            //   this.setState({ value: leafList });
+            // }}
+            // onItemClick={(item, level) => {
+            //   if (level === 1 && this.state.currentLevelNode !== item.value) {
+            //     // if (level === 1) {
+            //     this.props.dispatch({
+            //       type: 'common/getEnterpriseAndPoint',
+            //       payload: {
+            //         RegionCode: item.value,
+            //         PointMark: searchRegion ? 2 : (searchEnterprise ? 0 : 1)
+            //       }
+            //     });
+            //     this.setState({ currentLevelNode: item.value });
+            //   }
+            // }}
+            onOk={(valueList, labelList, leafList, level) => {
+              const values = leafList.map(p => p.value);
+              this.props.onChange && this.props.onChange(values);
+            }}
+            {...props}
+          />
+        </div>
+      )
+    }
+    return null
+
   }
 }
 
@@ -79,12 +85,17 @@ EnterprisePointCascadeMultiSelect.propTypes = {
   searchEnterprise: PropTypes.bool,
   // 是否只查询城市
   searchRegion: PropTypes.bool,
+  // placeholder
+  placeholder: PropTypes.string,
+  // value 回显
+  value: PropTypes.array
 }
 
 
 EnterprisePointCascadeMultiSelect.delfultProps = {
   searchEnterprise: false,
-  searchRegion: false
+  searchRegion: false,
+  placeholder: "请选择"
 }
 
 export default EnterprisePointCascadeMultiSelect;

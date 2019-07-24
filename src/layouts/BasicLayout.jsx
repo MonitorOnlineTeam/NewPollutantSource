@@ -81,7 +81,6 @@ const footerRender = (_, defaultDom) => {
 
 const BasicLayout = props => {
   const { dispatch, children, settings, currentMenu } = props;
-  ;
   /**
    * constructor
    */
@@ -89,7 +88,7 @@ const BasicLayout = props => {
     if (dispatch) {
       dispatch({
         type: 'user/fetchCurrent',
-        payload: {}
+        payload: {},
       });
       dispatch({
         type: 'settings/getSetting',
@@ -109,17 +108,18 @@ const BasicLayout = props => {
 
   const menuDataRender = list => {
     // console.log("user.currentMenu=", currentMenu);
-    
+
     return currentMenu;
-  }
+  };
 
   const logoRender = Item => {
-
-    return settings.layout === "topmenu" ? <img style={{ height: 60 }} src={logo} alt="logo" /> : <img src={logo} alt="logo" />;
-  }
-  const myStyle = {
-
+    return settings.layout === 'topmenu' ? (
+      <img style={{ height: 60 }} src={logo} alt="logo" />
+    ) : (
+      <img src={logo} alt="logo" />
+    );
   };
+  const myStyle = {};
   return (
     <>
       <ProLayout
@@ -128,16 +128,16 @@ const BasicLayout = props => {
         menuItemRender={(menuItemProps, defaultDom) => {
           // console.log("menuItemProps=", menuItemProps)
           // console.log("defaultDom=", defaultDom)
-   
+
           let userCookie = Cookie.get('currentUser');
           if (menuItemProps.replace && userCookie) {
             dispatch({
-              type: "global/getBtnAuthority",
+              type: 'global/getBtnAuthority',
               payload: {
                 Menu_ID: menuItemProps.id,
-                User_ID: JSON.parse(userCookie).User_ID
-              }
-            })
+                User_ID: JSON.parse(userCookie).User_ID,
+              },
+            });
           }
 
           if (menuItemProps.isUrl) {
@@ -157,7 +157,7 @@ const BasicLayout = props => {
           ...routers,
         ]}
         footerRender={() => {
-          return <div></div>
+          return <div></div>;
         }}
         menuDataRender={menuDataRender}
         formatMessage={formatMessage}
@@ -165,9 +165,9 @@ const BasicLayout = props => {
         {...props}
         {...settings}
       >
-          <div style={{margin: "-24px -24px 0px", padding: "24px", overflowY: "auto"}}>
-            {children}
-          </div>
+        <div style={{ margin: '-24px -24px 0px', padding: '24px', overflowY: 'auto' }}>
+          {children}
+        </div>
       </ProLayout>
       <SettingDrawer
         settings={settings}
@@ -184,6 +184,7 @@ const BasicLayout = props => {
 
 export default connect(({ global, settings, user }) => ({
   collapsed: global.collapsed,
+  changePwdVisible: global.changePwdVisible,
   settings,
-  currentMenu: user.currentMenu
+  currentMenu: user.currentMenu,
 }))(BasicLayout);
