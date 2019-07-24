@@ -44,7 +44,7 @@ class Test extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <NavigationTree choice={false} onItemClick={(value)=>{
+        <NavigationTree choice={true} onItemClick={(value)=>{
           console.log("test=",value)
           console.log("test1=",this.props.selectTreeKeys)
         }} />

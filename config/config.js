@@ -354,7 +354,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://localhost:52198/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
