@@ -25,7 +25,7 @@ class SdlTable extends PureComponent {
         }
       }
     })
-    
+
     let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <Table
@@ -43,6 +43,7 @@ class SdlTable extends PureComponent {
             }
           }
         }
+        bordered
         {...this.props}
         columns={_columns}
       />

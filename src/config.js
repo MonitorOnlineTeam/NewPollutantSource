@@ -30,6 +30,8 @@ module.exports = {
   ysyvideourl: 'http://localhost:8082/Web/YsyVideo/YsyVideo.html',
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
   VideoServer: 0,
+  // autoForm文件上传地址
+  fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%
