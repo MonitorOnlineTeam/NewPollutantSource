@@ -3,6 +3,7 @@ import { Table, Card } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './Video.less';
+import config from '@/config';
 
 @connect(({ hkvideo, loading }) => ({
   isloading: loading.effects['hkvideo/queryhistorydatalisthis'],
@@ -42,7 +43,7 @@ class HkHisVideoData extends Component {
       () => {
         this.getPollutantTitle();
         this.getRealTime(beginDate, endDate, pageIndex, pageSize);
-        this.timerID = setInterval(() => this.tick(), 30000);
+        this.timerID = setInterval(() => this.tick(), config.PlayDatas);
       },
     );
   };
@@ -54,8 +55,8 @@ class HkHisVideoData extends Component {
   tick = () => {
     const { pageIndex, pageSize, total } = this.props;
     const { beginDate, endDate } = this.state;
-    const sumSize = pageSize / total;
-    if (pageIndex >= sumSize) {
+    const sumSize = total / pageSize;
+    if (pageIndex <= sumSize) {
       this.getRealTime(
         beginDate.format('YYYY-MM-DD HH:mm:ss'),
         endDate.format('YYYY-MM-DD HH:mm:ss'),
@@ -122,7 +123,7 @@ class HkHisVideoData extends Component {
         dataSource={hisrealdata}
         columns={hiscolumns}
         size="small"
-        scroll={{ x, y: 'calc(100vh - 680px)' }}
+        scroll={{ x, y: 'calc(100vh - 820px)' }}
         pagination={{
           total: this.props.total,
           pageSize: this.props.pageSize,
