@@ -10,6 +10,7 @@ import NoticeIconView from './NoticeIconView';
 
 const GlobalHeaderRight = props => {
   const { theme, layout } = props;
+  //console.log("changePwdVisible=",props);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
@@ -56,7 +57,7 @@ const GlobalHeaderRight = props => {
         </a>
       </Tooltip> */}
       <NoticeIconView />
-      <Avatar menu />
+      <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>
   );

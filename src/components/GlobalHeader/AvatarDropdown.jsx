@@ -1,4 +1,4 @@
-import { Avatar, Icon, Menu, Spin } from 'antd';
+import { Avatar, Icon, Menu, Spin, Modal } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import { connect } from 'dva';
@@ -11,12 +11,10 @@ import ChangePwdView from './ChangePwdView';
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
     const { key } = event;
-
+    const { dispatch } = this.props;
     if (key === 'logout') {
-      const { dispatch } = this.props;
-
       if (dispatch) {
-        Cookie.set("currentUser", null);
+        Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',
         });
@@ -25,15 +23,20 @@ class AvatarDropdown extends React.Component {
       return;
     }
 
-    if(key === 'changepwd')
-    {
-      return <ChangePwdView  showchangepwd={true}/>
-    }
-    router.push(`/account/${key}`);
+    if (key === 'changepwd') {
+      debugger;
+      //router.push(`/account/ChangePwdView`);
+      //return <ChangePwdView  showchangepwd={true}/>
+      if (dispatch) {
+        dispatch({
+          type: 'global/changePwdModal',
+        });
+      }
+    } else router.push(`/account/${key}`);
   };
 
   render() {
-    const { currentUser = {}, menu } = this.props;
+    const { currentUser = {}, menu, changePwdVisible } = this.props;
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
@@ -54,11 +57,11 @@ class AvatarDropdown extends React.Component {
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item key="changepwd">
+        {/* <Menu.Item key="changepwd">
           <Icon type="lock" />
           修改密码
         </Menu.Item>
-        <Menu.Divider />
+        <Menu.Divider /> */}
         <Menu.Item key="logout">
           <Icon type="logout" />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
@@ -68,21 +71,26 @@ class AvatarDropdown extends React.Component {
     return currentUser && currentUser.UserName ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'} alt="avatar" />
+          <ChangePwdView visible={changePwdVisible} />
+
+          <Avatar
+            size="small"
+            className={styles.avatar}
+            src={'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'}
+            alt="avatar"
+          />
           <span className={styles.name}>{currentUser.UserName}</span>
-          
         </span>
-        
       </HeaderDropdown>
     ) : (
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      );
+      <Spin
+        size="small"
+        style={{
+          marginLeft: 8,
+          marginRight: 8,
+        }}
+      />
+    );
   }
 }
 

@@ -181,7 +181,8 @@ export default {
                 },
                 {
                   name: 'hkvideo',
-                  path: '/platformconfig/hkcameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+                  path:
+                    '/platformconfig/hkcameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
                   component: './platformManager/hkvideo/hkCameraIndex',
                 },
                 {
@@ -298,6 +299,11 @@ export default {
                   path: '/account/settings',
                   component: './account/settings',
                 },
+                {
+                  name: 'base',
+                  path: '/account/ChangePwdView',
+                  component: '../components/GlobalHeader/ChangePwdView',
+                },
               ],
             },
 
@@ -354,7 +360,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://localhost:52198/',
+      target: 'http://172.16.9.13:9090/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
