@@ -27,6 +27,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import router from 'umi/router';
 import { checkRules } from '@/utils/validator';
+import config from '@/config'
 import MonitorContent from '../../components/MonitorContent/index';
 import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
@@ -43,7 +44,8 @@ const FormItem = Form.Item;
   loadingAdd: loading.effects['autoForm/add'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
-  formItemLayout: autoForm.formLayout
+  formItemLayout: autoForm.formLayout,
+  fileList: autoForm.fileList,
 }))
 
 class SdlForm extends PureComponent {
@@ -89,7 +91,7 @@ class SdlForm extends PureComponent {
 
   componentDidMount() {
     let { addFormItems, dispatch, noLoad } = this.props;
-    let { configId, isEdit, keysParams } = this._SELF_;
+    let { configId, isEdit, keysParams, uid } = this._SELF_;
     // if (!addFormItems || addFormItems.length === 0) {
     !noLoad && dispatch({
       type: 'autoForm/getPageConfig',
@@ -100,13 +102,23 @@ class SdlForm extends PureComponent {
     // }
 
     // 编辑时获取数据
-    isEdit && (!noLoad && dispatch({
-      type: 'autoForm/getFormData',
-      payload: {
-        configId: configId,
-        ...keysParams
-      }
-    }));
+    if (isEdit) {
+      // 获取上传组件文件列表
+      uid && dispatch({
+        type: "autoForm/getAttachmentList",
+        payload: {
+          FileUuid: uid
+        }
+      })
+      // 获取编辑页面数据
+      !noLoad && dispatch({
+        type: 'autoForm/getFormData',
+        payload: {
+          configId: configId,
+          ...keysParams
+        }
+      })
+    }
   }
 
   // 处理时间控件
@@ -133,7 +145,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData } = this.props;
+    const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const formItems = addFormItems[configId] || [];
     const formData = isEdit ? (editFormData[configId] || {}) : {};
@@ -270,26 +282,35 @@ class SdlForm extends PureComponent {
         //   break;
         default:
           if (item.type === "上传") {
-            if (!isEdit) {
+            // if (!isEdit) {
               const props = {
-                action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+                action: config.fileUploadUrl,
                 // onChange: this.handleChange(fieldName),
+                onChange(info) {
+                  if (info.file.status === 'done') {
+                    // message.success(`${info.file.name} file uploaded successfully`);
+                  } else if (info.file.status === 'error') {
+                    message.error("上传文件失败！")
+                  }
+                },
                 multiple: true,
                 data: {
                   FileUuid: uid,
                   FileActualType: "1"
                 }
               };
-              element = <Upload {...props}>
+              element = <Upload {...props} defaultFileList={fileList}>
                 <Button>
-                  <Icon type="upload" /> Upload
+                  <Icon type="upload" /> 文件上传
                 </Button>
               </Upload>
-            } else {
-              element = <SdlUpload
-                uid={uid}
-              />
-            }
+            // } else {
+            //   console.log('edit')
+            //   element = <SdlUpload
+            //     // defaultFileList={[fileList]}
+            //     uid={isEdit ? uid : undefined}
+            //   />
+            // }
           }
           break;
       }
@@ -351,7 +372,7 @@ class SdlForm extends PureComponent {
           }
         }
         return (
-          <Col span={colSpan} style={{display: item.isHide == 1 ? "none" : ""}}>
+          <Col span={colSpan} style={{ display: item.isHide == 1 ? "none" : "" }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
                 initialValue: initialValue,
@@ -399,7 +420,7 @@ class SdlForm extends PureComponent {
             ...primaryKey
           }
         }
-        
+
         this.props.onSubmitForm && this.props.onSubmitForm(formData);
       }
     });

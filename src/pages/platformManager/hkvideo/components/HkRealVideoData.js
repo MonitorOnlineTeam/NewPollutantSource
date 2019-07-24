@@ -96,7 +96,7 @@ class HkRealVideoData extends Component {
       <div className={styles.tab}>
         <Card
           title="实时数据"
-          style={{ height: 'calc(100vh - 650px)', overflowY: 'scroll' }}
+          style={{ height: 'calc(100vh - 731px)', overflowY: 'scroll' }}
           extra={<div style={{ color: 'gray' }}>{MonitorTime}</div>}
           loading={isloadingC && isloadingP}
           size="small"

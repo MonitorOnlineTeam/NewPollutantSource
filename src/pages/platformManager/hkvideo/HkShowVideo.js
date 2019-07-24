@@ -13,11 +13,13 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
+import {
+  PageHeaderWrapper,
+} from '@ant-design/pro-layout';
 import styles from './video.less';
 import config from '@/config';
 import HkRealVideoData from './components/HkRealVideoData';
 import HkHisVideoData from './components/HkHisVideoData';
-import MonitorContent from '@/components/MonitorContent/index';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -33,8 +35,11 @@ class HkShowVideo extends Component {
 
         this.state = {
             displayR: true,
-            beginDate: moment(),
-              endDate: moment(),
+            beginDate: '',
+            endDate: '',
+            endOpen: false,
+            startValue: null,
+            endValue: null,
         };
     }
 
@@ -52,6 +57,9 @@ class HkShowVideo extends Component {
        if (event !== undefined) {
             if (event.data.key === '0' && event.data.flag === false) {
                 message.error(event.data.value);
+            }
+            if (event.data.key === '1' && event.data.flag === true) {
+              message.success(event.data.value);
             }
        }
    }
@@ -97,11 +105,8 @@ class HkShowVideo extends Component {
 
    /** 历史视频操作 */
    btnHisClick = opt => {
-        if (opt === 7) {
-            // this.child.startPlay();
-        }
         if (opt === 8) {
-            // this.child.endPlay();
+             this.child.endPlay();
         }
         let obj = { opt };
         const { beginDate, endDate } = this.state;
@@ -129,22 +134,63 @@ class HkShowVideo extends Component {
   };
 
   /** 时间控件 */
-  rangepickerOnChange = (date, dateString) => {
-    if (date.length > 1) {
+  disabledStartDate = startValue => {
+    const {
+      endValue,
+    } = this.state;
+    if (!startValue || !endValue) {
+      return false;
+    }
+    return startValue.valueOf() > endValue.valueOf();
+  }
+
+  onChange = (field, value) => {
+    this.setState({
+      [field]: value,
+    });
+  }
+
+  disabledEndDate = endValue => {
+    const {
+      startValue,
+    } = this.state;
+    if (!endValue || !startValue) {
+      return false;
+    }
+    return endValue.valueOf() <= startValue.valueOf();
+  }
+
+  onStartChange = (value, dateString) => {
+    this.onChange('startValue', value);
+    this.setState({
+      beginDate: dateString,
+    });
+  }
+
+  onEndChange = (value, dateString) => {
+    this.onChange('endValue', value);
+    this.setState({
+      endDate: dateString,
+    });
+  }
+
+  handleStartOpenChange = open => {
+    if (!open) {
       this.setState({
-         beginDate: dateString[0],
-           endDate: dateString[1],
-      });
-    } else {
-      this.setState({
-         beginDate: dateString[0],
-           endDate: dateString[1],
+        endOpen: true,
       });
     }
   }
 
+  handleEndOpenChange = open => {
+    this.setState({
+      endOpen: open,
+    });
+  }
+
    render() {
        const { realtimevideofullurl } = this.props;
+       const { endOpen } = this.state;
        if (!realtimevideofullurl) {
            return (<Spin
                style={{ width: '100%',
@@ -169,21 +215,14 @@ class HkShowVideo extends Component {
            );
        }
        return (
-           <MonitorContent
-        {...this.props}
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '系统管理', Url: '' },
-          { Name: '视频', Url: '' },
-        ]}
-      >
-           <div style={{ height: 'calc(100vh - 157px)', width: '100%' }}>
+           <PageHeaderWrapper>
+           <div style={{ height: 'calc(100vh - 245px)', width: '100%' }}>
                <Row gutter={24} style={{ height: '100%' }}>
                    <Col xl={18} lg={24} md={24} sm={24} xs={24} style={{ height: '100%' }}>
-                       <iframe title="实时视频" id="ifm" src={realtimevideofullurl} frameBorder="1" width="100%" height="100%" scrolling="no"/>
+                       <iframe title="实时视频" id="ifm" src={realtimevideofullurl} width="100%" height="100%" scrolling="no"/>
                    </Col>
                    <Col xl={6} lg={24} md={24} sm={24} xs={24}>
-
+                   <Card className={styles.card}>
                        <Tabs
                         defaultActiveKey="1"
                         onChange={key => {
@@ -194,15 +233,12 @@ class HkShowVideo extends Component {
                                 <Card className={styles.hisYunStyle}>
                                     <Row style={{ textAlign: 'center' }}>
                                         <Col span={8}>
-                                            <Tooltip placement="top" title="抓取图片">
                                                 <Button
-                                                    type="primary"
                                                     icon="file-image"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 10)}
                                                 > 抓图
                                                 </Button>
-                                            </Tooltip>
                                         </Col>
                                     </Row>
                                     <Divider type="horizontal" />
@@ -211,7 +247,6 @@ class HkShowVideo extends Component {
                                             <Row>
                                                 <Col className={styles.gutterleft} span={8}>
                                                  <Button
-                                                    type="primary"
                                                     icon = "radius-upleft"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 5)}
@@ -220,7 +255,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                   <Button
-                                                    type = "primary"
                                                     icon = "border-top"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 1)}
@@ -229,7 +263,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                   <Button
-                                                    type = "primary"
                                                     icon = "radius-upright"
                                                     size="Small"
                                                     onClick = {this.btnClick.bind(this, 7)}
@@ -240,7 +273,6 @@ class HkShowVideo extends Component {
                                             <Row style={{ marginTop: '10px' }}>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon="border-left"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 3)}
@@ -248,7 +280,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon = "border-inner"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 9)}
@@ -256,7 +287,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon="border-right"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 4)}
@@ -266,7 +296,6 @@ class HkShowVideo extends Component {
                                             <Row style={{ marginTop: '10px' }}>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon="radius-bottomleft"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 6)}
@@ -274,7 +303,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon="border-bottom"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 2)}
@@ -282,7 +310,6 @@ class HkShowVideo extends Component {
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
                                                 <Button
-                                                    type = "primary"
                                                     icon="radius-bottomright"
                                                     size="Small"
                                                     onClick={this.btnClick.bind(this, 8)}
@@ -296,82 +323,84 @@ class HkShowVideo extends Component {
                                         <Col span={24}>
                                             <Row style={{ textAlign: 'center' }}>
                                                 <Col className={styles.gutterleft} span={8}>
-                                                <Tooltip placement="top" title="加">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-in"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 11)}
-                                                />
-                                                </Tooltip>
+                                                   <Row>
+                                                    <div className={styles.divbtn}>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-in"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 11)}
+                                                            />
+                                                        </Col>
+                                                        <Col className={styles.gutterleft} span={8}>变倍</Col>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-out"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 12)}
+                                                            />
+                                                        </Col>
+                                                    </div>
+                                                   </Row>
                                                 </Col>
-                                                <Col className={styles.gutterleft} span={8}>变倍</Col>
                                                 <Col className={styles.gutterleft} span={8}>
-                                                <Tooltip placement="top" title="减">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-out"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 12)}
-                                                />
-                                                </Tooltip>
+                                                   <Row>
+                                                    <div className={styles.divbtn}>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-in"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 15)}
+                                                            />
+                                                        </Col>
+                                                        <Col className={styles.gutterleft} span={8}>变焦</Col>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-out"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 16)}
+                                                            />
+                                                        </Col>
+                                                    </div>
+                                                   </Row>
                                                 </Col>
-                                            </Row>
-                                            <Row style={{ marginTop: '10px', textAlign: 'center' }}>
                                                 <Col className={styles.gutterleft} span={8}>
-                                                <Tooltip placement="top" title="加">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-in"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 15)}
-                                                />
-                                                </Tooltip>
-                                                </Col>
-                                                <Col className={styles.gutterleft} span={8}>变焦</Col>
-                                                <Col className={styles.gutterleft} span={8}>
-                                                <Tooltip placement="top" title="减">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-out"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 16)}
-                                                />
-                                                </Tooltip>
-                                                </Col>
-                                            </Row>
-                                            <Row style={{ marginTop: '10px', textAlign: 'center' }}>
-                                                <Col className={styles.gutterleft} span={8}>
-                                                <Tooltip placement="top" title="加">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-in"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 19)}
-                                                />
-                                                </Tooltip>
-                                                </Col>
-                                                <Col className={styles.gutterleft} span={8}>光圈</Col>
-                                                <Col className={styles.gutterleft} span={8}>
-                                                 <Tooltip placement="top" title="减">
-                                                <Button
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon="zoom-out"
-                                                    size="Small"
-                                                    onClick={this.btnClick.bind(this, 20)}
-                                                />
-                                                </Tooltip>
+                                                   <Row>
+                                                    <div className={styles.divbtn}>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-in"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 19)}
+                                                            />
+                                                        </Col>
+                                                        <Col className={styles.gutterleft} span={8}>光圈</Col>
+                                                        <Col className={styles.gutterleft} span={8}>
+                                                            <Button
+                                                            shape="circle"
+                                                            icon="zoom-out"
+                                                            size="Small"
+                                                            style={{ width: '25px', height: '25px' }}
+                                                            onClick={this.btnClick.bind(this, 20)}
+                                                            />
+                                                        </Col>
+                                                    </div>
+                                                   </Row>
                                                 </Col>
                                             </Row>
                                         </Col>
                                     </Row>
-                                    <Divider type="dashed" />
+                                   <Divider type="horizontal" />
                                     <Row gutter={48}>
                                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                                         {this.state.displayR && <HkRealVideoData {...this.props} />}
@@ -383,11 +412,45 @@ class HkShowVideo extends Component {
                                 <Card className={styles.hisYunStyle}>
                                     <Row>
                                         <Col span={24}>
-                                            <RangePicker
-                                                showTime={{ format: 'HYYYY-MM-DD HH:mm:ss' }}
-                                                format="YYYY-MM-DD HH:mm:ss"
-                                                onChange={this.rangepickerOnChange}
-                                            />
+                                        <Row>
+                                        <Col span={10}>
+                                        <DatePicker
+                                            style={{ width: '170px', minWidth: '130px' }}
+                                            disabledDate={
+                                                this.disabledStartDate
+                                            }
+                                            format="YYYY-MM-DD HH:mm:ss"
+                                            showTime={{ format: 'HH:mm:ss' }}
+                                            placeholder="开始日期"
+                                            onChange={
+                                                this.onStartChange
+                                            }
+                                            onOpenChange={
+                                                this.handleStartOpenChange
+                                            }
+                                        />
+                                        </Col>
+                                        <Col span={10} style={{ marginLeft: '40px' }}>
+                                        <DatePicker
+                                        style={{ width: '170px', minWidth: '130px' }}
+                                        showTime={{ format: 'HH:mm:ss' }}
+                                        disabledDate={
+                                            this.disabledEndDate
+                                        }
+                                        format="YYYY-MM-DD HH:mm:ss"
+                                        placeholder="结束日期"
+                                        onChange={
+                                            this.onEndChange
+                                        }
+                                        open={
+                                            endOpen
+                                        }
+                                        onOpenChange={
+                                            this.handleEndOpenChange
+                                        }
+                                    />
+                                        </Col>
+                                        </Row>
                                         </Col>
                                     </Row>
                                     <Divider type="horizontal" />
@@ -395,10 +458,10 @@ class HkShowVideo extends Component {
                                         <Col span={24}>
                                             <Row style={{ marginTop: '10px' }}>
                                                 <Col className={styles.gutterleft} span={8}>
-                                                <Button type="primary" icon="play-circle" onClick={this.backplay.bind(this, 7)}>开始回放</Button>
+                                                <Button icon="play-circle" onClick={this.backplay.bind(this, 7)}>开始回放</Button>
                                                 </Col>
                                                 <Col className={styles.gutterleft} span={8}>
-                                                <Button type="primary" icon="close-circle" onClick={this.backplay.bind(this, 8)}>停止回放</Button>
+                                                <Button icon="close-circle" onClick={this.backplay.bind(this, 8)}>停止回放</Button>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -408,14 +471,14 @@ class HkShowVideo extends Component {
                                         <Col span={24}>
                                             <Row>
 
-                                                <Col className={styles.gutterleft} span={8}><Button type="primary" icon="pause-circle" onClick={this.btnHisClick.bind(this, 2)}>暂停</Button></Col>
-                                                <Col className={styles.gutterleft} span={8}><Button type="primary" icon="check-circle" onClick={this.btnHisClick.bind(this, 3)}>恢复</Button></Col>
-                                                <Col className={styles.gutterleft} span={8}><Button type="primary" icon="picture" onClick={this.btnHisClick.bind(this, 6)}>抓图</Button></Col>
+                                                <Col className={styles.gutterleft} span={8}><Button icon="pause-circle" onClick={this.btnHisClick.bind(this, 2)}>暂停</Button></Col>
+                                                <Col className={styles.gutterleft} span={8}><Button icon="check-circle" onClick={this.btnHisClick.bind(this, 3)}>恢复</Button></Col>
+                                                <Col className={styles.gutterleft} span={8}><Button icon="picture" onClick={this.btnHisClick.bind(this, 6)}>抓图</Button></Col>
                                             </Row>
                                             <Row style={{ marginTop: '30px' }}>
-                                                <Col className={styles.gutterleft} span={8}><Button type="primary" icon="step-forward" onClick={this.btnHisClick.bind(this, 4)}>慢放</Button></Col>
-                                                <Col className={styles.gutterleft} span={8}><Button type="primary" icon="fast-forward" onClick={this.btnHisClick.bind(this, 5)}>快放</Button></Col>
-                                                 <Col className={styles.gutterleft} span={8}><Button type="primary" icon="fast-backward" onClick={this.btnHisClick.bind(this, 1)}> 倒放</Button></Col>
+                                                <Col className={styles.gutterleft} span={8}><Button icon="step-forward" onClick={this.btnHisClick.bind(this, 4)}>慢放</Button></Col>
+                                                <Col className={styles.gutterleft} span={8}><Button icon="fast-forward" onClick={this.btnHisClick.bind(this, 5)}>快放</Button></Col>
+                                                 <Col className={styles.gutterleft} span={8}><Button icon="fast-backward" onClick={this.btnHisClick.bind(this, 1)}> 倒放</Button></Col>
                                             </Row>
                                         </Col>
                                     </Row>
@@ -426,8 +489,8 @@ class HkShowVideo extends Component {
                                             <HkHisVideoData
                                                 onRef={this.onRef1}
                                                 {...this.props}
-                                                beginDate={moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss')}
-                                                endDate={moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss')}
+                                                beginDate={moment(this.state.beginDate, 'YYYY-MM-DD HH:mm:ss')}
+                                                endDate={moment(this.state.endDate, 'YYYY-MM-DD HH:mm:ss')}
                                             />
                                             )}
                                         </Col>
@@ -435,11 +498,11 @@ class HkShowVideo extends Component {
                                 </Card>
                             </TabPane>
                         </Tabs>
-
+                        </Card>
                    </Col>
                </Row>
            </div>
-           </MonitorContent>
+           </PageHeaderWrapper>
        );
    }
 }

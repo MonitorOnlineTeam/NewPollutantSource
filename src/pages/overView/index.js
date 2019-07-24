@@ -24,6 +24,7 @@ import { getPointStatusImg } from '@/utils/getstatusImg';
 import { formatPollutantPopover } from '@/utils/utils';
 import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
+import SelectPollutantType from '@/components/SelectPollutantType'
 
 const RadioGroup = Radio.Group;
 @connect(({ loading, overview }) => ({
@@ -31,7 +32,7 @@ const RadioGroup = Radio.Group;
     data: overview.data,
     gwidth: overview.gwidth,
     isloading: loading.effects['overview/querypollutanttypecode'],
-    pollutantTypelist: overview.pollutantTypelist,
+    // pollutantTypelist: overview.pollutantTypelist,
     selectpollutantTypeCode: overview.selectpollutantTypeCode,
     dataOverview: overview.dataOverview,
 }))
@@ -109,21 +110,21 @@ class dataList extends PureComponent {
         this.reloadData(dataOverview);
     };
 
-    /**填充污染物类型 */
-    getPollutantDoc = () => {
-        const { pollutantTypelist } = this.props;
-        let res = [];
-        if (pollutantTypelist) {
-            pollutantTypelist.map((item, key) => {
-                res.push(
-                    <Radio.Button key={key} value={item.pollutantTypeCode}>
-                        {item.pollutantTypeName}
-                    </Radio.Button>,
-                );
-            });
-        }
-        return res;
-    };
+    // /**填充污染物类型 */
+    // getPollutantDoc = () => {
+    //     const { pollutantTypelist } = this.props;
+    //     let res = [];
+    //     if (pollutantTypelist) {
+    //         pollutantTypelist.map((item, key) => {
+    //             res.push(
+    //                 <Radio.Button key={key} value={item.pollutantTypeCode}>
+    //                     {item.pollutantTypeName}
+    //                 </Radio.Button>,
+    //             );
+    //         });
+    //     }
+    //     return res;
+    // };
 
     /**获取传输有效率的图例（废水没有传输有效率） */
     getcsyxlButton = () => {
@@ -239,7 +240,7 @@ class dataList extends PureComponent {
     render() {
         const { selectStatus, terate, time } = this.props.dataOverview;
         let { selectpollutantTypeCode } = this.props;
-        selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
+        // selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
         let fixed = false;
@@ -405,13 +406,19 @@ class dataList extends PureComponent {
                                     format="HH:00:00"
                                 />
 
-                                <Radio.Group
+                                {/* <Radio.Group
                                     style={{ marginLeft: 50, float: 'left' }}
                                     onChange={this.onPollutantChange}
                                     defaultValue={selectpollutantTypeCode}
                                 >
                                     {this.getPollutantDoc()}
-                                </Radio.Group>
+                                </Radio.Group> */}
+                                <SelectPollutantType
+                                    style={{ marginLeft: 50, float: 'left' }}
+                                    showType="radio"
+                                    onChange={this.onPollutantChange}
+                                    defaultValue={selectpollutantTypeCode}
+                                />
 
                                 <div style={{ width: 'calc(100vw - 220px)', marginLeft: 60 }}>
                                     <AListRadio style={{ float: 'right' }} dvalue="b" />
@@ -440,7 +447,7 @@ class dataList extends PureComponent {
                             dataSource={this.props.data}
                             pagination={false}
                             loading={this.props.isloading}
-                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 170px)'}}
+                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 170px)' }}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {
                         //   if (index === 0) {

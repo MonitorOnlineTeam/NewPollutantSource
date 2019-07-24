@@ -86,6 +86,7 @@ export default class MonitorTarget extends Component {
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+        console.log("this.props=",this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
         if (this.props.loading) {
@@ -117,6 +118,7 @@ export default class MonitorTarget extends Component {
                             configId={configId}
                         ></SearchWrapper>
                         <SdlTable
+                            
                             style={{ marginTop: 10 }}
                             // columns={columns}
                             configId={configId}
@@ -141,6 +143,7 @@ export default class MonitorTarget extends Component {
                                     </Tooltip>
                                 </Fragment>
                             }}
+                            {...this.props}
                         >
                         </SdlTable>
                     </Card>

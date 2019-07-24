@@ -347,12 +347,12 @@ class SdlTable extends PureComponent {
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                        this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes("view") && <Divider type="vertical" />
                       }
                     </Fragment>);
                 }
-                // if (item.type === "view" && btnsAuthority.includes("view")) {
-                  if (item.type === "view") {
+                if (item.type === "view" && btnsAuthority.includes("view")) {
+                  // if (item.type === "view") {
                   return (<Fragment key={item.type}>
                     <Tooltip title="详情">
                       <a onClick={() => {
@@ -367,7 +367,7 @@ class SdlTable extends PureComponent {
 
                     </Tooltip>
                     {
-                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
+                      this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes("del") && <Divider type="vertical" />
                     }
                   </Fragment>);
                 }

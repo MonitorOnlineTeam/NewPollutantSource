@@ -1,5 +1,12 @@
 import router from 'umi/router';
-import { queryCurrent, query as queryUsers, getMenuData, getUserInfo, editpersonaluser } from '@/services/user';
+import {
+  queryCurrent,
+  query as queryUsers,
+  getMenuData,
+  getUserInfo,
+  editpersonaluser,
+  getSystemConfigInfo,
+} from '@/services/user';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl } from '@/utils/utils';
@@ -7,7 +14,7 @@ import Model from '@/utils/model';
 
 function formatter(data, parentPath = '') {
   if (data && data.length > 0) {
-    return data.map((item) => {
+    return data.map(item => {
       let { path } = item;
       if (!isUrl(path)) {
         path = parentPath + item.path;
@@ -34,7 +41,7 @@ export default Model.extend({
     currentUser: {},
     changepwdRes: '',
     currentMenu: [],
-    editUser: null
+    editUser: null,
   },
 
   effects: {
@@ -58,7 +65,7 @@ export default Model.extend({
             type: 'saveCurrentUser',
             payload: {
               currentUser: currentUser,
-              currentMenu: cMenu
+              currentMenu: cMenu,
             },
           });
         } else {
@@ -82,47 +89,47 @@ export default Model.extend({
       }
     },
     /*获取单个用户实体**/
-    * getUserInfo({
-      payload
-    }, {
-      call,
-      update,
-    }) {
+    *getUserInfo({ payload }, { call, update }) {
       const result = yield call(getUserInfo, {
-        ...payload
+        ...payload,
       });
       yield update({
         requstresult: result.requstresult,
-        editUser: result.data[0]
+        editUser: result.data[0],
       });
       payload.callback();
     },
     /*个人设置编辑信息**/
-    * editpersonaluser({
-      payload
-    }, {
-      call,
-      update,
-    }) {
-      debugger
+    *editpersonaluser({ payload }, { call, update }) {
+      //debugger
       const result = yield call(editpersonaluser, {
-        ...payload
+        ...payload,
       });
-      debugger
+      debugger;
       yield update({
         requstresult: result.requstresult,
-        reason: result.reason
+        reason: result.reason,
       });
       payload.callback(result.requstresult === '1');
-    }
-
+    },
+    //获取登陆信息配置
+    *getSystemConfigInfo({ payload }, { put, call, update }) {
+      const loginData = yield call(getSystemConfigInfo, { ...payload });
+      if (loginData !== null) {
+        if (loginData.requstresult === '1') {
+          yield update({
+            getLoginInfoList: loginData.data,
+          });
+        }
+      }
+    },
   },
 
   reducers: {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     },
     changeNotifyCount(state, action) {
@@ -134,6 +141,6 @@ export default Model.extend({
           unreadCount: action.payload.unreadCount,
         },
       };
-    }
+    },
   },
 });
