@@ -297,6 +297,22 @@ export default {
               ],
             },
             {
+              path: '/monitoring',
+              name: 'monitoring',
+              routes: [
+                {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'datalist',
+                  path: '/monitoring/datalist',
+                  component: './overView',
+                },
+              ],
+            },
+            {
               path: '/account/settings',
               name: 'settings',
               routes: [
