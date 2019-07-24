@@ -215,6 +215,11 @@ export default Model.extend({
           Value: payload.PointCode,
           Where: '$=',
         },
+        {
+          Key: '[dbo]__[T_Bas_CameraMonitor]__MonitorType',
+          Value: 1,
+          Where: '$=',
+        },
       ];
 
       if (result.IsSuccess) {
@@ -244,6 +249,11 @@ export default Model.extend({
           Value: payload.PointCode,
           Where: '$=',
         },
+         {
+           Key: '[dbo]__[T_Bas_CameraMonitor]__MonitorType',
+           Value: 1,
+           Where: '$=',
+         },
       ];
         if (result.Datas) {
           message.success('删除成功！');

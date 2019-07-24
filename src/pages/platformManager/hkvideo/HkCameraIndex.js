@@ -194,7 +194,7 @@ const { confirm } = Modal;
                             loading={this.props.effects['hkvideo/hkvideourl']}
                             className={styles.dataTable}
                             size="middle"
-                            scroll={{ y: 'calc(100vh - 330px)' }}
+                            scroll={{ y: 'calc(100vh - 360px)' }}
                             rowClassName={
                                 (record, index, indent) => {
                                     if (index === 0) {

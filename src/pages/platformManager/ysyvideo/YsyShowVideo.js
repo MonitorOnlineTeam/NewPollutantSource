@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Row, Col, Button, Card, Divider, DatePicker, message, Tooltip, Tabs } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
+import {
+  PageHeaderWrapper,
+} from '@ant-design/pro-layout';
 import styles from './index.less';
-import MonitorContent from '@/components/MonitorContent/index';
 import HistoryVideo from './components/YsyHisVideoData';
 import YsyRealVideoData from './components/YsyRealVideoData';
 import config from '@/config';
@@ -268,15 +270,8 @@ class YsyShowVideo extends Component {
       );
     }
     return (
-      <MonitorContent
-        {...this.props}
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '系统管理', Url: '' },
-          { Name: '视频', Url: '' },
-        ]}
-      >
-        <div style={{ height: 'calc(100vh - 180px)', width: '100%', margin: '20px 0px 20px 0px' }}>
+      <PageHeaderWrapper>
+        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
           <Row gutter={48} style={{ height: '100%' }}>
             <Col
               xl={18}
@@ -284,7 +279,7 @@ class YsyShowVideo extends Component {
               md={24}
               sm={24}
               xs={24}
-              style={{ marginBottom: 10, height: '100%' }}
+              style={{ height: '100%' }}
             >
               <iframe
                 title="实时视频"
@@ -302,7 +297,7 @@ class YsyShowVideo extends Component {
               md={24}
               sm={24}
               xs={24}
-              style={{ marginBottom: 10, height: '100%' }}
+              style={{ height: '100%' }}
             >
               <Card className={styles.card}>
                 <Tabs
@@ -495,7 +490,7 @@ class YsyShowVideo extends Component {
             </Col>
           </Row>
         </div>
-      </MonitorContent>
+      </PageHeaderWrapper>
     );
   }
 }
