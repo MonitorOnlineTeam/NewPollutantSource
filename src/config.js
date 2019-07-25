@@ -29,7 +29,7 @@ module.exports = {
   // 萤石云视频地址
   ysyvideourl: 'http://172.16.9.33:8082/Web/YsyVideo/YsyVideo.html',
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
-  VideoServer: 0,
+  VideoServer: 1,
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 1000,
   // autoForm文件上传地址

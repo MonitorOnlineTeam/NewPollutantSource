@@ -18,8 +18,8 @@ class Index extends Component {
             optionDatas.map((item, key) => {
                 res.push(<Option
                     key={key}
-                    value={item.pollutantCode}
-                >{item.pollutantName}</Option>);
+                    value={item.PollutantCode}
+                >{item.PollutantName}</Option>);
             })
             return res;
         }
@@ -27,6 +27,7 @@ class Index extends Component {
 
     render() {
         const { mode, onChange, allowClear, style, placeholder, defaultValue, allpollutant } = this.props;
+        console.log('---------------------------------------------', defaultValue);
         return (
             <Select
                 mode={mode}
@@ -34,7 +35,7 @@ class Index extends Component {
                 allowClear={allowClear}
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
-                defaultValue={defaultValue || (allpollutant ? -1:null)}
+                defaultValue={defaultValue || (allpollutant ? -1 : null)}
             >
                 {
                      this.getoption()
