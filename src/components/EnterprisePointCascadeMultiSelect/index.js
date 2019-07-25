@@ -37,45 +37,41 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
     const cascadeSize = searchRegion ? level : (searchEnterprise ? level * 1 + 1 : level * 1 + 2);
     // const cascadeSize = searchEnterprise ? level * 1 + 1 : level * 1 + 2;
     const props = defaultValue ? { value: defaultValue } : {};
-    console.log('valporps=', props)
-    if (enterpriseAndPointList.length) {
-      return (
-        <div>
-          <CascadeMultiSelect
-            className={styles['kuma-cascader-wrapper']}
-            dropdownClassName={'ucms-drop'}
-            config={config}
-            placeholder={placeholder}
-            cascadeSize={cascadeSize}
-            notFoundContent={"沒有数据"}
-            options={enterpriseAndPointList}
-            // onSelect={(valueList, labelList, leafList) => {
-            //   console.log("select=", valueList, labelList, leafList);
-            //   this.setState({ value: leafList });
-            // }}
-            // onItemClick={(item, level) => {
-            //   if (level === 1 && this.state.currentLevelNode !== item.value) {
-            //     // if (level === 1) {
-            //     this.props.dispatch({
-            //       type: 'common/getEnterpriseAndPoint',
-            //       payload: {
-            //         RegionCode: item.value,
-            //         PointMark: searchRegion ? 2 : (searchEnterprise ? 0 : 1)
-            //       }
-            //     });
-            //     this.setState({ currentLevelNode: item.value });
-            //   }
-            // }}
-            onOk={(valueList, labelList, leafList, level) => {
-              const values = leafList.map(p => p.value);
-              this.props.onChange && this.props.onChange(values);
-            }}
-            {...props}
-          />
-        </div>
-      )
-    }
-    return null
+    return (
+      <div>
+        <CascadeMultiSelect
+          className={styles['kuma-cascader-wrapper']}
+          dropdownClassName={'ucms-drop'}
+          config={config}
+          placeholder={placeholder}
+          cascadeSize={cascadeSize}
+          notFoundContent={"沒有数据"}
+          options={enterpriseAndPointList}
+          // onSelect={(valueList, labelList, leafList) => {
+          //   console.log("select=", valueList, labelList, leafList);
+          //   this.setState({ value: leafList });
+          // }}
+          // onItemClick={(item, level) => {
+          //   if (level === 1 && this.state.currentLevelNode !== item.value) {
+          //     // if (level === 1) {
+          //     this.props.dispatch({
+          //       type: 'common/getEnterpriseAndPoint',
+          //       payload: {
+          //         RegionCode: item.value,
+          //         PointMark: searchRegion ? 2 : (searchEnterprise ? 0 : 1)
+          //       }
+          //     });
+          //     this.setState({ currentLevelNode: item.value });
+          //   }
+          // }}
+          onOk={(valueList, labelList, leafList, level) => {
+            const values = leafList.map(p => p.value);
+            this.props.onChange && this.props.onChange(values);
+          }}
+          {...props}
+        />
+      </div>
+    )
 
   }
 }

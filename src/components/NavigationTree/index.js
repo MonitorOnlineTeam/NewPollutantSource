@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty,Col } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
@@ -19,10 +19,10 @@ const gData = [];
 const children = [];
 const dataList = [];
 const floats = Setting.layout
-const styleTrue={border:"1px solid",borderRadius:4,padding:3 ,borderColor:"#1990fc",cursor:"pointer"}
-const styleFalse={border:"1px solid",borderRadius:4,padding:3 ,borderColor:"#fff",cursor:"pointer"}
-const styleNor={border:"1px solid",borderRadius:4,padding:3 ,borderColor:"#1990fc",cursor:"pointer",marginLeft:5}
-const styleFor={border:"1px solid",borderRadius:4,padding:3 ,borderColor:"#fff",cursor:"pointer",marginLeft:5}
+const styleTrue = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer" }
+const styleFalse = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer" }
+const styleNor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer", marginLeft: 5 }
+const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer", marginLeft: 5 }
 
 
 @connect(({ navigationtree, loading }) => ({
@@ -45,18 +45,22 @@ class NavigationTree extends Component {
     selectedKeys: [],
     searchValue: '',
     placement: 'right',
-    normalState:true,
-    offState:true,
-    overState:true,
-    exceState:true,
-    screenList:[0,1,2,3]
+    normalState: true,
+    offState: true,
+    overState: true,
+    exceState: true,
+    screenList: [0, 1, 2, 3]
   }
 
   componentDidMount() {
+    const dom  = document.querySelector(this.props.domId);
+    if(dom){
+      floats === "topmenu" ? dom.style.marginLeft = "400px" : dom.style.marginRight = "400px"
+    }
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
-        Status:this.state.screenList
+        Status: this.state.screenList
       }
     })
     this.props.dispatch({
@@ -133,7 +137,7 @@ class NavigationTree extends Component {
         PollutantTypes: value,
         RegionCode: this.state.RegionCode,
         Name: this.state.Name,
-        Status:this.state.screenList,
+        Status: this.state.screenList,
       }
     })
     console.log("list=", this.props.EntAndPoint)
@@ -148,7 +152,7 @@ class NavigationTree extends Component {
         Name: value,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
-        Status:this.state.screenList
+        Status: this.state.screenList
       }
     })
     console.log("list=", this.props.EntAndPoint)
@@ -174,9 +178,23 @@ class NavigationTree extends Component {
   };
 
   changeState = () => {
+    const { domId } = this.props;
     this.setState({
       visible: !this.state.visible,
       right: this.state.right === "caret-right" ? "caret-left" : "caret-right"
+    }, () => {
+      const dom = document.querySelector(domId)
+      if (dom) {
+        if (this.state.visible) {
+          dom.style.width = 'calc(100% - 400px)'
+          floats === "topmenu" ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px' 
+          dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
+        } else {
+          dom.style.width = 'calc(100%)'
+          floats === "topmenu" ? dom.style.marginLeft = '0' : dom.style.marginRight = '0' 
+          dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
+        }
+      }
     });
   };
   regionChange = (value) => {
@@ -190,7 +208,7 @@ class NavigationTree extends Component {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
-        Status:this.state.screenList
+        Status: this.state.screenList
       }
     })
     console.log("list=", this.props.EntAndPoint)
@@ -229,43 +247,41 @@ class NavigationTree extends Component {
     }
     return color
   }
-  screenData=(type)=>{
-    var offState=this.state.offState
-    var normalState=this.state.normalState
-    var overState=this.state.overState
-    var exceState=this.state.exceState
+  screenData = (type) => {
+    var offState = this.state.offState
+    var normalState = this.state.normalState
+    var overState = this.state.overState
+    var exceState = this.state.exceState
     switch (type) {
       case 0://离线
-      offState=!offState
+        offState = !offState
         break;
       case 1://正常
-      normalState=!normalState
+        normalState = !normalState
         break;
       case 2://超标
-      overState=!overState
+        overState = !overState
         break;
       case 3://异常
-      exceState=!exceState
+        exceState = !exceState
         break;
     }
     debugger
-    var typeList=this.state.screenList;
-    var index=typeList.indexOf(type)
-    if(index==-1)
-    {
+    var typeList = this.state.screenList;
+    var index = typeList.indexOf(type)
+    if (index == -1) {
       typeList.push(type)
-    }else
-    {
-      typeList.splice(index,1)
+    } else {
+      typeList.splice(index, 1)
     }
-    this.setState({screenList:typeList,offState,normalState,overState,exceState})
+    this.setState({ screenList: typeList, offState, normalState, overState, exceState })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
-        Status:typeList
+        Status: typeList
       }
     })
   }
@@ -325,14 +341,14 @@ class NavigationTree extends Component {
     this.setState({ checkedKeys: list, expandedKeys: expand });
     this.returnData(list)
   };
- 
+
   returnData = (data) => {
     const rtnList = [];
     data.map(item => {
       var isEnt = dataList.filter(m => m.key == item)[0].IsEnt == 1 ? true : false
       rtnList.push({ key: item, IsEnt: isEnt })
     })
-    this.props.onItemClick(rtnList)
+    this.props.onItemClick && this.props.onItemClick(rtnList)
     this.props.dispatch({
       type: "navigationtree/updateState",
       payload: {
@@ -393,14 +409,14 @@ class NavigationTree extends Component {
           }}
         >
           <div style={{ marginBottom: 15 }}>
-            <Row style={{textAlign:"center"}}>
-              <Col span={5} style={this.state.normalState?styleNor:styleFor} onClick={()=>this.screenData(1)}><LegendIcon style={{ color: "#34c066"}} />正常</Col>
+            <Row style={{ textAlign: "center" }}>
+              <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.offState?styleTrue:styleFalse} onClick={()=>this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
+              <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.overState?styleTrue:styleFalse} onClick={()=>this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col>
+              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.exceState?styleTrue:styleFalse} onClick={()=>this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
+              <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
           <Select
@@ -472,6 +488,10 @@ class NavigationTree extends Component {
 
     );
   }
+}
+
+NavigationTree.defaultProps = {
+  domId: "#contentWrapper"
 }
 
 export default NavigationTree
