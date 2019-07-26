@@ -314,7 +314,7 @@ export default {
                  {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/YsyCameraIndex'}`,
+                  component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/YsyShowVideo'}`,
                 },
               ],
             },
@@ -388,7 +388,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.52:8096/',
+      target: 'http://localhost:52198/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

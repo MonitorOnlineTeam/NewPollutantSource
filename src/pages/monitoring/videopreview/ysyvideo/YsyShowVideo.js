@@ -20,6 +20,7 @@ import styles from './index.less';
 import HistoryVideo from './components/YsyHisVideoData';
 import YsyRealVideoData from './components/YsyRealVideoData';
 import config from '@/config';
+import NavigationTree from '../../../../components/NavigationTree'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -132,7 +133,7 @@ class YsyShowVideo extends Component {
     dispatch({
       type: 'video/ysyvideourl',
       payload: {
-        VedioCameraID: match.params.ID,
+        VedioCameraID: 'CD4AD3E4-01FE-49EF-875A-90AD48627177',
         type,
       },
     });
@@ -204,7 +205,6 @@ class YsyShowVideo extends Component {
 
   /** 实时视频视频按钮 */
   btnClick = opt => {
-    debugger;
     if (opt === 2) {
       this.setState({
         displayRStartBtn: 'block',
@@ -267,32 +267,27 @@ class YsyShowVideo extends Component {
     }
   };
 
+  /** 切换排口 */
+   changeDgimn = dgimn => {
+
+   }
+
   render() {
     const { ysyrealtimevideofullurl } = this.props;
-    if (ysyrealtimevideofullurl === 'nodata') {
-      return (
-        <table align="center" style={{ height: 'calc(100vh - 225px)', width: '100%' }}>
-          <tbody>
-            <tr>
-              <td align="center">暂无视频配置</td>
-            </tr>
-          </tbody>
-        </table>
-      );
-    }
     return (
+      <div id="videopreview">
       <PageHeaderWrapper>
+       <NavigationTree domId="#videopreview" choice={false} onItemClick={value => {
+                            if (value.length > 0 && !value[0].IsEnt) {
+                            this.changeDgimn(value[0].key)
+                            }
+         }} />
         <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
-          <Row gutter={48} style={{ height: '100%' }}>
-            <Col
-              xl={18}
-              lg={24}
-              md={24}
-              sm={24}
-              xs={24}
-              style={{ height: '100%' }}
+          <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
+            <div
+              className={styles.divv}
             >
-              <iframe
+              {ysyrealtimevideofullurl !== 'nodata' ? <iframe
                 title="实时视频"
                 id="ifm"
                 src={ysyrealtimevideofullurl}
@@ -300,27 +295,11 @@ class YsyShowVideo extends Component {
                 width="100%"
                 height="100%"
                 scrolling="no"
-              />
-            </Col>
-            <Col
-              xl={6}
-              lg={24}
-              md={24}
-              sm={24}
-              xs={24}
-              style={{ height: '100%' }}
+              /> : 'ddd'}
+            </div>
+            <div className={styles.divc}
             >
-              <Card className={styles.card} extra={<span><Button
-                  style={{ marginLeft: 10 }}
-                  onClick={() => {
-                    history.go(-1);
-                  }}
-                  type="link"
-                  size="small"
-                >
-                  <Icon type="rollback" />
-                  返回上级
-                </Button></span>}>
+              <Card className={styles.card}>
                 <Tabs
                   defaultActiveKey="1"
                   onChange={key => {
@@ -508,10 +487,11 @@ class YsyShowVideo extends Component {
                   </TabPane>
                 </Tabs>
               </Card>
-            </Col>
+            </div>
           </Row>
         </div>
       </PageHeaderWrapper>
+      </div>
     );
   }
 }

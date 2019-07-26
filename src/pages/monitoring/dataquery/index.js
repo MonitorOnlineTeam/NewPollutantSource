@@ -2,22 +2,13 @@ import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import {
-    Button,
-    Input,
     Card,
-    Row,
-    Col,
     Table,
-    Form,
     Spin,
-    Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Empty, Switch,
+    message, Empty, Switch,
 } from 'antd';
-import { PointIcon } from '@/utils/icon'
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlTable from '../../../components/AutoForm/Table';
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import RangePicker_ from '../../../components/RangePicker'
@@ -288,28 +279,31 @@ class Index extends Component {
 
     render() {
         return (
-            <PageHeaderWrapper>
-                <div className={styles.cardTitle}>
-                <Card
-                    extra={
-                        <div>
-                            {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
-                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                            <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
-                        </div>
-                    }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)' }}
-                >
-                    <NavigationTree choice={false} onItemClick={value => {
-                        if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value[0].key)
+            <div id="dataquery">
+                <PageHeaderWrapper>
+
+                    <div className={styles.cardTitle}>
+                    <Card
+                        extra={
+                            <div>
+                                {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
+                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                                <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
+                            </div>
                         }
-                    }} />
-                     {this.loaddata()}
-                </Card>
+                        style={{ width: '100%', height: 'calc(100vh - 230px)' }}
+                    >
+                        {this.loaddata()}
+                    </Card>
+                </div>
+                </PageHeaderWrapper>
+                <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
+                            if (value.length > 0 && !value[0].IsEnt) {
+                            this.changeDgimn(value[0].key)
+                            }
+                        }} />
             </div>
-            </PageHeaderWrapper>
         );
     }
 }
