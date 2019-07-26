@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '../../../components/NavigationTree'
-import DataQuery from './components/DataQuery'
+import AlarmRecord from './components/AlarmRecord'
 
 /**
- * 数据查询页面
+ * 报警记录
  * xpy 2019.07.26
  */
 
@@ -24,11 +24,11 @@ class Index extends Component {
 
     render() {
         return (
-            <div id="dataquery">
+            <div id="alarmrecord">
                 <PageHeaderWrapper>
-                 <DataQuery DGIMN={this.state.dgimn} />
+                 <AlarmRecord DGIMN={this.state.dgimn} />
                 </PageHeaderWrapper>
-                <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
+                <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)
                             }
