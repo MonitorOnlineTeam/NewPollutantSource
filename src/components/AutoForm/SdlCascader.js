@@ -21,13 +21,13 @@ class SdlCascader extends Component {
 
   componentDidMount() {
     const { dispatch, data } = this.props;
-    !data && dispatch({
+    !data.length && dispatch({
       type: 'autoForm/getRegions',
     })
   }
   render() {
     const { configId, regionList, data, itemValue, itemName } = this.props;
-    const options = data ? data : regionList;
+    const options = data.length ? data : regionList;
     const labelArr = itemName.split('.');
     const valueArr = itemValue.split('.');
     let label = labelArr.length > 1 ? itemName.split('.').pop().toString() : itemName;

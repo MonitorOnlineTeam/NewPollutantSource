@@ -12,9 +12,9 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import MonitorContent from '@/components/MonitorContent';
+import MonitorContent from '../../components/MonitorContent/index';
 import ReturnName from './ReturnName'
-import styles from '@/components/DescriptionList/index.less';
+import styles from '../../components/DescriptionList/index.less';
 
 const FormItem = Form.Item;
 

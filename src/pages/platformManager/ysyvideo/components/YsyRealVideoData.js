@@ -91,7 +91,7 @@ class YsyRealVideoData extends Component {
       <div className={styles.tab}>
         <Card
           title="实时数据"
-          style={{ height: 'calc(100vh - 392px)', overflowY: 'scroll' }}
+          style={{ height: 'calc(100vh - 440px)', overflowY: 'scroll' }}
           extra={<div style={{ color: 'gray' }}>{MonitorTime}</div>}
           loading={isloadingC && isloadingP}
           size="small"

@@ -35,6 +35,11 @@ class YsyCameraIndex extends Component {
     this.state = {
       visible: false,
       FormDatas: {},
+      pointDataWhere: [{
+            Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
+            Value: 1,
+            Where: '$=',
+          }],
     };
   }
 
@@ -47,24 +52,12 @@ class YsyCameraIndex extends Component {
         configId: 'CameraMonitor',
       },
     });
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId: 'VideoCamera',
-      },
-    });
   }
 
   changeDgimn=dgimn => {
-
-  }
-
-  render() {
-    const { dispatch, loading, match } = this.props;
-    const pointDataWhere = [
-      {
+    const pointDataWhere = [{
         Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
-        Value: match.params.Pointcode,
+        Value: dgimn,
         Where: '$=',
       },
       {
@@ -73,6 +66,14 @@ class YsyCameraIndex extends Component {
         Where: '$=',
       },
     ];
+    this.setState({
+      pointDataWhere,
+    })
+  }
+
+  render() {
+    const { dispatch, loading, match } = this.props;
+    const { pointDataWhere } = this.state;
     if (loading) {
       return (
         <Spin
@@ -88,52 +89,43 @@ class YsyCameraIndex extends Component {
       );
     }
     return (
-      <PageHeaderWrapper>
-        <div className={styles.cardTitle}>
-        <NavigationTree choice={false} onItemClick={value => {
-                        console.log('-------------------------------------', value);
-                        if (!value[0].IsEnt) {
-                        this.changeDgimn(value[0].key)
-                        }
-                    }} />
-          <Card>
-            <SearchWrapper configId="VideoCamera" />
-            <SdlTable
-              style={{ marginTop: 10 }}
-              configId="CameraMonitor"
-              searchParams={pointDataWhere}
-              rowChange={(key, row) => {
-                this.setState({
-                  key,
-                  row,
-                });
-              }}
-              onAdd={() => {
-                this.showModal();
-              }}
-              appendHandleRows={row => (
-                <Fragment>
-                  <Tooltip title="播放">
-                  <a
-                    onClick={() => {
-                      dispatch(
-                        routerRedux.push(
-                          `/platformconfig/ysyshowvideo/${
-                            row['dbo.T_Bas_VideoCamera.VedioCamera_ID']
-                          }/${this.props.match.params.DGIMN}`,
-                        ),
-                      );
-                    }}
-                  >
-                    <Icon type="play-circle" theme="twoTone" />
-                  </a>
-                  </Tooltip>
-                </Fragment>
-              )}
-            />
-          </Card>
-        </div>
-      </PageHeaderWrapper>
+      <div id="videopreview">
+        <PageHeaderWrapper>
+          <div className={styles.cardTitle}>
+          <NavigationTree domId="#videopreview" choice={false} onItemClick={value => {
+                          if (value.length > 0 && !value[0].IsEnt) {
+                            this.changeDgimn(value[0].key)
+                            }
+                      }} />
+            <Card>
+              <SdlTable
+                style={{ marginTop: 10 }}
+                configId="CameraMonitor"
+                searchParams={pointDataWhere}
+                appendHandleRows={row => (
+                  <Fragment>
+                    <Tooltip title="播放">
+                    <a
+                      onClick={() => {
+                        dispatch(
+                          routerRedux.push(
+                            `/platformconfig/ysyshowvideo/${
+                              row['dbo.T_Bas_VideoCamera.VedioCamera_ID']
+                            }/${this.props.match.params.DGIMN}`,
+                          ),
+                        );
+                      }}
+                    >
+                      <Icon type="play-circle" theme="twoTone" />
+                    </a>
+                    </Tooltip>
+                  </Fragment>
+                )}
+              />
+            </Card>
+          </div>
+        </PageHeaderWrapper>
+      </div>
     );
   }
 }

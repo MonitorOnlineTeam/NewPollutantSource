@@ -157,7 +157,7 @@ export default {
                 {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId',
-                  component: './platformManager/enterprise',
+                  component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitorpoint',
@@ -314,7 +314,7 @@ export default {
                  {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/YsyCameraIndex'}`,
+                  component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/YsyShowVideo'}`,
                 },
                 {
                   name: 'overrecord',

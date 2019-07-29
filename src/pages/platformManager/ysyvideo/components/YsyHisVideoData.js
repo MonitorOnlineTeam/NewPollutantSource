@@ -123,7 +123,7 @@ class YsyHisVideoData extends Component {
         dataSource={hisrealdata}
         columns={hiscolumns}
         size="small"
-        scroll={{ x, y: 'calc(100vh - 598px)' }}
+        scroll={{ x, y: 'calc(100vh - 645px)' }}
         pagination={{
           total: this.props.total,
           pageSize: this.props.pageSize,

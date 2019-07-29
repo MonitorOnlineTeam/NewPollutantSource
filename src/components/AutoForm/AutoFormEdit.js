@@ -16,6 +16,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
 import MonitorContent from '../../components/MonitorContent/index';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlForm from "./SdlForm"
 
 const FormItem = Form.Item;
@@ -136,17 +137,19 @@ class AutoFormEdit extends Component {
       <Fragment>
         {
           breadcrumb ?
-            <MonitorContent breadCrumbList={
-              [
-                { Name: '首页', Url: '/' },
-                { Name: '系统管理', Url: '' },
-                { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
-                { Name: '编辑', Url: '' }
-              ]
-            }
-            >
+            // <MonitorContent breadCrumbList={
+            //   [
+            //     { Name: '首页', Url: '/' },
+            //     { Name: '系统管理', Url: '' },
+            //     { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
+            //     { Name: '编辑', Url: '' }
+            //   ]
+            // }
+            // >
+            <PageHeaderWrapper title="编辑">
               {this._renderForm()}
-            </MonitorContent> :
+              {/* </MonitorContent> : */}
+            </PageHeaderWrapper> :
             <Fragment>
               {this._renderForm()}
             </Fragment>
