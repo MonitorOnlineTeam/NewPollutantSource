@@ -81,6 +81,7 @@ class NavigationTree extends Component {
     }
 
   }
+  //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
@@ -92,7 +93,7 @@ class NavigationTree extends Component {
     }
   };
   // generateList(this.props.EntAndPoint);
-
+//获取当前传入的key的父节点
   getParentKey = (key, tree) => {
     let parentKey;
     for (let i = 0; i < tree.length; i++) {
@@ -124,9 +125,8 @@ class NavigationTree extends Component {
       placement: e.target.value,
     });
   };
-
+ //污染物筛选
   handleChange = (value) => {
-    console.log(`selected ${value}`);
     value = value.toString()
     this.setState({
       PollutantTypes: value,
@@ -140,8 +140,8 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
       }
     })
-    console.log("list=", this.props.EntAndPoint)
   }
+  //搜索框改变查询数据
   onTextChange = (value) => {
     this.setState({
       Name: value
@@ -155,28 +155,26 @@ class NavigationTree extends Component {
         Status: this.state.screenList
       }
     })
-    console.log("list=", this.props.EntAndPoint)
   }
+  //搜索框改变查询数据
   onChangeSearch = e => {
     this.generateList()
     const { value } = e.target;
     const expandedKeys = dataList
       .map(item => {
-        debugger
         if (item.title.indexOf(value) > -1) {
           return this.getParentKey(item.key, this.props.EntAndPoint);
         }
         return null;
       })
       .filter((item, i, self) => item && self.indexOf(item) === i);
-    console.log("expandkey=", expandedKeys)
     this.setState({
       expandedKeys,
       searchValue: value,
       autoExpandParent: true,
     });
   };
-
+//配置抽屉及动画效果左右区分
   changeState = () => {
     const { domId } = this.props;
     this.setState({
@@ -197,6 +195,7 @@ class NavigationTree extends Component {
       }
     });
   };
+  //行政区筛选
   regionChange = (value) => {
     value = value.toString()
     this.setState({
@@ -211,10 +210,8 @@ class NavigationTree extends Component {
         Status: this.state.screenList
       }
     })
-    console.log("list=", this.props.EntAndPoint)
   }
   onExpand = expandedKeys => {
-    console.log('onExpand', expandedKeys);
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
     // or, you can remove all expanded children keys.
     this.setState({
@@ -222,13 +219,12 @@ class NavigationTree extends Component {
       autoExpandParent: false,
     });
   };
-
+//复选框选中
   onCheck = checkedKeys => {
-    console.log('onCheck', checkedKeys);
-
     this.setState({ checkedKeys });
     this.returnData(checkedKeys)
   };
+  //获取筛选状态图标颜色
   getColor = (status) => {
     var color = ""
     switch (status) {
@@ -247,6 +243,7 @@ class NavigationTree extends Component {
     }
     return color
   }
+  //筛选运行状态
   screenData = (type) => {
     var offState = this.state.offState
     var normalState = this.state.normalState
@@ -266,7 +263,6 @@ class NavigationTree extends Component {
         exceState = !exceState
         break;
     }
-    debugger
     var typeList = this.state.screenList;
     var index = typeList.indexOf(type)
     if (index == -1) {
@@ -285,6 +281,7 @@ class NavigationTree extends Component {
       }
     })
   }
+  //树节点点击事件
   onSelect = (selectedKeys, info) => {
     // 展开关闭节点
     var expand = this.state.expandedKeys
@@ -341,14 +338,17 @@ class NavigationTree extends Component {
     this.setState({ checkedKeys: list, expandedKeys: expand });
     this.returnData(list)
   };
-
+//向外部返回选中的数据并且更新到model全局使用
   returnData = (data) => {
+    //处理选中的数据格式
     const rtnList = [];
     data.map(item => {
       var isEnt = dataList.filter(m => m.key == item)[0].IsEnt == 1 ? true : false
       rtnList.push({ key: item, IsEnt: isEnt })
     })
+    //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList)
+    //更新到model
     this.props.dispatch({
       type: "navigationtree/updateState",
       payload: {
@@ -358,6 +358,7 @@ class NavigationTree extends Component {
   }
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    //渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map(item => {
         const index = item.title.indexOf(searchValue);
@@ -489,7 +490,7 @@ class NavigationTree extends Component {
     );
   }
 }
-
+//如果传入的domId为空则默认使用以下id
 NavigationTree.defaultProps = {
   domId: "#contentWrapper"
 }

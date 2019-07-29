@@ -25,6 +25,7 @@ import { formatPollutantPopover } from '@/utils/utils';
 import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
+import { LegendIcon } from '@/utils/icon';
 
 const RadioGroup = Radio.Group;
 @connect(({ loading, overview }) => ({
@@ -257,19 +258,19 @@ class dataList extends PureComponent {
                 fixed: fixed,
                 filters: [
                     {
-                        text: '正常',
+                        text: <span><LegendIcon style={{color:"#34c066"}} />正常</span>,
                         value: 1,
                     },
                     {
-                        text: '超标',
+                        text: <span><LegendIcon style={{color:"#f04d4d"}} />超标</span>,
                         value: 2,
                     },
                     {
-                        text: '离线',
+                        text:<span><LegendIcon style={{color:"#999999"}} />离线</span>,
                         value: 0,
                     },
                     {
-                        text: '异常',
+                        text: <span><LegendIcon style={{color:"#e94"}} />异常</span>,
                         value: 3,
                     },
                 ],
