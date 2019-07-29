@@ -34,11 +34,12 @@ import PollutantType from '@/components/AutoForm/PollutantType';
 import SdlForm from '@/components/AutoForm/SdlForm';
 import AutoFormViewItems from '@/components/AutoForm/AutoFormViewItems';
 import config from '@/config';
+import SelectPollutantType from '@/components/SelectPollutantType'
 
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 
-@connect(({ loading, autoForm, monitorTarget }) => ({
+@connect(({ loading, autoForm, monitorTarget,common }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   autoForm,
@@ -49,6 +50,7 @@ let pointConfigIdEdit = '';
   routerConfig: autoForm.routerConfig,
   pointDataWhere: monitorTarget.pointDataWhere,
   isEdit: monitorTarget.isEdit,
+  defaultPollutantCode:common.defaultPollutantCode
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -299,7 +301,10 @@ export default class MonitorPoint extends Component {
       },
     });
   }
-
+  onPollutantChange = e => {
+    console.log(e);
+    this.getPageConfig(e.target.value);
+  }
   render() {
     const {
       searchConfigItems,
@@ -374,7 +379,13 @@ export default class MonitorPoint extends Component {
                 </Button>
               </span>
             }
-            extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}
+            // extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}
+            extra={<SelectPollutantType
+              style={{ marginLeft: 50, float: 'left' }}
+              showType="radio"
+              onChange={this.onPollutantChange}
+              defaultValue={this.state.pollutantType}
+            />}
           >
             <SdlTable
               style={{ marginTop: 10 }}
@@ -391,60 +402,60 @@ export default class MonitorPoint extends Component {
               }}
               searchParams={pointDataWhere}
               appendHandleRows={row => (
-                  <Fragment>
-                    <Tooltip title="编辑">
-                      <a
-                        onClick={() => {
-                          this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
-                        }}
-                      >
-                        <EditIcon />
-                      </a>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    <Tooltip title="详情">
-                      <a
-                        onClick={() => {
-                          this.setState({
-                            visible: true,
-                            isEdit: false,
-                            isView: true,
-                            selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
-                          });
-                        }}
-                      >
-                        <DetailIcon />
-                      </a>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    <Tooltip title="删除">
-                      <Popconfirm
-                        title="确认要删除吗?"
-                        onConfirm={() => {
-                          this.delPoint(
-                            row['dbo.T_Bas_CommonPoint.PointCode'],
-                            row['dbo.T_Bas_CommonPoint.DGIMN'],
-                          );
-                        }}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                      >
-                        <a href="#"><DelIcon /></a>
-                      </Popconfirm>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    <Dropdown
-                      overlay={menu(
-                        row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        row['dbo.T_Bas_CommonPoint.PointName'],
-                        row['dbo.T_Bas_CommonPoint.PointCode'],
-                      )}
+                <Fragment>
+                  <Tooltip title="编辑">
+                    <a
+                      onClick={() => {
+                        this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                      }}
                     >
-                      <a>更多</a>
-                    </Dropdown>
-                  </Fragment>
-                )}
+                      <EditIcon />
+                    </a>
+                  </Tooltip>
+                  <Divider type="vertical" />
+                  <Tooltip title="详情">
+                    <a
+                      onClick={() => {
+                        this.setState({
+                          visible: true,
+                          isEdit: false,
+                          isView: true,
+                          selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
+                        });
+                      }}
+                    >
+                      <DetailIcon />
+                    </a>
+                  </Tooltip>
+                  <Divider type="vertical" />
+                  <Tooltip title="删除">
+                    <Popconfirm
+                      title="确认要删除吗?"
+                      onConfirm={() => {
+                        this.delPoint(
+                          row['dbo.T_Bas_CommonPoint.PointCode'],
+                          row['dbo.T_Bas_CommonPoint.DGIMN'],
+                        );
+                      }}
+                      onCancel={this.cancel}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a href="#"><DelIcon /></a>
+                    </Popconfirm>
+                  </Tooltip>
+                  <Divider type="vertical" />
+                  <Dropdown
+                    overlay={menu(
+                      row['dbo.T_Bas_CommonPoint.DGIMN'],
+                      row['dbo.T_Bas_CommonPoint.PointName'],
+                      row['dbo.T_Bas_CommonPoint.PointCode'],
+                    )}
+                  >
+                    <a>更多</a>
+                  </Dropdown>
+                </Fragment>
+              )}
             />
           </Card>
           <Modal
@@ -473,7 +484,7 @@ export default class MonitorPoint extends Component {
               )}
           </Modal>
         </div>
-      {/* </MonitorContent> */}
+        {/* </MonitorContent> */}
       </PageHeaderWrapper>
     );
   }

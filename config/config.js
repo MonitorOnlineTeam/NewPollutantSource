@@ -162,7 +162,7 @@ export default {
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetType/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {

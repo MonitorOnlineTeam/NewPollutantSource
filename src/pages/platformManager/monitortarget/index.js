@@ -1,5 +1,9 @@
 
-
+/*
+ * @desc: 监控目标公共页面【企业、监测站、河段、工地】
+ * @Author: JianWei
+ * @Date: 2019年7月29日15:11:59
+ */
 import React, { Component, Fragment } from 'react';
 import {
     Button,
@@ -18,7 +22,6 @@ import { PointIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-// import SdlTable from '@/components/AutoForm/Table';
 import SdlTable from '@/components/AutoForm/Table';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/components/AutoForm/SearchWrapper';
@@ -46,7 +49,6 @@ export default class MonitorTarget extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //;
         if (nextProps.location.pathname != this.props.location.pathname) {
             if (nextProps.match.params.configId !== this.props.routerConfig)
                 this.reloadPage(nextProps.match.params.configId);
@@ -75,24 +77,37 @@ export default class MonitorTarget extends Component {
 
         let targetId = '';
         let targetName = '';
+        let targetType = '';
         switch (match.params.configId) {
-            case 'AEnterpriseTest':
+            case 'AEnterpriseTest'://企业
                 targetId = row['dbo.T_Bas_Enterprise.EntCode'];
-                targetName = row['dbo.T_Bas_Enterprise.EntName']
+                targetName = row['dbo.T_Bas_Enterprise.EntName'];
+                targetType = 1;
                 break;
-            case 'baseReach':
+            case 'basStation'://监测站
+                targetId = row['dbo.T_Bas_Station.StationCode'];
+                targetName = row['dbo.T_Bas_Station.StationName'];
+                targetType = 2;
+                break;
+            case 'baseReach'://河段
                 targetId = row['dbo.T_Bas_Reach.ReachCode'];
-                targetName = row['dbo.T_Bas_Reach.ReachName']
+                targetName = row['dbo.T_Bas_Reach.ReachName'];
+                targetType = 3;
+                break;
+            case 'basBuildingSite'://工地
+                targetId = row['dbo.T_Bas_BuildingSite.BuildingSiteCode'];
+                targetName = row['dbo.T_Bas_BuildingSite.BuildingSiteName'];
+                targetType = 1;
                 break;
             default: break;
         }
 
-        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/monitorpoint/${match.params.configId}/${targetId}/${targetName}`))
+        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/monitorpoint/${match.params.configId}/${targetType}/${targetId}/${targetName}`))
     }
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-        console.log("this.props=", this.props);
+        //console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
         if (this.props.loading) {
@@ -109,13 +124,6 @@ export default class MonitorTarget extends Component {
         }
         return (
             <PageHeaderWrapper>
-                {/* <MonitorContent breadCrumbList={
-                [
-                    { Name: '首页', Url: '/' },
-                    { Name: '平台配置', Url: '' },
-                    { Name: '企业管理', Url: '' }
-                ]
-            }> */}
                 <div className={styles.cardTitle}>
                     <Card>
 
@@ -155,7 +163,6 @@ export default class MonitorTarget extends Component {
                         </SdlTable>
                     </Card>
                 </div>
-                {/* </MonitorContent> */}
             </PageHeaderWrapper>
         );
     }
