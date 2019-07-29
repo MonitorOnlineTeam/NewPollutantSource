@@ -55,17 +55,42 @@ class AlarmRecord extends Component {
                   rangeDate: [nextProps.firsttime, nextProps.lasttime],
                   overdataparams: overdataparamsState,
               })
-            this.reloaddatalist(overdataparamsState);
+            this.changeDgimn(nextProps.DGIMN, nextProps.firsttime, nextProps.lasttime);
           }
       }
 
+       /** 切换排口 */
+    changeDgimn=dgimn => {
+        this.setState({
+            selectDisplay: true,
+        })
+         const {
+        dispatch,
+      } = this.props;
+      let { overdataparams } = this.props;
+        overdataparams = {
+          ...overdataparams,
+          pollutantCode: '',
+          pageIndex: 1,
+        }
+      dispatch({
+        type: 'alarmrecord/updateState',
+        payload: {
+          overdataparams,
+        },
+      })
+        this.getpointpollutants(dgimn);
+    }
+
       /** 获取污染物 */
-      getpointpollutants = dgimn => {
+      getpointpollutants = (dgimn, firsttime, lasttime) => {
          this.props.dispatch({
            type: 'alarmrecord/querypollutantlist',
            payload: {
              overdata: true,
              dgimn,
+             beginTime: moment(firsttime).format('YYYY-MM-DD HH:mm:ss'),
+            endTime: moment(lasttime).format('YYYY-MM-DD HH:mm:ss'),
            },
          })
       }
@@ -94,12 +119,12 @@ class AlarmRecord extends Component {
             optionDatas={pollutantlist}
             defaultValue={this.getpropspollutantcode()}
             style={{ width: 150, marginRight: 10 }}
-            onChange={this._handlePollutantChange}
+            onChange={this.ChangePollutant}
         />);
     }
 
     /**切换污染物 */
-    _handlePollutantChange = (value, selectedOptions) => {
+    ChangePollutant = (value, selectedOptions) => {
       let {
         overdataparams,
       } = this.props;
@@ -146,28 +171,6 @@ class AlarmRecord extends Component {
         });
     }
 
-     /** 切换排口 */
-    changeDgimn=dgimn => {
-        this.setState({
-            selectDisplay: true,
-        })
-         const {
-        dispatch,
-      } = this.props;
-      let { overdataparams } = this.props;
-        overdataparams = {
-          ...overdataparams,
-          pollutantCode: '',
-          pageIndex: 1,
-        }
-      dispatch({
-        type: 'alarmrecord/updateState',
-        payload: {
-          overdataparams,
-        },
-      })
-        this.getpointpollutants(dgimn);
-    }
 
       render() {
           let tablewidth = 0;
