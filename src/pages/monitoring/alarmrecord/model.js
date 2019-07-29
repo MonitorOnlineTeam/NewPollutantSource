@@ -2,7 +2,7 @@ import Model from '@/utils/model';
 import moment from 'moment'
 import {
   querypollutantlist,
-  queryhistorydatalist,
+  queryoverdatalist,
 } from './services';
 import { formatPollutantPopover } from '@/utils/utils';
 
@@ -45,25 +45,21 @@ export default Model.extend({
          * queryoverdatalist({
             payload,
         }, { call, update, select }) {
-            const { overdataparams } = yield select(a => a.points);
+            const { overdataparams } = yield select(a => a.alarmrecord);
             const postData = {
                 ...overdataparams,
                 DGIMN: payload.dgimn ? payload.dgimn : overdataparams.DGIMN,
                 beginTime: payload.beginTime ? payload.beginTime : overdataparams.beginTime,
                 endTime: payload.endTime ? payload.endTime : overdataparams.endTime,
             }
-            const res = yield call(queryoverdatalist, postData);
 
-            if (res.data) {
-                let reslist = [];
-                res.data.map((item, key) => {
-                    reslist = reslist.concat({
-                        ...item,
-                        overValue: item.value,
-                        key,
-                    });
+            const res = yield call(queryoverdatalist, postData);
+            debugger;
+            if (res.IsSuccess) {
+                yield update({
+                  overdata: res.Datas,
+                  overtotal: res.Total,
                 });
-                yield update({ overdata: reslist, overtotal: res.total });
             } else {
                 yield update({ overdata: [], overtotal: 0 });
             }

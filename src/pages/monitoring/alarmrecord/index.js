@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import moment from 'moment';
 import NavigationTree from '../../../components/NavigationTree'
 import AlarmRecord from './components/AlarmRecord'
-
 /**
  * 报警记录
  * xpy 2019.07.26

@@ -1,5 +1,7 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 import { Icon, Badge, Popover } from 'antd';
+import moment from 'moment';
+
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 const isUrl = path => reg.test(path);
@@ -48,7 +50,14 @@ export function sdlMessage(content, type) {
       break;
   }
 }
-
+/**
+ *  格式化moment对象，返回字符串
+ * @param {moment} mmt monent对象
+ * @param {String} formatType 格式
+ */
+export function formatMoment(mmt, formatType = 'YYYY-MM-DD HH:mm:ss') {
+  return mmt ? moment(mmt).format(formatType) : null;
+}
 /**
  *格式化数据显示的Popover
  * @export
