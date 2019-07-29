@@ -1,3 +1,5 @@
+
+
 import React, { Component, Fragment } from 'react';
 import {
     Button,
@@ -8,17 +10,19 @@ import {
     Table,
     Form,
     Spin,
+    Tooltip,
     Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
 } from 'antd';
-import styles from './index.less';
-import MonitorContent from '../../components/MonitorContent/index';
-import NewDataFilter from '../Userinfo/DataFilterNew';
-import EnterpriseDataFilter from '../../components/UserInfo/EnterpriseDataFilter';
+import styles from './style.less';
+import { PointIcon } from '@/utils/icon'
+import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from './Table';
-import SearchWrapper from './SearchWrapper';
-import { sdlMessage } from '../../utils/utils';
+// import SdlTable from '@/components/AutoForm/Table';
+import SdlTable from '@/components/AutoForm/Table';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+import { sdlMessage } from '@/utils/utils';
 
 
 @connect(({ loading, autoForm }) => ({
@@ -42,7 +46,7 @@ export default class MonitorTarget extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //debugger;
+        //;
         if (nextProps.location.pathname != this.props.location.pathname) {
             if (nextProps.match.params.configId !== this.props.routerConfig)
                 this.reloadPage(nextProps.match.params.configId);
@@ -76,6 +80,10 @@ export default class MonitorTarget extends Component {
                 targetId = row['dbo.T_Bas_Enterprise.EntCode'];
                 targetName = row['dbo.T_Bas_Enterprise.EntName']
                 break;
+            case 'baseReach':
+                targetId = row['dbo.T_Bas_Reach.ReachCode'];
+                targetName = row['dbo.T_Bas_Reach.ReachName']
+                break;
             default: break;
         }
 
@@ -84,6 +92,7 @@ export default class MonitorTarget extends Component {
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+        console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
         if (this.props.loading) {
@@ -99,13 +108,14 @@ export default class MonitorTarget extends Component {
             />);
         }
         return (
-            <MonitorContent breadCrumbList={
+            <PageHeaderWrapper>
+                {/* <MonitorContent breadCrumbList={
                 [
                     { Name: '首页', Url: '/' },
                     { Name: '平台配置', Url: '' },
                     { Name: '企业管理', Url: '' }
                 ]
-            }>
+            }> */}
                 <div className={styles.cardTitle}>
                     <Card>
 
@@ -114,6 +124,7 @@ export default class MonitorTarget extends Component {
                             configId={configId}
                         ></SearchWrapper>
                         <SdlTable
+
                             style={{ marginTop: 10 }}
                             // columns={columns}
                             configId={configId}
@@ -122,20 +133,30 @@ export default class MonitorTarget extends Component {
                                     key, row
                                 })
                             }}
+                            // onAdd={()=>{
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            // }}
+                            // onEdit={()=>{
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            // }}
                             appendHandleRows={row => {
                                 return <Fragment>
                                     <Divider type="vertical" />
-                                    <a onClick={() => {
-                                        this.editMonitorInfo('', row);
-                                    }}>维护点信息</a>
-
+                                    <Tooltip title="维护点信息">
+                                        <a onClick={() => {
+                                            this.editMonitorInfo('', row);
+                                        }}><PointIcon />    </a>
+                                    </Tooltip>
                                 </Fragment>
                             }}
+                            parentcode='platformconfig'
+                            {...this.props}
                         >
                         </SdlTable>
                     </Card>
                 </div>
-            </MonitorContent>
+                {/* </MonitorContent> */}
+            </PageHeaderWrapper>
         );
     }
 }

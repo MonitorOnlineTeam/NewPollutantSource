@@ -120,7 +120,7 @@ class SdlTable extends PureComponent {
   }
 
   _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch, btnsAuthority, match } = this.props;
+    const { opreationButtons, keys, dispatch, btnsAuthority, match,parentcode } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
     const { btnEl, configId, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
@@ -132,7 +132,7 @@ class SdlTable extends PureComponent {
               icon="plus"
               type="primary"
               onClick={() => {
-                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
+                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode||parentcode}/autoformmanager/${configId}/autoformadd`));
               }}
             >添加
                   </Button>;
@@ -252,11 +252,11 @@ class SdlTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match,parentcode } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] : 1;
     const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
-
+    let parentCode=match&&match.params&&match.params.parentcode||parentcode;
     // 计算长度
     let _columns = (columns || []).map(col => {
       if (col.title === "文件") {
@@ -343,7 +343,7 @@ class SdlTable extends PureComponent {
                             }
                           })
                           // this.props.onEdit ? this.props.onEdit() : dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
-                          dispatch(routerRedux.push(`/${match.params.parentcode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
@@ -362,7 +362,7 @@ class SdlTable extends PureComponent {
                             postData[item] = record[item]
                           }
                         })
-                        dispatch(routerRedux.push(`/${match.params.parentcode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
+                        dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
                       }}><DetailIcon /></a>
 
                     </Tooltip>
