@@ -12,7 +12,7 @@ export async function querypollutantlist(params) {
     data: null,
   } : result.Datas;
 }
-/** 获取单排口超标数据
+/** 获取单排口报警数据
  * {
         DGIMN: "51052216080301",
         pollutantCode: "zs01",
@@ -23,7 +23,7 @@ export async function querypollutantlist(params) {
     }
  *  */
 export async function queryoverdatalist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/OverData/GetOnePointOverDataList', params, null);
+    const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetExceptionProcessingList', params, null);
     return result === null ? {
       data: null,
     } : result.Datas;
