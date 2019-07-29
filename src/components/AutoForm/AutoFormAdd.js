@@ -22,7 +22,8 @@ import cuid from 'cuid';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
-import MonitorContent from '@/components/MonitorContent';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+// import MonitorContent from '../../components/MonitorContent/index';
 import SdlForm from "./SdlForm"
 
 const FormItem = Form.Item;
@@ -122,17 +123,19 @@ class AutoFormAdd extends Component {
       <Fragment>
         {
           breadcrumb ?
-            <MonitorContent breadCrumbList={
-              [
-                { Name: '首页', Url: '/' },
-                { Name: '系统管理', Url: '' },
-                { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
-                { Name: '添加', Url: '' }
-              ]
-            }
-            >
+            <PageHeaderWrapper title="添加">
+              {/* // <MonitorContent breadCrumbList={
+            //   [
+            //     { Name: '首页', Url: '/' },
+            //     { Name: '系统管理', Url: '' },
+            //     { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
+            //     { Name: '添加', Url: '' }
+            //   ]
+            // }
+            // > */}
               {this._renderForm()}
-            </MonitorContent> :
+            </PageHeaderWrapper> :
+            // </MonitorContent> :
             <Fragment>
               {this._renderForm()}
             </Fragment>

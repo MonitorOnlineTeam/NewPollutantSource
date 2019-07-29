@@ -1,119 +1,119 @@
-import React, { PureComponent, Fragment } from 'react';
-import {
-  List, Card, Divider, Button, message
-} from 'antd';
-import { connect } from 'dva';
-import SdlTable from './Table'
-import AutoFormAdd from './AutoFormAdd';
-import AutoFormEdit from './AutoFormEdit';
-import AutoFormView from './AutoFormView';
+import React, { Component } from 'react'
+import { CascadeMultiSelect } from 'uxcore';
+// import Marquee from './modules/index'
+import styles from './index.less'
 
-const data = [
+const options = [
   {
-    title: 'Title 1',
-  },
-  {
-    title: 'Title 2',
-  },
-  {
-    title: 'Title 3',
-  },
-  {
-    title: 'Title 4',
+    value: 'zhejiang',
+    label: '浙江',
+    children: [{
+      value: 'hangzhou',
+      label: '杭州',
+      children: [{
+        value: 'xihu',
+        label: '西湖',
+      }, {
+        value: 'bingjiang',
+        label: '滨江',
+      }],
+    }, {
+      value: 'ningbo',
+      label: '宁波',
+      children: [{
+        value: 'zhoushan',
+        label: '舟山',
+      }],
+    }, {
+      value: 'yiwu',
+      label: '义乌',
+      children: [{
+        value: 'jinhua',
+        label: '金华',
+      }],
+    }, {
+      value: 'changxing',
+      label: '长兴',
+      children: [],
+    }, {
+      value: 'jiaxing',
+      label: '嘉兴',
+      children: [],
+    }, {
+      value: 'wenzhou',
+      label: '温州',
+    }, {
+      value: 'lishui',
+      label: '丽水',
+      children: [],
+    }, {
+      value: 'linan',
+      label: '临安',
+      children: [],
+    }],
+  }, {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [{
+      value: 'nanjing',
+      label: '南京',
+      children: [{
+        value: 'zhonghuamen',
+        label: '中华门',
+      }],
+    }],
+  }, {
+    value: 'shandong',
+    label: '山东',
+    children: [{
+      value: 'jinan',
+      label: '济南',
+      children: [{
+        value: 'baotuquan',
+        label: '趵突泉',
+      }],
+    }],
+  }, {
+    value: 'longname-0',
+    label: '名称很长的选项展示效果0',
+    children: [{
+      value: 'longname-0-0',
+      label: '名称很长的选项展示效果0-0',
+      children: [{
+        value: 'longname-0-0-0',
+        label: '名称很长的选项展示效果0-0-0',
+      }],
+    }],
   },
 ];
 
-@connect()
-class Test extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  componentDidMount() {
-    this.props.dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId: this.props.match.params.configId,
-        test: true
-      }
-    })
+class Test extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      demo1: ['shanghai'],
+    }
   }
   render() {
+    let { loopData } = this.state;
     return (
-      // <React.Fragment>
-      //   <SdlTable
-      //     configId="TestCommonPoint"
-      //   // searchParams={[
-      //   //   {
-      //   //     Key: "test",
-      //   //     Value: false,
-      //   //     Where: "$like"
-      //   //   }
-      //   // ]}
-      //   />
-      //   <AutoFormAdd
-      //     configId="TestCommonPoint"
-      //     breadcrumb={false}
-      //   />
-
-      //   <AutoFormEdit
-      //     configId="TestCommonPoint"
-      //     keysParams={{ "dbo.T_Bas_CommonPoint.PointCode": "0EB9F198-A195-48F3-B476-AE0B9EA8FFDD" }}
-      //     // uid={null}
-      //     breadcrumb={false}
-      //   />
-      //   <AutoFormView 
-      //     configId="TestCommonPoint"
-      //     keysParams={{ "dbo.T_Bas_CommonPoint.PointCode": "0EB9F198-A195-48F3-B476-AE0B9EA8FFDD" }}
-      //     breadcrumb={false}
-      //   />
-
-      //   {/* */}
-
-      // </React.Fragment>
-      <Card>
-        <Card title="自定义DOM" bordered={false}>
-          <List
-            grid={{ gutter: 16, column: 4 }}
-            dataSource={data}
-            renderItem={item => (
-              <List.Item>
-                <Card title={item.title}>Card content</Card>
-              </List.Item>
-            )}
-          />
-        </Card>
-        <Card title="AutoForm - Table" bordered={false}>
-          <SdlTable
-            configId="TestCommonPoint"
-            rowChange={(key, row) => {
-              this.setState({
-                key, row
-              })
-            }}
-          // searchParams={[
-          //   {
-          //     Key: "test",
-          //     Value: false,
-          //     Where: "$like"
-          //   }
-          // ]}
-          >
-            <Fragment key="top">
-              <Button icon="printer" type="primary" onClick={() => {
-                // dispatch(routerRedux.push(`/autoformmanager/test/TestCommonPoint`))
-                if(this.state.row) {
-                  message.success('成功获取数据：'+ JSON.stringify(this.state.row));
-                  return;
-                }
-                message.error('至少选择一行！')
-              }}>获取数据</Button>
-            </Fragment>
-          </SdlTable>
-        </Card>
-      </Card>
-    );
+      <div style={{ margin: 15 }}>
+        <CascadeMultiSelect
+          className={'ucms-input'}
+          dropdownClassName={'ucms-drop'}
+          options={options}
+          onSelect={(valueList, labelList, leafList) => {
+            console.log(valueList, labelList, leafList);
+            this.setState({ demo1: valueList });
+          }}
+          onOk={(valueList, labelList, leafList) => {
+            console.log(valueList, labelList, leafList);
+          }}
+          value={this.state.demo1}
+        />
+      </div>
+    )
   }
 }
 
-export default Test;
+export default Test

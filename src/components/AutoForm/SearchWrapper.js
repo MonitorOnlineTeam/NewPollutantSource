@@ -150,7 +150,6 @@ class SearchWrapper extends Component {
   // 渲染FormItem
   _renderFormItem() {
       const { dispatch, form: { getFieldDecorator }, searchConfigItems, configId } = this.props;
-      console.log(searchConfigItems);
       const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
       const searchConditions = searchConfigItems[configId] || [];
       let element = '';
@@ -222,7 +221,7 @@ class SearchWrapper extends Component {
           return (
               element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
-            <FormItem {...formLayout} label={labelText} style={{ width: '100%' }}>
+            <FormItem {...formLayout} label={labelText} style={{ width: '100%', zIndex: 1 }}>
               {getFieldDecorator(`${fieldName  }`, {})(
                     element
                 )}
