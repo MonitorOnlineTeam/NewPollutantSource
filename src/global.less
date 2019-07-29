@@ -60,29 +60,29 @@ ol {
 .fixedHeader {
   position: fixed;
   top: 0;
-  right: 0;
+  right: 0; 
   width: 100%;
   z-index: 9;
   transition: width 0.2s;
 }
 
-div {
-  &::-webkit-scrollbar-track-piece {
+
+  ::-webkit-scrollbar-track-piece {
     -webkit-border-radius: 0;
   }
 
-  &::-webkit-scrollbar {
+  ::-webkit-scrollbar {
     width: @scrollbar-width;
     height: @scrollbar-width;
   }
 
-  &::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-track {
 
     border-radius: 10px;
     background-color: @scrollbar-track-color;
   }
 
-  &::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     height: 50px;
     background-color: @scrollbar-thumb-color;
     -webkit-border-radius: 4px;
@@ -90,12 +90,12 @@ div {
     border: 2px solid @scrollbar-thumb-color;
   }
 
-  &::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     height: 50px;
     background-color: @scrollbar-thumb-color;
     -webkit-border-radius: 4px;
   }
-}
+
 
 .light {
   background-color: #f0f2f5

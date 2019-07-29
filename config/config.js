@@ -277,26 +277,26 @@ export default {
                 },
               ],
             },
-            {
-              path: '/overview',
-              name: 'overview',
-              // redirect: '/AutoFormManager',
-              // component: './authorized/user',
-              // authority: ['admin', 'user'],
-              routes: [
-                // {
-                //   name: 'datalist',
-                //   path: '/overview/datalist',
-                //   routes:[
-                {
-                  name: 'index',
-                  path: '/overview/datalist',
-                  component: './overView',
-                },
-                //   ]
-                // },
-              ],
-            },
+            // {
+            //   path: '/overview',
+            //   name: 'overview',
+            //   // redirect: '/AutoFormManager',
+            //   // component: './authorized/user',
+            //   // authority: ['admin', 'user'],
+            //   routes: [
+            //     // {
+            //     //   name: 'datalist',
+            //     //   path: '/overview/datalist',
+            //     //   routes:[
+            //     {
+            //       name: 'index',
+            //       path: '/overview/datalist',
+            //       component: './overView',
+            //     },
+            //     //   ]
+            //     // },
+            //   ],
+            // },
             {
               path: '/monitoring',
               name: 'monitoring',
@@ -309,12 +309,22 @@ export default {
                 {
                   name: 'datalist',
                   path: '/monitoring/datalist',
-                  component: './overView',
+                  component: './monitoring/overView',
                 },
                  {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/YsyShowVideo'}`,
+                },
+                {
+                  name: 'overrecord',
+                  path: '/monitoring/overrecord',
+                  component: './monitoring/overRecord',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/monitoring/exceptionrecord',
+                  component: './monitoring/exceptionRecord',
                 },
               ],
             },

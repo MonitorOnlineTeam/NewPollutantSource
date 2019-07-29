@@ -32,15 +32,41 @@ export default Model.extend({
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
                 yield put({
-                  type: 'queryhistorydatalist',
+                  type: 'queryoverdatalist',
                   payload,
                 });
-                yield take('queryhistorydatalist/@@end');
+                yield take('queryoverdatalist/@@end');
             }
             } else {
-                yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
+                yield update({ pollutantlist: [] });
             }
         },
+        /** 报警记录 */
+         * queryoverdatalist({
+            payload,
+        }, { call, update, select }) {
+            const { overdataparams } = yield select(a => a.points);
+            const postData = {
+                ...overdataparams,
+                DGIMN: payload.dgimn ? payload.dgimn : overdataparams.DGIMN,
+                beginTime: payload.beginTime ? payload.beginTime : overdataparams.beginTime,
+                endTime: payload.endTime ? payload.endTime : overdataparams.endTime,
+            }
+            const res = yield call(queryoverdatalist, postData);
 
+            if (res.data) {
+                let reslist = [];
+                res.data.map((item, key) => {
+                    reslist = reslist.concat({
+                        ...item,
+                        overValue: item.value,
+                        key,
+                    });
+                });
+                yield update({ overdata: reslist, overtotal: res.total });
+            } else {
+                yield update({ overdata: [], overtotal: 0 });
+            }
+        },
     },
 });
