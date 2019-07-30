@@ -7,10 +7,10 @@ import {
     message, Empty, Switch,
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '../../../../components/RangePicker'
-import ButtonGroup_ from '../../../../components/ButtonGroup'
-import PollutantSelect from '../../../../components/PollutantSelect'
-import SdlTable from '../../../../components/SdlTable'
+import RangePicker_ from '@/components/RangePicker'
+import ButtonGroup_ from '@/components/ButtonGroup'
+import PollutantSelect from '@/components/PollutantSelect'
+import SdlTable from '@/components/SdlTable'
 /**
  * 数据查询组件
  * xpy 2019.07.26
