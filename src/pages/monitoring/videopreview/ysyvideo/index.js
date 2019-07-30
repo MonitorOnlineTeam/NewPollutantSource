@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import moment from 'moment';
-import NavigationTree from '../../../components/NavigationTree'
-import AlarmRecord from './components/AlarmRecord'
+import NavigationTree from '../../../../components/NavigationTree'
+import YsyShowVideo from './YsyShowVideo'
+
 /**
- * 报警记录
+ * 视频预览
  * xpy 2019.07.26
  */
 
@@ -24,11 +24,11 @@ class Index extends Component {
 
     render() {
         return (
-            <div id="alarmrecord">
+            <div id="ysyvideo">
                 <PageHeaderWrapper>
-                 <AlarmRecord DGIMN={this.state.dgimn} />
+                 <YsyShowVideo DGIMN={this.state.dgimn} />
                 </PageHeaderWrapper>
-                <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
+                <NavigationTree domId="#ysyvideo" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)
                             }

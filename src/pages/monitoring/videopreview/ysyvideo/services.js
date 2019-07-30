@@ -75,6 +75,19 @@ export async function AddCameraMonitor(params) {
       }
     : result;
 }
+/** 获取摄像头列表 */
+export async function getvideolist(params) {
+  debugger;
+  const body = {
+    DGIMN: params.DGIMN,
+  };
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoList', body, null);
+  return result === null ?
+    {
+      data: null,
+    } :
+    result;
+}
 /** 判断序列号是否有效 */
 export async function IsTrueSerialNumber(params) {
   const body = {

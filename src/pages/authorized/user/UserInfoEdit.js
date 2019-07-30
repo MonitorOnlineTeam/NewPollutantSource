@@ -274,7 +274,14 @@ export default class UserInfoEdit extends Component {
                                 </Menu>
 
                             </Sider>
-                            <Content style={{ padding: '0 10px' }}>
+                            <Content style={{ padding: '0 10px', position: "relative" }}>
+                                <Button
+                                    style={{ position: "absolute", right: 20, zIndex: 1, top: 11 }}
+                                    onClick={() => {
+                                        history.go(-1);
+                                    }}
+                                >返回
+                                </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
                                     <SdlForm
                                         configId={"UserInfoAdd"}

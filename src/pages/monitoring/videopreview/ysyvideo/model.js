@@ -8,6 +8,7 @@ import {
   AddCameraMonitor,
   IsTrueSerialNumber,
   DeleteCamera,
+  getvideolist,
 } from './services';
 import config from '@/config';
 import { formatPollutantPopover } from '@/utils/utils';
@@ -17,6 +18,7 @@ import * as services from '../../../../services/autoformapi';
 export default Model.extend({
   namespace: 'video',
   state: {
+    videoList: [],
     ysyvideoListParameters: {
       DGIMN: null,
       realtimevideofullurl: null,
@@ -78,6 +80,23 @@ export default Model.extend({
       }
     },
 
+    /** 获取摄像头列表 */
+    *getvideolist({ payload }, { call, update }) {
+      const body = {
+        DGIMN: payload.dgimn,
+      };
+      const res = yield call(getvideolist, body);
+      if (res.IsSuccess && res.Datas.length > 0) {
+         yield update({
+        videoList: res.Datas,
+      });
+    } else {
+         yield update({
+           videoList: [],
+         });
+      }
+      payload.callback(res.Datas);
+    },
     /** 获取实时视频的污染物表头 */
     *querypollutantlist({ payload }, { call, update }) {
       const body = {

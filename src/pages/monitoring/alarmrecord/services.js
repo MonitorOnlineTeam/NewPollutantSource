@@ -26,5 +26,5 @@ export async function queryoverdatalist(params) {
     const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetExceptionProcessingList', params, null);
     return result === null ? {
       data: null,
-    } : result.Datas;
+    } : result;
 }

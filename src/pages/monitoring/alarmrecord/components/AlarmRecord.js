@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import ReactEcharts from 'echarts-for-react';
+import { formatMoment } from '@/utils/utils';
 import {
     Card,
     Spin,
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '../../../../components/RangePicker'
-import PollutantSelect from '../../../../components/PollutantSelect'
-import SdlTable from '../../../../components/SdlTable'
+import RangePicker_ from '@/components/RangePicker'
+import PollutantSelect from '@/components/PollutantSelect'
+import SdlTable from '@/components/SdlTable'
 /**
  * 报警记录
  * xpy 2019.07.26
@@ -40,75 +40,97 @@ class AlarmRecord extends Component {
 
      componentWillReceiveProps = nextProps => {
           const { DGIMN, lasttime, firsttime } = this.props;
-          // 如果传入参数有变化，则重新加载数据
-          if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('yyyy-MM-dd HH:mm:ss')
-          !== moment(lasttime).format('yyyy-MM-dd HH:mm:ss') ||
-           moment(nextProps.firsttime).format('yyyy-MM-dd HH:mm:ss') !== moment(firsttime).format('yyyy-MM-dd HH:mm:ss')) {
-              const { overdataparams } = this.props;
-              const overdataparamsState = {
-                  ...overdataparams,
-                  DGIMN: nextProps.DGIMN,
-                  beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
-                  endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
-              }
-              this.setState({
-                  rangeDate: [nextProps.firsttime, nextProps.lasttime],
-                  overdataparams: overdataparamsState,
-              })
-            this.changeDgimn(nextProps.DGIMN, nextProps.firsttime, nextProps.lasttime);
-          }
+          if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
+                 // 如果传入参数有变化，则重新加载数据
+                 if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('yyyy-MM-dd HH:mm:ss') !==
+                   moment(lasttime).format('yyyy-MM-dd HH:mm:ss') ||
+                   moment(nextProps.firsttime).format('yyyy-MM-dd HH:mm:ss') !== moment(firsttime).format('yyyy-MM-dd HH:mm:ss')) {
+                   let {
+                     overdataparams,
+                   } = this.props;
+                   overdataparams = {
+                     ...overdataparams,
+                     DGIMN: nextProps.DGIMN,
+                     beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
+                     endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
+                   }
+                   this.setState({
+                     rangeDate: [nextProps.firsttime, nextProps.lasttime],
+                   })
+                   if (nextProps.DGIMN !== '') {
+                     this.changeDgimn(nextProps.DGIMN, overdataparams);
+                   }
+                 }
+            } else {
+                // 如果传入参数有变化，则重新加载数据
+                if (nextProps.DGIMN !== DGIMN) {
+                    const { rangeDate } = this.state;
+                  let {
+                    overdataparams,
+                  } = this.props;
+                  overdataparams = {
+                    ...overdataparams,
+                    DGIMN: nextProps.DGIMN,
+                    beginTime: moment(rangeDate[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    endTime: moment(rangeDate[1]).format('YYYY-MM-DD HH:mm:ss'),
+                  }
+                  if (nextProps.DGIMN !== '') {
+                    this.changeDgimn(nextProps.DGIMN, overdataparams);
+                  }
+                }
+            }
       }
 
        /** 切换排口 */
-    changeDgimn=dgimn => {
+    changeDgimn=(dgimn, params) => {
         this.setState({
             selectDisplay: true,
         })
          const {
         dispatch,
       } = this.props;
-      let { overdataparams } = this.props;
-        overdataparams = {
-          ...overdataparams,
+        params = {
+          ...params,
           pollutantCode: '',
           pageIndex: 1,
+          pageSiz: 10,
         }
       dispatch({
         type: 'alarmrecord/updateState',
         payload: {
-          overdataparams,
+          overdataparams: params,
         },
       })
         this.getpointpollutants(dgimn);
     }
 
       /** 获取污染物 */
-      getpointpollutants = (dgimn, firsttime, lasttime) => {
+      getpointpollutants = dgimn => {
          this.props.dispatch({
            type: 'alarmrecord/querypollutantlist',
            payload: {
-             overdata: true,
+             overdata: false,
              dgimn,
-             beginTime: moment(firsttime).format('YYYY-MM-DD HH:mm:ss'),
-            endTime: moment(lasttime).format('YYYY-MM-DD HH:mm:ss'),
            },
          })
-      }
+      };
 
     /** 时间更改 */
     _handleDateChange=(date, dateString) => {
         let { overdataparams } = this.props;
         overdataparams = {
             ...overdataparams,
-            DGIMN: this.props.DGIMN,
             beginTime: date[0] && formatMoment(date[0]),
             endTime: date[0] && formatMoment(date[1]),
             pageIndex: 1,
+            pageSiz: 10,
         }
         this.setState({
             rangeDate: date,
         })
+        if (overdataparams.DGIMN !== null && overdataparams.DGIMN !== '') {
         this.reloaddatalist(overdataparams);
+        }
     };
 
 
@@ -117,9 +139,10 @@ class AlarmRecord extends Component {
         const { pollutantlist } = this.props;
         return (<PollutantSelect
             optionDatas={pollutantlist}
-            defaultValue={this.getpropspollutantcode()}
+            allpollutant
             style={{ width: 150, marginRight: 10 }}
             onChange={this.ChangePollutant}
+            placeholder="请选择污染物"
         />);
     }
 
@@ -135,17 +158,10 @@ class AlarmRecord extends Component {
         ...overdataparams,
         pollutantCode: value,
         pageIndex: 1,
+        pageSiz: 10,
       }
       this.reloaddatalist(overdataparams);
     };
-
-    /** 获取第一个污染物 */
-    getpropspollutantcode = () => {
-      if (this.props.pollutantlist[0]) {
-        return this.props.pollutantlist[0].PollutantCode;
-      }
-      return null;
-    }
 
 
     /** 分页 */
@@ -183,39 +199,35 @@ class AlarmRecord extends Component {
 
 
           const columns = [{
-              title: '超标时间',
-              dataIndex: 'time',
+              title: '报警时间',
+              dataIndex: 'FirstTime',
               fixed: 'left',
               width,
-              key: 'time',
+              key: 'FirstTime',
+          },
+           {
+             title: '报警类型',
+             dataIndex: 'AlarmTypeName',
+             width,
+             key: 'AlarmTypeName',
+           },
+          {
+              title: '污染物',
+              dataIndex: 'PollutantName',
+              width,
+              key: 'PollutantName',
           },
           {
-              title: '超标污染物',
-              dataIndex: 'pollutantName',
+              title: '报警信息',
+              dataIndex: 'AlarmMsg',
               width,
-              key: 'pollutantName',
-          }, {
-              title: '超标值',
-              dataIndex: 'overValue',
-              width,
-              key: 'overValue',
-              render: (text, record) => {
-                 if (record.unit) {
-                     return `${text}(${record.unit})`;
-                 }
-                 return text;
-              },
-          }, {
-              title: '标准值',
-              dataIndex: 'standardValue',
-              width,
-              key: 'standardValue',
+              key: 'AlarmMsg',
           },
           {
-              title: '超标倍数',
-              dataIndex: 'overMul',
+              title: '报警次数',
+              dataIndex: 'AlarmCount',
               width,
-              key: 'overMul',
+              key: 'AlarmCount',
           }];
            const { isloading, overdataparams } = this.props;
           if (isloading) {
@@ -238,6 +250,7 @@ class AlarmRecord extends Component {
                                   <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm:ss" onChange={this._handleDateChange} dateValue={this.state.rangeDate} />
                               </div>
                           }
+                          style={{ width: '100%', height: 'calc(100vh - 230px)' }}
                       >
                           <SdlTable
                               loading={this.props.dataloading}
@@ -245,10 +258,7 @@ class AlarmRecord extends Component {
                               dataSource={this.props.data}
                               rowKey="key"
                               pagination={{
-                                  total: this.props.total,
-                                  pageSize: overdataparams.pageSize,
-                                  current: overdataparams.pageIndex,
-                                  onChange: this.pageIndexChange,
+                                   pageSize: 10,
                               }}
                           />
                       </Card>
