@@ -3,6 +3,7 @@ import { Form, Select, Input, Button } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import NavigationTree from '../../components/NavigationTree'
+import DataQuery from "../monitoring/dataquery/components/DataQuery"
 
 @Form.create()
 @connect(({ navigationtree, loading }) => ({
@@ -44,10 +45,11 @@ class Test extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <NavigationTree choice={true} onItemClick={(value)=>{
+      <DataQuery DGIMN="1111" />
+        {/* <NavigationTree choice={true} onItemClick={(value)=>{
           console.log("test=",value)
           console.log("test1=",this.props.selectTreeKeys)
-        }} />
+        }} /> */}
       {/* <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
         <Form.Item label="Note">
           {getFieldDecorator('note', {
@@ -58,7 +60,7 @@ class Test extends Component {
           {getFieldDecorator('gender', {
             rules: [{ required: true, message: 'Please select your gender!' }],
           })(
-            <EnterprisePointCascadeMultiSelect 
+            <EnterprisePointCascadeMultiSelect
             // searchEnterprise={true}
             searchRegion={true}
             onChange={(val)=>{
