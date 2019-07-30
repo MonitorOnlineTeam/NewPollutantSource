@@ -39,7 +39,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 
-@connect(({ loading, autoForm, monitorTarget,common }) => ({
+@connect(({ loading, autoForm, monitorTarget, common, point }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   autoForm,
@@ -50,7 +50,7 @@ let pointConfigIdEdit = '';
   routerConfig: autoForm.routerConfig,
   pointDataWhere: monitorTarget.pointDataWhere,
   isEdit: monitorTarget.isEdit,
-  defaultPollutantCode:common.defaultPollutantCode
+  defaultPollutantCode: common.defaultPollutantCode
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -72,16 +72,25 @@ export default class MonitorPoint extends Component {
     const { dispatch, match } = this.props;
 
     dispatch({
-      type: 'monitorTarget/getPollutantTypeList',
+      type: 'point/getPointList',
       payload: {
-        callback: result => {
-          this.setState({
-            pollutantType: result,
-          });
-          this.getPageConfig(result);
-        },
-      },
+        callback:res=>{
+          this.getPageConfig(this.props.defaultPollutantCode);
+        }
+      }
     });
+    
+    // dispatch({
+    //   type: 'monitorTarget/getPollutantTypeList',
+    //   payload: {
+    //     callback: result => {
+    //       this.setState({
+    //         pollutantType: result,
+    //       });
+    //       this.getPageConfig(result);
+    //     },
+    //   },
+    // });
   }
 
   getPageConfig = type => {
