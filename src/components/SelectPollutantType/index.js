@@ -19,11 +19,14 @@ class SelectPollutantType extends PureComponent {
   componentDidMount() {
     this.props.dispatch({
       type: 'common/getPollutantTypeList',
-      payload: {},
+      payload: {
+        filterPollutantType:this.props.filterPollutantType//自定义显示污染物类型 wjw
+      },
     });
   }
   render() {
     const { pollutantTypelist, defaultPollutantCode, loading, showType } = this.props;
+
     if (!loading) {
       return (
         <>

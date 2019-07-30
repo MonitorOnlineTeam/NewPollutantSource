@@ -70,16 +70,16 @@ export default class MonitorPoint extends Component {
     // 2.污染物类型
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
-
+    console.log("match=", match);
     dispatch({
       type: 'point/getPointList',
       payload: {
-        callback:res=>{
+        callback: res => {
           this.getPageConfig(this.props.defaultPollutantCode);
         }
       }
     });
-    
+
     // dispatch({
     //   type: 'monitorTarget/getPollutantTypeList',
     //   payload: {
@@ -320,7 +320,7 @@ export default class MonitorPoint extends Component {
       searchForm,
       tableInfo,
       match: {
-        params: { targetName, configId },
+        params: { targetName, configId, pollutantTypes },
       },
       dispatch,
       pointDataWhere,
@@ -394,6 +394,7 @@ export default class MonitorPoint extends Component {
               showType="radio"
               onChange={this.onPollutantChange}
               defaultValue={this.state.pollutantType}
+              filterPollutantType={pollutantTypes}
             />}
           >
             <SdlTable

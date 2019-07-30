@@ -102,7 +102,7 @@ export default class MonitorTarget extends Component {
             default: break;
         }
 
-        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/monitorpoint/${match.params.configId}/${targetType}/${targetId}/${targetName}`))
+        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${match.params.configId}/${match.params.pollutantTypes}/monitorpoint/${targetType}/${targetId}/${targetName}`))
     }
 
     render() {

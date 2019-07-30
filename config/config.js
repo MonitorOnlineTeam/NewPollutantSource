@@ -160,9 +160,14 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitortarget/:configId/:pollutantTypes',
+                  component: './platformManager/monitortarget',
+                },
+                {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetType/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:pollutantTypes/monitorpoint/:targetType/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
