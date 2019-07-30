@@ -326,6 +326,11 @@ export default {
                   path: '/monitoring/exceptionrecord',
                   component: './monitoring/exceptionRecord',
                 },
+                {
+                  name: 'alarmrecord',
+                  path: '/monitoring/alarmrecord',
+                  component: './monitoring/alarmrecord/index',
+                },
               ],
             },
             {
