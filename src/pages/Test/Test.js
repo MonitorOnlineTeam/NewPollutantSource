@@ -1,9 +1,41 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button } from 'antd';
+import { Form, Select, Input, Button,Table } from 'antd';
 import { connect } from 'dva';
-import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
-import NavigationTree from '../../components/NavigationTree'
+// import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
+// import NavigationTree from '../../components/NavigationTree'
 
+const data = [
+  {
+    key: '1',
+    name: '胡彦斌',
+    age: 32,
+    address: '西湖区湖底公园1号',
+  },
+  {
+    key: '2',
+    name: '胡彦祖',
+    age: 42,
+    address: '西湖区湖底公园1号',
+  },
+];
+
+const columns = [
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '年龄',
+    dataIndex: 'age',
+    key: 'age',
+  },
+  {
+    title: '住址',
+    dataIndex: 'address',
+    key: 'address',
+  },
+];
 @Form.create()
 @connect(({ navigationtree, loading }) => ({
   selectTreeKeys: navigationtree.selectTreeKeys,
@@ -44,10 +76,14 @@ class Test extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <NavigationTree choice={true} onItemClick={(value)=>{
+        {/* <NavigationTree choice={true} onItemClick={(value)=>{
           console.log("test=",value)
           console.log("test1=",this.props.selectTreeKeys)
-        }} />
+        }} /> */}
+          <Table
+            column={columns}
+            dataSource={data}
+            ></Table>
       {/* <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} onSubmit={this.handleSubmit}>
         <Form.Item label="Note">
           {getFieldDecorator('note', {
