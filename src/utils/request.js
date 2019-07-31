@@ -94,8 +94,9 @@ async function requestMy(url, options) {
   return (resp && resp.data) || { IsSuccess: false, Datas: null, Message: '服务器内部错误' };
 }
 
-export async function get(url, params) {
-  url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
+export async function get(url, params, flag) {
+  if (flag !== 0) 
+    url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
   if (params) {
     const paramsArray = [];
     Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));

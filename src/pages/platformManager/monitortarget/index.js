@@ -97,7 +97,7 @@ export default class MonitorTarget extends Component {
             case 'basBuildingSite'://工地
                 targetId = row['dbo.T_Bas_BuildingSite.BuildingSiteCode'];
                 targetName = row['dbo.T_Bas_BuildingSite.BuildingSiteName'];
-                targetType = 1;
+                targetType = 4;
                 break;
             default: break;
         }

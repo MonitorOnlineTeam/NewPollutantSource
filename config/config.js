@@ -336,6 +336,11 @@ export default {
                   path: '/monitoring/alarmrecord',
                   component: './monitoring/alarmrecord/index',
                 },
+                {
+                  name: 'originaldata',
+                  path: '/monitoring/originaldata',
+                  component: './monitoring/originaldata',
+                },
               ],
             },
             {
