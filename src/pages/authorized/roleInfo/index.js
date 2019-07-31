@@ -244,8 +244,8 @@ class RoleIndex extends Component {
                     title: '操作',
                     dataIndex: '',
                     key: 'x',
-                    align: 'left',
-                    width: '280px',
+                    align: 'center',
+                    width: 180,
                     render: (text, record) =>
                         <span>
                             <Tooltip title="编辑">

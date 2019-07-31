@@ -31,7 +31,7 @@ const DEFAULT_WIDTH = 180;
   btnsAuthority: global.btnsAuthority
 }))
 
-class SdlTable extends PureComponent {
+class AutoFormTable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -510,10 +510,12 @@ class SdlTable extends PureComponent {
                 let keys = selectedRowKeys;
                 if (selectedRowKeys.some(item => item == index)) {
                   keys = keys.filter(item => item !== index)
+                  console.log('keys=',keys)
                   // keys.splice(index, 1)
                 } else {
+                  console.log('checkboxOrRadio=',checkboxOrRadio)
                   // keys = keys.concat([index])
-                  keys = checkboxOrRadio === 1 ? keys.concat([index]) : [index];
+                  keys = checkboxOrRadio === 1 ? [index] : keys.concat([index]);
                 }
                 // return;
                 this.setState({
@@ -565,4 +567,4 @@ class SdlTable extends PureComponent {
   }
 }
 
-export default SdlTable;
+export default AutoFormTable;

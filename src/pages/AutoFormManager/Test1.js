@@ -3,7 +3,7 @@ import {
   List, Card, Divider, Button, message
 } from 'antd';
 import { connect } from 'dva';
-import SdlTable from './Table'
+import SdlTable from './AutoFormTable'
 import AutoFormAdd from './AutoFormAdd';
 import AutoFormEdit from './AutoFormEdit';
 import AutoFormView from './AutoFormView';

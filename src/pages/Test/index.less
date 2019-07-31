@@ -38,3 +38,57 @@
 //       display: none;
 //     }
 // }
+// :global {
+.amap-info-contentContainer.bottom-left,
+.amap-info-contentContainer.bottom-center,
+.amap-info-contentContainer.bottom-right {
+  padding-bottom: 40px;
+  margin-left: 10px;
+}
+
+:global {
+  .amap-logo {
+    display: none !important;
+  }
+
+  .amap-copyright {
+    display: none !important;
+  }
+}
+
+.pointInfoWindow {
+  :global {
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label{
+      padding: 6px;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 12px;
+    }
+
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-content {
+      padding: 0;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 12px;
+    }
+  }
+
+  .content {
+    line-height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+}
+
+.echartdiv {
+  margin-top: 10px;
+}
+:global {
+  .ant-layout {
+    .ant-pro-basicLayout-content {
+      margin: 0;
+      // padding-top: 64px;
+    }
+  }
+}
+// }

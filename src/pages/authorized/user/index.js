@@ -25,7 +25,7 @@ import styles from './style.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '../../AutoFormManager/Table';
+import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';

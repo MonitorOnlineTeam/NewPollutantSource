@@ -15,7 +15,7 @@ import MonitorContent from '../../components/MonitorContent/index';
 import { routerRedux } from 'dva/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
-import SdlTable from './Table';
+import SdlTable from './AutoFormTable';
 import SearchWrapper from './SearchWrapper';
 
 @connect(({ loading, autoForm }) => ({
