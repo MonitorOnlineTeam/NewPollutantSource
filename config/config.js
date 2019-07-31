@@ -160,9 +160,14 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitortarget/:configId/:pollutantTypes',
+                  component: './platformManager/monitortarget',
+                },
+                {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/monitorpoint/:configId/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:pollutantTypes/monitorpoint/:targetType/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
@@ -330,6 +335,11 @@ export default {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',
                   component: './monitoring/alarmrecord/index',
+                },
+                {
+                  name: 'originaldata',
+                  path: '/monitoring/originaldata',
+                  component: './monitoring/originaldata',
                 },
               ],
             },

@@ -37,6 +37,7 @@ class DataQuery extends Component {
             rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
             format: 'YYYY-MM-DD HH:mm:ss',
             selectDisplay: false,
+            dd: [],
         };
     }
 
@@ -59,36 +60,35 @@ class DataQuery extends Component {
 
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
-        console.log('555555555555555555555555555555555555555555555555', date);
-        debugger;
-        if (date) {
             let { historyparams } = this.props;
-            console.log('555555555555555555555555555555555555555555555555', historyparams.datatype);
             switch (historyparams.datatype) {
                 case 'realtime':
-                     console.log('555555555555555555555555555555555555555555555555', date[1].add(-7, 'day'));
-                     console.log('555555555555555555555555555555555555555555555555', date[0]);
                     if (date[1].add(-7, 'day') > date[0]) {
                     message.info('实时数据时间间隔不能超过7天');
                     return;
                     }
+                        date[1].add(7, 'day')
+
                     break;
                 case 'minute':
                     if (date[1].add(-1, 'month') > date[0]) {
                     message.info('分钟数据时间间隔不能超过1个月');
                     return;
                     }
+                    date[1].add(-1, 'month')
                     break;
                 case 'hour':
                     if (date[1].add(-6, 'month') > date[0]) {
                     message.info('小时数据时间间隔不能超过6个月');
                     return;
                     }
+                    date[1].add(-6, 'month')
                     break;
                case 'day':
                     if (date[1].add(-12, 'month') > date[0]) {
                        message.info('日数据时间间隔不能超过1年个月');
                        return;
+                       date[1].add(-12, 'month')
                     }
                     break;
                     default:
@@ -101,7 +101,6 @@ class DataQuery extends Component {
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
             }
             this.reloaddatalist(historyparams);
-        }
     };
 
     /** 数据类型切换 */
