@@ -6,9 +6,9 @@ import {
     Spin,
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '../../../../components/RangePicker'
-import PollutantSelect from '../../../../components/PollutantSelect'
-import SdlTable from '../../../../components/SdlTable'
+import RangePicker_ from '@/components/RangePicker'
+import PollutantSelect from '@/components/PollutantSelect'
+import SdlTable from '@/components/SdlTable'
 /**
  * 报警记录
  * xpy 2019.07.26

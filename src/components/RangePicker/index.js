@@ -57,6 +57,9 @@ class Index extends Component {
                 disabled={this.props.disabled}
                 style={{ width: 250, marginLeft: 5, marginRight: 5, ...this.props.style }}
                 placeholder={this.state.placeholder}
+                allowClear = {
+                  this.props.allowClear === undefined ? true : this.props.allowClear
+                }
             />
         );
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin ,message} from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -169,37 +169,43 @@ class Index extends Component {
     _handleDateChange = (date, dateString) => {
         if (date) {
             // 判断
-
+            console.log("dateString=",dateString)
+            var hisData=[];
+            hisData=hisData.concat(date);
             switch (this.state.dataType) {
-                case 'realtime':
-                    if (date[1].add(-7, 'day') > date[0]) {
-                        message.info('实时数据时间间隔不能超过7天');
-                        return;
-                    }
-
-                    break;
-                case 'minute':
-                    if (date[1].add(-1, 'month') > date[0]) {
-                        message.info('分钟数据时间间隔不能超过1个月');
-                        return;
-                    }
-
-                    break;
-                case 'hour':
-                    if (date[1].add(-6, 'month') > date[0]) {
-                        message.info('小时数据时间间隔不能超过6个月');
-                        return;
-                    }
-
-                    break;
-                case 'day':
-                    if (date[1].add(-12, 'month') > date[0]) {
-                        message.info('日数据时间间隔不能超过1年个月');
-                        return;
-                    }
-
-                    break;
+                case 'RealDataTime':
+                       if (hisData[1].add(-7, 'day') > hisData[0]) {
+                       message.info('实时数据时间间隔不能超过7天');
+                       return;
+                       }
+                       hisData[1].add(+7, 'day')
+                       break;
+                   case 'MinuteData':
+                       if (hisData[1].add(-1, 'month') > hisData[0]) {
+                       message.info('分钟数据时间间隔不能超过1个月');
+                       return;
+                       }
+                       hisData[1].add(+1, 'month')
+                       break;
+                   case 'HourData':
+                       if (hisData[1].add(-6, 'month') > hisData[0]) {
+                       message.info('小时数据时间间隔不能超过6个月');
+                       return;
+                       }
+                       hisData[1].add(+6, 'month')
+                       break;
+                  case 'DayData':
+                       if (hisData[1].add(-12, 'month') > hisData[0]) {
+                          message.info('日数据时间间隔不能超过1年个月');
+                          return;
+                       }
+                       hisData[1].add(+12, 'month')
+                       break;
+                       default:
+                           return;
             }
+            console.log("hisData=",hisData)
+            console.log("date=",date)
             this.setState({
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -263,7 +269,7 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} showTime={true} allowClear={false} onChange={this._handleDateChange} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }

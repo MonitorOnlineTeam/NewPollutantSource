@@ -23,10 +23,10 @@ class YsyRealVideoData extends Component {
   };
 
   getPollutantTitle = () => {
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
       type: 'video/querypollutantlist',
-      payload: { dgimn: match.params.pointcode },
+      payload: { dgimn },
     });
   };
 
@@ -37,11 +37,11 @@ class YsyRealVideoData extends Component {
         .format('YYYY-MM-DD HH:mm:ss'),
       moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     ];
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
       type: 'video/queryhistorydatalist',
       payload: {
-        DGIMNs: match.params.pointcode,
+        DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: 1,
         pageSize: 20,

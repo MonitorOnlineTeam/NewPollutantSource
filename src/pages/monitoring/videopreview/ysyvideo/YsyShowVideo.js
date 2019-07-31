@@ -9,18 +9,15 @@ import {
   message,
   Tooltip,
   Tabs,
-  Icon,
+  Empty,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import {
-  PageHeaderWrapper,
-} from '@ant-design/pro-layout';
 import styles from './index.less';
 import HistoryVideo from './components/YsyHisVideoData';
 import YsyRealVideoData from './components/YsyRealVideoData';
 import config from '@/config';
-import NavigationTree from '../../../../components/NavigationTree'
+import VideoSelect from '../../../../components/VideoSelect'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -30,7 +27,9 @@ const { TabPane } = Tabs;
 add by xpy
 */
 
-@connect(({ video }) => ({
+@connect(({ video, loading }) => ({
+  vIsLoading: loading.effects['video/getvideolist'],
+  videoList: video.videoList,
   ysyrealtimevideofullurl: video.ysyvideoListParameters.realtimevideofullurl,
 }))
 class YsyShowVideo extends Component {
@@ -45,23 +44,34 @@ class YsyShowVideo extends Component {
       endValue: null,
       displayR: 'block',
       displayH: 'none',
-      displayRStartBtn: 'none',
-      displayREndBtn: 'block',
+      displayRStartBtn: 'block',
+      displayREndBtn: 'none',
       displayHStartBtn: 'block',
       displayHEndBtn: 'none',
       vIsLoading: false,
       playtime: '',
+      selectDisplay: false,
+      dgimn: '',
+      tabsKey: 1,
     };
   }
 
   componentWillMount = () => {
     window.addEventListener('message', this.receiveMessage, false);
-    this.getVideoIp(1);
   };
 
   componentWillUnmount() {
     window.removeEventListener('message', this.receiveMessage);
     clearInterval(this.timerID);
+  }
+
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.setState({
+        dgimn: nextProps.DGIMN,
+      })
+      this.changeDgimn(nextProps.DGIMN);
+    }
   }
 
   receiveMessage = event => {
@@ -127,13 +137,66 @@ class YsyShowVideo extends Component {
     }
   };
 
+  /** 切换排口 */
+  changeDgimn=DGIMN => {
+    this.getvideolist(DGIMN);
+  }
+
+/** 根据排口dgimn获取它下面的摄像头 */
+getvideolist= dgimn => {
+  this.props.dispatch({
+    type: 'video/getvideolist',
+    payload: {
+      dgimn,
+      callback: data => {
+        if (data.length > 0) {
+          this.setState({
+            selectDisplay: true,
+          }, () => {
+            this.getVideoIp(this.state.tabsKey, data[0].VedioID);
+          })
+        }
+      },
+    },
+  });
+}
+
+  /** 获取摄像头 */
+  getpollutantSelect = () => {
+        const { videoList } = this.props;
+            return (<VideoSelect
+                optionDatas={videoList}
+                defaultValue={this.getpropspollutantcode()}
+                style={{ width: 150, marginRight: 5 }}
+                onChange={this.handlePollutantChange}
+            />);
+    }
+     /**切换摄像头  */
+    handlePollutantChange = (value, selectedOptions) => {
+        let { historyparams } = this.props;
+        historyparams = {
+            ...historyparams,
+            payloadpollutantCode: value,
+            payloadpollutantName: selectedOptions.props.children,
+        }
+        this.reloaddatalist(historyparams);
+    };
+
+    /** 获取第一个摄像头  */
+    getpropspollutantcode = () => {
+      if (this.props.videoList[0]) {
+        return this.props.videoList[0].VedioID;
+      }
+      return null;
+    }
+
   /** 获取url */
-  getVideoIp = type => {
+  getVideoIp = (type, id) => {
     const { match, dispatch } = this.props;
     dispatch({
       type: 'video/ysyvideourl',
       payload: {
-        VedioCameraID: 'CD4AD3E4-01FE-49EF-875A-90AD48627177',
+        VedioCameraID: id,
         type,
       },
     });
@@ -207,8 +270,8 @@ class YsyShowVideo extends Component {
   btnClick = opt => {
     if (opt === 2) {
       this.setState({
-        displayRStartBtn: 'block',
-        displayREndBtn: 'none',
+        displayRStartBtn: 'none',
+        displayREndBtn: 'block',
       });
     }
     if (opt === 1) {
@@ -252,6 +315,7 @@ class YsyShowVideo extends Component {
       this.setState({
         displayR: 'block',
         displayH: 'none',
+        tabsKey: 1,
       });
       this.getVideoIp(1);
     }
@@ -263,31 +327,31 @@ class YsyShowVideo extends Component {
       this.setState({
         displayR: 'none',
         displayH: 'block',
+        tabsKey: 2,
       });
     }
   };
 
-  /** 切换排口 */
-   changeDgimn = dgimn => {
-
-   }
 
   render() {
-    const { ysyrealtimevideofullurl } = this.props;
+    const { ysyrealtimevideofullurl, videoList } = this.props;
+    if (videoList.length === 0) {
+      return (< div style = {
+          {
+            textAlign: 'center',
+          }
+        } > < Empty image = {
+          Empty.PRESENTED_IMAGE_SIMPLE
+        }
+        /></div >);
+    }
     return (
-      <div id="videopreview">
-      <PageHeaderWrapper>
-       <NavigationTree domId="#videopreview" choice={false} onItemClick={value => {
-                            if (value.length > 0 && !value[0].IsEnt) {
-                            this.changeDgimn(value[0].key)
-                            }
-         }} />
         <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
           <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
             <div
               className={styles.divv}
             >
-              {ysyrealtimevideofullurl !== 'nodata' ? <iframe
+              <iframe
                 title="实时视频"
                 id="ifm"
                 src={ysyrealtimevideofullurl}
@@ -295,7 +359,7 @@ class YsyShowVideo extends Component {
                 width="100%"
                 height="100%"
                 scrolling="no"
-              /> : 'ddd'}
+              />
             </div>
             <div className={styles.divc}
             >
@@ -305,6 +369,7 @@ class YsyShowVideo extends Component {
                   onChange={key => {
                     this.tabsChange(key);
                   }}
+                  tabBarExtraContent={!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                 >
                   <TabPane tab="实时" key="1">
                     <Row>
@@ -382,7 +447,7 @@ class YsyShowVideo extends Component {
                     <Divider type="dashed" />
                     <Row gutter={48} style={{ display: this.state.displayR }}>
                       <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                        {this.state.displayR && <YsyRealVideoData {...this.props} />}
+                        {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
                       </Col>
                     </Row>
                   </TabPane>
@@ -490,8 +555,6 @@ class YsyShowVideo extends Component {
             </div>
           </Row>
         </div>
-      </PageHeaderWrapper>
-      </div>
     );
   }
 }

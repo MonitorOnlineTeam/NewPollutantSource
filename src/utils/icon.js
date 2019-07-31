@@ -20,6 +20,8 @@ export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{
 export const EntIcon = () => <IconConfig type="icon-qiye1" style={{ ...style }} />
 export const WaterIcon = () => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} />
 export const GasIcon = () => <IconConfig type="icon-wuranyuan" style={{ ...style }} />
+export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style } />
+export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style } />
 export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />
 export const DustIcon = () => <IconConfig type="icon-yangchen" style={{...style}} />
 export const VocIcon =  () => <IconConfig type="icon-ziyuan" style={{...style}} />

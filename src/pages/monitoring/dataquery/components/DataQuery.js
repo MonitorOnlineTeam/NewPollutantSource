@@ -7,10 +7,10 @@ import {
     message, Empty, Switch,
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '../../../../components/RangePicker'
-import ButtonGroup_ from '../../../../components/ButtonGroup'
-import PollutantSelect from '../../../../components/PollutantSelect'
-import SdlTable from '../../../../components/SdlTable'
+import RangePicker_ from '@/components/RangePicker'
+import ButtonGroup_ from '@/components/ButtonGroup'
+import PollutantSelect from '@/components/PollutantSelect'
+import SdlTable from '@/components/SdlTable'
 /**
  * 数据查询组件
  * xpy 2019.07.26
@@ -59,11 +59,15 @@ class DataQuery extends Component {
 
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
+        console.log('555555555555555555555555555555555555555555555555', date);
+        debugger;
         if (date) {
             let { historyparams } = this.props;
-            // 判断
-            switch (historyparams.dataType) {
+            console.log('555555555555555555555555555555555555555555555555', historyparams.datatype);
+            switch (historyparams.datatype) {
                 case 'realtime':
+                     console.log('555555555555555555555555555555555555555555555555', date[1].add(-7, 'day'));
+                     console.log('555555555555555555555555555555555555555555555555', date[0]);
                     if (date[1].add(-7, 'day') > date[0]) {
                     message.info('实时数据时间间隔不能超过7天');
                     return;
@@ -86,7 +90,9 @@ class DataQuery extends Component {
                        message.info('日数据时间间隔不能超过1年个月');
                        return;
                     }
-               break;
+                    break;
+                    default:
+                        return;
             }
             this.setState({ rangeDate: date });
             historyparams = {
@@ -100,6 +106,7 @@ class DataQuery extends Component {
 
     /** 数据类型切换 */
     _handleDateTypeChange = e => {
+        const { rangeDate } = this.state;
         let formats;
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
@@ -273,7 +280,7 @@ class DataQuery extends Component {
                         extra={
                             <div>
                                 {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
                                 <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                                 <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
                             </div>

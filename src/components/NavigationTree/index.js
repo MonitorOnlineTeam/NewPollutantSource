@@ -3,8 +3,9 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
+import global from '@/global.less'
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -15,9 +16,11 @@ const { TreeNode } = Tree;
 const x = 3;
 const y = 2;
 const z = 1;
+var defaultKey = 0;
 const gData = [];
 const children = [];
 const dataList = [];
+const panelDataList = [];
 const floats = Setting.layout
 const styleTrue = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer" }
 const styleFalse = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer" }
@@ -30,31 +33,65 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   PollutantType: navigationtree.PollutantType,
   EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
   PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
+  overallexpkeys: navigationtree.overallexpkeys,
+  overallselkeys: navigationtree.overallexpkeys
 }))
 @Form.create()
 class NavigationTree extends Component {
-  state = {
-    visible: true,
-    Name: "",
-    Status: "",
-    RegionCode: "",
-    right: floats == "topmenu" ? "caret-left" : "caret-right",
-    expandedKeys: [],
-    autoExpandParent: true,
-    checkedKeys: [],
-    selectedKeys: [],
-    searchValue: '',
-    placement: 'right',
-    normalState: true,
-    offState: true,
-    overState: true,
-    exceState: true,
-    screenList: [0, 1, 2, 3]
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: true,
+      Name: "",
+      Status: "",
+      RegionCode: "",
+      right: floats == "topmenu" ? "caret-left" : "caret-right",
+      expandedKeys: this.props.overallexpkeys,
+      autoExpandParent: true,
+      checkedKeys: [],
+      selectedKeys: this.props.overallselkeys,
+      searchValue: '',
+      placement: 'right',
+      normalState: true,
+      offState: true,
+      overState: true,
+      exceState: true,
+      screenList: [0, 1, 2, 3],
+      treeVis: true,
+      panelVis: "none",
+      panelData: [],
+      // panelSelKey:"",
+      panelColumn: [
+        {
+          title: 'Name',
+          dataIndex: 'Pollutant',
+          render: (text, record) => {
+            return record.Pollutant == 1 ? <a><PanelWaterIcon style={{ fontSize: 25 }} /></a> : <a><PanelGasIcon style={{ fontSize: 25 }} /></a>
+          }
+        },
+        {
+          title: 'Age',
+          dataIndex: 'pointName',
+          render: (text, record) => {
+            return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
+          }
+        },
+        {
+          title: 'Age',
+          dataIndex: 'Status',
+          render: (text, record) => {
+            return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
+          }
+        },
+
+      ]
+    }
   }
 
+
   componentDidMount() {
-    const dom  = document.querySelector(this.props.domId);
-    if(dom){
+    const dom = document.querySelector(this.props.domId);
+    if (dom) {
       floats === "topmenu" ? dom.style.marginLeft = "400px" : dom.style.marginRight = "400px"
     }
     this.props.dispatch({
@@ -79,21 +116,33 @@ class NavigationTree extends Component {
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
       this.generateList(nextProps.EntAndPoint)
     }
-
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint) => {
+
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
       dataList.push({ key, title: node.title, IsEnt: node.IsEnt });
+      if (node.IsEnt == 0) {
+        panelDataList.push({ key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType })
+      }
+      if (defaultKey == 0 && node.IsEnt == 0) {
+        defaultKey = 1;
+        // var parentKey=this.getParentKey(key,this.props.EntAndPoint)
+        this.setState({
+          selectedKeys: [key],
+          // expandedKeys:[parentKey]
+        })
+      }
+
       if (node.children) {
         this.generateList(node.children);
       }
     }
   };
   // generateList(this.props.EntAndPoint);
-//获取当前传入的key的父节点
+  //获取当前传入的key的父节点
   getParentKey = (key, tree) => {
     let parentKey;
     for (let i = 0; i < tree.length; i++) {
@@ -125,7 +174,7 @@ class NavigationTree extends Component {
       placement: e.target.value,
     });
   };
- //污染物筛选
+  //污染物筛选
   handleChange = (value) => {
     value = value.toString()
     this.setState({
@@ -174,7 +223,7 @@ class NavigationTree extends Component {
       autoExpandParent: true,
     });
   };
-//配置抽屉及动画效果左右区分
+  //配置抽屉及动画效果左右区分
   changeState = () => {
     const { domId } = this.props;
     this.setState({
@@ -185,11 +234,11 @@ class NavigationTree extends Component {
       if (dom) {
         if (this.state.visible) {
           dom.style.width = 'calc(100% - 400px)'
-          floats === "topmenu" ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px' 
+          floats === "topmenu" ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
           dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
         } else {
           dom.style.width = 'calc(100%)'
-          floats === "topmenu" ? dom.style.marginLeft = '0' : dom.style.marginRight = '0' 
+          floats === "topmenu" ? dom.style.marginLeft = '0' : dom.style.marginRight = '0'
           dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
         }
       }
@@ -219,7 +268,7 @@ class NavigationTree extends Component {
       autoExpandParent: false,
     });
   };
-//复选框选中
+  //复选框选中
   onCheck = checkedKeys => {
     this.setState({ checkedKeys });
     this.returnData(checkedKeys)
@@ -283,28 +332,35 @@ class NavigationTree extends Component {
   }
   //树节点点击事件
   onSelect = (selectedKeys, info) => {
-    // 展开关闭节点
-    var expand = this.state.expandedKeys
-    var expandIndex = expand.indexOf(selectedKeys[0])
+    // // 展开关闭节点
+    // var expand = this.state.expandedKeys
+    // var expandIndex = expand.indexOf(selectedKeys[0])
     //单选返回单个KEY
     if (!this.props.choice) {
-      if (selectedKeys.length == 0) {
-        expandIndex = expand.indexOf(info.node.props.dataRef.key)
+      // if (selectedKeys.length == 0) {
+      //   expandIndex = expand.indexOf(info.node.props.dataRef.key)
+      // }
+      // if (expandIndex == -1) {
+      //   expand = expand.concat(selectedKeys)
+      // } else {
+      //   expand = expand.filter((item, index) => index !== expandIndex)
+      // }
+      var eventKey = info.node.props.eventKey
+      var event = this.state.selectedKeys
+      var eventIndex = event.indexOf(eventKey)
+      if (eventIndex == -1) {
+        this.setState({ selectedKeys }, () => { this.returnData(selectedKeys) });//, expandedKeys: expand
       }
-      if (expandIndex == -1) {
-        expand = expand.concat(selectedKeys)
-      } else {
-        expand = expand.filter((item, index) => index !== expandIndex)
+      else {
+        this.returnData([eventKey])
       }
-      this.setState({ selectedKeys, expandedKeys: expand });
-      this.returnData(selectedKeys)
       return
     }
-    if (expandIndex == -1) {
-      expand = expand.concat(selectedKeys)
-    } else {
-      expand = expand.filter((item, index) => index !== expandIndex)
-    }
+    // if (expandIndex == -1) {
+    //   expand = expand.concat(selectedKeys)
+    // } else {
+    //   expand = expand.filter((item, index) => index !== expandIndex)
+    // }
     var list = this.state.checkedKeys;
     var children = info.node.props.children ? info.node.props.children.map(m => m.key) : selectedKeys;
     children = info.node.props.children ? children.concat(selectedKeys) : selectedKeys;
@@ -335,10 +391,10 @@ class NavigationTree extends Component {
         })
       }
     }
-    this.setState({ checkedKeys: list, expandedKeys: expand });
+    this.setState({ checkedKeys: list }); //, expandedKeys: expand 
     this.returnData(list)
   };
-//向外部返回选中的数据并且更新到model全局使用
+  //向外部返回选中的数据并且更新到model全局使用
   returnData = (data) => {
     //处理选中的数据格式
     const rtnList = [];
@@ -352,10 +408,40 @@ class NavigationTree extends Component {
     this.props.dispatch({
       type: "navigationtree/updateState",
       payload: {
-        selectTreeKeys: rtnList
+        selectTreeKeys: rtnList,
+        overallselkeys: this.state.selectedKeys,
+        overallexpkeys: this.state.expandedKeys,
       }
     })
   }
+  onRadioChange = (e) => {
+    if (e.target.value == "tree") {
+      this.setState({
+        treeVis: true,
+      })
+    } else {
+      //
+
+      this.setState({
+        treeVis: false,
+      })
+    }
+  }
+  // 选中行
+  onClickRow = (record) => {
+    return {
+      onClick: () => {
+        this.setState({
+          selectedKeys: [record.key],
+        });
+        this.returnData([record.key])
+      },
+    };
+  }
+  setRowClassName = (record) => {
+    return record.key === this.state.selectedKeys[0] ? global.clickRowStyl : '';
+  }
+
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     //渲染数据及企业排口图标和运行状态
@@ -433,6 +519,7 @@ class NavigationTree extends Component {
             // searchEnterprise={true}
             searchRegion={true}
             onChange={this.regionChange}
+            placeholder="请选择区域"
           />
           <Search
             placeholder="查询企业排口"
@@ -440,7 +527,10 @@ class NavigationTree extends Component {
             // onChange={console.log("111")}
             style={{ marginTop: 10 }}
           />
-
+          <Radio.Group defaultValue="tree" buttonStyle="solid" style={{ marginTop: 10 }} onChange={this.onRadioChange}>
+            <Radio.Button value="tree">节点</Radio.Button>
+            <Radio.Button value="panel">面板</Radio.Button>
+          </Radio.Group>
           <Divider />
           {/* <Collapse defaultActiveKey={['1']} bordered={false} width="100%">
             <Panel key='1' header="搜索条件" width="100%">
@@ -449,7 +539,7 @@ class NavigationTree extends Component {
           </Collapse> */}
           <div visible={true} style={{
             position: "absolute",
-            top: "40%",
+            top: "30%",
             right: floats == "leftmenu" ? "400px" : null,
             left: floats == "topmenu" ? "400px" : null,
             display: "flex",
@@ -463,25 +553,35 @@ class NavigationTree extends Component {
             cursor: "pointer",
           }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: "#FFFFFF", marginLeft: "15%" }} type={this.state.right} /></a></div>
 
-          {this.props.EntAndPoint.length ? <Tree
-            checkable={this.props.choice}
-            // onExpand={this.onExpand}
-            defaultExpandAll={true}
-            onCheck={this.onCheck}
-            checkedKeys={this.state.checkedKeys}
-            onSelect={this.onSelect}
-            selectedKeys={this.state.selectedKeys}
-            style={{ marginTop: "5%", maxHeight: 750, overflow: 'auto', width: "100%" }}
 
-            onExpand={this.onExpand}
-            expandedKeys={expandedKeys}
-            autoExpandParent={autoExpandParent}
-          >
-            {/* {this.renderTreeNodes(this.props.EntAndPoint)} */}
-            {loop(this.props.EntAndPoint)}
-            {/* {loop(gData)} */}
-          </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
 
+          {this.state.treeVis ? <div >
+            {this.props.EntAndPoint.length ? <Tree
+              checkable={this.props.choice}
+              // onExpand={this.onExpand}
+              defaultExpandAll={true}
+              onCheck={this.onCheck}
+              checkedKeys={this.state.checkedKeys}
+              onSelect={this.onSelect}
+              selectedKeys={this.state.selectedKeys}
+              style={{ marginTop: "5%", maxHeight: 700, overflow: 'auto', width: "100%" }}
+
+              onExpand={this.onExpand}
+              expandedKeys={expandedKeys}
+              autoExpandParent={autoExpandParent}
+            >
+              {/* {this.renderTreeNodes(this.props.EntAndPoint)} */}
+              {loop(this.props.EntAndPoint)}
+              {/* {loop(gData)} */}
+            </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+          </div> : <div >
+              {this.props.EntAndPoint.length ? <Table columns={this.state.panelColumn} dataSource={panelDataList} showHeader={false} pagination={false}
+                style={{ marginTop: "5%", maxHeight: 700, overflow: 'auto', width: "100%", cursor: "pointer" }}
+                onRow={this.onClickRow}
+                rowClassName={this.setRowClassName}
+
+              ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            </div>}
         </Drawer>
 
       </div>
