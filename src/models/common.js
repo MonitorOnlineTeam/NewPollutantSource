@@ -16,11 +16,23 @@ export default Model.extend({
     *getPollutantTypeList({ payload }, {
       update, call
     }) {
+      let { filterPollutantType } = payload;
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.requstresult === "1") {
+
+        let data = result.data;
+        if (filterPollutantType) {
+          let thisPollutantType = filterPollutantType.split(',');
+          data = data.filter(item => {
+            let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
+            return flag.length > 0;
+          })
+          // console.log("newPollutantTypelist2=", newPollutantTypelist);
+        }
+
         yield update({
-          pollutantTypelist: result.data,
-          defaultPollutantCode: result.data[0] && result.data[0]["pollutantTypeCode"]
+          pollutantTypelist: data,
+          defaultPollutantCode: data[0] && data[0]["pollutantTypeCode"]
         })
       }
     },
