@@ -22,9 +22,9 @@ import { PointIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/components/AutoForm/Table';
+import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 
 

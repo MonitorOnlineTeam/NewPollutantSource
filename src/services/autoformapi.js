@@ -195,3 +195,13 @@ export async function exportTemplet(params) {
     const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/ExportTemplet', params, null);
     return result;
 }
+
+/**
+ * 【AutoForm】下载导入模板
+ * @params {"configId": "String"}
+ */
+export async function fileUpload(params) {
+    const result = await post('/upload/rest/PollutantSourceApi/UploadApi/PostFiles', params, null);
+    return result;
+}
+// rest/PollutantSourceApi/UploadApi/PostFiles

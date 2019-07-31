@@ -14,7 +14,9 @@ export default Model.extend({
     state: {
         EntAndPoint:[],
         PollutantType:[],
-        selectTreeKeys:[]
+        selectTreeKeys:[],
+        overallselkeys:[],
+        overallexpkeys:[]
     },
     subscriptions: {
         setup({

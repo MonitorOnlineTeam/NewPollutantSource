@@ -91,7 +91,7 @@ EnterprisePointCascadeMultiSelect.propTypes = {
 EnterprisePointCascadeMultiSelect.delfultProps = {
   searchEnterprise: false,
   searchRegion: false,
-  placeholder: "请选择"
+  placeholder: "请选择行政区"
 }
 
 export default EnterprisePointCascadeMultiSelect;

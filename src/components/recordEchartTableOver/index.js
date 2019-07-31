@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin,message } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin ,message} from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -11,12 +11,12 @@ import moment from 'moment';
 
 
 @connect(({ recordEchartTable, loading }) => ({
-    exlist: recordEchartTable.exlist,
-    excount: recordEchartTable.excount,
-    exmodellist: recordEchartTable.exmodellist,
-    exmodellistLoading: loading.effects['recordEchartTable/getexmodellist'],
-    exceptionData: recordEchartTable.exceptionData,
-    exceptionDataLoading: loading.effects['recordEchartTable/getexceptiondata'],
+    overlist: recordEchartTable.overlist,
+    overcount: recordEchartTable.overcount,
+    overmodellist: recordEchartTable.overmodellist,
+    overmodellistLoading: loading.effects['recordEchartTable/getovermodellist'],
+    overData: recordEchartTable.overceptionData,
+    overDataLoading: loading.effects['recordEchartTable/getoverdata'],
 }))
 @Form.create()
 class Index extends Component {
@@ -39,18 +39,29 @@ class Index extends Component {
                 },
                 {
                     title: '监测时间',
-                    dataIndex: 'ExceptionTime',
+                    dataIndex: 'OverTime',
                 },
                 {
                     title: '监测数值',
                     dataIndex: 'MonitorValue',
                 },
                 {
-                    title: '异常类型',
-                    dataIndex: 'ExceptionType',
+                    title: '标准值',
+                    dataIndex: 'StandValue',
+                },
+                {
+                    title: '超标倍数',
+                    dataIndex: 'OverShoot',
+                },
+                {
+                    title: '超标类型',
+                    dataIndex: 'AlarmType',
+                },
+                {
+                    title: '超标级别',
+                    dataIndex: 'AlarmLevel',
                 },
             ],
-           
         };
     }
     /** 初始化加载 */
@@ -72,6 +83,7 @@ class Index extends Component {
         this.setState({
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+          
         })
     }
     componentWillReceiveProps(nextProps) {
@@ -88,7 +100,7 @@ class Index extends Component {
         }
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.props.dispatch({
-                type: "recordEchartTable/getexmodellist",
+                type: "recordEchartTable/getovermodellist",
                 payload: {
                     beginTime: this.state.beginTime,
                     endTime: this.state.endTime,
@@ -143,7 +155,7 @@ class Index extends Component {
             dataType: dataType,
         });
         this.props.dispatch({
-            type: "recordEchartTable/getexmodellist",
+            type: "recordEchartTable/getovermodellist",
             payload: {
                 beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
                 endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
@@ -157,43 +169,50 @@ class Index extends Component {
     _handleDateChange = (date, dateString) => {
         if (date) {
             // 判断
-
+            console.log("dateString=",dateString)
+            var hisData=[];
+            hisData=hisData.concat(date);
             switch (this.state.dataType) {
                 case 'RealDataTime':
-                       if (date[1].add(-7, 'day') > date[0]) {
+                       if (hisData[1].add(-7, 'day') > hisData[0]) {
                        message.info('实时数据时间间隔不能超过7天');
                        return;
                        }
+                       hisData[1].add(+7, 'day')
                        break;
                    case 'MinuteData':
-                       if (date[1].add(-1, 'month') > date[0]) {
+                       if (hisData[1].add(-1, 'month') > hisData[0]) {
                        message.info('分钟数据时间间隔不能超过1个月');
                        return;
                        }
+                       hisData[1].add(+1, 'month')
                        break;
                    case 'HourData':
-                       if (date[1].add(-6, 'month') > date[0]) {
+                       if (hisData[1].add(-6, 'month') > hisData[0]) {
                        message.info('小时数据时间间隔不能超过6个月');
                        return;
                        }
+                       hisData[1].add(+6, 'month')
                        break;
                   case 'DayData':
-                       if (date[1].add(-12, 'month') > date[0]) {
+                       if (hisData[1].add(-12, 'month') > hisData[0]) {
                           message.info('日数据时间间隔不能超过1年个月');
                           return;
                        }
+                       hisData[1].add(+12, 'month')
                        break;
                        default:
                            return;
             }
-            
+            console.log("hisData=",hisData)
+            console.log("date=",date)
             this.setState({
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
             });
             this.props.dispatch({
-                type: "recordEchartTable/getexmodellist",
+                type: "recordEchartTable/getovermodellist",
                 payload: {
                     beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                     endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -208,16 +227,15 @@ class Index extends Component {
     }
     clickEchartsPie(e) {
         var name = e.name
-        var seriesName = e.seriesName
+        // var seriesName = e.seriesName
         this.props.dispatch({
-            type: "recordEchartTable/getexceptiondata",
+            type: "recordEchartTable/getoverdata",
             payload: {
                 beginTime: this.state.beginTime,
                 endTime: this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [this.props.DGIMN],
                 Pollutant: e.name,
-                ExceptionType: e.seriesName
             }
         })
         console.log(e)
@@ -251,14 +269,14 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} showTime={true} allowClear={false} onChange={this._handleDateChange} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
                     style={{ width: '100%', height: 'calc(100vh - 230px)' }}
                 >
                     {
-                        this.props.exmodellistLoading ? <Spin
+                        this.props.overmodellistLoading ? <Spin
                             style={{
                                 width: '100%',
                                 height: 'calc(100vh/2)',
@@ -269,7 +287,7 @@ class Index extends Component {
                             size="large"
                         /> :
                             <div> {
-                                this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                                this.props.overmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
                                     <ReactEcharts
                                         theme="light"
@@ -282,7 +300,7 @@ class Index extends Component {
                                     />
 
                                     {
-                                        this.props.exceptionDataLoading ? <Spin
+                                        this.props.overDataLoading ? <Spin
                                             style={{
                                                 width: '100%',
                                                 height: 'calc(100vh/2)',

@@ -86,7 +86,6 @@ export default class MonitorTarget extends Component {
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-        console.log("this.props=",this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
         if (this.props.loading) {
@@ -118,7 +117,6 @@ export default class MonitorTarget extends Component {
                             configId={configId}
                         ></SearchWrapper>
                         <SdlTable
-                            
                             style={{ marginTop: 10 }}
                             // columns={columns}
                             configId={configId}
@@ -128,10 +126,10 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             // onAdd={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
                             // }}
                             // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
                             // }}
                             appendHandleRows={row => {
                                 return <Fragment>
@@ -143,6 +141,7 @@ export default class MonitorTarget extends Component {
                                     </Tooltip>
                                 </Fragment>
                             }}
+                            parentName="platformconfig"
                             {...this.props}
                         >
                         </SdlTable>

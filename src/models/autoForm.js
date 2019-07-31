@@ -192,6 +192,7 @@ export default Model.extend({
             type: item.DF_CONTROL_TYPE,
             labelText: item.DF_NAME_CN,
             fieldName: item.DF_NAME,
+            fullFieldName: item.FullFieldName,
             value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
             placeholder: item.DF_TOOLTIP,
             configId: item.DT_CONFIG_ID,
@@ -365,6 +366,16 @@ export default Model.extend({
           yield update({
             fileList
           })
+        }
+      },
+
+      // 文件上传
+      * fileUpload({ payload }, { call, update }) {
+        const result = yield call(services.exportTemplet, payload);
+        if (result.IsSuccess) {
+          // result.Datas && window.open(result.Datas)
+        } else {
+          message.error(result.Datas)
         }
       },
   

@@ -37,16 +37,35 @@ class SdlUpload extends Component {
     const { uid } = this._SELF_;
 
     const props = {
-      action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+      action: 'http://172.16.9.52:8096/rest/PollutantSourceApi/UploadApi/PostFiles',
+      // action: (file) => {
+      //   console.log("file=",file)
+      //   this.props.dispatch({
+      //     type: "autoForm/fileUpload",
+      //     // payload: {
+      //     //   file
+      //     // }
+      //   })
+      // },
       multiple: true,
       data: {
         FileUuid: uid,
         FileActualType: "1"
-      }
+      },
+      onChange(info) {
+        // if (info.file.status !== 'uploading') {
+        //   console.log(info.file, info.fileList);
+        // }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error("上传文件失败！")
+        }
+      },
     };
 
     return (
-      <Upload {...props} {...this.props} defaultFileList={[fileList]}>
+      <Upload {...props} {...this.props} defaultFileList={fileList}>
         <Button>
           <Icon type="upload" /> Upload
       </Button>

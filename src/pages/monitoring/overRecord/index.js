@@ -23,6 +23,7 @@ import NavigationTree from '../../../components/NavigationTree'
 import RangePicker_ from '../../../components/RangePicker'
 import ButtonGroup_ from '../../../components/ButtonGroup'
 import PollutantSelect from '../../../components/PollutantSelect'
+import RecordEchartTableOver from '../../../components/recordEchartTableOver'
 
 @connect(({ loading, dataquery }) => ({
     pollutantlist: dataquery.pollutantlist,
@@ -288,28 +289,19 @@ class Index extends Component {
 
     render() {
         return (
+            <div id="record">
+            <NavigationTree domId="#record" choice={false} onItemClick={value => {
+                if (value.length > 0 && !value[0].IsEnt) {
+                    this.setState({
+                        dgimn:value[0].key
+                    })
+                }
+            }} />
             <PageHeaderWrapper>
-                <div className={styles.cardTitle}>
-                <Card
-                    extra={
-                        <div>
-                            {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
-                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                            <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
-                        </div>
-                    }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)' }}
-                >
-                    <NavigationTree choice={false} onItemClick={value => {
-                        if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value[0].key)
-                        }
-                    }} />
-                     {this.loaddata()}
-                </Card>
-            </div>
+                <RecordEchartTableOver  DGIMN={this.state.dgimn}  />
             </PageHeaderWrapper>
+            
+        </div>
         );
     }
 }
