@@ -13,6 +13,7 @@ import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
+import YsyShowVideo from '../videopreview/ysyvideo/YsyShowVideo'
 const { TabPane } = Tabs;
 const entZoom = 11;
 const pointZoom = 13;
@@ -58,7 +59,7 @@ class MapView extends Component {
           console.log('allEntAndPointList=', props.allEntAndPointList)
           // const displayType = this.state.displayType === 1
           this.setState({
-            infoWindowVisible: (this.state.coordinateSet.length && this.state.infoWindowVisible) ? false : true,
+            infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1) ? false : true,
             coordinateSet: [],
             displayType: 0,
           }, () => {
@@ -239,15 +240,28 @@ class MapView extends Component {
   componentWillReceiveProps(nextProps) {
     const { defaultMapInfo } = this.props;
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
-      setTimeout(() => {
-        _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
-        this.setState({
-          coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
-          currentEntInfo: nextProps.defaultMapInfo,
-          loading: false
-        })
-        this.randomMarker(nextProps.defaultMapInfo.children);
-      }, 1000)
+      const timer = setInterval(() => {
+        if (_thismap) {
+          _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          this.setState({
+            coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+            currentEntInfo: nextProps.defaultMapInfo,
+            loading: false
+          })
+          this.randomMarker(nextProps.defaultMapInfo.children);
+          clearInterval(timer)
+        }
+      }, 500);
+      // setTimeout(() => {
+      //   console.log('2222')
+      //   _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+      //   this.setState({
+      //     coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+      //     currentEntInfo: nextProps.defaultMapInfo,
+      //     loading: false
+      //   })
+      //   this.randomMarker(nextProps.defaultMapInfo.children);
+      // }, 1000)
     }
   }
 
@@ -331,7 +345,6 @@ class MapView extends Component {
       //   },
       // }
     ]
-    console.log('currentEntInfo=', this.state.currentEntInfo)
     if (loading && this.state.loading) {
       return (<Spin
         style={{
@@ -405,7 +418,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove={true}
-              size={{ width: 430, height: 370 }}
+              // size={{ width: 430, height: }}
               // closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[10, -25]}
@@ -439,7 +452,7 @@ class MapView extends Component {
                   </div> : <div className={styles.pointInfoWindow}>
                     {
                       (!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"/> :
                         <>
                           <Descriptions title={this.state.currentPointInfo.title} size="small" bordered>
                             {
@@ -506,7 +519,7 @@ class MapView extends Component {
                 </div>
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                Content of tab 2
+                <YsyShowVideo DGIMN={currentKey} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
                 <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
