@@ -47,8 +47,8 @@ export default Model.extend({
       };
       const result = yield call(getysyList, body);
       let temprealurl = 'nodata';
-      if (result.requstresult === '1') {
-        const obj = result.data[0];
+      if (result.IsSuccess) {
+        const obj = result.Datas[0];
         if (obj) {
           if (payload.type === 1) {
             temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=1`;
@@ -67,13 +67,13 @@ export default Model.extend({
           },
         });
       } else {
+        message.error(result)
         yield update({
           ysyvideoListParameters: {
             ...ysyvideoListParameters,
             ...{
-              requstresult: result.requstresult,
               list: [],
-              realtimevideofullurl: temprealurl,
+              realtimevideofullurl: '',
             },
           },
         });
