@@ -5,7 +5,7 @@ export async function getysyList(params) {
   const body = {
     VedioCameraID: params.VedioCameraID,
   };
-  const result = post('/api/rest/PollutantSourceApi/Video/GetCameraMonitorUrl', body, null);
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetCameraMonitorUrl', body, null);
   return result === null
     ? {
         data: null,
