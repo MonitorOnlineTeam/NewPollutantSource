@@ -116,7 +116,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
+            { path: '/', redirect: './monitoring/datalist' },
             {
               name: 'test',
               path: '/test',
