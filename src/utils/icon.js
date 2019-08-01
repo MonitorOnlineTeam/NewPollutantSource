@@ -17,9 +17,9 @@ export const IconConfig = Icon.createFromIconfontCN({
 })
 
 export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{ ...style }} />
-export const EntIcon = (props) => <IconConfig type="icon-qiye1" style={{ ...style }} />
-export const WaterIcon = (props) => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} />
-export const GasIcon = (props) => <IconConfig type="icon-wuranyuan" style={{ ...style }} />
+export const EntIcon = (props) => <IconConfig type="icon-qiye1" style={{ ...style }} {...props}/>
+export const WaterIcon = (props) => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} {...props} />
+export const GasIcon = (props) => <IconConfig type="icon-wuranyuan" style={{ ...style }} {...props} />
 export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style } />
 export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style } />
 export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />

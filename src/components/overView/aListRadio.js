@@ -10,7 +10,7 @@ class AListRadio extends Component {
     const _this = this;
     this.onchange = value => {
       if (value.target.value === 'a') {
-        // _this.props.dispatch(routerRedux.push('/overview/mapview'));
+        _this.props.dispatch(routerRedux.push('/monitoring/mapview'));
       } else if (value.target.value === 'b') {
         _this.props.dispatch(routerRedux.push('/monitoring/datalist'));
       } else {

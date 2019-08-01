@@ -316,6 +316,11 @@ export default {
                   path: '/monitoring/datalist',
                   component: './monitoring/overView',
                 },
+                {
+                  name: 'mapview',
+                  path: '/monitoring/mapview',
+                  component: './monitoring/mapview',
+                },
                  {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
