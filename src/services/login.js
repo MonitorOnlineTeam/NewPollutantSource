@@ -6,25 +6,18 @@
  */
 
 import Cookie from 'js-cookie';
-import { postNew, getNew } from '../dvapack/request';
+import { post, get } from '@/utils/request';
 import { async } from 'q';
 
+
+
 /**
- * 【AutoForm】系统登录
- * @params {"UserAccount": "system","UserPwd": "system","RememberMe": true}
+ * 获取登录配置信息
+ * @params {}
  */
-export async function systemLogin(params) {
-    const defaults = {
-        RememberMe: true,
-        UserAccount: params.userName,
-        UserPwd: params.password,
-    };
-    const body = Object.assign(defaults);
-    const result = await postNew('/api/rest/PollutantSourceApi/LoginApi/Login', body);
-    if (result.IsSuccess && result.Datas) {
-        Cookie.set('ssoToken', result.Datas.Ticket);
-    } else {
-        Cookie.set('ssoToken', "");
-    }
+export async function getSystemLoginConfigInfo() {
+ 
+    const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemLoginConfigInfo');
+   
     return result;
-}
+  }

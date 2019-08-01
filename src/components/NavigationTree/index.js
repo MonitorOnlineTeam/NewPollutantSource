@@ -34,7 +34,7 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
   PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
-  overallselkeys: navigationtree.overallexpkeys
+  overallselkeys: navigationtree.overallselkeys
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -403,7 +403,8 @@ class NavigationTree extends Component {
       rtnList.push({ key: item, IsEnt: isEnt })
     })
     //向外部返回选中的数据
-    this.props.onItemClick && this.props.onItemClick(rtnList)
+    this.props.onItemClick && this.props.onItemClick(rtnList);
+    console.log("overallselkeys=",this.state.selectedKeys);
     //更新到model
     this.props.dispatch({
       type: "navigationtree/updateState",
