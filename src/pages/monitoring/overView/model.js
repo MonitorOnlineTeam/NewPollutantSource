@@ -4,9 +4,9 @@ import moment from 'moment';
 import { Popover, Badge, Icon, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
 import { querypolluntantentinfolist } from '@/services/baseapi';
+import { getPollutantTypeList } from '@/services/commonApi';
 import {
   querypollutanttypecode,
-  getPollutantTypeList,
   querydatalist,
   querylastestdatalist,
   queryhistorydatalist,
@@ -474,9 +474,9 @@ export default Model.extend({
     //获取系统污染物类型
     *getPollutantTypeList({ payload }, { call, update, put, take }) {
       const res = yield call(getPollutantTypeList, payload);
-      if (res) {
+      if (res.IsSuccess) {
         yield update({
-          pollutantTypelist: res,
+          pollutantTypelist: res.Datas,
         });
         if (!payload.treeCard) {
           yield put({
