@@ -21,7 +21,8 @@ export default Model.extend({
       seriesData: [],
       xAxisData: [],
       legend: []
-    }
+    },
+    monitorTime: null
   },
   effects: {
     *getAllEntAndPoint({ payload }, {
@@ -41,9 +42,9 @@ export default Model.extend({
       payload,
     }, { call, update, select }) {
       const result = yield call(services.getPollutantList, payload);
-      if (result.requstresult === "1") {
+      if (result.IsSuccess) {
         yield update({
-          waterList: result.data
+          waterList: result.Datas
         })
       }
     },
@@ -52,9 +53,9 @@ export default Model.extend({
       payload,
     }, { call, update, select }) {
       const result = yield call(services.getPollutantList, payload);
-      if (result.requstresult === "1") {
+      if (result.IsSuccess) {
         yield update({
-          gasList: result.data
+          gasList: result.Datas
         })
       }
     },
@@ -67,7 +68,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         const type = payload.type;
         const pollutantType = type == 1 ? yield select(state => state.mapView.waterList) : yield select(state => state.mapView.gasList)
-        // console.log('pollutantType=',pollutantType)
         const tableList = [];
         pollutantType.map(item => {
           result.Datas.map(itm => {
@@ -81,9 +81,9 @@ export default Model.extend({
             }
           })
         })
-        console.log('tableList=', tableList)
         yield update({
-          tableList
+          tableList,
+          monitorTime: result.Datas[0] ? result.Datas[0].MonitorTime : null
         })
         // yield take('getPointTableData/@@end');
         yield put({

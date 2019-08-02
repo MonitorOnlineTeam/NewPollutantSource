@@ -26,7 +26,7 @@ class Index extends Component {
             rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
             format: 'YYYY-MM-DD HH:mm:ss',
             bar: [],
-            dataType: 'RealDataTime',
+            dataType: 'RealTimeData',
             DGIMN: [],
             beginTime: "",
             endTime: "",
@@ -132,7 +132,7 @@ class Index extends Component {
             case 'realtime':
                 beginTime = moment(new Date()).add(-60, 'minutes');
                 formats = 'YYYY-MM-DD HH:mm:ss';
-                dataType = "RealDataTime"
+                dataType = "RealTimeData"
                 break;
             case 'minute':
                 beginTime = moment(new Date()).add(-1, 'day');
@@ -183,7 +183,7 @@ class Index extends Component {
             var hisData=[];
             hisData=hisData.concat(date);
             switch (this.state.dataType) {
-                case 'RealDataTime':
+                case 'RealTimeData':
                        if (hisData[1].add(-7, 'day') > hisData[0]) {
                        message.info('实时数据时间间隔不能超过7天');
                        return;
