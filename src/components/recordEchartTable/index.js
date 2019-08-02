@@ -73,25 +73,28 @@ class Index extends Component {
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         })
+        console.log("props=",this.props)
     }
     componentWillReceiveProps(nextProps) {
-        if (this.props.excount != nextProps.excount) {
-            var barList = [];
-            var item = { "type": 'bar', "barMaxWidth": '50' }
-            var realItem = nextProps.excount > 4 ? { "type": 'bar' } : item
-            for (var i = 0; i < nextProps.excount; i++) {
-                barList.push(realItem);
-            }
-            this.setState({
-                bar: barList
-            })
-        }
+        // if (this.props.excount != nextProps.excount) {
+        //     var barList = [];
+        //     var item = { "type": 'bar', "barMaxWidth": '50' }
+        //     var realItem = nextProps.excount > 4 ? { "type": 'bar' } : item
+        //     for (var i = 0; i < nextProps.excount; i++) {
+        //         barList.push(realItem);
+        //     }
+        //     this.setState({
+        //         bar: barList
+        //     })
+        // }
+        let beginTime = moment(new Date()).add(-60, 'minutes');
+        const endTime = moment(new Date());
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.props.dispatch({
                 type: "recordEchartTable/getexmodellist",
                 payload: {
-                    beginTime: this.state.beginTime,
-                    endTime: this.state.endTime,
+                    beginTime: this.state.beginTime==""?beginTime.format('YYYY-MM-DD HH:mm:ss'):this.state.beginTime,
+                    endTime: this.state.endTime==""?endTime.format('YYYY-MM-DD HH:mm:ss'):this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [nextProps.DGIMN],
                 }
@@ -164,24 +167,28 @@ class Index extends Component {
                        message.info('实时数据时间间隔不能超过7天');
                        return;
                        }
+                       date[1].add(+7, 'day') 
                        break;
                    case 'MinuteData':
                        if (date[1].add(-1, 'month') > date[0]) {
                        message.info('分钟数据时间间隔不能超过1个月');
                        return;
                        }
+                       date[1].add(+1, 'month')
                        break;
                    case 'HourData':
                        if (date[1].add(-6, 'month') > date[0]) {
                        message.info('小时数据时间间隔不能超过6个月');
                        return;
                        }
+                       date[1].add(+6, 'month')
                        break;
                   case 'DayData':
                        if (date[1].add(-12, 'month') > date[0]) {
                           message.info('日数据时间间隔不能超过1年个月');
                           return;
                        }
+                       date[1].add(+12, 'month')
                        break;
                        default:
                            return;
@@ -243,7 +250,8 @@ class Index extends Component {
             yAxis: { triggerEvent: true },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
-            series: this.state.bar,
+            series:this.props.excount
+            //this.state.bar,
             // [{type:"bar"},{type:"bar"}]
         }
         return (

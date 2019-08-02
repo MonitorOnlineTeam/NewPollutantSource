@@ -15,7 +15,7 @@ import moment from 'moment';
     overcount: recordEchartTable.overcount,
     overmodellist: recordEchartTable.overmodellist,
     overmodellistLoading: loading.effects['recordEchartTable/getovermodellist'],
-    overData: recordEchartTable.overceptionData,
+    overData: recordEchartTable.overData,
     overDataLoading: loading.effects['recordEchartTable/getoverdata'],
 }))
 @Form.create()
@@ -87,11 +87,11 @@ class Index extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        if (this.props.excount != nextProps.excount) {
+        if (this.props.overcount != nextProps.overcount) {
             var barList = [];
             var item = { "type": 'bar', "barMaxWidth": '50' }
-            var realItem = nextProps.excount > 4 ? { "type": 'bar' } : item
-            for (var i = 0; i < nextProps.excount; i++) {
+            var realItem = nextProps.overcount > 4 ? { "type": 'bar' } : item
+            for (var i = 0; i < nextProps.overcount; i++) {
                 barList.push(realItem);
             }
             this.setState({
@@ -246,9 +246,9 @@ class Index extends Component {
             legend: {},
             tooltip: {},
             dataset: {
-                dimensions: this.props.exlist,
+                dimensions: this.props.overlist,
                 // ['product', '2012', '2013', '2017', '2018'],
-                source: this.props.exmodellist
+                source: this.props.overmodellist
                 // [
                 //     {'product': '大气', '2012': "43.3", '2013': 85.8, '2017': 93.7,'2018':111},
                 //     {'product': 'Milk Tea', '2012': "83.1", '2013': 73.4, '2017': 55.1},
@@ -315,7 +315,7 @@ class Index extends Component {
 
                                                     // style={{ width: "400px", height: "500px" }}
                                                     columns={column}
-                                                    dataSource={this.props.exceptionData}
+                                                    dataSource={this.props.overData}
                                                 >
                                                 </SdlTable>
                                             </div>
