@@ -25,8 +25,7 @@ export default Model.extend({
             const dd1 = yield select(state => state.common);
             yield take('common/getPollutantTypeList/@@end');
             const dd = yield select(state => state.common);
-         
-            payload.callback();
+            payload.callback(dd.defaultPollutantCode);
         },
         *addPoint({ payload }, { call, put, update, select }) {
             // ;
