@@ -28,7 +28,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
 
 const RadioGroup = Radio.Group;
-@connect(({ loading, overview }) => ({
+@connect(({ loading, overview,global,common }) => ({
     columnsdata: overview.columns,
     data: overview.data,
     gwidth: overview.gwidth,
@@ -37,6 +37,8 @@ const RadioGroup = Radio.Group;
     // pollutantTypelist: overview.pollutantTypelist,
     selectpollutantTypeCode: overview.selectpollutantTypeCode,
     dataOverview: overview.dataOverview,
+    configInfo:global.configInfo,
+    defaultPollutantCode: common.defaultPollutantCode
 }))
 class dataList extends PureComponent {
     constructor(props) {
@@ -44,21 +46,42 @@ class dataList extends PureComponent {
     }
     /**页面初始化 */
     componentDidMount() {
-        const { dispatch, dataOverview } = this.props;
-
-        // 由于数据一览没有全部，初始化为废气
-        !!!this.props.selectpollutantTypeCode &&
-            dispatch({
-                type: 'overview/updateState',
-                payload: {
-                    selectpollutantTypeCode: 2,
-                },
-            });
+        const { dispatch, dataOverview,defaultPollutantCode } = this.props;
+      
+        // // 由于数据一览没有全部，初始化为废气
+        // !!!this.props.selectpollutantTypeCode &&
+        //     dispatch({
+        //         type: 'overview/updateState',
+        //         payload: {
+        //             selectpollutantTypeCode: defaultPollutantCode,
+        //         },
+        //     });
+        // dispatch({
+        //     type: 'overview/querypollutanttypecode',
+        //     payload: {
+        //         selectpollutantTypeCode:this.props.defaultPollutantCode
+        //     },
+        // });
         dispatch({
-            type: 'overview/querypollutanttypecode',
-            payload: {},
+            type: 'overview/init',
+            payload: {
+                callback: res => {
+                    dispatch({
+                        type: 'overview/updateState',
+                        payload: {
+                            //更新条件变量
+                            selectpollutantTypeCode: this.props.defaultPollutantCode,
+                        },
+                    });
+                    dispatch({
+                        type: 'overview/querypollutanttypecode',
+                        payload: {},
+                    });
+                    this.reloadData(dataOverview)
+                  }
+            },
         });
-        // this.reloadData(dataOverview)
+        
     }
     /**加载数据 */
     reloadData = dataOverview => {
@@ -167,6 +190,7 @@ class dataList extends PureComponent {
             type: 'overview/querypollutanttypecode',
             payload: {},
         });
+        this.reloadData(dataOverview);
     };
     // /**获取详情按钮 */
     // gerpointButton = (record) => (<div>

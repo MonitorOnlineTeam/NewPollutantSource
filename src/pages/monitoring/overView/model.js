@@ -3,7 +3,7 @@ import moment from 'moment';
 // import { message } from 'antd';
 import { Popover, Badge, Icon, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
-import { querypolluntantentinfolist,getPollutantTypeList } from '@/services/baseapi';
+import { querypolluntantentinfolist, getPollutantTypeList } from '@/services/baseapi';
 import {
   querypollutanttypecode,
   querydatalist,
@@ -69,7 +69,16 @@ export default Model.extend({
     },
   },
   effects: {
+    *init({ payload }, { call, take, select }) {
+      const dd1 = yield select(state => state.common);
+      yield take('common/getPollutantTypeList/@@end');
+      
+      payload.callback();
+    },
+
     *querypollutanttypecode({ payload }, { call, update, put, take, select }) {
+
+      // debugger;
       let gwidth = 300 + 140 + 70;
       if (!onlyOneEnt) {
         gwidth = gwidth + 300;
@@ -79,11 +88,11 @@ export default Model.extend({
         pollutantTypes: selectpollutantTypeCode,
       };
       const data = yield call(querypollutanttypecode, body);
-      yield put({
-        type: 'getPollutantTypeList',
-        payload: {},
-      });
-      yield take('getPollutantTypeList/@@end');
+      // yield put({
+      //   type: 'getPollutantTypeList',
+      //   payload: {},
+      // });
+      // yield take('getPollutantTypeList/@@end');
       if (data) {
         gwidth += 200 * data.length;
       }
@@ -404,7 +413,7 @@ export default Model.extend({
         },
         tooltip: {
           trigger: 'axis',
-          formatter: function(params, ticket, callback) {
+          formatter: function (params, ticket, callback) {
             let res = `${params[0].axisValue}时<br/>`;
             params.map(item => {
               res += `${item.seriesName}:${item.value}<br />`;
