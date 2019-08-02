@@ -120,6 +120,10 @@ class NavigationTree extends Component {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.generateList(nextProps.EntAndPoint)
     }
+    if (this.props.selKeys !== nextProps.selKeys) {
+      this.state.panelDataList.splice(0, this.state.panelDataList.length)
+      this.generateList(nextProps.EntAndPoint)
+    }
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint) => {
@@ -136,7 +140,6 @@ class NavigationTree extends Component {
         // }
       }
       if (this.defaultKey == 0 && node.IsEnt == 0) {
-        debugger
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
@@ -153,7 +156,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var rtnKey = [{ key: nowKey[0], IsEnt: false }]
-        this.props.onItemClick(rtnKey)
+        this.props.onItemClick&&this.props.onItemClick(rtnKey)
       }
 
       if (node.children) {
@@ -435,6 +438,7 @@ class NavigationTree extends Component {
     })
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
+    this.props.onMapClick && this.props.onMapClick(rtnList);
     console.log("overallselkeys=", this.state.selectedKeys);
     //更新到model
     this.props.dispatch({
