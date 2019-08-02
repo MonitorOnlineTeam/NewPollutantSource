@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin,message } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -50,7 +50,7 @@ class Index extends Component {
                     dataIndex: 'ExceptionType',
                 },
             ],
-           
+
         };
     }
     /** 初始化加载 */
@@ -73,7 +73,7 @@ class Index extends Component {
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         })
-        console.log("props=",this.props)
+        console.log("props=", this.props)
     }
     componentWillReceiveProps(nextProps) {
         // if (this.props.excount != nextProps.excount) {
@@ -91,10 +91,16 @@ class Index extends Component {
         const endTime = moment(new Date());
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.props.dispatch({
+                type: 'recordEchartTable/updateState',
+                payload: {
+                    exceptionData:[],
+                },
+            })
+            this.props.dispatch({
                 type: "recordEchartTable/getexmodellist",
                 payload: {
-                    beginTime: this.state.beginTime==""?beginTime.format('YYYY-MM-DD HH:mm:ss'):this.state.beginTime,
-                    endTime: this.state.endTime==""?endTime.format('YYYY-MM-DD HH:mm:ss'):this.state.endTime,
+                    beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                    endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [nextProps.DGIMN],
                 }
@@ -146,6 +152,12 @@ class Index extends Component {
             dataType: dataType,
         });
         this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                exceptionData:[],
+            },
+        })
+        this.props.dispatch({
             type: "recordEchartTable/getexmodellist",
             payload: {
                 beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
@@ -163,42 +175,48 @@ class Index extends Component {
 
             switch (this.state.dataType) {
                 case 'RealDataTime':
-                       if (date[1].add(-7, 'day') > date[0]) {
-                       message.info('实时数据时间间隔不能超过7天');
-                       return;
-                       }
-                       date[1].add(+7, 'day') 
-                       break;
-                   case 'MinuteData':
-                       if (date[1].add(-1, 'month') > date[0]) {
-                       message.info('分钟数据时间间隔不能超过1个月');
-                       return;
-                       }
-                       date[1].add(+1, 'month')
-                       break;
-                   case 'HourData':
-                       if (date[1].add(-6, 'month') > date[0]) {
-                       message.info('小时数据时间间隔不能超过6个月');
-                       return;
-                       }
-                       date[1].add(+6, 'month')
-                       break;
-                  case 'DayData':
-                       if (date[1].add(-12, 'month') > date[0]) {
-                          message.info('日数据时间间隔不能超过1年个月');
-                          return;
-                       }
-                       date[1].add(+12, 'month')
-                       break;
-                       default:
-                           return;
+                    if (date[1].add(-7, 'day') > date[0]) {
+                        message.info('实时数据时间间隔不能超过7天');
+                        return;
+                    }
+                    date[1].add(+7, 'day')
+                    break;
+                case 'MinuteData':
+                    if (date[1].add(-1, 'month') > date[0]) {
+                        message.info('分钟数据时间间隔不能超过1个月');
+                        return;
+                    }
+                    date[1].add(+1, 'month')
+                    break;
+                case 'HourData':
+                    if (date[1].add(-6, 'month') > date[0]) {
+                        message.info('小时数据时间间隔不能超过6个月');
+                        return;
+                    }
+                    date[1].add(+6, 'month')
+                    break;
+                case 'DayData':
+                    if (date[1].add(-12, 'month') > date[0]) {
+                        message.info('日数据时间间隔不能超过1年个月');
+                        return;
+                    }
+                    date[1].add(+12, 'month')
+                    break;
+                default:
+                    return;
             }
-            
+
             this.setState({
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
             });
+            this.props.dispatch({
+                type: 'recordEchartTable/updateState',
+                payload: {
+                    exceptionData:[],
+                },
+            })
             this.props.dispatch({
                 type: "recordEchartTable/getexmodellist",
                 payload: {
@@ -250,7 +268,7 @@ class Index extends Component {
             yAxis: { triggerEvent: true },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
-            series:this.props.excount
+            series: this.props.excount
             //this.state.bar,
             // [{type:"bar"},{type:"bar"}]
         }
@@ -259,7 +277,7 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} allowClear={false} format={this.state.formats} onChange={this._handleDateChange} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
@@ -290,25 +308,26 @@ class Index extends Component {
                                     />
 
                                     {
-                                        this.props.exceptionDataLoading ? <Spin
-                                            style={{
-                                                width: '100%',
-                                                height: 'calc(100vh/2)',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}
-                                            size="large"
-                                        /> :
-                                            <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                        // this.props.exceptionDataLoading ? <Spin
+                                        //     style={{
+                                        //         width: '100%',
+                                        //         height: 'calc(100vh/2)',
+                                        //         display: 'flex',
+                                        //         alignItems: 'center',
+                                        //         justifyContent: 'center'
+                                        //     }}
+                                        //     size="large"
+                                        // /> :
+                                        //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
                                                 <SdlTable
-
+                                                    loading={this.props.exceptionDataLoading}
                                                     // style={{ width: "400px", height: "500px" }}
+                                                    scroll={{ y: 300 }}
                                                     columns={column}
                                                     dataSource={this.props.exceptionData}
                                                 >
                                                 </SdlTable>
-                                            </div>
+                                            // </div>
                                     }
                                 </div>
                             }</div>

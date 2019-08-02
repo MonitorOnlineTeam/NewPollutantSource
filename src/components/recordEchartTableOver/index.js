@@ -57,10 +57,6 @@ class Index extends Component {
                     title: '超标类型',
                     dataIndex: 'AlarmType',
                 },
-                {
-                    title: '超标级别',
-                    dataIndex: 'AlarmLevel',
-                },
             ],
         };
     }
@@ -87,23 +83,31 @@ class Index extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        if (this.props.overcount != nextProps.overcount) {
-            var barList = [];
-            var item = { "type": 'bar', "barMaxWidth": '50' }
-            var realItem = nextProps.overcount > 4 ? { "type": 'bar' } : item
-            for (var i = 0; i < nextProps.overcount; i++) {
-                barList.push(realItem);
-            }
-            this.setState({
-                bar: barList
-            })
-        }
+        // if (this.props.overcount != nextProps.overcount) {
+        //     var barList = [];
+        //     var item = { "type": 'bar', "barMaxWidth": '50' }
+        //     var realItem = nextProps.overcount > 4 ? { "type": 'bar' } : item
+        //     for (var i = 0; i < nextProps.overcount; i++) {
+        //         barList.push(realItem);
+        //     }
+        //     this.setState({
+        //         bar: barList
+        //     })
+        // }
+        let beginTime = moment(new Date()).add(-60, 'minutes');
+        const endTime = moment(new Date());
         if (this.props.DGIMN != nextProps.DGIMN) {
+            this.props.dispatch({
+                type: 'recordEchartTable/updateState',
+                payload: {
+                    overData:[],
+                },
+            })
             this.props.dispatch({
                 type: "recordEchartTable/getovermodellist",
                 payload: {
-                    beginTime: this.state.beginTime,
-                    endTime: this.state.endTime,
+                    beginTime: this.state.beginTime==""?beginTime.format('YYYY-MM-DD HH:mm:ss'):this.state.beginTime,
+                    endTime: this.state.endTime==""?endTime.format('YYYY-MM-DD HH:mm:ss'):this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [nextProps.DGIMN],
                 }
@@ -154,6 +158,12 @@ class Index extends Component {
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
             dataType: dataType,
         });
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                overData:[],
+            },
+        })
         this.props.dispatch({
             type: "recordEchartTable/getovermodellist",
             payload: {
@@ -212,6 +222,12 @@ class Index extends Component {
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
             });
             this.props.dispatch({
+                type: 'recordEchartTable/updateState',
+                payload: {
+                    overData:[],
+                },
+            })
+            this.props.dispatch({
                 type: "recordEchartTable/getovermodellist",
                 payload: {
                     beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -242,6 +258,7 @@ class Index extends Component {
     }
     render() {
         const { column } = this.state
+        debugger
         const option = {
             legend: {},
             tooltip: {},
@@ -261,7 +278,7 @@ class Index extends Component {
             yAxis: { triggerEvent: true },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
-            series: this.state.bar,
+            series: this.props.overcount,
             // [{type:"bar"},{type:"bar"}]
         }
         return (
@@ -269,7 +286,7 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} showTime={true} allowClear={false} onChange={this._handleDateChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats}  onChange={this._handleDateChange} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }

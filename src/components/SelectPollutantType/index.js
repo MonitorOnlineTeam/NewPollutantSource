@@ -43,7 +43,7 @@ class SelectPollutantType extends PureComponent {
                 }
               </Radio.Group> :
               <Select
-                placeholder="请选择"
+                placeholder="请选择污染物"
                 {...this.props}
               >
                 {

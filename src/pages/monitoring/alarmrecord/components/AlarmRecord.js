@@ -189,44 +189,44 @@ class AlarmRecord extends Component {
 
 
       render() {
-          let tablewidth = 0;
-          const colcount = 5;
-          let width = (window.screen.availWidth - 120) / colcount;
-          if (width < 200) {
-              width = 200;
-          }
-          tablewidth = width * colcount;
+          // let tablewidth = 0;
+          // const colcount = 5;
+          // let width = (window.screen.availWidth - 120) / colcount;
+          // if (width < 200) {
+          //     width = 200;
+          // }
+          // tablewidth = width * colcount;
 
 
           const columns = [{
               title: '报警时间',
               dataIndex: 'FirstTime',
-              fixed: 'left',
-              width,
+              // fixed: 'left',
+               width:50,
               key: 'FirstTime',
           },
            {
              title: '报警类型',
              dataIndex: 'AlarmTypeName',
-             width,
+             width:50,
              key: 'AlarmTypeName',
            },
           {
               title: '污染物',
               dataIndex: 'PollutantName',
-              width,
+              width:50,
               key: 'PollutantName',
           },
           {
               title: '报警信息',
               dataIndex: 'AlarmMsg',
-              width,
+              // width,
               key: 'AlarmMsg',
           },
           {
               title: '报警次数',
               dataIndex: 'AlarmCount',
-              width,
+              width:50,
               key: 'AlarmCount',
           }];
            const { isloading, overdataparams } = this.props;

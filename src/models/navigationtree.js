@@ -16,7 +16,8 @@ export default Model.extend({
         PollutantType:[],
         selectTreeKeys:[],
         overallselkeys:[],
-        overallexpkeys:[]
+        overallexpkeys:[],
+        IsTree:true
     },
     subscriptions: {
         setup({

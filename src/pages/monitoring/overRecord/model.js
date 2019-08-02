@@ -6,7 +6,7 @@ import {
 import { formatPollutantPopover } from '@/utils/utils';
 
 export default Model.extend({
-    namespace: 'dataquery',
+    namespace: 'overRecord',
     state: {
         pollutantlist: [],
         option: null,
