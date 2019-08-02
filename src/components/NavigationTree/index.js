@@ -122,11 +122,12 @@ class NavigationTree extends Component {
     }
     if (this.props.selKeys !== nextProps.selKeys) {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
-      this.generateList(nextProps.EntAndPoint)
+      this.defaultKey = 0
+      this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
     }
   }
   //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint) => {
+  generateList = (data = this.props.EntAndPoint, selKeys) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -143,10 +144,10 @@ class NavigationTree extends Component {
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
-        if (this.props.selKeys) {
-          nowKey = [this.props.selKeys];
-          // debugger
-          // nowExpandKey=[this.getParentKey(nowKey,this.props.EntAndPoint)]
+
+        if (selKeys || this.props.selKeys) {
+          nowKey = [selKeys || this.props.selKeys];
+          nowExpandKey=[this.getParentKey(nowKey[0],this.props.EntAndPoint)]
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
@@ -160,7 +161,7 @@ class NavigationTree extends Component {
       }
 
       if (node.children) {
-        this.generateList(node.children);
+        this.generateList(node.children, selKeys);
       }
     }
   };

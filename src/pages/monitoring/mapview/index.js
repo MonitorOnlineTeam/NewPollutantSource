@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Modal, Tabs, Descriptions, Spin, Empty } from 'antd';
+import { Form, Select, Input, Button, Card, Modal, Tabs, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 import { connect } from 'dva';
 import moment from 'moment';
+import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
@@ -25,7 +26,10 @@ let _thismap = null;
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
   chartData: mapView.chartData,
-  loading: loading.effects["mapView/getAllEntAndPoint"]
+  monitorTime: mapView.monitorTime,
+  loading: loading.effects["mapView/getAllEntAndPoint"],
+  pointLoading: loading.effects['mapView/getPointTableData'],
+  chartLoading: loading.effects['mapView/getPointChartData']
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -35,6 +39,7 @@ class MapView extends Component {
       displayType: 1,
       currentPointInfo: {},
       loading: true,
+      tooltipVisible: false,
       // mapCenter: { longitude: 110.520708, latitude: 38.969114 },
       infoWindowVisible: false,
       coordinateSet: [],
@@ -56,10 +61,14 @@ class MapView extends Component {
         const zoom = _thismap.getZoom();
         // 地图缩放，显示企业
         if (zoom < entZoom) {
-          console.log('allEntAndPointList=', props.allEntAndPointList)
           // const displayType = this.state.displayType === 1
+          if (this.state.displayType === 1) {
+            this.setState({
+              infoWindowVisible: false
+            })
+          }
           this.setState({
-            infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1) ? false : true,
+            // infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1 && this.state.infoWindowVisible) && false,
             coordinateSet: [],
             displayType: 0,
           }, () => {
@@ -97,31 +106,91 @@ class MapView extends Component {
   // 渲染坐标点
   renderMarker = (extData) => {
     // let extData = extData;
-    return <div onClick={() => {
-      if (extData) {
-        _thismap.setCenter([extData.position.longitude, extData.position.latitude])
-        // 设置平移
-        this.setState({
-          mapCenter: extData.position,
-          // displayType: extData.position.type,
-          infoWindowVisible: true,
-          currentKey: extData.position.key,
-          currentPointInfo: extData.position,
-          // currentEntInfo: extData.position
-        }, () => {
-          console.log("PollutantType=", extData)
-          this.state.displayType !== 0 && this.getPointInfo(extData.position.PollutantType)
-        })
-      }
-    }}>{
-        this.state.displayType === 0 ?
-          <EntIcon style={{ fontSize: 40 }} /> :
-          (extData.position.PollutantType === "2" ?
-            <a><GasIcon style={{ fontSize: 24 }} /></a> :
-            <a><WaterIcon style={{ fontSize: 24 }} /></a>)
+    return <div
+      onMouseEnter={() => {
+        if (this.state.infoWindowVisible === false) {
+          this.setState({
+            hoverMapCenter: extData.position,
+            currentTitle: extData.position.title,
+            infoWindowHoverVisible: true,
+          })
+        }
+      }}
+      onMouseLeave={() => {
+        if (this.state.infoWindowVisible === false) {
+          this.setState({
+            infoWindowHoverVisible: false,
+          })
+        }
+      }}
+      onClick={() => {
+        if (extData) {
+          _thismap.setCenter([extData.position.longitude, extData.position.latitude])
+          let newState = {};
+          if (this.state.displayType === 1) {
+            // 企业
+            newState = {
+              infoWindowVisible: true,
+              currentPointInfo: extData.position,
+              // coordinateSet: extData.position.CoordinateSet,
+            }
+          } else {
+            // 排口
+            newState = {
+              coordinateSet: this.state.currentEntInfo.CoordinateSet,
+              displayType: 1
+            }
+            _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
+            this.randomMarker(extData.position.children)
+          }
+          // 设置平移
+          this.setState({
+            mapCenter: extData.position,
+            // displayType: extData.position.type,
+            // infoWindowVisible: true,
+            currentKey: extData.position.key,
+            infoWindowHoverVisible: false,
+            ...newState
+            // currentEntInfo: extData.position
+          }, () => {
+            this.state.displayType !== 0 && this.getPointInfo(extData.position.PollutantType)
+          })
+        }
+      }}>
+      {/* <Tooltip title={extData.position.title} overlayClassName="tooltipmy"> */}
+      {
+        // extData.position && <Popover content={extData.position.title}>
+        //   {
+        //     this.state.displayType === 0 ?
+        //       <EntIcon style={{ fontSize: 40 }} /> :
+        //       (extData.position.PollutantType === "2" ?
+        //         <GasIcon
 
-      }</div>
+        //           style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
+        //         <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
+        //   }
+        // </Popover>
+        extData.position && <div content={extData.position.title}>
+          {
+            this.state.displayType === 0 ?
+              <EntIcon style={{ fontSize: 40 }} /> :
+              (extData.position.PollutantType === "2" ?
+                <GasIcon
+
+                  style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
+                <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
+          }
+        </div>
+        // (extData.position && this.state.displayType === 0) ?
+        //   <EntIcon style={{ fontSize: 40 }} /> :
+        //   (extData.position.PollutantType === "2" ?
+        //     <GasIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
+        //     <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
+      }
+
+    </div>
   }
+
 
 
 
@@ -228,13 +297,13 @@ class MapView extends Component {
 
   windowEvents = {
     created: (iw) => { console.log(iw) },
-    open: () => { console.log('InfoWindow opened') },
+    // open: () => { console.log('InfoWindow opened') },
     close: () => {
       this.setState({
         infoWindowVisible: false
       })
     },
-    change: () => { console.log('InfoWindow prop changed') },
+    // change: () => { console.log('InfoWindow prop changed') },
   }
 
   componentWillReceiveProps(nextProps) {
@@ -243,15 +312,16 @@ class MapView extends Component {
       const timer = setInterval(() => {
         if (_thismap) {
           _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
-          this.setState({
+        this.setState({
             coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
             currentEntInfo: nextProps.defaultMapInfo,
-            loading: false
+            loading: false,
+            currentKey: nextProps.defaultMapInfo.key
           })
           this.randomMarker(nextProps.defaultMapInfo.children);
           clearInterval(timer)
         }
-      }, 500);
+      }, 200);
       // setTimeout(() => {
       //   console.log('2222')
       //   _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
@@ -265,13 +335,43 @@ class MapView extends Component {
     }
   }
 
+  //获取筛选状态图标颜色
+  getColor = (status) => {
+    var color = ""
+    switch (status) {
+      case 0://离线
+        color = "#999999"
+        break;
+      case 1://正常
+        color = "#34c066"
+        break;
+      case 2://超标
+        color = "#f04d4d"
+        break;
+      case 3://异常
+        color = "#e94"
+        break;
+    }
+    return color
+  }
 
   render() {
     const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
+      title: {
+        text: `${chartData.legend}24小时趋势图`,
+        textStyle: {
+          color: "rgba(0, 0, 0, 0.75)",
+          fontSize: 15,
+          fontWeight: '400',
+        },
+        // subtext: '数据来自西安兰特水电测控技术有限公司',
+        x: 'center'
+      },
       legend: {
-        data: [chartData.legend]
+        data: [chartData.legend],
+        x: 'left'
       },
       tooltip: {
         trigger: 'axis',
@@ -291,7 +391,7 @@ class MapView extends Component {
       },
       xAxis: {
         type: 'category',
-        name: '时间',
+        // name: '时间',
         boundaryGap: false,
         data: chartData.xAxisData
       },
@@ -357,37 +457,59 @@ class MapView extends Component {
         size="large"
       />);
     }
+
     return (
       <div className={styles.mapWrapper}>
-        <NavigationTree choice={false} onItemClick={(val) => {
+        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={(val) => {
           if (val[0]) {
-            this.setState({
-              currentKey: val[0].key
-            })
             let entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
-              // 点击的企业
-              const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
-              this.randomMarker(allEntAndPointList)
-              _thismap.setZoomAndCenter(entZoom, position)
+              if (this.state.currentEntInfo == entInfo[0]) {
+                // 点击的是当期企业
+              } else {
+                // 切换企业
+                const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
+
+                this.setState({
+                  displayType: 1,
+                  infoWindowVisible: false,
+                  mapCenter: position,
+                  coordinateSet: entInfo[0]["CoordinateSet"]
+                }, () => {
+                  _thismap.setZoomAndCenter(pointZoom, position)
+                  this.randomMarker(entInfo[0].children)
+                })
+
+              }
               this.setState({
-                displayType: 0,
-                infoWindowVisible: true,
-                mapCenter: position,
                 currentEntInfo: entInfo[0],
-                coordinateSet: []
               })
+              // 点击的企业
+              // const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
+              // this.randomMarker(allEntAndPointList)
+              // _thismap.setZoomAndCenter(entZoom, position)
+              // this.setState({
+              //   displayType: 0,
+              //   infoWindowVisible: false,
+              //   mapCenter: position,
+              //   currentEntInfo: entInfo[0],
+              //   coordinateSet: []
+              // })
+              // this.setState({
+              //   displayType: 0,
+              //   infoWindowVisible: false,
+              //   mapCenter: position,
+              //   currentEntInfo: entInfo[0],
+              //   coordinateSet: []
+              // })
             } else {
-              console.log('this.state.currentEntInfo=', this.state.currentEntInfo)
               const entInfo = allEntAndPointList.find(item => {
                 if (item.children.filter(itm => itm.key === val[0].key).length) {
                   return item;
                 }
               })
-              console.log('entInfo=', entInfo)
               // 点击的排口
               let pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
-              console.log('pointInfo=', pointInfo)
               if (entInfo) {
                 const position = [pointInfo["Longitude"], pointInfo["Latitude"]];
                 _thismap.setZoomAndCenter(pointZoom, position)
@@ -398,16 +520,16 @@ class MapView extends Component {
                   displayType: 1,
                   currentEntInfo: entInfo,
                   currentPointInfo: pointInfo,
+                  currentKey: val[0].key,
                   coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet
                 }, () => {
-                  console.log('pointInfo=', pointInfo)
                   this.getPointInfo(pointInfo.PollutantType)
                 })
               }
             }
           }
         }} />
-        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: "400px" }}>
+        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: "400px", position: "relative" }}>
           <Map
             amapkey={"c5cb4ec7ca3ba4618348693dd449002d"}
             plugins={plugins}
@@ -415,88 +537,127 @@ class MapView extends Component {
             events={this.mapEvents}
           >
             {this.drawPolygon()}
+            {/* <Polygon path={[[[[116.491204,39.957416],[116.587335,39.93636],[116.521417,39.891066],[116.495324,39.918457]]]]} /> */}
+            <InfoWindow
+              position={this.state.hoverMapCenter}
+              isCustom={true}
+              visible={this.state.infoWindowHoverVisible}
+              offset={[4, -35]}
+            >{this.state.currentTitle}</InfoWindow>
             <InfoWindow
               position={this.state.mapCenter}
               autoMove={true}
               // size={{ width: 430, height: }}
               // closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
-              offset={[10, -25]}
+              offset={[4, -35]}
               events={this.windowEvents}
             // isCustom
             >
-              {console.log('this.state.displayType=', this.state.displayType)}
               {
-                this.state.displayType == 0 ?
-                  <div>
-                    <span>11111</span>
-                    <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => {
-                      // _thismap.setZoomAndCenter(13, [118.520708, 38.969114])
-                      this.setState({
-                        infoWindowVisible: false
-                      })
-                      let pointInfo = this.state.currentEntInfo.children;
-                      if (pointInfo) {
-                        const position = [pointInfo[0]["Longitude"], pointInfo[0]["Latitude"]];
-                        _thismap.setZoomAndCenter(pointZoom, position)
-                        this.randomMarker()
-                        this.setState({
-                          mapCenter: position,
-                          // infoWindowVisible: true,
-                          displayType: 1,
-                          // currentEntInfo: entInfo[0],
-                          coordinateSet: this.state.currentEntInfo.CoordinateSet || this.props.coordinateSet
-                        })
-                      }
-                    }}>更多</Button>
-                  </div> : <div className={styles.pointInfoWindow}>
-                    {
-                      (!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"/> :
-                        <>
-                          <Descriptions title={this.state.currentPointInfo.title} size="small" bordered>
-                            {
-                              this.props.tableList.map(item => {
-                                return <Descriptions.Item label={item.label}><div onClick={() => {
-                                  this.props.dispatch({
-                                    type: "mapView/updateChartData",
-                                    payload: {
-                                      key: item.key,
-                                      label: item.label
-                                    }
-                                  })
-                                }} className={styles.content}>{item.value}</div></Descriptions.Item>
-                              })
-                            }
-                          </Descriptions>
-                          <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div>
-                          <ReactEcharts
-                            className={styles.echartdiv}
-                            style={{ width: '100%', height: '200px', textAlign: 'center', padding: '0 15px 0 15px' }}
-                            option={option}
-                            notMerge={true}
-                            lazyUpdate={true} />
-                          {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
-                          <Button style={{ float: 'right', fontSize: 13 }} size="small" onClick={() => {
-                            this.setState({
-                              pointVisible: true
+                // this.state.displayType == 0 ?
+                //   <div>
+                //     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                //     <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => {
+                //       // _thismap.setZoomAndCenter(13, [118.520708, 38.969114])
+                //       this.setState({
+                //         infoWindowVisible: false
+                //       })
+                //       let pointInfo = this.state.currentEntInfo.children;
+                //       console.log('pointInfo=', pointInfo)
+                //       if (pointInfo.length) {
+                //         const position = [pointInfo[0]["Longitude"], pointInfo[0]["Latitude"]];
+                //         _thismap.setZoomAndCenter(pointZoom, position)
+                //         this.randomMarker()
+                //         this.setState({
+                //           mapCenter: position,
+                //           // infoWindowVisible: true,
+                //           displayType: 1,
+                //           // currentEntInfo: entInfo[0],
+                //           coordinateSet: this.state.currentEntInfo.CoordinateSet || this.props.coordinateSet
+                //         })
+                //       }
+                //     }}>更多</Button>
+                //   </div> : <div className={styles.pointInfoWindow}>
+                <div className={styles.pointInfoWindow}>
+                  {
+                    this.props.pointLoading && <Spin
+                      style={{
+                        width: '100%',
+                        height: '380px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      size="large"
+                    />
+                  }
+                  {
+                    // ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                    !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
+                      <>
+                        <Descriptions
+                          title={
+                            <div>{this.state.currentPointInfo.title} <br /> <span style={{ fontWeight: "normal", fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ""}</span></div>
+                          }
+                          size="small"
+                          bordered>
+                          {
+                            this.props.tableList.map(item => {
+                              return <Descriptions.Item label={item.label}><div onClick={() => {
+                                this.props.dispatch({
+                                  type: "mapView/updateChartData",
+                                  payload: {
+                                    key: item.key,
+                                    label: item.label
+                                  }
+                                })
+                              }} className={styles.content}>{item.value}</div></Descriptions.Item>
                             })
-                          }}>排口详情</Button>
-                        </>
-                    }
+                          }
+                        </Descriptions>
+                        {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
+                        {
+                          // !this.props.chartLoading && (!this.props.chartData.seriesData.length ?
+                          !this.props.chartData.seriesData.length ?
+                            <img src="/nodata.png" style={{ width: "150px", margin: "35px 124px", dispatch: 'block' }} />
+                            : <ReactEcharts
+                              className={styles.echartdiv}
+                              style={{ width: '100%', height: '200px', textAlign: 'center' }}
+                              option={option}
+                              notMerge={true}
+                              lazyUpdate={true} />
+                        }
+                        {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
+                        <a className={styles.pointDetails} size="small" onClick={() => {
+                          this.setState({
+                            pointVisible: true,
+                          })
+                        }}>排口详情</a>
+                      </>)
+                  }
 
-                  </div>
+                </div>
               }
             </InfoWindow>
             <Markers
               markers={this.state.markersList}
               events={this.markersEvents}
               render={this.renderMarker}
-              content={<span>111</span>}
+            // content={<span>111</span>}
             />
           </Map>
+          <div style={{ position: "absolute", right: 100, top: 20 }}>
+            <Radio.Group defaultValue="map" buttonStyle="solid" onChange={(e) => {
+              e.target.value === "data" && router.push("/monitoring/datalist")
+            }}>
+              <Radio.Button value="data">数据</Radio.Button>
+              <Radio.Button value="map">地图</Radio.Button>
+            </Radio.Group>
+          </div>
           <Modal
-            title="排口详情"
+            title={this.state.currentPointInfo.title + "详情"}
             width="80%"
             footer={null}
             style={{ maxHeight: '80vh' }}

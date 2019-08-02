@@ -78,6 +78,7 @@
     padding: 0 10px;
     cursor: pointer;
   }
+ 
 }
 
 .echartdiv {
@@ -86,6 +87,15 @@
 
 .mapWrapper {
   margin: -24px -24px 0px;
+
+  .pointDetails {
+    float: right;
+    font-size: 14px;
+    margin-top: -20px;
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+  }
   :global {
     .ant-layout {
       .ant-pro-basicLayout-content {
@@ -93,11 +103,31 @@
         // padding-top: 64px;
       }
     }
-    .amap-info-content{
+
+    .ant-descriptions-title {
+      font-weight: normal;
+    }
+
+    // .ant-descriptions-title{
+    //   margin-bottom: 10px;
+    // }
+    .amap-info-content {
       width: 430px;
+      min-height: 150px;
       max-height: 400px;
+    }
+
+    .amap-info-close {
+      right: 10px !important;
+      font-size: 22px;
+    }
+    .ant-tooltip-inner{
+      background-color: "#fff";
+      color: #000000
     }
   }
 }
+
+
 
 // }
