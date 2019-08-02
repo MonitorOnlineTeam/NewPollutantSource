@@ -148,6 +148,13 @@ class NavigationTree extends Component {
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey=[this.getParentKey(nowKey[0],this.props.EntAndPoint)]
+          this.props.dispatch({
+            type: "navigationtree/updateState",
+            payload: {
+              overallselkeys: nowKey,
+              overallexpkeys: [nowExpandKey],
+            }
+          })
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
