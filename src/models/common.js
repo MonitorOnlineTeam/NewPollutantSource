@@ -22,11 +22,12 @@ export default Model.extend({
 
         let data = result.Datas
         if (filterPollutantType !== "undefined") {
-          let thisPollutantType = filterPollutantType.split(',');
-          data = data.filter(item => {
+          let thisPollutantType = filterPollutantType && filterPollutantType.split(',');
+          thisPollutantType && (data = data.filter(item => {
             let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
             return flag.length > 0;
-          })
+          }))
+
           // console.log("newPollutantTypelist2=", newPollutantTypelist);
         }
 
