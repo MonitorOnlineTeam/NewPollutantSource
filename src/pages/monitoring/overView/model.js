@@ -3,8 +3,7 @@ import moment from 'moment';
 // import { message } from 'antd';
 import { Popover, Badge, Icon, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
-import { querypolluntantentinfolist } from '@/services/baseapi';
-import { getPollutantTypeList } from '@/services/commonApi';
+import { querypolluntantentinfolist,getPollutantTypeList } from '@/services/baseapi';
 import {
   querypollutanttypecode,
   querydatalist,

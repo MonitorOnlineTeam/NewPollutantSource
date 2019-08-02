@@ -26,7 +26,7 @@ export async function getEntAndPointList(params) {
 
 // 获取所有污染物
 export async function getPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/DataList/GetPollutantTypeCode', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
   return result === null ? {
     data: null
   } : result;

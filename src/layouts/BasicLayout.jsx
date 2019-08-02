@@ -88,7 +88,7 @@ const BasicLayout = props => {
   useEffect(() => {
     if (dispatch) {
       dispatch({
-        type: 'login/getSystemLoginConfigInfo',
+        type: 'global/getSystemConfigInfo',
         payload: {},
       });
       dispatch({
@@ -203,10 +203,10 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, user, login }) => ({
+export default connect(({ global, settings, user }) => ({
   collapsed: global.collapsed,
   changePwdVisible: global.changePwdVisible,
   settings,
   currentMenu: user.currentMenu,
-  configInfo: login.configInfo
+  configInfo: global.configInfo
 }))(BasicLayout);
