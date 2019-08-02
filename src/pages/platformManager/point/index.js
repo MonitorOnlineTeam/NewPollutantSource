@@ -27,12 +27,11 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/components/AutoForm/Table';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { sdlMessage } from '@/utils/utils';
 import PollutantType from '@/components/AutoForm/PollutantType';
-import SdlForm from '@/components/AutoForm/SdlForm';
-import AutoFormViewItems from '@/components/AutoForm/AutoFormViewItems';
+import SdlForm from '@/pages/AutoFormManager/SdlForm';
+import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
 import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
 
@@ -369,7 +368,7 @@ export default class MonitorPoint extends Component {
       //     { Name: '维护点信息', Url: '' },
       //   ]}
       // >
-      <PageHeaderWrapper>
+      <PageHeaderWrapper title="监测点维护">
         <div className={styles.cardTitle}>
           <Card
             title={
@@ -397,7 +396,8 @@ export default class MonitorPoint extends Component {
               filterPollutantType={pollutantTypes}
             />}
           >
-            <SdlTable
+            
+            <AutoFormTable
               style={{ marginTop: 10 }}
               // columns={columns}
               configId={pointConfigId}

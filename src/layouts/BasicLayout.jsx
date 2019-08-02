@@ -15,6 +15,7 @@ import logo from '../../public/sdlicon.png';
 import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
+import Title from 'antd/lib/typography/Title';
 /**
  * use Authorized check all menu item
  */
@@ -80,12 +81,16 @@ const footerRender = (_, defaultDom) => {
 };
 
 const BasicLayout = props => {
-  const { dispatch, children, settings, currentMenu } = props;
+  const { dispatch, children, settings, currentMenu, configInfo } = props;
   /**
    * constructor
    */
   useEffect(() => {
     if (dispatch) {
+      dispatch({
+        type: 'login/getSystemLoginConfigInfo',
+        payload: {},
+      });
       dispatch({
         type: 'user/fetchCurrent',
         payload: {},
@@ -93,6 +98,7 @@ const BasicLayout = props => {
       dispatch({
         type: 'settings/getSetting',
       });
+
     }
   }, []);
   /**
@@ -113,17 +119,32 @@ const BasicLayout = props => {
   };
 
   const logoRender = Item => {
-    return settings.layout === 'topmenu' ? (
-      <img style={{ height: 60 }} src={logo} alt="logo" />
-    ) : (
-      <img src={logo} alt="logo" />
-    );
+    if (configInfo && configInfo.IsShowLogo === "true") {
+      return settings.layout === 'topmenu' ? (
+        <img style={{ height: 60 }} src={logo} alt="logo" />
+      ) : (
+          <img src={logo} alt="logo" />
+        );
+    }
+
+    else {
+      return <div></div>
+    }
   };
   const myStyle = {};
   return (
     <>
       <ProLayout
         logo={logoRender}
+        pageTitleRender={(e) => {
+          // e.title = "123123";
+          configInfo && (e.settings.title = configInfo.SystemName);
+          return e;
+        }}
+        // headerRender={(e)=>{
+        //   debugger;
+
+        // }}
         onCollapse={handleMenuCollapse}
         menuItemRender={(menuItemProps, defaultDom) => {
           // console.log("menuItemProps=", menuItemProps)
@@ -182,9 +203,10 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, user }) => ({
+export default connect(({ global, settings, user, login }) => ({
   collapsed: global.collapsed,
   changePwdVisible: global.changePwdVisible,
   settings,
   currentMenu: user.currentMenu,
+  configInfo: login.configInfo
 }))(BasicLayout);

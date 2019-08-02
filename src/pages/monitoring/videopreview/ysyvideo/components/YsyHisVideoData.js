@@ -69,19 +69,19 @@ class YsyHisVideoData extends Component {
   };
 
   getPollutantTitle = () => {
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
       type: 'video/querypollutantlisthis',
-      payload: { dgimn: match.params.pointcode },
+      payload: { dgimn },
     });
   };
 
   getRealTime = (beginTime, endTime, pageIndex, pageSize) => {
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
       type: 'video/queryhistorydatalisthis',
       payload: {
-        DGIMNs: match.params.pointcode,
+        DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: pageIndex === undefined ? 1 : pageIndex,
         pageSize: pageSize === undefined ? 15 : pageSize,
@@ -96,12 +96,16 @@ class YsyHisVideoData extends Component {
 
   onChange = (pageIndex, pageSize) => {
     this.endPlay();
-    const { match, dispatch } = this.props;
+    const {
+      match,
+      dispatch,
+      dgimn,
+    } = this.props;
     const { beginDate, endDate } = this.state;
     dispatch({
       type: 'video/queryhistorydatalisthis',
       payload: {
-        DGIMNs: match.params.pointcode,
+        DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: pageIndex === undefined ? 1 : pageIndex,
         pageSize: pageSize === undefined ? 15 : pageSize,

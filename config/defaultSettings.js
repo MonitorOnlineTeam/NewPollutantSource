@@ -9,7 +9,7 @@ export default {
   "menu": {
     "locale": true
   },
-  "title": "污染源智能分析平台",
+  "title": "",
   "pwa": false,
   "iconfontUrl": "",
   "collapse": true,

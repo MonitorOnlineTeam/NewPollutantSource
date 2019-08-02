@@ -8,31 +8,33 @@ import styles from './index.less'
 import { isEqual } from 'lodash';
 import Item from 'antd/lib/list/Item';
 import { EntIcon, GasIcon, WaterIcon } from '@/utils/icon';
-import DataQuery from '../monitoring/dataquery/components/DataQuery'
-import AlarmRecord from '../monitoring/alarmrecord//components/AlarmRecord'
+import DataQuery from '../dataquery/components/DataQuery'
+import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
+import YsyShowVideo from '../videopreview/ysyvideo/YsyShowVideo'
 const { TabPane } = Tabs;
 const entZoom = 11;
 const pointZoom = 13;
 let _thismap = null;
 
 @Form.create()
-@connect(({ loading, test }) => ({
-  allEntAndPointList: test.allEntAndPointList,
-  defaultMapInfo: test.defaultMapInfo,
-  tableList: test.tableList,
-  chartData: test.chartData,
-  loading: loading.effects["test/getAllEntAndPoint"]
+@connect(({ loading, mapView }) => ({
+  allEntAndPointList: mapView.allEntAndPointList,
+  defaultMapInfo: mapView.defaultMapInfo,
+  tableList: mapView.tableList,
+  chartData: mapView.chartData,
+  loading: loading.effects["mapView/getAllEntAndPoint"]
 }))
-class Test extends Component {
+class MapView extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       createMap: false,
       displayType: 1,
       currentPointInfo: {},
+      loading: true,
       // mapCenter: { longitude: 110.520708, latitude: 38.969114 },
       infoWindowVisible: false,
       coordinateSet: [],
@@ -51,15 +53,13 @@ class Test extends Component {
         })
       },
       zoomchange: (value) => {
-        console.log('value=', value)
-        console.log('///=', _thismap.getZoom())
         const zoom = _thismap.getZoom();
         // 地图缩放，显示企业
         if (zoom < entZoom) {
           console.log('allEntAndPointList=', props.allEntAndPointList)
           // const displayType = this.state.displayType === 1
           this.setState({
-            infoWindowVisible: this.state.coordinateSet.length ? false : true,
+            infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1) ? false : true,
             coordinateSet: [],
             displayType: 0,
           }, () => {
@@ -75,19 +75,19 @@ class Test extends Component {
   componentDidMount() {
     // 获取所有企业及排口信息
     this.props.dispatch({
-      type: 'test/getAllEntAndPoint',
+      type: 'mapView/getAllEntAndPoint',
     })
 
     // 获取废水污染物
     this.props.dispatch({
-      type: 'test/getPollutantWaterList',
+      type: 'mapView/getPollutantWaterList',
       payload: {
         pollutantTypes: 1
       }
     })
     // 获取废气污染物
     this.props.dispatch({
-      type: 'test/getPollutantGasList',
+      type: 'mapView/getPollutantGasList',
       payload: {
         pollutantTypes: 2
       }
@@ -155,7 +155,7 @@ class Test extends Component {
   getPointInfo = (pollutantType) => {
     // 获取table数据
     this.props.dispatch({
-      type: 'test/getPointTableData',
+      type: 'mapView/getPointTableData',
       payload: {
         DGIMNs: this.state.currentKey,
         dataType: "HourData",
@@ -165,7 +165,7 @@ class Test extends Component {
     })
     // 获取图表数据
     // this.props.dispatch({
-    //   type: 'test/getPointChartData',
+    //   type: 'mapView/getPointChartData',
     //   payload: {
     //     DGIMNs: this.state.currentKey,
     //     endTime: moment(new Date()).format('YYYY-MM-DD HH:00:00'),
@@ -240,14 +240,28 @@ class Test extends Component {
   componentWillReceiveProps(nextProps) {
     const { defaultMapInfo } = this.props;
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
-      setTimeout(() => {
-        _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
-        this.setState({
-          coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
-          currentEntInfo: nextProps.defaultMapInfo
-        })
-        this.randomMarker(nextProps.defaultMapInfo.children);
-      }, 2000)
+      const timer = setInterval(() => {
+        if (_thismap) {
+          _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          this.setState({
+            coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+            currentEntInfo: nextProps.defaultMapInfo,
+            loading: false
+          })
+          this.randomMarker(nextProps.defaultMapInfo.children);
+          clearInterval(timer)
+        }
+      }, 500);
+      // setTimeout(() => {
+      //   console.log('2222')
+      //   _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+      //   this.setState({
+      //     coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+      //     currentEntInfo: nextProps.defaultMapInfo,
+      //     loading: false
+      //   })
+      //   this.randomMarker(nextProps.defaultMapInfo.children);
+      // }, 1000)
     }
   }
 
@@ -331,8 +345,7 @@ class Test extends Component {
       //   },
       // }
     ]
-    console.log('currentEntInfo=', this.state.currentEntInfo)
-    if (loading) {
+    if (loading && this.state.loading) {
       return (<Spin
         style={{
           width: '100%',
@@ -345,7 +358,7 @@ class Test extends Component {
       />);
     }
     return (
-      <>
+      <div className={styles.mapWrapper}>
         <NavigationTree choice={false} onItemClick={(val) => {
           if (val[0]) {
             this.setState({
@@ -405,7 +418,7 @@ class Test extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove={true}
-              size={{ width: 430, height: 370 }}
+              // size={{ width: 430, height: }}
               // closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[10, -25]}
@@ -439,14 +452,14 @@ class Test extends Component {
                   </div> : <div className={styles.pointInfoWindow}>
                     {
                       (!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"/> :
                         <>
                           <Descriptions title={this.state.currentPointInfo.title} size="small" bordered>
                             {
                               this.props.tableList.map(item => {
                                 return <Descriptions.Item label={item.label}><div onClick={() => {
                                   this.props.dispatch({
-                                    type: "test/updateChartData",
+                                    type: "mapView/updateChartData",
                                     payload: {
                                       key: item.key,
                                       label: item.label
@@ -502,12 +515,11 @@ class Test extends Component {
             <Tabs>
               <TabPane tab="历史数据" key="1">
                 <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
-                  {console.log('currentKey=', currentKey)}
                   <DataQuery DGIMN={currentKey} />
                 </div>
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                Content of tab 2
+                <YsyShowVideo DGIMN={currentKey} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
                 <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
@@ -527,10 +539,10 @@ class Test extends Component {
             </Tabs>
           </Modal>
         </div>
-      </>
+      </div>
 
     );
   }
 }
 
-export default Test
+export default MapView

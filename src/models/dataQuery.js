@@ -2,7 +2,7 @@ import Model from '@/utils/model';
 import {
   querypollutantlist,
   queryhistorydatalist,
-} from './services';
+} from '../services/dataQueryApi';
 import { formatPollutantPopover } from '@/utils/utils';
 
 export default Model.extend({

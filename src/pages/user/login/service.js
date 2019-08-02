@@ -5,7 +5,7 @@ import Cookie from 'js-cookie';
 import { async } from 'q';
 
 /**
- * 【AutoForm】系统登录
+ * 系统登录
  * @params {"UserAccount": "system","UserPwd": "system","RememberMe": true}
  */
 export async function systemLogin(params) {
@@ -24,6 +24,8 @@ export async function systemLogin(params) {
   }
   return result;
 }
+
+
 
 
 // export async function fakeAccountLogin(params) {

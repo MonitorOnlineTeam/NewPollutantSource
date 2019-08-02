@@ -183,7 +183,7 @@ class SdlForm extends PureComponent {
           break;
         case "多选下拉搜索树":
           placeholder = placeholder || selectPlaceholder;
-          initialValue = formData[fieldName] && formData[fieldName] + "".split(",");
+          initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(",");
           element = (
             <SdlCascader
               itemName={item.configDataItemName}

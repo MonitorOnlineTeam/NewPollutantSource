@@ -116,7 +116,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './rolesmanager/user/userinfoindex/UserInfo' },
+            { path: '/', redirect: './monitoring/datalist' },
             {
               name: 'test',
               path: '/test',
@@ -315,6 +315,11 @@ export default {
                   name: 'datalist',
                   path: '/monitoring/datalist',
                   component: './monitoring/overView',
+                },
+                {
+                  name: 'mapview',
+                  path: '/monitoring/mapview',
+                  component: './monitoring/mapview',
                 },
                  {
                   name: 'videopreview',

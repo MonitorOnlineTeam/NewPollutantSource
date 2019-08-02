@@ -16,7 +16,7 @@ import NewDataFilter from '../Userinfo/DataFilterNew';
 import EnterpriseDataFilter from '../../components/UserInfo/EnterpriseDataFilter';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from './Table';
+import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from './SearchWrapper';
 import { sdlMessage } from '../../utils/utils';
 

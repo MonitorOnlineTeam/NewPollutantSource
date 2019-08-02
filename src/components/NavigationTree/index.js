@@ -258,11 +258,11 @@ class NavigationTree extends Component {
         if (this.state.visible) {
           dom.style.width = 'calc(100% - 400px)'
           floats === "topmenu" ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
-          dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
+          dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
         } else {
           dom.style.width = 'calc(100%)'
           floats === "topmenu" ? dom.style.marginLeft = '0' : dom.style.marginRight = '0'
-          dom.style.transition = 'all .7s ease-in-out, box-shadow .7s ease-in-out'
+          dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
         }
       }
     });
@@ -420,7 +420,7 @@ class NavigationTree extends Component {
         })
       }
     }
-    this.setState({ checkedKeys: list }); //, expandedKeys: expand 
+    this.setState({ checkedKeys: list }); //, expandedKeys: expand
     this.returnData(list)
   };
   //向外部返回选中的数据并且更新到model全局使用
@@ -432,7 +432,8 @@ class NavigationTree extends Component {
       rtnList.push({ key: item, IsEnt: isEnt })
     })
     //向外部返回选中的数据
-    this.props.onItemClick && this.props.onItemClick(rtnList)
+    this.props.onItemClick && this.props.onItemClick(rtnList);
+    console.log("overallselkeys=",this.state.selectedKeys);
     //更新到model
     debugger
     this.props.dispatch({
@@ -571,7 +572,7 @@ class NavigationTree extends Component {
           <Divider />
           {/* <Collapse defaultActiveKey={['1']} bordered={false} width="100%">
             <Panel key='1' header="搜索条件" width="100%">
-             
+
             </Panel>
           </Collapse> */}
           <div visible={true} style={{
@@ -633,3 +634,4 @@ NavigationTree.defaultProps = {
 }
 
 export default NavigationTree
+

@@ -3,7 +3,7 @@ import moment from 'moment'
 import {
   querypollutantlist,
   queryoverdatalist,
-} from './services';
+} from '../services/alarmRecordApi';
 import { formatPollutantPopover } from '@/utils/utils';
 
 export default Model.extend({

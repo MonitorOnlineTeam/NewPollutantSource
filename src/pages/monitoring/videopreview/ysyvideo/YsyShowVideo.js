@@ -53,6 +53,7 @@ class YsyShowVideo extends Component {
       selectDisplay: false,
       dgimn: '',
       tabsKey: 1,
+      VedioID: '',
     };
   }
 
@@ -152,6 +153,7 @@ getvideolist= dgimn => {
         if (data.length > 0) {
           this.setState({
             selectDisplay: true,
+            VedioID: data[0].VedioID,
           }, () => {
             this.getVideoIp(this.state.tabsKey, data[0].VedioID);
           })
@@ -317,10 +319,10 @@ getvideolist= dgimn => {
         displayH: 'none',
         tabsKey: 1,
       });
-      this.getVideoIp(1);
+      this.getVideoIp(1, this.state.VedioID);
     }
     if (key === '2') {
-      this.getVideoIp(2);
+      this.getVideoIp(2, this.state.VedioID);
       const obj = { opt: 2 };
       const frame = document.getElementById('ifm').contentWindow;
       frame.postMessage(obj, config.ysyvideourl);
@@ -336,14 +338,14 @@ getvideolist= dgimn => {
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (videoList.length === 0) {
-      return (< div style = {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)' }}>< div style = {
           {
             textAlign: 'center',
           }
-        } > < Empty image = {
+        } > <Empty image = {
           Empty.PRESENTED_IMAGE_SIMPLE
-        }
-        /></div >);
+        } description="暂无视频数据"
+        /></div ></Card>);
     }
     return (
         <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
@@ -543,6 +545,7 @@ getvideolist= dgimn => {
                           <HistoryVideo
                             onRef={this.onRef1}
                             {...this.props}
+                            dgimn={this.state.dgimn}
                             beginDate={moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss')}
                             endDate={moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss')}
                           />
