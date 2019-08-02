@@ -173,7 +173,7 @@ export default {
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {
@@ -307,11 +307,6 @@ export default {
               name: 'monitoring',
               routes: [
                 {
-                  name: 'dataquery',
-                  path: '/monitoring/dataquery',
-                  component: './monitoring/dataquery/index',
-                },
-                {
                   name: 'datalist',
                   path: '/monitoring/datalist',
                   component: './monitoring/overView',
@@ -326,27 +321,38 @@ export default {
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
                 },
+              ],
+            },
+            {
+              path: '/dataquery',
+              name: 'dataquery',
+              routes: [
                 {
-                  name: 'overrecord',
-                  path: '/monitoring/overrecord',
-                  component: './monitoring/overRecord',
+                  name: 'dataquery',
+                  path: '/dataquery/dataquery',
+                  component: './monitoring/dataquery/index',
                 },
                 {
                   name: 'exceptionrecord',
-                  path: '/monitoring/exceptionrecord',
-                  component: './monitoring/exceptionRecord',
+                  path: '/dataquery/exceptionrecord',
+                  component: './monitoring/exceptionrecord',
+                },
+                {
+                  name: 'overrecord',
+                  path: '/dataquery/overrecord',
+                  component: './monitoring/overRecord',
                 },
                 {
                   name: 'alarmrecord',
-                  path: '/monitoring/alarmrecord',
+                  path: '/dataquery/alarmrecord',
                   component: './monitoring/alarmrecord/index',
                 },
                 {
                   name: 'originaldata',
-                  path: '/monitoring/originaldata',
+                  path: '/dataquery/originaldata',
                   component: './monitoring/originaldata',
                 },
-              ],
+              ]
             },
             {
               path: '/account/settings',

@@ -20,8 +20,8 @@ export default Model.extend({
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
 
-        let data = result.Datas;
-        if (filterPollutantType) {
+        let data = result.Datas
+        if (filterPollutantType !== "undefined") {
           let thisPollutantType = filterPollutantType.split(',');
           data = data.filter(item => {
             let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);

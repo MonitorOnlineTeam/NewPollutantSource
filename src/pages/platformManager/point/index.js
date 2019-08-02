@@ -74,7 +74,7 @@ export default class MonitorPoint extends Component {
       type: 'point/getPointList',
       payload: {
         callback: res => {
-          this.getPageConfig(this.props.defaultPollutantCode);
+          this.getPageConfig(res);
         }
       }
     });
@@ -97,7 +97,6 @@ export default class MonitorPoint extends Component {
       pollutantType: type,
     });
     const { dispatch, match } = this.props;
-
     // 1	废水
     // 2	废气
     // 3	噪声
@@ -113,7 +112,7 @@ export default class MonitorPoint extends Component {
     // 23	国控
     // 24	省控
     // 25	市控
-
+    debugger;
     switch (type) {
       case 1:
         // 废水
@@ -178,7 +177,7 @@ export default class MonitorPoint extends Component {
       case '1':
         this.props.dispatch(
           routerRedux.push(
-            `/platformconfig/usestandardlibrary/${id}/${name}/${configId}/${targetId}/${targetName}/${this.state.pollutantType}`,
+            `/platformconfig/monitortarget/${configId}/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
           ),
         );
         break;
@@ -396,77 +395,79 @@ export default class MonitorPoint extends Component {
               filterPollutantType={pollutantTypes}
             />}
           >
-            
-            <AutoFormTable
-              style={{ marginTop: 10 }}
-              // columns={columns}
-              configId={pointConfigId}
-              rowChange={(key, row) => {
-                this.setState({
-                  key,
-                  row,
-                });
-              }}
-              onAdd={() => {
-                this.showModal();
-              }}
-              searchParams={pointDataWhere}
-              appendHandleRows={row => (
-                <Fragment>
-                  <Tooltip title="编辑">
-                    <a
-                      onClick={() => {
-                        this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
-                      }}
+
+            {
+              pointConfigId && <AutoFormTable
+                style={{ marginTop: 10 }}
+                // columns={columns}
+                configId={pointConfigId}
+                rowChange={(key, row) => {
+                  this.setState({
+                    key,
+                    row,
+                  });
+                }}
+                onAdd={() => {
+                  this.showModal();
+                }}
+                searchParams={pointDataWhere}
+                appendHandleRows={row => (
+                  <Fragment>
+                    <Tooltip title="编辑">
+                      <a
+                        onClick={() => {
+                          this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                        }}
+                      >
+                        <EditIcon />
+                      </a>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    <Tooltip title="详情">
+                      <a
+                        onClick={() => {
+                          this.setState({
+                            visible: true,
+                            isEdit: false,
+                            isView: true,
+                            selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
+                          });
+                        }}
+                      >
+                        <DetailIcon />
+                      </a>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    <Tooltip title="删除">
+                      <Popconfirm
+                        title="确认要删除吗?"
+                        onConfirm={() => {
+                          this.delPoint(
+                            row['dbo.T_Bas_CommonPoint.PointCode'],
+                            row['dbo.T_Bas_CommonPoint.DGIMN'],
+                          );
+                        }}
+                        onCancel={this.cancel}
+                        okText="是"
+                        cancelText="否"
+                      >
+                        <a href="#"><DelIcon /></a>
+                      </Popconfirm>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    <Dropdown
+                      overlay={menu(
+                        row['dbo.T_Bas_CommonPoint.DGIMN'],
+                        row['dbo.T_Bas_CommonPoint.PointName'],
+                        row['dbo.T_Bas_CommonPoint.PointCode'],
+                      )}
                     >
-                      <EditIcon />
-                    </a>
-                  </Tooltip>
-                  <Divider type="vertical" />
-                  <Tooltip title="详情">
-                    <a
-                      onClick={() => {
-                        this.setState({
-                          visible: true,
-                          isEdit: false,
-                          isView: true,
-                          selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
-                        });
-                      }}
-                    >
-                      <DetailIcon />
-                    </a>
-                  </Tooltip>
-                  <Divider type="vertical" />
-                  <Tooltip title="删除">
-                    <Popconfirm
-                      title="确认要删除吗?"
-                      onConfirm={() => {
-                        this.delPoint(
-                          row['dbo.T_Bas_CommonPoint.PointCode'],
-                          row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        );
-                      }}
-                      onCancel={this.cancel}
-                      okText="是"
-                      cancelText="否"
-                    >
-                      <a href="#"><DelIcon /></a>
-                    </Popconfirm>
-                  </Tooltip>
-                  <Divider type="vertical" />
-                  <Dropdown
-                    overlay={menu(
-                      row['dbo.T_Bas_CommonPoint.DGIMN'],
-                      row['dbo.T_Bas_CommonPoint.PointName'],
-                      row['dbo.T_Bas_CommonPoint.PointCode'],
-                    )}
-                  >
-                    <a>更多</a>
-                  </Dropdown>
-                </Fragment>
-              )}
-            />
+                      <a>更多</a>
+                    </Dropdown>
+                  </Fragment>
+                )}
+              />
+            }
           </Card>
           <Modal
             title={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'}
