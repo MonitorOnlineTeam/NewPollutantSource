@@ -7,6 +7,7 @@ import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -151,7 +152,7 @@ const BasicLayout = props => {
           // console.log("defaultDom=", defaultDom)
 
           let userCookie = Cookie.get('currentUser');
-          if (menuItemProps.replace && userCookie) {
+          if (menuItemProps.replace && userCookie !== "null") {
             dispatch({
               type: 'global/getBtnAuthority',
               payload: {
@@ -159,6 +160,8 @@ const BasicLayout = props => {
                 User_ID: JSON.parse(userCookie).User_ID,
               },
             });
+          }else if(userCookie === "null"){
+            router.push("/user/login");
           }
 
           if (menuItemProps.isUrl) {
