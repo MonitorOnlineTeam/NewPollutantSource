@@ -20,6 +20,7 @@ import PollutantView from './pollutantView';
 import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
 import SdlTable from '@/components/AutoForm/Table';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 @connect(({ loading, standardlibrary, autoForm }) => ({
   ...loading,
@@ -403,20 +404,8 @@ class UseStandardLibrary extends Component {
       isEdit,
     } = this.props;
     return (
-      <MonitorContent
-        {...this.props}
-        breadCrumbList={[
-          { Name: '首页', Url: '/' },
-          { Name: '平台管理', Url: '' },
-          { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
-          {
-            Name: '维护点信息',
-            Url: `/platformconfig/monitortarget/monitorpoint/${configId}/${targetId}/${targetName}`,
-          },
-          { Name: '设置标准', Url: '' },
-        ]}
-        className={styles.antCss}
-      >
+      <PageHeaderWrapper title="监测点维护-设置标准">
+
         <Card
           bordered={false}
           title={
@@ -574,7 +563,7 @@ class UseStandardLibrary extends Component {
             {<PollutantView StandardLibraryID={this.state.StandardLibraryID} />}
           </Modal>
         </Card>
-      </MonitorContent>
+      </PageHeaderWrapper>
     );
   }
 }

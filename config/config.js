@@ -173,7 +173,7 @@ export default {
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/usestandardlibrary/:DGIMN/:PointName/:configId/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {
