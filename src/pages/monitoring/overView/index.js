@@ -33,6 +33,7 @@ const RadioGroup = Radio.Group;
     data: overview.data,
     gwidth: overview.gwidth,
     isloading: loading.effects['overview/querypollutanttypecode'],
+    timeLoading:loading.effects['overview/querydatalist'],
     // pollutantTypelist: overview.pollutantTypelist,
     selectpollutantTypeCode: overview.selectpollutantTypeCode,
     dataOverview: overview.dataOverview,
@@ -440,14 +441,15 @@ class dataList extends PureComponent {
                         <Table
                             rowKey={(record, index) => `complete${index}`}
                             style={{
-                                marginTop: 20
+                                marginTop: 20,
+                                paddingBottom:10
                             }}
                             // className={styles.tableCss}
                             columns={columns}
                             size="middle"
                             dataSource={this.props.data}
                             pagination={false}
-                            loading={this.props.isloading}
+                            loading={this.props.isloading||this.props.timeLoading}
                             scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 170px)' }}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {

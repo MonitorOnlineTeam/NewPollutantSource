@@ -6,6 +6,7 @@ import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
+import SelectPollutantType from '@/components/SelectPollutantType'
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -16,7 +17,6 @@ const { TreeNode } = Tree;
 const x = 3;
 const y = 2;
 const z = 1;
-var defaultKey = 0;
 const gData = [];
 const children = [];
 const dataList = [];
@@ -34,12 +34,13 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
   PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
-  overallselkeys: navigationtree.overallexpkeys
+  overallselkeys: navigationtree.overallselkeys
 }))
 @Form.create()
 class NavigationTree extends Component {
   constructor(props) {
     super(props);
+    this.defaultKey = 0;
     this.state = {
       visible: true,
       Name: "",
@@ -106,6 +107,7 @@ class NavigationTree extends Component {
       }
 
     })
+    panelDataList.splice(0, panelDataList.length)
     this.generateList(this.props.EntAndPoint)
   }
 
@@ -114,26 +116,45 @@ class NavigationTree extends Component {
       nextProps.PollutantType.map(m => children.push(<Option key={m.pollutantTypeCode}>{m.pollutantTypeName}</Option>));
     }
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
+      panelDataList.splice(0, panelDataList.length)
       this.generateList(nextProps.EntAndPoint)
     }
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint) => {
-
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
       dataList.push({ key, title: node.title, IsEnt: node.IsEnt });
       if (node.IsEnt == 0) {
-        panelDataList.push({ key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType })
+        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
+        // var ddd=panelDataList.filter(item=>item.key==key);
+        // if(panelDataList.filter(item=>item.key==key).length==0)
+        // {
+        panelDataList.push(pushItem)
+        // }
       }
-      if (defaultKey == 0 && node.IsEnt == 0) {
-        defaultKey = 1;
-        // var parentKey=this.getParentKey(key,this.props.EntAndPoint)
+      if (this.defaultKey == 0 && node.IsEnt == 0) {
+        debugger
+        this.defaultKey = 1;
+        var nowKey=[key]
+        var nowExpandKey=[node.EntCode]
+        if(this.props.selKeys)
+        {
+          nowKey=[this.props.selKeys];
+          // debugger
+          // nowExpandKey=[this.getParentKey(nowKey,this.props.EntAndPoint)]
+        }else if(this.props.overallselkeys.length!=0)
+        {
+          nowKey=this.props.overallselkeys
+          nowExpandKey=this.props.overallexpkeys
+        }
         this.setState({
-          selectedKeys: [key],
-          // expandedKeys:[parentKey]
+          selectedKeys: nowKey,
+          expandedKeys: nowExpandKey
         })
+        var rtnKey=[{key:nowKey[0],IsEnt:false}]
+        this.props.onItemClick(rtnKey)
       }
 
       if (node.children) {
@@ -180,6 +201,7 @@ class NavigationTree extends Component {
     this.setState({
       PollutantTypes: value,
     })
+    this.defaultKey=0;
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
@@ -207,6 +229,7 @@ class NavigationTree extends Component {
   }
   //搜索框改变查询数据
   onChangeSearch = e => {
+    panelDataList.splice(0, panelDataList.length)
     this.generateList()
     const { value } = e.target;
     const expandedKeys = dataList
@@ -267,6 +290,12 @@ class NavigationTree extends Component {
       expandedKeys,
       autoExpandParent: false,
     });
+    this.props.dispatch({
+      type: "navigationtree/updateState",
+      payload: {
+        overallexpkeys: expandedKeys,
+      }
+    })
   };
   //复选框选中
   onCheck = checkedKeys => {
@@ -405,6 +434,7 @@ class NavigationTree extends Component {
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList)
     //更新到model
+    debugger
     this.props.dispatch({
       type: "navigationtree/updateState",
       payload: {
@@ -413,6 +443,7 @@ class NavigationTree extends Component {
         overallexpkeys: this.state.expandedKeys,
       }
     })
+
   }
   onRadioChange = (e) => {
     if (e.target.value == "tree") {
@@ -506,7 +537,7 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
-          <Select
+          {/* <Select
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
             placeholder="请选择污染物类型"
@@ -514,7 +545,13 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           >
             {children}
-          </Select>
+          </Select> */}
+          <SelectPollutantType
+              // style={{ marginLeft: 50, float: 'left' }}
+              mode="multiple"
+              style={{ width: '100%', marginBottom: 10 }}
+              onChange={this.handleChange}
+            />
           <EnterprisePointCascadeMultiSelect
             // searchEnterprise={true}
             searchRegion={true}
@@ -575,7 +612,7 @@ class NavigationTree extends Component {
               {/* {loop(gData)} */}
             </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
           </div> : <div >
-              {this.props.EntAndPoint.length ? <Table columns={this.state.panelColumn} dataSource={panelDataList} showHeader={false} pagination={false}
+              {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={panelDataList} showHeader={false} pagination={false}
                 style={{ marginTop: "5%", maxHeight: 700, overflow: 'auto', width: "100%", cursor: "pointer" }}
                 onRow={this.onClickRow}
                 rowClassName={this.setRowClassName}

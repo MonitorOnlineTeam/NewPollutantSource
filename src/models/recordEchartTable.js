@@ -8,7 +8,7 @@ export default Model.extend({
     namespace: 'recordEchartTable',
     state: {
         exlist: [],
-        excount: 0,
+        excount: [],
         exmodellist: [],
         exceptionData:[],
         overlist:[],

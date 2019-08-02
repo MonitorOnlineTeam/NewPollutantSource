@@ -7,11 +7,11 @@ import { post, get } from '@/utils/request';
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/DataList/GetPollutantTypeList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
     params,
     null,
   );
-  return result === null ? { data: null } : result.data;
+  return result === null ? { data: null } : result.Datas;
 }
 
 /**
@@ -20,11 +20,11 @@ export async function getPollutantTypeList(params) {
  */
 export async function querypollutanttypecode(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/DataList/GetPollutantTypeCode',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
     params,
     null,
   );
-  return result === null ? { data: null } : result.data;
+  return result === null ? { data: null } : result.Datas;
 }
 /**
  * 【智能监控】获取数据一览数据
