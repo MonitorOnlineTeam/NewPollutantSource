@@ -1,5 +1,6 @@
 import { queryNotices } from '@/services/user';
 import { getBtnAuthority } from '../services/baseapi';
+import * as services from '@/services/commonApi'
 const GlobalModel = {
   namespace: 'global',
   state: {
@@ -7,6 +8,7 @@ const GlobalModel = {
     notices: [],
     btnsAuthority: [],
     changePwdVisible: false,
+    configInfo:null
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -75,7 +77,7 @@ const GlobalModel = {
       const result = yield call(getBtnAuthority, payload);
       if (result.IsSuccess) {
         const btnsAuthority = result.Datas.map(item => item.Code);
-        console.log('btnsAuthority=', btnsAuthority);
+        // console.log('btnsAuthority=', btnsAuthority);
         yield put({
           type: 'updateState',
           payload: {
@@ -96,6 +98,17 @@ const GlobalModel = {
           changePwdVisible: true,
         },
       });
+    },
+    *getSystemConfigInfo({ payload }, { call, put, select }) {
+      const response = yield call(services.getSystemConfigInfo);
+      if (response.IsSuccess) {
+        yield put({
+          type: 'setConfigInfo',
+          payload: response.Datas,
+        });
+      }
+      // const { configInfo } = yield select(m => m.login);
+      // console.log("setConfigInfo=", configInfo);
     },
   },
   reducers: {
@@ -129,6 +142,9 @@ const GlobalModel = {
         ...state,
         notices: state.notices.filter(item => item.type !== payload),
       };
+    },
+    setConfigInfo(state, { payload }) {
+      return { ...state, configInfo: { ...payload } };
     },
 
     updateState(state, { payload }) {

@@ -2,7 +2,7 @@ import { post, get, getNew } from '@/utils/request';
 
 // 获取污染物类型 - 表头
 export async function getPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/DataList/GetPollutantTypeCode', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
   return result === null ? {
     data: null
   } : result;
