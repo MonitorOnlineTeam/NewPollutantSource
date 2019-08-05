@@ -2,13 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { Spin, Card, Divider } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from './tree.less';
+import styles from './index.less';
 
-@connect(({ video, loading }) => ({
-  isloadingC: loading.effects['video/querypollutantlist'],
-  isloadingp: loading.effects['video/queryhistorydatalist'],
-  realdata: video.realdata,
-  columns: video.columns,
+@connect(({ videodata, loading }) => ({
+  isloadingC: loading.effects['videodata/querypollutantlist'],
+  isloadingp: loading.effects['videodata/queryhistorydatalist'],
+  realdata: videodata.realdata,
+  columns: videodata.columns,
 }))
 class YsyRealVideoData extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class YsyRealVideoData extends Component {
   getPollutantTitle = () => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'video/querypollutantlist',
+      type: 'videodata/querypollutantlist',
       payload: { dgimn },
     });
   };
@@ -39,7 +39,7 @@ class YsyRealVideoData extends Component {
     ];
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'video/queryhistorydatalist',
+      type: 'videodata/queryhistorydatalist',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',

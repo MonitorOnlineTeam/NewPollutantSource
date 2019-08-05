@@ -1,0 +1,20 @@
+
+import {
+  post,
+} from '@/utils/request';
+/** 萤石云视频列表 */
+export async function getysyList(params) {
+  const body = {
+    VedioCameraID: params.VedioCameraID,
+  };
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetCameraMonitorUrl', body, null);
+  return result;
+}
+/** 获取摄像头列表 */
+export async function getvideolist(params) {
+  const body = {
+    DGIMN: params.DGIMN,
+  };
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoList', body, null);
+  return result;
+}

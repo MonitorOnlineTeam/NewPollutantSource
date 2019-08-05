@@ -1,10 +1,12 @@
 import Model from '@/utils/model';
 import moment from 'moment'
 import {
-  querypollutantlist,
   queryoverdatalist,
 } from '../services/alarmRecordApi';
-import { formatPollutantPopover } from '@/utils/utils';
+import {
+  querypollutantlist,
+}
+from '../services/baseapi';
 
 export default Model.extend({
     namespace: 'alarmrecord',
@@ -54,7 +56,6 @@ export default Model.extend({
             }
 
             const res = yield call(queryoverdatalist, postData);
-            debugger;
             if (res.IsSuccess) {
                 yield update({
                   overdata: res.Datas,

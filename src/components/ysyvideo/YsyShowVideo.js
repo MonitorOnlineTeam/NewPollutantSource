@@ -14,10 +14,10 @@ import {
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
-import HistoryVideo from './components/YsyHisVideoData';
-import YsyRealVideoData from './components/YsyRealVideoData';
+import HistoryVideo from './YsyHisVideoData';
+import YsyRealVideoData from './YsyRealVideoData';
 import config from '@/config';
-import VideoSelect from '../../../../components/VideoSelect'
+import VideoSelect from '../VideoSelect'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -27,10 +27,10 @@ const { TabPane } = Tabs;
 add by xpy
 */
 
-@connect(({ video, loading }) => ({
-  vIsLoading: loading.effects['video/getvideolist'],
-  videoList: video.videoList,
-  ysyrealtimevideofullurl: video.ysyvideoListParameters.realtimevideofullurl,
+@connect(({ videodata, loading }) => ({
+  vIsLoading: loading.effects['videodata/getvideolist'],
+  videoList: videodata.videoList,
+  ysyrealtimevideofullurl: videodata.ysyvideoListParameters.realtimevideofullurl,
 }))
 class YsyShowVideo extends Component {
   constructor(props) {
@@ -146,7 +146,7 @@ class YsyShowVideo extends Component {
 /** 根据排口dgimn获取它下面的摄像头 */
 getvideolist= dgimn => {
   this.props.dispatch({
-    type: 'video/getvideolist',
+    type: 'videodata/getvideolist',
     payload: {
       dgimn,
       callback: data => {
@@ -196,7 +196,7 @@ getvideolist= dgimn => {
   getVideoIp = (type, id) => {
     const { match, dispatch } = this.props;
     dispatch({
-      type: 'video/ysyvideourl',
+      type: 'videodata/ysyvideourl',
       payload: {
         VedioCameraID: id,
         type,

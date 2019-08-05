@@ -14,7 +14,8 @@ import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
-import YsyShowVideo from '../videopreview/ysyvideo/YsyShowVideo'
+import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
+
 const { TabPane } = Tabs;
 const entZoom = 11;
 const pointZoom = 13;
@@ -27,9 +28,9 @@ let _thismap = null;
   tableList: mapView.tableList,
   chartData: mapView.chartData,
   monitorTime: mapView.monitorTime,
-  loading: loading.effects["mapView/getAllEntAndPoint"],
+  loading: loading.effects['mapView/getAllEntAndPoint'],
   pointLoading: loading.effects['mapView/getPointTableData'],
-  chartLoading: loading.effects['mapView/getPointChartData']
+  chartLoading: loading.effects['mapView/getPointChartData'],
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -44,27 +45,27 @@ class MapView extends Component {
       infoWindowVisible: false,
       coordinateSet: [],
       markersList: [],
-      currentEntInfo: {}
+      currentEntInfo: {},
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
     // this.mapCenter = { longitude: 115, latitude: 40 };
-    //地图事件
+    // 地图事件
     this.mapEvents = {
-      created: (m) => {
+      created: m => {
         _thismap = m;
         this.setState({
-          createMap: true
+          createMap: true,
         })
       },
-      zoomchange: (value) => {
+      zoomchange: value => {
         const zoom = _thismap.getZoom();
         // 地图缩放，显示企业
         if (zoom < entZoom) {
           // const displayType = this.state.displayType === 1
           if (this.state.displayType === 1) {
             this.setState({
-              infoWindowVisible: false
+              infoWindowVisible: false,
             })
           }
           this.setState({
@@ -77,7 +78,7 @@ class MapView extends Component {
         }
       },
       complete: () => {
-      }
+      },
     };
   }
 
@@ -91,22 +92,22 @@ class MapView extends Component {
     this.props.dispatch({
       type: 'mapView/getPollutantWaterList',
       payload: {
-        pollutantTypes: 1
-      }
+        pollutantTypes: 1,
+      },
     })
     // 获取废气污染物
     this.props.dispatch({
       type: 'mapView/getPollutantGasList',
       payload: {
-        pollutantTypes: 2
-      }
+        pollutantTypes: 2,
+      },
     })
   }
 
   // 渲染坐标点
-  renderMarker = (extData) => {
+  renderMarker = extData => 
     // let extData = extData;
-    return <div
+     <div
       onMouseEnter={() => {
         if (this.state.infoWindowVisible === false) {
           this.setState({
@@ -189,9 +190,7 @@ class MapView extends Component {
       }
 
     </div>
-  }
-
-
+  
 
 
   // 渲染点或企业
@@ -221,16 +220,16 @@ class MapView extends Component {
   }
 
   // 点击气泡获取数据
-  getPointInfo = (pollutantType) => {
+  getPointInfo = pollutantType => {
     // 获取table数据
     this.props.dispatch({
       type: 'mapView/getPointTableData',
       payload: {
         DGIMNs: this.state.currentKey,
-        dataType: "HourData",
+        dataType: 'HourData',
         isLastest: true,
-        type: pollutantType
-      }
+        type: pollutantType,
+      },
     })
     // 获取图表数据
     // this.props.dispatch({
@@ -247,7 +246,7 @@ class MapView extends Component {
 
 
   markersEvents = {
-    created: (allMarkers) => {
+    created: allMarkers => {
       console.log('All Markers Instance Are Below');
       console.log(allMarkers);
     },
@@ -273,9 +272,9 @@ class MapView extends Component {
 
   // 绘制厂界
   drawPolygon = () => {
-    let res = [];
+    const res = [];
     if (this.state.coordinateSet) {
-      let arr = eval(this.state.coordinateSet);
+      const arr = eval(this.state.coordinateSet);
       for (let i = 0; i < arr.length; i++) {
         res.push(<Polygon
           // events={this.polygonEvents}
@@ -296,11 +295,11 @@ class MapView extends Component {
   }
 
   windowEvents = {
-    created: (iw) => { console.log(iw) },
+    created: iw => { console.log(iw) },
     // open: () => { console.log('InfoWindow opened') },
     close: () => {
       this.setState({
-        infoWindowVisible: false
+        infoWindowVisible: false,
       })
     },
     // change: () => { console.log('InfoWindow prop changed') },
@@ -316,7 +315,7 @@ class MapView extends Component {
             coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
             currentEntInfo: nextProps.defaultMapInfo,
             loading: false,
-            currentKey: nextProps.defaultMapInfo.key
+            currentKey: nextProps.defaultMapInfo.key,
           })
           this.randomMarker(nextProps.defaultMapInfo.children);
           clearInterval(timer)
@@ -335,21 +334,21 @@ class MapView extends Component {
     }
   }
 
-  //获取筛选状态图标颜色
-  getColor = (status) => {
-    var color = ""
+  // 获取筛选状态图标颜色
+  getColor = status => {
+    let color = ''
     switch (status) {
-      case 0://离线
-        color = "#999999"
+      case 0:// 离线
+        color = '#999999'
         break;
-      case 1://正常
-        color = "#34c066"
+      case 1:// 正常
+        color = '#34c066'
         break;
-      case 2://超标
-        color = "#f04d4d"
+      case 2:// 超标
+        color = '#f04d4d'
         break;
-      case 3://异常
-        color = "#e94"
+      case 3:// 异常
+        color = '#e94'
         break;
     }
     return color
@@ -362,44 +361,44 @@ class MapView extends Component {
       title: {
         text: `${chartData.legend}24小时趋势图`,
         textStyle: {
-          color: "rgba(0, 0, 0, 0.75)",
+          color: 'rgba(0, 0, 0, 0.75)',
           fontSize: 15,
           fontWeight: '400',
         },
         // subtext: '数据来自西安兰特水电测控技术有限公司',
-        x: 'center'
+        x: 'center',
       },
       legend: {
         data: [chartData.legend],
-        x: 'left'
+        x: 'left',
       },
       tooltip: {
         trigger: 'axis',
-        formatter: function (params, ticket, callback) {
+        formatter (params, ticket, callback) {
           let res = `${params[0].axisValue}时<br/>`;
           params.map(item => {
             res += `${item.seriesName}:${item.value}<br />`;
           });
           return res;
-        }
+        },
       },
       toolbox: {
         show: true,
         feature: {
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       xAxis: {
         type: 'category',
         // name: '时间',
         boundaryGap: false,
-        data: chartData.xAxisData
+        data: chartData.xAxisData,
       },
       yAxis: {
         type: 'value',
         name: '浓度(' + 'mg/m³' + ')',
         axisLabel: {
-          formatter: '{value}'
+          formatter: '{value}',
         },
       },
       series: [{
@@ -420,20 +419,20 @@ class MapView extends Component {
           normal: {
             color: '#54A8FF',
             lineStyle: {
-              color: '#54A8FF'
-            }
-          }
+              color: '#54A8FF',
+            },
+          },
         },
       },
-      ]
+      ],
     };
 
 
     const plugins = [
-      'MapType',  // 地图模式（卫星）
+      'MapType', // 地图模式（卫星）
       'Scale', //
       'OverView',
-      "ToolBar",
+      'ToolBar',
       // 'ControlBar', // v1.1.0 新增
       // {
       //   name: 'ToolBar',
@@ -452,7 +451,7 @@ class MapView extends Component {
           height: 'calc(100vh/2)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
         size="large"
       />);
@@ -460,26 +459,25 @@ class MapView extends Component {
 
     return (
       <div className={styles.mapWrapper}>
-        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={(val) => {
+        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={val => {
           if (val[0]) {
-            let entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
+            const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
               if (this.state.currentEntInfo == entInfo[0]) {
                 // 点击的是当期企业
               } else {
                 // 切换企业
-                const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
+                const position = [entInfo[0].Longitude, entInfo[0].Latitude];
 
                 this.setState({
                   displayType: 1,
                   infoWindowVisible: false,
                   mapCenter: position,
-                  coordinateSet: entInfo[0]["CoordinateSet"]
+                  coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
                   _thismap.setZoomAndCenter(pointZoom, position)
                   this.randomMarker(entInfo[0].children)
                 })
-
               }
               this.setState({
                 currentEntInfo: entInfo[0],
@@ -509,9 +507,9 @@ class MapView extends Component {
                 }
               })
               // 点击的排口
-              let pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
+              const pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
               if (entInfo) {
-                const position = [pointInfo["Longitude"], pointInfo["Latitude"]];
+                const position = [pointInfo.Longitude, pointInfo.Latitude];
                 _thismap.setZoomAndCenter(pointZoom, position)
                 this.randomMarker(entInfo.children)
                 this.setState({
@@ -521,7 +519,7 @@ class MapView extends Component {
                   currentEntInfo: entInfo,
                   currentPointInfo: pointInfo,
                   currentKey: val[0].key,
-                  coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet
+                  coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet,
                 }, () => {
                   this.getPointInfo(pointInfo.PollutantType)
                 })
@@ -529,9 +527,9 @@ class MapView extends Component {
             }
           }
         }} />
-        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: "400px", position: "relative" }}>
+        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '400px', position: 'relative' }}>
           <Map
-            amapkey={"c5cb4ec7ca3ba4618348693dd449002d"}
+            amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
             // center={this.state.mapCenter}
             events={this.mapEvents}
@@ -540,13 +538,13 @@ class MapView extends Component {
             {/* <Polygon path={[[[[116.491204,39.957416],[116.587335,39.93636],[116.521417,39.891066],[116.495324,39.918457]]]]} /> */}
             <InfoWindow
               position={this.state.hoverMapCenter}
-              isCustom={true}
+              isCustom
               visible={this.state.infoWindowHoverVisible}
               offset={[4, -35]}
             >{this.state.currentTitle}</InfoWindow>
             <InfoWindow
               position={this.state.mapCenter}
-              autoMove={true}
+              autoMove
               // size={{ width: 430, height: }}
               // closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
@@ -587,7 +585,7 @@ class MapView extends Component {
                         height: '380px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
                       }}
                       size="large"
                     />
@@ -599,13 +597,12 @@ class MapView extends Component {
                       <>
                         <Descriptions
                           title={
-                            <div>{this.state.currentPointInfo.title} <br /> <span style={{ fontWeight: "normal", fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ""}</span></div>
+                            <div>{this.state.currentPointInfo.title} <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                           }
                           size="small"
                           bordered>
                           {
-                            this.props.tableList.map(item => {
-                              return <Descriptions.Item label={item.label}><div onClick={() => {
+                            this.props.tableList.map(item => <Descriptions.Item label={item.label}><div onClick={() => {
                                 this.props.dispatch({
                                   type: "mapView/updateChartData",
                                   payload: {
@@ -613,21 +610,20 @@ class MapView extends Component {
                                     label: item.label
                                   }
                                 })
-                              }} className={styles.content}>{item.value}</div></Descriptions.Item>
-                            })
+                              }} className={styles.content}>{item.value}</div></Descriptions.Item>)
                           }
                         </Descriptions>
                         {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
                         {
                           // !this.props.chartLoading && (!this.props.chartData.seriesData.length ?
                           !this.props.chartData.seriesData.length ?
-                            <img src="/nodata.png" style={{ width: "150px", margin: "35px 124px", dispatch: 'block' }} />
+                            <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                             : <ReactEcharts
                               className={styles.echartdiv}
                               style={{ width: '100%', height: '200px', textAlign: 'center' }}
                               option={option}
-                              notMerge={true}
-                              lazyUpdate={true} />
+                              notMerge
+                              lazyUpdate />
                         }
                         {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
                         <a className={styles.pointDetails} size="small" onClick={() => {
@@ -648,16 +644,16 @@ class MapView extends Component {
             // content={<span>111</span>}
             />
           </Map>
-          <div style={{ position: "absolute", right: 100, top: 20 }}>
-            <Radio.Group defaultValue="map" buttonStyle="solid" onChange={(e) => {
-              e.target.value === "data" && router.push("/monitoring/datalist")
+          <div style={{ position: 'absolute', right: 100, top: 20 }}>
+            <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
+              e.target.value === 'data' && router.push('/monitoring/datalist')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>
             </Radio.Group>
           </div>
           <Modal
-            title={this.state.currentPointInfo.title + "详情"}
+            title={`${this.state.currentPointInfo.title  }详情`}
             width="80%"
             footer={null}
             style={{ maxHeight: '80vh' }}
@@ -675,7 +671,7 @@ class MapView extends Component {
           >
             <Tabs>
               <TabPane tab="历史数据" key="1">
-                <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
+                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                   <DataQuery DGIMN={currentKey} />
                 </div>
               </TabPane>
@@ -683,17 +679,17 @@ class MapView extends Component {
                 <YsyShowVideo DGIMN={currentKey} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
+                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                   <AlarmRecord DGIMN={currentKey} />
                 </div>
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
+                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                   <RecordEchartTable DGIMN={currentKey} />
                 </div>
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <div style={{ maxHeight: '60vh', overflowY: "auto" }}>
+                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                   <RecordEchartTableOver DGIMN={currentKey} />
                 </div>
               </TabPane>
