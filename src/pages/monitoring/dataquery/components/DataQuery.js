@@ -284,9 +284,10 @@ class DataQuery extends Component {
                             <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
                         </div>
                     }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}
                 >
-                    {this.loaddata()}
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
+                        {this.loaddata()}
+                    </Card.Grid>
                 </Card>
             </div>
         );
