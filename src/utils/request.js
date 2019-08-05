@@ -39,19 +39,19 @@ export function getAuthHeader(ssoToken) {
   return {
     headers: {
       Accept: 'application/json',
-      Authorization: `Bearer ${ssoToken}`,
+      Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
       'Content-Type': 'application/json',
     },
   };
 }
 
 const checkStatus = response => {
-  if ((response.status >= 200 && response.status < 300)) {
+  if ((response.status >= 200 && response.status < 300) || response.status === 500) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
-    message: `请求错误 ${response.status}`, //: ${response.url}
+    message: `请求错误 ${response.status}`, // : ${response.url}
     description: errortext,
   });
   const error = new Error(errortext);
@@ -75,6 +75,7 @@ async function requestMy(url, options) {
     .catch(e => {
       const status = e.name;
       if (status === 401) {
+        Cookie.set('ssoToken', "null");
         router.push('/user/login');
         return;
       }
@@ -95,8 +96,8 @@ async function requestMy(url, options) {
 }
 
 export async function get(url, params, flag) {
-  if (flag !== 0) 
-    url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
+  // if (flag !== 0)
+  //   url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
   if (params) {
     const paramsArray = [];
     Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
@@ -115,7 +116,7 @@ export async function get(url, params, flag) {
 }
 
 export async function post(url, params) {
-  return requestMy(url + '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', {
+  return requestMy(url, {
     method: 'POST',
     body: JSON.stringify(params),
   });

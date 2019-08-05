@@ -67,7 +67,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result)
+        message.error(result.Message)
         yield update({
           ysyvideoListParameters: {
             ...ysyvideoListParameters,

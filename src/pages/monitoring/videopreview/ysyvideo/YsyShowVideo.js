@@ -337,7 +337,7 @@ getvideolist= dgimn => {
 
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
-    if (videoList.length === 0) {
+    if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
       return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)' }}>< div style = {
           {
             textAlign: 'center',
