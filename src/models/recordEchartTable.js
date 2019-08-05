@@ -15,6 +15,8 @@ export default Model.extend({
         overcount: 0,
         overmodellist: [],
         overData:[],
+        exfirstData:[],
+        overfirstData:[]
     },
     effects: {
         //获取异常记录汇总
@@ -25,7 +27,8 @@ export default Model.extend({
                 yield update({
                     exlist: result.Datas.rtnExList,
                     excount: result.Datas.rtnExBar,
-                    exmodellist: result.Datas.rtnVal
+                    exmodellist: result.Datas.rtnVal,
+                    exfirstData:result.Datas.firstData
                 })
             }
 
@@ -37,7 +40,7 @@ export default Model.extend({
              if (result.IsSuccess) {
                 //  debugger
                  yield update({
-                    exceptionData: result.Datas,
+                    exfirstData: result.Datas,
                  })
              }
  
@@ -50,7 +53,8 @@ export default Model.extend({
                 yield update({
                     overlist: result.Datas.rtnExList,
                     overcount: result.Datas.rtnExBar,
-                    overmodellist: result.Datas.rtnVal
+                    overmodellist: result.Datas.rtnVal,
+                    overfirstData:result.Datas.firstData
                 })
             }
 
@@ -62,7 +66,7 @@ export default Model.extend({
              if (result.IsSuccess) {
                 //  debugger
                  yield update({
-                    overData: result.Datas,
+                    overfirstData: result.Datas,
                  })
              }
  

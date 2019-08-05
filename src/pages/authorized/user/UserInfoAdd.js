@@ -127,30 +127,13 @@ export default class UserInfoAdd extends Component {
         });
 
     onSubmitForm(formData) {
-        const { dispatch, form } = this.props;
-        // form.validateFields((err, values) => {
-        //     if (!err) {
-        //         let FormData = {};
-        //         for (let key in values) {
-        //             if (values[key] && values[key]["fileList"]) {
-        //                 FormData[key] = uid;
-        //             } else {
-        //                 FormData[key] = values[key] && values[key].toString()
-        //             }
-        //         }
-        //         this.setState({
-        //             FormDatas: FormData
-        //         })
-        //         console.log('FormData=', FormData);
-        //         // return;
-
-        //     }
-        // });
-        this.setState({
-            FormDatas: formData
-        })
-        console.log('FormData=', formData);
-        // return;
+        // const { dispatch, form } = this.props;
+       
+        // this.setState({
+        //     FormDatas: formData
+        // })
+        // console.log('FormData=', formData);
+        // // return;
     }
 
     postFormDatas() {
@@ -165,18 +148,36 @@ export default class UserInfoAdd extends Component {
             message.error("部门不能为空");
             return;
         }
-        Object.keys(FormDatas).length ? dispatch({
-            type: 'userinfo/add',
-            payload: {
-                configId: 'UserInfoAdd',
-                roleID: this.state.checkedKeySel,
-                departID: this.state.checkedKeysSel,
-                FormData: {
-                    ...FormDatas,
-                    // uid: uid
-                },
+        form.validateFields((err, values) => {
+            if (!err) {
+                let FormData = {};
+                for (let key in values) {
+                    if (values[key] && values[key]["fileList"]) {
+                        FormData[key] = uid;
+                    } else {
+                        FormData[key] = values[key] && values[key].toString()
+                    }
+                }
+                // this.setState({
+                //     FormDatas: FormData
+                // })
+                // console.log('FormData=', FormData);
+                // return;
+                dispatch({
+                    type: 'userinfo/add',
+                    payload: {
+                        configId: 'UserInfoAdd',
+                        roleID: checkedKeySel,
+                        departID: checkedKeysSel,
+                        FormData: {
+                            ...FormData,
+                            // uid: uid
+                        },
+                    }
+                }) 
+
             }
-        }) : message.error("数据为空")
+        });
     }
 
     render() {

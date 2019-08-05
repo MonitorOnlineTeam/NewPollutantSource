@@ -17,6 +17,7 @@ import moment from 'moment';
     exmodellistLoading: loading.effects['recordEchartTable/getexmodellist'],
     exceptionData: recordEchartTable.exceptionData,
     exceptionDataLoading: loading.effects['recordEchartTable/getexceptiondata'],
+    exfirstData:recordEchartTable.exfirstData
 }))
 @Form.create()
 class Index extends Component {
@@ -232,6 +233,12 @@ class Index extends Component {
         'click': this.clickEchartsPie.bind(this)
     }
     clickEchartsPie(e) {
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                exfirstData:[],
+            },
+        })
         var name = e.name
         var seriesName = e.seriesName
         this.props.dispatch({
@@ -281,7 +288,7 @@ class Index extends Component {
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)' }}
+                    style={{ width: '100%', height:  this.props.height||'calc(100vh - 230px)',overflow:"auto" }}
                 >
                     {
                         this.props.exmodellistLoading ? <Spin
@@ -324,7 +331,7 @@ class Index extends Component {
                                                     // style={{ width: "400px", height: "500px" }}
                                                     scroll={{ y: 300 }}
                                                     columns={column}
-                                                    dataSource={this.props.exceptionData}
+                                                    dataSource={this.props.exfirstData}
                                                 >
                                                 </SdlTable>
                                             // </div>

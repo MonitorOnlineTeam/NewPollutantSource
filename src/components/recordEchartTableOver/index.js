@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin ,message} from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -17,6 +17,7 @@ import moment from 'moment';
     overmodellistLoading: loading.effects['recordEchartTable/getovermodellist'],
     overData: recordEchartTable.overData,
     overDataLoading: loading.effects['recordEchartTable/getoverdata'],
+    overfirstData:recordEchartTable.overfirstData
 }))
 @Form.create()
 class Index extends Component {
@@ -79,7 +80,7 @@ class Index extends Component {
         this.setState({
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-          
+
         })
     }
     componentWillReceiveProps(nextProps) {
@@ -100,14 +101,14 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'recordEchartTable/updateState',
                 payload: {
-                    overData:[],
+                    overData: [],
                 },
             })
             this.props.dispatch({
                 type: "recordEchartTable/getovermodellist",
                 payload: {
-                    beginTime: this.state.beginTime==""?beginTime.format('YYYY-MM-DD HH:mm:ss'):this.state.beginTime,
-                    endTime: this.state.endTime==""?endTime.format('YYYY-MM-DD HH:mm:ss'):this.state.endTime,
+                    beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                    endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [nextProps.DGIMN],
                 }
@@ -161,7 +162,7 @@ class Index extends Component {
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
-                overData:[],
+                overData: [],
             },
         })
         this.props.dispatch({
@@ -179,43 +180,43 @@ class Index extends Component {
     _handleDateChange = (date, dateString) => {
         if (date) {
             // 判断
-            console.log("dateString=",dateString)
-            var hisData=[];
-            hisData=hisData.concat(date);
+            console.log("dateString=", dateString)
+            var hisData = [];
+            hisData = hisData.concat(date);
             switch (this.state.dataType) {
                 case 'RealTimeData':
-                       if (hisData[1].add(-7, 'day') > hisData[0]) {
-                       message.info('实时数据时间间隔不能超过7天');
-                       return;
-                       }
-                       hisData[1].add(+7, 'day')
-                       break;
-                   case 'MinuteData':
-                       if (hisData[1].add(-1, 'month') > hisData[0]) {
-                       message.info('分钟数据时间间隔不能超过1个月');
-                       return;
-                       }
-                       hisData[1].add(+1, 'month')
-                       break;
-                   case 'HourData':
-                       if (hisData[1].add(-6, 'month') > hisData[0]) {
-                       message.info('小时数据时间间隔不能超过6个月');
-                       return;
-                       }
-                       hisData[1].add(+6, 'month')
-                       break;
-                  case 'DayData':
-                       if (hisData[1].add(-12, 'month') > hisData[0]) {
-                          message.info('日数据时间间隔不能超过1年个月');
-                          return;
-                       }
-                       hisData[1].add(+12, 'month')
-                       break;
-                       default:
-                           return;
+                    if (hisData[1].add(-7, 'day') > hisData[0]) {
+                        message.info('实时数据时间间隔不能超过7天');
+                        return;
+                    }
+                    hisData[1].add(+7, 'day')
+                    break;
+                case 'MinuteData':
+                    if (hisData[1].add(-1, 'month') > hisData[0]) {
+                        message.info('分钟数据时间间隔不能超过1个月');
+                        return;
+                    }
+                    hisData[1].add(+1, 'month')
+                    break;
+                case 'HourData':
+                    if (hisData[1].add(-6, 'month') > hisData[0]) {
+                        message.info('小时数据时间间隔不能超过6个月');
+                        return;
+                    }
+                    hisData[1].add(+6, 'month')
+                    break;
+                case 'DayData':
+                    if (hisData[1].add(-12, 'month') > hisData[0]) {
+                        message.info('日数据时间间隔不能超过1年个月');
+                        return;
+                    }
+                    hisData[1].add(+12, 'month')
+                    break;
+                default:
+                    return;
             }
-            console.log("hisData=",hisData)
-            console.log("date=",date)
+            console.log("hisData=", hisData)
+            console.log("date=", date)
             this.setState({
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -224,7 +225,7 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'recordEchartTable/updateState',
                 payload: {
-                    overData:[],
+                    overData: [],
                 },
             })
             this.props.dispatch({
@@ -244,6 +245,12 @@ class Index extends Component {
     clickEchartsPie(e) {
         var name = e.name
         // var seriesName = e.seriesName
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                overfirstData:[],
+            },
+        })
         this.props.dispatch({
             type: "recordEchartTable/getoverdata",
             payload: {
@@ -286,62 +293,62 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats}  onChange={this._handleDateChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)' }}
                 >
-                    {
-                        this.props.overmodellistLoading ? <Spin
-                            style={{
-                                width: '100%',
-                                height: 'calc(100vh/2)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                            size="large"
-                        /> :
-                            <div> {
-                                this.props.overmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                    <Card.Grid  style={{ width: '100%', height: this.props.height||'calc(100vh - 230px)', overflow: 'auto' }}>
+                        {
+                            this.props.overmodellistLoading ? <Spin
+                                style={{
+                                    width: '100%',
+                                    height: 'calc(100vh/2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                size="large"
+                            /> :
+                                <div> {
+                                    this.props.overmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
-                                    <ReactEcharts
-                                        theme="light"
-                                        option={option}
-                                        lazyUpdate
-                                        notMerge
-                                        id="rightLine"
-                                        onEvents={this.onclick}
-                                        style={{ width: '100%', height: 'calc(100vh - 700px)' }}
-                                    />
+                                        <ReactEcharts
+                                            theme="light"
+                                            option={option}
+                                            lazyUpdate
+                                            notMerge
+                                            id="rightLine"
+                                            onEvents={this.onclick}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)' }}
+                                        />
 
-                                    {
-                                        this.props.overDataLoading ? <Spin
-                                            style={{
-                                                width: '100%',
-                                                height: 'calc(100vh/2)',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}
-                                            size="large"
-                                        /> :
-                                            <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                                <SdlTable
+                                        {
+                                            this.props.overDataLoading ? <Spin
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'calc(100vh/2)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}
+                                                size="large"
+                                            /> :
+                                                <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                                    <SdlTable
 
-                                                    // style={{ width: "400px", height: "500px" }}
-                                                    columns={column}
-                                                    dataSource={this.props.overData}
-                                                >
-                                                </SdlTable>
-                                            </div>
-                                    }
-                                </div>
-                            }</div>
-                    }
+                                                        // style={{ width: "400px", height: "500px" }}
+                                                        columns={column}
+                                                        dataSource={this.props.overfirstData}
+                                                    >
+                                                    </SdlTable>
+                                                </div>
+                                        }
+                                    </div>
+                                }</div>
+                        }
 
-
+                    </Card.Grid>
                 </Card>
             </div>
         );

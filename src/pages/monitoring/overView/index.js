@@ -270,7 +270,7 @@ class dataList extends PureComponent {
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
         let fixed = false;
-        if (coldata[0]) {
+        if (coldata&&coldata[0]) {
             fixed = true;
         }
         let columns = [
