@@ -6,11 +6,7 @@ export async function getysyList(params) {
     VedioCameraID: params.VedioCameraID,
   };
   const result = post('/api/rest/PollutantSourceApi/VideoApi/GetCameraMonitorUrl', body, null);
-  return result === null
-    ? {
-        data: null,
-      }
-    : result;
+  return result;
 }
 /**
  * 获取排口下的污染物
@@ -77,16 +73,11 @@ export async function AddCameraMonitor(params) {
 }
 /** 获取摄像头列表 */
 export async function getvideolist(params) {
-  debugger;
   const body = {
     DGIMN: params.DGIMN,
   };
   const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoList', body, null);
-  return result === null ?
-    {
-      data: null,
-    } :
-    result;
+  return result;
 }
 /** 判断序列号是否有效 */
 export async function IsTrueSerialNumber(params) {
