@@ -17,7 +17,8 @@ export default Model.extend({
         selectTreeKeys:[],
         overallselkeys:[],
         overallexpkeys:[],
-        IsTree:true
+        IsTree:true,
+        BellList:['51052216080302','60827636000025','62020131jhdj03']
     },
     subscriptions: {
         setup({

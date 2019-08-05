@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_blfd7m7db05.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_7rfkjn3e6po.js';
 const style = {
   fontSize: 16,
 }
@@ -29,6 +29,7 @@ export const DustIcon = () => <IconConfig type="icon-yangchen" style={{...style}
 export const VocIcon =  () => <IconConfig type="icon-ziyuan" style={{...style}} />
 export const TreeIcon=()=><IconConfig type="icon-jiedian" style={{...style}} />
 export const PanelIcon=()=><IconConfig type="icon-jiedian1" style={{...styles}} />
+export const BellIcon=(val)=><IconConfig type="icon-lingdang" style={val.style} />
 
 /**视频操作图标 */
 export const Top = () => <IconConfig type="icon-jiantou_xiangshang" style={{ ...style }} />
