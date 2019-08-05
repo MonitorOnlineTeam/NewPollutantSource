@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin ,message} from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -297,8 +297,9 @@ class Index extends Component {
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
+                    style={{ width: '100%',  height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}
                 >
-                    <Card.Grid  style={{ width: '100%', height: this.props.height||'calc(100vh - 230px)', overflow: 'auto' }}>
+                    <Card.Grid>
                         {
                             this.props.overmodellistLoading ? <Spin
                                 style={{

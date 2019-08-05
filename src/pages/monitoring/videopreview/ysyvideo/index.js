@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '../../../../components/NavigationTree'
-import YsyShowVideo from './YsyShowVideo'
+import YsyShowVideo from '../../../../components/ysyvideo/YsyShowVideo'
 
 /**
  * 视频预览

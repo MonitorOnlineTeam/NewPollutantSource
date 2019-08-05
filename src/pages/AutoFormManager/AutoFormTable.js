@@ -128,6 +128,7 @@ class AutoFormTable extends PureComponent {
         case "add":
           if (btnsAuthority.includes("add")) {
             return <Button
+              style={{marginRight: 8}}
               key={btn.DISPLAYBUTTON}
               icon="plus"
               type="primary"
@@ -141,6 +142,7 @@ class AutoFormTable extends PureComponent {
         case "alldel":
           return <Button
             disabled={this.state.selectedRowKeys.length <= 0}
+            style={{marginRight: 8}}
             icon="delete"
             key={btn.DISPLAYBUTTON}
             type="primary"

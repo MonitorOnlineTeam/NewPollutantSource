@@ -288,7 +288,7 @@ class Index extends Component {
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
-                    style={{ width: '100%', height:  this.props.height||'calc(100vh - 230px)',overflow:"auto" }}
+                    style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style }}
                 >
                     {
                         this.props.exmodellistLoading ? <Spin

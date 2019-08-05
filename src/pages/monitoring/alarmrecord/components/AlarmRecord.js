@@ -250,7 +250,7 @@ class AlarmRecord extends Component {
                                   <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm:ss" onChange={this._handleDateChange} dateValue={this.state.rangeDate} />
                               </div>
                           }
-                          style={{ width: '100%', height: 'calc(100vh - 230px)' }}
+                          style={{ width: '100%', height: 'calc(100vh - 230px)',overflow: "auto", ...this.props.style, }}
                       >
                           <SdlTable
                               loading={this.props.dataloading}

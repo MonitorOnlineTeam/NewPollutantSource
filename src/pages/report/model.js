@@ -27,8 +27,8 @@ export default Model.extend({
       payload,
     }, { call, update, select }) {
       const result = yield call(services.getPollutantList, payload);
-      if (result.requstresult === "1") {
-        const columns = result.data.map(item => {
+      if (result.IsSuccess) {
+        const columns = result.Datas.map(item => {
           return {
             title: item.title,
             dataIndex: item.name
