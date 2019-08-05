@@ -139,7 +139,6 @@ class NavigationTree extends Component {
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint, selKeys) => {
-    debugger
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;

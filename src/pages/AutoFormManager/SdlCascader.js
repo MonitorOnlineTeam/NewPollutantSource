@@ -3,12 +3,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import {
-  Cascader
+  Cascader,
+  Select
 } from 'antd'
 import { connect } from 'dva';
+const { Option } = Select;
 
-@connect(({ loading, autoForm }) => ({
-  regionList: autoForm.regionList,
+@connect(({ loading, common }) => ({
+  enterpriseAndPointList: common.enterpriseAndPointList,
+  level: common.level
 }))
 class SdlCascader extends Component {
   constructor(props) {
@@ -21,17 +24,38 @@ class SdlCascader extends Component {
 
   componentDidMount() {
     const { dispatch, data } = this.props;
+    // !data.length && dispatch({
+    //   type: 'autoForm/getRegions',
+    // })
     !data.length && dispatch({
-      type: 'autoForm/getRegions',
+      type: 'common/getEnterpriseAndPoint',
+      payload: {
+        RegionCode: "",
+        PointMark: "2"
+      }
     })
   }
   render() {
-    const { configId, regionList, data, itemValue, itemName } = this.props;
-    const options = data.length ? data : regionList;
+    const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
+    const options = data.length ? data : enterpriseAndPointList;
     const labelArr = itemName.split('.');
     const valueArr = itemValue.split('.');
     let label = labelArr.length > 1 ? itemName.split('.').pop().toString() : itemName;
     let value = valueArr.length > 1 ? itemValue.split('.').pop().toString() : itemValue;
+    if (level == 1) {
+      return (
+        <Select
+          showSearch
+          {...this.props}
+        >
+          {
+            options.map(item => {
+              return <Option value={item.value}>{item.label}</Option>
+            })
+          }
+        </Select>
+      )
+    }
     return (
       <Cascader
         fieldNames={{ label: label, value: value, children: 'children' }}
@@ -60,7 +84,7 @@ class SdlCascader extends Component {
 SdlCascader.defaultProps = {
   itemName: "title",
   itemValue: "value",
-  // data: []
+  data: []
 }
 
 export default SdlCascader;

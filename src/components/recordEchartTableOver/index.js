@@ -265,7 +265,6 @@ class Index extends Component {
     }
     render() {
         const { column } = this.state
-        debugger
         const option = {
             legend: {},
             tooltip: {},
