@@ -348,7 +348,7 @@ getvideolist= dgimn => {
         /></div ></Card>);
     }
     return (
-        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
+        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
           <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
             <div
               className={styles.divv}

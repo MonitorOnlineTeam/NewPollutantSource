@@ -105,7 +105,7 @@ class MapView extends Component {
   }
 
   // 渲染坐标点
-  renderMarker = extData => 
+  renderMarker = extData =>
     // let extData = extData;
      <div
       onMouseEnter={() => {
@@ -190,7 +190,7 @@ class MapView extends Component {
       }
 
     </div>
-  
+
 
 
   // 渲染点或企业
@@ -671,27 +671,19 @@ class MapView extends Component {
           >
             <Tabs>
               <TabPane tab="历史数据" key="1">
-                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-                  <DataQuery DGIMN={currentKey} />
-                </div>
+                <DataQuery DGIMN={currentKey} style={{maxHeight: '60vh'}} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} />
+                <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh'}} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-                  <AlarmRecord DGIMN={currentKey} />
-                </div>
+                <AlarmRecord DGIMN={currentKey} style={{maxHeight: '60vh'}} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-                  <RecordEchartTable DGIMN={currentKey} />
-                </div>
+                <RecordEchartTable DGIMN={currentKey} style={{maxHeight: '60vh'}}/>
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-                  <RecordEchartTableOver DGIMN={currentKey} />
-                </div>
+                <RecordEchartTableOver DGIMN={currentKey} style={{maxHeight: '60vh'}} />
               </TabPane>
             </Tabs>
           </Modal>
