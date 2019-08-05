@@ -40,7 +40,7 @@ export default Model.extend({
   effects: {
     /** 萤石云视频链接 */
     *ysyvideourl({ payload }, { call, update, select }) {
-      const { ysyvideoListParameters } = yield select(state => state.video);
+      const { ysyvideoListParameters } = yield select(state => state.videodata);
       const body = {
         VedioCameraID: payload.VedioCameraID,
       };
@@ -179,10 +179,10 @@ export default Model.extend({
       const res = yield call(queryhistorydatalist, {
         ...payload,
       });
-      const { hisrealdataList } = yield select(state => state.video);
+      const { hisrealdataList } = yield select(state => state.videodata);
       const realdata = [];
-      if (res.data.length > 0) {
-        const datas = res.data;
+      if (res.Datas.length > 0) {
+        const datas = res.Datas;
         for (let i = 0; i < datas.length; i++) {
           const element = datas[i];
           realdata.push({
