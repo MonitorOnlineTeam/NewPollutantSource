@@ -49,58 +49,58 @@ class DataQuery extends Component {
     }
 
     /** 根据排口dgimn获取它下面的所有污染物 */
-    getpointpollutants=dgimn => {
+    getpointpollutants = dgimn => {
         this.props.dispatch({
-          type: 'dataquery/querypollutantlist',
-          payload: {
-            dgimn,
-          },
+            type: 'dataquery/querypollutantlist',
+            payload: {
+                dgimn,
+            },
         });
     }
 
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
-            let { historyparams } = this.props;
-            switch (historyparams.datatype) {
-                case 'realtime':
-                    if (date[1].add(-7, 'day') > date[0]) {
+        let { historyparams } = this.props;
+        switch (historyparams.datatype) {
+            case 'realtime':
+                if (date[1].add(-7, 'day') > date[0]) {
                     message.info('实时数据时间间隔不能超过7天');
                     return;
-                    }
-                        date[1].add(7, 'day')
+                }
+                date[1].add(7, 'day')
 
-                    break;
-                case 'minute':
-                    if (date[1].add(-1, 'month') > date[0]) {
+                break;
+            case 'minute':
+                if (date[1].add(-1, 'month') > date[0]) {
                     message.info('分钟数据时间间隔不能超过1个月');
                     return;
-                    }
-                    date[1].add(-1, 'month')
-                    break;
-                case 'hour':
-                    if (date[1].add(-6, 'month') > date[0]) {
+                }
+                date[1].add(-1, 'month')
+                break;
+            case 'hour':
+                if (date[1].add(-6, 'month') > date[0]) {
                     message.info('小时数据时间间隔不能超过6个月');
                     return;
-                    }
-                    date[1].add(-6, 'month')
-                    break;
-               case 'day':
-                    if (date[1].add(-12, 'month') > date[0]) {
-                       message.info('日数据时间间隔不能超过1年个月');
-                       return;
-                       date[1].add(-12, 'month')
-                    }
-                    break;
-                    default:
-                        return;
-            }
-            this.setState({ rangeDate: date });
-            historyparams = {
-                ...historyparams,
-                beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-                endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-            }
-            this.reloaddatalist(historyparams);
+                }
+                date[1].add(-6, 'month')
+                break;
+            case 'day':
+                if (date[1].add(-12, 'month') > date[0]) {
+                    message.info('日数据时间间隔不能超过1年个月');
+                    return;
+                    date[1].add(-12, 'month')
+                }
+                break;
+            default:
+                return;
+        }
+        this.setState({ rangeDate: date });
+        historyparams = {
+            ...historyparams,
+            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        }
+        this.reloaddatalist(historyparams);
     };
 
     /** 数据类型切换 */
@@ -143,17 +143,17 @@ class DataQuery extends Component {
 
     /** 图表转换 */
     displayChange = checked => {
-      if (!checked) {
-        this.setState({
-          displayType: 'table',
-          displayName: '查看图表',
-        });
-      } else {
-        this.setState({
-          displayType: 'chart',
-          displayName: '查看数据',
-        });
-      }
+        if (!checked) {
+            this.setState({
+                displayType: 'table',
+                displayName: '查看图表',
+            });
+        } else {
+            this.setState({
+                displayType: 'chart',
+                displayName: '查看数据',
+            });
+        }
     };
 
     /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
@@ -184,50 +184,50 @@ class DataQuery extends Component {
 
     /** 获取第一个污染物 */
     getpropspollutantcode = () => {
-      if (this.props.pollutantlist[0]) {
-          console.log('------------------------', this.props.pollutantlist[0].PollutantCode);
-        return this.props.pollutantlist[0].PollutantCode;
-      }
-      return null;
+        if (this.props.pollutantlist[0]) {
+            console.log('------------------------', this.props.pollutantlist[0].PollutantCode);
+            return this.props.pollutantlist[0].PollutantCode;
+        }
+        return null;
     }
 
     /** 后台请求数据 */
     reloaddatalist = historyparams => {
-      const {
-        dispatch,
-      } = this.props;
-      dispatch({
-        type: 'dataquery/updateState',
-        payload: {
-          historyparams,
-        },
-      })
-      dispatch({
-        type: 'dataquery/queryhistorydatalist',
-        payload: {},
-      });
+        const {
+            dispatch,
+        } = this.props;
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams,
+            },
+        })
+        dispatch({
+            type: 'dataquery/queryhistorydatalist',
+            payload: {},
+        });
     }
 
     /** 切换排口 */
-    changeDgimn=dgimn => {
+    changeDgimn = dgimn => {
         this.setState({
             selectDisplay: true,
         })
-         const {
-        dispatch,
-      } = this.props;
-      let { historyparams } = this.props;
+        const {
+            dispatch,
+        } = this.props;
+        let { historyparams } = this.props;
         historyparams = {
             ...historyparams,
             payloadpollutantCode: '',
             payloadpollutantName: '',
         }
-      dispatch({
-        type: 'dataquery/updateState',
-        payload: {
-          historyparams,
-        },
-      })
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams,
+            },
+        })
         this.getpointpollutants(dgimn);
     }
 
@@ -274,21 +274,21 @@ class DataQuery extends Component {
 
     render() {
         return (
-                <div>
-                    <Card
-                        extra={
-                            <div>
-                                {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
-                                <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                                <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
-                            </div>
-                        }
-                        style={{ width: '100%', height: 'calc(100vh - 230px)' }}
-                    >
-                        {this.loaddata()}
-                    </Card>
-                </div>
+            <div>
+                <Card
+                    extra={
+                        <div>
+                            {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
+                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
+                        </div>
+                    }
+                    style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}
+                >
+                    {this.loaddata()}
+                </Card>
+            </div>
         );
     }
 }

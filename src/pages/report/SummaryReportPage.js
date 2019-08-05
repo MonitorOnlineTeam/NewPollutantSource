@@ -5,6 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment'
 import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
+import SelectPollutantType from '@/components/SelectPollutantType'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -233,11 +234,12 @@ class DailySummaryPage extends PureComponent {
                       message: '请选择污染物类型',
                     }],
                   })(
-                    <Select placeholder="请选择污染物类型">
-                      {
-                        pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
-                      }
-                    </Select>
+                    // <Select placeholder="请选择污染物类型">
+                    //   {
+                    //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
+                    //   }
+                    // </Select>
+                    <SelectPollutantType placeholder="请选择污染物类型"/>
                   )}
                 </FormItem>
               </Col>

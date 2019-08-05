@@ -139,6 +139,7 @@ class NavigationTree extends Component {
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint, selKeys) => {
+    debugger
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -540,7 +541,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{item.PollutantType == 1 ? <a><WaterIcon /></a> : <a><GasIcon /></a>}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{this.props.BellList.indexOf(item.key) > -1 ? <BellIcon style={{fontSize:10,marginTop:7,marginRight:-40, float:'right'}} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>
