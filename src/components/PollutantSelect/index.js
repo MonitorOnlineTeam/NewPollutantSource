@@ -36,6 +36,9 @@ class Index extends Component {
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
                 defaultValue={defaultValue || (allpollutant ? -1 : null)}
+                maxTagCount={1}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
             >
                 {
                      this.getoption()

@@ -10,7 +10,7 @@ import {
   Badge,
   Progress,
   Tooltip,
-  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Upload
+  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Upload,
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -28,7 +28,7 @@ const DEFAULT_WIDTH = 180;
   tableInfo: autoForm.tableInfo,
   opreationButtons: autoForm.opreationButtons,
   keys: autoForm.keys,
-  btnsAuthority: global.btnsAuthority
+  btnsAuthority: global.btnsAuthority,
 }))
 
 class AutoFormTable extends PureComponent {
@@ -57,8 +57,8 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params
-      }
+        otherParams: params,
+      },
     });
   }
 
@@ -72,10 +72,10 @@ class AutoFormTable extends PureComponent {
           [this.props.configId]: {
             ...this.props.searchForm[this.props.configId],
             current,
-            pageSize
-          }
-        }
-      }
+            pageSize,
+          },
+        },
+      },
     });
     setTimeout(() => {
       this.loadDataSource();
@@ -84,7 +84,7 @@ class AutoFormTable extends PureComponent {
 
   onSelectChange = (selectedRowKeys, selectedRows) => {
     const { keys, configId } = this.props;
-    let postData = {};
+    const postData = {};
     keys[configId].map(item => {
       // if (record[item]) {
       postData[item] = selectedRows.map(row => row[[item]]).toString()
@@ -109,9 +109,9 @@ class AutoFormTable extends PureComponent {
   _handleTableChange(pagination, filters, sorter) {
     console.log('sorter=', sorter)
     if (sorter.order) {
-      let sorterObj = {
-        IsAsc: sorter.order === "ascend",
-        SortFileds: sorter.field
+      const sorterObj = {
+        IsAsc: sorter.order === 'ascend',
+        SortFileds: sorter.field,
       };
       // sorterObj.IsAsc = sorter.order === "ascend"
       // sorterObj.SortFileds = sorter.field;
@@ -120,29 +120,29 @@ class AutoFormTable extends PureComponent {
   }
 
   _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch, btnsAuthority, match,parentcode } = this.props;
+    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
     const { btnEl, configId, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
       switch (btn.DISPLAYBUTTON) {
-        case "add":
-          if (btnsAuthority.includes("add")) {
+        case 'add':
+          if (btnsAuthority.includes('add')) {
             return <Button
-              style={{marginRight: 8}}
+              style={{ marginRight: 8 }}
               key={btn.DISPLAYBUTTON}
               icon="plus"
               type="primary"
               onClick={() => {
-                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode||parentcode}/autoformmanager/${configId}/autoformadd`));
+                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
               }}
             >添加
                   </Button>;
           }
           break;
-        case "alldel":
+        case 'alldel':
           return <Button
             disabled={this.state.selectedRowKeys.length <= 0}
-            style={{marginRight: 8}}
+            style={{ marginRight: 8 }}
             icon="delete"
             key={btn.DISPLAYBUTTON}
             type="primary"
@@ -153,11 +153,11 @@ class AutoFormTable extends PureComponent {
                 content: '确认是否删除',
                 onOk() {
                   dispatch({
-                    type: "autoForm/del",
+                    type: 'autoForm/del',
                     payload: {
-                      configId: configId,
-                      FormData: JSON.stringify(postData)
-                    }
+                      configId,
+                      FormData: JSON.stringify(postData),
+                    },
                   })
                 },
               });
@@ -165,12 +165,12 @@ class AutoFormTable extends PureComponent {
           >批量删除
                          </Button>;
           break;
-        case "print":
-          moreBtns.push({ type: "printer", text: "打印" })
+        case 'print':
+          moreBtns.push({ type: 'printer', text: '打印' })
           break;
         // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
-        case "exp":
-          moreBtns.push({ type: "export", text: "导出" })
+        case 'exp':
+          moreBtns.push({ type: 'export', text: '导出' })
           break;
         //   return <Button
         //     icon="export"
@@ -187,8 +187,8 @@ class AutoFormTable extends PureComponent {
         //   >
         //     导出
         // </Button>;
-        case "imp":
-          moreBtns.push({ type: "import", text: "导入" })
+        case 'imp':
+          moreBtns.push({ type: 'import', text: '导入' })
           break;
         //   return <Button
         //     icon="import"
@@ -202,19 +202,19 @@ class AutoFormTable extends PureComponent {
         //   >
         //     导入
         // </Button>;
-        case "edit":
+        case 'edit':
           btnEl.push({
-            type: 'edit'
+            type: 'edit',
           });
           break;
-        case "view":
+        case 'view':
           btnEl.push({
-            type: 'view'
+            type: 'view',
           });
           break;
-        case "del":
+        case 'del':
           btnEl.push({
-            type: 'del'
+            type: 'del',
           });
           break;
         default:
@@ -243,8 +243,8 @@ class AutoFormTable extends PureComponent {
         dispatch({
           type: 'autoForm/exportDataExcel',
           payload: {
-            configId
-          }
+            configId,
+          },
         })
         break;
       default:
@@ -254,25 +254,25 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match,parentcode } = this.props;
-    const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
-    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] : 1;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
+    const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
+    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId].checkboxOrRadio * 1 : 1;
     const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
-    let parentCode=match&&match.params&&match.params.parentcode||parentcode;
+    const parentCode = match && match.params && match.params.parentcode || parentcode;
     // 计算长度
-    let _columns = (columns || []).map(col => {
-      if (col.title === "文件") {
+    const _columns = (columns || []).map(col => {
+      if (col.title === '文件') {
         return {
           ...col,
           width: 400,
           render: (text, record) => {
             const key = col.dataIndex;
-            const fileInfo = record[key] ? record[key].split(";") : [];
+            const fileInfo = record[key] ? record[key].split(';') : [];
             return (
               <div>
                 {
                   fileInfo.map(item => {
-                    const itemList = item.split("|");
+                    const itemList = item.split('|');
                     return <Fragment>
                       <a target="_blank" href={`${itemList[itemList.length - 1]}${itemList[0]}`}>{itemList[0]}</a>
                       <a style={{ marginLeft: 10 }} href={`${itemList.pop()}${itemList[0]}`} download>下载</a>
@@ -282,7 +282,7 @@ class AutoFormTable extends PureComponent {
                 }
               </div>
             )
-          }
+          },
         }
       }
       return {
@@ -291,17 +291,17 @@ class AutoFormTable extends PureComponent {
         render: (text, record) => {
           const type = col.formatType;
           return text && <div>
-            {type === "超链接" &&
+            {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             }
-            {type == "小圆点" && <Badge status="warning" text={text} />}
-            {type === "标签" && <Tag>{text}</Tag>}
-            {type === "进度条" && <Progress percent={text} />}
+            {type == '小圆点' && <Badge status="warning" text={text} />}
+            {type === '标签' && <Tag>{text}</Tag>}
+            {type === '进度条' && <Progress percent={text} />}
             {!type && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
               {text}
             </div>}
           </div>
-        }
+        },
       }
       // return col.width ? { width: DEFAULT_WIDTH, ...col } : { ...col, width: DEFAULT_WIDTH }
     });
@@ -314,31 +314,31 @@ class AutoFormTable extends PureComponent {
     // }
     // const showHandle = rowKey.length;
     // console.log("showHandle=",showHandle)
-    let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
 
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
-      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48) ? "right" : ""
+      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48) ? 'right' : ''
       _columns.push({
-        align: "center",
-        title: "操作",
+        align: 'center',
+        title: '操作',
         width: 180,
         fixed: isFixed,
         render: (text, record) => (
           <div>
             {
               this._SELF_.btnEl.map((item, index) => {
-                if (item.type === "edit" && btnsAuthority.includes("edit")) {
-                  const filterList = columns.filter(itm => itm.title == "文件")[0] || {};
+                if (item.type === 'edit' && btnsAuthority.includes('edit')) {
+                  const filterList = columns.filter(itm => itm.title == '文件')[0] || {};
                   const key = filterList.dataIndex;
-                  const fileInfo = record[key] && record[key].split(";")[0];
-                  const list = fileInfo ? fileInfo.split("|") : [];
+                  const fileInfo = record[key] && record[key].split(';')[0];
+                  const list = fileInfo ? fileInfo.split('|') : [];
                   const uid = list[list.length - 2] || null;
                   // const uid = record.
                   return (
                     <Fragment key={item.type}>
                       <Tooltip title="编辑">
                         <a onClick={() => {
-                          let postData = {};
+                          const postData = {};
                           keys[configId].map(item => {
                             if (record[item]) {
                               postData[item] = record[item]
@@ -349,16 +349,16 @@ class AutoFormTable extends PureComponent {
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
-                        this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes("view") && <Divider type="vertical" />
+                        this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
                       }
                     </Fragment>);
                 }
-                if (item.type === "view" && btnsAuthority.includes("view")) {
+                if (item.type === 'view' && btnsAuthority.includes('view')) {
                   // if (item.type === "view") {
                   return (<Fragment key={item.type}>
                     <Tooltip title="详情">
                       <a onClick={() => {
-                        let postData = {};
+                        const postData = {};
                         keys[configId].map(item => {
                           if (record[item]) {
                             postData[item] = record[item]
@@ -369,18 +369,18 @@ class AutoFormTable extends PureComponent {
 
                     </Tooltip>
                     {
-                      this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes("del") && <Divider type="vertical" />
+                      this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
                     }
                   </Fragment>);
                 }
-                if (item.type === "del" && btnsAuthority.includes("del")) {
+                if (item.type === 'del' && btnsAuthority.includes('del')) {
                   return (<Fragment key={item.type}>
                     <Tooltip title="删除">
                       <Popconfirm
                         placement="left"
                         title="确认是否删除?"
                         onConfirm={() => {
-                          let postData = {
+                          const postData = {
                           };
                           keys[configId].map(item => {
                             if (record[item]) {
@@ -388,11 +388,11 @@ class AutoFormTable extends PureComponent {
                             }
                           })
                           dispatch({
-                            type: "autoForm/del",
+                            type: 'autoForm/del',
                             payload: {
-                              configId: configId,
-                              FormData: JSON.stringify(postData)
-                            }
+                              configId,
+                              FormData: JSON.stringify(postData),
+                            },
                           })
                         }}
                         okText="是"
@@ -419,13 +419,13 @@ class AutoFormTable extends PureComponent {
               this.props.appendHandleRows && this.props.appendHandleRows(record)
             }
           </div>
-        )
+        ),
       });
     }
 
 
     const rowSelection = checkboxOrRadio ? {
-      type: checkboxOrRadio == 1 ? "radio" : "checkbox",
+      type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -439,7 +439,7 @@ class AutoFormTable extends PureComponent {
       action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
       data: {
         ConfigID: configId,
-      }
+      },
       // onChange(info) {
       //   const status = info.file.status;
       //   if (status !== 'uploading') {
@@ -459,8 +459,7 @@ class AutoFormTable extends PureComponent {
           {this.props.appendHandleButtons && this.props.appendHandleButtons(this.state.selectedRowKeys, this.state.selectedRows)}
           {
             // 更多操作
-            this._SELF_.moreBtns.length ? <Dropdown overlay={() => {
-              return <Menu onClick={this.moreClick}>
+            this._SELF_.moreBtns.length ? <Dropdown overlay={() => <Menu onClick={this.moreClick}>
                 {
                   this._SELF_.moreBtns.map(item => {
                     return <Menu.Item key={item.type}>
@@ -469,8 +468,7 @@ class AutoFormTable extends PureComponent {
                     </Menu.Item>
                   })
                 }
-              </Menu>
-            }}>
+              </Menu>}>
               <Button>
                 更多操作 <Icon type="down" />
               </Button>
@@ -505,8 +503,7 @@ class AutoFormTable extends PureComponent {
           }
           onChange={this._handleTableChange}
           rowSelection={rowSelection}
-          onRow={(record, index) => {
-            return {
+          onRow={(record, index) => ({
               onClick: event => {
                 const { selectedRowKeys } = this.state;
                 let keys = selectedRowKeys;
@@ -524,17 +521,16 @@ class AutoFormTable extends PureComponent {
                   selectedRowKeys: keys
                 })
               },
-            }
-          }}
+            })}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
-            pageSize: pageSize,
-            current: current,
+            pageSize,
+            current,
             onChange: this.onTableChange,
             onShowSizeChange: this.onTableChange,
             pageSizeOptions: ['10', '20', '30', '40'],
-            total: total
+            total,
           }}
           {...this.props}
           columns={_columns}
@@ -558,8 +554,8 @@ class AutoFormTable extends PureComponent {
                 dispatch({
                   type: 'autoForm/exportTemplet',
                   payload: {
-                    configId
-                  }
+                    configId,
+                  },
                 })
               }}>下载导入模板</a></Col>
           </Row>
