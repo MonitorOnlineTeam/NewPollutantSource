@@ -77,9 +77,14 @@ class SiteDailyPage extends PureComponent {
     })
 
     this.props.dispatch({
-      type: 'autoForm/getRegions',
-      callback: (sucRes) => {
-        let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+      type: 'common/getEnterpriseAndPoint',
+      payload:{
+        RegionCode: "",
+        PointMark: "2"
+      },
+      callback: (sucRes, defaultValue) => {
+        // let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+        let RegionCode = defaultValue;
         this.setState({
           defaultRegionCode: RegionCode
         })
