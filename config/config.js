@@ -376,6 +376,11 @@ export default {
                   path: '/dataquery/originaldata',
                   component: './monitoring/originaldata',
                 },
+                 {
+                   name: 'alarmverifyrecord',
+                   path: '/dataquery/alarmverifyrecord',
+                   component: './monitoring/alarmverifyrecord/index',
+                 },
               ]
             },
             {

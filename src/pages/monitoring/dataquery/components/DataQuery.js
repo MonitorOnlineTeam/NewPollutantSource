@@ -4,7 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
     Card,
     Spin,
-    message, Empty, Switch,
+    message, Empty, Radio,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -38,6 +38,7 @@ class DataQuery extends Component {
             format: 'YYYY-MM-DD HH:mm:ss',
             selectDisplay: false,
             dd: [],
+            selectP: '',
         };
     }
 
@@ -88,8 +89,8 @@ class DataQuery extends Component {
                 if (date[1].add(-12, 'month') > date[0]) {
                     message.info('日数据时间间隔不能超过1年个月');
                     return;
-                    date[1].add(-12, 'month')
                 }
+                 date[1].add(-12, 'month')
                 break;
             default:
                 return;
@@ -143,7 +144,7 @@ class DataQuery extends Component {
 
     /** 图表转换 */
     displayChange = checked => {
-        if (!checked) {
+        if (checked !== 'chart') {
             this.setState({
                 displayType: 'table',
                 displayName: '查看图表',
@@ -158,14 +159,22 @@ class DataQuery extends Component {
 
     /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
     getpollutantSelect = () => {
-        const { displayType } = this.state;
+        const {
+          displayType,
+          selectP,
+        } = this.state;
         const { pollutantlist } = this.props;
         if (displayType === 'chart') {
             return (<PollutantSelect
+                mode = "multiple"
                 optionDatas={pollutantlist}
-                defaultValue={this.getpropspollutantcode()}
-                style={{ width: 150, marginRight: 10 }}
+                defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
+                style={{ width: 300, marginRight: 10 }}
                 onChange={this.handlePollutantChange}
+                placeholder="请选择污染物"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
             />);
         }
         return '';
@@ -173,19 +182,29 @@ class DataQuery extends Component {
 
     /**切换污染物 */
     handlePollutantChange = (value, selectedOptions) => {
+        const res = [];
         let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            payloadpollutantCode: value,
-            payloadpollutantName: selectedOptions.props.children,
+        if (selectedOptions.length > 0) {
+        selectedOptions.map((item, key) => {
+                res.push(item.props.children);
+            })
         }
+            historyparams = {
+              ...historyparams,
+              payloadpollutantCode: value.length > 0 ? value.toString() : '',
+              payloadpollutantName: res.length > 0 ? res.toString() : '',
+
+        }
+        this.setState({
+            selectP: value.length > 0 ? value : [],
+        })
+
         this.reloaddatalist(historyparams);
     };
 
     /** 获取第一个污染物 */
     getpropspollutantcode = () => {
         if (this.props.pollutantlist[0]) {
-            console.log('------------------------', this.props.pollutantlist[0].PollutantCode);
             return this.props.pollutantlist[0].PollutantCode;
         }
         return null;
@@ -212,6 +231,7 @@ class DataQuery extends Component {
     changeDgimn = dgimn => {
         this.setState({
             selectDisplay: true,
+            selectP: '',
         })
         const {
             dispatch,
@@ -252,6 +272,7 @@ class DataQuery extends Component {
         if (displayType === 'chart') {
             if (option) {
                 return (<ReactEcharts
+                    theme="light"
                     option={option}
                     lazyUpdate
                     notMerge
@@ -281,11 +302,16 @@ class DataQuery extends Component {
                             {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                            <Switch checkedChildren="图表" unCheckedChildren="数据" onChange={this.displayChange} defaultChecked />
+                            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
+                             this.displayChange(e.target.value)
+                            }}>
+                            <Radio.Button value="chart">图表</Radio.Button>
+                            <Radio.Button value="data">数据</Radio.Button>
+                            </Radio.Group>
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}>
                         {this.loaddata()}
                     </Card.Grid>
                 </Card>
