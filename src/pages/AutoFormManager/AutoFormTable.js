@@ -256,7 +256,7 @@ class AutoFormTable extends PureComponent {
     const { loading, selectedRowKeys } = this.state;
     const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match,parentcode } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
-    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] : 1;
+    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
     let parentCode=match&&match.params&&match.params.parentcode||parentcode;
     // 计算长度

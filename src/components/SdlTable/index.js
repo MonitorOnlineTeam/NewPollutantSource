@@ -16,13 +16,13 @@ class SdlTable extends PureComponent {
     // 处理表格长度，防止错位
     let _columns = (columns || []).map(col => {
       return {
-        ...col,
-        width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
           return text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
             {text}
           </div>
-        }
+        },
+        ...col,
+        width: col.width || DEFAULT_WIDTH,
       }
     })
 

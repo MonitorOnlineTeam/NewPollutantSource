@@ -113,4 +113,28 @@ export function formatPollutantPopover(value, additional) {
   return value || (value === 0 ? 0 : '-');
 }
 
+/**
+ * autoForm 处理form数据
+ * @param {object} values form对象
+ * @param {uid} uid 附件唯一标识
+ */
+export function handleFormData(values, uid) {
+  let formData = {};
+  for (let key in values) {
+    if (values[key] && values[key]["fileList"]) {
+      // 处理附件列表
+      if (uid) {
+        formData[key] = uid;
+      }
+    } else if (values[key] && moment.isMoment(values[key])) {
+      // 格式化moment对象
+      formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
+    } else {
+      formData[key] = values[key] && values[key].toString()
+    }
+  }
+
+  return formData;
+}
+
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
