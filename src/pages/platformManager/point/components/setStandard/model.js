@@ -17,9 +17,9 @@ import {
   getstandardlibraryfiles,
   getuselist,
   getpollutantbydgimn,
-  usepoint,
+  useStandard,
   isusepollutant,
-  getmonitorpointpollutant,
+  getMonitorPointPollutantDetails,
   editmonitorpointPollutant,
   useallDGIMNbyid,
 } from './service';
@@ -51,43 +51,44 @@ export default Model.extend({
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(location => {});
+      history.listen(location => { });
     },
   },
   effects: {
     /**获取标准库列表 */
-    *getlist({ payload }, { call, update }) {
-      const result = yield call(getlist, {
-        ...payload,
-      });
+    // *getlist({ payload }, { call, update }) {
+    //   const result = yield call(getlist, {
+    //     ...payload,
+    //   });
 
-      if (result.requstresult === '1') {
-        yield update({
-          requstresult: result.requstresult,
-          list: result.data,
-          total: result.total,
-          pageIndex: payload.pageIndex,
-          pageSize: payload.pageSize,
-        });
-      } else {
-        yield update({
-          requstresult: result.requstresult,
-          list: [],
-          total: 0,
-          pageIndex: null,
-          pageSize: null,
-        });
-      }
-    },
+    //   if (result.requstresult === '1') {
+    //     yield update({
+    //       requstresult: result.requstresult,
+    //       list: result.data,
+    //       total: result.total,
+    //       pageIndex: payload.pageIndex,
+    //       pageSize: payload.pageSize,
+    //     });
+    //   } else {
+    //     yield update({
+    //       requstresult: result.requstresult,
+    //       list: [],
+    //       total: 0,
+    //       pageIndex: null,
+    //       pageSize: null,
+    //     });
+    //   }
+    // },
     /**查询单个监测点下污染物列表 */
     *getpollutantbydgimn({ payload }, { call, update }) {
       const result = yield call(getpollutantbydgimn, {
         ...payload,
       });
-      if (result.requstresult === '1') {
+      debugger
+      if (result.IsSuccess) {
         yield update({
           requstresult: result.requstresult,
-          PollutantListByDGIMN: result.data,
+          PollutantListByDGIMN: result.Datas,
         });
       } else {
         yield update({
@@ -154,21 +155,18 @@ export default Model.extend({
       });
     },
     /**应用到单个监测点 */
-    *usepoint({ payload }, { call, put, update }) {
-      const result = yield call(usepoint, {
+    *useStandard({ payload }, { call, put, update }) {
+      const result = yield call(useStandard, {
         ...payload,
       });
-      yield update({
-        requstresult: result.requstresult,
-        reason: result.reason,
-      });
+     
       yield put({
         type: 'getpollutantbydgimn',
         payload: {
           ...payload,
         },
       });
-      payload.callback();
+      payload.callback(result);
     },
     /**删除标准库主表 */
     *deletestandardlibrarybyid({ payload }, { call, put, update }) {
@@ -334,45 +332,60 @@ export default Model.extend({
       const result = yield call(isusepollutant, {
         ...payload,
       });
-      yield update({
-        requstresult: result.requstresult,
-        reason: result.reason,
-      });
-      yield put({
-        type: 'getpollutantbydgimn',
-        payload: {
-          ...payload,
-        },
-      });
+      if (result.IsSuccess) {
+        yield put({
+          type: 'getpollutantbydgimn',
+          payload: {
+            ...payload,
+          },
+        });
+      }else
+      {
+
+      }
+      // yield update({
+      //   requstresult: result.requstresult,
+      //   reason: result.reason,
+      // });
+
     },
     /**根据监测点和污染物编号查询实体 */
-    *getmonitorpointpollutant({ payload }, { call, update }) {
-      const result = yield call(getmonitorpointpollutant, {
+    *getMonitorPointPollutantDetails({ payload }, { call, update }) {
+      const result = yield call(getMonitorPointPollutantDetails, {
         ...payload,
       });
       yield update({
-        editpollutant: result.data[0],
+        editpollutant: result.Datas[0],
         requstresult: result.requstresult,
         reason: result.reason,
       });
-      payload.callback();
+      payload.callback(result);
     },
     /**监测点-设置监测标准-编辑污染物 */
     *editmonitorpointPollutant({ payload }, { call, put, update }) {
       const result = yield call(editmonitorpointPollutant, {
         ...payload,
       });
-      yield update({
-        requstresult: result.requstresult,
-        reason: result.reason,
-      });
-      yield put({
-        type: 'getpollutantbydgimn',
-        payload: {
-          ...payload,
-        },
-      });
-      payload.callback();
+      if(result.IsSuccess)
+      {
+        yield put({
+          type: 'getpollutantbydgimn',
+          payload: {
+            ...payload,
+          },
+        });
+      }
+      // yield update({
+      //   requstresult: result.requstresult,
+      //   reason: result.reason,
+      // });
+      // yield put({
+      //   type: 'getpollutantbydgimn',
+      //   payload: {
+      //     ...payload,
+      //   },
+      // });
+      payload.callback(result);
     },
   },
   reducers: {
