@@ -26,7 +26,18 @@ class Index extends Component {
     }
 
     render() {
-        const { mode, onChange, allowClear, style, placeholder, defaultValue, allpollutant } = this.props;
+        const {
+          mode,
+          onChange,
+          allowClear,
+          style,
+          placeholder,
+          defaultValue,
+          allpollutant,
+          maxTagCount,
+          maxTagTextLength,
+          maxTagPlaceholder,
+        } = this.props;
         console.log('---------------------------------------------', defaultValue);
         return (
             <Select
@@ -36,9 +47,9 @@ class Index extends Component {
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
                 defaultValue={defaultValue || (allpollutant ? -1 : null)}
-                maxTagCount={1}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
+                maxTagCount={maxTagCount}
+                maxTagTextLength={maxTagTextLength}
+                maxTagPlaceholder={maxTagPlaceholder}
             >
                 {
                      this.getoption()

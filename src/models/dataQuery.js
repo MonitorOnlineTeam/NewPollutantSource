@@ -33,14 +33,24 @@ export default Model.extend({
     },
     effects: {
         * querypollutantlist({ payload,
-        }, { call, update, put, take }) {
+        }, { call, update, put, take, select }) {
             const body = {
                 DGIMNs: payload.dgimn,
             }
             const result = yield call(querypollutantlist, body);
+            let { historyparams } = yield select(_ => _.dataquery);
+            const { pollutantlist } = yield select(_ => _.dataquery);
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
+                  historyparams = {
+                      ...historyparams,
+                      payloadpollutantCode: result[0].PollutantCode,
+                      payloadpollutantName: result[0].PollutantName,
+                  }
+                  yield update({
+                    historyparams,
+                  });
                 yield put({
                   type: 'queryhistorydatalist',
                   payload,
@@ -55,22 +65,21 @@ export default Model.extend({
             payload,
         }, { select, call, update }) {
             const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-            if (!pollutantlist[0]) {
+            debugger;
+            if (!pollutantlist[0] || !historyparams.payloadpollutantCode) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
-            debugger;
             if (payload.dgimn) {
                 historyparams.DGIMNs = payload.dgimn;
             }
-            // 如果是初次加载的话
-            if (!historyparams.payloadpollutantCode && pollutantlist.length > 0) {
-                historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
-                historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
-            }
+            // // 如果是初次加载的话
+            // if (!historyparams.payloadpollutantCode && pollutantlist.length > 0) {
+            //     historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
+            //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
+            // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
-            console.log(result.length);
             if (result.length === 0) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
@@ -209,7 +218,6 @@ export default Model.extend({
                     series: arr,
                 };
             }
-
             yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.total });
         },
     },
