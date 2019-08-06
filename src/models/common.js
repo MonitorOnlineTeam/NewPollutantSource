@@ -48,6 +48,8 @@ export default Model.extend({
           yield update({ level: result.Datas.level });
         }
         yield update({ enterpriseAndPointList: result.Datas.list });
+
+        payload.callback && payload.callback()
       }
     },
   },
