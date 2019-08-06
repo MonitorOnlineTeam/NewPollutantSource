@@ -13,7 +13,24 @@ import { post } from '@/utils/request';
  *  */
 export async function queryoverdatalist(params) {
     const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetExceptionProcessingList', params, null);
-    return result === null ? {
-      data: null,
-    } : result;
+    return result;
+}
+/** 更新报警记录表
+ * {
+        ExceptionProcessingID: "1，2，3",
+        ExceptionVerifyID: "4",
+    }
+ *  */
+export async function UpdateExceptionProcessing(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/UpdateExceptionProcessing', params, null);
+  return result;
+}
+/** 报警记录详情
+ * {
+        ExceptionVerifyID: "4",
+    }
+ *  */
+export async function GetAlarmRecordDetails(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/GetAlarmRecordDetails', params, null);
+  return result;
 }

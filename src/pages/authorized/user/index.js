@@ -19,9 +19,8 @@ import {
   message,
   DatePicker,
   InputNumber,
-  Tooltip
+  Tooltip,
 } from 'antd';
-import styles from './style.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -29,11 +28,12 @@ import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
+import styles from './style.less';
 const { confirm } = Modal;
 
 @connect(({ loading, autoForm }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
-  autoForm: autoForm,
+  autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
@@ -48,15 +48,15 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
+    debugger;
     const { match } = this.props;
     this.reloadPage(match.params.configId);
   }
 
   componentWillReceiveProps(nextProps) {
-    //debugger;
+    // debugger;
     if (nextProps.location.pathname != this.props.location.pathname) {
-      if (nextProps.match.params.configId !== this.props.routerConfig)
-        this.reloadPage(nextProps.match.params.configId);
+      if (nextProps.match.params.configId !== this.props.routerConfig) {this.reloadPage(nextProps.match.params.configId);}
     }
   }
 
@@ -71,10 +71,11 @@ export default class UserInfoIndex extends Component {
     dispatch({
       type: 'autoForm/getPageConfig',
       payload: {
-        configId: configId,
+        configId,
       },
     });
   };
+
   confirm(userid) {
     this.props.dispatch({
       type: 'userinfo/deluserandroledep',
@@ -83,6 +84,7 @@ export default class UserInfoIndex extends Component {
       },
     });
   }
+
   showConfirm = (selectedRowKeys, selectedRows) => {
     if (selectedRowKeys.length == 0) {
       message.error('请至少选中一行');
@@ -95,7 +97,7 @@ export default class UserInfoIndex extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk() {
-        var str = [];
+        let str = [];
         selectedRows.map(item => str.push(item['dbo.Base_UserInfo.User_ID']));
         console.log(str);
         dispatch({
@@ -114,6 +116,7 @@ export default class UserInfoIndex extends Component {
   cancel(e) {
     console.log(e);
   }
+
   render() {
     const {
       searchConfigItems,
@@ -125,7 +128,7 @@ export default class UserInfoIndex extends Component {
       dispatch,
     } = this.props;
     const searchConditions = searchConfigItems[configId] || [];
-    const columns = tableInfo[configId] ? tableInfo[configId]['columns'] : [];
+    const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
     if (this.props.loading) {
       return (
         <Spin
@@ -171,8 +174,7 @@ export default class UserInfoIndex extends Component {
                   row,
                 });
               }}
-              appendHandleButtons={(selectedRowKeys, selectedRows) => {
-                return (
+              appendHandleButtons={(selectedRowKeys, selectedRows) => (
                   <Fragment>
                     <Button
                       type="danger"
@@ -183,10 +185,8 @@ export default class UserInfoIndex extends Component {
                       重置密码
                     </Button>
                   </Fragment>
-                );
-              }}
-              appendHandleRows={row => {
-                return (
+                )}
+              appendHandleRows={row => (
                   <Fragment>
                     <Tooltip title="编辑">
                       <a
@@ -230,8 +230,7 @@ export default class UserInfoIndex extends Component {
                       </Popconfirm>
                     </Tooltip>
                   </Fragment>
-                );
-              }}
+                )}
             // loadDataSourceParams={[
             //   {
             //     Key: "test",

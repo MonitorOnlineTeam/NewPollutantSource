@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  Table
+  Table,
 } from 'antd';
 import styles from './index.less'
 
@@ -11,6 +11,7 @@ class SdlTable extends PureComponent {
     super(props);
     this.state = {};
   }
+
   render() {
     const { columns } = this.props;
     // 处理表格长度，防止错位
@@ -26,7 +27,7 @@ class SdlTable extends PureComponent {
       }
     })
 
-    let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <Table
         rowKey={record => record.id || record.ID}
