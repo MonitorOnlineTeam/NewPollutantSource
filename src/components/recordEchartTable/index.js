@@ -288,8 +288,8 @@ class Index extends Component {
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
-                    style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style }}
                 >
+                    <Card.Grid  style={{ width: '100%',  height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
                     {
                         this.props.exmodellistLoading ? <Spin
                             style={{
@@ -340,7 +340,7 @@ class Index extends Component {
                             }</div>
                     }
 
-
+        </Card.Grid>
                 </Card>
             </div>
         );

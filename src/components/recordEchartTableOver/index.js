@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin ,message} from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -17,7 +17,7 @@ import moment from 'moment';
     overmodellistLoading: loading.effects['recordEchartTable/getovermodellist'],
     overData: recordEchartTable.overData,
     overDataLoading: loading.effects['recordEchartTable/getoverdata'],
-    overfirstData:recordEchartTable.overfirstData
+    overfirstData: recordEchartTable.overfirstData
 }))
 @Form.create()
 class Index extends Component {
@@ -248,7 +248,7 @@ class Index extends Component {
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
-                overfirstData:[],
+                overfirstData: [],
             },
         })
         this.props.dispatch({
@@ -265,7 +265,6 @@ class Index extends Component {
     }
     render() {
         const { column } = this.state
-        debugger
         const option = {
             legend: {},
             tooltip: {},
@@ -297,9 +296,8 @@ class Index extends Component {
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
-                    style={{ width: '100%',  height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}
                 >
-                    <Card.Grid>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
                         {
                             this.props.overmodellistLoading ? <Spin
                                 style={{
@@ -325,25 +323,26 @@ class Index extends Component {
                                         />
 
                                         {
-                                            this.props.overDataLoading ? <Spin
-                                                style={{
-                                                    width: '100%',
-                                                    height: 'calc(100vh/2)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center'
-                                                }}
-                                                size="large"
-                                            /> :
-                                                <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                                    <SdlTable
-
-                                                        // style={{ width: "400px", height: "500px" }}
-                                                        columns={column}
-                                                        dataSource={this.props.overfirstData}
-                                                    >
-                                                    </SdlTable>
-                                                </div>
+                                            // this.props.overDataLoading ? <Spin
+                                            //     style={{
+                                            //         width: '100%',
+                                            //         height: 'calc(100vh/2)',
+                                            //         display: 'flex',
+                                            //         alignItems: 'center',
+                                            //         justifyContent: 'center'
+                                            //     }}
+                                            //     size="large"
+                                            // /> :
+                                            //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                            <SdlTable
+                                                loading={this.props.overDataLoading}
+                                                scroll={{ y: 300 }}
+                                                // style={{ width: "400px", height: "500px" }}
+                                                columns={column}
+                                                dataSource={this.props.overfirstData}
+                                            >
+                                            </SdlTable>
+                                            // </div>
                                         }
                                     </div>
                                 }</div>
