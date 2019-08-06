@@ -1,5 +1,5 @@
 /*
- * @desc: AutoForm添加公共页面
+ * @desc: form 组件
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
@@ -23,11 +23,13 @@ import {
 } from 'antd';
 import moment from 'moment';
 import cuid from 'cuid';
+import { handleFormData } from '@/utils/utils'
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import router from 'umi/router';
 import { checkRules } from '@/utils/validator';
-import config from '@/config'
+import config from '../../../config/config'
+// import config from "@/config"
 import MonitorContent from '../../components/MonitorContent/index';
 import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
@@ -85,7 +87,6 @@ class SdlForm extends PureComponent {
       isEdit: props.isEdit
     };
     this.renderFormItem = this.renderFormItem.bind(this);
-    // this.openMapModal = this.openMapModal.bind(this);
     this.renderContent = this.renderContent.bind(this);
   }
 
@@ -284,7 +285,8 @@ class SdlForm extends PureComponent {
           if (item.type === "上传") {
             // if (!isEdit) {
               const props = {
-                action: config.fileUploadUrl,
+                action: config.proxy["/upload"].target + "/rest/PollutantSourceApi/UploadApi/PostFiles",
+                // action: config.fileUploadUrl,
                 // onChange: this.handleChange(fieldName),
                 onChange(info) {
                   if (info.file.status === 'done') {
@@ -327,7 +329,7 @@ class SdlForm extends PureComponent {
           const min = vid.replace(/[^\d]/g, '') * 1
           return {
             min: min / 1,
-            message: `最少输入${max}位`,
+            message: `最少输入${min}位`,
           }
         } else if (vid.indexOf("rangeLength") > -1) { // 最小最大长度限制
           const range = vid.match(/\d+(,\d+)?/g);
@@ -396,18 +398,19 @@ class SdlForm extends PureComponent {
     const { uid, configId, isEdit, keysParams } = this._SELF_;
     form.validateFields((err, values) => {
       if (!err) {
-        let formData = {};
-        for (let key in values) {
-          if (values[key] && values[key]["fileList"]) {
-            // 处理附件列表
-            formData[key] = uid;
-          } else if (values[key] && moment.isMoment(values[key])) {
-            // 格式化moment对象
-            formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
-          } else {
-            formData[key] = values[key] && values[key].toString()
-          }
-        }
+        // let formData = {};
+        // for (let key in values) {
+        //   if (values[key] && values[key]["fileList"]) {
+        //     // 处理附件列表
+        //     formData[key] = uid;
+        //   } else if (values[key] && moment.isMoment(values[key])) {
+        //     // 格式化moment对象
+        //     formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
+        //   } else {
+        //     formData[key] = values[key] && values[key].toString()
+        //   }
+        // }
+        let formData = handleFormData(values, uid)
         // 编辑时处理主键
         if (isEdit) {
           const keys = keysParams;
@@ -472,49 +475,9 @@ class SdlForm extends PureComponent {
           </Divider>
         } */}
       </Form>
-      {/* {
-        <MapModal
-          setMapVisible={this.setMapVisible}
-          MapVisible={this.state.MapVisible}
-          setPoint={this.setPoint}
-          setMapPolygon={this.setMapPolygon}
-          polygon={this.state.polygon}
-          longitude={this.state.longitude}
-          latitude={this.state.latitude}
-          EditMarker={this.state.EditMarker}
-          EditPolygon={this.state.EditPolygon}
-        />
-      } */}
     </Card>
   }
 
-  // openMapModal(obj) {
-  //   let { form } = this.props;
-  //   this.setState({
-  //     MapVisible: true,
-  //     EditMarker: obj.EditMarker || false,
-  //     EditPolygon: obj.EditPolygon || false,
-  //     polygon: form.getFieldValue(obj.FieldName) || [],
-  //     longitude: form.getFieldValue("Longitude"),
-  //     latitude: form.getFieldValue("Latitude")
-  //   });
-  // }
-
-  // setMapVisible = (flag) => {
-  //   this.setState({
-  //     MapVisible: flag
-  //   });
-  // }
-
-  // setPoint = (obj) => {
-  //   let { form: { setFieldsValue } } = this.props;
-  //   setFieldsValue({ Longitude: obj.Longitude, Latitude: obj.Latitude });
-  // }
-
-  // setMapPolygon = (obj) => {
-  //   let { form: { setFieldsValue } } = this.props;
-  //   setFieldsValue({ Col6: obj });
-  // }
 
   render() {
     let { loadingAdd, loadingConfig, dispatch, breadcrumb } = this.props;

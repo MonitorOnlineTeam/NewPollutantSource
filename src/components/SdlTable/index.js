@@ -15,15 +15,17 @@ class SdlTable extends PureComponent {
   render() {
     const { columns } = this.props;
     // 处理表格长度，防止错位
-    const _columns = (columns || []).map(col => ({
+    let _columns = (columns || []).map(col => {
+      return {
+        render: (text, record) => {
+          return text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            {text}
+          </div>
+        },
         ...col,
         width: col.width || DEFAULT_WIDTH,
-        // render: (text, record) => {
-        //   return text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-        //     {text}
-        //   </div>
-        // }
-      }))
+      }
+    })
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (

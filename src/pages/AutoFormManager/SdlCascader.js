@@ -38,10 +38,10 @@ class SdlCascader extends Component {
   render() {
     const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
     const options = data.length ? data : enterpriseAndPointList;
-    const labelArr = itemName.split('.');
-    const valueArr = itemValue.split('.');
-    let label = labelArr.length > 1 ? itemName.split('.').pop().toString() : itemName;
-    let value = valueArr.length > 1 ? itemValue.split('.').pop().toString() : itemValue;
+    // const labelArr = itemName.split('.');
+    // const valueArr = itemValue.split('.');
+    // let label = labelArr.length > 1 ? itemName.split('.').pop().toString() : itemName;
+    // let value = valueArr.length > 1 ? itemValue.split('.').pop().toString() : itemValue;
     if (level == 1) {
       return (
         <Select
@@ -58,7 +58,7 @@ class SdlCascader extends Component {
     }
     return (
       <Cascader
-        fieldNames={{ label: label, value: value, children: 'children' }}
+        fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
         changeOnSelect={true}
         {...this.props}

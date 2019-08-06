@@ -35,7 +35,6 @@ export function afterDecimalNum(rule, value, callback) {
     len = rule.num;
   }
   let arr = value.toString().split(".");
-  console.log('arr=', arr);
   if (arr.length == 2) {
     if (arr[1].length < 1) {
       callback(rule.messageMin);
