@@ -292,8 +292,8 @@ export async function getpollutantbydgimn(params) {
   const body = {
     DGIMN: params.DGIMN,
   };
-  const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibrary/GetDGIMNPollutantList',
+  const result = get(
+    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetStandardPollutantsByDgimn',
     body,
     null,
   );
@@ -304,13 +304,13 @@ export async function getpollutantbydgimn(params) {
     : result;
 }
 // 应用到单个排口
-export async function usepoint(params) {
+export async function useStandard(params) {
   const body = {
     DGIMN: params.DGIMN,
     StandardLibraryID: params.StandardLibraryID,
   };
   const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibrary/UsePoint',
+    '/api/rest/PollutantSourceApi/StandardLibraryApi/UseStandard',
     body,
     null,
   );
@@ -344,7 +344,7 @@ export async function isusepollutant(params) {
     Enalbe: params.Enalbe,
   };
   const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibrary/IsUsePollutant',
+    '/api/rest/PollutantSourceApi/StandardLibraryApi/UsePollutant',
     body,
     null,
   );
@@ -355,13 +355,13 @@ export async function isusepollutant(params) {
     : result;
 }
 // 根据排口和污染物编号查询实体
-export async function getmonitorpointpollutant(params) {
+export async function getMonitorPointPollutantDetails(params) {
   const body = {
     DGIMN: params.DGIMN,
-    PollutantCode: params.PollutantCode,
+    pollutantCode: params.PollutantCode,
   };
-  const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibrary/GetMonitorPointPollutant',
+  const result = get(
+    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetMonitorPointPollutantDetails',
     body,
     null,
   );
@@ -388,7 +388,7 @@ export async function editmonitorpointPollutant(params) {
     AbnormalLowerLimit: params.AbnormalLowerLimit,
   };
   const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibrary/EditMonitorPointPollutant',
+    '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',
     body,
     null,
   );

@@ -120,6 +120,7 @@ export default Model.extend({
             let option = null;
             if (seriesdata && seriesdata.length > 0) {
                 option = {
+
                     title: {
                         // text: '2018-05-17~2018-05-18'
                     },

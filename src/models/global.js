@@ -8,7 +8,7 @@ const GlobalModel = {
     notices: [],
     btnsAuthority: [],
     changePwdVisible: false,
-    configInfo:null
+    configInfo: null
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -102,6 +102,7 @@ const GlobalModel = {
     *getSystemConfigInfo({ payload }, { call, put, select }) {
       const response = yield call(services.getSystemConfigInfo);
       if (response.IsSuccess) {
+        console.log("ConfigInfo=", response.Datas);
         yield put({
           type: 'setConfigInfo',
           payload: response.Datas,
