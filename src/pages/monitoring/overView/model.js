@@ -72,7 +72,7 @@ export default Model.extend({
     *init({ payload }, { call, take, select }) {
       const dd1 = yield select(state => state.common);
       yield take('common/getPollutantTypeList/@@end');
-      
+
       payload.callback();
     },
 
@@ -127,6 +127,7 @@ export default Model.extend({
         body = {};
       }
       const data = yield call(querydatalist, body);
+      console.log("data=", data)
       if (data) {
         data.map(item => {
           item.position = {
@@ -136,6 +137,7 @@ export default Model.extend({
           item.key = item.DGIMN;
         });
       }
+      debugger
       let { selectpoint } = yield select(_ => _.overview);
       if (selectpoint) {
         const newpoint = data.find(value => value.DGIMN == selectpoint.DGIMN);
@@ -145,7 +147,7 @@ export default Model.extend({
       }
       yield update({ data });
       yield update({ dataTemp: data });
-      yield update({ dataOne: data == null ? '0' : data[0].DGIMN });
+      yield update({ dataOne: data == null ? '0' : data.length == 0 ? '0' : data[0].DGIMN });
       if (payload.callback === undefined) {
       } else {
         payload.callback(data);
