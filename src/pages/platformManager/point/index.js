@@ -131,7 +131,7 @@ export default class MonitorPoint extends Component {
       sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
-    debugger;
+    // debugger;
     switch (type) {
       case 1:
         // 废水

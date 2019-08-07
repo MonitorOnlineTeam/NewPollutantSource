@@ -107,7 +107,7 @@ class MapView extends Component {
   // 渲染坐标点
   renderMarker = extData =>
     // let extData = extData;
-     <div
+    <div
       onMouseEnter={() => {
         if (this.state.infoWindowVisible === false) {
           this.setState({
@@ -309,9 +309,10 @@ class MapView extends Component {
     const { defaultMapInfo } = this.props;
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
       const timer = setInterval(() => {
-        if (_thismap) {
+        if (_thismap && nextProps.defaultMapInfo) {
+          debugger;
           _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
-        this.setState({
+          this.setState({
             coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
             currentEntInfo: nextProps.defaultMapInfo,
             loading: false,
@@ -374,7 +375,7 @@ class MapView extends Component {
       },
       tooltip: {
         trigger: 'axis',
-        formatter (params, ticket, callback) {
+        formatter(params, ticket, callback) {
           let res = `${params[0].axisValue}时<br/>`;
           params.map(item => {
             res += `${item.seriesName}:${item.value}<br />`;
@@ -603,14 +604,14 @@ class MapView extends Component {
                           bordered>
                           {
                             this.props.tableList.map(item => <Descriptions.Item label={item.label}><div onClick={() => {
-                                this.props.dispatch({
-                                  type: "mapView/updateChartData",
-                                  payload: {
-                                    key: item.key,
-                                    label: item.label
-                                  }
-                                })
-                              }} className={styles.content}>{item.value}</div></Descriptions.Item>)
+                              this.props.dispatch({
+                                type: "mapView/updateChartData",
+                                payload: {
+                                  key: item.key,
+                                  label: item.label
+                                }
+                              })
+                            }} className={styles.content}>{item.value}</div></Descriptions.Item>)
                           }
                         </Descriptions>
                         {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
@@ -653,7 +654,7 @@ class MapView extends Component {
             </Radio.Group>
           </div>
           <Modal
-            title={`${this.state.currentPointInfo.title  }详情`}
+            title={`${this.state.currentPointInfo.title}详情`}
             width="80%"
             footer={null}
             style={{ maxHeight: '80vh' }}
@@ -671,19 +672,19 @@ class MapView extends Component {
           >
             <Tabs>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} style={{maxHeight: '60vh'}} />
+                <DataQuery DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh'}} />
+                <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} style={{maxHeight: '60vh'}} />
+                <AlarmRecord DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} style={{maxHeight: '60vh'}}/>
+                <RecordEchartTable DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} style={{maxHeight: '60vh'}} />
+                <RecordEchartTableOver DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
               </TabPane>
             </Tabs>
           </Modal>

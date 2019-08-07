@@ -204,7 +204,7 @@ class YsyShowVideo extends Component {
 
   /** 实时视频视频按钮 */
   btnClick = opt => {
-    debugger;
+    // debugger;
     if (opt === 2) {
       this.setState({
         displayRStartBtn: 'block',
