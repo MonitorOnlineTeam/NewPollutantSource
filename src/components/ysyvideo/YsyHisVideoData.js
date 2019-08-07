@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { Table, Card } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from './Video.less';
+import styles from './index.less';
 import config from '@/config';
 
-@connect(({ video, loading }) => ({
-  isloading: loading.effects['video/queryhistorydatalisthis'],
-  hisrealdata: video.hisrealdataList.hisrealdata,
-  total: video.hisrealdataList.total,
-  pageSize: video.hisrealdataList.pageSize,
-  pageIndex: video.hisrealdataList.pageIndex,
-  hiscolumns: video.hiscolumns,
+@connect(({ videodata, loading }) => ({
+  isloading: loading.effects['videodata/queryhistorydatalisthis'],
+  hisrealdata: videodata.hisrealdataList.hisrealdata,
+  total: videodata.hisrealdataList.total,
+  pageSize: videodata.hisrealdataList.pageSize,
+  pageIndex: videodata.hisrealdataList.pageIndex,
+  hiscolumns: videodata.hiscolumns,
 }))
 class YsyHisVideoData extends Component {
   constructor(props) {
@@ -71,7 +71,7 @@ class YsyHisVideoData extends Component {
   getPollutantTitle = () => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'video/querypollutantlisthis',
+      type: 'videodata/querypollutantlisthis',
       payload: { dgimn },
     });
   };
@@ -79,7 +79,7 @@ class YsyHisVideoData extends Component {
   getRealTime = (beginTime, endTime, pageIndex, pageSize) => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'video/queryhistorydatalisthis',
+      type: 'videodata/queryhistorydatalisthis',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',
@@ -103,7 +103,7 @@ class YsyHisVideoData extends Component {
     } = this.props;
     const { beginDate, endDate } = this.state;
     dispatch({
-      type: 'video/queryhistorydatalisthis',
+      type: 'videodata/queryhistorydatalisthis',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',

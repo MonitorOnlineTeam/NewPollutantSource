@@ -14,10 +14,10 @@ import {
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
-import HistoryVideo from './components/YsyHisVideoData';
-import YsyRealVideoData from './components/YsyRealVideoData';
+import HistoryVideo from './YsyHisVideoData';
+import YsyRealVideoData from './YsyRealVideoData';
 import config from '@/config';
-import VideoSelect from '../../../../components/VideoSelect'
+import VideoSelect from '../VideoSelect'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -27,10 +27,10 @@ const { TabPane } = Tabs;
 add by xpy
 */
 
-@connect(({ video, loading }) => ({
-  vIsLoading: loading.effects['video/getvideolist'],
-  videoList: video.videoList,
-  ysyrealtimevideofullurl: video.ysyvideoListParameters.realtimevideofullurl,
+@connect(({ videodata, loading }) => ({
+  vIsLoading: loading.effects['videodata/getvideolist'],
+  videoList: videodata.videoList,
+  ysyrealtimevideofullurl: videodata.ysyvideoListParameters.realtimevideofullurl,
 }))
 class YsyShowVideo extends Component {
   constructor(props) {
@@ -67,6 +67,7 @@ class YsyShowVideo extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
+    // debugger;
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.setState({
         dgimn: nextProps.DGIMN,
@@ -146,7 +147,7 @@ class YsyShowVideo extends Component {
 /** 根据排口dgimn获取它下面的摄像头 */
 getvideolist= dgimn => {
   this.props.dispatch({
-    type: 'video/getvideolist',
+    type: 'videodata/getvideolist',
     payload: {
       dgimn,
       callback: data => {
@@ -196,7 +197,7 @@ getvideolist= dgimn => {
   getVideoIp = (type, id) => {
     const { match, dispatch } = this.props;
     dispatch({
-      type: 'video/ysyvideourl',
+      type: 'videodata/ysyvideourl',
       payload: {
         VedioCameraID: id,
         type,
@@ -338,7 +339,7 @@ getvideolist= dgimn => {
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
-      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)' }}>< div style = {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
           {
             textAlign: 'center',
           }
@@ -348,7 +349,7 @@ getvideolist= dgimn => {
         /></div ></Card>);
     }
     return (
-        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px' }}>
+        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
           <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
             <div
               className={styles.divv}

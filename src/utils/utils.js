@@ -1,5 +1,5 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
-import { Icon, Badge, Popover } from 'antd';
+import { Icon, Badge, Popover,message } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -162,4 +162,28 @@ export function getTimeDistance(type) {
   const year = now.getFullYear();
   return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
 }
+/**
+ * autoForm 处理form数据
+ * @param {object} values form对象
+ * @param {uid} uid 附件唯一标识
+ */
+export function handleFormData(values, uid) {
+  let formData = {};
+  for (let key in values) {
+    if (values[key] && values[key]["fileList"]) {
+      // 处理附件列表
+      if (uid) {
+        formData[key] = uid;
+      }
+    } else if (values[key] && moment.isMoment(values[key])) {
+      // 格式化moment对象
+      formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
+    } else {
+      formData[key] = values[key] && values[key].toString()
+    }
+  }
+
+  return formData;
+}
+
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };

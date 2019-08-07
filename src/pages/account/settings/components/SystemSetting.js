@@ -58,7 +58,7 @@ class SystemSetting extends Component {
     e.preventDefault();
     const that = this;
     this.props.form.validateFieldsAndScroll((err, values) => {
-      debugger;
+      // debugger;
       if (!err) {
         that.props.dispatch({
           type: 'login/editLoginInfo',

@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
-import MonitorContent from '@/components/MonitorContent';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlForm from "@/components/AutoForm/SdlForm"
 const Search = Input.Search;
 
@@ -127,30 +127,13 @@ export default class UserInfoAdd extends Component {
         });
 
     onSubmitForm(formData) {
-        const { dispatch, form } = this.props;
-        // form.validateFields((err, values) => {
-        //     if (!err) {
-        //         let FormData = {};
-        //         for (let key in values) {
-        //             if (values[key] && values[key]["fileList"]) {
-        //                 FormData[key] = uid;
-        //             } else {
-        //                 FormData[key] = values[key] && values[key].toString()
-        //             }
-        //         }
-        //         this.setState({
-        //             FormDatas: FormData
-        //         })
-        //         console.log('FormData=', FormData);
-        //         // return;
+        // const { dispatch, form } = this.props;
 
-        //     }
-        // });
-        this.setState({
-            FormDatas: formData
-        })
-        console.log('FormData=', formData);
-        // return;
+        // this.setState({
+        //     FormDatas: formData
+        // })
+        // console.log('FormData=', formData);
+        // // return;
     }
 
     postFormDatas() {
@@ -165,18 +148,36 @@ export default class UserInfoAdd extends Component {
             message.error("部门不能为空");
             return;
         }
-        Object.keys(FormDatas).length ? dispatch({
-            type: 'userinfo/add',
-            payload: {
-                configId: 'UserInfoAdd',
-                roleID: this.state.checkedKeySel,
-                departID: this.state.checkedKeysSel,
-                FormData: {
-                    ...FormDatas,
-                    // uid: uid
-                },
+        form.validateFields((err, values) => {
+            if (!err) {
+                let FormData = {};
+                for (let key in values) {
+                    if (values[key] && values[key]["fileList"]) {
+                        FormData[key] = uid;
+                    } else {
+                        FormData[key] = values[key] && values[key].toString()
+                    }
+                }
+                // this.setState({
+                //     FormDatas: FormData
+                // })
+                // console.log('FormData=', FormData);
+                // return;
+                dispatch({
+                    type: 'userinfo/add',
+                    payload: {
+                        configId: 'UserInfoAdd',
+                        roleID: checkedKeySel,
+                        departID: checkedKeysSel,
+                        FormData: {
+                            ...FormData,
+                            // uid: uid
+                        },
+                    }
+                })
+
             }
-        }) : message.error("数据为空")
+        });
     }
 
     render() {
@@ -201,18 +202,9 @@ export default class UserInfoAdd extends Component {
                 sm: { span: 10, offset: 7 },
             },
         };
+        const title = this.state.selectKey === "base" ? "基本信息" : (this.state.selectKey === "roles" ? "角色设置" : "部门设置");
         return (
-            <MonitorContent
-                {...this.props}
-                breadCrumbList={
-                    [
-                        { Name: '首页', Url: '/' },
-                        { Name: '权限管理', Url: '' },
-                        { Name: '用户管理', Url: '/rolesmanager/userinfoindex/UserInfo' },
-                        { Name: '添加用户', Url: '' },
-                    ]
-                }
-            >
+            <PageHeaderWrapper title={"添加 - " + title}>
                 <div style={{ width: '100%', height: 'calc(100vh - 500px)', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
@@ -291,7 +283,8 @@ export default class UserInfoAdd extends Component {
                                                                 activeKey: "roles",
                                                                 baseState: 'none',
                                                                 rolesState: 'block',
-                                                                departState: 'none'
+                                                                departState: 'none',
+                                                                selectKey: "roles"
                                                             })
                                                         }
                                                     })
@@ -340,7 +333,8 @@ export default class UserInfoAdd extends Component {
                                                     activeKey: "departs",
                                                     baseState: 'none',
                                                     rolesState: 'none',
-                                                    departState: 'block'
+                                                    departState: 'block',
+                                                    selectKey: "departs"
                                                 })
                                             }}
                                         >下一步
@@ -388,7 +382,7 @@ export default class UserInfoAdd extends Component {
                     }
 
                 </div>
-            </MonitorContent>
+            </PageHeaderWrapper>
         );
     }
 }

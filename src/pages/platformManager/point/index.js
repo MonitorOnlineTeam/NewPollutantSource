@@ -38,7 +38,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 
-@connect(({ loading, autoForm, monitorTarget, common, point }) => ({
+@connect(({ loading, autoForm, monitorTarget, common, point, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   autoForm,
@@ -49,7 +49,8 @@ let pointConfigIdEdit = '';
   routerConfig: autoForm.routerConfig,
   pointDataWhere: monitorTarget.pointDataWhere,
   isEdit: monitorTarget.isEdit,
-  defaultPollutantCode: common.defaultPollutantCode
+  defaultPollutantCode: common.defaultPollutantCode,
+  configInfo: global.configInfo
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -92,11 +93,12 @@ export default class MonitorPoint extends Component {
     // });
   }
 
+
   getPageConfig = type => {
     this.setState({
       pollutantType: type,
     });
-    const { dispatch, match } = this.props;
+    const { dispatch, match, configInfo } = this.props;
     // 1	废水
     // 2	废气
     // 3	噪声
@@ -112,17 +114,34 @@ export default class MonitorPoint extends Component {
     // 23	国控
     // 24	省控
     // 25	市控
-    debugger;
+
+    try {
+      let { SystemPollutantTypeConfigId } = configInfo;
+      let configIds = SystemPollutantTypeConfigId.split(',');
+      let thisConfigId = null;
+      if (configIds.length > 0) {
+        thisConfigId = configIds.filter(m => m.split(':')[0] == type);
+        if (thisConfigId.length > 0) {
+          pointConfigIdEdit = thisConfigId[0].split(':')[1];
+          pointConfigId = pointConfigIdEdit + "New";
+        }
+      }
+
+    } catch (e) {
+      sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
+    }
+
+    // debugger;
     switch (type) {
       case 1:
         // 废水
-        pointConfigId = 'WaterOutputNew';
-        pointConfigIdEdit = 'WaterOutput';
+        //pointConfigId = 'WaterOutputNew';
+        //pointConfigIdEdit = 'WaterOutput';
         break;
       case 2:
         // 废气
-        pointConfigId = 'GasOutputNew';
-        pointConfigIdEdit = 'GasOutput';
+        // pointConfigId = 'GasOutputNew';
+        //pointConfigIdEdit = 'GasOutput';
         break;
       case 3:
         // 噪声

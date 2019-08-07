@@ -2,21 +2,20 @@ import Model from '@/utils/model';
 
 import {
   getysyList,
-  querypollutantlist,
-  queryhistorydatalist,
-  queryhistorydatalistbyrealtime,
-  AddCameraMonitor,
-  IsTrueSerialNumber,
-  DeleteCamera,
   getvideolist,
-} from './services';
+} from '../services/videodata';
+import {
+  querypollutantlist,
+} from '../services/baseapi';
+import {
+  queryhistorydatalist,
+} from '../services/monitordata';
 import config from '@/config';
 import { formatPollutantPopover } from '@/utils/utils';
 import { message } from 'antd';
-import * as services from '../../../../services/autoformapi';
 
 export default Model.extend({
-  namespace: 'video',
+  namespace: 'videodata',
   state: {
     videoList: [],
     ysyvideoListParameters: {
@@ -41,7 +40,7 @@ export default Model.extend({
   effects: {
     /** 萤石云视频链接 */
     *ysyvideourl({ payload }, { call, update, select }) {
-      const { ysyvideoListParameters } = yield select(state => state.video);
+      const { ysyvideoListParameters } = yield select(state => state.videodata);
       const body = {
         VedioCameraID: payload.VedioCameraID,
       };
@@ -177,13 +176,13 @@ export default Model.extend({
     },
     /** 获取历史视频数据 */
     *queryhistorydatalisthis({ payload }, { call, update, select }) {
-      const res = yield call(queryhistorydatalistbyrealtime, {
+      const res = yield call(queryhistorydatalist, {
         ...payload,
       });
-      const { hisrealdataList } = yield select(state => state.video);
+      const { hisrealdataList } = yield select(state => state.videodata);
       const realdata = [];
-      if (res.data.length > 0) {
-        const datas = res.data;
+      if (res.Datas.length > 0) {
+        const datas = res.Datas;
         for (let i = 0; i < datas.length; i++) {
           const element = datas[i];
           realdata.push({
@@ -204,86 +203,5 @@ export default Model.extend({
         },
       });
     },
-    /** 添加摄像头 */
-    *AddDevice({ payload }, { call, put }) {
-      const result = yield call(services.postAutoFromDataAdd, {
-        ...payload,
-        FormData: JSON.stringify(payload.FormData),
-      });
-      if (result.IsSuccess) {
-        yield put({
-          type: 'AddCameraMonitor',
-          payload: {
-            PointCode: payload.PointCode,
-            VedioCameraID: result.Datas,
-          },
-        });
-      } else {
-        message.error(result.Message);
-      }
-      payload.callback(result);
-    },
-    /** 添加摄像头与排口关系表 */
-    *AddCameraMonitor({ payload }, { call, put }) {
-      const result = yield call(AddCameraMonitor, {
-        ...payload,
-      });
-      const pointDataWhere = [
-        {
-          Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
-          Value: payload.PointCode,
-          Where: '$=',
-        },
-        {
-          Key: '[dbo]__[T_Bas_CameraMonitor]__MonitorType',
-          Value: 1,
-          Where: '$=',
-        },
-      ];
-
-      if (result.IsSuccess) {
-        message.success('添加成功！');
-        yield put({
-          type: 'autoForm/getAutoFormData',
-          payload: {
-            configId: 'CameraMonitor',
-            searchParams: pointDataWhere,
-          },
-        });
-      }
-    },
-    /** 判断序列号是否有效 */
-    *IsTrueSerialNumber({ payload }, { call }) {
-      const result = yield call(IsTrueSerialNumber, {
-        ...payload,
-      });
-      payload.callback(result);
-    },
-    /** 删除摄像头 */
-    * DeleteCamera({ payload }, { call, put }) {
-        const result = yield call(DeleteCamera, { ...payload });
-        const pointDataWhere = [
-        {
-          Key: '[dbo]__[T_Bas_CameraMonitor]__BusinessCode',
-          Value: payload.PointCode,
-          Where: '$=',
-        },
-         {
-           Key: '[dbo]__[T_Bas_CameraMonitor]__MonitorType',
-           Value: 1,
-           Where: '$=',
-         },
-      ];
-        if (result.Datas) {
-          message.success('删除成功！');
-          yield put({
-          type: 'autoForm/getAutoFormData',
-          payload: {
-            configId: 'CameraMonitor',
-            searchParams: pointDataWhere,
-          },
-        });
-        }
-      },
   },
 });

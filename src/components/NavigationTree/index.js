@@ -3,7 +3,7 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon,BellIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -35,6 +35,7 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
+  BellList:navigationtree.BellList
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -61,12 +62,13 @@ class NavigationTree extends Component {
       treeVis: this.props.IsTree,
       panelVis: "none",
       panelData: [],
-      panelDataList:[],
+      panelDataList: [],
       // panelSelKey:"",
       panelColumn: [
         {
           title: 'Name',
           dataIndex: 'Pollutant',
+          width:'10%',
           render: (text, record) => {
             return record.Pollutant == 1 ? <a><PanelWaterIcon style={{ fontSize: 25 }} /></a> : <a><PanelGasIcon style={{ fontSize: 25 }} /></a>
           }
@@ -74,6 +76,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'pointName',
+          width:'70%',
           render: (text, record) => {
             return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
           }
@@ -81,11 +84,19 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'Status',
+          width:'10%',
           render: (text, record) => {
             return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
           }
         },
-
+        {
+          title: 'Bell',
+          dataIndex: 'key',
+          width:'10%',
+          render: (text, record) => {
+            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{fontSize:10,marginTop:7}} /> : ""
+          }
+        },
       ]
     }
   }
@@ -147,7 +158,7 @@ class NavigationTree extends Component {
 
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
-          nowExpandKey=[this.getParentKey(nowKey[0],this.props.EntAndPoint)]
+          nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
           this.props.dispatch({
             type: "navigationtree/updateState",
             payload: {
@@ -164,7 +175,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var rtnKey = [{ key: nowKey[0], IsEnt: false }]
-        this.props.onItemClick&&this.props.onItemClick(rtnKey)
+        this.props.onItemClick && this.props.onItemClick(rtnKey)
       }
 
       if (node.children) {
@@ -241,7 +252,7 @@ class NavigationTree extends Component {
   onChangeSearch = e => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.generateList()
-    debugger
+    // debugger
     const { value } = e.target;
     const expandedKeys = dataList
       .map(item => {
@@ -251,12 +262,12 @@ class NavigationTree extends Component {
         return null;
       })
       .filter((item, i, self) => item && self.indexOf(item) === i);
-    var filterList=this.state.panelDataList.filter(item =>  item.pointName.indexOf(value) > -1 || item.entName.indexOf(value) > -1 );
+    var filterList = this.state.panelDataList.filter(item => item.pointName.indexOf(value) > -1 || item.entName.indexOf(value) > -1);
     this.setState({
       expandedKeys,
       searchValue: value,
       autoExpandParent: true,
-      panelDataList:filterList
+      panelDataList: filterList
     });
   };
   //配置抽屉及动画效果左右区分
@@ -529,7 +540,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{item.PollutantType == 1 ? <a><WaterIcon /></a> : <a><GasIcon /></a>}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{this.props.BellList.indexOf(item.key) > -1 ? <BellIcon style={{fontSize:10,marginTop:7,marginRight:-40, float:'right'}} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>
@@ -588,9 +599,9 @@ class NavigationTree extends Component {
             placeholder="查询企业排口"
             onChange={this.onChangeSearch}
             // onChange={console.log("111")}
-            style={{ marginTop: 10, width: 240 }}
+            style={{ marginTop: 10, width: '67%' }}
           />
-          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer" }} onChange={this.onRadioChange}>
+          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer",width: '28%' }} onChange={this.onRadioChange}>
             <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
@@ -619,32 +630,57 @@ class NavigationTree extends Component {
 
 
           {this.state.treeVis ? <div >
-            {this.props.EntAndPoint.length ? <Tree
-              checkable={this.props.choice}
-              // onExpand={this.onExpand}
-              defaultExpandAll={true}
-              onCheck={this.onCheck}
-              checkedKeys={this.state.checkedKeys}
-              onSelect={this.onSelect}
-              selectedKeys={this.state.selectedKeys}
-              style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%" }}
+            {
+              this.props.EntAndPointLoading ? <Spin
+                style={{
+                  width: '100%',
+                  height: 'calc(100vh/2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                size="large"
+              /> : <div>{this.props.EntAndPoint.length ? <Tree
+                checkable={this.props.choice}
+                // onExpand={this.onExpand}
+                defaultExpandAll={true}
+                onCheck={this.onCheck}
+                checkedKeys={this.state.checkedKeys}
+                onSelect={this.onSelect}
+                selectedKeys={this.state.selectedKeys}
+                style={{ marginTop: "5%",maxHeight:'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
 
-              onExpand={this.onExpand}
-              expandedKeys={expandedKeys}
-              autoExpandParent={autoExpandParent}
-            >
-              {/* {this.renderTreeNodes(this.props.EntAndPoint)} */}
-              {loop(this.props.EntAndPoint)}
-              {/* {loop(gData)} */}
-            </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                onExpand={this.onExpand}
+                expandedKeys={expandedKeys}
+                autoExpandParent={autoExpandParent}
+              >
+                {/* {this.renderTreeNodes(this.props.EntAndPoint)} */}
+                {loop(this.props.EntAndPoint)}
+                {/* {loop(gData)} */}
+              </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                </div>
+            }
+
           </div> : <div >
-              {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer" }}
-                onRow={this.onClickRow}
-                rowClassName={this.setRowClassName}
+              {
+                this.props.EntAndPointLoading ? <Spin
+                  style={{
+                    width: '100%',
+                    height: 'calc(100vh/2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  size="large"
+                /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer" }}
+                  onRow={this.onClickRow}
+                  rowClassName={this.setRowClassName}
 
-              ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-            </div>}
+                ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                  </div>}</div>
+          }
+
         </Drawer>
 
       </div>

@@ -1,17 +1,6 @@
 import { post } from '@/utils/request';
 
-/**
- * 【智能监控】获取排口下的污染物
- * @params {
-          "DGIMNs": "31011500000002"
-    }
- */
-export async function querypollutantlist(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
-  return result === null ? {
-    data: null,
-  } : result.Datas;
-}
+
 /** 获取单排口报警数据
  * {
         DGIMN: "51052216080301",
@@ -24,7 +13,24 @@ export async function querypollutantlist(params) {
  *  */
 export async function queryoverdatalist(params) {
     const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetExceptionProcessingList', params, null);
-    return result === null ? {
-      data: null,
-    } : result;
+    return result;
+}
+/** 更新报警记录表
+ * {
+        ExceptionProcessingID: "1，2，3",
+        ExceptionVerifyID: "4",
+    }
+ *  */
+export async function UpdateExceptionProcessing(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/UpdateExceptionProcessing', params, null);
+  return result;
+}
+/** 报警记录详情
+ * {
+        ExceptionVerifyID: "4",
+    }
+ *  */
+export async function GetAlarmRecordDetails(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/GetAlarmRecordDetails', params, null);
+  return result;
 }

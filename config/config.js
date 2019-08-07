@@ -155,6 +155,10 @@ export default {
               name: 'platformconfig',
               routes: [
                 {
+                  path: '/platformconfig',
+                  redirect: '/platformconfig/monitortarget/AEnterpriseTest',
+                },
+                {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId',
                   component: './platformManager/monitortarget',
@@ -205,6 +209,10 @@ export default {
               name: 'report',
               routes: [
                 {
+                  path: '/report',
+                  redirect: '/report/siteDaily',
+                },
+                {
                   name: 'dateReportPage',
                   path: '/report/:reportType',
                   component: './report/DateReportPage',
@@ -219,14 +227,22 @@ export default {
             {
               path: '/rolesmanager',
               name: 'rolesmanager',
-              // redirect: './rolesmanager/user/userinfoindex/UserInfo',
+              // redirect: './rolesmanager/user',
               // component: './authorized/user',
               // authority: ['admin', 'user'],
               routes: [
                 {
+                  path: '/rolesmanager',
+                  redirect: '/rolesmanager/user',
+                },
+                {
                   name: 'user',
                   path: '/rolesmanager/user',
                   routes: [
+                    // {
+                    //   path: '/rolesmanager',
+                    //   redirect: '/rolesmanager/user',
+                    // },
                     {
                       path: '/rolesmanager/user',
                       redirect: '/rolesmanager/user/userinfoindex/UserInfo',
@@ -307,6 +323,10 @@ export default {
               name: 'monitoring',
               routes: [
                 {
+                  path: '/monitoring',
+                  redirect: '/monitoring/realtimedata',
+                },
+                {
                   name: 'datalist',
                   path: '/monitoring/datalist',
                   component: './monitoring/overView',
@@ -327,6 +347,10 @@ export default {
               path: '/dataquery',
               name: 'dataquery',
               routes: [
+                {
+                  path: '/dataquery',
+                  redirect: '/dataquery/dataquery',
+                },
                 {
                   name: 'dataquery',
                   path: '/dataquery/dataquery',
@@ -352,6 +376,11 @@ export default {
                   path: '/dataquery/originaldata',
                   component: './monitoring/originaldata',
                 },
+                 {
+                   name: 'alarmverifyrecord',
+                   path: '/dataquery/alarmverifyrecord',
+                   component: './monitoring/alarmverifyrecord/index',
+                 },
               ]
             },
             {
@@ -424,12 +453,12 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.52:8096/',
+      target: 'http://172.16.9.13:9093/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
     '/upload': {
-      target: 'http://172.16.9.52:8096/', // 接口的域名
+      target: 'http://172.16.9.13:9093/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },

@@ -33,7 +33,7 @@ export async function getBtnAuthority(params) {
 }
 
 
-/**获取企业信息
+/** 获取企业信息
  *  {
         parentIDs:'51216eae-8f11-4578-ad63-5127f78f6cca',
     }
@@ -45,4 +45,16 @@ export async function querypolluntantentinfolist(params) {
     null,
   );
   return result === null ? { data: null } : result.data;
+}
+/**
+ * 【智能监控】获取排口下的污染物
+ * @params {
+          "DGIMNs": "31011500000002"
+    }
+ */
+export async function querypollutantlist(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  return result === null ? {
+    data: null,
+  } : result.Datas;
 }

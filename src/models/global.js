@@ -221,6 +221,7 @@ export default Model.extend({
     *getSystemConfigInfo({ payload }, { call, put, select }) {
       const response = yield call(services.getSystemConfigInfo);
       if (response.IsSuccess) {
+        console.log("ConfigInfo=", response.Datas);
         yield put({
           type: 'setConfigInfo',
           payload: response.Datas,

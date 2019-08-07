@@ -7,6 +7,7 @@ import style from './index.less'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlCascader from '../AutoFormManager/SdlCascader'
 import SearchSelect from '../AutoFormManager/SearchSelect'
+import SelectPollutantType from '@/components/SelectPollutantType'
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -76,9 +77,14 @@ class SiteDailyPage extends PureComponent {
     })
 
     this.props.dispatch({
-      type: 'autoForm/getRegions',
-      callback: (sucRes) => {
-        let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+      type: 'common/getEnterpriseAndPoint',
+      payload:{
+        RegionCode: "",
+        PointMark: "2"
+      },
+      callback: (sucRes, defaultValue) => {
+        // let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+        let RegionCode = defaultValue;
         this.setState({
           defaultRegionCode: RegionCode
         })
@@ -241,7 +247,6 @@ class SiteDailyPage extends PureComponent {
         //   message.error("请填写统计时间！");
         //   return;
         // }
-        console.log("111=", this.props.enterpriseList.filter(item => item["dbo.T_Bas_Enterprise.EntCode"] == values.EntCode))
         this.setState({
           currentDate: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
           currentEntName: this.props.enterpriseList.filter(item => item["dbo.T_Bas_Enterprise.EntCode"] == values.EntCode)[0]["dbo.T_Bas_Enterprise.EntName"]
@@ -276,7 +281,6 @@ class SiteDailyPage extends PureComponent {
     const { form, match: { params: { reportType } } } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        console.log(err)
         this.props.dispatch({
           type: "report/reportExport",
           payload: {
@@ -307,11 +311,12 @@ class SiteDailyPage extends PureComponent {
                       message: '请选择污染物类型',
                     }],
                   })(
-                    <Select placeholder="请选择污染物类型">
-                      {
-                        pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
-                      }
-                    </Select>
+                    // <Select placeholder="请选择污染物类型">
+                    //   {
+                    //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
+                    //   }
+                    // </Select>
+                    <SelectPollutantType placeholder="请选择污染物类型"/>
                   )}
                 </FormItem>
               </Col>

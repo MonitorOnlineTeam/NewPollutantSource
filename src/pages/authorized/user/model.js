@@ -285,6 +285,25 @@ export default Model.extend({
                 // message.error(result.Message);
             }
         },
+         /*添加角色和部门**/
+         * insertroledep({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const result = yield call(insertroledep, {
+                ...payload
+            });
+            if (result.IsSuccess == true) {
+                message.success("成功");
+                history.go(-1);
+            }
+            // yield update({
+            //     requstresult: result.requstresult,
+            //     reason: result.reason
+            // });
+        },
          /*重置密码**/
          * resetpwd({
             payload

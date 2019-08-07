@@ -270,7 +270,7 @@ class dataList extends PureComponent {
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
         let fixed = false;
-        if (coldata[0]) {
+        if (coldata&&coldata[0]) {
             fixed = true;
         }
         let columns = [
@@ -474,7 +474,7 @@ class dataList extends PureComponent {
                             dataSource={this.props.data}
                             pagination={false}
                             loading={this.props.isloading||this.props.timeLoading}
-                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 170px)' }}
+                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {
                         //   if (index === 0) {
