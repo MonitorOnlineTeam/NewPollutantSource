@@ -26,7 +26,6 @@ class SelectPollutantType extends PureComponent {
   }
   render() {
     const { pollutantTypelist, defaultPollutantCode, loading, showType } = this.props;
-
     if (!loading) {
       return (
         <>
@@ -44,6 +43,7 @@ class SelectPollutantType extends PureComponent {
               </Radio.Group> :
               <Select
                 placeholder="请选择污染物"
+                // defaultValue={defaultPollutantCode}
                 {...this.props}
               >
                 {

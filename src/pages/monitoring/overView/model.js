@@ -137,7 +137,6 @@ export default Model.extend({
           item.key = item.DGIMN;
         });
       }
-      debugger
       let { selectpoint } = yield select(_ => _.overview);
       if (selectpoint) {
         const newpoint = data.find(value => value.DGIMN == selectpoint.DGIMN);

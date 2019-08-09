@@ -6,7 +6,6 @@ const ws = new WebSocket(`ws://${config.webSocketPushURL}/`);
 window.ws = ws;
 
 export function listen(callback) {
-  debugger;
   ws.onopen = event => {
     const response = Cookie.get('currentUser');
     if (response) {

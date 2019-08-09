@@ -17,6 +17,7 @@ export default Model.extend({
     waterList: [],
     gasList: [],
     tableList: [],
+    curPointData: [],
     chartData: {
       seriesData: [],
       xAxisData: [],
@@ -32,7 +33,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           allEntAndPointList: result.Datas,
-          defaultMapInfo: result.Datas[3],
+          defaultMapInfo: result.Datas[0],
           // allEnterpriseList: result.Datas.filter
         })
       }
@@ -72,18 +73,19 @@ export default Model.extend({
         pollutantType.map(item => {
           result.Datas.map(itm => {
             if (itm[item.field]) {
-              console.log('///=', itm[item.field])
               tableList.push({
                 label: item.name,
                 value: itm[item.field],
-                key: item.field
+                key: item.field,
+                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
               })
             }
           })
         })
         yield update({
           tableList,
-          monitorTime: result.Datas[0] ? result.Datas[0].MonitorTime : null
+          monitorTime: result.Datas[0] ? result.Datas[0].MonitorTime : null,
+          curPointData: result.Datas[0] ? result.Datas[0] : []
         })
         // yield take('getPointTableData/@@end');
         yield put({

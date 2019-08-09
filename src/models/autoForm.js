@@ -152,7 +152,8 @@ export default Model.extend({
             width: item.DF_WIDTH,
             sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
             fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
-            formatType: item.DF_ISFormat
+            formatType: item.DF_ISFormat,
+            type: item.DF_CONTROL_TYPE
           })
           );
   
@@ -163,7 +164,7 @@ export default Model.extend({
             index === 0 ? whereList[configId] = {} : '';
             whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
             return {
-              type: item.DF_CONTROL_TYPE,
+              type: item.DF_QUERY_CONTROL_TYPE,
               labelText: item.DF_NAME_CN,
               fieldName: item.FullFieldNameVerticalBar,
               value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
