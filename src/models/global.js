@@ -1,11 +1,12 @@
 import { queryNotices } from '@/services/user';
 import { getBtnAuthority } from '../services/baseapi';
 import * as services from '@/services/commonApi';
-import { Model } from '../dvapack';
-import * as service from '../dvapack/websocket/mywebsocket';
+import Model from '@/utils/model';
+import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
-import { GetAlarmNotices, mymessagelist } from '../services/globalApi';
+import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
+
 export default Model.extend({
   namespace: 'global',
   state: {
@@ -21,131 +22,108 @@ export default Model.extend({
     },
   },
   effects: {
-    *fetchNotices({ payload }, { call, put }) {
-      yield put({
-        type: 'changeNoticeLoading',
-        payload: true,
-      });
+    *fetchNotices({ payload }, { call, put, update }) {
+      // yield put({
+      //   type: 'changeNoticeLoading',
+      //   payload: true,
+      // });
+      yield update({
+        fetchingNotices: true,
+      })
       //报警消息
       let today = getTimeDistance('today');
-      const res = yield call(GetAlarmNotices, {
+      const result = yield call(getAlarmNotices, {
         beginTime: today[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: today[1].format('YYYY-MM-DD HH:mm:ss'),
       });
       let notices = [];
       let count = 0;
-      if (res && res.data && res.requstresult === '1') {
-        const resdata = JSON.parse(res.data);
-        if (resdata) {
-          let dataovers = resdata.overs;
-          let datawarns = resdata.warns;
-          let dataexceptions = resdata.exceptions;
-          notices = notices.concat(
-            dataovers.map((item, index) => {
-              count += item.AlarmCount;
-              return {
-                id: `over_${item.DGIMNs}`,
-                pointname: item.PointName,
-                DGIMN: `${item.DGIMNs}`,
-                pollutantnames: item.PollutantNames,
-                firsttime: item.FirstTime,
-                lasttime: item.LastTime,
-                alarmcount: item.AlarmCount,
-                sontype: 'over',
-                //组件里根据这个分组
-                type: 'alarm',
-                //排序从0到2999
-                orderby: 1000 + index,
-                key: `over_${item.DGIMNs}`,
-                title: `${item.PointName}报警${item.AlarmCount}次`,
-                description: `${item.PollutantNames}从${item.FirstTime}发生了${item.AlarmCount}次超标报警`,
-              };
-            }),
-          );
-          notices = notices.concat(
-            datawarns.map((item, index) => {
-              let discription = '';
-              discription = discription.concat(
-                item.OverWarnings.map(
-                  sonitem =>
-                    `${sonitem.PollutantName}${sonitem.AlarmOverTime}发生预警，建议浓度降到${sonitem.SuggestValue}以下;`,
-                ),
-              );
-              count += 1;
-              return {
-                id: `warn_${item.DGIMNs}`,
-                pointname: item.PointName,
-                DGIMN: `${item.DGIMNs}`,
-                discription: discription,
-                overwarnings: item.OverWarnings,
-                sontype: 'warn',
-                //组件里根据这个分组
-                type: 'alarm',
-                //排序从3000到4999
-                orderby: 4000 + index,
-                key: `warn_${item.DGIMNs}`,
-                title: `${item.PointName}发生了预警`,
-                description: `${discription}`,
-              };
-            }),
-          );
-          notices = notices.concat(
-            dataexceptions.map((item, index) => {
-              count += item.AlarmCount;
-              return {
-                id: `exception_${item.DGIMNs}`,
-                pointname: item.PointName,
-                DGIMN: `${item.DGIMNs}`,
-                exceptiontypes: item.ExceptionTypes,
-                firsttime: item.FirstAlarmTime,
-                lasttime: item.LastAlarmTime,
-                alarmcount: item.AlarmCount,
-                sontype: 'exception',
-                //组件里根据这个分组
-                type: 'alarm',
-                //排序从5000到9999
-                orderby: 6000 + index,
-                key: `exception_${item.DGIMNs}`,
-                title: `${item.PointName}报警${item.AlarmCount}次`,
-                description: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
-                descriptionbak: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
-              };
-            }),
-          );
-        }
+      if (result.IsSuccess) {
+        const { overs, warns, exceptions } = result.Datas;
+        let dataovers = overs;
+        let datawarns = warns;
+        let dataexceptions = exceptions;
+        notices = notices.concat(
+          dataovers.map((item, index) => {
+            count += item.AlarmCount;
+            return {
+              id: `over_${item.DGIMNs}`,
+              pointname: item.PointName,
+              DGIMN: `${item.DGIMNs}`,
+              pollutantnames: item.PollutantNames,
+              firsttime: item.FirstTime,
+              lasttime: item.LastTime,
+              alarmcount: item.AlarmCount,
+              sontype: 'over',
+              //组件里根据这个分组
+              type: 'alarm',
+              //排序从0到2999
+              orderby: 1000 + index,
+              key: `over_${item.DGIMNs}`,
+              title: `${item.PointName}报警${item.AlarmCount}次`,
+              description: `${item.PollutantNames}从${item.FirstTime}发生了${item.AlarmCount}次超标报警`,
+            };
+          }),
+        );
+        notices = notices.concat(
+          datawarns.map((item, index) => {
+            let discription = '';
+            discription = discription.concat(
+              item.OverWarnings.map(
+                sonitem =>
+                  `${sonitem.PollutantName}${sonitem.AlarmOverTime}发生预警，建议浓度降到${sonitem.SuggestValue}以下;`,
+              ),
+            );
+            count += 1;
+            return {
+              id: `warn_${item.DGIMNs}`,
+              pointname: item.PointName,
+              DGIMN: `${item.DGIMNs}`,
+              discription: discription,
+              overwarnings: item.OverWarnings,
+              sontype: 'warn',
+              //组件里根据这个分组
+              type: 'alarm',
+              //排序从3000到4999
+              orderby: 4000 + index,
+              key: `warn_${item.DGIMNs}`,
+              title: `${item.PointName}发生了预警`,
+              description: `${discription}`,
+            };
+          }),
+        );
+        notices = notices.concat(
+          dataexceptions.map((item, index) => {
+            count += item.AlarmCount;
+            return {
+              id: `exception_${item.DGIMNs}`,
+              pointname: item.PointName,
+              DGIMN: `${item.DGIMNs}`,
+              exceptiontypes: item.ExceptionTypes,
+              firsttime: item.FirstAlarmTime,
+              lasttime: item.LastAlarmTime,
+              alarmcount: item.AlarmCount,
+              sontype: 'exception',
+              //组件里根据这个分组
+              type: 'alarm',
+              //排序从5000到9999
+              orderby: 6000 + index,
+              key: `exception_${item.DGIMNs}`,
+              title: `${item.PointName}报警${item.AlarmCount}次`,
+              description: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
+              descriptionbak: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
+            };
+          }),
+        );
       }
-      //通知消息,未读消息
-      const res2 = yield call(mymessagelist, { isView: false });
-      if (res2 && res2.data) {
-        let advises = res2.data.map((item, index) => ({
-          id: `advise_${item.DGIMN}`,
-          pointname: `${item.PointName}`,
-          DGIMN: `${item.DGIMN}`,
-          pushid: `${item.ID}`,
-          msgtitle: item.MsgTitle,
-          msg: item.Msg,
-          isview: item.IsView,
-          sontype: `advise_${item.PushType}`,
-          params: item.Col1,
-          //组件里根据这个分组
-          type: 'advise',
-          //排序从10000到19999
-          orderby: 11000 + index,
-          key: `advise_${item.DGIMN}_${item.ID}`,
-          title: `${item.MsgTitle}`,
-          description: `${item.Msg}`,
-        }));
-        count += advises.length;
-        notices = notices.concat(advises);
-      }
-      yield put({
-        type: 'saveNotices',
-        payload: {
-          notices: notices,
+      yield update({
+        notices: notices,
+        currentUserNoticeCnt: {
           notifyCount: count,
           unreadCount: count,
         },
-      });
+        fetchingNotices: false,
+      })
     },
 
     *clearNotices({ payload }, { put, select }) {
@@ -242,25 +220,24 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
-    saveNotices(state, { payload }) {
-      return {
-        ...state,
-        notices: payload.notices,
-        currentUserNoticeCnt: {
-          notifyCount: payload.notifyCount,
-          unreadCount: payload.unreadCount,
-        },
-        fetchingNotices: false,
-      };
-    },
-    changeNoticeLoading(state, { payload }) {
-      return {
-        ...state,
-        fetchingNotices: payload,
-      };
-    },
+    // saveNotices(state, { payload }) {
+    //   return {
+    //     ...state,
+    //     notices: payload.notices,
+    //     currentUserNoticeCnt: {
+    //       notifyCount: payload.notifyCount,
+    //       unreadCount: payload.unreadCount,
+    //     },
+    //     fetchingNotices: false,
+    //   };
+    // },
+    // changeNoticeLoading(state, { payload }) {
+    //   return {
+    //     ...state,
+    //     fetchingNotices: payload,
+    //   };
+    // },
     changeNotices(state, { payload }) {
-      console.log(payload);
       const { message } = payload;
       const { Message: data } = message;
       const { notices } = state;
@@ -462,7 +439,7 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch }) {
       // socket相关
-      return service.listen(data => {
+      return mywebsocket.listen(data => {
         // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
         let obj = JSON.parse(data);
         switch (obj.MessageType) {

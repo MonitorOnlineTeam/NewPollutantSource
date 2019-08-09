@@ -9,7 +9,7 @@ export default Model.extend({
     defaultPollutantCode: null,
     enterpriseAndPointList: [],
     defaultSelected: [],
-    level: null,
+    level: null
   },
 
   effects: {

@@ -10,8 +10,9 @@ import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
 // import RealTimeWarningModal from '../../components/SpecialWorkbench/RealTimeWarningModal';
 import AlarmRecordModal from './AlarmRecordModal';
+import ExceptionModal from './ExceptionModal';
 // import EmergencyDetailInfoModal from './EmergencyDetailInfoModal';
-import PdButton from '../../components/OverView/PdButton';
+import RecordEchartTable from '@/components/recordEchartTable'
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
@@ -19,13 +20,14 @@ import PdButton from '../../components/OverView/PdButton';
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 export default class GlobalHeaderRight extends PureComponent {
+  
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'global/fetchNotices',
+      payload:{}
     });
   }
-
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -51,61 +53,22 @@ export default class GlobalHeaderRight extends PureComponent {
         if (newNotice.type === 'alarm') {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
-              <Avatar style={{ backgroundColor: 'red', verticalAlign: 'middle' }} size="large">
-                超
+              <Avatar style={{ verticalAlign: 'middle' }} src='/over.png'>
               </Avatar>
+              
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
-              <Avatar style={{ backgroundColor: 'blue', verticalAlign: 'middle' }} size="large">
-                预
+              <Avatar style={{ verticalAlign: 'middle' }} src='/earlywarning.png'>
               </Avatar>
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{ backgroundColor: 'gold', verticalAlign: 'middle' }} size="large">
-                异
+              <Avatar style={{verticalAlign: 'middle' }} src='/exception.png'>
               </Avatar>
             );
           }
-        } else if (newNotice.type === 'advise') {
-          newNotice.avatar = !newNotice.isview ? (
-            <Avatar style={{ backgroundColor: 'red', verticalAlign: 'middle' }} size="large">
-              通
-            </Avatar>
-          ) : (
-            <Avatar style={{ backgroundColor: 'gray', verticalAlign: 'middle' }} size="large">
-              通
-            </Avatar>
-          );
         }
-      }
-      //如果是异常特殊处理，让其点击弹出
-      if (newNotice.sontype === 'exception') {
-        newNotice.title = (
-          <Popover
-            trigger="click"
-            content={
-              <div>
-                <PdButton sendpush={true} DGIMN={newNotice.DGIMN} viewType="datalist" />
-              </div>
-            }
-          >
-            <span style={{ cursor: 'pointer' }}>{newNotice.title}</span>
-          </Popover>
-        );
-        newNotice.description = (
-          <Popover
-            trigger="click"
-            content={
-              <div>
-                <PdButton sendpush={true} DGIMN={newNotice.DGIMN} viewType="datalist" />
-              </div>
-            }
-          >
-            <span style={{ cursor: 'pointer' }}>{newNotice.description}</span>
-          </Popover>
-        );
       }
       return newNotice;
     });
@@ -150,7 +113,10 @@ export default class GlobalHeaderRight extends PureComponent {
   onRefAlarm = ref => {
     this.childAlarm = ref;
   };
-
+  onRefException = ref => {
+    debugger
+    this.childException = ref;
+  };
   // onRefEmergencyDetailInfo = (ref) => {
   //   this.childEmergencyDetailInfo = ref;
   // }
@@ -159,9 +125,6 @@ export default class GlobalHeaderRight extends PureComponent {
     const {
       fetchingNotices,
       currentUserNoticeCnt,
-      onNoticeVisibleChange,
-      onMenuClick,
-      onNoticeClear,
       theme,
       dispatch,
     } = this.props;
@@ -176,7 +139,6 @@ export default class GlobalHeaderRight extends PureComponent {
         <NoticeIcon
           count={currentUserNoticeCnt.unreadCount}
           onItemClick={(item, tabProps) => {
-            console.log(item, tabProps); // eslint-disable-line
             //报警
             if (item.type === 'alarm') {
               if (item.sontype === 'warn') {
@@ -202,33 +164,19 @@ export default class GlobalHeaderRight extends PureComponent {
                 //     dgimn: item.DGIMN
                 //   }
                 // });
-                this.childAlarm.showModal(
-                  item.firsttime,
-                  item.lasttime,
+                this.childException.showModal(
+                  // item.firsttime,
+                  // item.lasttime,
                   item.DGIMN,
-                  item.pointname,
+                  // item.pointname,
                 );
-              }
-            } else if (item.type === 'advise') {
-              if (item.params) {
-                const params = JSON.parse(JSON.parse(item.params));
-                // this.props.dispatch(routerRedux.push(`/workbench`));
-                // this.props.dispatch(routerRedux.push(`/TaskDetail/emergencydetailinfo/null/ywdsjlist/${params.TaskId}/${item.DGIMN}`));
-                this.childEmergencyDetailInfo.showModal(item.DGIMN, params.TaskId, item.pointname);
               }
             }
             //修改通知的已读状态
             //   this.changeReadState(item, tabProps);
           }}
-          locale={{
-            emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
-            clear: formatMessage({ id: 'component.noticeIcon.clear' }),
-          }}
-          onClear={onNoticeClear}
-          onPopupVisibleChange={onNoticeVisibleChange}
           loading={fetchingNotices}
-          clearClose={false}
-          showClear={false}
+          onViewMore={() => message.info('Click on view more')}
         >
           <NoticeIcon.Tab
             count={unreadMsg.alarm}
@@ -238,19 +186,13 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
-          <NoticeIcon.Tab
-            count={unreadMsg.advise}
-            list={noticeData.advise}
-            title={formatMessage({ id: 'component.globalHeader.message' })}
-            name="advise"
-            emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-          />
         </NoticeIcon>
         {/* 预警 */}
         {/* <RealTimeWarningModal {...this.props} onRef={this.onRefWarning} /> */}
         {/* 超标 */}
         <AlarmRecordModal {...this.props} onRef={this.onRefAlarm} />
+        {/* 异常 */}
+        <ExceptionModal {...this.props} onRef={this.onRefException} />
         {/* 消息 */}
         {/* <EmergencyDetailInfoModal  {...this.props} onRef={this.onRefEmergencyDetailInfo} /> */}
       </div>

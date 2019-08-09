@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { formatMoment } from '@/utils/utils';
+import { formatMoment, handleFormData } from '@/utils/utils';
 import {
     Card,
     Spin,
@@ -18,6 +18,7 @@ import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import Styles from './index.less';
+
 /**
  * 报警记录
  * xpy 2019.07.26
@@ -210,6 +211,10 @@ class AlarmRecord extends Component {
 
     /** 显示核查单 */
     BtnVerify=() => {
+      const { form } = this.props;
+      form.setFieldsValue({
+        VerifyTime: moment(),
+      })
       if (this.state.selectedRowKeys.length > 0) {
       this.setState({
         visible: true,
@@ -224,18 +229,7 @@ class AlarmRecord extends Component {
     const { dispatch, form, overdataparams } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        const formData = {};
-        for (const key in values) {
-          if (values[key] && values[key].fileList) {
-            // 处理附件列表
-            formData[key] = this.state.uid;
-          } else if (values[key] && moment.isMoment(values[key])) {
-            // 格式化moment对象
-            formData[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss')
-          } else {
-            formData[key] = values[key] && values[key].toString()
-          }
-        }
+       const formData = handleFormData(values, this.state.uid);
         console.log('formData=', formData);
         dispatch({
           type: 'alarmrecord/AddExceptionVerify',
@@ -322,7 +316,7 @@ class AlarmRecord extends Component {
             },
           },
         ];
-           const { isloading, overdataparams } = this.props;
+           const { isloading, overdataparams, form } = this.props;
           if (isloading) {
               return (<Spin
                   style={{ width: '100%',
