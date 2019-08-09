@@ -3,7 +3,7 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon,StationIcon,ReachIcon,SiteIcon,DustIcon,VocIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -27,8 +27,8 @@ const styleNor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
 const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer", marginLeft: 5 }
 
 
-@connect(({ navigationtree, loading,global }) => ({
-  ConfigInfo:global.configInfo,
+@connect(({ navigationtree, loading, global }) => ({
+  ConfigInfo: global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
   PollutantType: navigationtree.PollutantType,
   EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
@@ -36,7 +36,8 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
-  BellList: navigationtree.BellList
+  BellList: navigationtree.BellList,
+  noticeList: global.notices
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -46,7 +47,7 @@ class NavigationTree extends Component {
     this.state = {
       visible: true,
       Name: "",
-      PollutantTypes:"",
+      PollutantTypes: "",
       Status: "",
       RegionCode: "",
       right: floats == "topmenu" ? "caret-left" : "caret-right",
@@ -105,26 +106,29 @@ class NavigationTree extends Component {
 
 
   componentDidMount() {
-    // console.log("this.props.ConfigInfo.SystemPollutantType=",this.props.ConfigInfo.SystemPollutantType)
     const dom = document.querySelector(this.props.domId);
     if (dom) {
       floats === "topmenu" ? dom.style.marginLeft = "400px" : dom.style.marginRight = "400px"
     }
-    // this.props.dispatch({
-    //   type: 'navigationtree/getentandpoint',
-    //   payload: {
-    //     Status: this.state.screenList,
-    //     PollutantTypes: this.props.ConfigInfo.SystemPollutantType,
-    //   }
-    // })
-    this.props.dispatch({
-      type: 'navigationtree/getPollutantTypeList',
-      payload: {
-      }
+    const { dispatch, EntAndPoint } = this.props;
+    const { panelDataList, screenList } = this.state;
 
+    dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+        Status: screenList,
+      }
     })
-    this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    this.generateList(this.props.EntAndPoint)
+    panelDataList.splice(0, panelDataList.length)
+    this.generateList(EntAndPoint)
+
+    // // this.props.dispatch({
+    // //   type: 'navigationtree/getPollutantTypeList',
+    // //   payload: {
+    // //   }
+
+    // })
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -140,18 +144,18 @@ class NavigationTree extends Component {
       this.defaultKey = 0
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
     }
-    if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-      this.setState({
-        PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
-      })
-      this.props.dispatch({
-        type: 'navigationtree/getentandpoint',
-        payload: {
-          Status: this.state.screenList,
-          PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
-        }
-      })
-    }
+    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
+    //   this.setState({
+    //     PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
+    //   })
+    //   this.props.dispatch({
+    //     type: 'navigationtree/getentandpoint',
+    //     payload: {
+    //       Status: this.state.screenList,
+    //       PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
+    //     }
+    //   })
+    // }
   }
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint, selKeys) => {
@@ -235,9 +239,8 @@ class NavigationTree extends Component {
   //污染物筛选
   handleChange = (value) => {
     value = value.toString()
-    if(value=="")
-    {
-      value=this.props.ConfigInfo.SystemPollutantType
+    if (value == "") {
+      value = this.props.ConfigInfo.SystemPollutantType
     }
     this.setState({
       PollutantTypes: value,
@@ -574,7 +577,7 @@ class NavigationTree extends Component {
               <span style={{ marginLeft: 3 }}>{item.title}</span>
             );
         if (item.children) {
-          return ( 
+          return (
             <TreeNode style={{ width: "100%" }} title={
               <div style={{ width: "271px" }}>{this.getEntIcon(item.MonitorObjectType)}{title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
@@ -646,7 +649,7 @@ class NavigationTree extends Component {
             // onChange={console.log("111")}
             style={{ marginTop: 10, width: '67%' }}
           />
-          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer",width: '28%' }} onChange={this.onRadioChange}>
+          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer", width: '28%' }} onChange={this.onRadioChange}>
             <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
@@ -693,7 +696,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={{ marginTop: "5%",maxHeight:'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
+                style={{ marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
 
                 onExpand={this.onExpand}
                 expandedKeys={expandedKeys}
