@@ -35,22 +35,22 @@ export default class UpdateManualUpload extends Component {
         this.SelectHandleChange();
     }
     GetAllPollutantTypes = () => {
-        this.props.dispatch({
-            type: 'manualupload/GetAllPollutantTypes',
-            payload: {
-                DGIMN: this.props.item.DGIMN,
-            },
-        });
+        // this.props.dispatch({
+        //     type: 'manualupload/GetAllPollutantTypes',
+        //     payload: {
+        //         DGIMN: this.props.item.DGIMN,
+        //     },
+        // });
     }
     //污染物类型改变事件
     SelectHandleChange = () => {
         //获取绑定下拉污染物
-        this.props.dispatch({
-            type: 'manualupload/addGetPollutantByPoint',
-            payload: {
-                DGIMN: this.props.item.DGIMN,
-            }
-        });
+        // this.props.dispatch({
+        //     type: 'manualupload/addGetPollutantByPoint',
+        //     payload: {
+        //         DGIMN: this.props.item.DGIMN,
+        //     }
+        // });
     }
     //根据污染物编号获取单位
     pollutantChange = (value) => {

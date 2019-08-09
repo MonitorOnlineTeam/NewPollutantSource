@@ -24,26 +24,22 @@ import {
   message,
 } from 'antd';
 import * as services from '../../../services/autoformapi';
+import moment from "moment";
 
 export default Model.extend({
   namespace: 'manualupload',
   state: {
-      editUser: null,
       requstresult: null,
       total: 0,
-      reason: null,
       selectdata: [],
       uploaddatalist: [],
-      templatedata: [],
       PollutantTypesList: [],
       addselectdata: [],
       unit: null,
       DGIMN: null,
       pointName: null,
-      polltuantTypeList: [],
       //手工数据上传参数
       manualUploadParameters: {
-          DGIMNs: '',
           DGIMN: '',
           pollutantCode: [],
           BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
@@ -64,11 +60,11 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(uploadfiles, payload);
-          if (result !== null) {
+          if (result.IsSuccess) {
               yield update({
                   requstresult: result.requstresult,
               });
-              payload.callback(result.requstresult, result.reason);
+              payload.callback(result.requstresult);
           }
       },
       //根据排口获取污染物
@@ -79,16 +75,9 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(GetPollutantByPoint, payload);
-          if (result.data.length !== 0) {
+          if (result.IsSuccess) {
               yield update({
                   selectdata: result.data,
-                  reason: result.reason
-              });
-          }
-          else {
-              yield update({
-                  selectdata: [],
-                  reason: result.reason
               });
           }
       },
@@ -100,16 +89,9 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(addGetPollutantByPoint, payload);
-          if (result.data.length !== 0) {
+          if (resultIsSuccess) {
               yield update({
                   addselectdata: result.data,
-                  reason: result.reason
-              });
-          }
-          else {
-              yield update({
-                  addselectdata: null,
-                  reason: result.reason
               });
           }
       },
@@ -123,20 +105,8 @@ export default Model.extend({
           select,
       }) {
           const { manualUploadParameters } = yield select(a => a.manualupload);
-          const body = {
-              DGIMN: manualUploadParameters.DGIMN,
-              pollutantCode: manualUploadParameters.pollutantCode,
-              BeginTime: manualUploadParameters.BeginTime,
-              EndTime: manualUploadParameters.EndTime,
-              pageIndex: manualUploadParameters.pageIndex,
-              pageSize: manualUploadParameters.pageSize,
-              pointName: manualUploadParameters.pointName,
-              PollutantType: manualUploadParameters.PollutantType,
-          }
-     
-          const result = yield call(GetManualSupplementList, body);
-          if (result.data !== null) {
-              if (result.data.length !== 0) {
+          const result = yield call(GetManualSupplementList, manualUploadParameters);
+          if (result.IsSuccess) {
                   //根据MN号码获取所对应的污染物信息
                   if (body.DGIMN) {
                       yield put({
@@ -149,25 +119,8 @@ export default Model.extend({
                 
                   yield update({
                       uploaddatalist: result.data,
-                      reason: result.reason,
                       total: result.total,
                   });
-              }
-              else {
-                  
-                  yield update({
-                      uploaddatalist: null,
-                      reason: result.reason,
-                      total: result.total,
-                  });
-              }
-          }
-          else {
-              yield update({
-                  uploaddatalist: null,
-                  reason: result.reason,
-                  total: result.total,
-              });
           }
       },
       //获取Excel模板
@@ -177,16 +130,11 @@ export default Model.extend({
           call,
           update,
       }) {
-          console.log(payload);
           const result = yield call(getUploadTemplate, payload);
-          if (result.data !== null) {
-              if (result.data.length !== 0) {
-                  yield update({
-                      reason: result.reason,
-                  });
-              }
+          if (result.IsSuccess) {
+            payload.callback(result.data);
           }
-          payload.callback(result.data);
+     
       },
 
       //获取污染物类型列表
@@ -197,16 +145,9 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(GetAllPollutantTypes, payload);
-          if (result.data !== null) {
+          if (result.IsSuccess) {
               yield update({
                   PollutantTypesList: result.data,
-                  reason: result.reason
-              });
-          }
-          else {
-              yield update({
-                  PollutantTypesList: null,
-                  reason: result.reason
               });
           }
       },
@@ -220,17 +161,11 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(AddUploadFiles, payload);
-          if (result.requstresult === "1") {
+          if (result.IsSuccess) {
               yield update({
                   requstresult: result.requstresult,
               });
           }
-          else {
-              yield update({
-                  requstresult: result.requstresult,
-              });
-          }
-          payload.callback(result.reason);
       },
 
       //根据污染物获取单位
@@ -241,16 +176,9 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(GetUnitByPollutant, payload);
-          if (result.requstresult === "1") {
+          if (result.IsSuccess) {
               yield update({
                   unit: result.data,
-                  reason: result.reason
-              });
-          }
-          else {
-              yield update({
-                  unit: null,
-                  reason: result.reason
               });
           }
       },
@@ -263,19 +191,11 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(DeleteUploadFiles, payload);
-          if (result.requstresult === "1") {
+          if (result.IsSuccess) {
               yield update({
                   requstresult: result.requstresult,
-                  reason: result.reason
               });
           }
-          else {
-              yield update({
-                  requstresult: result.requstresult,
-                  reason: result.reason
-              });
-          }
-          payload.callback(result.reason);
       },
 
       //修改数据，值修改监测值
@@ -286,19 +206,11 @@ export default Model.extend({
           update,
       }) {
           const result = yield call(UpdateManualSupplementData, payload);
-          if (result.requstresult === "1") {
+          if (result.IsSuccess) {
               yield update({
                   requstresult: result.requstresult,
-                  reason: result.reason
               });
           }
-          else {
-              yield update({
-                  requstresult: result.requstresult,
-                  reason: result.reason
-              });
-          }
-          payload.callback(result.reason);
       },
   },
 });
