@@ -185,5 +185,37 @@ export function handleFormData(values, uid) {
 
   return formData;
 }
+//文件下载
+export function downloadFile(sUrl) {
+  //iOS devices do not support downloading. We have to inform user about this.
+  if (/(iP)/g.test(navigator.userAgent)) {
+      alert('Your device does not support files downloading. Please try again in desktop browser.');
+      return false;
+  }
+  //If in Chrome or Safari - download via virtual link click
+  if (true) {
+      //Creating new link node.
+      var link = document.createElement('a');
+      link.href = sUrl;
+      if (link.download !== undefined) {
+          //Set HTML5 download attribute. This will prevent file from opening if supported.
+          var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+          link.download = fileName;
+      }
+      //Dispatching click event.
+      if (document.createEvent) {
+          var e = document.createEvent('MouseEvents');
+          e.initEvent('click', true, true);
+          link.dispatchEvent(e);
+          return true;
+      }
+  }
+  // Force file download (whether supported by server).
+  if (sUrl.indexOf('?') === -1) {
+      sUrl += '?download';
+  }
+  window.open(sUrl, '_self');
+  return true;
+}
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
