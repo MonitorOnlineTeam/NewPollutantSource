@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, Radio, message } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '../../components/PointDetail/RangePicker_';
+import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';
 const Option = Select.Option;
 const FormItem = Form.Item;

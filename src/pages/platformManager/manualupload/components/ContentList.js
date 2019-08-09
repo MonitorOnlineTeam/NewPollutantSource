@@ -2,17 +2,12 @@ import React, { Component } from 'react';
 import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import RangePicker_ from '../../components/PointDetail/RangePicker_';
-import TreeCard from '../../components/OverView/TreeCard';
-import MonitorContent from '../../components/MonitorContent/index';
-import Add from '../../components/ManualUpload/AddManualUpload';
-import Update from '../../components/ManualUpload/UpdateManualUpload';
+import RangePicker_ from '@/components/RangePicker'
+import Add from './AddManualUpload';
+import Update from './UpdateManualUpload';
 import { routerRedux } from 'dva/router';
 import styles from './ContentList.less';
-import TreeCardContent from '../../components/OverView/TreeCardContent';
-import SearchInput from '../../components/OverView/SearchInput';
-import {downloadFile}from '../../utils/utils';
-
+import { downloadFile } from '@/utils/utils';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
