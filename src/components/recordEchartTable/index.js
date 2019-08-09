@@ -107,6 +107,23 @@ class Index extends Component {
                 }
             })
         }
+        if (this.props.startTimes != nextProps.startTimes||this.props.endTimes!=nextProps.endTimes) {
+            this.props.dispatch({
+                type: 'recordEchartTable/updateState',
+                payload: {
+                    exceptionData:[],
+                },
+            })
+            this.props.dispatch({
+                type: "recordEchartTable/getexmodellist",
+                payload: {
+                    beginTime: nextProps.startTimes == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : nextProps.startTimes,
+                    endTime: nextProps.endTimes == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : nextProps.endTimes,
+                    dataType: this.state.dataType,
+                    DGIMN: [this.props.DGIMN],
+                }
+            })
+        }
     }
     // /** 后台请求数据 */
     // reloaddatalist = () => {

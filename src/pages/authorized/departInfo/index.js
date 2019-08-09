@@ -17,12 +17,13 @@ import {
     Divider,
     Popconfirm,
     Empty,
-    Transfer, Switch, Tag, Tree, Radio,Tooltip
+    Transfer, Switch, Tag, Tree, Radio, Tooltip
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
+import SelectPollutantType from '@/components/SelectPollutantType'
 
 
 const TreeNode = TreeSelect.TreeNode;
@@ -121,14 +122,14 @@ const rightTableColumns = [
     },
 ];
 
-@connect(({ departinfo, loading }) => ({
+@connect(({ departinfo, loading, global }) => ({
     GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
     GetRegionByDepID: loading.effects['departinfo/getregionbydepid'],
     GetUserByDepID: loading.effects['departinfo/getuserbydepid'],
     GetAllUser: loading.effects['departinfo/getalluser'],
     GetDepartInfoByTree: loading.effects['departinfo/getdepartinfobytree'],
     DepartInfoOneLoading: loading.effects['departinfo/getdepartinfobyid'],
-    CheckPointLoading:loading.effects['departinfo/getpointbydepid'],
+    CheckPointLoading: loading.effects['departinfo/getpointbydepid'],
     DepartInfoTree: departinfo.DepartInfoTree,
     DepartInfoOne: departinfo.DepartInfoOne,
     DepartTree: departinfo.DepartTree,
@@ -137,7 +138,8 @@ const rightTableColumns = [
     RegionByDepID: departinfo.RegionByDepID,
     RegionInfoTree: departinfo.RegionInfoTree,
     EntAndPoint: departinfo.EntAndPoint,
-    CheckPoint: departinfo.CheckPoint
+    CheckPoint: departinfo.CheckPoint,
+    ConfigInfo: global.configInfo,
 }))
 @Form.create()
 
@@ -168,7 +170,7 @@ class DepartIndex extends Component {
             visibleRegion: false,
             leafTreeDatas: [],
             visibleData: false,
-            pollutantType: "1",
+            pollutantType: "",
             DataTreeValue: [],
             columns: [
                 {
@@ -203,77 +205,77 @@ class DepartIndex extends Component {
                     width: '280px',
                     render: (text, record) =>
                         <span>
-                             <Tooltip title="编辑">
-                            <a href="javascript:;" onClick={() => {
-                                console.log(record.UserGroup_ID)
-                                this.props.dispatch({
-                                    type: 'departinfo/getdepartinfobyid',
-                                    payload: {
-                                        UserGroup_ID: record.UserGroup_ID
-                                    }
-                                })
-                                this.showModalEdit()
-                            }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                            <Tooltip title="编辑">
+                                <a href="javascript:;" onClick={() => {
+                                    console.log(record.UserGroup_ID)
+                                    this.props.dispatch({
+                                        type: 'departinfo/getdepartinfobyid',
+                                        payload: {
+                                            UserGroup_ID: record.UserGroup_ID
+                                        }
+                                    })
+                                    this.showModalEdit()
+                                }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="删除">
-                            <Popconfirm
-                                title="确认要删除吗?"
-                                onConfirm={() => {
-                                    this.props.dispatch({
-                                        type: 'departinfo/deldepartinfo',
-                                        payload: {
-                                            UserGroup_ID: record.UserGroup_ID,
-                                            callback: (res) => {
-                                                if (res.IsSuccess) {
-                                                    message.success("删除成功");
-                                                    this.props.dispatch({
-                                                        type: "departinfo/getdepartinfobytree",
-                                                        payload: {
-                                                        }
-                                                    })
+                                <Popconfirm
+                                    title="确认要删除吗?"
+                                    onConfirm={() => {
+                                        this.props.dispatch({
+                                            type: 'departinfo/deldepartinfo',
+                                            payload: {
+                                                UserGroup_ID: record.UserGroup_ID,
+                                                callback: (res) => {
+                                                    if (res.IsSuccess) {
+                                                        message.success("删除成功");
+                                                        this.props.dispatch({
+                                                            type: "departinfo/getdepartinfobytree",
+                                                            payload: {
+                                                            }
+                                                        })
+                                                    }
                                                 }
                                             }
-                                        }
-                                    })
-                                }}
-                                onCancel={this.cancel}
-                                okText="是"
-                                cancelText="否"
-                            >
-                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
-                            
-                            </Popconfirm>
+                                        })
+                                    }}
+                                    onCancel={this.cancel}
+                                    okText="是"
+                                    cancelText="否"
+                                >
+                                    <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+
+                                </Popconfirm>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="分配用户">
-                            <a href="javascript:;" onClick={() => {
-                                this.setState({
-                                    selectedRowKeys:record
-                                   },()=> {
-                                    this.showUserModal()
-                                   })
-                            }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
+                                <a href="javascript:;" onClick={() => {
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showUserModal()
+                                    })
+                                }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="区域过滤">
-                            <a href="javascript:;" onClick={() => {
-                                this.setState({
-                                    selectedRowKeys:record
-                                   },()=> {
-                                    this.showRegionModal()
-                                   })
-                            }}><Icon type="filter" style={{ fontSize: 16 }}  /></a>
+                                <a href="javascript:;" onClick={() => {
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showRegionModal()
+                                    })
+                                }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="数据过滤">
-                            <a href="javascript:;" onClick={() => {
-                                this.setState({
-                                    selectedRowKeys:record
-                                   },()=> {
-                                    this.showDataModal()
-                                   })
-                            }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
+                                <a href="javascript:;" onClick={() => {
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showDataModal()
+                                    })
+                                }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                         </span>
                 },
@@ -432,6 +434,12 @@ class DepartIndex extends Component {
         })
     }
     showDataModal = () => {
+        console.log('///=', this.props.ConfigInfo)
+        var list = this.props.ConfigInfo.SystemPollutantType ? this.props.ConfigInfo.SystemPollutantType.split(',') : []
+        var type = list.length > 0 ? list[0] : "";
+        this.setState({
+            pollutantType: type,
+        })
         if (this.state.selectedRowKeys.length == 0) {
             message.error("请选中一行")
             return
@@ -444,13 +452,11 @@ class DepartIndex extends Component {
         this.setState({
             visibleData: true,
             checkedKey: this.props.RegionByDepID,
-            DataTreeValue: [],
         })
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
-                RegionCode: ["0"],
-                PollutantType: this.state.pollutantType
+                PollutantType: type,
             }
         })
         this.props.dispatch({
@@ -490,6 +496,20 @@ class DepartIndex extends Component {
                 // allKeys: filterArr
             })
         }
+        // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
+        //     var list = nextProps.ConfigInfo.SystemPollutantType ? nextProps.ConfigInfo.SystemPollutantType.split(',') : []
+        //     var type = list.length > 0 ? list[0] : "";
+        //     this.setState({
+        //         pollutantType: type,
+        //     })
+        //     // this.props.dispatch({
+        //     //   type: 'navigationtree/getentandpoint',
+        //     //   payload: {
+        //     //     Status: this.state.screenList,
+        //     //     PollutantType: nextProps.ConfigInfo.SystemPollutantType,
+        //     //   }
+        //     // })
+        // }
     }
     showModalEdit = () => {
         this.props.dispatch({
@@ -560,8 +580,8 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
-                RegionCode: this.state.DataTreeValue,
-                PollutantType: e.target.value
+                RegionCode: this.state.DataTreeValue.toString(),
+                PollutantType: e.target.value,
             }
         })
     };
@@ -570,16 +590,14 @@ class DepartIndex extends Component {
         this.setState({
             DataTreeValue: value
         });
-        if (value.length != 0) {
-            this.props.dispatch({
-                type: 'departinfo/getentandpoint',
-                payload: {
-                    RegionCode: value,
-                    PollutantType: this.state.pollutantType
-                }
-            })
+        this.props.dispatch({
+            type: 'departinfo/getentandpoint',
+            payload: {
+                RegionCode: value.toString(),
+                PollutantType: this.state.pollutantType,
+            }
+        })
 
-        }
     };
     handleSubmit = e => {
         e.preventDefault();
@@ -631,7 +649,7 @@ class DepartIndex extends Component {
         });
     renderDataTreeNodes = data =>
         data.map(item => {
-            if (item.children.length == 0) {
+            if (item.children) {
                 if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
                     this.state.leafTreeDatas.push(item.key);
                 }
@@ -735,10 +753,10 @@ class DepartIndex extends Component {
                                             })
                                         },
                                     };
-                                }} 
-                                style={{marginTop:"20px"}}
+                                }}
+                                style={{ marginTop: "20px" }}
                                 //rowSelection={rowRadioSelection}
-                                size="small" columns={this.state.columns} defaultExpandAllRows  dataSource={this.props.DepartInfoTree} />
+                                size="small" columns={this.state.columns} defaultExpandAllRows dataSource={this.props.DepartInfoTree} />
 
 
                         </Card>
@@ -819,7 +837,7 @@ class DepartIndex extends Component {
                                 }
                             </Modal>
                             <Modal
-                                title={"分配用户-"+this.state.selectedRowKeys.UserGroup_Name}
+                                title={"分配用户-" + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleUser}
                                 onOk={this.handleCancel}
                                 destroyOnClose="true"
@@ -850,14 +868,14 @@ class DepartIndex extends Component {
                                             }
                                             leftColumns={leftTableColumns}
                                             rightColumns={rightTableColumns}
-                                            style={{ width: "100%",height:"600px" }}
+                                            style={{ width: "100%", height: "600px" }}
                                         />
 
                                 }
 
                             </Modal>
                             <Modal
-                                title={"区域过滤-"+this.state.selectedRowKeys.UserGroup_Name}
+                                title={"区域过滤-" + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleRegion}
                                 onOk={this.handleRegionOK}
                                 destroyOnClose="true"
@@ -878,6 +896,7 @@ class DepartIndex extends Component {
                                     /> :
                                         <div style={{ maxHeight: "600px", overflowY: "auto" }}>
                                             <Tree
+                                                key="key"
                                                 checkable
                                                 // checkStrictly={false}
                                                 onExpand={this.onExpand}
@@ -901,7 +920,7 @@ class DepartIndex extends Component {
                             </Modal>
 
                             <Modal
-                                title={"数据过滤-"+this.state.selectedRowKeys.UserGroup_Name}
+                                title={"数据过滤-" + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleData}
                                 onOk={this.handleDataOK}
                                 // destroyOnClose="true"
@@ -921,15 +940,23 @@ class DepartIndex extends Component {
                                         }}
                                         size="large"
                                     /> :
-                                        <div style={{ height:"600px",overflow:"auto"}}>
+                                        <div style={{ height: "600px", overflow: "auto" }}>
                                             <Row style={{ position: "fixed", background: "#fff", paddingBottom: 10, zIndex: 1 }}>
-                                                <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
+                                                {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
                                                     <Radio.Button value="1">废水</Radio.Button>
                                                     <Radio.Button value="2">废气</Radio.Button>
-                                                </Radio.Group>
+                                                </Radio.Group> */}
+                                                <SelectPollutantType
+                                                    // style={{ marginLeft: 50, float: 'left' }}
+                                                    showType="radio"
+                                                    // defaultPollutantCode={this.state.pollutantType}
+                                                    mode="multiple"
+                                                    onChange={this.handleSizeChange}
+                                                />
                                                 <TreeSelect {...tProps} />
                                             </Row>{
                                                 this.props.EntAndPoint.length ? <Tree
+                                                    key="key"
                                                     style={{ marginTop: 47 }}
                                                     checkable
                                                     // checkStrictly={false}
@@ -956,7 +983,7 @@ class DepartIndex extends Component {
 
                             </Modal>
                         </div>
-                    {/* </MonitorContent> */}
+                        {/* </MonitorContent> */}
                     </PageHeaderWrapper>
                 }
             </Fragment>

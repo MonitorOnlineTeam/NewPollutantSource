@@ -3,7 +3,7 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon,BellIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon,StationIcon,ReachIcon,SiteIcon,DustIcon,VocIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -27,7 +27,8 @@ const styleNor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
 const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer", marginLeft: 5 }
 
 
-@connect(({ navigationtree, loading }) => ({
+@connect(({ navigationtree, loading,global }) => ({
+  ConfigInfo:global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
   PollutantType: navigationtree.PollutantType,
   EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
@@ -35,7 +36,7 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
-  BellList:navigationtree.BellList
+  BellList: navigationtree.BellList
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -45,6 +46,7 @@ class NavigationTree extends Component {
     this.state = {
       visible: true,
       Name: "",
+      PollutantTypes:"",
       Status: "",
       RegionCode: "",
       right: floats == "topmenu" ? "caret-left" : "caret-right",
@@ -68,7 +70,7 @@ class NavigationTree extends Component {
         {
           title: 'Name',
           dataIndex: 'Pollutant',
-          width:'10%',
+          width: '10%',
           render: (text, record) => {
             return record.Pollutant == 1 ? <a><PanelWaterIcon style={{ fontSize: 25 }} /></a> : <a><PanelGasIcon style={{ fontSize: 25 }} /></a>
           }
@@ -76,7 +78,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'pointName',
-          width:'70%',
+          width: '70%',
           render: (text, record) => {
             return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
           }
@@ -84,7 +86,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'Status',
-          width:'10%',
+          width: '10%',
           render: (text, record) => {
             return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
           }
@@ -92,9 +94,9 @@ class NavigationTree extends Component {
         {
           title: 'Bell',
           dataIndex: 'key',
-          width:'10%',
+          width: '10%',
           render: (text, record) => {
-            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{fontSize:10,marginTop:7}} /> : ""
+            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7 }} /> : ""
           }
         },
       ]
@@ -103,16 +105,18 @@ class NavigationTree extends Component {
 
 
   componentDidMount() {
+    // console.log("this.props.ConfigInfo.SystemPollutantType=",this.props.ConfigInfo.SystemPollutantType)
     const dom = document.querySelector(this.props.domId);
     if (dom) {
       floats === "topmenu" ? dom.style.marginLeft = "400px" : dom.style.marginRight = "400px"
     }
-    this.props.dispatch({
-      type: 'navigationtree/getentandpoint',
-      payload: {
-        Status: this.state.screenList
-      }
-    })
+    // this.props.dispatch({
+    //   type: 'navigationtree/getentandpoint',
+    //   payload: {
+    //     Status: this.state.screenList,
+    //     PollutantTypes: this.props.ConfigInfo.SystemPollutantType,
+    //   }
+    // })
     this.props.dispatch({
       type: 'navigationtree/getPollutantTypeList',
       payload: {
@@ -135,6 +139,18 @@ class NavigationTree extends Component {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
+    }
+    if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
+      this.setState({
+        PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
+      })
+      this.props.dispatch({
+        type: 'navigationtree/getentandpoint',
+        payload: {
+          Status: this.state.screenList,
+          PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
+        }
+      })
     }
   }
   //处理接口返回的企业和排口数据
@@ -219,6 +235,10 @@ class NavigationTree extends Component {
   //污染物筛选
   handleChange = (value) => {
     value = value.toString()
+    if(value=="")
+    {
+      value=this.props.ConfigInfo.SystemPollutantType
+    }
     this.setState({
       PollutantTypes: value,
     })
@@ -244,7 +264,7 @@ class NavigationTree extends Component {
         Name: value,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
-        Status: this.state.screenList
+        Status: this.state.screenList,
       }
     })
   }
@@ -303,7 +323,7 @@ class NavigationTree extends Component {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
-        Status: this.state.screenList
+        Status: this.state.screenList,
       }
     })
   }
@@ -379,7 +399,7 @@ class NavigationTree extends Component {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
-        Status: typeList
+        Status: typeList,
       }
     })
   }
@@ -510,6 +530,31 @@ class NavigationTree extends Component {
     return record.key === this.state.selectedKeys[0] ? global.clickRowStyl : '';
   }
 
+  getEntIcon = (type) => {
+    switch (type) {
+      case "1":
+        return <a><EntIcon /></a>
+      case "2":
+        return <a><StationIcon /></a>
+      case "3":
+        return <a><ReachIcon /></a>
+      case "4":
+        return <a><SiteIcon /></a>
+    }
+  }
+  getPollutantIcon = (type) => {
+    switch (type) {
+      case "1":
+        return <a><WaterIcon /></a>
+      case "2":
+        return <a><GasIcon /></a>
+      case "10":
+        return <a><VocIcon /></a>
+      case "12":
+        return <a><DustIcon /></a>
+    }
+  }
+
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     //渲染数据及企业排口图标和运行状态
@@ -529,9 +574,9 @@ class NavigationTree extends Component {
               <span style={{ marginLeft: 3 }}>{item.title}</span>
             );
         if (item.children) {
-          return (
+          return ( 
             <TreeNode style={{ width: "100%" }} title={
-              <div style={{ width: "271px" }}>{item.IsEnt == 1 ? <a><EntIcon /></a> : ""}{title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
+              <div style={{ width: "271px" }}>{this.getEntIcon(item.MonitorObjectType)}{title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -539,8 +584,8 @@ class NavigationTree extends Component {
 
         }
         return <TreeNode style={{ width: "100%" }} title={
-          <div style={{ width: "253px" }}>{item.PollutantType == 1 ? <a><WaterIcon /></a> : <a><GasIcon /></a>}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{this.props.BellList.indexOf(item.key) > -1 ? <BellIcon style={{fontSize:10,marginTop:7,marginRight:-40, float:'right'}} /> : ""}
+          <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{this.props.BellList.indexOf(item.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right' }} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>
