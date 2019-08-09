@@ -6,6 +6,7 @@ import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'global',
@@ -20,6 +21,11 @@ export default Model.extend({
       notifyCount: 0,
       unreadCount: 0,
     },
+    getAlarmNoticesParameters: {
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DGIMN: null,
+    },
   },
   effects: {
     *fetchNotices({ payload }, { call, put, update }) {
@@ -32,10 +38,8 @@ export default Model.extend({
       })
       //报警消息
       let today = getTimeDistance('today');
-      const result = yield call(getAlarmNotices, {
-        beginTime: today[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: today[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
+      const { getAlarmNoticesParameters } = yield select(a => a.global);
+      const result = yield call(getAlarmNotices, { getAlarmNoticesParameters });
       let notices = [];
       let count = 0;
       if (result.IsSuccess) {
