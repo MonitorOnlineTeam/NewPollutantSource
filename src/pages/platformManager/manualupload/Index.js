@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import { routerRedux } from 'dva/router';
-import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Tooltip, Popconfirm, Form } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '../../../components/NavigationTree'
 import ContentList from './components/ContentList'
 
-const { confirm } = Modal;
-@connect(({ loading, hkvideo }) => ({
-    ...loading,
-    videoListParameters: hkvideo.videoListParameters,
-}))
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dgimn: null,
+            DGIMN: "62262431qlsp02",
         };
     }
 
@@ -23,18 +17,18 @@ class Index extends Component {
         debugger
 
     }
-    changeDgimn = dgimn => {
-        this.setState({
-            dgimn,
-        })
-    }
+    // changeDgimn = dgimn => {
+    //     this.setState({
+    //         DGIMN,
+    //     })
+    // }
 
     render() {
+        const { DGIMN } = this.state;
         return (
             <div id="manualupload">
                 <PageHeaderWrapper>
-                <ContentList PollutantType={upLoadParameters.pollutantTypes}  DGIMN={upLoadParameters.manualUploaddataOne} />
-                    {/* <AlarmRecord DGIMN={this.state.dgimn} /> */}
+                    <ContentList DGIMN={DGIMN} />
                 </PageHeaderWrapper>
                 <NavigationTree domId="#manualupload" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
