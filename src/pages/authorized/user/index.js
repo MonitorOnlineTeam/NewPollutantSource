@@ -48,7 +48,7 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    debugger;
+    // debugger;
     const { match } = this.props;
     this.reloadPage(match.params.configId);
   }

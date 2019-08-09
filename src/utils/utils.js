@@ -1,5 +1,5 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
-import { Icon, Badge, Popover } from 'antd';
+import { Icon, Badge, Popover,message } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -112,7 +112,56 @@ export function formatPollutantPopover(value, additional) {
   }
   return value || (value === 0 ? 0 : '-');
 }
+export function asc(a, b) {
+  //数字类型
+  if (typeof a.orderby === 'number') return a.orderby - b.orderby;
+  //时间类型
+  return a.orderby < b.orderby ? 1 : -1;
+}
+export function getTimeDistance(type) {
+  const now = new Date();
+  const oneDay = 1000 * 60 * 60 * 24;
 
+  if (type === 'today') {
+    now.setHours(0);
+    now.setMinutes(0);
+    now.setSeconds(0);
+    return [moment(now), moment(now.getTime() + (oneDay - 1000))];
+  }
+
+  if (type === 'week') {
+    let day = now.getDay();
+    now.setHours(0);
+    now.setMinutes(0);
+    now.setSeconds(0);
+
+    if (day === 0) {
+      day = 6;
+    } else {
+      day -= 1;
+    }
+
+    const beginTime = now.getTime() - day * oneDay;
+
+    return [moment(beginTime), moment(beginTime + (7 * oneDay - 1000))];
+  }
+
+  if (type === 'month') {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const nextDate = moment(now).add(1, 'months');
+    const nextYear = nextDate.year();
+    const nextMonth = nextDate.month();
+
+    return [
+      moment(`${year}-${fixedZero(month + 1)}-01 00:00:00`),
+      moment(moment(`${nextYear}-${fixedZero(nextMonth + 1)}-01 00:00:00`).valueOf() - 1000),
+    ];
+  }
+
+  const year = now.getFullYear();
+  return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
+}
 /**
  * autoForm 处理form数据
  * @param {object} values form对象

@@ -105,7 +105,7 @@ export default Model.extend({
       const result = yield call(editpersonaluser, {
         ...payload,
       });
-      debugger;
+      // debugger;
       yield update({
         requstresult: result.requstresult,
         reason: result.reason,

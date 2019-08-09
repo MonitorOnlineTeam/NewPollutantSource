@@ -67,7 +67,7 @@ class YsyShowVideo extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    debugger;
+    // debugger;
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.setState({
         dgimn: nextProps.DGIMN,

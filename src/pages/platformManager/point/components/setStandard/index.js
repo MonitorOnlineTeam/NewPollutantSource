@@ -70,14 +70,14 @@ class UseStandardLibrary extends Component {
   }
 
   onChange = (pageIndex, pageSize) => {
-    this.props.dispatch({
-      type: 'standardlibrary/getuselist',
-      payload: {
-        DGIMN: this.state.DGIMN,
-        pageIndex: pageIndex === undefined ? 1 : pageIndex,
-        pageSize: pageSize === undefined ? 4 : pageSize,
-      },
-    });
+    // this.props.dispatch({
+    //   type: 'standardlibrary/getuselist',
+    //   payload: {
+    //     DGIMN: this.state.DGIMN,
+    //     pageIndex: pageIndex === undefined ? 1 : pageIndex,
+    //     pageSize: pageSize === undefined ? 4 : pageSize,
+    //   },
+    // });
   };
 
   getpollutantbydgimn() {
@@ -91,16 +91,16 @@ class UseStandardLibrary extends Component {
 
   UseALL(StandardLibraryID) {
     this.props.dispatch({
-      type: 'standardlibrary/usepoint',
+      type: 'standardlibrary/useStandard',
       payload: {
         DGIMN: this.state.DGIMN,
         StandardLibraryID: StandardLibraryID,
-        callback: () => {
+        callback: (res) => {
           // debugger;
           this.setState({
             standardlibraryModal: false,
           });
-          if (this.props.requstresult === '1') {
+          if (res.IsSuccess) {
             message.success('应用成功');
           } else {
             message.error('应用失败');
@@ -120,76 +120,6 @@ class UseStandardLibrary extends Component {
         StandardLibraryID: null,
       },
     });
-  };
-
-  renderStandardList = () => {
-    console.log(this.props.list);
-    const rtnVal = [];
-    const that = this;
-    if (this.props.list.length > 0) {
-      this.props.list.map((item, key) => {
-        rtnVal.push(
-          <div key={`${key}1`} className={styles.item}>
-            <div key={`${key}2`} className={styles.standardlibrary}>
-              {item.Name}
-            </div>
-            <Divider key={`${key}3`} dashed={true} />
-            <div key={`${key}4`} className={styles.child}>
-              {that.renderPollutantItem(item.child)}
-            </div>
-            <div key={`${key}5`} className={styles.foot}>
-              <div key={`${key}6`} className={styles.use}>
-                <div key={`${key}7`} style={{ position: 'relative' }}>
-                  <Row key={`${key}8`} justify="center" type="flex">
-                    <Col key={`${key}9`} span={9}>
-                      <a
-                        key={`${key}10`}
-                        className={styles.a}
-                        onClick={() => {
-                          that.setState({
-                            StandardLibraryID: item.key,
-                            Pvisible: true,
-                            title: `${item.Name}中的污染物`,
-                            width: '50%',
-                          });
-                        }}
-                      >
-                        <Icon key={`${key}11`} type="search" /> 查看更多
-                      </a>
-                    </Col>
-                    <Col key={`${key}11`} span={3}>
-                      {' '}
-                      <Divider type="vertical" />
-                    </Col>
-                    <Col key={`${key}12`} span={9}>
-                      <Popconfirm
-                        placement="left"
-                        title="确定要此标准下所有污染物应用到此监测点下吗？"
-                        onConfirm={() => that.UseALL(item.key)}
-                        okText="是"
-                        cancelText="否"
-                      >
-                        <a key={`${key}13`} className={styles.a}>
-                          {' '}
-                          <Icon key={`${key}14`} type="appstore" /> 应用全部
-                        </a>
-                      </Popconfirm>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </div>
-          </div>,
-        );
-      });
-    } else {
-      rtnVal.push(
-        <div>
-          <img src="/nodata.png" />
-        </div>,
-      );
-    }
-    return rtnVal;
   };
 
   renderPollutantItem = pollutantList => {
@@ -402,6 +332,7 @@ class UseStandardLibrary extends Component {
       dispatch,
       pointDataWhere,
       isEdit,
+      PollutantListByDGIMN
     } = this.props;
     return (
       <PageHeaderWrapper title="监测点维护-设置标准">
@@ -469,9 +400,7 @@ class UseStandardLibrary extends Component {
                 loading={this.props.effects['standardlibrary/getpollutantbydgimn']}
                 columns={columns}
                 size="small"
-                dataSource={
-                  this.props.requstresult === '1' ? this.props.PollutantListByDGIMN : null
-                }
+                dataSource={PollutantListByDGIMN}
                 pagination={true}
                 rowClassName={(record, index, indent) => {
                   if (index === 0) {

@@ -370,7 +370,7 @@ class BaseView extends Component {
       user = JSON.parse(userCookie);
     }
     this.props.form.validateFieldsAndScroll((err, values) => {
-      debugger
+      // debugger
       if (!err) {
         that.props.dispatch({
           type: 'user/editpersonaluser',

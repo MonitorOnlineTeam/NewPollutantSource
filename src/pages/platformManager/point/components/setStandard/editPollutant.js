@@ -20,7 +20,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
 @connect(({ loading, standardlibrary }) => ({
-  isloading: loading.effects['standardlibrary/getmonitorpointpollutant'],
+  isloading: loading.effects['standardlibrary/getMonitorPointPollutantDetails'],
   reason: standardlibrary.reason,
   requstresult: standardlibrary.requstresult,
   PollutantList: standardlibrary.PollutantList,
@@ -46,7 +46,7 @@ class EditPollutant extends Component {
     const DGIMN = this.props.DGIMN;
     if (Id !== null && DGIMN !== null) {
       this.props.dispatch({
-        type: 'standardlibrary/getmonitorpointpollutant',
+        type: 'standardlibrary/getMonitorPointPollutantDetails',
         payload: {
           DGIMN: DGIMN,
           PollutantCode: Id,
@@ -109,11 +109,12 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
-              callback: () => {
-                if (this.props.requstresult === '1') {
+              callback: (res) => {
+
+                if (res.IsSuccess) {
                   message.success('编辑成功', 1).then(() => this.props.oncancel());
                 } else {
-                  message.error(this.props.reason);
+                  message.error(res.Message);
                 }
               },
             },

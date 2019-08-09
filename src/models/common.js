@@ -8,6 +8,7 @@ export default Model.extend({
     pollutantTypelist: [],
     defaultPollutantCode: null,
     enterpriseAndPointList: [],
+    defaultSelected: [],
     level: null,
   },
 
@@ -39,7 +40,7 @@ export default Model.extend({
     },
     // 获取省市区/企业/排口
     * getEnterpriseAndPoint({
-      payload,
+      payload, callback
     }, { call, update, select }) {
       const level = yield select(state => state.common.level);
       const result = yield call(services.getEnterpriseAndPoint, payload);
@@ -47,9 +48,21 @@ export default Model.extend({
         if (level !== result.Datas.level) {
           yield update({ level: result.Datas.level });
         }
-        yield update({ enterpriseAndPointList: result.Datas.list });
+        let defaultValue = [];
+        function factorial(data) {
+          // if (n == 1) return n;
+          if (data && data.children) {
+            defaultValue.push(data.value)
+            factorial(data.children[0])
+          }
+        }
+        factorial(result.Datas.list[0])
+        yield update({
+          enterpriseAndPointList: result.Datas.list,
+          defaultSelected: defaultValue
+        });
 
-        payload.callback && payload.callback()
+        callback && callback(result.Datas.list, defaultValue)
       }
     },
   },

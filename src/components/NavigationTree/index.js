@@ -252,7 +252,7 @@ class NavigationTree extends Component {
   onChangeSearch = e => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.generateList()
-    debugger
+    // debugger
     const { value } = e.target;
     const expandedKeys = dataList
       .map(item => {
@@ -599,9 +599,9 @@ class NavigationTree extends Component {
             placeholder="查询企业排口"
             onChange={this.onChangeSearch}
             // onChange={console.log("111")}
-            style={{ marginTop: 10, width: 240 }}
+            style={{ marginTop: 10, width: '67%' }}
           />
-          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer" }} onChange={this.onRadioChange}>
+          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer",width: '28%' }} onChange={this.onRadioChange}>
             <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
@@ -648,7 +648,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%" }}
+                style={{ marginTop: "5%",maxHeight:'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
 
                 onExpand={this.onExpand}
                 expandedKeys={expandedKeys}
