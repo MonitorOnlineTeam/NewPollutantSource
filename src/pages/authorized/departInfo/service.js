@@ -120,10 +120,10 @@ export async function getregioninfobytree(params) {
 // 获取企业+排口
 export async function getentandpoint(params) {
     const body={
-        PollutantType:params.PollutantType,
-        RegionCode:params.RegionCode
+        PollutantTypes:params.PollutantType,
+        RegionCode:params.RegionCode,
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetEntAndPoint', body);
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', body);
     return result === null ? {
         data: null
     } : result;

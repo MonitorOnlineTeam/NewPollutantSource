@@ -229,7 +229,18 @@ export default Model.extend({
         }, {
             call,
             update,
+            select,
+            take
         }) {
+            if(!payload.PollutantType)
+            {
+                yield take('common/getPollutantTypeList/@@end');
+                const dd = yield select(state => state.common);
+                payload={
+                    ...payload,
+                    PollutantTypes:dd.defaultPollutantCode
+                }
+            }
             const result = yield call(getentandpoint, {
                 ...payload
             });
