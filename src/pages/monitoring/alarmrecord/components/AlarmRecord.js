@@ -10,6 +10,9 @@ import {
     message,
     Badge,
     Icon,
+    Row,
+    Col,
+    Input,
 } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
@@ -17,8 +20,12 @@ import RangePicker_ from '@/components/RangePicker'
 import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
+import SdlDatePicker from '@/pages/AutoFormManager/SdlDatePicker';
+
+import Cookie from 'js-cookie';
 import Styles from './index.less';
 
+const FormItem = Form.Item;
 /**
  * 报警记录
  * xpy 2019.07.26
@@ -51,7 +58,10 @@ class AlarmRecord extends Component {
         };
     }
 
+
      componentWillReceiveProps = nextProps => {
+       console.log('------------------------------------------000', nextProps.DGIMN);
+       console.log('------------------------------------------111', this.props.DGIMN);
           const { DGIMN, lasttime, firsttime } = this.props;
           if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
                  // 如果传入参数有变化，则重新加载数据
@@ -77,6 +87,7 @@ class AlarmRecord extends Component {
             } else {
                 // 如果传入参数有变化，则重新加载数据
                 if (nextProps.DGIMN !== DGIMN) {
+                  debugger;
                     const { rangeDate } = this.state;
                   let {
                     overdataparams,
@@ -226,11 +237,14 @@ class AlarmRecord extends Component {
 
     /** 保存核查单 */
      handleOk = e => {
-    const { dispatch, form, overdataparams } = this.props;
+    const { dispatch, form, overdataparams, DGIMN } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
        const formData = handleFormData(values, this.state.uid);
-        console.log('formData=', formData);
+        formData.VerifyPerSon = formData.VerifyPerSon1;
+        formData.VerifyTime = formData.VerifyTime1;
+        formData.DGIMN = DGIMN;
+        formData.EntCode = '51216eae-8f11-4578-ad63-5127f78f6cca';
         dispatch({
           type: 'alarmrecord/AddExceptionVerify',
           payload: {
@@ -255,13 +269,8 @@ class AlarmRecord extends Component {
   };
 
       render() {
-          // let tablewidth = 0;
-          // const colcount = 5;
-          // let width = (window.screen.availWidth - 120) / colcount;
-          // if (width < 200) {
-          //     width = 200;
-          // }
-          // tablewidth = width * colcount;
+          const userCookie = Cookie.get('currentUser');
+          const UserName = JSON.parse(userCookie).User_Name;
           const { selectedRowKeys } = this.state;
            const rowSelection = {
              selectedRowKeys,
@@ -270,6 +279,7 @@ class AlarmRecord extends Component {
                disabled: record.State === '1', // Column configuration not to be checked
                name: record.State,
              }),
+             hideDefaultSelections: true,
            };
            console.log('object')
           const columns = [{
@@ -314,9 +324,30 @@ class AlarmRecord extends Component {
                 }
                 return <span> <Badge status="default" text="已核查" /> </span>;
             },
+            filters: [{
+                  text: '未核实',
+                  value: '0',
+                },
+                {
+                  text: '已核实',
+                  value: '1',
+                },
+              ],
+              onFilter: (value, record) => record.State.indexOf(value) === 0,
           },
         ];
            const { isloading, overdataparams, form } = this.props;
+           const {
+             getFieldDecorator,
+           } = this.props.form;
+           const formLayout = {
+             labelCol: {
+               span: 8,
+             },
+             wrapperCol: {
+               span: 14,
+             },
+           };
           if (isloading) {
               return (<Spin
                   style={{ width: '100%',
@@ -350,9 +381,23 @@ class AlarmRecord extends Component {
                               pagination={{
                                    pageSize: 10,
                               }}
+                              onRow={(record, index) => ({
+                                  onClick: event => {
+                                    const { selectedRowKeys } = this.state;
+                                    let keys = selectedRowKeys;
+                                    if (selectedRowKeys.some(item => item === record.ID)) {
+                                      keys = keys.filter(item => item !== record.ID)
+                                    } else if (record.State !== '1') {
+                                      keys.push(record.ID);
+                                      }
+                                    this.setState({
+                                      selectedRowKeys: keys,
+                                    })
+                                  },
+                                })}
                           />
                           <Modal
-                              title="核查单"
+                              title="核查单详情"
                               visible={this.state.visible}
                               destroyOnClose // 清除上次数据
                               onOk={this.handleOk}
@@ -365,7 +410,40 @@ class AlarmRecord extends Component {
                               }}
                               width="50%"
                             >
-                              <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns />
+                              <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
+                              <Row>
+                              <Col span={12}>
+                                <FormItem {...formLayout} label="核查人">
+                                  {getFieldDecorator('VerifyPerSon1', {
+                                    initialValue: UserName,
+                                    rules: [
+                                      {
+                                        required: true,
+                                        message: '核查人不能为空',
+                                      },
+                                    ],
+                                  })(
+                                    <Input></Input>,
+                                  )}
+                                </FormItem>
+                              </Col>
+                              <Col span={12}>
+                                <FormItem {...formLayout} label="核查时间">
+                                  {getFieldDecorator('VerifyTime1', {
+                                    initialValue: moment(),
+                                    rules: [
+                                      {
+                                        required: true,
+                                        message: '核查时间不能为空',
+                                      },
+                                    ],
+                                  })(
+                                    <SdlDatePicker/>,
+                                  )}
+                                </FormItem>
+                              </Col>
+                              </Row>
+                              </SdlForm>
                         </Modal>
                       </Card>
                   </div>
