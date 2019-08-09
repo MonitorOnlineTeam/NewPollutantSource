@@ -69,7 +69,7 @@ export default Model.extend({
             },
           });
         } else {
-          message.info('菜单获取失败，请联系系统管理员！');
+          //message.info('菜单获取失败，请联系系统管理员！');
         }
         // if (responseMenu.requstresult === '1') {
         //     const cMenu = yield call(formatter, responseMenu.data);

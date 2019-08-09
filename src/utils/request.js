@@ -132,10 +132,10 @@ const errorHandler = error => {
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
-    notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
-    });
+    // notification.error({
+    //   message: `请求错误 ${status}: ${url}`,
+    //   description: errorText,
+    // });
   }
 };
 /**
