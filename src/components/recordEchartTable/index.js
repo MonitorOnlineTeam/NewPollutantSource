@@ -17,7 +17,7 @@ import moment from 'moment';
     exmodellistLoading: loading.effects['recordEchartTable/getexmodellist'],
     exceptionData: recordEchartTable.exceptionData,
     exceptionDataLoading: loading.effects['recordEchartTable/getexceptiondata'],
-    exfirstData:recordEchartTable.exfirstData
+    exfirstData: recordEchartTable.exfirstData
 }))
 @Form.create()
 class Index extends Component {
@@ -74,6 +74,8 @@ class Index extends Component {
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         })
+
+
         console.log("props=", this.props)
     }
     componentWillReceiveProps(nextProps) {
@@ -94,36 +96,33 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'recordEchartTable/updateState',
                 payload: {
-                    exceptionData:[],
+                    exceptionData: [],
                 },
             })
-            this.props.dispatch({
-                type: "recordEchartTable/getexmodellist",
-                payload: {
-                    beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-                    endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
-                    dataType: this.state.dataType,
-                    DGIMN: [nextProps.DGIMN],
-                }
-            })
+            if (this.props.startTimes && this.props.endTimes) {
+                this.props.dispatch({
+                    type: "recordEchartTable/getexmodellist",
+                    payload: {
+                        beginTime: this.props.startTimes == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.props.startTimes,
+                        endTime: this.props.endTimes == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.props.endTimes,
+                        dataType: this.state.dataType,
+                        DGIMN: [nextProps.DGIMN],
+                    }
+                })
+            } else {
+                this.props.dispatch({
+                    type: "recordEchartTable/getexmodellist",
+                    payload: {
+                        beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                        endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
+                        dataType: this.state.dataType,
+                        DGIMN: [nextProps.DGIMN],
+                    }
+                })
+            }
+
         }
-        if (this.props.startTimes != nextProps.startTimes||this.props.endTimes!=nextProps.endTimes) {
-            this.props.dispatch({
-                type: 'recordEchartTable/updateState',
-                payload: {
-                    exceptionData:[],
-                },
-            })
-            this.props.dispatch({
-                type: "recordEchartTable/getexmodellist",
-                payload: {
-                    beginTime: nextProps.startTimes == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : nextProps.startTimes,
-                    endTime: nextProps.endTimes == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : nextProps.endTimes,
-                    dataType: this.state.dataType,
-                    DGIMN: [this.props.DGIMN],
-                }
-            })
-        }
+
     }
     // /** 后台请求数据 */
     // reloaddatalist = () => {
@@ -172,7 +171,7 @@ class Index extends Component {
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
-                exceptionData:[],
+                exceptionData: [],
             },
         })
         this.props.dispatch({
@@ -232,7 +231,7 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'recordEchartTable/updateState',
                 payload: {
-                    exceptionData:[],
+                    exceptionData: [],
                 },
             })
             this.props.dispatch({
@@ -253,7 +252,7 @@ class Index extends Component {
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
-                exfirstData:[],
+                exfirstData: [],
             },
         })
         var name = e.name
@@ -306,58 +305,58 @@ class Index extends Component {
                         </div>
                     }
                 >
-                    <Card.Grid  style={{ width: '100%',  height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
-                    {
-                        this.props.exmodellistLoading ? <Spin
-                            style={{
-                                width: '100%',
-                                height: 'calc(100vh/2)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                            size="large"
-                        /> :
-                            <div> {
-                                this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
+                        {
+                            this.props.exmodellistLoading ? <Spin
+                                style={{
+                                    width: '100%',
+                                    height: 'calc(100vh/2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                size="large"
+                            /> :
+                                <div> {
+                                    this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
-                                    <ReactEcharts
-                                        theme="light"
-                                        option={option}
-                                        lazyUpdate
-                                        notMerge
-                                        id="rightLine"
-                                        onEvents={this.onclick}
-                                        style={{ width: '100%', height: 'calc(100vh - 700px)' }}
-                                    />
+                                        <ReactEcharts
+                                            theme="light"
+                                            option={option}
+                                            lazyUpdate
+                                            notMerge
+                                            id="rightLine"
+                                            onEvents={this.onclick}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)' }}
+                                        />
 
-                                    {
-                                        // this.props.exceptionDataLoading ? <Spin
-                                        //     style={{
-                                        //         width: '100%',
-                                        //         height: 'calc(100vh/2)',
-                                        //         display: 'flex',
-                                        //         alignItems: 'center',
-                                        //         justifyContent: 'center'
-                                        //     }}
-                                        //     size="large"
-                                        // /> :
-                                        //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                                <SdlTable
-                                                    loading={this.props.exceptionDataLoading}
-                                                    // style={{ width: "400px", height: "500px" }}
-                                                    scroll={{ y: 300 }}
-                                                    columns={column}
-                                                    dataSource={this.props.exfirstData}
-                                                >
-                                                </SdlTable>
+                                        {
+                                            // this.props.exceptionDataLoading ? <Spin
+                                            //     style={{
+                                            //         width: '100%',
+                                            //         height: 'calc(100vh/2)',
+                                            //         display: 'flex',
+                                            //         alignItems: 'center',
+                                            //         justifyContent: 'center'
+                                            //     }}
+                                            //     size="large"
+                                            // /> :
+                                            //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                            <SdlTable
+                                                loading={this.props.exceptionDataLoading}
+                                                // style={{ width: "400px", height: "500px" }}
+                                                scroll={{ y: 300 }}
+                                                columns={column}
+                                                dataSource={this.props.exfirstData}
+                                            >
+                                            </SdlTable>
                                             // </div>
-                                    }
-                                </div>
-                            }</div>
-                    }
+                                        }
+                                    </div>
+                                }</div>
+                        }
 
-        </Card.Grid>
+                    </Card.Grid>
                 </Card>
             </div>
         );

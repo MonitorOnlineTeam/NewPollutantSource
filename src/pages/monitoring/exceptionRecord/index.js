@@ -66,7 +66,7 @@ class Index extends Component {
                     }
                 }} />
                 <PageHeaderWrapper>
-                    <RecordEchartTable  DGIMN={this.state.dgimn}   />
+                    <RecordEchartTable  DGIMN={this.state.dgimn}    />
                 </PageHeaderWrapper>
                 
             </div>
