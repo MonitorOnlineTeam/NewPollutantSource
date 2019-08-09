@@ -170,7 +170,7 @@ getvideolist= dgimn => {
             return (<VideoSelect
                 optionDatas={videoList}
                 defaultValue={this.getpropspollutantcode()}
-                style={{ width: 150, marginRight: 5 }}
+                style={{ width: 200, marginRight: 5 }}
                 onChange={this.handlePollutantChange}
             />);
     }
@@ -349,7 +349,7 @@ getvideolist= dgimn => {
         /></div ></Card>);
     }
     return (
-        <div style={{ height: 'calc(100vh - 245px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
+        <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
           <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
             <div
               className={styles.divv}
@@ -372,7 +372,6 @@ getvideolist= dgimn => {
                   onChange={key => {
                     this.tabsChange(key);
                   }}
-                  tabBarExtraContent={!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                 >
                   <TabPane tab="实时" key="1">
                     <Row>
@@ -445,6 +444,12 @@ getvideolist= dgimn => {
                         >
                           抓取图片
                         </a>
+                      </Col>
+                    </Row>
+                    <Divider type="dashed" />
+                     <Row gutter={48} style={{ display: this.state.displayR }}>
+                      <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
+                        {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                       </Col>
                     </Row>
                     <Divider type="dashed" />
