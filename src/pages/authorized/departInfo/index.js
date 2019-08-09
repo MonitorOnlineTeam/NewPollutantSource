@@ -434,12 +434,12 @@ class DepartIndex extends Component {
         })
     }
     showDataModal = () => {
-        console.log('///=', this.props.ConfigInfo)
-        var list = this.props.ConfigInfo.SystemPollutantType ? this.props.ConfigInfo.SystemPollutantType.split(',') : []
-        var type = list.length > 0 ? list[0] : "";
-        this.setState({
-            pollutantType: type,
-        })
+        // console.log('///=', this.props.ConfigInfo)
+        // var list = this.props.ConfigInfo.SystemPollutantType ? this.props.ConfigInfo.SystemPollutantType.split(',') : []
+        // var type = list.length > 0 ? list[0] : "";
+        // this.setState({
+        //     pollutantType: type,
+        // })
         if (this.state.selectedRowKeys.length == 0) {
             message.error("请选中一行")
             return
@@ -456,7 +456,6 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
-                PollutantType: type,
             }
         })
         this.props.dispatch({
