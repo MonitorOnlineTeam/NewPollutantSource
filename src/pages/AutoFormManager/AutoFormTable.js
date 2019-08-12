@@ -328,8 +328,6 @@ class AutoFormTable extends PureComponent {
             {
               this._SELF_.btnEl.map((item, index) => {
                 if (item.type === 'edit' && btnsAuthority.includes('edit')) {
-                  console.log('columns=', columns)
-
                   // const uid = record.
                   return (
                     <Fragment key={item.type}>

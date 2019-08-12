@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import MonitorContent from '../../components/MonitorContent/index';
+import SdlMap from './SdlMap'
 import ReturnName from './ReturnName'
 import styles from '../../components/DescriptionList/index.less';
 
@@ -88,12 +88,29 @@ class AutoFormViewItems extends Component {
       //     itemName={item.configDataItemName}
       //   />
       // } else {
-        showText = formData[item.fieldName]
+      showText = formData[item.fieldName]
+      let el = <div className={styles.detail}>{showText}</div>;
       // }
+      if (item.type === "坐标集合") {
+        return <Col span={24} style={{ marginBottom: 10 }} key={item.fieldName}>
+          <div className={styles.term} style={{ verticalAlign: "top" }}>{item.labelText}</div>
+          <div className={styles.detail}><SdlMap
+            mode="map"
+            longitude={formData["Longitude"]}
+            latitude={formData["Latitude"]}
+            path={showText}
+            handleMarker={true}
+            handlePolygon={true}
+            style={{ height: 400 }}
+            zoom={12}
+          /></div>
+        </Col>
+      }
+
       return (
         <Col span={6} style={{ marginBottom: 10 }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>
-          <div className={styles.detail}>{showText}</div>
+          {el}
         </Col>
       )
     })
