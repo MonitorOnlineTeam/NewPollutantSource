@@ -241,6 +241,8 @@ class DataQuery extends Component {
             ...historyparams,
             payloadpollutantCode: '',
             payloadpollutantName: '',
+            pageIndex: 1,
+            pageSize: 20,
         }
         dispatch({
             type: 'dataquery/updateState',
@@ -249,6 +251,27 @@ class DataQuery extends Component {
             },
         })
         this.getpointpollutants(dgimn);
+    }
+
+    /** 分页 */
+     onShowSizeChange = (pageIndex, pageSize) => {
+        let { historyparams } = this.props;
+        historyparams = {
+            ...historyparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(historyparams);
+    }
+
+    onChange = (pageIndex, pageSize) => {
+        let { historyparams } = this.props;
+        historyparams = {
+            ...historyparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(historyparams);
     }
 
     /** 渲染数据展示 */
@@ -277,7 +300,7 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '100%', height: 'calc(100vh - 380px)' }}
+                    style={{ width: '100%', height: 'calc(100vh - 500px)' }}
                 />);
             }
 
@@ -287,9 +310,20 @@ class DataQuery extends Component {
             rowKey={(record, index) => `complete${index}`}
             dataSource={datatable}
             columns={columns}
-            pagination={{
-                pageSize: 15,
-            }}
+            scroll={{ y: 'calc(100vh - 550px)' }}
+            pagination = {
+               {
+                 size: 'small',
+                 showSizeChanger: true,
+                 showQuickJumper: true,
+                 total: this.props.total,
+                 pageSize: this.props.historyparams.pageSize,
+                 current: this.props.historyparams.pageIndex,
+                 onChange: this.onChange,
+                 onShowSizeChange: this.onShowSizeChange,
+                 pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
+               }
+             }
         />);
     }
 
@@ -311,7 +345,7 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 100px)', ...this.props.style }}>
                         {this.loaddata()}
                     </Card.Grid>
                 </Card>

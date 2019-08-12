@@ -370,7 +370,7 @@ class AlarmRecord extends Component {
                                   <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm:ss" onChange={this._handleDateChange} dateValue={this.state.rangeDate} />
                               </div>
                           }
-                          style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}
+                          style={{ width: '100%', height: 'calc(100vh - 100px)', ...this.props.style }}
                       >
                           <SdlTable
                               loading={this.props.dataloading}
@@ -378,9 +378,20 @@ class AlarmRecord extends Component {
                               dataSource={this.props.data}
                               rowKey = "ID"
                               rowSelection={rowSelection}
-                              pagination={{
-                                   pageSize: 10,
-                              }}
+                              scroll={{ y: 'calc(100vh - 550px)' }}
+                             pagination = {
+                                {
+                                  size: 'small',
+                                  showSizeChanger: true,
+                                  showQuickJumper: true,
+                                  total: this.props.total,
+                                  pageSize: this.props.historyparams.pageSize,
+                                  current: this.props.historyparams.pageIndex,
+                                  onChange: this.onChange,
+                                  onShowSizeChange: this.onShowSizeChange,
+                                  pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
+                                }
+                              }
                               onRow={(record, index) => ({
                                   onClick: event => {
                                     const { selectedRowKeys } = this.state;
