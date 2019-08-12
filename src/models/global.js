@@ -175,6 +175,7 @@ export default Model.extend({
     *getBtnAuthority({ payload }, { call, put, select }) {
       // const menuCode = yield select(state => state.menu.menuCode);
       const result = yield call(getBtnAuthority, payload);
+      debugger;
       if (result.IsSuccess) {
         const btnsAuthority = result.Datas.map(item => item.Code);
         // console.log('btnsAuthority=', btnsAuthority);
