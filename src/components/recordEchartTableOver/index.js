@@ -319,7 +319,7 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)' }}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)',minHeight:'200px' }}
                                         />
 
                                         {
@@ -337,7 +337,7 @@ class Index extends Component {
                                             <SdlTable
                                                 loading={this.props.overDataLoading}
                                                 scroll={{ y: 300 }}
-                                                // style={{ width: "400px", height: "500px" }}
+                                                style={{  minHeight: "200px" }}
                                                 columns={column}
                                                 dataSource={this.props.overfirstData}
                                             >
