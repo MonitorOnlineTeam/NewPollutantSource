@@ -48,14 +48,22 @@ export default Model.extend({
             take
         }) {
             if (!payload.PollutantTypes) {
-                const global = yield select(state => state.global);
-                if (!global && !global.configInfo) {
+                let global = yield select(state => state.global);
+                if (!global.configInfo) {
                     yield take('global/getSystemConfigInfo/@@end');
+                    global = yield select(state => state.global);
+                    console.log("///=",global.configInfo.SystemPollutantType)
+                    payload = {
+                        ...payload,
+                        PollutantTypes: global.configInfo.SystemPollutantType
+                    }
+                }else {
+                    payload = {
+                        ...payload,
+                        PollutantTypes: global.configInfo.SystemPollutantType
+                    }
                 }
-                payload = {
-                    ...payload,
-                    PollutantTypes: global.configInfo.SystemPollutantType
-                }
+                
             }
             const result = yield call(getentandpoint, { ...payload });
             if (result.IsSuccess) {
