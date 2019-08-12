@@ -20,7 +20,7 @@ class SdlMap extends PureComponent {
       },
       isChangePos: false,
       address: null,
-      polygon: null,
+      polygon: [],
       path: props.path
       // mapCenter: { longitude: 120, latitude: 35 },
     };
@@ -80,16 +80,38 @@ class SdlMap extends PureComponent {
         // self.drawWhat(obj);
         if (obj.CLASS_NAME === "AMap.Polygon") {
           // 绘制厂界
-          const polygon = obj.getPath().map(item => {
-            return {
-              longitude: item.lng,
-              latitude: item.lat
-            }
-          })
+          let markersList = [];
+          for (let i = 0; i < obj.getPath().length; i++) {
+            let garr = new Array();
+            garr.push(obj.getPath()[i].lng);
+            garr.push(obj.getPath()[i].lat);
+            markersList.push(garr);
+          }
+          // const polygon = obj.getPath().map(item => {
+          //   return {
+          //     longitude: item.lng,
+          //     latitude: item.lat
+          //   }
+          // })
+          let polygon = [];
+          if (self.state.polygon.length) {
+            polygon = self.state.polygon;
+            polygon.push([markersList])
+            // polygon = [
+            //   self.state.polygon,
+            //   [markersList]
+            // ]
+          } else {
+            polygon.push([
+              markersList
+            ])
+          }
+
           self.setState({
             polygon: polygon
           })
         }
+
         // console.log('getPosition=', obj.getPosition())
         // return;
         // self.setState({
@@ -100,6 +122,10 @@ class SdlMap extends PureComponent {
         // })
       }
     }
+
+    this.props.mode === "map" && this.setState({
+      mapCenter: [this.props.longitude, this.props.latitude]
+    })
   }
 
 
@@ -113,6 +139,38 @@ class SdlMap extends PureComponent {
       }
       this.props.onOk(marker)
     }
+  }
+
+  //js 转换
+  json2string = (jsonObj) => {
+    let type = Object.prototype.toString.call(jsonObj).slice(8, -1); let rs;
+    switch (type) {
+      case "Undefined":
+      case "Null":
+      case "Number":
+      case "Boolean":
+      case "Date":
+      case "Function":
+      case "Error":
+      case "RegExp": rs = jsonObj; break;
+      case "String": rs = `"${jsonObj}"`; break;
+      case "Array":
+        rs = "";
+        for (let i = 0, len = jsonObj.length; i < len; i++) {
+          rs += `${this.json2string(jsonObj[i])},`;
+        }
+        rs = `[${rs.slice(0, -1)}]`;
+        break;
+
+      case "Object":
+        rs = [];
+        for (let k in jsonObj) {
+          rs.push(`"${k.toString()}":${this.json2string(jsonObj[k])}`);
+        }
+        rs = `{${rs.join(",")}}`;
+        break;
+    }
+    return rs;
   }
 
   // 关闭弹窗
@@ -197,20 +255,21 @@ class SdlMap extends PureComponent {
 
       }
     }
+    console.log('mapCenter=',this.state.mapCenter)
     return <Map
       amapkey={YOUR_AMAP_KEY}
       center={this.state.mapCenter}
-      zoom={15}
+      zoom={this.props.zoom}
       events={events}
     >
       {
         // 地图标注点
-        this.state.position.longitude && this.state.position.latitude &&
+        this.state.position.longitude && this.state.position.latitude && this.props.handleMarker &&
         <Marker
           position={this.state.position}
         />
       }
-      {
+      {/* {
         // 绘制厂界
         this.state.path && <Polygon path={this.state.path} style={{
           strokeColor: "#FF33FF", //线颜色
@@ -220,14 +279,44 @@ class SdlMap extends PureComponent {
           fillOpacity: 0.35,//填充透明度
           bubble: true
         }} />
+      } */}
+      {
+        this.getPolygon()
       }
       <MouseTool events={this.toolEvents} />
     </Map>
   }
 
+  // 绘制厂界
+  getPolygon = () => {
+    const res = [];
+    console.log('this.props.path=',this.props.path)
+    if (this.props.path) {
+      const arr = eval(this.props.path);
+      for (let i = 0; i < arr.length; i++) {
+        console.log('arr=',arr[i])
+        res.push(<Polygon
+          // events={this.polygonEvents}
+          // key={item.entCode+i}
+          // extData={item}
+          style={{
+            strokeColor: '#FF33FF',
+            strokeOpacity: 0.2,
+            strokeWeight: 3,
+            fillColor: '#595959',
+            fillOpacity: 0.35,
+          }}
+          path={arr[i]}
+        />);
+      }
+    }
+    return res;
+  }
+
   render() {
     const { mapVisible } = this.state;
     const { handleMarker, handlePolygon, mode, latitude, longitude } = this.props;
+    console.log('porps=',this.props)
     return (
       <Fragment>
         {
@@ -259,7 +348,7 @@ class SdlMap extends PureComponent {
         }
         {
           mode === "map" &&
-          <div className={styles.mapContent}>
+          <div className={styles.mapContent} style={{...this.props.style}}>
             {this.renderMapContent()}
           </div>
         }
@@ -277,7 +366,7 @@ class SdlMap extends PureComponent {
             this.onCloseModal();
           }}
         >
-          <div className={styles.mapContent}>
+          <div className={styles.mapContent} style={{...this.props.style}}>
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {
@@ -287,7 +376,7 @@ class SdlMap extends PureComponent {
                     longitude: undefined
                   },
                   address: undefined,
-                  polygon: undefined,
+                  polygon: [],
                   path: undefined
                 })
               }}>清除全部</Button>
@@ -337,7 +426,8 @@ SdlMap.propTypes = {
 
 SdlMap.defaultProps = {
   // handleMarker: true,
-  mode: "modal"
+  mode: "modal",
+  zoom: 13
 }
 
 export default SdlMap;
