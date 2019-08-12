@@ -563,6 +563,7 @@ class NavigationTree extends Component {
     //渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map(item => {
+        console.log("notice=",this.props.noticeList)
         const index = item.title.indexOf(searchValue);
         const beforeStr = item.title.substr(0, index);
         const afterStr = item.title.substr(index + searchValue.length);
@@ -588,7 +589,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{this.props.BellList.indexOf(item.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right' }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right',color:"red" }} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>

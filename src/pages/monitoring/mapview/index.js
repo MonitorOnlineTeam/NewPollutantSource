@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Modal, Tabs, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
+import { Form, Select, Input, Button, Card, Tag, Modal, Tabs, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -31,6 +31,7 @@ let _thismap = null;
   loading: loading.effects['mapView/getAllEntAndPoint'],
   pointLoading: loading.effects['mapView/getPointTableData'],
   chartLoading: loading.effects['mapView/getPointChartData'],
+  curPointData: mapView.curPointData,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -105,9 +106,9 @@ class MapView extends Component {
   }
 
   // 渲染坐标点
-  renderMarker = extData =>
+  renderMarker = extData => {
     // let extData = extData;
-    <div
+    return <div
       onMouseEnter={() => {
         if (this.state.infoWindowVisible === false) {
           this.setState({
@@ -173,25 +174,40 @@ class MapView extends Component {
         // </Popover>
         extData.position && <div content={extData.position.title}>
           {
-            this.state.displayType === 0 ?
-              <EntIcon style={{ fontSize: 40 }} /> :
-              (extData.position.PollutantType === "2" ?
-                <GasIcon
-
-                  style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
-                <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
+            // this.state.displayType === 0 ?
+            //   <EntIcon style={{ fontSize: 40 }} /> :
+            //   (extData.position.PollutantType === "2" ?
+            //     <GasIcon
+            //       style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
+            //     <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
+            this.renderPonit(extData)
           }
         </div>
-        // (extData.position && this.state.displayType === 0) ?
-        //   <EntIcon style={{ fontSize: 40 }} /> :
-        //   (extData.position.PollutantType === "2" ?
-        //     <GasIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} /> :
-        //     <WaterIcon style={{ fontSize: 24, color: this.getColor(extData.position.Status) }} />)
       }
-
     </div>
-
-
+  }
+  renderPonit(extData) {
+    let pointEl = null;
+    if (extData.position) {
+      if (this.state.displayType === 0) {
+        // 企业
+        pointEl = <EntIcon style={{ fontSize: 40 }} />
+      } else {
+        // 排口
+        pointEl = <div className={styles.container}>
+          {
+            extData.position.PollutantType === "2" ?
+              <GasIcon
+                style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
+              <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
+          }
+          {extData.position.Status === 2 && <div className={styles.pulse}></div>}
+          {extData.position.Status === 2 && <div className={styles.pulse1}></div>}
+        </div>
+      }
+    }
+    return pointEl;
+  }
 
   // 渲染点或企业
   randomMarker = (dataList = this.state.currentEntInfo.children) => {
@@ -310,7 +326,6 @@ class MapView extends Component {
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
       const timer = setInterval(() => {
         if (_thismap && nextProps.defaultMapInfo) {
-          debugger;
           _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
           this.setState({
             coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
@@ -360,13 +375,12 @@ class MapView extends Component {
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
-        text: `${chartData.legend}24小时趋势图`,
+        text: `24小时趋势图`,
         textStyle: {
           color: 'rgba(0, 0, 0, 0.75)',
           fontSize: 15,
           fontWeight: '400',
         },
-        // subtext: '数据来自西安兰特水电测控技术有限公司',
         x: 'center',
       },
       legend: {
@@ -598,7 +612,7 @@ class MapView extends Component {
                       <>
                         <Descriptions
                           title={
-                            <div>{this.state.currentPointInfo.title} <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                            <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                           }
                           size="small"
                           bordered>
@@ -611,7 +625,7 @@ class MapView extends Component {
                                   label: item.label
                                 }
                               })
-                            }} className={styles.content}>{item.value}</div></Descriptions.Item>)
+                            }} className={styles.content} style={{color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "")}}>{item.value}</div></Descriptions.Item>)
                           }
                         </Descriptions>
                         {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}

@@ -7,6 +7,8 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable'
+import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
+
 /**
  * 报警记录详情
  * xpy 2019.08.06
@@ -38,15 +40,7 @@ class AlarmRecordDetails extends Component {
       render() {
           const columns = [
             {
-                title: '企业-排口名称',
-                dataIndex: 'EntPointName',
-                // fixed: 'left',
-                width: 100,
-                key: 'EntPointName',
-                render: (text, record) => `【${record.EntName}】--${record.PointName}`,
-            },
-            {
-            title: '报警时间',
+            title: '首次报警时间',
             dataIndex: 'FirstTime',
             // fixed: 'left',
             width: 50,
@@ -75,18 +69,6 @@ class AlarmRecordDetails extends Component {
               width: 50,
               key: 'AlarmCount',
           },
-          {
-            title: '核查状态',
-            dataIndex: 'State',
-            width: 50,
-            key: 'State',
-             render: (text, record) => {
-                if (text === '0') {
-                    return <span> <Badge status="error" text="未核查" /> </span>;
-                }
-                return <span> <Badge status="default" text="已核查" /> </span>;
-            },
-          },
         ];
            const { isloading } = this.props;
           if (isloading) {
@@ -100,12 +82,15 @@ class AlarmRecordDetails extends Component {
               />);
           }
           return (
-                  <div>
-                      <Card
-                          titile="报警单详情"
-                          style={{ width: '100%', height: 'calc(100vh - 330px)', overflow: 'auto' }}
-                      >
-                          <SdlTable
+                  <div style={{ width: '100%', height: 'calc(100vh - 330px)', overflow: 'auto' }}>
+                      <Card title="核查单详情" bordered={false}>
+                          <AutoFormViewItems
+                            configId="ExceptionVerify"
+                            keysParams={{ 'dbo.T_Cod_ExceptionVerify.ID': this.props.ID }}
+                        />
+                      </Card>
+                      <Card title="报警记录" bordered={false}>
+                       <SdlTable
                               loading={this.props.isloading}
                               columns={columns}
                               dataSource={this.props.AlarmRecordList}

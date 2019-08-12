@@ -305,7 +305,8 @@ class SiteDailyPage extends PureComponent {
               <Col md={3} sm={24}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
-                    initialValue: defaultSearchForm.PollutantSourceType,
+                    // initialValue: defaultSearchForm.PollutantSourceType,
+                    initialValue: pollutantTypeList.length ? pollutantTypeList[0].pollutantTypeCode : undefined,
                     rules: [{
                       required: true,
                       message: '请选择污染物类型',

@@ -254,14 +254,14 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match,parentcode } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
     const parentCode = match && match.params && match.params.parentcode || parentcode;
     // 计算长度
     const _columns = (columns || []).map(col => {
-      if (col.title === '文件') {
+      if (col.type === '上传') {
         return {
           ...col,
           width: 400,
@@ -328,16 +328,18 @@ class AutoFormTable extends PureComponent {
             {
               this._SELF_.btnEl.map((item, index) => {
                 if (item.type === 'edit' && btnsAuthority.includes('edit')) {
-                  const filterList = columns.filter(itm => itm.title == '文件')[0] || {};
-                  const key = filterList.dataIndex;
-                  const fileInfo = record[key] && record[key].split(';')[0];
-                  const list = fileInfo ? fileInfo.split('|') : [];
-                  const uid = list[list.length - 2] || null;
+                  console.log('columns=', columns)
+
                   // const uid = record.
                   return (
                     <Fragment key={item.type}>
                       <Tooltip title="编辑">
                         <a onClick={() => {
+                          const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
+                          const key = filterList.dataIndex;
+                          const fileInfo = record[key] && record[key].split(';')[0];
+                          const list = fileInfo ? fileInfo.split('|') : [];
+                          const uid = list[list.length - 2] || null;
                           const postData = {};
                           keys[configId].map(item => {
                             if (record[item]) {
@@ -460,15 +462,15 @@ class AutoFormTable extends PureComponent {
           {
             // 更多操作
             this._SELF_.moreBtns.length ? <Dropdown overlay={() => <Menu onClick={this.moreClick}>
-                {
-                  this._SELF_.moreBtns.map(item => {
-                    return <Menu.Item key={item.type}>
-                      <Icon type={item.type} />
-                      {item.text}
-                    </Menu.Item>
-                  })
-                }
-              </Menu>}>
+              {
+                this._SELF_.moreBtns.map(item => {
+                  return <Menu.Item key={item.type}>
+                    <Icon type={item.type} />
+                    {item.text}
+                  </Menu.Item>
+                })
+              }
+            </Menu>}>
               <Button>
                 更多操作 <Icon type="down" />
               </Button>
@@ -504,24 +506,22 @@ class AutoFormTable extends PureComponent {
           onChange={this._handleTableChange}
           rowSelection={rowSelection}
           onRow={(record, index) => ({
-              onClick: event => {
-                const { selectedRowKeys } = this.state;
-                let keys = selectedRowKeys;
-                if (selectedRowKeys.some(item => item == index)) {
-                  keys = keys.filter(item => item !== index)
-                  console.log('keys=',keys)
-                  // keys.splice(index, 1)
-                } else {
-                  console.log('checkboxOrRadio=',checkboxOrRadio)
-                  // keys = keys.concat([index])
-                  keys = checkboxOrRadio === 1 ? [index] : keys.concat([index]);
-                }
-                // return;
-                this.setState({
-                  selectedRowKeys: keys
-                })
-              },
-            })}
+            onClick: event => {
+              const { selectedRowKeys } = this.state;
+              let keys = selectedRowKeys;
+              if (selectedRowKeys.some(item => item == index)) {
+                keys = keys.filter(item => item !== index)
+                // keys.splice(index, 1)
+              } else {
+                // keys = keys.concat([index])
+                keys = checkboxOrRadio === 1 ? [index] : keys.concat([index]);
+              }
+              // return;
+              this.setState({
+                selectedRowKeys: keys
+              })
+            },
+          })}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,

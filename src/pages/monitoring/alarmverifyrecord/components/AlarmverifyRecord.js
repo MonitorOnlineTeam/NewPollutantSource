@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import {
     Card,
     Spin,
-    Tooltip, Modal,
+    Tooltip, Modal, Divider, Icon,
 } from 'antd';
 import { PointIcon,
   DetailIcon,
@@ -79,6 +79,7 @@ import AlarmRecordDetails from './AlarmRecordDetails';
                             configId={configId}
                             appendHandleRows={row => (
                                 <Fragment>
+                                <Divider type="vertical"></Divider>
                                 <Tooltip title="报警记录详情">
                                 <a
                                     onClick={() => {
@@ -89,7 +90,7 @@ import AlarmRecordDetails from './AlarmRecordDetails';
                                     })
                                     }}
                                 >
-                                    <DetailIcon/>
+                                    <Icon type="snippets" theme="twoTone" />
                                 </a>
                                 </Tooltip>
                                 </Fragment>
@@ -97,7 +98,7 @@ import AlarmRecordDetails from './AlarmRecordDetails';
                         >
                         </AutoFormTable>
                         <Modal
-                              title="核查单"
+                              title="报警记录详细"
                               visible={this.state.visible}
                               destroyOnClose // 清除上次数据
                               onCancel={() => {

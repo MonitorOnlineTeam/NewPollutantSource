@@ -126,6 +126,7 @@ class AutoFormEdit extends Component {
       form={this.props.form}
       isEdit={true}
       keysParams={keysParams}
+      {...this.props}
     ></SdlForm>
   }
 

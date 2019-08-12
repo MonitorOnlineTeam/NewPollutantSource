@@ -19,7 +19,8 @@ import {
   Row,
   Col,
   Divider,
-  DatePicker
+  DatePicker,
+  message
 } from 'antd';
 import moment from 'moment';
 import cuid from 'cuid';
@@ -27,6 +28,7 @@ import { handleFormData } from '@/utils/utils'
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import router from 'umi/router';
+import Cookie from 'js-cookie';
 import { checkRules } from '@/utils/validator';
 import config from '../../../config/config'
 // import config from "@/config"
@@ -81,7 +83,8 @@ class SdlForm extends PureComponent {
       },
       inputPlaceholder: "请输入",
       selectPlaceholder: "请选择",
-      uid: props.isEdit ? (props.uid || (props.match && props.match.params.uid) || null) : cuid(),
+      // uid: props.isEdit ? (props.uid || (props.match && props.match.params.uid) || null) : cuid(),
+      uid: props.uid || (props.match && props.match.params.uid) || cuid(),
       keysParams: props.keysParams || {},
       configId: props.configId,
       isEdit: props.isEdit
@@ -155,7 +158,7 @@ class SdlForm extends PureComponent {
       let validate = [];
       let element = '';
       let { placeholder, validator } = item;
-      const { fieldName, labelText, required } = item;
+      const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
       let initialValue = formData[fieldName] && formData[fieldName] + "";
       // 判断类型
@@ -169,7 +172,8 @@ class SdlForm extends PureComponent {
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
-          initialValue = formData[fieldName] && (formData[fieldName] + "").split(",");
+          // initialValue = formData[fieldName] && (formData[fieldName] + "").split(",");
+          initialValue = formData[configDataItemValue] && (formData[configDataItemValue] + "").split(",");
           placeholder = placeholder || selectPlaceholder;
           const mode = item.type === "多选下拉列表" ? 'multiple' : '';
           element = (
@@ -284,28 +288,33 @@ class SdlForm extends PureComponent {
         default:
           if (item.type === "上传") {
             // if (!isEdit) {
-              const props = {
-                action: config.proxy["/upload"].target + "/rest/PollutantSourceApi/UploadApi/PostFiles",
-                // action: config.fileUploadUrl,
-                // onChange: this.handleChange(fieldName),
-                onChange(info) {
-                  if (info.file.status === 'done') {
-                    // message.success(`${info.file.name} file uploaded successfully`);
-                  } else if (info.file.status === 'error') {
-                    message.error("上传文件失败！")
-                  }
-                },
-                multiple: true,
-                data: {
-                  FileUuid: uid,
-                  FileActualType: "1"
+            const ssoToken = Cookie.get('ssoToken');
+            const props = {
+              action: config.proxy["/upload"].target + "/rest/PollutantSourceApi/UploadApi/PostFiles",
+              // headers: {
+              //   Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
+              //   // 'Content-Type': 'application/json',
+              // },
+              // action: config.fileUploadUrl,
+              // onChange: this.handleChange(fieldName),
+              onChange(info) {
+                if (info.file.status === 'done') {
+                  // message.success(`${info.file.name} file uploaded successfully`);
+                } else if (info.file.status === 'error') {
+                  message.error("上传文件失败！")
                 }
-              };
-              element = <Upload {...props} defaultFileList={fileList}>
-                <Button>
-                  <Icon type="upload" /> 文件上传
+              },
+              multiple: true,
+              data: {
+                FileUuid: uid,
+                FileActualType: "1"
+              }
+            };
+            element = <Upload {...props} defaultFileList={fileList}>
+              <Button>
+                <Icon type="upload" /> 文件上传
                 </Button>
-              </Upload>
+            </Upload>
             // } else {
             //   console.log('edit')
             //   element = <SdlUpload
@@ -411,6 +420,8 @@ class SdlForm extends PureComponent {
         //   }
         // }
         let formData = handleFormData(values, uid)
+        console.log('formData=', formData);
+        // return;
         // 编辑时处理主键
         if (isEdit) {
           const keys = keysParams;

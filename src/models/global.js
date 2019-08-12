@@ -6,6 +6,7 @@ import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'global',
@@ -20,9 +21,14 @@ export default Model.extend({
       notifyCount: 0,
       unreadCount: 0,
     },
+    getAlarmNoticesParameters: {
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DGIMN: null,
+    },
   },
   effects: {
-    *fetchNotices({ payload }, { call, put, update }) {
+    *fetchNotices({ payload }, { call, select, update }) {
       // yield put({
       //   type: 'changeNoticeLoading',
       //   payload: true,
@@ -30,19 +36,16 @@ export default Model.extend({
       yield update({
         fetchingNotices: true,
       })
-      //报警消息
-      let today = getTimeDistance('today');
-      const result = yield call(getAlarmNotices, {
-        beginTime: today[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: today[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
+      // 报警消息
+      const { getAlarmNoticesParameters } = yield select(a => a.global);
+      const result = yield call(getAlarmNotices, { getAlarmNoticesParameters });
       let notices = [];
       let count = 0;
       if (result.IsSuccess) {
         const { overs, warns, exceptions } = result.Datas;
-        let dataovers = overs;
-        let datawarns = warns;
-        let dataexceptions = exceptions;
+        const dataovers = overs;
+        const datawarns = warns;
+        const dataexceptions = exceptions;
         notices = notices.concat(
           dataovers.map((item, index) => {
             count += item.AlarmCount;
@@ -55,9 +58,9 @@ export default Model.extend({
               lasttime: item.LastTime,
               alarmcount: item.AlarmCount,
               sontype: 'over',
-              //组件里根据这个分组
+              // 组件里根据这个分组
               type: 'alarm',
-              //排序从0到2999
+              // 排序从0到2999
               orderby: 1000 + index,
               key: `over_${item.DGIMNs}`,
               title: `${item.PointName}报警${item.AlarmCount}次`,
@@ -79,12 +82,12 @@ export default Model.extend({
               id: `warn_${item.DGIMNs}`,
               pointname: item.PointName,
               DGIMN: `${item.DGIMNs}`,
-              discription: discription,
+              discription,
               overwarnings: item.OverWarnings,
               sontype: 'warn',
-              //组件里根据这个分组
+              // 组件里根据这个分组
               type: 'alarm',
-              //排序从3000到4999
+              // 排序从3000到4999
               orderby: 4000 + index,
               key: `warn_${item.DGIMNs}`,
               title: `${item.PointName}发生了预警`,
@@ -104,9 +107,9 @@ export default Model.extend({
               lasttime: item.LastAlarmTime,
               alarmcount: item.AlarmCount,
               sontype: 'exception',
-              //组件里根据这个分组
+              // 组件里根据这个分组
               type: 'alarm',
-              //排序从5000到9999
+              // 排序从5000到9999
               orderby: 6000 + index,
               key: `exception_${item.DGIMNs}`,
               title: `${item.PointName}报警${item.AlarmCount}次`,
@@ -117,7 +120,7 @@ export default Model.extend({
         );
       }
       yield update({
-        notices: notices,
+        notices,
         currentUserNoticeCnt: {
           notifyCount: count,
           unreadCount: count,
@@ -200,7 +203,7 @@ export default Model.extend({
     *getSystemConfigInfo({ payload }, { call, put, select }) {
       const response = yield call(services.getSystemConfigInfo);
       if (response.IsSuccess) {
-        console.log("ConfigInfo=", response.Datas);
+        console.log('ConfigInfo=', response.Datas);
         yield put({
           type: 'setConfigInfo',
           payload: response.Datas,
@@ -249,8 +252,8 @@ export default Model.extend({
         data.AlarmType === EnumPropellingAlarmSourceType.DataOver
       ) {
         newnotices = notices;
-        let minOrderby = Math.min(...notices.filter(t => t.sontype === 'over').map(o => o.orderby));
-        count += data.AlarmCount; //董晓云添加
+        const minOrderby = Math.min(...notices.filter(t => t.sontype === 'over').map(o => o.orderby));
+        count += data.AlarmCount; // 董晓云添加
         newnotices.push({
           id: `over_${data.DGIMN}`,
           pointname: data.PointName,
@@ -259,9 +262,9 @@ export default Model.extend({
           lasttime: data.AlarmTime,
           alarmcount: data.AlarmCount,
           sontype: 'over',
-          //组件里根据这个分组
+          // 组件里根据这个分组
           type: 'alarm',
-          //排序从0到2999
+          // 排序从0到2999
           orderby: minOrderby - 1,
           key: `over_${data.DGIMN}`,
           title: `${data.PointName}报警${data.AlarmCount}次`,
@@ -272,21 +275,21 @@ export default Model.extend({
         data.AlarmType === EnumPropellingAlarmSourceType.DataOverWarning
       ) {
         newnotices = notices;
-        let minOrderby = Math.min(...notices.filter(t => t.sontype === 'warn').map(o => o.orderby));
-        count += 1; //董晓云添加
+        const minOrderby = Math.min(...notices.filter(t => t.sontype === 'warn').map(o => o.orderby));
+        count += 1; // 董晓云添加
         newnotices.push({
           id: `warn_${data.DGIMN}`,
           pointname: data.PointName,
           discription: '',
           overwarnings: '',
           sontype: 'warn',
-          //组件里根据这个分组
+          // 组件里根据这个分组
           type: 'alarm',
-          //排序从3000到4999
+          // 排序从3000到4999
           orderby: minOrderby - 1,
           key: `warn_${data.DGIMN}`,
           title: `${data.PointName}发生了预警`,
-          description: ``,
+          description: '',
         });
       } else if (
         !notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) &&
@@ -296,10 +299,10 @@ export default Model.extend({
           data.AlarmType === EnumPropellingAlarmSourceType.DYSTATEALARM)
       ) {
         newnotices = notices;
-        let minOrderby = Math.min(
+        const minOrderby = Math.min(
           ...notices.filter(t => t.sontype === 'exception').map(o => o.orderby),
         );
-        count += data.AlarmCount; //董晓云添加
+        count += data.AlarmCount; // 董晓云添加
         newnotices.push({
           id: `exception_${data.DGIMN}`,
           pointname: data.PointName,
@@ -308,16 +311,16 @@ export default Model.extend({
           lasttime: data.AlarmTime,
           alarmcount: data.AlarmCount,
           sontype: 'exception',
-          //组件里根据这个分组
+          // 组件里根据这个分组
           type: 'alarm',
-          //排序从5000到9999
+          // 排序从5000到9999
           orderby: minOrderby - 1,
           key: `exception_${data.DGIMN}`,
           title: `${data.PointName}报警${data.AlarmCount}次`,
           description: `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警`,
         });
       } else {
-        //证明之前有数据，在之前的数据上叠加
+        // 证明之前有数据，在之前的数据上叠加
         newnotices = notices.map(notice => {
           // let newnotice = { ...notice };
           if (data.AlarmType === EnumPropellingAlarmSourceType.DataOver) {
@@ -381,9 +384,9 @@ export default Model.extend({
       const { message } = payload;
       const { Message: item } = message;
       const { notices } = state;
-      let count = state.currentUserNoticeCnt.unreadCount;
-      let newnotices = notices;
-      let minOrderby = Math.min(...notices.filter(t => t.type === 'advise').map(o => o.orderby));
+      const count = state.currentUserNoticeCnt.unreadCount;
+      const newnotices = notices;
+      const minOrderby = Math.min(...notices.filter(t => t.type === 'advise').map(o => o.orderby));
       newnotices.push({
         id: `advise_${item.DGIMN}`,
         pointname: `${item.PointName}`,
@@ -394,9 +397,9 @@ export default Model.extend({
         isview: item.IsView,
         sontype: `advise_${item.NoticeType}`,
         params: item.Col1,
-        //组件里根据这个分组
+        // 组件里根据这个分组
         type: 'advise',
-        //排序从10000到19999
+        // 排序从10000到19999
         orderby: minOrderby - 1,
         key: `advise_${item.DGIMN}_${item.PushID}`,
         title: `${item.Title}`,
@@ -441,7 +444,7 @@ export default Model.extend({
       // socket相关
       return mywebsocket.listen(data => {
         // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
-        let obj = JSON.parse(data);
+        const obj = JSON.parse(data);
         switch (obj.MessageType) {
           case 'RealTimeData':
             // // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的

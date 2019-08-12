@@ -58,9 +58,13 @@ class DailySummaryPage extends PureComponent {
     const { defaultSearchForm } = this.SELF;
 
     this.props.dispatch({
-      type: 'autoForm/getRegions',
-      callback: (sucRes) => {
-        let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+      type: 'common/getEnterpriseAndPoint',
+      payload:{
+        RegionCode: "",
+        PointMark: "2"
+      },
+      callback: (sucRes, defaultValue) => {
+        let RegionCode = defaultValue;
         this.setState({
           defaultRegionCode: RegionCode
         })
@@ -76,7 +80,7 @@ class DailySummaryPage extends PureComponent {
                 payload: {
                   "type": this.props.match.params.reportType,
                   "PollutantSourceType": "1",
-                  "Regions": RegionCode.toString(),
+                  "Regions": RegionCode,
                   // "Regions": "130000000,130200000,130201000",
                   "ReportTime": moment().format("YYYY-MM-DD")
                 }
@@ -216,7 +220,7 @@ class DailySummaryPage extends PureComponent {
   }
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList } = this.props;
+    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList,  } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
@@ -228,7 +232,8 @@ class DailySummaryPage extends PureComponent {
               <Col md={6} sm={24}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
-                    initialValue: defaultSearchForm.PollutantSourceType,
+                    // initialValue: defaultSearchForm.PollutantSourceType,
+                    initialValue: pollutantTypeList.length ? pollutantTypeList[0].pollutantTypeCode : undefined,
                     rules: [{
                       required: true,
                       message: '请选择污染物类型',
