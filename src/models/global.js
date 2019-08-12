@@ -29,7 +29,7 @@ export default Model.extend({
   },
   effects: {
     *fetchNotices({ payload }, { call, select, update }) {
-      debugger
+      // debugger
       // yield put({
       //   type: 'changeNoticeLoading',
       //   payload: true,
@@ -39,8 +39,8 @@ export default Model.extend({
       })
       // 报警消息
       const { getAlarmNoticesParameters } = yield select(a => a.global);
-      debugger
-      const result = yield call(getAlarmNotices, { getAlarmNoticesParameters });
+      // debugger
+      const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
       let notices = [];
       let count = 0;
       if (result.IsSuccess) {
@@ -177,7 +177,7 @@ export default Model.extend({
     *getBtnAuthority({ payload }, { call, put, select }) {
       // const menuCode = yield select(state => state.menu.menuCode);
       const result = yield call(getBtnAuthority, payload);
-      debugger;
+      // debugger;
       if (result.IsSuccess) {
         const btnsAuthority = result.Datas.map(item => item.Code);
         // console.log('btnsAuthority=', btnsAuthority);
@@ -407,7 +407,7 @@ export default Model.extend({
         title: `${item.Title}`,
         description: `${item.Message}`,
       });
-      debugger;
+      // debugger;
       return {
         ...state,
         notices: newnotices,
