@@ -241,19 +241,19 @@ export default Model.extend({
             //         PollutantTypes:dd.defaultPollutantCode
             //     }
             // }
-            if (!payload.PollutantTypes) {
+            if (!payload.PollutantType) {
                 let global = yield select(state => state.common);
                 if (!global.defaultPollutantCode) {
                     yield take('common/getPollutantTypeList/@@end');
                     global = yield select(state => state.common);
                     payload = {
                         ...payload,
-                        PollutantTypes: global.defaultPollutantCode
+                        PollutantType: global.defaultPollutantCode
                     }
                 }else {
                     payload = {
                         ...payload,
-                        PollutantTypes:global.defaultPollutantCode
+                        PollutantType:global.defaultPollutantCode
                     }
                 }
                 
