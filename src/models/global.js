@@ -29,6 +29,7 @@ export default Model.extend({
   },
   effects: {
     *fetchNotices({ payload }, { call, select, update }) {
+      debugger
       // yield put({
       //   type: 'changeNoticeLoading',
       //   payload: true,
@@ -38,6 +39,7 @@ export default Model.extend({
       })
       // 报警消息
       const { getAlarmNoticesParameters } = yield select(a => a.global);
+      debugger
       const result = yield call(getAlarmNotices, { getAlarmNoticesParameters });
       let notices = [];
       let count = 0;

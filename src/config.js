@@ -34,6 +34,8 @@ module.exports = {
   PlayDatas: 10 * 1000,
   // autoForm文件上传地址
   fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+  // autoForm文件上传地址
+  fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/ManualSupplementApiController/UploadFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

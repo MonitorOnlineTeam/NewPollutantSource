@@ -114,7 +114,6 @@ export default class GlobalHeaderRight extends PureComponent {
     this.childAlarm = ref;
   };
   onRefException = ref => {
-    debugger
     this.childException = ref;
   };
   // onRefEmergencyDetailInfo = (ref) => {

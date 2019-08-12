@@ -225,20 +225,22 @@
 //     //上传文件
 //     upload = () => {
 //         const { uid } = this.state;
+//         const { DGIMN } = this.props;
 //         const props = {
-//             // action: config.fileUploadUrl,
-//             customRequest=this.addimg,
-//             // onChange(info) {
-//             //     if (info.file.status === 'done') {
-//             //     } else if (info.file.status === 'error') {
-//             //         message.error("上传文件失败！")
-//             //     }
-//             // },
+//             action: config.fileUploadUrl,
+//             // customRequest=this.addimg,
+//             onChange(info) {
+//                 if (info.file.status === 'done') {
+//                 } else if (info.file.status === 'error') {
+//                     message.error("上传文件失败！")
+//                 }
+//             },
 //             multiple: true,
 //             accept: ".xls,.xlsx",
 //             data: {
+//                 DGIMN: DGIMN,
 //                 FileUuid: uid,
-//                 FileActualType: "1"
+//                 FileActualType: "2"
 //             }
 //         };
 //         //defaultFileList={fileList}
@@ -250,33 +252,33 @@
 //             </Upload>
 //         )
 //     }
-//     addimg = ({ file }) => {
-//         const { manualUploadParameters } = this.props;
-//             let reader = new FileReader();
-//             reader.readAsDataURL(file);
-//             reader.onloadend = function () {
-//                 let base64 = reader.result; // base64就是图片的转换的结果
-//                 const attachId = _this.uuid();
-//                 _this.props.dispatch({
-//                     type: 'manualupload/uploadfiles',
-//                     payload: {
-//                         file: base64.split(',')[1],
-//                         fileName: file.name,
-//                         DGIMN: manualUploadParameters.DGIMN,
-//                         callback: (flag, data) => {
-//                             if (flag === '1') {
-//                                 _this.GetManualSupplementList();
-//                                 message.success(data)
-//                             }
-//                             else {
-//                                 _this.GetManualSupplementList();
-//                                 message.error(data);
-//                             }
-//                         }
-//                     }
-//                 });
-//             };
-//     };
+//     // addimg = ({ file }) => {
+//     //     const { manualUploadParameters } = this.props;
+//     //         let reader = new FileReader();
+//     //         reader.readAsDataURL(file);
+//     //         reader.onloadend = function () {
+//     //             let base64 = reader.result; // base64就是图片的转换的结果
+//     //             const attachId = _this.uuid();
+//     //             _this.props.dispatch({
+//     //                 type: 'manualupload/uploadfiles',
+//     //                 payload: {
+//     //                     file: base64.split(',')[1],
+//     //                     fileName: file.name,
+//     //                     DGIMN: manualUploadParameters.DGIMN,
+//     //                     callback: (flag, data) => {
+//     //                         if (flag === '1') {
+//     //                             _this.GetManualSupplementList();
+//     //                             message.success(data)
+//     //                         }
+//     //                         else {
+//     //                             _this.GetManualSupplementList();
+//     //                             message.error(data);
+//     //                         }
+//     //                     }
+//     //                 }
+//     //             });
+//     //         };
+//     // };
 //     render() {
 //         const { manualUploadParameters, DGIMN } = this.props;
 //         let dateValues = [moment(manualUploadParameters.BeginTime), moment(manualUploadParameters.EndTime)]
