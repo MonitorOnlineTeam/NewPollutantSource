@@ -239,8 +239,8 @@ class SdlForm extends PureComponent {
               console.log("map=", map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue("Longitude")}
-            latitude={getFieldValue("Latitude")}
+            longitude={getFieldValue("Longitude") || formData["Longitude"]}
+            latitude={getFieldValue("Latitude") || formData["Latitude"]}
             handleMarker={true}
           />
           break;
@@ -253,8 +253,8 @@ class SdlForm extends PureComponent {
               console.log("map=", map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue("Longitude")}
-            latitude={getFieldValue("Latitude")}
+            longitude={getFieldValue("Longitude") || formData["Longitude"]}
+            latitude={getFieldValue("Latitude") || formData["Latitude"]}
             handleMarker={true}
           />;
           break;
@@ -267,7 +267,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue("Longitude")}
             latitude={getFieldValue("Latitude")}
-            path={getFieldValue(`${fieldName}`)}
+            path={getFieldValue(`${fieldName}`) || formData[fieldName]}
             // handleMarker={true}
             handlePolygon={true}
           />;
