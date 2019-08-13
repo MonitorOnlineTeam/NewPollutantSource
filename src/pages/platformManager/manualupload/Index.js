@@ -1,26 +1,42 @@
 import React, { Component } from 'react';
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '../../../components/NavigationTree'
 import ContentList from './components/ContentList'
+import moment from "moment";
 
+@connect(({ manualupload, loading }) => ({
+
+}))
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            DGIMN: "62262431qlsp02",
+            DGIMN: "",
         };
     }
 
     componentDidMount() {
     }
-    changeDgimn = dgimn => {
+    changeDgimn = (DGIMN) => {
+        const { dispatch } = this.props;
         this.setState({
-            DGIMN:dgimn,
+            DGIMN,
         })
+        if (DGIMN) {
+            this.GetAllPollutantTypes(DGIMN);
+        }
     }
-
+    //根据MN号获取污染物类型
+    GetAllPollutantTypes = (DGIMN) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'manualupload/GetAllPollutantTypes',
+            payload: {
+                DGIMN
+            },
+        });
+    }
     render() {
         const { DGIMN } = this.state;
         return (

@@ -37,7 +37,6 @@ export async function addGetPollutantByPoint(params) {
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetManualSupplementList(params) {
-  debugger
   const result = await post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementList', params, null);
   return result;
 }
@@ -46,9 +45,6 @@ export async function GetManualSupplementList(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplate(params) {
-  const body = {
-      PollutantType:params.PollutantType
-  };
   const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplate', params, null);
   return result;
 }

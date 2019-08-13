@@ -143,6 +143,7 @@ export function handleFormData(values, uid) {
 }
 //文件下载
 export function downloadFile(sUrl) {
+  debugger
   //iOS devices do not support downloading. We have to inform user about this.
   if (/(iP)/g.test(navigator.userAgent)) {
       alert('Your device does not support files downloading. Please try again in desktop browser.');

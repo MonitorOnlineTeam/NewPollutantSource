@@ -35,7 +35,7 @@ module.exports = {
   // autoForm文件上传地址
   fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
   // autoForm文件上传地址
-  fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/ManualSupplementApiController/UploadFiles',
+  templateUploadUrl: 'http://localhost:52198/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

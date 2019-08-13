@@ -33,7 +33,7 @@ export default Model.extend({
         total: 0,
         selectdata: [],
         uploaddatalist: [],
-        PollutantTypesList: [],
+        pollutantTypesItem: null,
         addSelectPollutantData: [],
         unit: null,
         DGIMN: null,
@@ -42,12 +42,11 @@ export default Model.extend({
         manualUploadParameters: {
             DGIMN: '',
             pollutantCode: [],
-            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
-            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+            beginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+            endTime: moment().format('YYYY-MM-DD 23:59:59'),
             pageIndex: 1,
             pageSize: 10,
             pointName: '',
-            PollutantType: '2'
         }
 
     },
@@ -60,12 +59,8 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(uploadfiles, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
-                payload.callback(result.Datas);
-            }
+            payload.callback(result.StatusCode);
+
         },
         //根据排口获取污染物
         * GetPollutantByPoint({
@@ -89,7 +84,6 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(addGetPollutantByPoint, payload);
-            debugger
             if (result.IsSuccess) {
                 yield update({
                     addSelectPollutantData: result.Datas,
@@ -109,12 +103,12 @@ export default Model.extend({
             const result = yield call(GetManualSupplementList, { ...manualUploadParameters });
             if (result.IsSuccess) {
                 //根据MN号码获取所对应的污染物信息
-                    yield put({
-                        type: 'GetPollutantByPoint',
-                        payload: {
-                            DGIMN: manualUploadParameters.DGIMN
-                        }
-                    });
+                yield put({
+                    type: 'GetPollutantByPoint',
+                    payload: {
+                        DGIMN: manualUploadParameters.DGIMN
+                    }
+                });
                 yield update({
                     uploaddatalist: result.Datas,
                     total: result.Total,
@@ -145,7 +139,7 @@ export default Model.extend({
             const result = yield call(GetAllPollutantTypes, payload);
             if (result.IsSuccess) {
                 yield update({
-                    PollutantTypesList: result.Datas,
+                    pollutantTypesItem: result.Datas,
                 });
             }
         },
@@ -158,11 +152,10 @@ export default Model.extend({
             call,
             update,
         }) {
-            debugger
             const result = yield call(AddUploadFiles, payload);
-            debugger
             if (result.IsSuccess) {
-                    payload.callback(result.StatusCode);
+
+                payload.callback(result.StatusCode);
             }
         },
 
@@ -173,7 +166,6 @@ export default Model.extend({
             call,
             update,
         }) {
-            debugger
             const result = yield call(GetUnitByPollutant, payload);
             if (result.IsSuccess) {
                 yield update({
@@ -191,9 +183,7 @@ export default Model.extend({
         }) {
             const result = yield call(DeleteUploadFiles, payload);
             if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
+                payload.callback(result.StatusCode);
             }
         },
 

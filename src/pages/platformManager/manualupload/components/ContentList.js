@@ -12,13 +12,14 @@ import cuid from 'cuid';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
-@connect(({ manualupload, overview, loading }) => ({
+@connect(({ manualupload, loading }) => ({
     loading: loading.effects['manualupload/GetManualSupplementList'],
     selectdata: manualupload.selectdata,
     uploaddatalist: manualupload.uploaddatalist,
     total: manualupload.total,
     pointName: manualupload.pointName,
     manualUploadParameters: manualupload.manualUploadParameters,//参数
+    pollutantTypesItem: manualupload.pollutantTypesItem
 }))
 @Form.create()
 export default class ContentList extends Component {
@@ -33,33 +34,47 @@ export default class ContentList extends Component {
             width: 1000,
         };
     }
-    componentWillMount() {
-        debugger
-        this.props.dispatch({
+    componentWillReceiveProps = nextProps => {
+        const { DGIMN, dispatch } = this.props;
+        let nextPropsDGIMN = nextProps.DGIMN;
+        if (nextPropsDGIMN) {
+            if (nextPropsDGIMN !== DGIMN) {
+                dispatch({
+                    type: 'manualupload/updateState',
+                    payload: {
+                        manualUploadParameters: {
+                            ...this.props.manualUploadParameters,
+                            ...{
+                                DGIMN: nextPropsDGIMN,
+                                pageIndex: 1,
+                                pageSize: 10,
+                                beginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+                                endTime: moment().format('YYYY-MM-DD 23:59:59'),
+                            }
+                        }
+                    }
+                });
+                dispatch({
+                    type: 'manualupload/GetManualSupplementList',
+                    payload: {
+                    }
+                });
+            }
+        }
+    }
+
+    //日期改变事件
+    _handleDateChange = (date, dateString) => {
+        const { dispatch } = this.props;
+        dispatch({
             type: 'manualupload/updateState',
             payload: {
                 manualUploadParameters: {
                     ...this.props.manualUploadParameters,
                     ...{
-                        DGIMN: this.props.DGIMN,
+                        beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+                        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
                     }
-                }
-            }
-        });
-        this.props.dispatch({
-            type: 'manualupload/GetManualSupplementList',
-            payload: {
-            }
-        });
-    }
-
-    _handleDateChange = (date, dateString) => {
-        this.updateState({
-            manualUploadParameters: {
-                ...this.props.manualUploadParameters,
-                ...{
-                    BeginTime: date[0].format('YYYY-MM-DD 00:00:00'),
-                    EndTime: date[1].format('YYYY-MM-DD 23:59:59'),
                 }
             }
         });
@@ -67,6 +82,7 @@ export default class ContentList extends Component {
     };
     //下拉污染物事件
     SelectHandleChange = (value) => {
+        const { dispatch } = this.props;
         var pName = [];
         value.map((item) => {
             var code = item.split('--')[0];
@@ -74,11 +90,15 @@ export default class ContentList extends Component {
                 pName.push(code)
             }
         })
-        this.updateState({
-            manualUploadParameters: {
-                ...this.props.manualUploadParameters,
-                ...{
-                    pollutantCode: pName
+
+        dispatch({
+            type: 'manualupload/updateState',
+            payload: {
+                manualUploadParameters: {
+                    ...this.props.manualUploadParameters,
+                    ...{
+                        pollutantCode: pName
+                    }
                 }
             }
         });
@@ -97,30 +117,33 @@ export default class ContentList extends Component {
     //创建并获取模板
     Template = () => {
         //获取模板地址
-        debugger;
-
-        const { dispatch, PollutantType } = this.props;
-        console.log(PollutantType);
-        dispatch({
-            type: 'manualupload/getUploadTemplate',
-            payload: {
-                PollutantType: PollutantType,
-                callback: (data) => {
-                    downloadFile(data);
-                    //window.location.href = data
+        const { dispatch, pollutantTypesItem } = this.props;
+        if (pollutantTypesItem) {
+            dispatch({
+                type: 'manualupload/getUploadTemplate',
+                payload: {
+                    PollutantTypeCode: pollutantTypesItem.PollutantTypeCode,
+                    callback: (data) => {
+                        downloadFile(data);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     //分页等改变事件
     onChange = (pageIndex, pageSize) => {
-        this.updateState({
-            manualUploadParameters: {
-                ...this.props.manualUploadParameters,
-                ...{
-                    pageIndex: pageIndex,
-                    pageSize: pageSize,
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'manualupload/updateState',
+            payload: {
+                manualUploadParameters: {
+                    ...this.props.manualUploadParameters,
+                    ...{
+                        pageIndex: pageIndex,
+                        pageSize: pageSize,
+                    }
                 }
             }
         });
@@ -128,19 +151,24 @@ export default class ContentList extends Component {
     }
     //分页等改变事件
     onShowSizeChange = (pageIndex, pageSize) => {
-        this.updateState({
-            manualUploadParameters: {
-                ...this.props.manualUploadParameters,
-                ...{
-                    pageIndex: pageIndex,
-                    pageSize: pageSize,
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'manualupload/updateState',
+            payload: {
+                manualUploadParameters: {
+                    ...this.props.manualUploadParameters,
+                    ...{
+                        pageIndex: pageIndex,
+                        pageSize: pageSize,
+                    }
                 }
             }
         });
         this.GetManualSupplementList();
     }
     GetManualSupplementList = () => {
-        this.props.dispatch({
+        const { dispatch } = this.props;
+        dispatch({
             type: 'manualupload/GetManualSupplementList',
             payload: {
             }
@@ -157,21 +185,33 @@ export default class ContentList extends Component {
         this.child = ref;
     }
     //添加弹出层
-    addModel = (uploaddata) => {
-        debugger
-        let pointName = '';
-        if (uploaddata && uploaddata.count > 0) {
-            pointName = '-' + uploaddata[0].pointName
-        }
+    updateModel = (record) => {
         if (this.props.DGIMN) {
-            this.setState({
-                visible: true,
-                title: '添加数据' + pointName,
-                footer: <div>
-                    <Button key="back" onClick={this.onCancel}>取消</Button>
-                    <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
-                </div>
-            });
+            //修改
+            if (record) {
+                this.setState({
+                    visible: true,
+                    title: '编辑信息',
+                    width: 1000,
+                    data: record,
+                    footer: <div>
+                        <Button key="back" onClick={this.onCancel}>取消</Button>
+                        <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
+                    </div>
+                });
+
+            }
+            else {
+                this.setState({
+                    visible: true,
+                    title: '添加信息',
+                    data: null,
+                    footer: <div>
+                        <Button key="back" onClick={this.onCancel}>取消</Button>
+                        <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
+                    </div>
+                });
+            }
         }
         else {
             message.info("请选择监测点！")
@@ -179,12 +219,11 @@ export default class ContentList extends Component {
     }
     // 编辑数据
     updateData = () => {
-        debugger
         this.child.handleSubmit();
         this.GetManualSupplementList();
     }
     //删除
-    deleteVideoInfo = (record) => {
+    deletemanualuploadData = (record) => {
         confirm({
             title: '确定要删除吗?',
             okText: '是',
@@ -192,67 +231,90 @@ export default class ContentList extends Component {
             cancelText: '否',
             onOk: () => this.delete(record),
             onCancel() {
-                console.log('取消');
             },
         });
     };
     //删除实现
     delete = (record) => {
-        this.props.dispatch({
+        const { dispatch } = this.props;
+        dispatch({
             type: 'manualupload/DeleteUploadFiles',
             payload: {
                 DGIMN: record.DGIMN,
                 pollutantCode: record.PollutantCode,
                 monitorTime: (moment(record.MonitorTime)).format('YYYY-MM-DD HH:mm:ss'),
-                callback: () => {
-                    message.success("删除成功！")
+                callback: (reason) => {
+                    switch (reason) {
+                        case 1:
+                            return (message.success("删除成功！"))
+                        default:
+                            return (message.error("删除失败！"))
+                    }
                 }
             },
         });
         this.GetManualSupplementList();
 
     }
-    // // 修改
-    // updateData = () => {
-    //     this.child.handleSubmitupdate();
-    //     this.GetManualSupplementList();
-    // }
     //上传文件
     upload = () => {
+        var that = this;
         const { uid } = this.state;
         const { DGIMN } = this.props;
         const props = {
-            action: config.fileUploadUrl,
-            // customRequest=this.addimg,
+            action: config.templateUploadUrl,
             onChange(info) {
                 if (info.file.status === 'done') {
+                    let response = info.file.response;
+                    var flag = '';
+                    switch (response) {
+                        case 1:
+                            flag = "添加成功！"; break;
+                        case 2:
+                            flag = "请选择排口！"; break;
+                        case 3:
+                            flag = "模板不正确！"; break;
+                        case 4:
+                            flag = "导入数据不能为空,请检查！"; break;
+                        case 5:
+                            flag = "污染物编号不符合标准，请检查！"; break;
+                        case 6:
+                            flag = "不能导入重复数据！"; break;
+                        default:
+                            flag = "添加失败！"; break;
+                    }
+                    //只有成功时刷新页面
+                    if (response === 1) {
+                        that.GetManualSupplementList();
+                    }
+                    return (info.file.response === 1 ? message.success(flag) : message.error(flag));
                 } else if (info.file.status === 'error') {
                     message.error("上传文件失败！")
                 }
             },
             multiple: true,
             accept: ".xls,.xlsx",
+            showUploadList: false,
             data: {
                 DGIMN: DGIMN,
                 FileUuid: uid,
-                FileActualType: "2"
+                FileActualType: "1"
             }
         };
-        //defaultFileList={fileList}
         return (
             <Upload {...props} >
                 <Button>
-                    <Icon type="upload" /> 文件上传
+                    <Icon type="upload" /> 文件导入
         </Button>
             </Upload>
         )
     }
     render() {
         const { manualUploadParameters, DGIMN } = this.props;
-        let dateValues = [moment(manualUploadParameters.BeginTime), moment(manualUploadParameters.EndTime)]
+        let dateValues = [moment(manualUploadParameters.beginTime), moment(manualUploadParameters.endTime)]
         var uploaddata = [];
         if (!this.props.loading) {
-            uploaddata = this.props.uploaddatalist === null ? null : this.props.uploaddatalist;
+            uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
         }
         const columns = [
             {
@@ -312,20 +374,11 @@ export default class ContentList extends Component {
                 render: (text, record, index) => (
                     <span>
                         <a onClick={() => {
-                            this.setState({
-                                visible: true,
-                                title: '编辑信息',
-                                width: 1000,
-                                data: record,
-                                footer: <div>
-                                        <Button key="back" onClick={() => this.onCancel}>取消</Button>
-                                        <Button key="submit" type="primary" onClick={() => this.updateData}>确定</Button>
-                                        </div>
-                            });
+                            this.updateModel(record)
                         }}>编辑</a>
                         <Divider type="vertical" />
                         <a onClick={() => {
-                            this.deleteVideoInfo(record);
+                            this.deletemanualuploadData(record);
                         }}>删除</a>
                     </span>
                 ),
@@ -351,16 +404,16 @@ export default class ContentList extends Component {
                                 </Select>
                             </Col>
                             <Col span={4} style={{ textAlign: 'center' }} >
-                                <Button onClick={() => this.Template}>
+                                <Button onClick={() => this.Template()}>
                                     <Icon type="download" />模板下载
-                                            </Button>
+                                 </Button>
                             </Col>
                             <Col span={4} style={{ textAlign: 'center' }} >
                                 {this.upload()}
                             </Col>
                             <Col span={2} style={{ textAlign: 'center' }} >
                                 <Button
-                                    onClick={() => this.addModel(uploaddata)}
+                                    onClick={() => this.updateModel()}
                                 >
                                     添加
                                 </Button>
@@ -374,7 +427,7 @@ export default class ContentList extends Component {
                     loading={this.props.loading}
                     className={styles.tableCss}
                     columns={columns}
-                    dataSource={DGIMN === '0' ? null : uploaddata}
+                    dataSource={!DGIMN ? null : uploaddata}
                     size={'middle'}
                     scroll={{ x: '1000px', y: 'calc(100vh - 460px)' }}
                     rowClassName={

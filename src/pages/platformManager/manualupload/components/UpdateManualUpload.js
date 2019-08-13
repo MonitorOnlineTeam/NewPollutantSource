@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 @connect(({ manualupload, loading }) => ({
-    PollutantTypesList: manualupload.PollutantTypesList,
+    pollutantTypesItem: manualupload.pollutantTypesItem,
     addSelectPollutantData: manualupload.addSelectPollutantData,
     unit: manualupload.unit,
     requstresult: manualupload.requstresult,
@@ -31,17 +31,11 @@ export default class UpdateManualUpload extends Component {
     }
     componentWillMount() {
         this.props.onRef(this);
-        this.GetAllPollutantTypes();
         this.SelectHandleChange();
-    }
-    //根据MN号获取污染物类型
-    GetAllPollutantTypes = () => {
-        this.props.dispatch({
-            type: 'manualupload/GetAllPollutantTypes',
-            payload: {
-                DGIMN: this.props.DGIMN,
-            },
-        });
+        const { item } = this.props;
+        if (item) {
+            this.pollutantChange(item.PollutantCode)
+        }
     }
     //根据MN号获取绑定污染物类型
     SelectHandleChange = () => {
@@ -54,16 +48,10 @@ export default class UpdateManualUpload extends Component {
     }
     //根据污染物编号获取单位
     pollutantChange = (value) => {
-        debugger
-        const { item } = this.props;
         if (value) {
             let pollutantCode = '';
-            if (!item) {
-                pollutantCode = value.split('--')[0]
-            }
-            else {
-                pollutantCode = value
-            }
+            pollutantCode = value.split('--')[0]
+
             //获取绑定下拉污染物
             this.props.dispatch({
                 type: 'manualupload/GetUnitByPollutant',
@@ -71,24 +59,41 @@ export default class UpdateManualUpload extends Component {
                     pollutantCode
                 }
             });
+            this.setState({
+                pollutantCode,
+            })
         }
 
     }
     handleSubmit = (e) => {
-        debugger
-        const { item } = this.props;
+        const { item, dispatch, form } = this.props;
         if (!item) {
-            this.props.form.validateFieldsAndScroll((err, values) => {
+            form.validateFieldsAndScroll((err, values) => {
                 if (!err) {
-                    this.props.dispatch({
+                    dispatch({
                         type: 'manualupload/AddUploadFiles',
                         payload: {
-                            pollutantCode: values.pollutantCode.split('--')[0],
+                            pollutantCode: this.state.pollutantCode,
                             monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
                             avgValue: values.avgValue,
                             DGIMN: values.DGIMN,
                             callback: (reason) => {
-                                message.success(reason)
+                                var flag = '';
+                                switch (reason) {
+                                    case 1:
+                                        flag = "添加成功！";
+                                        break;
+                                    case 2:
+                                        flag = "添加数据重复！";
+                                        break;
+                                    case 3:
+                                        flag = "选择时间不能大于当前时间！";
+                                        break;
+                                    default:
+                                        flag = "添加失败！";
+                                        break;
+                                }
+                                return (reason === 1 ? message.success(flag) : message.error(flag));
                             }
                         },
                     });
@@ -98,18 +103,26 @@ export default class UpdateManualUpload extends Component {
             });
         }
         else {
-            debugger
             this.props.form.validateFieldsAndScroll((err, values) => {
                 if (!err) {
-                    this.props.dispatch({
-                        type: 'manualupload/AddUploadFiles',
+                    dispatch({
+                        type: 'manualupload/UpdateManualSupplementData',
                         payload: {
-                            pollutantCode: values.pollutantCode.split('--')[0],
-                            monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
+                            pollutantCode: this.state.pollutantCode,
+                            monitorTime: values.monitorTime.format('YYYY-MM-DD HH:mm:ss'),
                             avgValue: values.avgValue,
                             DGIMN: values.DGIMN,
                             callback: (reason) => {
-                                message.success(reason)
+                                var flag = '';
+                                switch (reason) {
+                                    case 1:
+                                        flag = "修改成功！";
+                                        break;
+                                    default:
+                                        flag = "修改失败！";
+                                        break;
+                                }
+                                return (reason === 1 ? message.success(flag) : message.error(flag));
                             }
                         },
                     });
@@ -121,8 +134,7 @@ export default class UpdateManualUpload extends Component {
     }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { item, PollutantTypesList, unit, addSelectPollutantData } = this.props;
-        debugger
+        const { item, pollutantTypesItem, unit, addSelectPollutantData } = this.props;
         let isExists = false;
         if (item) {
             //有值是修改,状态改为true
@@ -147,18 +159,13 @@ export default class UpdateManualUpload extends Component {
                                 {...formItemLayout}
                                 label={'污染物种类'}>
                                 {getFieldDecorator('pollutantType', {
-                                    initialValue: PollutantTypesList.length !== 0 ? PollutantTypesList[0].PollutantTypeName : null
+                                    initialValue: pollutantTypesItem ? pollutantTypesItem.PollutantTypeName : null
                                 })(
                                     <Select
                                         disabled={true}
-                                        value={2}
-                                        optionFilterProp="children"
-                                        onFocus={this.handleFocus}
-                                        onBlur={this.handleBlur}
-                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         {
-                                            PollutantTypesList.length !== 0 ? PollutantTypesList.map(item => <Option key={item.PollutantTypeCode}>{item.PollutantTypeName}</Option>) : null
+                                            pollutantTypesItem ? <Option key={pollutantTypesItem.PollutantTypeCode}>{pollutantTypesItem.PollutantTypeName}</Option> : null
                                         }
                                     </Select>
                                 )}
@@ -169,17 +176,15 @@ export default class UpdateManualUpload extends Component {
                                 {...formItemLayout}
                                 label={'污染物名称'}>
                                 {getFieldDecorator('pollutantCode', {
-                                    initialValue: isExists ? item.PollutantCode : ''
+                                    initialValue: isExists ? item.PollutantName : ''
                                 })(
                                     <Select
                                         placeholder="请选择污染物名称"
                                         onChange={this.pollutantChange}
+                                        disabled={isExists}
                                     >
                                         {
-                                            isExists ?
-                                                <Option key={item.PollutantCode}>{item.PollutantName}</Option>
-                                                :
-                                                addSelectPollutantData !== null ? addSelectPollutantData.map(item => <Option key={item.PollutantCode + '--' + item.PollutantName}>{item.PollutantName}</Option>) : null
+                                            addSelectPollutantData !== null ? addSelectPollutantData.map(item => <Option key={item.PollutantCode + '--' + item.PollutantName}>{item.PollutantName}</Option>) : null
                                         }
 
 
@@ -197,7 +202,7 @@ export default class UpdateManualUpload extends Component {
                                     {
                                         initialValue: isExists ? moment(item.MonitorTime === null ? Date.now() : item.MonitorTime) : '',
                                     })(
-                                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                                        <DatePicker disabled={isExists} showTime format="YYYY-MM-DD HH:mm:ss" />
                                     )}
                             </FormItem>
                         </Col>
