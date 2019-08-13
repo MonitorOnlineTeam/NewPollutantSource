@@ -107,7 +107,7 @@ export default Model.extend({
               {
                 Key: "RegionCode",
                 Value: payload.RegionCode,
-                Where: "$="
+                Where: "$like"
               }
             ]
           }]

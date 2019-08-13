@@ -11,7 +11,7 @@ import { post, get } from '@/utils/request';
  * @params {"file":"","fileName":"","DGIMN":""}
  */
 export async function uploadfiles(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/UploadFiles', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles', params, null);
   return result;
 }
 
@@ -20,7 +20,7 @@ export async function uploadfiles(params) {
  * @params {"DGIMN":""}
  */
 export async function GetPollutantByPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/GetPollutantByDGIMN', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMN', params, null);
   return result;
 }
 /**
@@ -28,7 +28,7 @@ export async function GetPollutantByPoint(params) {
  * @params {"DGIMN":""}
  */
 export async function addGetPollutantByPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/GetPollutantByDGIMNAdd', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAdd', params, null);
   return result;
 }
 
@@ -37,7 +37,8 @@ export async function addGetPollutantByPoint(params) {
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetManualSupplementList(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/GetManualSupplementList', params, null);
+  debugger
+  const result = await post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementList', params, null);
   return result;
 }
 /**
@@ -48,7 +49,7 @@ export async function getUploadTemplate(params) {
   const body = {
       PollutantType:params.PollutantType
   };
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/UploadTemplate', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplate', params, null);
   return result;
 }
 /**
@@ -56,7 +57,7 @@ export async function getUploadTemplate(params) {
  * @params {"DGIMN":""}
  */
 export async function GetAllPollutantTypes(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/GetAllPollutantTypes', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetAllPollutantTypes', params, null);
   return result;
 }
 /**
@@ -64,7 +65,7 @@ export async function GetAllPollutantTypes(params) {
  * @params {"pollutantCode":"","monitorTime":"","avgValue":"","DGIMN":""}
  */
 export async function AddUploadFiles(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/AddUploadFiles', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/AddUploadFiles', params, null);
   return result;
 }
 
@@ -73,7 +74,7 @@ export async function AddUploadFiles(params) {
  * @params {"pollutantCode":""}
  */
 export async function GetUnitByPollutant(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/GetUnitByPollutant', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetUnitByPollutant', params, null);
   return result;
 }
 /**
@@ -81,7 +82,7 @@ export async function GetUnitByPollutant(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":""}
  */
 export async function DeleteUploadFiles(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/DeleteUploadFiles', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/DeleteUploadFiles', params, null);
   return result;
 }
 /**
@@ -89,6 +90,6 @@ export async function DeleteUploadFiles(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function UpdateManualSupplementData(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplement/UpdateHourData', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateHourData', params, null);
   return result;
 }
