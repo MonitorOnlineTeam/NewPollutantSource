@@ -52,7 +52,7 @@ export default Model.extend({
         let monitorRelFormData = {
           DGIMN: payload.FormData.DGIMN,
           BaseCode: payload.targetId,
-          BaseType: payload.FormData.PollutantType,
+          BaseType: payload.targetType,
           PointCode: result.Datas,
         };
 
@@ -100,7 +100,7 @@ export default Model.extend({
         let pointRelParam = {
           'dbo.T_Cod_MonitorPointBase.DGIMN': payload.DGIMN,
           'dbo.T_Cod_MonitorPointBase.BaseCode': payload.targetId,
-          'dbo.T_Cod_MonitorPointBase.BaseType': payload.pollutantType,
+          'dbo.T_Cod_MonitorPointBase.BaseType': payload.targetType,
         };
         result = yield call(services.postAutoFromDataDelete, {
           configId: 'monitorpoint',

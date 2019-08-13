@@ -268,7 +268,7 @@ export default class MonitorPoint extends Component {
             FormData[key] = values[key] && values[key].toString();
           }
         }
-
+        //FormData.PollutantType = match.params.targetType;
         if (!Object.keys(FormData).length) {
           sdlMessage('数据为空', 'error');
           return false;
@@ -281,6 +281,7 @@ export default class MonitorPoint extends Component {
           payload: {
             configId: pointConfigIdEdit,
             targetId: match.params.targetId,
+            targetType:match.params.targetType,
             FormData,
             callback: result => {
               if (result.IsSuccess) {
@@ -310,6 +311,7 @@ export default class MonitorPoint extends Component {
       payload: {
         configId: pointConfigIdEdit,
         targetId: match.params.targetId,
+        targetType:match.params.targetType,
         pollutantType,
         DGIMN,
         PointCode,
