@@ -22,7 +22,7 @@ const pointZoom = 13;
 let _thismap = null;
 
 @Form.create()
-@connect(({ loading, mapView }) => ({
+@connect(({ loading, mapView, global }) => ({
   allEntAndPointList: mapView.allEntAndPointList,
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
@@ -32,6 +32,7 @@ let _thismap = null;
   pointLoading: loading.effects['mapView/getPointTableData'],
   chartLoading: loading.effects['mapView/getPointChartData'],
   curPointData: mapView.curPointData,
+  noticeList: global.notices
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -201,8 +202,15 @@ class MapView extends Component {
                 style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
           }
-          {extData.position.Status === 2 && <div className={styles.pulse}></div>}
-          {extData.position.Status === 2 && <div className={styles.pulse1}></div>}
+          {extData.position.Status === 2 && !!["yastqsn0000002"].find(m => m === extData.position.DGIMN) &&
+            <>
+              <div className={styles.pulse}></div>
+              <div className={styles.pulse1}></div>
+            </>
+          }
+          {/* {extData.position.Status === 2 && !!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
+          <div className={styles.pulse1}></div>
+          } */}
         </div>
       }
     }
@@ -625,7 +633,7 @@ class MapView extends Component {
                                   label: item.label
                                 }
                               })
-                            }} className={styles.content} style={{color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "")}}>{item.value}</div></Descriptions.Item>)
+                            }} className={styles.content} style={{ color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "") }}>{item.value}</div></Descriptions.Item>)
                           }
                         </Descriptions>
                         {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}

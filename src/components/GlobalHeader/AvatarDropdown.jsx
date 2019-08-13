@@ -14,6 +14,7 @@ class AvatarDropdown extends React.Component {
     const { dispatch } = this.props;
     if (key === 'logout') {
       if (dispatch) {
+        Cookie.set('ssoToken',null);
         Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',
@@ -52,11 +53,11 @@ class AvatarDropdown extends React.Component {
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item> */}
-        <Menu.Item key="settings">
+        {/* <Menu.Item key="settings">
           <Icon type="setting" />
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
         </Menu.Item>
-        <Menu.Divider />
+        <Menu.Divider /> */}
         {/* <Menu.Item key="changepwd">
           <Icon type="lock" />
           修改密码

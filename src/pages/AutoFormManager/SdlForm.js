@@ -151,6 +151,7 @@ class SdlForm extends PureComponent {
   renderFormItem() {
     const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
+    let _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
     const formData = isEdit ? (editFormData[configId] || {}) : {};
     // return addFormItems[configId].map((item) =>{
@@ -238,8 +239,8 @@ class SdlForm extends PureComponent {
               console.log("map=", map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue("Longitude")}
-            latitude={getFieldValue("Latitude")}
+            longitude={getFieldValue("Longitude") || formData["Longitude"]}
+            latitude={getFieldValue("Latitude") || formData["Latitude"]}
             handleMarker={true}
           />
           break;
@@ -252,8 +253,8 @@ class SdlForm extends PureComponent {
               console.log("map=", map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue("Longitude")}
-            latitude={getFieldValue("Latitude")}
+            longitude={getFieldValue("Longitude") || formData["Longitude"]}
+            latitude={getFieldValue("Latitude") || formData["Latitude"]}
             handleMarker={true}
           />;
           break;
@@ -262,10 +263,12 @@ class SdlForm extends PureComponent {
           placeholder = placeholder || inputPlaceholder;
           element = <SdlMap
             onOk={(map) => {
-              console.log("map=", map)
               setFieldsValue({ [fieldName]: JSON.stringify(map.polygon) });
             }}
-            path={getFieldValue(`${fieldName}`)}
+            longitude={getFieldValue("Longitude")}
+            latitude={getFieldValue("Latitude")}
+            path={getFieldValue(`${fieldName}`) || formData[fieldName]}
+            // handleMarker={true}
             handlePolygon={true}
           />;
           break;
@@ -310,11 +313,23 @@ class SdlForm extends PureComponent {
                 FileActualType: "1"
               }
             };
-            element = <Upload {...props} defaultFileList={fileList}>
-              <Button>
-                <Icon type="upload" /> 文件上传
+            if (isEdit) {
+              if (_fileList.length) {
+                console.log('fileList=', _fileList)
+                element = <Upload {...props} defaultFileList={_fileList}>
+                  <Button>
+                    <Icon type="upload" /> 文件上传
+                  </Button>
+                </Upload>
+              }
+            } else {
+              element = <Upload {...props}>
+                <Button>
+                  <Icon type="upload" /> 文件上传
                 </Button>
-            </Upload>
+              </Upload>
+            }
+
             // } else {
             //   console.log('edit')
             //   element = <SdlUpload

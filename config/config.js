@@ -351,6 +351,24 @@ export default {
               ],
             },
             {
+              path: '/Intelligentanalysis',
+              name: 'Intelligentanalysis',
+              routes: [
+               
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency',
+                  component: './Intelligentanalysis/transmissionefficiency/entIndex',
+                },
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
+                  component: './Intelligentanalysis/transmissionefficiency/pointIndex',
+                },
+               
+              ],
+            },
+            {
               path: '/dataquery',
               name: 'dataquery',
               routes: [

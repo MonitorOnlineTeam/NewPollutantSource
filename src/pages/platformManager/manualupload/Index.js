@@ -14,14 +14,12 @@ class Index extends Component {
     }
 
     componentDidMount() {
-        debugger
-
     }
-    // changeDgimn = dgimn => {
-    //     this.setState({
-    //         DGIMN,
-    //     })
-    // }
+    changeDgimn = dgimn => {
+        this.setState({
+            DGIMN:dgimn,
+        })
+    }
 
     render() {
         const { DGIMN } = this.state;
