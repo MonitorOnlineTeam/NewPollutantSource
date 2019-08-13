@@ -7,7 +7,6 @@ import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
-import Item from 'antd/lib/list/Item';
 import { EntIcon, GasIcon, WaterIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
@@ -202,15 +201,12 @@ class MapView extends Component {
                 style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
           }
-          {extData.position.Status === 2 && !!["yastqsn0000002"].find(m => m === extData.position.DGIMN) &&
+          {extData.position.Status === 2 && !!this.props.noticeList.find(m => m === extData.position.DGIMN) &&
             <>
               <div className={styles.pulse}></div>
               <div className={styles.pulse1}></div>
             </>
           }
-          {/* {extData.position.Status === 2 && !!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
-          <div className={styles.pulse1}></div>
-          } */}
         </div>
       }
     }
