@@ -235,6 +235,27 @@ class AlarmRecord extends Component {
     }
     }
 
+      /** 分页 */
+     onShowSizeChange = (pageIndex, pageSize) => {
+        let { overdataparams } = this.props;
+        overdataparams = {
+            ...overdataparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(overdataparams);
+    }
+
+    onChange = (pageIndex, pageSize) => {
+        let { overdataparams } = this.props;
+        overdataparams = {
+            ...overdataparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(overdataparams);
+    }
+
     /** 保存核查单 */
      handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN } = this.props;
@@ -385,8 +406,8 @@ class AlarmRecord extends Component {
                                   showSizeChanger: true,
                                   showQuickJumper: true,
                                   total: this.props.total,
-                                  pageSize: this.props.historyparams.pageSize,
-                                  current: this.props.historyparams.pageIndex,
+                                  pageSize: this.props.overdataparams.pageSize,
+                                  current: this.props.overdataparams.pageIndex,
                                   onChange: this.onChange,
                                   onShowSizeChange: this.onShowSizeChange,
                                   pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
