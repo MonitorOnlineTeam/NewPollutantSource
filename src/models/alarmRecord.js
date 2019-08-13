@@ -1,6 +1,7 @@
 import Model from '@/utils/model';
 import moment from 'moment'
 import {
+  queryoverdatalist,
   UpdateExceptionProcessing,
   GetAlarmRecordDetails,
 } from '../services/alarmRecordApi';
@@ -62,7 +63,7 @@ export default Model.extend({
                 endTime: payload.endTime ? payload.endTime : overdataparams.endTime,
             }
 
-            const res = yield call(getAlarmNotices, postData);
+            const res = yield call(queryoverdatalist, postData);
             if (res.IsSuccess) {
                 yield update({
                   overdata: res.Datas,

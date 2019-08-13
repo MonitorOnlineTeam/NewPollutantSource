@@ -328,8 +328,10 @@ export default {
               name: 'monitoring',
               routes: [
                 {
-                  path: '/monitoring',
-                  redirect: '/monitoring/realtimedata',
+                  name:'realtimedata',
+                  path: '/monitoring/realtimedata',
+                  component: './monitoring/realtimedata',
+
                 },
                 {
                   name: 'datalist',
