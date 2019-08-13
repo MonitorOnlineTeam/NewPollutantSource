@@ -481,7 +481,7 @@ export default class MonitorPoint extends Component {
                         row['dbo.T_Bas_CommonPoint.PointCode'],
                       )}
                     >
-                      <a>更多</a>
+                      <a><Icon type="down" /></a>
                     </Dropdown>
                   </Fragment>
                 )}

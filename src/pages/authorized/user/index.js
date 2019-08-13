@@ -181,6 +181,7 @@ export default class UserInfoIndex extends Component {
                       onClick={() => {
                         this.showConfirm(selectedRowKeys, selectedRows);
                       }}
+                      style={{marginRight:8}}
                     >
                       重置密码
                     </Button>

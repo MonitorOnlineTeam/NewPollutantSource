@@ -175,17 +175,16 @@ class NavigationTree extends Component {
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
-
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          this.props.dispatch({
-            type: "navigationtree/updateState",
-            payload: {
-              overallselkeys: nowKey,
-              overallexpkeys: [nowExpandKey],
-            }
-          })
+          // this.props.dispatch({
+          //   type: "navigationtree/updateState",
+          //   payload: {
+          //     overallselkeys: nowKey,
+          //     overallexpkeys: [nowExpandKey],
+          //   }
+          // })当前页面传入的值只供当前页面使用
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
@@ -644,7 +643,7 @@ class NavigationTree extends Component {
             placeholder="请选择区域"
           />
           <Search
-            placeholder="查询企业排口"
+            placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
             // onChange={console.log("111")}
             style={{ marginTop: 10, width: '67%' }}
