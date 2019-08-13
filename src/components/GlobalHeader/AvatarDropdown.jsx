@@ -14,6 +14,7 @@ class AvatarDropdown extends React.Component {
     const { dispatch } = this.props;
     if (key === 'logout') {
       if (dispatch) {
+        Cookie.set('ssoToken',null);
         Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',

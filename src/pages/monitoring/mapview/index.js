@@ -7,7 +7,6 @@ import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
-import Item from 'antd/lib/list/Item';
 import { EntIcon, GasIcon, WaterIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
@@ -202,15 +201,12 @@ class MapView extends Component {
                 style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
           }
-          {extData.position.Status === 2 && !!["yastqsn0000002"].find(m => m === extData.position.DGIMN) &&
-            <>
-              <div className={styles.pulse}></div>
-              <div className={styles.pulse1}></div>
-            </>
+          {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
+          <>
+            <div className={styles.pulse}></div>
+            <div className={styles.pulse1}></div>
+          </>
           }
-          {/* {extData.position.Status === 2 && !!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
-          <div className={styles.pulse1}></div>
-          } */}
         </div>
       }
     }
@@ -573,7 +569,7 @@ class MapView extends Component {
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
               events={this.windowEvents}
-            // isCustom
+              // isCustom
             >
               {
                 // this.state.displayType == 0 ?
@@ -652,6 +648,13 @@ class MapView extends Component {
                         <a className={styles.pointDetails} size="small" onClick={() => {
                           this.setState({
                             pointVisible: true,
+                            DGIMN: "",
+                          }, () => {
+                            setTimeout(() => {
+                              this.setState({
+                                DGIMN: this.state.currentKey
+                              })
+                            }, 200);
                           })
                         }}>排口详情</a>
                       </>)
@@ -664,7 +667,7 @@ class MapView extends Component {
               markers={this.state.markersList}
               events={this.markersEvents}
               render={this.renderMarker}
-            // content={<span>111</span>}
+              // content={<span>111</span>}
             />
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
@@ -692,9 +695,22 @@ class MapView extends Component {
               });
             }}
           >
-            <Tabs>
+            <Tabs onChange={(activeKey)=> {
+              this.setState({
+                [DGIMN + activeKey]: this.state.currentKey
+              })
+              // this.setState({
+              //   DGIMN: undefined,
+              // }, () => {
+              //   setTimeout(() => {
+              //     this.setState({
+              //       DGIMN: this.state.currentKey
+              //     })
+              //   }, 200);
+              // })
+            }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <DataQuery DGIMN={this.state.DGIMN1} style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
                 <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh' }} />
@@ -706,7 +722,7 @@ class MapView extends Component {
                 <RecordEchartTable DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <RecordEchartTableOver DGIMN={this.state.DGIMN5} style={{ maxHeight: '60vh' }} />
               </TabPane>
             </Tabs>
           </Modal>
