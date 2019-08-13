@@ -175,17 +175,16 @@ class NavigationTree extends Component {
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
-
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          this.props.dispatch({
-            type: "navigationtree/updateState",
-            payload: {
-              overallselkeys: nowKey,
-              overallexpkeys: [nowExpandKey],
-            }
-          })
+          // this.props.dispatch({
+          //   type: "navigationtree/updateState",
+          //   payload: {
+          //     overallselkeys: nowKey,
+          //     overallexpkeys: [nowExpandKey],
+          //   }
+          // })当前页面传入的值只供当前页面使用
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
@@ -563,7 +562,6 @@ class NavigationTree extends Component {
     //渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map(item => {
-        console.log("notice=", this.props.noticeList)
         const index = item.title.indexOf(searchValue);
         const beforeStr = item.title.substr(0, index);
         const afterStr = item.title.substr(index + searchValue.length);
@@ -589,7 +587,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right',color:"red" }} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>
@@ -645,7 +643,7 @@ class NavigationTree extends Component {
             placeholder="请选择区域"
           />
           <Search
-            placeholder="查询企业排口"
+            placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
             // onChange={console.log("111")}
             style={{ marginTop: 10, width: '67%' }}

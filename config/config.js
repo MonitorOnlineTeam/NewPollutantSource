@@ -328,8 +328,10 @@ export default {
               name: 'monitoring',
               routes: [
                 {
-                  path: '/monitoring',
-                  redirect: '/monitoring/realtimedata',
+                  name:'realtimedata',
+                  path: '/monitoring/realtimedata',
+                  component: './monitoring/realtimedata',
+
                 },
                 {
                   name: 'datalist',
@@ -346,6 +348,24 @@ export default {
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
                 },
+              ],
+            },
+            {
+              path: '/Intelligentanalysis',
+              name: 'Intelligentanalysis',
+              routes: [
+               
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency',
+                  component: './Intelligentanalysis/transmissionefficiency/entIndex',
+                },
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
+                  component: './Intelligentanalysis/transmissionefficiency/pointIndex',
+                },
+               
               ],
             },
             {

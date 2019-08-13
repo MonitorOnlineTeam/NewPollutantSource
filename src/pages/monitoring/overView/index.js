@@ -258,7 +258,7 @@ class dataList extends PureComponent {
             <Input.Search
                 style={{ width: 300, marginRight: 50 }}
                 onSearch={this.entOnSearch}
-                placeholder="请输入企业名称进行搜索"
+                placeholder="请输入关键字查询"
             />
         );
     };
@@ -307,7 +307,7 @@ class dataList extends PureComponent {
         ];
         if (!onlyOneEnt) {
             columns = columns.concat({
-                title: '企业名称',
+                title: '监控目标',
                 dataIndex: 'entName',
                 key: 'entName',
                 width: 300,
