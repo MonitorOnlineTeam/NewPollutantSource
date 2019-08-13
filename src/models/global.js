@@ -24,7 +24,7 @@ export default Model.extend({
     getAlarmNoticesParameters: {
       beginTime: moment().format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      DGIMN: null,
+      DGIMN: "",
     },
   },
   effects: {
