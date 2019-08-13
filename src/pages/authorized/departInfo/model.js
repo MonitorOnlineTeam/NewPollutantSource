@@ -232,14 +232,31 @@ export default Model.extend({
             select,
             take
         }) {
-            if(!payload.PollutantType)
-            {
-                yield take('common/getPollutantTypeList/@@end');
-                const dd = yield select(state => state.common);
-                payload={
-                    ...payload,
-                    PollutantTypes:dd.defaultPollutantCode
+            // if(!payload.PollutantType)
+            // {
+            //     yield take('common/getPollutantTypeList/@@end');
+            //     const dd = yield select(state => state.common);
+            //     payload={
+            //         ...payload,
+            //         PollutantTypes:dd.defaultPollutantCode
+            //     }
+            // }
+            if (!payload.PollutantType) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
+                    }
+                }else {
+                    payload = {
+                        ...payload,
+                        PollutantType:global.defaultPollutantCode
+                    }
                 }
+                
             }
             const result = yield call(getentandpoint, {
                 ...payload
@@ -273,7 +290,20 @@ export default Model.extend({
         }, {
             call,
             update,
+            select,
+            take
         }) {
+            if (!payload.Type) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload.Type=global.defaultPollutantCode
+                }else {
+                    payload.Type=global.defaultPollutantCode
+                }
+                
+            }
             const result = yield call(insertpointfilterbydepid, {
                 ...payload
             });
