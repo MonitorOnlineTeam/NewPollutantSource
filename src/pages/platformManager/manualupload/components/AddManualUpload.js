@@ -33,13 +33,13 @@ export default class AddManualUpload extends Component {
         this.props.onRef(this);
         this.GetAllPollutantTypes();
         this.SelectHandleChange();
-             //获取绑定下拉污染物
-             this.props.dispatch({
-                type: 'manualupload/GetUnitByPollutant',
-                payload: {
-                    pollutantCode: ""
-                }
-            });
+        //获取绑定下拉污染物
+        this.props.dispatch({
+            type: 'manualupload/GetUnitByPollutant',
+            payload: {
+                pollutantCode: ""
+            }
+        });
     }
     GetAllPollutantTypes = () => {
         this.props.dispatch({
@@ -61,7 +61,7 @@ export default class AddManualUpload extends Component {
     }
     //根据污染物编号获取单位
     pollutantChange = (value) => {
-        var pCode=value.split('--')
+        var pCode = value.split('--')
         //获取绑定下拉污染物
         this.props.dispatch({
             type: 'manualupload/GetUnitByPollutant',
@@ -71,25 +71,49 @@ export default class AddManualUpload extends Component {
         });
     }
     handleSubmit = (e) => {
-        let flag = true;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err && flag === true) {
-                this.props.dispatch({
-                    type: 'manualupload/AddUploadFiles',
-                    payload: {
-                        pollutantCode: values.pollutantCode.split('--')[0],
-                        monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
-                        avgValue: values.avgValue,
-                        DGIMN: values.DGIMN,
-                        callback: (reason) => {
-                            message.success(reason)
-                        }
-                    },
-                });
-                this.props.onCancels();
-            } else {
-            }
-        });
+        const { item } = this.props;
+        if (!item) {
+            this.props.form.validateFieldsAndScroll((err, values) => {
+                if (!err) {
+                    this.props.dispatch({
+                        type: 'manualupload/AddUploadFiles',
+                        payload: {
+                            pollutantCode: values.pollutantCode.split('--')[0],
+                            monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
+                            avgValue: values.avgValue,
+                            DGIMN: values.DGIMN,
+                            callback: (reason) => {
+                                message.success(reason)
+                            }
+                        },
+                    });
+                    this.props.onCancels();
+                } else {
+                }
+            });
+        }
+        else {
+            debugger
+            this.props.form.validateFieldsAndScroll((err, values) => {
+                if (!err) {
+                    this.props.dispatch({
+                        type: 'manualupload/AddUploadFiles',
+                        payload: {
+                            pollutantCode: values.pollutantCode.split('--')[0],
+                            monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
+                            avgValue: values.avgValue,
+                            DGIMN: values.DGIMN,
+                            callback: (reason) => {
+                                message.success(reason)
+                            }
+                        },
+                    });
+                    this.props.onCancels();
+                } else {
+                }
+            });
+        }
+
     }
     handleFocus = () => {
         console.log('focus');
@@ -134,7 +158,7 @@ export default class AddManualUpload extends Component {
                                 {...formItemLayout}
                                 label={'污染物名称'}>
                                 {getFieldDecorator('pollutantCode', {
-                                       rules: [{
+                                    rules: [{
                                         required: true,
                                         message: '请选择污染物名称',
                                     }],
@@ -161,7 +185,7 @@ export default class AddManualUpload extends Component {
                                 {...formItemLayout}
                                 label={'监测时间'}>
                                 {getFieldDecorator('monitorTime', {
-                                       rules: [{
+                                    rules: [{
                                         required: true,
                                         message: '请输入监测时间',
                                     }],
