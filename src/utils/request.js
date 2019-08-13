@@ -75,7 +75,8 @@ async function requestMy(url, options) {
     .catch(e => {
       const status = e.name;
       if (status === 401) {
-        Cookie.set('ssoToken', "null");
+        Cookie.set('ssoToken', null);
+        Cookie.set('currentUser', null);
         router.push('/user/login');
         return;
       }
