@@ -66,6 +66,7 @@ class NavigationTree extends Component {
       panelVis: "none",
       panelData: [],
       panelDataList: [],
+      RunState: "",
       // panelSelKey:"",
       panelColumn: [
         {
@@ -112,11 +113,15 @@ class NavigationTree extends Component {
     }
     const { dispatch, EntAndPoint } = this.props;
     const { panelDataList, screenList } = this.state;
-
+    var state = this.props.runState == undefined ? "" : this.props.runState
+    this.setState({
+      RunState: state
+    })
     dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Status: screenList,
+        RunState: state
       }
     })
     panelDataList.splice(0, panelDataList.length)
@@ -142,23 +147,12 @@ class NavigationTree extends Component {
     if (this.props.selKeys !== nextProps.selKeys) {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
-      this.generateList(nextProps.EntAndPoint, nextProps.selKeys,nextProps.overAll)
+      this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
-    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-    //   this.setState({
-    //     PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
-    //   })
-    //   this.props.dispatch({
-    //     type: 'navigationtree/getentandpoint',
-    //     payload: {
-    //       Status: this.state.screenList,
-    //       PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
-    //     }
-    //   })
-    // }
+
   }
   //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys,overAll) => {
+  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -178,9 +172,9 @@ class NavigationTree extends Component {
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          if (overAll||this.props.overAll) {
-            console.log("////////overAll=",this.props.overAll)
-            console.log("////////overAll111=",overAll)
+          if (overAll || this.props.overAll) {
+            console.log("////////overAll=", this.props.overAll)
+            console.log("////////overAll111=", overAll)
             this.props.dispatch({
               type: "navigationtree/updateState",
               payload: {
@@ -256,6 +250,7 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         Name: this.state.Name,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -271,6 +266,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -330,6 +326,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -406,6 +403,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: typeList,
+        RunState: this.state.RunState
       }
     })
   }
