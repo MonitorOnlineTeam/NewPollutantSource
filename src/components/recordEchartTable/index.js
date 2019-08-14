@@ -73,10 +73,11 @@ class Index extends Component {
         this.setState({
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+        }, () => {
+            this.props.initLoadData &&  this.getLoadData(this.props);
         })
 
 
-        console.log("props=", this.props)
     }
     componentWillReceiveProps(nextProps) {
         // if (this.props.excount != nextProps.excount) {

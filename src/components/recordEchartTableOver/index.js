@@ -80,7 +80,8 @@ class Index extends Component {
         this.setState({
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-
+        }, () => {
+            this.props.initLoadData && this.getLoadData(this.props);
         })
     }
     componentWillReceiveProps(nextProps) {
@@ -95,7 +96,7 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-       
+
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }
