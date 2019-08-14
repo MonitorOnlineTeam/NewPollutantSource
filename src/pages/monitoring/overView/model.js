@@ -96,7 +96,7 @@ export default Model.extend({
       if (data) {
         gwidth += 200 * data.length;
       }
-      yield update({ columns: data, gwidth });
+      yield update({ columns: data || [], gwidth });
     },
     *querydatalist({ payload }, { call, update, put, select }) {
       const {

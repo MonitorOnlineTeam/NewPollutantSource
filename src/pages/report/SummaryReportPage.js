@@ -249,19 +249,19 @@ class DailySummaryPage extends PureComponent {
                 </FormItem>
               </Col>
               <Col md={6} sm={24}>
-                <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     // initialValue: defaultSearchForm.Regions,
                     initialValue: this.state.defaultRegionCode,
                     rules: [{
                       required: true,
-                      message: '请选择省市区',
+                      message: '请选择行政区',
                     }],
                   })(
                     <SdlCascader
                       changeOnSelect={false}
                       data={regionList}
-                      placeholder="请选择"
+                      placeholder="请选择行政区"
                     />
                   )}
                 </FormItem>
