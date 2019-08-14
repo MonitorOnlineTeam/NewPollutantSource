@@ -51,7 +51,8 @@ class YsyShowVideo extends Component {
       vIsLoading: false,
       playtime: '',
       selectDisplay: false,
-      dgimn: '',
+      dgimn: props.DGIMN,
+      // dgimn: '',
       tabsKey: 1,
       VedioID: '',
     };
@@ -64,6 +65,10 @@ class YsyShowVideo extends Component {
   componentWillUnmount() {
     window.removeEventListener('message', this.receiveMessage);
     clearInterval(this.timerID);
+  }
+
+  componentDidMount() {
+    this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
   componentWillReceiveProps = nextProps => {
