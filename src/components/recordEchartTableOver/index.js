@@ -95,24 +95,9 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-        let beginTime = moment(new Date()).add(-60, 'minutes');
-        const endTime = moment(new Date());
+       
         if (this.props.DGIMN != nextProps.DGIMN) {
-            this.props.dispatch({
-                type: 'recordEchartTable/updateState',
-                payload: {
-                    overData: [],
-                },
-            })
-            this.props.dispatch({
-                type: "recordEchartTable/getovermodellist",
-                payload: {
-                    beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-                    endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
-                    dataType: this.state.dataType,
-                    DGIMN: [nextProps.DGIMN],
-                }
-            })
+            this.getLoadData(nextProps);
         }
     }
     // /** 后台请求数据 */
@@ -122,6 +107,25 @@ class Index extends Component {
     //     } = this.props;
     //     console.log("dgmn=",this.props.DGIMN)
 
+    getLoadData=(nextProps)=>{
+        let beginTime = moment(new Date()).add(-60, 'minutes');
+        const endTime = moment(new Date());
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                overData: [],
+            },
+        })
+        this.props.dispatch({
+            type: "recordEchartTable/getovermodellist",
+            payload: {
+                beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
+                dataType: this.state.dataType,
+                DGIMN: [nextProps.DGIMN],
+            }
+        })
+    }
     // }
     /** 数据类型切换 */
     _handleDateTypeChange = e => {
