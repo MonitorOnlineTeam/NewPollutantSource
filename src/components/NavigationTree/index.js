@@ -6,6 +6,7 @@ import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
+import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
 const RadioGroup = Radio.Group;
@@ -80,7 +81,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'pointName',
-          width: '70%',
+          width: '60%',
           render: (text, record) => {
             return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
           }
@@ -88,19 +89,30 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'Status',
-          width: '10%',
+          width: 100,
+          align: "left",
           render: (text, record) => {
-            return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
+            return (
+              <>
+                {
+                  record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: "0 10px" }} /> : ""
+                }
+                {
+                  !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>
+                }
+              </>
+            )
+            return
           }
         },
-        {
-          title: 'Bell',
-          dataIndex: 'key',
-          width: '10%',
-          render: (text, record) => {
-            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7 }} /> : ""
-          }
-        },
+        // {
+        //   title: 'Bell',
+        //   dataIndex: 'key',
+        //   width: '10%',
+        //   render: (text, record) => {
+        //     return !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon  className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>;
+        //   }
+        // },
       ]
     }
   }
@@ -173,8 +185,6 @@ class NavigationTree extends Component {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
           if (overAll || this.props.overAll) {
-            console.log("////////overAll=", this.props.overAll)
-            console.log("////////overAll111=", overAll)
             this.props.dispatch({
               type: "navigationtree/updateState",
               payload: {
@@ -189,6 +199,7 @@ class NavigationTree extends Component {
         }
         this.setState({
           selectedKeys: nowKey,
+          overAll: overAll,
           expandedKeys: nowExpandKey
         })
         var rtnKey = [{ key: nowKey[0], IsEnt: false }]
@@ -196,7 +207,7 @@ class NavigationTree extends Component {
       }
 
       if (node.children) {
-        this.generateList(node.children, selKeys);
+        this.generateList(node.children, selKeys, overAll);
       }
     }
   };
@@ -482,16 +493,19 @@ class NavigationTree extends Component {
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
-    console.log("overallselkeys=", this.state.selectedKeys);
-    //更新到model
-    this.props.dispatch({
-      type: "navigationtree/updateState",
-      payload: {
-        selectTreeKeys: rtnList,
-        overallselkeys: this.state.selectedKeys,
-        overallexpkeys: this.state.expandedKeys,
-      }
-    })
+    if (this.props.isMap === true && rtnList[0].IsEnt) {
+    } else {
+      //更新到model
+      this.props.dispatch({
+        type: "navigationtree/updateState",
+        payload: {
+          selectTreeKeys: rtnList,
+          overallselkeys: this.state.selectedKeys,
+          overallexpkeys: this.state.expandedKeys,
+        }
+      })
+    }
+
 
   }
   onRadioChange = (e) => {
@@ -589,7 +603,11 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.bell}>
+                <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
+              </div>
+              : ""}
           </div>
         }
           key={item.key} dataRef={item}>
