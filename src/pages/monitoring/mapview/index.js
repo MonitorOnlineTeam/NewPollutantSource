@@ -205,7 +205,7 @@ class MapView extends Component {
           }
           {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
           <>
-            <div className={styles.pulse}></div>
+            {/* <div className={styles.pulse}></div> */}
             <div className={styles.pulse1}></div>
           </>
           }
