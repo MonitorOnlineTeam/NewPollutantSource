@@ -322,17 +322,17 @@ class SiteDailyPage extends PureComponent {
                 </FormItem>
               </Col>
               <Col md={5} sm={24}>
-                <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     initialValue: defaultRegionCode,
                     rules: [{
                       required: true,
-                      message: '请选择省市区',
+                      message: '请选择行政区',
                     }],
                   })(
                     <SdlCascader
                       changeOnSelect={false}
-                      placeholder="请选择"
+                      placeholder="请选择行政区"
                       data={regionList}
                       allowClear={false}
                       onChange={(val) => {
@@ -354,17 +354,17 @@ class SiteDailyPage extends PureComponent {
                 </FormItem>
               </Col>
               <Col md={5} sm={24}>
-                <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
+                <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                   {getFieldDecorator("EntCode", {
                     initialValue: enterpriseList.length ? enterpriseList[0]["dbo.T_Bas_Enterprise.EntCode"] : undefined,
                     rules: [{
                       required: true,
-                      message: '请选择企业',
+                      message: '请选择监控目标',
                     }],
                   })(
                     // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
                     <Select
-                      placeholder="请选择企业">
+                      placeholder="请选择监控目标">
                       {
                         enterpriseList.map(item =>
                           <Option value={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>)
