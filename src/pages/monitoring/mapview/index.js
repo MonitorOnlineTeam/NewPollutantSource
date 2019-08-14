@@ -134,13 +134,15 @@ class MapView extends Component {
             newState = {
               infoWindowVisible: true,
               currentPointInfo: extData.position,
+              overAll: true,
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
             // 排口
             newState = {
               coordinateSet: this.state.currentEntInfo.CoordinateSet,
-              displayType: 1
+              displayType: 1,
+              overAll: false,
             }
             _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
             this.randomMarker(extData.position.children)
@@ -202,10 +204,10 @@ class MapView extends Component {
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
           }
           {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
-            <>
-              <div className={styles.pulse}></div>
-              <div className={styles.pulse1}></div>
-            </>
+          <>
+            <div className={styles.pulse}></div>
+            <div className={styles.pulse1}></div>
+          </>
           }
         </div>
       }
@@ -475,23 +477,25 @@ class MapView extends Component {
         size="large"
       />);
     }
-
     return (
       <div className={styles.mapWrapper}>
-        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={val => {
+        <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
             const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
               if (this.state.currentEntInfo == entInfo[0]) {
                 // 点击的是当期企业
+                this.setState({
+                  overAll: false,
+                })
               } else {
                 // 切换企业
                 const position = [entInfo[0].Longitude, entInfo[0].Latitude];
-
                 this.setState({
                   displayType: 1,
                   infoWindowVisible: false,
                   mapCenter: position,
+                  overAll: false,
                   coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
                   _thismap.setZoomAndCenter(pointZoom, position)
@@ -538,6 +542,7 @@ class MapView extends Component {
                   currentEntInfo: entInfo,
                   currentPointInfo: pointInfo,
                   currentKey: val[0].key,
+                  overAll: true,
                   coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet,
                 }, () => {
                   this.getPointInfo(pointInfo.PollutantType)
@@ -569,7 +574,7 @@ class MapView extends Component {
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
               events={this.windowEvents}
-            // isCustom
+              // isCustom
             >
               {
                 // this.state.displayType == 0 ?
@@ -667,7 +672,7 @@ class MapView extends Component {
               markers={this.state.markersList}
               events={this.markersEvents}
               render={this.renderMarker}
-            // content={<span>111</span>}
+              // content={<span>111</span>}
             />
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>

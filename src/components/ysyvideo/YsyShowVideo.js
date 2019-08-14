@@ -51,7 +51,8 @@ class YsyShowVideo extends Component {
       vIsLoading: false,
       playtime: '',
       selectDisplay: false,
-      dgimn: '',
+      dgimn: props.DGIMN,
+      // dgimn: '',
       tabsKey: 1,
       VedioID: '',
     };
@@ -64,6 +65,10 @@ class YsyShowVideo extends Component {
   componentWillUnmount() {
     window.removeEventListener('message', this.receiveMessage);
     clearInterval(this.timerID);
+  }
+
+  componentDidMount() {
+    this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
   componentWillReceiveProps = nextProps => {
@@ -144,54 +149,54 @@ class YsyShowVideo extends Component {
     this.getvideolist(DGIMN);
   }
 
-/** 根据排口dgimn获取它下面的摄像头 */
-getvideolist= dgimn => {
-  this.props.dispatch({
-    type: 'videodata/getvideolist',
-    payload: {
-      dgimn,
-      callback: data => {
-        if (data.length > 0) {
-          this.setState({
-            selectDisplay: true,
-            VedioID: data[0].VedioID,
-          }, () => {
-            this.getVideoIp(this.state.tabsKey, data[0].VedioID);
-          })
-        }
+  /** 根据排口dgimn获取它下面的摄像头 */
+  getvideolist= dgimn => {
+    this.props.dispatch({
+      type: 'videodata/getvideolist',
+      payload: {
+        dgimn,
+        callback: data => {
+          if (data.length > 0) {
+            this.setState({
+              selectDisplay: true,
+              VedioID: data[0].VedioID,
+            }, () => {
+              this.getVideoIp(this.state.tabsKey, data[0].VedioID);
+            })
+          }
+        },
       },
-    },
-  });
-}
+    });
+  }
 
   /** 获取摄像头 */
   getpollutantSelect = () => {
-        const { videoList } = this.props;
-            return (<VideoSelect
-                optionDatas={videoList}
-                defaultValue={this.getpropspollutantcode()}
-                style={{ width: 200, marginRight: 5 }}
-                onChange={this.handlePollutantChange}
-            />);
+    const { videoList } = this.props;
+    return (<VideoSelect
+      optionDatas={videoList}
+      defaultValue={this.getpropspollutantcode()}
+      style={{ width: 200, marginRight: 5 }}
+      onChange={this.handlePollutantChange}
+    />);
+  }
+  /**切换摄像头  */
+  handlePollutantChange = (value, selectedOptions) => {
+    let { historyparams } = this.props;
+    historyparams = {
+      ...historyparams,
+      payloadpollutantCode: value,
+      payloadpollutantName: selectedOptions.props.children,
     }
-     /**切换摄像头  */
-    handlePollutantChange = (value, selectedOptions) => {
-        let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            payloadpollutantCode: value,
-            payloadpollutantName: selectedOptions.props.children,
-        }
-        this.reloaddatalist(historyparams);
-    };
+    this.reloaddatalist(historyparams);
+  };
 
-    /** 获取第一个摄像头  */
-    getpropspollutantcode = () => {
-      if (this.props.videoList[0]) {
-        return this.props.videoList[0].VedioID;
-      }
-      return null;
+  /** 获取第一个摄像头  */
+  getpropspollutantcode = () => {
+    if (this.props.videoList[0]) {
+      return this.props.videoList[0].VedioID;
     }
+    return null;
+  }
 
   /** 获取url */
   getVideoIp = (type, id) => {
@@ -340,230 +345,230 @@ getvideolist= dgimn => {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
       return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
-          {
-            textAlign: 'center',
-          }
-        } > <Empty image = {
-          Empty.PRESENTED_IMAGE_SIMPLE
-        } description="暂无视频数据"
-        /></div ></Card>);
+        {
+          textAlign: 'center',
+        }
+      } > <Empty image = {
+        Empty.PRESENTED_IMAGE_SIMPLE
+      } description="暂无视频数据"
+      /></div ></Card>);
     }
     return (
-        <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
-          <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
-            <div
-              className={styles.divv}
-            >
-              <iframe
-                title="实时视频"
-                id="ifm"
-                src={ysyrealtimevideofullurl}
-                frameBorder="0"
-                width="100%"
-                height="100%"
-                scrolling="no"
-              />
-            </div>
-            <div className={styles.divc}
-            >
-              <Card className={styles.card}>
-                <Tabs
-                  defaultActiveKey="1"
-                  onChange={key => {
-                    this.tabsChange(key);
-                  }}
-                >
-                  <TabPane tab="实时" key="1">
-                    <Row>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayRStartBtn }}
-                      >
-                        <Tooltip placement="top" title="开始播放">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="play-circle"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 1)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
-                          开始播放
-                        </a>
-                      </Col>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayREndBtn }}
-                      >
-                        <Tooltip placement="top" title="暂停播放">
-                          <Button
-                            type="danger"
-                            shape="circle"
-                            icon="pause-circle"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 2)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'red' }}
-                          onClick={this.btnClick.bind(this, 2)}
-                        >
-                          暂停播放
-                        </a>
-                      </Col>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="刷新视频">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="redo"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 1)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
-                          刷新视频
-                        </a>
-                      </Col>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="抓取图片">
-                          <Button
-                            type="dashed"
-                            shape="circle"
-                            icon="file-image"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 3)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'black' }}
-                          onClick={this.btnClick.bind(this, 3)}
-                        >
-                          抓取图片
-                        </a>
-                      </Col>
-                    </Row>
-                    <Divider type="dashed" />
-                     <Row gutter={48} style={{ display: this.state.displayR }}>
-                      <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
-                        {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
-                      </Col>
-                    </Row>
-                    <Divider type="dashed" />
-                    <Row gutter={48} style={{ display: this.state.displayR }}>
-                      <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                        {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
-                      </Col>
-                    </Row>
-                  </TabPane>
-                  <TabPane tab="历史" key="2">
-                    <Row>
-                      <Col className={styles.gutterleft} span={24}>
-                        <RangePicker
-                          style={{ width: '350px' }}
-                          showTime={{ format: 'HH:mm:ss' }}
-                          format="YYYY-MM-DD HH:mm:ss"
-                          placeholder={['开始时间', '结束时间']}
-                          onChange={this.onChange}
+      <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
+        <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
+          <div
+            className={styles.divv}
+          >
+            <iframe
+              title="实时视频"
+              id="ifm"
+              src={ysyrealtimevideofullurl}
+              frameBorder="0"
+              width="100%"
+              height="100%"
+              scrolling="no"
+            />
+          </div>
+          <div className={styles.divc}
+          >
+            <Card className={styles.card}>
+              <Tabs
+                defaultActiveKey="1"
+                onChange={key => {
+                  this.tabsChange(key);
+                }}
+              >
+                <TabPane tab="实时" key="1">
+                  <Row>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayRStartBtn }}
+                    >
+                      <Tooltip placement="top" title="开始播放">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="play-circle"
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 1)}
                         />
-                      </Col>
-                    </Row>
-                    <Divider dashed />
-                    <Row>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayHStartBtn }}
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
+                        开始播放
+                      </a>
+                    </Col>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayREndBtn }}
+                    >
+                      <Tooltip placement="top" title="暂停播放">
+                        <Button
+                          type="danger"
+                          shape="circle"
+                          icon="pause-circle"
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 2)}
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'red' }}
+                        onClick={this.btnClick.bind(this, 2)}
                       >
-                        <Tooltip placement="top" title="开始播放">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="play-circle"
-                            size="Small"
-                            onClick={this.backplay.bind(this)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
-                          开始播放
-                        </a>
-                      </Col>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayHEndBtn }}
+                        暂停播放
+                      </a>
+                    </Col>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="刷新视频">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="redo"
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 1)}
+                        />
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
+                        刷新视频
+                      </a>
+                    </Col>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="抓取图片">
+                        <Button
+                          type="dashed"
+                          shape="circle"
+                          icon="file-image"
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 3)}
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'black' }}
+                        onClick={this.btnClick.bind(this, 3)}
                       >
-                        <Tooltip placement="top" title="暂停播放">
-                          <Button
-                            type="danger"
-                            shape="circle"
-                            icon="pause-circle"
-                            size="Small"
-                            onClick={this.backbtnClick.bind(this, 2)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'red' }}
+                        抓取图片
+                      </a>
+                    </Col>
+                  </Row>
+                  <Divider type="dashed" />
+                  <Row gutter={48} style={{ display: this.state.displayR }}>
+                    <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
+                      {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
+                    </Col>
+                  </Row>
+                  <Divider type="dashed" />
+                  <Row gutter={48} style={{ display: this.state.displayR }}>
+                    <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+                      {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
+                    </Col>
+                  </Row>
+                </TabPane>
+                <TabPane tab="历史" key="2">
+                  <Row>
+                    <Col className={styles.gutterleft} span={24}>
+                      <RangePicker
+                        style={{ width: '350px' }}
+                        showTime={{ format: 'HH:mm:ss' }}
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder={['开始时间', '结束时间']}
+                        onChange={this.onChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Divider dashed />
+                  <Row>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayHStartBtn }}
+                    >
+                      <Tooltip placement="top" title="开始播放">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="play-circle"
+                          size="Small"
+                          onClick={this.backplay.bind(this)}
+                        />
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
+                        开始播放
+                      </a>
+                    </Col>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayHEndBtn }}
+                    >
+                      <Tooltip placement="top" title="暂停播放">
+                        <Button
+                          type="danger"
+                          shape="circle"
+                          icon="pause-circle"
+                          size="Small"
                           onClick={this.backbtnClick.bind(this, 2)}
-                        >
-                          暂停播放
-                        </a>
-                      </Col>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="刷新视频">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="redo"
-                            size="Small"
-                            onClick={this.backplay.bind(this)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
-                          刷新视频
-                        </a>
-                      </Col>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="抓取图片">
-                          <Button
-                            type="dashed"
-                            shape="circle"
-                            icon="file-image"
-                            size="Small"
-                            onClick={this.backbtnClick.bind(this, 3)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'black' }}
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'red' }}
+                        onClick={this.backbtnClick.bind(this, 2)}
+                      >
+                        暂停播放
+                      </a>
+                    </Col>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="刷新视频">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="redo"
+                          size="Small"
+                          onClick={this.backplay.bind(this)}
+                        />
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
+                        刷新视频
+                      </a>
+                    </Col>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="抓取图片">
+                        <Button
+                          type="dashed"
+                          shape="circle"
+                          icon="file-image"
+                          size="Small"
                           onClick={this.backbtnClick.bind(this, 3)}
-                        >
-                          抓取图片
-                        </a>
-                      </Col>
-                    </Row>
-                    <Divider type="horizontal" />
-                    <Row gutter={48} style={{ display: this.state.displayH }}>
-                      <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                        {this.state.displayR && (
-                          <HistoryVideo
-                            onRef={this.onRef1}
-                            {...this.props}
-                            dgimn={this.state.dgimn}
-                            beginDate={moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss')}
-                            endDate={moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss')}
-                          />
-                        )}
-                      </Col>
-                    </Row>
-                  </TabPane>
-                </Tabs>
-              </Card>
-            </div>
-          </Row>
-        </div>
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'black' }}
+                        onClick={this.backbtnClick.bind(this, 3)}
+                      >
+                        抓取图片
+                      </a>
+                    </Col>
+                  </Row>
+                  <Divider type="horizontal" />
+                  <Row gutter={48} style={{ display: this.state.displayH }}>
+                    <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+                      {this.state.displayR && (
+                        <HistoryVideo
+                          onRef={this.onRef1}
+                          {...this.props}
+                          dgimn={this.state.dgimn}
+                          beginDate={moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss')}
+                          endDate={moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss')}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+                </TabPane>
+              </Tabs>
+            </Card>
+          </div>
+        </Row>
+      </div>
     );
   }
 }
