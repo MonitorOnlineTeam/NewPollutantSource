@@ -58,6 +58,9 @@ class AlarmRecord extends Component {
         };
     }
 
+    componentDidMount() {
+      this.props.initLoadData && this.changeDgimn(this.props.DGIMN, this.props.overdataparams)
+    }
 
      componentWillReceiveProps = nextProps => {
        console.log('------------------------------------------000', nextProps.DGIMN);
