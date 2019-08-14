@@ -171,7 +171,7 @@ export default Model.extend({
       yield update({
         upLoadParameters: {
           ...upLoadParameters,
-          manualUploaddataOne: data == null ? '0' : data[0].DGIMN,
+          manualUploaddataOne: data == null ? '0' : data.length == 0 ? '0' : data[0].DGIMN,
         },
       });
     },

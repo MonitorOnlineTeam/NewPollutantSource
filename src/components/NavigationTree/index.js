@@ -142,7 +142,7 @@ class NavigationTree extends Component {
     if (this.props.selKeys !== nextProps.selKeys) {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
-      this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
+      this.generateList(nextProps.EntAndPoint, nextProps.selKeys,nextProps.overAll)
     }
     // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
     //   this.setState({
@@ -158,7 +158,7 @@ class NavigationTree extends Component {
     // }
   }
   //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys) => {
+  generateList = (data = this.props.EntAndPoint, selKeys,overAll) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -178,13 +178,17 @@ class NavigationTree extends Component {
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          // this.props.dispatch({
-          //   type: "navigationtree/updateState",
-          //   payload: {
-          //     overallselkeys: nowKey,
-          //     overallexpkeys: [nowExpandKey],
-          //   }
-          // })当前页面传入的值只供当前页面使用
+          if (overAll||this.props.overAll) {
+            console.log("////////overAll=",this.props.overAll)
+            console.log("////////overAll111=",overAll)
+            this.props.dispatch({
+              type: "navigationtree/updateState",
+              payload: {
+                overallselkeys: nowKey,
+                overallexpkeys: [nowExpandKey],
+              }
+            })//根据传入的状态判断是否更新全局
+          }
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
@@ -587,7 +591,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right',color:"red" }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} /> : ""}
           </div>
         }
           key={item.key} dataRef={item}>
