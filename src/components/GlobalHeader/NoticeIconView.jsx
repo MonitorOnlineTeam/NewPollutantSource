@@ -8,10 +8,7 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
-// import RealTimeWarningModal from '../../components/SpecialWorkbench/RealTimeWarningModal';
-import AlarmRecordModal from './AlarmRecordModal';
-import ExceptionModal from './ExceptionModal';
-// import EmergencyDetailInfoModal from './EmergencyDetailInfoModal';
+import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmRecord';
 import RecordEchartTable from '@/components/recordEchartTable'
 
 @connect(({ loading, global }) => ({
@@ -20,6 +17,13 @@ import RecordEchartTable from '@/components/recordEchartTable'
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 export default class GlobalHeaderRight extends PureComponent {
+  constructor(props) {
+    super(props);
+    const _this = this;
+    this.state = {
+      visible: false,
+    };
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -105,20 +109,12 @@ export default class GlobalHeaderRight extends PureComponent {
       payload: id,
     });
   };
-
-  onRefWarning = ref => {
-    this.childWarning = ref;
-  };
-
-  onRefAlarm = ref => {
-    this.childAlarm = ref;
-  };
-  onRefException = ref => {
-    this.childException = ref;
-  };
-  // onRefEmergencyDetailInfo = (ref) => {
-  //   this.childEmergencyDetailInfo = ref;
-  // }
+  //取消Model
+  onCancel = () => {
+    this.setState({
+      visible: false
+    });
+  }
 
   render() {
     const {
@@ -138,41 +134,34 @@ export default class GlobalHeaderRight extends PureComponent {
         <NoticeIcon
           count={currentUserNoticeCnt.unreadCount}
           onItemClick={(item, tabProps) => {
+            debugger
+            this.setState({
+              visible: true,
+              firsttime: item.firsttime,
+              lasttime: item.lasttime,
+              DGIMN: item.DGIMN,
+              pointname: item.pointname,
+            });
             //报警
             if (item.type === 'alarm') {
               if (item.sontype === 'warn') {
-                this.childAlarm.showModal(
-                  item.firsttime,
-                  item.lasttime,
-                  item.DGIMN,
-                  item.pointname,
-                );
-                // this.childWarning.showModal(item.pointname, item.DGIMN, item.overwarnings[0].PollutantCode, item.overwarnings[0].PollutantName, item.overwarnings[0].SuggestValue);
+                this.setState({
+                  title: '预警消息',
+                  flag: 'over',
+                });
               } else if (item.sontype === 'over') {
-                // dispatch(routerRedux.push(`/pointdetail/${item.DGIMN}/alarmrecord/alarmrecord`));
-                this.childAlarm.showModal(
-                  item.firsttime,
-                  item.lasttime,
-                  item.DGIMN,
-                  item.pointname,
-                );
+                this.setState({
+                  title: '超标报警消息',
+                  flag: 'over',
+
+                });
               } else if (item.sontype === 'exception') {
-                // this.props.dispatch({
-                //   type: 'urgentdispatch/queryoperationInfo',
-                //   payload: {
-                //     dgimn: item.DGIMN
-                //   }
-                // });
-                this.childException.showModal(
-                  // item.firsttime,
-                  // item.lasttime,
-                  item.DGIMN,
-                  // item.pointname,
-                );
+                this.setState({
+                  title: '异常报警消息',
+                  flag: 'exception',
+                });
               }
             }
-            //修改通知的已读状态
-            //   this.changeReadState(item, tabProps);
           }}
           loading={fetchingNotices}
           onViewMore={() => message.info('Click on view more')}
@@ -187,27 +176,28 @@ export default class GlobalHeaderRight extends PureComponent {
           />
         </NoticeIcon>
 
-        {/* <Modal
-          footer={[]}
+        <Modal
           destroyOnClose="true"
           visible={this.state.visible}
           title={this.state.title}
-          width={this.state.width}
+          width="70%"
+          footer={null}
         >
-          {
-            <UpdateManualUpload DGIMN={DGIMN} item={this.state.data} onRef={this.onRef1} />
-          }
-        </Modal> */}
-
-
-        {/* 预警 */}
-        {/* <RealTimeWarningModal {...this.props} onRef={this.onRefWarning} /> */}
-        {/* 超标 */}
-        <AlarmRecordModal {...this.props} onRef={this.onRefAlarm} />
-        {/* 异常 */}
-        <ExceptionModal {...this.props} onRef={this.onRefException} />
-        {/* 消息 */}
-        {/* <EmergencyDetailInfoModal  {...this.props} onRef={this.onRefEmergencyDetailInfo} /> */}
+          <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+            {
+              this.state.flag === "over" ?
+                <AlarmRecord
+                  DGIMN={this.state.DGIMN}
+                  firsttime={moment(this.state.firsttime)}
+                  lasttime={moment(this.state.lasttime)}
+                />
+                :
+                <RecordEchartTable
+                  DGIMN={this.state.DGIMN}
+                />
+            }
+          </div>
+        </Modal>
       </div>
     );
   }

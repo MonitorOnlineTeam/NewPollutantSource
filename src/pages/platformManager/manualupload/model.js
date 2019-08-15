@@ -106,9 +106,7 @@ export default Model.extend({
             update,
             select,
         }) {
-            debugger
             const { manualUploadParameters } = yield select(a => a.manualupload);
-            debugger
             const result = yield call(GetManualSupplementList, { ...manualUploadParameters });
             if (result.IsSuccess) {
                 //根据MN号码获取所对应的污染物信息

@@ -129,6 +129,7 @@ export default class ContentList extends Component {
                 payload: {
                     PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
                     callback: (data) => {
+                        debugger
                         downloadFile(data);
                     }
                 }
