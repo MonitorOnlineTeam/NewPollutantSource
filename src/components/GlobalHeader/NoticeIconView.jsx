@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Popover, Button } from 'antd';
+import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Popover, Button, Modal } from 'antd';
 import { connect } from 'dva';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '../SelectLang';
@@ -20,12 +20,12 @@ import RecordEchartTable from '@/components/recordEchartTable'
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 export default class GlobalHeaderRight extends PureComponent {
-  
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'global/fetchNotices',
-      payload:{}
+      payload: {}
     });
   }
   getNoticeData() {
@@ -55,7 +55,7 @@ export default class GlobalHeaderRight extends PureComponent {
             newNotice.avatar = (
               <Avatar style={{ verticalAlign: 'middle' }} src='/over.png'>
               </Avatar>
-              
+
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
@@ -64,7 +64,7 @@ export default class GlobalHeaderRight extends PureComponent {
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{verticalAlign: 'middle' }} src='/exception.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src='/exception.png'>
               </Avatar>
             );
           }
@@ -186,6 +186,20 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
         </NoticeIcon>
+
+        {/* <Modal
+          footer={[]}
+          destroyOnClose="true"
+          visible={this.state.visible}
+          title={this.state.title}
+          width={this.state.width}
+        >
+          {
+            <UpdateManualUpload DGIMN={DGIMN} item={this.state.data} onRef={this.onRef1} />
+          }
+        </Modal> */}
+
+
         {/* 预警 */}
         {/* <RealTimeWarningModal {...this.props} onRef={this.onRefWarning} /> */}
         {/* 超标 */}

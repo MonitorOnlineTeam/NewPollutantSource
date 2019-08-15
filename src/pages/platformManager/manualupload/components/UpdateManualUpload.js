@@ -8,10 +8,7 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 @connect(({ manualupload, loading }) => ({
-    pollutantTypesItem: manualupload.pollutantTypesItem,
     addSelectPollutantData: manualupload.addSelectPollutantData,
-    unit: manualupload.unit,
-    requstresult: manualupload.requstresult,
     reason: manualupload.reason
 }))
 /*
@@ -30,111 +27,46 @@ export default class UpdateManualUpload extends Component {
         };
     }
     componentWillMount() {
-        this.props.onRef(this);
-        this.SelectHandleChange();
         const { item } = this.props;
         if (item) {
             this.pollutantChange(item.PollutantCode)
         }
     }
-    //根据MN号获取绑定污染物类型
-    SelectHandleChange = () => {
-        this.props.dispatch({
-            type: 'manualupload/addGetPollutantByPoint',
-            payload: {
-                DGIMN: this.props.DGIMN,
-            }
-        });
-    }
     //根据污染物编号获取单位
     pollutantChange = (value) => {
+        const { addSelectPollutantData ,item} = this.props;
         if (value) {
-            let pollutantCode = '';
-            pollutantCode = value.split('--')[0]
-
-            //获取绑定下拉污染物
-            this.props.dispatch({
-                type: 'manualupload/GetUnitByPollutant',
-                payload: {
-                    pollutantCode
-                }
-            });
+            let PollutantCode = '';
+            let unit = '';
+            PollutantCode = value.split('--')[0]
+            if (item) {
+                unit=item.Unit;
+            }
+            else
+            {
+                   //测试
+                   addSelectPollutantData.filter(n => n.PollutantCode == PollutantCode).map((item) => {
+                    unit = item.Unit
+                })
+            }
             this.setState({
-                pollutantCode,
+                unit
             })
         }
 
     }
     handleSubmit = (e) => {
         const { item, dispatch, form } = this.props;
-        if (!item) {
-            form.validateFieldsAndScroll((err, values) => {
-                if (!err) {
-                    dispatch({
-                        type: 'manualupload/AddUploadFiles',
-                        payload: {
-                            pollutantCode: this.state.pollutantCode,
-                            monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
-                            avgValue: values.avgValue,
-                            DGIMN: values.DGIMN,
-                            callback: (reason) => {
-                                var flag = '';
-                                switch (reason) {
-                                    case 1:
-                                        flag = "添加成功！";
-                                        break;
-                                    case 2:
-                                        flag = "添加数据重复！";
-                                        break;
-                                    case 3:
-                                        flag = "选择时间不能大于当前时间！";
-                                        break;
-                                    default:
-                                        flag = "添加失败！";
-                                        break;
-                                }
-                                return (reason === 1 ? message.success(flag) : message.error(flag));
-                            }
-                        },
-                    });
-                    this.props.onCancels();
-                } else {
-                }
-            });
-        }
-        else {
-            this.props.form.validateFieldsAndScroll((err, values) => {
-                if (!err) {
-                    dispatch({
-                        type: 'manualupload/UpdateManualSupplementData',
-                        payload: {
-                            pollutantCode: this.state.pollutantCode,
-                            monitorTime: values.monitorTime.format('YYYY-MM-DD HH:mm:ss'),
-                            avgValue: values.avgValue,
-                            DGIMN: values.DGIMN,
-                            callback: (reason) => {
-                                var flag = '';
-                                switch (reason) {
-                                    case 1:
-                                        flag = "修改成功！";
-                                        break;
-                                    default:
-                                        flag = "修改失败！";
-                                        break;
-                                }
-                                return (reason === 1 ? message.success(flag) : message.error(flag));
-                            }
-                        },
-                    });
-                    this.props.onCancels();
-                } else {
-                }
-            });
-        }
+        form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                this.props.onSubmitForm && this.props.onSubmitForm(values, item, pollutantCode);
+            }
+        });
     }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { item, pollutantTypesItem, unit, addSelectPollutantData } = this.props;
+        const { item, addSelectPollutantData } = this.props;
+        const { unit } = this.state;
         let isExists = false;
         if (item) {
             //有值是修改,状态改为true
@@ -157,15 +89,15 @@ export default class UpdateManualUpload extends Component {
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
-                                label={'污染物种类'}>
+                                label={'污染物类型'}>
                                 {getFieldDecorator('pollutantType', {
-                                    initialValue: pollutantTypesItem ? pollutantTypesItem.PollutantTypeName : null
+                                    initialValue: addSelectPollutantData ? addSelectPollutantData[0].PollutantTypeName : null,
                                 })(
                                     <Select
                                         disabled={true}
                                     >
                                         {
-                                            pollutantTypesItem ? <Option key={pollutantTypesItem.PollutantTypeCode}>{pollutantTypesItem.PollutantTypeName}</Option> : null
+                                            addSelectPollutantData ? <Option key={addSelectPollutantData[0].PollutantTypeCode}>{addSelectPollutantData[0].PollutantTypeName}</Option> : null
                                         }
                                     </Select>
                                 )}
@@ -175,8 +107,14 @@ export default class UpdateManualUpload extends Component {
                             <FormItem
                                 {...formItemLayout}
                                 label={'污染物名称'}>
-                                {getFieldDecorator('pollutantCode', {
-                                    initialValue: isExists ? item.PollutantName : ''
+                                {getFieldDecorator('PollutantCode', {
+                                    initialValue: isExists ? item.PollutantName : '',
+                                    rules: [
+                                        {
+                                          required: true,
+                                          message: '请选择污染物名称!',
+                                        },
+                                      ],
                                 })(
                                     <Select
                                         placeholder="请选择污染物名称"
@@ -198,9 +136,15 @@ export default class UpdateManualUpload extends Component {
                             <FormItem
                                 {...formItemLayout}
                                 label={'检测时间'}>
-                                {getFieldDecorator('monitorTime',
+                                {getFieldDecorator('MonitorTime',
                                     {
                                         initialValue: isExists ? moment(item.MonitorTime === null ? Date.now() : item.MonitorTime) : '',
+                                        rules: [
+                                            {
+                                              required: true,
+                                              message: '请选择监测时间!',
+                                            },
+                                          ],
                                     })(
                                         <DatePicker disabled={isExists} showTime format="YYYY-MM-DD HH:mm:ss" />
                                     )}
@@ -210,8 +154,14 @@ export default class UpdateManualUpload extends Component {
                             <FormItem
                                 {...formItemLayout}
                                 label={'浓度'}>
-                                {getFieldDecorator('avgValue', {
-                                    initialValue: isExists ? item.MonitorValue.split('.')[0] + '.000' : ''
+                                {getFieldDecorator('AvgValue', {
+                                    initialValue: isExists ? item.MonitorValue.split('.')[0] + '.000' : '',
+                                    rules: [
+                                        {
+                                          required: true,
+                                          message: '请选择浓度!',
+                                        },
+                                      ],
                                 })(
 
                                     <Input type="number" placeholder="请输入浓度" addonAfter={unit} />
