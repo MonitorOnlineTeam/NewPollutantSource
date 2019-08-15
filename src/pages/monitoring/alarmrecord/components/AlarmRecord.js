@@ -223,7 +223,7 @@ class AlarmRecord extends Component {
       });
     };
 
-    /** 显示核查单 */
+    /** 显示核实单 */
     BtnVerify=() => {
       const { form } = this.props;
       form.setFieldsValue({
@@ -259,7 +259,7 @@ class AlarmRecord extends Component {
         this.reloaddatalist(overdataparams);
     }
 
-    /** 保存核查单 */
+    /** 保存核实单 */
      handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN } = this.props;
     form.validateFields((err, values) => {
@@ -338,15 +338,15 @@ class AlarmRecord extends Component {
               key: 'AlarmCount',
           },
           {
-            title: '核查状态',
+            title: '核实状态',
             dataIndex: 'State',
             width: 50,
             key: 'State',
              render: (text, record) => {
                 if (text === '0') {
-                    return <span> <Badge status="error" text="未核查" /> </span>;
+                    return <span> <Badge status="error" text="未核实" /> </span>;
                 }
-                return <span> <Badge status="default" text="已核查" /> </span>;
+                return <span> <Badge status="default" text="已核实" /> </span>;
             },
             filters: [{
                   text: '未核实',
@@ -386,7 +386,7 @@ class AlarmRecord extends Component {
                   <div className={Styles.check}>
                       <Card
                           title={
-                            <Button onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核查</Button>
+                            <Button onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
                           }
                           extra={
                               <div>
@@ -432,7 +432,7 @@ class AlarmRecord extends Component {
                                 })}
                           />
                           <Modal
-                              title="核查单详情"
+                              title="核实单详情"
                               visible={this.state.visible}
                               destroyOnClose // 清除上次数据
                               onOk={this.handleOk}
@@ -448,13 +448,13 @@ class AlarmRecord extends Component {
                               <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
                               <Row>
                               <Col span={12}>
-                                <FormItem {...formLayout} label="核查人">
+                                <FormItem {...formLayout} label="核实人">
                                   {getFieldDecorator('VerifyPerSon1', {
                                     initialValue: UserName,
                                     rules: [
                                       {
                                         required: true,
-                                        message: '核查人不能为空',
+                                        message: '核实人不能为空',
                                       },
                                     ],
                                   })(
@@ -463,13 +463,13 @@ class AlarmRecord extends Component {
                                 </FormItem>
                               </Col>
                               <Col span={12}>
-                                <FormItem {...formLayout} label="核查时间">
+                                <FormItem {...formLayout} label="核实时间">
                                   {getFieldDecorator('VerifyTime1', {
                                     initialValue: moment(),
                                     rules: [
                                       {
                                         required: true,
-                                        message: '核查时间不能为空',
+                                        message: '核实时间不能为空',
                                       },
                                     ],
                                   })(
