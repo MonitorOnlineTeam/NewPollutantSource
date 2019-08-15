@@ -207,6 +207,36 @@ export default {
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
                 },
+                {
+                  name: 'maintenancedatabase',
+                  path: '/platformconfig/maintenancedatabase/:configId',
+                  component: './OperationSysManager/MaintenanceDatabaseManage/',
+                },
+                {
+                  name: 'consumablesmanage',
+                  path: '/platformconfig/consumablesmanage/:configId',
+                  component: './OperationSysManager/ConsumablesManage/',
+                },
+                {
+                  name: 'sparepartmanage',
+                  path: '/platformconfig/sparepartmanage/:configId',
+                  component: './OperationSysManager/SparepartManage/',
+                },
+                 {
+                   name: 'standardgasmanage',
+                   path: '/platformconfig/standardgasmanage/:configId',
+                   component: './OperationSysManager/StandardGasManage/',
+                 }, 
+                  {
+                    name: 'handhelddevicesmanage',
+                    path: '/platformconfig/handhelddevicesmanage/:configId',
+                    component: './OperationSysManager/HandheldDevicesManage/',
+                  },
+                  {
+                    name: 'vehiclemanage',
+                    path: '/platformconfig/vehiclemanage/:configId',
+                    component: './OperationSysManager/VehicleManage/',
+                  },
               ],
             },
             {

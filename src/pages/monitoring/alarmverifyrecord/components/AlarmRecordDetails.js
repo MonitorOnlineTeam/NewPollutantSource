@@ -83,7 +83,7 @@ class AlarmRecordDetails extends Component {
           }
           return (
                   <div style={{ width: '100%', height: 'calc(100vh - 330px)', overflow: 'auto' }}>
-                      <Card title="核查单详情" bordered={false}>
+                      <Card title="核实单详情" bordered={false}>
                           <AutoFormViewItems
                             configId="ExceptionVerify"
                             keysParams={{ 'dbo.T_Cod_ExceptionVerify.ID': this.props.ID }}
