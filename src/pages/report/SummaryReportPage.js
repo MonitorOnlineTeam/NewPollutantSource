@@ -5,6 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment'
 import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
+import SdlTable from '@/components/SdlTable'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
 const FormItem = Form.Item;
@@ -65,6 +66,7 @@ class DailySummaryPage extends PureComponent {
       },
       callback: (sucRes, defaultValue) => {
         let RegionCode = defaultValue;
+        console.log('defaultValue=',defaultValue)
         this.setState({
           defaultRegionCode: RegionCode
         })
@@ -80,7 +82,7 @@ class DailySummaryPage extends PureComponent {
                 payload: {
                   "type": this.props.match.params.reportType,
                   "PollutantSourceType": "1",
-                  "Regions": RegionCode,
+                  "Regions": RegionCode.toString(),
                   // "Regions": "130000000,130200000,130201000",
                   "ReportTime": moment().format("YYYY-MM-DD")
                 }
@@ -249,19 +251,19 @@ class DailySummaryPage extends PureComponent {
                 </FormItem>
               </Col>
               <Col md={6} sm={24}>
-                <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     // initialValue: defaultSearchForm.Regions,
                     initialValue: this.state.defaultRegionCode,
                     rules: [{
                       required: true,
-                      message: '请选择省市区',
+                      message: '请选择行政区',
                     }],
                   })(
                     <SdlCascader
                       changeOnSelect={false}
                       data={regionList}
-                      placeholder="请选择"
+                      placeholder="请选择行政区"
                     />
                   )}
                 </FormItem>
@@ -293,12 +295,13 @@ class DailySummaryPage extends PureComponent {
             </Row>
           </Form>
           <p className={style.title}>{this.state.currentYear}年{reportText}</p>
-          <Table
+          <SdlTable
             loading={loading}
             style={{ minHeight: 80 }}
             size="small"
             columns={this.state.columns}
             dataSource={dailySummaryDataList}
+            defaultWidth={80}
             rowClassName={
               (record, index, indent) => {
                 if (index === 0 || record.time === "0时") {

@@ -32,7 +32,7 @@ export const DustIcon = () => <IconConfig type="icon-yangchen" style={{...style}
 export const VocIcon =  () => <IconConfig type="icon-ziyuan" style={{...style}} />
 export const TreeIcon=()=><IconConfig type="icon-jiedian" style={{...style}} />
 export const PanelIcon=()=><IconConfig type="icon-jiedian1" style={{...styles}} />
-export const BellIcon=(val)=><IconConfig type="icon-lingdang" style={val.style} />
+export const BellIcon=(props)=><IconConfig type="icon-lingdang" style={{...styles}} {...props} />
 
 
 /**视频操作图标 */

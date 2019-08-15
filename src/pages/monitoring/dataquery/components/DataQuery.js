@@ -41,6 +41,9 @@ class DataQuery extends Component {
             selectP: '',
         };
     }
+    componentDidMount() {
+        this.props.initLoadData && this.changeDgimn(this.props.DGIMN)
+    }
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {

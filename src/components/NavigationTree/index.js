@@ -6,6 +6,7 @@ import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
+import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
 const RadioGroup = Radio.Group;
@@ -66,6 +67,7 @@ class NavigationTree extends Component {
       panelVis: "none",
       panelData: [],
       panelDataList: [],
+      RunState: "",
       // panelSelKey:"",
       panelColumn: [
         {
@@ -79,7 +81,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'pointName',
-          width: '70%',
+          width: '60%',
           render: (text, record) => {
             return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
           }
@@ -87,19 +89,30 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'Status',
-          width: '10%',
+          width: 100,
+          align: "left",
           render: (text, record) => {
-            return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
+            return (
+              <>
+                {
+                  record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: "0 10px" }} /> : ""
+                }
+                {
+                  !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>
+                }
+              </>
+            )
+            return
           }
         },
-        {
-          title: 'Bell',
-          dataIndex: 'key',
-          width: '10%',
-          render: (text, record) => {
-            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7 }} /> : ""
-          }
-        },
+        // {
+        //   title: 'Bell',
+        //   dataIndex: 'key',
+        //   width: '10%',
+        //   render: (text, record) => {
+        //     return !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon  className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>;
+        //   }
+        // },
       ]
     }
   }
@@ -112,11 +125,15 @@ class NavigationTree extends Component {
     }
     const { dispatch, EntAndPoint } = this.props;
     const { panelDataList, screenList } = this.state;
-
+    var state = this.props.runState == undefined ? "" : this.props.runState
+    this.setState({
+      RunState: state
+    })
     dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Status: screenList,
+        RunState: state
       }
     })
     panelDataList.splice(0, panelDataList.length)
@@ -142,23 +159,12 @@ class NavigationTree extends Component {
     if (this.props.selKeys !== nextProps.selKeys) {
       this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
-      this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
+      this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
-    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-    //   this.setState({
-    //     PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
-    //   })
-    //   this.props.dispatch({
-    //     type: 'navigationtree/getentandpoint',
-    //     payload: {
-    //       Status: this.state.screenList,
-    //       PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
-    //     }
-    //   })
-    // }
+
   }
   //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys) => {
+  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -178,19 +184,22 @@ class NavigationTree extends Component {
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          // this.props.dispatch({
-          //   type: "navigationtree/updateState",
-          //   payload: {
-          //     overallselkeys: nowKey,
-          //     overallexpkeys: [nowExpandKey],
-          //   }
-          // })当前页面传入的值只供当前页面使用
+          if (overAll || this.props.overAll) {
+            this.props.dispatch({
+              type: "navigationtree/updateState",
+              payload: {
+                overallselkeys: nowKey,
+                overallexpkeys: [nowExpandKey],
+              }
+            })//根据传入的状态判断是否更新全局
+          }
         } else if (this.props.overallselkeys.length != 0) {
           nowKey = this.props.overallselkeys
           nowExpandKey = this.props.overallexpkeys
         }
         this.setState({
           selectedKeys: nowKey,
+          overAll: overAll,
           expandedKeys: nowExpandKey
         })
         var rtnKey = [{ key: nowKey[0], IsEnt: false }]
@@ -198,7 +207,7 @@ class NavigationTree extends Component {
       }
 
       if (node.children) {
-        this.generateList(node.children, selKeys);
+        this.generateList(node.children, selKeys, overAll);
       }
     }
   };
@@ -252,6 +261,7 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         Name: this.state.Name,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -267,6 +277,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -326,6 +337,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -402,6 +414,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: typeList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -480,16 +493,19 @@ class NavigationTree extends Component {
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
-    console.log("overallselkeys=", this.state.selectedKeys);
-    //更新到model
-    this.props.dispatch({
-      type: "navigationtree/updateState",
-      payload: {
-        selectTreeKeys: rtnList,
-        overallselkeys: this.state.selectedKeys,
-        overallexpkeys: this.state.expandedKeys,
-      }
-    })
+    if (this.props.isMap === true && rtnList[0].IsEnt) {
+    } else {
+      //更新到model
+      this.props.dispatch({
+        type: "navigationtree/updateState",
+        payload: {
+          selectTreeKeys: rtnList,
+          overallselkeys: this.state.selectedKeys,
+          overallexpkeys: this.state.expandedKeys,
+        }
+      })
+    }
+
 
   }
   onRadioChange = (e) => {
@@ -587,7 +603,11 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right',color:"red" }} /> : ""}
+            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.bell}>
+                <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
+              </div>
+              : ""}
           </div>
         }
           key={item.key} dataRef={item}>

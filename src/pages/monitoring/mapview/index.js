@@ -134,13 +134,15 @@ class MapView extends Component {
             newState = {
               infoWindowVisible: true,
               currentPointInfo: extData.position,
+              overAll: true,
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
             // 排口
             newState = {
               coordinateSet: this.state.currentEntInfo.CoordinateSet,
-              displayType: 1
+              displayType: 1,
+              overAll: false,
             }
             _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
             this.randomMarker(extData.position.children)
@@ -203,7 +205,7 @@ class MapView extends Component {
           }
           {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
           <>
-            <div className={styles.pulse}></div>
+            {/* <div className={styles.pulse}></div> */}
             <div className={styles.pulse1}></div>
           </>
           }
@@ -475,23 +477,25 @@ class MapView extends Component {
         size="large"
       />);
     }
-
     return (
       <div className={styles.mapWrapper}>
-        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={val => {
+        <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
             const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
               if (this.state.currentEntInfo == entInfo[0]) {
                 // 点击的是当期企业
+                this.setState({
+                  overAll: false,
+                })
               } else {
                 // 切换企业
                 const position = [entInfo[0].Longitude, entInfo[0].Latitude];
-
                 this.setState({
                   displayType: 1,
                   infoWindowVisible: false,
                   mapCenter: position,
+                  overAll: false,
                   coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
                   _thismap.setZoomAndCenter(pointZoom, position)
@@ -538,6 +542,7 @@ class MapView extends Component {
                   currentEntInfo: entInfo,
                   currentPointInfo: pointInfo,
                   currentKey: val[0].key,
+                  overAll: true,
                   coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet,
                 }, () => {
                   this.getPointInfo(pointInfo.PollutantType)
@@ -648,13 +653,13 @@ class MapView extends Component {
                         <a className={styles.pointDetails} size="small" onClick={() => {
                           this.setState({
                             pointVisible: true,
-                            DGIMN: "",
-                          }, () => {
-                            setTimeout(() => {
-                              this.setState({
-                                DGIMN: this.state.currentKey
-                              })
-                            }, 200);
+                            //   DGIMN: "",
+                            // }, () => {
+                            //   setTimeout(() => {
+                            //     this.setState({
+                            //       DGIMN: this.state.currentKey
+                            //     })
+                            //   }, 200);
                           })
                         }}>排口详情</a>
                       </>)
@@ -695,12 +700,13 @@ class MapView extends Component {
               });
             }}
           >
-            <Tabs onChange={(activeKey)=> {
-              this.setState({
-                [DGIMN + activeKey]: this.state.currentKey
-              })
+            <Tabs onChange={(activeKey) => {
+              // this.setState({
+              //   ["DGIMN" + activeKey]: this.state.currentKey
+              // })
               // this.setState({
               //   DGIMN: undefined,
+              //   // clickKey: this.state.clickKey.push(activeKey)
               // }, () => {
               //   setTimeout(() => {
               //     this.setState({
@@ -710,19 +716,19 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={this.state.DGIMN1} style={{ maxHeight: '60vh' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh' }} />
+                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={this.state.DGIMN5} style={{ maxHeight: '60vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
               </TabPane>
             </Tabs>
           </Modal>

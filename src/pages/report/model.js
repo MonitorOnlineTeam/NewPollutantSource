@@ -10,6 +10,10 @@ export default Model.extend({
   state: {
     dateReportForm:{
       PollutantSourceType: 1,
+      current: 1,
+      pageSize: 27,
+      total: 0,
+      EntCode: "",
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
       ReportTime: moment()
@@ -57,6 +61,8 @@ export default Model.extend({
         ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
         Regions: dateReportForm.Regions && dateReportForm.Regions.value.toString(),
         EntCode: dateReportForm.EntCode && dateReportForm.EntCode.value,
+        PageIndex:dateReportForm.current && dateReportForm.current,
+        IsPage: 1,
         ...payload
       }
       let serviceApi = payload.type === "siteDaily" ? services.getSiteDailyDayReport : (payload.type === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
@@ -77,7 +83,11 @@ export default Model.extend({
         // console.log('data=',data)
         // message.success("统计成功！")
         yield update({
-          dateReportData: data
+          dateReportData: data,
+          dateReportForm: {
+            ...dateReportForm,
+            total: result.Total
+          }
         })
       }
     },
@@ -105,7 +115,7 @@ export default Model.extend({
             "rel": "$and",
             group: [
               {
-                Key: "RegionCode",
+                Key: "dbo__T_Bas_Enterprise__RegionCode",
                 Value: payload.RegionCode,
                 Where: "$like"
               }

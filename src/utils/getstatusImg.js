@@ -1,20 +1,23 @@
+import styles from './utils.less'
 export function getPointStatusImg(status, stop, type = 1, width) {
   if (stop) {
     return '';
   }
-
+  let flag = false;
   let imgSrc, imgWidth;
   if (type === 1) {
-    imgWidth = 15;
+    imgWidth = 14;
     imgSrc = '/gisunline.png';
     if (status === 1) {
       imgSrc = '/gisnormal.png';
     }
     if (status === 2) {
       imgSrc = '/gisover.png';
+      flag = true;
     }
     if (status === 3) {
       imgSrc = '/gisexception.png';
+      flag = true;
     }
   } else if (type === 2) {
     imgWidth = 20;
@@ -55,6 +58,13 @@ export function getPointStatusImg(status, stop, type = 1, width) {
   }
   if (width) {
     imgWidth = width;
+  }
+  if (flag) {
+    return <div className={styles.container} style={{display: "inline"}}>
+      <img style={{ width: imgWidth }} src={imgSrc} />
+      {/* <div className={styles.pulse}></div> */}
+      <div className={styles.pulse1}></div>
+    </div>
   }
   return <img style={{ width: imgWidth }} src={imgSrc} />;
 }
