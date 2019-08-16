@@ -289,16 +289,14 @@ export default class ContentList extends Component {
                     message.error(info.file.response.Message)
                 }
             },
-            headers: {
-                authorization: `Bearer ${Cookie.get('ssoToken')}`
-            },
             multiple: true,
             accept: ".xls,.xlsx",
             showUploadList: false,
             data: {
                 DGIMN: DGIMN,
                 FileUuid: uid,
-                FileActualType: "1"
+                FileActualType: "1",
+                ssoToken:Cookie.get('ssoToken')
             }
         };
         return (
