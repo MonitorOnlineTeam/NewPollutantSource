@@ -237,6 +237,11 @@ export default {
                     path: '/platformconfig/vehiclemanage/:configId',
                     component: './OperationSysManager/VehicleManage/',
                   },
+                  {
+                    name: 'equipmentinfomanage',
+                    path: '/platformconfig/equipmentinfomanage/:configId',
+                    component: './OperationSysManager/EquipmentInfoManage/',
+                  },
               ],
             },
             {
