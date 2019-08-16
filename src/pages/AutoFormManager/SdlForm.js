@@ -354,7 +354,7 @@ class SdlForm extends PureComponent {
             console.log('AT-UserName=', currentUser.UserName)
             initialValue = currentUser.UserName
             break;
-          case "AT-GetDate ":
+          case "AT-GetDate":
             console.log('AT-GetDate=', moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss"))
             initialValue = moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss")
             break;
