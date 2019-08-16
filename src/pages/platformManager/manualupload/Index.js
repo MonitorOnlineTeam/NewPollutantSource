@@ -24,14 +24,29 @@ class Index extends Component {
             DGIMN,
         })
         if (DGIMN) {
+            dispatch({
+                type: 'manualupload/updateState',
+                payload: {
+                    manualUploadParameters: {
+                        ...this.props.manualUploadParameters,
+                        ...{
+                            PageIndex: 1,
+                            PageSize: 10,
+                            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+                            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+                            PollutantCode: '',
+                        }
+                    }
+                }
+            });
             this.GetAllPollutantTypes(DGIMN);
         }
     }
-    //根据MN号获取污染物类型
+    //根据MN号获取污染物与类型
     GetAllPollutantTypes = (DGIMN) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'manualupload/GetAllPollutantTypes',
+            type: 'manualupload/addGetPollutantByPoint',
             payload: {
                 DGIMN
             },
@@ -44,15 +59,13 @@ class Index extends Component {
                 <PageHeaderWrapper>
                     <ContentList DGIMN={DGIMN} />
                 </PageHeaderWrapper>
-                <NavigationTree domId="#manualupload" choice={false} onItemClick={value => {
+                <NavigationTree runState='0' domId="#manualupload" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }
                 }} />
             </div>
         )
-
-
     }
 }
 export default Index;

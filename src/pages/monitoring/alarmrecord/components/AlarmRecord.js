@@ -63,6 +63,7 @@ class AlarmRecord extends Component {
     }
 
      componentWillReceiveProps = nextProps => {
+       debugger
        console.log('------------------------------------------000', nextProps.DGIMN);
        console.log('------------------------------------------111', this.props.DGIMN);
           const { DGIMN, lasttime, firsttime } = this.props;
