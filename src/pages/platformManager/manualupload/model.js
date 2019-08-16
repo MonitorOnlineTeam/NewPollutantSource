@@ -11,7 +11,7 @@ import {
     GetAllPollutantTypes,
     addGetPollutantByPoint,
     AddUploadFiles,
-    GetUnitByPollutant,
+    // GetUnitByPollutant,
     DeleteUploadFiles,
     UpdateManualSupplementData,
     getPollutantTypeList
@@ -33,20 +33,20 @@ export default Model.extend({
         total: 0,
         selectdata: [],
         uploaddatalist: [],
-        pollutantTypesItem: null,
+        // pollutantTypesItem: null,
         addSelectPollutantData: [],
-        unit: null,
+        // unit: null,
         DGIMN: null,
         pointName: null,
         //手工数据上传参数
         manualUploadParameters: {
             DGIMN: '',
-            pollutantCode: [],
-            beginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
-            endTime: moment().format('YYYY-MM-DD 23:59:59'),
-            pageIndex: 1,
-            pageSize: 10,
-            pointName: '',
+            PollutantCode: '',
+            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+            PageIndex: 1,
+            PageSize: 10,
+            PointName: '',
         }
 
     },
@@ -59,7 +59,14 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(uploadfiles, payload);
-            payload.callback(result.StatusCode);
+            if(result.IsSuccess)
+            {
+                message.success("添加成功！");
+            }
+            else
+            {
+                message.error(result.Message);
+            }
 
         },
         //根据排口获取污染物
@@ -129,20 +136,20 @@ export default Model.extend({
 
         },
 
-        //获取污染物类型列表
-        * GetAllPollutantTypes({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(GetAllPollutantTypes, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    pollutantTypesItem: result.Datas,
-                });
-            }
-        },
+        // //获取污染物类型列表
+        // * GetAllPollutantTypes({
+        //     payload
+        // }, {
+        //     call,
+        //     update,
+        // }) {
+        //     const result = yield call(GetAllPollutantTypes, payload);
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             pollutantTypesItem: result.Datas,
+        //         });
+        //     }
+        // },
 
         //添加手工上传数据
         * AddUploadFiles({
@@ -153,26 +160,30 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(AddUploadFiles, payload);
-            if (result.IsSuccess) {
-
-                payload.callback(result.StatusCode);
+            if(result.IsSuccess)
+            {
+                message.success("操作成功！");
+            }
+            else
+            {
+                message.error(result.Message);
             }
         },
 
-        //根据污染物获取单位
-        * GetUnitByPollutant({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(GetUnitByPollutant, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    unit: result.Datas,
-                });
-            }
-        },
+        // //根据污染物获取单位
+        // * GetUnitByPollutant({
+        //     payload
+        // }, {
+        //     call,
+        //     update,
+        // }) {
+        //     const result = yield call(GetUnitByPollutant, payload);
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             unit: result.Datas,
+        //         });
+        //     }
+        // },
 
         //根据MN号码 污染物编号 时间删除数据
         * DeleteUploadFiles({
@@ -182,8 +193,13 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(DeleteUploadFiles, payload);
-            if (result.IsSuccess) {
-                payload.callback(result.StatusCode);
+            if(result.IsSuccess)
+            {
+                message.success("操作成功！");
+            }
+            else
+            {
+                message.error(result.Message);
             }
         },
 
@@ -195,10 +211,13 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(UpdateManualSupplementData, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
+            if(result.IsSuccess)
+            {
+                message.success("操作成功！");
+            }
+            else
+            {
+                message.error(result.Message);
             }
         },
     },

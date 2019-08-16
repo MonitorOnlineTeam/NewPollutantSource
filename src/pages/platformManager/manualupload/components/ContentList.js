@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input } from 'antd';
+import React, { Component, Fragment } from 'react';
+import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -7,8 +7,10 @@ import UpdateManualUpload from './UpdateManualUpload';
 import { routerRedux } from 'dva/router';
 import styles from './ContentList.less';
 import { downloadFile } from '@/utils/utils';
+import SdlTable from '@/components/SdlTable'
 import config from '@/config'
 import cuid from 'cuid';
+import { EditIcon, DelIcon } from '@/utils/icon'
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
@@ -19,7 +21,7 @@ const Option = Select.Option;
     total: manualupload.total,
     pointName: manualupload.pointName,
     manualUploadParameters: manualupload.manualUploadParameters,//参数
-    pollutantTypesItem: manualupload.pollutantTypesItem
+    addSelectPollutantData: manualupload.addSelectPollutantData,
 }))
 @Form.create()
 export default class ContentList extends Component {
@@ -29,7 +31,7 @@ export default class ContentList extends Component {
         this.state = {
             fileList: [],
             visible: false,
-            footer: null,
+            // footer: null,
             uid: cuid(),
             width: 1000,
         };
@@ -46,10 +48,10 @@ export default class ContentList extends Component {
                             ...this.props.manualUploadParameters,
                             ...{
                                 DGIMN: nextPropsDGIMN,
-                                pageIndex: 1,
-                                pageSize: 10,
-                                beginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
-                                endTime: moment().format('YYYY-MM-DD 23:59:59'),
+                                PageIndex: 1,
+                                PageSize: 10,
+                                BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+                                EndTime: moment().format('YYYY-MM-DD 23:59:59'),
                             }
                         }
                     }
@@ -72,8 +74,8 @@ export default class ContentList extends Component {
                 manualUploadParameters: {
                     ...this.props.manualUploadParameters,
                     ...{
-                        beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
-                        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
+                        BeginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+                        EndTime: date[1].format('YYYY-MM-DD 23:59:59'),
                     }
                 }
             }
@@ -83,26 +85,29 @@ export default class ContentList extends Component {
     //下拉污染物事件
     SelectHandleChange = (value) => {
         const { dispatch } = this.props;
-        var pName = [];
-        value.map((item) => {
-            var code = item.split('--')[0];
-            if (code !== undefined) {
-                pName.push(code)
-            }
-        })
-
-        dispatch({
-            type: 'manualupload/updateState',
-            payload: {
-                manualUploadParameters: {
-                    ...this.props.manualUploadParameters,
-                    ...{
-                        pollutantCode: pName
+        var pName = '';
+        if (value) {
+            value.map((item) => {
+                var code = item.split('--')[0];
+                if (code) {
+                    pName += code + ','
+                }
+            })
+            pName = pName.substr(0, pName.length - 1);
+            dispatch({
+                type: 'manualupload/updateState',
+                payload: {
+                    manualUploadParameters: {
+                        ...this.props.manualUploadParameters,
+                        ...{
+                            PollutantCode: pName
+                        }
                     }
                 }
-            }
-        });
-        this.GetManualSupplementList()
+            });
+            this.GetManualSupplementList()
+        }
+
     }
     //获取下拉污染物数据
     SelectOptions = () => {
@@ -117,23 +122,23 @@ export default class ContentList extends Component {
     //创建并获取模板
     Template = () => {
         //获取模板地址
-        const { dispatch, pollutantTypesItem } = this.props;
-        if (pollutantTypesItem) {
+        const { dispatch, addSelectPollutantData } = this.props;
+        if (addSelectPollutantData) {
             dispatch({
                 type: 'manualupload/getUploadTemplate',
                 payload: {
-                    PollutantTypeCode: pollutantTypesItem.PollutantTypeCode,
+                    PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
                     callback: (data) => {
+                        debugger
                         downloadFile(data);
                     }
                 }
             });
         }
-
     }
 
     //分页等改变事件
-    onChange = (pageIndex, pageSize) => {
+    onChange = (PageIndex, PageSize) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'manualupload/updateState',
@@ -141,8 +146,8 @@ export default class ContentList extends Component {
                 manualUploadParameters: {
                     ...this.props.manualUploadParameters,
                     ...{
-                        pageIndex: pageIndex,
-                        pageSize: pageSize,
+                        PageIndex: PageIndex,
+                        PageSize: PageSize,
                     }
                 }
             }
@@ -150,7 +155,7 @@ export default class ContentList extends Component {
         this.GetManualSupplementList();
     }
     //分页等改变事件
-    onShowSizeChange = (pageIndex, pageSize) => {
+    onShowSizeChange = (PageIndex, PageSize) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'manualupload/updateState',
@@ -158,8 +163,8 @@ export default class ContentList extends Component {
                 manualUploadParameters: {
                     ...this.props.manualUploadParameters,
                     ...{
-                        pageIndex: pageIndex,
-                        pageSize: pageSize,
+                        PageIndex: PageIndex,
+                        PageSize: PageSize,
                     }
                 }
             }
@@ -180,9 +185,34 @@ export default class ContentList extends Component {
             visible: false
         });
     }
-    //父子调用
-    onRef1 = (ref) => {
-        this.child = ref;
+    //表单提交
+    onSubmitForm = (values, item, pollutantCode) => {
+        const { dispatch } = this.props;
+        ///有bug
+        if (!item) {
+            dispatch({
+                type: 'manualupload/AddUploadFiles',
+                payload: {
+                    pollutantCode,
+                    monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
+                    avgValue: values.avgValue,
+                    DGIMN: values.DGIMN,
+                },
+            });
+            this.props.onCancels();
+        }
+        else {
+            dispatch({
+                type: 'manualupload/UpdateManualSupplementData',
+                payload: {
+                    pollutantCode,
+                    monitorTime: values.monitorTime.format('YYYY-MM-DD HH:mm:ss'),
+                    avgValue: values.avgValue,
+                    DGIMN: values.DGIMN,
+                },
+            });
+            this.props.onCancels();
+        }
     }
     //添加弹出层
     updateModel = (record) => {
@@ -194,22 +224,21 @@ export default class ContentList extends Component {
                     title: '编辑信息',
                     width: 1000,
                     data: record,
-                    footer: <div>
-                        <Button key="back" onClick={this.onCancel}>取消</Button>
-                        <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
-                    </div>
+                    // footer: <div>
+                    //     <Button key="back" onClick={this.onCancel}>取消</Button>
+                    //     <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
+                    // </div>
                 });
-
             }
             else {
                 this.setState({
                     visible: true,
                     title: '添加信息',
                     data: null,
-                    footer: <div>
-                        <Button key="back" onClick={this.onCancel}>取消</Button>
-                        <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
-                    </div>
+                    // footer: <div>
+                    //     <Button key="back" onClick={this.onCancel}>取消</Button>
+                    //     <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
+                    // </div>
                 });
             }
         }
@@ -265,31 +294,10 @@ export default class ContentList extends Component {
             action: config.templateUploadUrl,
             onChange(info) {
                 if (info.file.status === 'done') {
-                    let response = info.file.response;
-                    var flag = '';
-                    switch (response) {
-                        case 1:
-                            flag = "添加成功！"; break;
-                        case 2:
-                            flag = "请选择排口！"; break;
-                        case 3:
-                            flag = "模板不正确！"; break;
-                        case 4:
-                            flag = "导入数据不能为空,请检查！"; break;
-                        case 5:
-                            flag = "污染物编号不符合标准，请检查！"; break;
-                        case 6:
-                            flag = "不能导入重复数据！"; break;
-                        default:
-                            flag = "添加失败！"; break;
-                    }
-                    //只有成功时刷新页面
-                    if (response === 1) {
-                        that.GetManualSupplementList();
-                    }
-                    return (info.file.response === 1 ? message.success(flag) : message.error(flag));
+                    message.success("导入成功！")
+                    that.GetManualSupplementList();
                 } else if (info.file.status === 'error') {
-                    message.error("上传文件失败！")
+                    message.error(info.file.response.Message)
                 }
             },
             multiple: true,
@@ -303,99 +311,120 @@ export default class ContentList extends Component {
         };
         return (
             <Upload {...props} >
-                <Button>
+                <Button >
                     <Icon type="upload" /> 文件导入
-        </Button>
+                </Button>
             </Upload>
         )
     }
     render() {
         const { manualUploadParameters, DGIMN } = this.props;
-        let dateValues = [moment(manualUploadParameters.beginTime), moment(manualUploadParameters.endTime)]
+        let dateValues = [moment(manualUploadParameters.BeginTime), moment(manualUploadParameters.EndTime)]
         var uploaddata = [];
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
         }
         const columns = [
+            // {
+            //     title: '污染物种类',
+            //     dataIndex: 'PollutantTypeName',
+            //     align: 'left',
+            //     width: '10%',
+            //     key: 'PollutantTypeName',
+            // },
             {
-                title: '污染物种类',
-                dataIndex: 'PollutantTypeName',
-                align: 'left',
-                width: '10%',
-                key: 'PollutantTypeName',
-            }, {
                 title: '污染物名称',
                 dataIndex: 'PollutantName',
                 align: 'left',
-                width: '10%',
+
                 key: 'PollutantName'
             }, {
                 title: '监测时间',
                 dataIndex: 'MonitorTime',
                 align: 'left',
-                width: '20%',
+                width: '100px',
                 key: 'MonitorTime',
                 sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
             }, {
                 title: '浓度',
                 dataIndex: 'MonitorValue',
                 align: 'left',
-                width: '13%',
+
                 key: 'MonitorValue'
             },
             {
                 title: '标准限值',
                 dataIndex: 'StandardLimits',
                 align: 'left',
-                width: '13%',
+
                 key: 'StandardLimits'
             }, {
                 title: '达标情况',
                 dataIndex: 'StandardSituation',
                 align: 'left',
-                width: '10%',
+                width: '50px',
                 key: 'StandardSituation',
                 render: (text, record, index) => (
                     <span>
-                        {text === 0 ? "达标" : "超标"}
+                        {text === 0 ? <Tag color="green">达标</Tag> : <Tag color="red">超标</Tag>}
                     </span>
                 ),
             }, {
                 title: '超标倍数',
                 dataIndex: 'OverTimes',
                 align: 'left',
-                width: '10%',
-                key: 'OverTimes'
+                width: '100px',
+                key: 'OverTimes',
+                render: (text, record, index) => (
+
+                    text ? <Tag color="#FF3434">{text}</Tag> : <span>-</span>
+
+
+                ),
             },
             {
                 title: '操作',
                 key: 'action',
-                width: '14%',
+                width: '60px',
+                align: 'center',
                 render: (text, record, index) => (
                     <span>
-                        <a onClick={() => {
-                            this.updateModel(record)
-                        }}>编辑</a>
-                        <Divider type="vertical" />
-                        <a onClick={() => {
-                            this.deletemanualuploadData(record);
-                        }}>删除</a>
+                        <Fragment type='edit'>
+                            <Tooltip title="编辑">
+                                <a onClick={() => {
+                                    this.updateModel(record)
+                                }}><EditIcon /></a>
+                            </Tooltip>
+                            {<Divider type="vertical" />}
+                        </Fragment>
+                        <Fragment>
+                            <Tooltip title="删除">
+                                <a onClick={() => {
+                                    this.deletemanualuploadData(record);
+                                }}><DelIcon /> </a>
+                            </Tooltip>
+                        </Fragment>
                     </span>
                 ),
             }
         ];
         return (
-            <Card style={{ top: 10, height: 'calc(100vh - 150px)' }} bordered={false}>
-                <Card style={{ height: '120px' }}>
-                    <Form style={{ marginTop: '17px' }} layout="inline">
+            <Card
+                extra={
+                    <Button type="primary" onClick={() => this.Template()}>
+                        <Icon type="download" />模板下载
+                             </Button>
+                }
+                title={
+                    <Form >
                         <Row>
-                            <Col span={8} >
-                                <RangePicker_ style={{ width: '90%' }} onChange={this._handleDateChange} format={'YYYY-MM-DD'} dateValue={dateValues} />
+                            <Col span={7} >
+                                选择时间:  <RangePicker_ style={{ width: '300px' }} onChange={this._handleDateChange} format={'YYYY-MM-DD'} dateValue={dateValues} />
                             </Col>
-                            <Col span={6} >
+                            <Col span={5} >
                                 <Select
                                     mode="multiple"
-                                    style={{ width: '90%' }}
+                                    style={{ width: '250px' }}
                                     placeholder="请选择污染物"
                                     filterOption={true}
                                     onChange={this.SelectHandleChange}
@@ -404,62 +433,52 @@ export default class ContentList extends Component {
                                 </Select>
                             </Col>
                             <Col span={4} style={{ textAlign: 'center' }} >
-                                <Button onClick={() => this.Template()}>
-                                    <Icon type="download" />模板下载
-                                 </Button>
-                            </Col>
-                            <Col span={4} style={{ textAlign: 'center' }} >
-                                {this.upload()}
-                            </Col>
-                            <Col span={2} style={{ textAlign: 'center' }} >
-                                <Button
+                                <Button style={{ marginRight: 5 }}
                                     onClick={() => this.updateModel()}
                                 >
                                     添加
-                                </Button>
+                            </Button>
+                                {this.upload()}
                             </Col>
+
+
                         </Row>
                     </Form>
-                </Card>
+                } style={{ height: 'calc(100vh - 150px)' }} bordered={false}>
 
-                <Table
-                    rowKey={(record, index) => `complete${index}`}
+
+
+                <SdlTable
                     loading={this.props.loading}
-                    className={styles.tableCss}
                     columns={columns}
                     dataSource={!DGIMN ? null : uploaddata}
-                    size={'middle'}
-                    scroll={{ x: '1000px', y: 'calc(100vh - 460px)' }}
-                    rowClassName={
-                        (record, index, indent) => {
-                            if (index === 0) {
-                                return;
-                            }
-                            if (index % 2 !== 0) {
-                                return 'light';
-                            }
-                        }
-                    }
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
                         'total': this.props.total,
-                        'pageSize': manualUploadParameters.pageSize,
-                        'current': manualUploadParameters.pageIndex,
+                        'pageSize': manualUploadParameters.PageSize,
+                        'current': manualUploadParameters.PageIndex,
                         onChange: this.onChange,
                         onShowSizeChange: this.onShowSizeChange,
-                        pageSizeOptions: ['10', '20', '30', '40']
                     }}
                 />
                 <Modal
-                    footer={this.state.footer}
+                    // footer={this.state.footer}
                     destroyOnClose="true"
                     visible={this.state.visible}
                     title={this.state.title}
                     width={this.state.width}
-                    onCancel={this.onCancel}>
+                    onCancel={this.onCancel}
+                    onOk={this.onSubmitForm}
+
+                >
                     {
-                        <UpdateManualUpload onCancels={this.onCancel} DGIMN={DGIMN} item={this.state.data} onRef={this.onRef1} />
+                        <UpdateManualUpload
+                            onSubmitForm={this.onSubmitForm}
+                            onCancels={this.onCancel}
+                            DGIMN={DGIMN}
+                            item={this.state.data}
+                        />
                     }
                 </Modal>
             </Card>

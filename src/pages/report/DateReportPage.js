@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Table, Form, Row, Col, Input, Select, Card, Button, DatePicker, message, Icon } from 'antd';
+import { Table, Form, Row, Col, Input, Select, Card, Button, DatePicker, message, Icon, Spin } from 'antd';
 import { connect } from "dva";
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -8,6 +8,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlCascader from '../AutoFormManager/SdlCascader'
 import SearchSelect from '../AutoFormManager/SearchSelect'
 import SelectPollutantType from '@/components/SelectPollutantType'
+import SdlTable from '@/components/SdlTable'
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -15,6 +16,7 @@ const { Option } = Select;
 @connect(({ loading, report, autoForm }) => ({
   loading: loading.effects["report/getDateReportData"],
   exportLoading: loading.effects["report/reportExport"],
+  entLoading: loading.effects["report/getEnterpriseList"],
   pollutantList: report.pollutantList,
   dateReportData: report.dateReportData,
   pollutantTypeList: report.pollutantTypeList,
@@ -78,7 +80,7 @@ class SiteDailyPage extends PureComponent {
 
     this.props.dispatch({
       type: 'common/getEnterpriseAndPoint',
-      payload:{
+      payload: {
         RegionCode: "",
         PointMark: "2"
       },
@@ -261,9 +263,10 @@ class SiteDailyPage extends PureComponent {
               this.props.dispatch({
                 type: "report/getDateReportData",
                 payload: {
+                  // pageIndex: 1,
                   "type": match.params.reportType,
                   // "PollutantSourceType": values.PollutantSourceType,
-                  // "Regions": values.Regions.toString(),
+                  // // "Regions": values.Regions.toString(),
                   // "EntCode": values.EntCode,
                   // "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD")
                 }
@@ -271,7 +274,6 @@ class SiteDailyPage extends PureComponent {
             }
           }
         })
-
       }
     })
   }
@@ -293,13 +295,49 @@ class SiteDailyPage extends PureComponent {
       }
     })
   }
+
+  // 分页
+  onTableChange = (current, pageSize) => {
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          ...this.props.dateReportForm,
+          current,
+        }
+      }
+    });
+    setTimeout(() => {
+      // 获取表格数据
+      this.props.dispatch({
+        type: "report/getDateReportData",
+        payload: {
+          "type": this.SELF.actionType,
+        }
+      })
+    }, 0);
+  }
+
+
   render() {
-    const { form: { getFieldDecorator }, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList } = this.props;
+    const { form: { getFieldDecorator }, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
+    if (exportLoading) {
+      return <Spin
+        style={{
+          width: '100%',
+          height: 'calc(100vh/2)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        size="large"
+      />
+    }
     return (
       <PageHeaderWrapper>
-        <Card>
+        <Card style={{ height: 'calc(100vh - 224px)' }}>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col md={3} sm={24}>
@@ -317,7 +355,7 @@ class SiteDailyPage extends PureComponent {
                     //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
                     //   }
                     // </Select>
-                    <SelectPollutantType placeholder="请选择污染物类型"/>
+                    <SelectPollutantType placeholder="请选择污染物类型" />
                   )}
                 </FormItem>
               </Col>
@@ -389,7 +427,18 @@ class SiteDailyPage extends PureComponent {
               </Col>
               <Col md={6}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
+                  <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                    this.props.dispatch({
+                      type: 'report/updateState',
+                      payload: {
+                        dateReportForm: {
+                          ...this.props.dateReportForm,
+                          current: 1,
+                        }
+                      }
+                    });
+                    setTimeout(() => { this.statisticsReport() }, 0)
+                  }}>生成统计</Button>
                   <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
                 </FormItem>
               </Col>
@@ -399,12 +448,14 @@ class SiteDailyPage extends PureComponent {
             currentEntName &&
             <p className={style.title}>{currentEntName}{currentDate}报表</p>
           }
-          <Table
+          <SdlTable
             loading={loading}
             style={{ minHeight: 80 }}
             size="small"
             columns={this.state.columns}
             dataSource={dateReportData}
+            defaultWidth={80}
+            scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
             rowClassName={
               (record, index, indent) => {
                 if (index === 0 || record.time === "0时") {
@@ -415,7 +466,14 @@ class SiteDailyPage extends PureComponent {
               }
             }
             bordered
-            pagination={true}
+            pagination={{
+              // showSizeChanger: true,
+              showQuickJumper: true,
+              pageSize: dateReportForm.pageSize,
+              current: dateReportForm.current,
+              onChange: this.onTableChange,
+              total: dateReportForm.total
+            }}
           />
         </Card>
       </PageHeaderWrapper>

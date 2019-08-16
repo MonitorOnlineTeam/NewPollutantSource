@@ -206,7 +206,8 @@ export default Model.extend({
             validate: item.DF_VALIDATE ? item.DF_VALIDATE.split(',') : [],
             colSpan: item.DF_COLSPAN,
             dateFormat: item.DF_DATEFORMAT,
-            isHide: item.DF_HIDDEN
+            isHide: item.DF_HIDDEN,
+            defaultValue: item.DF_DEFAULTVALUE,
           }));
   
   

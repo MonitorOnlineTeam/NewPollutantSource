@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import styles from './index.less'
 
-const DEFAULT_WIDTH = 180;
+// const DEFAULT_WIDTH = 180;
 
 class SdlTable extends PureComponent {
   constructor(props) {
@@ -13,7 +13,7 @@ class SdlTable extends PureComponent {
   }
 
   render() {
-    const { columns } = this.props;
+    const { columns, defaultWidth } = this.props;
     // 处理表格长度，防止错位
     let _columns = (columns || []).map(col => {
       return {
@@ -23,7 +23,7 @@ class SdlTable extends PureComponent {
           </div>
         },
         ...col,
-        width: col.width || DEFAULT_WIDTH,
+        width: col.width || defaultWidth,
       }
     })
 
@@ -33,7 +33,6 @@ class SdlTable extends PureComponent {
         rowKey={record => record.id || record.ID}
         size="middle"
         className={styles.dataTable}
-        scroll={{ x: scrollXWidth }}
         rowClassName={
           (record, index, indent) => {
             if (index === 0) {
@@ -46,10 +45,16 @@ class SdlTable extends PureComponent {
         }
         bordered
         {...this.props}
+        defaultWidth={80}
+        scroll={{ x: scrollXWidth, y: this.props.scroll && this.props.scroll.y && this.props.scroll.y }}
         columns={_columns}
       />
     );
   }
+}
+
+SdlTable.defaultProps = {
+  defaultWidth: 180
 }
 
 export default SdlTable;

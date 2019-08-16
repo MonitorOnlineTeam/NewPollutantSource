@@ -142,10 +142,10 @@ class SdlForm extends PureComponent {
       //     this.props.form.setFieldsValue({ [item.fieldName]: value })
       //   }}
       //   format={format} />
-    } 
-      // 年-月-日 时:分:秒
-      return <DatePicker showTime format={format} style={{ width: '100%' }} />
-    
+    }
+    // 年-月-日 时:分:秒
+    return <DatePicker showTime format={format} style={{ width: '100%' }} />
+
   }
 
   // 渲染FormItem
@@ -341,6 +341,27 @@ class SdlForm extends PureComponent {
           }
           break;
       }
+      // 添加设置默认值
+      if (!isEdit && item.defaultValue) {
+        // AT-UserID, AT-UserName,AT-GetDate
+        const currentUser = JSON.parse(Cookie.get('currentUser'));
+        switch (item.defaultValue) {
+          case "AT-UserID":
+            console.log('AT-UserID=', currentUser.UserId)
+            initialValue = currentUser.UserId
+            break;
+          case "AT-UserName":
+            console.log('AT-UserName=', currentUser.UserName)
+            initialValue = currentUser.UserName
+            break;
+          case "AT-GetDate ":
+            console.log('AT-GetDate=', moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss"))
+            initialValue = moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss")
+            break;
+          default:
+            break;
+        }
+      }
       // 匹配校验规则
       validate = item.validate.map(vid => {
         // 最大长度
@@ -384,18 +405,18 @@ class SdlForm extends PureComponent {
         if (this.props.formItemLayout[configId]) {
           colSpan = this.props.formItemLayout[configId]
         } else if (item.colSpan === 1 || item.colSpan === null) {
-            colSpan = 12
-          } else {
-            colSpan = 24;
-            layout = {
-              labelCol: {
-                span: 4,
-              },
-              wrapperCol: {
-                span: 19,
-              },
-            }
+          colSpan = 12
+        } else {
+          colSpan = 24;
+          layout = {
+            labelCol: {
+              span: 4,
+            },
+            wrapperCol: {
+              span: 19,
+            },
           }
+        }
         return (
           <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
@@ -419,7 +440,8 @@ class SdlForm extends PureComponent {
   _onSubmitForm() {
     const { form, onSubmitForm } = this.props;
     const { uid, configId, isEdit, keysParams } = this._SELF_;
-    form.validateFields((err, values) => {
+    console.log('submitFormData=',this.props.form.getFieldsValue())
+    form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // let formData = {};
         // for (let key in values) {
@@ -434,7 +456,7 @@ class SdlForm extends PureComponent {
         //   }
         // }
         let formData = handleFormData(values, uid)
-        console.log('formData=', formData);
+        console.log('!errAddSubmitFormData=', formData);
         // return;
         // 编辑时处理主键
         if (isEdit) {
@@ -447,6 +469,7 @@ class SdlForm extends PureComponent {
             ...formData,
             ...primaryKey,
           }
+          console.log('!errEditSubmitFormData=', formData);
         }
 
         this.props.onSubmitForm && this.props.onSubmitForm(formData);
@@ -526,7 +549,7 @@ class SdlForm extends PureComponent {
     );
   }
 
- F
+  F
 }
 
 
