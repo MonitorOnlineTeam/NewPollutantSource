@@ -49,15 +49,6 @@ export async function getUploadTemplate(params) {
   return result;
 }
 /**
- * 添加手工数据
- * @params {"pollutantCode":"","monitorTime":"","avgValue":"","DGIMN":""}
- */
-export async function AddUploadFiles(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/AddUploadFiles', params, null);
-  return result;
-}
-
-/**
  * 删除数据
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":""}
  */
@@ -70,6 +61,6 @@ export async function DeleteUploadFiles(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function UpdateManualSupplementData(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateHourData', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateManualSupplement', params, null);
   return result;
 }

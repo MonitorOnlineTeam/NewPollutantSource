@@ -10,7 +10,8 @@ import { downloadFile } from '@/utils/utils';
 import SdlTable from '@/components/SdlTable'
 import config from '@/config'
 import cuid from 'cuid';
-import { EditIcon, DelIcon } from '@/utils/icon'
+import { EditIcon, DelIcon } from '@/utils/icon';
+import Cookie from 'js-cookie';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
@@ -186,34 +187,30 @@ export default class ContentList extends Component {
         });
     }
     //表单提交
-    onSubmitForm = (values, item, pollutantCode) => {
-        const { dispatch } = this.props;
-        ///有bug
-        if (!item) {
-            dispatch({
-                type: 'manualupload/AddUploadFiles',
-                payload: {
-                    pollutantCode,
-                    monitorTime: moment(values.monitorTime.format("YYYY-MM-DD HH:mm:ss")),
-                    avgValue: values.avgValue,
-                    DGIMN: values.DGIMN,
-                },
-            });
-            this.props.onCancels();
-        }
-        else {
-            dispatch({
-                type: 'manualupload/UpdateManualSupplementData',
-                payload: {
-                    pollutantCode,
-                    monitorTime: values.monitorTime.format('YYYY-MM-DD HH:mm:ss'),
-                    avgValue: values.avgValue,
-                    DGIMN: values.DGIMN,
-                },
-            });
-            this.props.onCancels();
-        }
+    handleSubmit = (e) => {
+        const { item, dispatch, form } = this.props;
+        const { data } = this.state;
+        let PollutantCode = '';
+        form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                dispatch({
+                    type: 'manualupload/UpdateManualSupplementData',
+                    payload: {
+                        PollutantCode: data ? data.PollutantCode : values.PollutantCode.split('--')[0],
+                        MonitorTime: values.MonitorTime.format('YYYY-MM-DD HH:mm:ss'),
+                        AvgValue: values.AvgValue,
+                        DGIMN: values.DGIMN,
+                        callback: () => {
+                            debugger
+                            this.GetManualSupplementList();
+                        }
+                    },
+                });
+                this.onCancel();
+            }
+        });
     }
+
     //添加弹出层
     updateModel = (record) => {
         if (this.props.DGIMN) {
@@ -224,10 +221,6 @@ export default class ContentList extends Component {
                     title: '编辑信息',
                     width: 1000,
                     data: record,
-                    // footer: <div>
-                    //     <Button key="back" onClick={this.onCancel}>取消</Button>
-                    //     <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
-                    // </div>
                 });
             }
             else {
@@ -235,10 +228,6 @@ export default class ContentList extends Component {
                     visible: true,
                     title: '添加信息',
                     data: null,
-                    // footer: <div>
-                    //     <Button key="back" onClick={this.onCancel}>取消</Button>
-                    //     <Button key="submit" type="primary" onClick={this.updateData}>确定</Button>
-                    // </div>
                 });
             }
         }
@@ -300,6 +289,9 @@ export default class ContentList extends Component {
                     message.error(info.file.response.Message)
                 }
             },
+            headers: {
+                authorization: `Bearer ${Cookie.get('ssoToken')}`
+            },
             multiple: true,
             accept: ".xls,.xlsx",
             showUploadList: false,
@@ -325,44 +317,38 @@ export default class ContentList extends Component {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
         }
         const columns = [
-            // {
-            //     title: '污染物种类',
-            //     dataIndex: 'PollutantTypeName',
-            //     align: 'left',
-            //     width: '10%',
-            //     key: 'PollutantTypeName',
-            // },
             {
+                title: '监测时间',
+                dataIndex: 'MonitorTime',
+                align: 'left',
+                width: '150px',
+                key: 'MonitorTime',
+                sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
+            }, {
                 title: '污染物名称',
                 dataIndex: 'PollutantName',
                 align: 'left',
 
                 key: 'PollutantName'
             }, {
-                title: '监测时间',
-                dataIndex: 'MonitorTime',
-                align: 'left',
-                width: '100px',
-                key: 'MonitorTime',
-                sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
-            }, {
                 title: '浓度',
                 dataIndex: 'MonitorValue',
-                align: 'left',
+                align: 'right',
 
                 key: 'MonitorValue'
             },
             {
                 title: '标准限值',
                 dataIndex: 'StandardLimits',
-                align: 'left',
-
-                key: 'StandardLimits'
+                align: 'right',
+                key: 'StandardLimits',
+                render: (text, record, index) => (
+                    text ? text: <span>-</span>
+                ),
             }, {
                 title: '达标情况',
                 dataIndex: 'StandardSituation',
-                align: 'left',
-                width: '50px',
+                align: 'center',
                 key: 'StandardSituation',
                 render: (text, record, index) => (
                     <span>
@@ -372,20 +358,16 @@ export default class ContentList extends Component {
             }, {
                 title: '超标倍数',
                 dataIndex: 'OverTimes',
-                align: 'left',
-                width: '100px',
+                align: 'right',
                 key: 'OverTimes',
                 render: (text, record, index) => (
-
                     text ? <Tag color="#FF3434">{text}</Tag> : <span>-</span>
-
-
                 ),
             },
             {
                 title: '操作',
                 key: 'action',
-                width: '60px',
+                width: '80px',
                 align: 'center',
                 render: (text, record, index) => (
                     <span>
@@ -413,7 +395,7 @@ export default class ContentList extends Component {
                 extra={
                     <Button type="primary" onClick={() => this.Template()}>
                         <Icon type="download" />模板下载
-                             </Button>
+                    </Button>
                 }
                 title={
                     <Form >
@@ -446,12 +428,12 @@ export default class ContentList extends Component {
                     </Form>
                 } style={{ height: 'calc(100vh - 150px)' }} bordered={false}>
 
-
-
                 <SdlTable
                     loading={this.props.loading}
                     columns={columns}
                     dataSource={!DGIMN ? null : uploaddata}
+                    scroll={{ y: 'calc(100vh - 400px)' }}
+                    // style={{minHeight:'200px'}}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
@@ -463,21 +445,19 @@ export default class ContentList extends Component {
                     }}
                 />
                 <Modal
-                    // footer={this.state.footer}
                     destroyOnClose="true"
                     visible={this.state.visible}
                     title={this.state.title}
                     width={this.state.width}
                     onCancel={this.onCancel}
-                    onOk={this.onSubmitForm}
-
+                    onOk={this.handleSubmit}
                 >
                     {
                         <UpdateManualUpload
-                            onSubmitForm={this.onSubmitForm}
                             onCancels={this.onCancel}
                             DGIMN={DGIMN}
                             item={this.state.data}
+                            form={this.props.form}
                         />
                     }
                 </Modal>

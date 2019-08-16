@@ -182,21 +182,26 @@ export default class GlobalHeaderRight extends PureComponent {
           title={this.state.title}
           width="70%"
           footer={null}
+          onCancel={this.onCancel}
         >
-          <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+
             {
               this.state.flag === "over" ?
                 <AlarmRecord
+                initLoadData 
+                style={{ maxHeight: '60vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
                   lasttime={moment(this.state.lasttime)}
                 />
                 :
                 <RecordEchartTable
+                initLoadData 
+                style={{ maxHeight: '60vh' }}
                   DGIMN={this.state.DGIMN}
                 />
             }
-          </div>
+   
         </Modal>
       </div>
     );
