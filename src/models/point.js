@@ -7,7 +7,7 @@
 import { message } from 'antd';
 import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
-import { getPollutantTypeList } from '@/services/baseapi';
+import { getPollutantTypeList,deletePoints } from '@/services/baseapi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -74,35 +74,43 @@ export default Model.extend({
             payload.callback(result);
         },
         *delPoint({ payload }, { call, put, update, select }) {
-            let pointParam = {
-                'dbo.T_Bas_CommonPoint.PointCode': payload.PointCode,
-            };
 
-            let result = yield call(services.postAutoFromDataDelete, {
-                configId: payload.configId,
-                FormData: JSON.stringify(pointParam),
-            });
 
-            if (result.IsSuccess) {
-                let pointRelParam = {
-                    'dbo.T_Cod_MonitorPointBase.DGIMN': payload.DGIMN,
-                    'dbo.T_Cod_MonitorPointBase.BaseCode': payload.targetId,
-                    'dbo.T_Cod_MonitorPointBase.BaseType': payload.pollutantType,
-                };
-                result = yield call(services.postAutoFromDataDelete, {
-                    configId: 'monitorpoint',
-                    FormData: JSON.stringify(pointRelParam),
-                });
-                if (result.IsSuccess) {
-                    sdlMessage('操作成功！', 'success');
-                } else {
-                    sdlMessage(result.Message, 'error');
-                }
-            } else {
-                sdlMessage(result.Message, 'error');
+            let result=yield call(deletePoints,[payload.DGIMN]);
+            if(result.IsSuccess)
+            {
+                sdlMessage('操作成功！', 'success');
             }
-
             payload.callback(result);
+            // let pointParam = {
+            //     'dbo.T_Bas_CommonPoint.PointCode': payload.PointCode,
+            // };
+
+            // let result = yield call(services.postAutoFromDataDelete, {
+            //     configId: payload.configId,
+            //     FormData: JSON.stringify(pointParam),
+            // });
+
+            // if (result.IsSuccess) {
+            //     let pointRelParam = {
+            //         'dbo.T_Cod_MonitorPointBase.DGIMN': payload.DGIMN,
+            //         'dbo.T_Cod_MonitorPointBase.BaseCode': payload.targetId,
+            //         'dbo.T_Cod_MonitorPointBase.BaseType': payload.pollutantType,
+            //     };
+            //     result = yield call(services.postAutoFromDataDelete, {
+            //         configId: 'monitorpoint',
+            //         FormData: JSON.stringify(pointRelParam),
+            //     });
+            //     if (result.IsSuccess) {
+            //         sdlMessage('操作成功！', 'success');
+            //     } else {
+            //         sdlMessage(result.Message, 'error');
+            //     }
+            // } else {
+            //     sdlMessage(result.Message, 'error');
+            // }
+
+            // payload.callback(result);
         },
     },
     reducers: {

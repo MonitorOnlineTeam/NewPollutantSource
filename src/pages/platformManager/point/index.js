@@ -277,7 +277,7 @@ export default class MonitorPoint extends Component {
           FormData.PointCode = this.state.selectedPointCode;
         }
         dispatch({
-          type: !this.state.isEdit ? 'monitorTarget/addPoint' : 'monitorTarget/editPoint',
+          type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
           payload: {
             configId: pointConfigIdEdit,
             targetId: match.params.targetId,
@@ -307,7 +307,7 @@ export default class MonitorPoint extends Component {
     const { dispatch, match, pointDataWhere } = this.props;
     const { pollutantType } = this.state;
     dispatch({
-      type: 'monitorTarget/delPoint',
+      type: 'point/delPoint',
       payload: {
         configId: pointConfigIdEdit,
         targetId: match.params.targetId,
