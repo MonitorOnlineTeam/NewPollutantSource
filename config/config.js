@@ -226,7 +226,7 @@ export default {
                    name: 'standardgasmanage',
                    path: '/platformconfig/standardgasmanage/:configId',
                    component: './OperationSysManager/StandardGasManage/',
-                 }, 
+                 },
                   {
                     name: 'handhelddevicesmanage',
                     path: '/platformconfig/handhelddevicesmanage/:configId',
@@ -263,6 +263,22 @@ export default {
                   component: './report/summaryReportPage',
                 },
               ],
+            },
+            {
+              path: "/operations",
+              name: "operations",
+              routes: [
+                {
+                  path: '/operations/calendar',
+                  name: "calendar",
+                  component: "./operations/CalendarPage"
+                },
+                {
+                  path: '/operations/log',
+                  name: "log",
+                  component: "./operations/Log"
+                }
+              ]
             },
             {
               path: '/rolesmanager',
@@ -389,7 +405,7 @@ export default {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
-               
+
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
@@ -400,7 +416,7 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
                   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
                 },
-               
+
               ],
             },
             {

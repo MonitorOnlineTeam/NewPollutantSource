@@ -1,0 +1,116 @@
+.calendarWrapper {
+  :global {
+    .ant-card-body {
+      padding: 12px;
+    }
+
+    .ant-fullcalendar-value {
+      height: 20px;
+    }
+
+    .ant-card-head-title {
+      padding: 0
+    }
+
+    .ant-fullcalendar-fullscreen .ant-fullcalendar-month,
+    .ant-fullcalendar-fullscreen .ant-fullcalendar-date {
+      height: 100px;
+    }
+
+    // .ant-fullcalendar-fullscreen .ant-fullcalendar-content
+    // .ant-fullcalendar-content {
+    //   overflow: initial;
+    // }
+
+    .ant-fullcalendar-fullscreen .ant-fullcalendar-content {
+      position: static;
+      width: auto;
+      height: 73px;
+      overflow: initial;
+      // overflow-y: auto;
+    }
+  }
+}
+
+.events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.events .ant-badge-status {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+.notes-month {
+  text-align: center;
+  font-size: 28px;
+}
+
+.notes-month section {
+  font-size: 28px;
+}
+
+
+.operationLogWrapper {
+  .timelineContent {
+    // display: flex;
+    // align-items: center;
+    // flex-direction: column;
+    // margin-left: 300px;
+    // color: #444;
+    // margin-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    // padding-left: 300px;
+    color: #444;
+    // padding-top: 20px;
+    height: calc(100vh - 314px);
+    // overflow-y: auto;
+  }
+  .timeline {
+    // height: calc(100vh); */
+    overflow-y: auto;
+    /* position: relative; */
+    width: 100%;
+    // z-index: 1;
+    padding-left: 400px;
+    padding-top: 20px;
+    /* padding-bottom: 20px; */
+  }
+  .dateContent{
+    color: #444;
+    font-size: 15px;
+    background: #fff;
+    padding: 2px 10px;
+  }
+
+  .DateLoad {
+    // width: 150px;
+    // height: 30px;
+    // line-height: 30px;
+    // border: 2px solid #43B9FF;
+    // border-radius: 15px;
+  }
+
+  .taskDate {
+    font-size: 14px;
+    /* color: #66C7F9; */
+    /* margin-left: -100px; */
+    margin-bottom: 30px;
+    margin-left: -200px;
+  }
+  :global{
+    .ant-timeline-item{
+      padding: 0 0 30px;
+    }
+    .ant-timeline-item-content{
+      margin: 0 0 0 24px;
+    }
+  }
+}
