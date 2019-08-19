@@ -1,13 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import {
-    Card, Spin,
+    Card, Spin, Modal, Button, Form,
 } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlTable from '../../AutoFormManager/AutoFormTable';
-import SearchWrapper from '../../AutoFormManager/SearchWrapper';
-import styles from './index.less';
+import cuid from 'cuid';
+import SdlTable from '../../../AutoFormManager/AutoFormTable';
+import SearchWrapper from '../../../AutoFormManager/SearchWrapper';
+import SdlForm from '../../../AutoFormManager/SdlForm'
+import { handleFormData } from '@/utils/utils';
 
+@Form.create()
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
     autoForm,
@@ -20,22 +22,35 @@ import styles from './index.less';
  class Index extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
-    }
-
-    componentDidMount() {
-        const { match } = this.props;
-        this.reloadPage(match.params.configId);
+        this.state = {
+            pointDataWhere: [],
+            visible: false,
+            uid: cuid(),
+        };
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.location.pathname !== this.props.location.pathname) {
-            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
+        if (nextProps.DGIMN !== this.props.DGIMN) {
+            {
+                debugger;
+               const pointDataWhere = [{
+                     Key: '[dbo]__[T_Bas_EquipmentInfo]__PointCode',
+                     Value: nextProps.DGIMN,
+                     Where: '$=',
+                   },
+                 ];
+                 this.setState({
+                     pointDataWhere,
+                 }, () => {
+                     this.reloadPage()
+                 })
+            }
         }
     }
 
-    reloadPage = configId => {
-        const { dispatch } = this.props;
+    reloadPage = () => {
+        debugger;
+        const { dispatch, configId } = this.props;
         dispatch({
             type: 'autoForm/updateState',
             payload: {
@@ -50,8 +65,40 @@ import styles from './index.less';
         })
     }
 
+    /** 保存核实单 */
+    handleOk = e => {
+      const {
+        dispatch,
+        form,
+        DGIMN,
+      } = this.props;
+      form.validateFields((err, values) => {
+        if (!err) {
+          const formData = handleFormData(values, this.state.uid);
+          formData.PointCode = DGIMN;
+          dispatch({
+            type: 'operationsysmanage/AddEquipmentInfo',
+            payload: {
+              configId: 'ExceptionVerify',
+              FormData: formData,
+              callback: result => {
+                  if (result.IsSuccess) {
+                      this.setState({
+                          visible: false,
+                      }, () => {
+                          this.reloadPage();
+                      })
+                  }
+              },
+            },
+          });
+        }
+      });
+    };
+
     render() {
-        const { match: { params: { configId } } } = this.props;
+        const { configId } = this.props;
+        const { pointDataWhere } = this.state;
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -65,7 +112,7 @@ import styles from './index.less';
             />);
         }
         return (
-                <div className={styles.cardTitle}>
+                <div>
                     <Card>
                         <SearchWrapper
                             onSubmitForm={form => this.loadReportList(form)}
@@ -74,9 +121,35 @@ import styles from './index.less';
                         <SdlTable
                             style={{ marginTop: 10 }}
                             configId={configId}
+                            searchParams={pointDataWhere}
+                            appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
+                                <Button icon="plus" type="primary" onClick={() => {
+                                    debugger;
+                                    this.setState({
+                                        visible: true,
+                                    })
+                                }}>添加</Button>
+                              </Fragment>}
                             {...this.props}
                         >
                         </SdlTable>
+                        <Modal
+                              title="添加"
+                              visible={this.state.visible}
+                              destroyOnClose // 清除上次数据
+                              onOk={this.handleOk}
+                              okText="保存"
+                              cancelText="关闭"
+                              onCancel={() => {
+                                this.setState({
+                                  visible: false,
+                                });
+                              }}
+                              width="50%"
+                            >
+                              <SdlForm configId={configId} form={this.props.form} hideBtns >
+                              </SdlForm>
+                        </Modal>
                     </Card>
                 </div>
         );
