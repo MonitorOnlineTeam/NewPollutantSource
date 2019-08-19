@@ -15,7 +15,7 @@ const { TextArea } = Input;
 页面：编辑手工录入数据页面
 */
 @connect()
-@Form.create()
+// @Form.create()
 export default class UpdateManualUpload extends Component {
     constructor(props) {
         super(props);
@@ -54,14 +54,6 @@ export default class UpdateManualUpload extends Component {
             })
         }
 
-    }
-    handleSubmit = (e) => {
-        const { item, dispatch, form } = this.props;
-        form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                this.props.onSubmitForm && this.props.onSubmitForm(values, item, pollutantCode);
-            }
-        });
     }
     render() {
         const { getFieldDecorator } = this.props.form;

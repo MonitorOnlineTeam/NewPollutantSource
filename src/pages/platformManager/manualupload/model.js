@@ -10,8 +10,6 @@ import {
     getUploadTemplate,
     GetAllPollutantTypes,
     addGetPollutantByPoint,
-    AddUploadFiles,
-    // GetUnitByPollutant,
     DeleteUploadFiles,
     UpdateManualSupplementData,
     getPollutantTypeList
@@ -136,55 +134,6 @@ export default Model.extend({
 
         },
 
-        // //获取污染物类型列表
-        // * GetAllPollutantTypes({
-        //     payload
-        // }, {
-        //     call,
-        //     update,
-        // }) {
-        //     const result = yield call(GetAllPollutantTypes, payload);
-        //     if (result.IsSuccess) {
-        //         yield update({
-        //             pollutantTypesItem: result.Datas,
-        //         });
-        //     }
-        // },
-
-        //添加手工上传数据
-        * AddUploadFiles({
-            payload,
-
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(AddUploadFiles, payload);
-            if(result.IsSuccess)
-            {
-                message.success("操作成功！");
-            }
-            else
-            {
-                message.error(result.Message);
-            }
-        },
-
-        // //根据污染物获取单位
-        // * GetUnitByPollutant({
-        //     payload
-        // }, {
-        //     call,
-        //     update,
-        // }) {
-        //     const result = yield call(GetUnitByPollutant, payload);
-        //     if (result.IsSuccess) {
-        //         yield update({
-        //             unit: result.Datas,
-        //         });
-        //     }
-        // },
-
         //根据MN号码 污染物编号 时间删除数据
         * DeleteUploadFiles({
             payload
@@ -214,6 +163,7 @@ export default Model.extend({
             if(result.IsSuccess)
             {
                 message.success("操作成功！");
+                payload.callback()
             }
             else
             {
