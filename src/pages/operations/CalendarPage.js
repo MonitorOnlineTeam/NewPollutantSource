@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty } from 'antd'
+import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
 import { connect } from 'dva';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -9,10 +9,20 @@ import styles from './index.less'
 
 const { Option } = Select;
 
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
 @connect(({ operations, loading }) => ({
   recordTypeList: operations.recordTypeList,
   timeLineList: operations.timeLineList,
-  timeLineTotal: operations.timeLineTotal
+  timeLineTotal: operations.timeLineTotal,
+  imageList: operations.imageList,
 }))
 class CalendarPage extends Component {
   constructor(props) {
@@ -21,13 +31,15 @@ class CalendarPage extends Component {
       currentRecordType: "",
       dateValues: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
       current: 1,
-      pageIndex: 10
+      pageIndex: 10,
+      previewVisible: false,
+      previewImage: "",
       // DGIMN: ""
     };
   }
 
   componentDidMount() {
-    // // 
+    // //
     // this.props.dispatch({
     //   type: "type/getOperationLogList",
     //   payload: {
@@ -78,9 +90,10 @@ class CalendarPage extends Component {
         <Timeline.Item
           dot={<Icon type="clock-circle-o" style={{ fontSize: '26px' }} />}
           position="left"
+          key={item.RecordDate}
         >
           {/* <div className={styles.DateLoad}> */}
-          <p className={styles.taskDate}><Tag className={styles.dateContent}>{item.RecordDate}</Tag></p>
+          <p className={styles.taskDate}><Tag className={styles.dateContent}>{moment(item.RecordDate).format("YYYY-MM-DD")}</Tag></p>
           {/* </div> */}
         </Timeline.Item>
       )
@@ -90,10 +103,19 @@ class CalendarPage extends Component {
           <Timeline.Item
             dot={<Icon type={node.Icon} style={{ fontSize: '20px', color: this.getStatusColor(node.TypeID) }} />}
             position="left"
+            // key={node.MainFormID}
           >
             {`${node.CreateUser}${node.DisplayInfo}`}
             <br />
-            <Tag color="#43b9ff" style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}>查看详情</Tag>
+            <Tag
+              color="#43b9ff"
+              style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
+              onClick={() => {
+                this.getOperationImageList(node)
+              }}
+            >
+              查看详情
+            </Tag>
           </Timeline.Item>
         )
       })
@@ -101,6 +123,7 @@ class CalendarPage extends Component {
     return timelineItems;
   }
 
+  // 获取运维日志数据
   getOperationLogList = () => {
     const { dateValues, DGIMN, currentRecordType } = this.state;
     this.props.dispatch({
@@ -116,20 +139,57 @@ class CalendarPage extends Component {
     })
   }
 
+  // 获取详情图片
+  getOperationImageList = (data) => {
+    this.props.dispatch({
+      type: "operations/getOperationImageList",
+      payload: {
+        FormMainID: data.MainFormID
+      },
+      callback: (res) => {
+        if(res.Datas){
+          this.setState({
+            visible: true
+          })
+        }else {
+          message.warning("暂无数据！")
+        }
+
+      }
+    })
+  }
+
   paginationChange = (current, pageSize) => {
-    console.log('pageInfo=', current, pageSize)
     this.setState({
       current
     }, () => {
       this.getOperationLogList()
     })
-
   }
+
+  modalHandleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+      // previewVisible: false,
+    });
+  };
+
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    console.log('file=',file)
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+    });
+  };
 
 
   render() {
-    const { recordTypeList, timeLineList, timeLineTotal } = this.props;
-    const { dateValues, current } = this.state;
+    const { recordTypeList, timeLineList, timeLineTotal, imageList } = this.props;
+    const { dateValues, current, previewVisible, previewImage } = this.state;
     return (
       <>
         <NavigationTree choice={false} onItemClick={value => {
@@ -163,7 +223,7 @@ class CalendarPage extends Component {
                   >
                     {
                       recordTypeList.map(item => {
-                        return <Option value={item.TypeId}>{item.CnName}</Option>
+                        return <Option value={item.TypeId} key={item.TypeId}>{item.CnName}</Option>
                       })
                     }
                   </Select>
@@ -207,7 +267,33 @@ class CalendarPage extends Component {
             </Card>
           </PageHeaderWrapper>
         </div>
-
+        <Modal
+          title="详情"
+          visible={this.state.visible}
+          footer=""
+          // onOk={this.handleOk}
+          onCancel={this.modalHandleCancel}
+        >
+          <div style={{overflow: "hidden"}}>
+            <Upload
+              action=""
+              listType="picture-card"
+              fileList={imageList}
+              disabled
+              onPreview={this.handlePreview}
+            // onChange={this.handleChange}
+            >
+              {/* {fileList.length >= 8 ? null : uploadButton} */}
+            </Upload>
+            <Modal visible={previewVisible} width={800} footer={null} onCancel={() => {
+              this.setState({
+                previewVisible: false
+              })
+            }}>
+              <img alt="example" style={{ width: '100%' }} src={previewImage} />
+            </Modal>
+          </div>
+        </Modal>
       </>
     );
   }

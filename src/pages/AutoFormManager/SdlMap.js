@@ -123,9 +123,17 @@ class SdlMap extends PureComponent {
       }
     }
 
-    this.props.mode === "map" && this.setState({
-      mapCenter: [this.props.longitude, this.props.latitude]
-    })
+    if (this.props.mode === "map") {
+      if (this.props.longitude && this.props.latitude) {
+        this.setState({
+          mapCenter: [this.props.longitude, this.props.latitude]
+        })
+      } else if(this.props.path) {
+        this.setState({
+          mapCenter: this.props.path[0][0][0]
+        })
+      }
+    }
   }
 
 
@@ -220,8 +228,16 @@ class SdlMap extends PureComponent {
         });
       });
     }
-
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.path !== nextProps.path) {
+      nextProps.path && this.setState({
+        mapCenter: nextProps.path[0][0][0]
+      })
+    }
+  }
+
 
 
   renderMapContent() {
@@ -255,7 +271,7 @@ class SdlMap extends PureComponent {
 
       }
     }
-    console.log('mapCenter=',this.state.mapCenter)
+    console.log('mapCenter=', this.state.mapCenter)
     return <Map
       amapkey={YOUR_AMAP_KEY}
       center={this.state.mapCenter}
@@ -290,11 +306,9 @@ class SdlMap extends PureComponent {
   // 绘制厂界
   getPolygon = () => {
     const res = [];
-    console.log('this.props.path=',this.props.path)
     if (this.props.path) {
       const arr = eval(this.props.path);
       for (let i = 0; i < arr.length; i++) {
-        console.log('arr=',arr[i])
         res.push(<Polygon
           // events={this.polygonEvents}
           // key={item.entCode+i}
@@ -316,7 +330,6 @@ class SdlMap extends PureComponent {
   render() {
     const { mapVisible } = this.state;
     const { handleMarker, handlePolygon, mode, latitude, longitude } = this.props;
-    console.log('porps=',this.props)
     return (
       <Fragment>
         {
@@ -333,10 +346,17 @@ class SdlMap extends PureComponent {
                     mapCenter: [longitude, latitude]
                   })
                 }
+
                 const path = this.props.path && JSON.parse(this.props.path);
+                // 厂界
+                if (handlePolygon && path) {
+                  this.setState({
+                    mapCenter: path[0][0][0],
+                    path: path
+                  })
+                }
                 this.setState({
                   mapVisible: true,
-                  path: path
                 })
               }}
               type="global"
@@ -348,7 +368,7 @@ class SdlMap extends PureComponent {
         }
         {
           mode === "map" &&
-          <div className={styles.mapContent} style={{...this.props.style}}>
+          <div className={styles.mapContent} style={{ ...this.props.style }}>
             {this.renderMapContent()}
           </div>
         }
@@ -366,7 +386,7 @@ class SdlMap extends PureComponent {
             this.onCloseModal();
           }}
         >
-          <div className={styles.mapContent} style={{...this.props.style}}>
+          <div className={styles.mapContent} style={{ ...this.props.style }}>
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {

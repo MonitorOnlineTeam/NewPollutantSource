@@ -22,7 +22,7 @@ import { PointIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
@@ -131,7 +131,7 @@ export default class MonitorTarget extends Component {
                             onSubmitForm={(form) => this.loadReportList(form)}
                             configId={configId}
                         ></SearchWrapper>
-                        <SdlTable
+                        <AutoFormTable
 
                             style={{ marginTop: 10 }}
                             // columns={columns}
@@ -142,10 +142,10 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             // onAdd={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
                             // }}
                             // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
                             // }}
                             appendHandleRows={row => {
                                 return <Fragment>
@@ -160,7 +160,7 @@ export default class MonitorTarget extends Component {
                             parentcode='platformconfig'
                             {...this.props}
                         >
-                        </SdlTable>
+                        </AutoFormTable>
                     </Card>
                 </div>
             </PageHeaderWrapper>
