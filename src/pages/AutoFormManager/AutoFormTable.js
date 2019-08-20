@@ -45,7 +45,14 @@ class AutoFormTable extends PureComponent {
     this._renderHandleButtons = this._renderHandleButtons.bind(this);
     this._handleTableChange = this._handleTableChange.bind(this);
     this.moreClick = this.moreClick.bind(this);
+    this.delRowData = this.delRowData.bind(this);
+    this.batchDel = this.batchDel.bind(this);
   }
+
+  componentWillMount = () => {
+    const { onRef } = this.props;
+    onRef && onRef(this);
+  };
 
   componentDidMount() {
     this.loadDataSource();
@@ -118,7 +125,41 @@ class AutoFormTable extends PureComponent {
       this.loadDataSource(sorterObj);
     }
   }
-
+  //行删除
+  delRowData(record) {
+    const { keys, dispatch, configId } = this.props;
+    const postData = {
+    };
+    keys[configId].map(item => {
+      if (record[item]) {
+        postData[item] = record[item]
+      }
+    })
+    dispatch({
+      type: 'autoForm/del',
+      payload: {
+        configId,
+        FormData: JSON.stringify(postData),
+      },
+    })
+  }
+  //批量删除
+  batchDel() {
+    const postData = this.state.delPostData;
+    confirm({
+      title: '是否删除?',
+      content: '确认是否删除',
+      onOk() {
+        dispatch({
+          type: 'autoForm/del',
+          payload: {
+            configId,
+            FormData: JSON.stringify(postData),
+          },
+        })
+      },
+    });
+  }
   _renderHandleButtons() {
     const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
@@ -147,20 +188,7 @@ class AutoFormTable extends PureComponent {
             key={btn.DISPLAYBUTTON}
             type="primary"
             onClick={() => {
-              const postData = this.state.delPostData;
-              confirm({
-                title: '是否删除?',
-                content: '确认是否删除',
-                onOk() {
-                  dispatch({
-                    type: 'autoForm/del',
-                    payload: {
-                      configId,
-                      FormData: JSON.stringify(postData),
-                    },
-                  })
-                },
-              });
+              this.batchDel();
             }}
           >批量删除
                          </Button>;
@@ -380,20 +408,7 @@ class AutoFormTable extends PureComponent {
                         placement="left"
                         title="确认是否删除?"
                         onConfirm={() => {
-                          const postData = {
-                          };
-                          keys[configId].map(item => {
-                            if (record[item]) {
-                              postData[item] = record[item]
-                            }
-                          })
-                          dispatch({
-                            type: 'autoForm/del',
-                            payload: {
-                              configId,
-                              FormData: JSON.stringify(postData),
-                            },
-                          })
+                          this.delRowData(record);
                         }}
                         okText="是"
                         cancelText="否">

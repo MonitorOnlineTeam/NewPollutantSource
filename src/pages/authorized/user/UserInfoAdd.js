@@ -15,7 +15,7 @@ import {
 import { connect } from 'dva';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlForm from "@/components/AutoForm/SdlForm"
+import SdlForm from "@/pages/AutoFormManager/SdlForm"
 const Search = Input.Search;
 
 
