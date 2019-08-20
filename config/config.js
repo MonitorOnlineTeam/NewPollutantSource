@@ -160,24 +160,24 @@ export default {
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId',
+                  path: '/platformconfig/monitortarget/:configId/:targetType',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:pollutantTypes',
+                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/monitorpoint/:targetType/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {

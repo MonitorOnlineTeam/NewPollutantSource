@@ -10,7 +10,7 @@ import {
     Row,
     Col,
 } from 'antd';
-import AutoFormViewItems from '@/components/AutoForm/AutoFormViewItems'
+import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 @connect(({ userinfo, loading }) => ({
