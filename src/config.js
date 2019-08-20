@@ -17,7 +17,7 @@ module.exports = {
   isMultiEnterprise: false,
   apiPrefix: '/mock',
   webSocketPushURL: '172.16.12.152:40005',
-  imgaddress: 'http://172.16.12.152:8066/api/upload/',
+  imgaddress: 'http://172.16.9.41:7001/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
   // 使用文档路径

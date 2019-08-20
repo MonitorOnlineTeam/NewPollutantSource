@@ -532,6 +532,8 @@ class AutoFormTable extends PureComponent {
               // return;
               this.setState({
                 selectedRowKeys: keys
+              }, () => {
+                this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record)
               })
             },
           })}

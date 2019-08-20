@@ -188,10 +188,10 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             // onAdd={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
                             // }}
                             // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
                             // }}
                             // appendHandleButtons={(selectedRowKeys, selectedRows) => (
                             //     <Fragment>

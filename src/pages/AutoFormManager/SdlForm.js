@@ -63,6 +63,7 @@ class SdlForm extends PureComponent {
       longitude: 0,
       latitude: 0,
       polygon: [],
+      defaultFileList: [],
     };
     this._SELF_ = {
       formLayout: props.formLayout || {
@@ -125,6 +126,15 @@ class SdlForm extends PureComponent {
       })
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.fileList !== nextProps.fileList){
+      this.setState({
+        defaultFileList: nextProps.fileList
+      })
+    }
+  }
+
 
   // 处理时间控件
   _rtnDateEl = item => {
@@ -315,9 +325,9 @@ class SdlForm extends PureComponent {
               },
             };
             if (isEdit) {
-              if (_fileList.length) {
-                console.log('fileList=', _fileList)
-                element = <Upload {...props} defaultFileList={_fileList}>
+              // if (fileList.length) {
+              if (this.state.defaultFileList.length) {
+                element = <Upload {...props} defaultFileList={this.state.defaultFileList}>
                   <Button>
                     <Icon type="upload" /> 文件上传
                   </Button>

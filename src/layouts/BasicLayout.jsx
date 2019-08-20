@@ -189,7 +189,7 @@ const BasicLayout = props => {
         {...props}
         {...settings}
       >
-        <div style={{ margin: '-24px -24px 0px', padding: '24px', overflowY: 'auto' }}>
+        <div style={{ margin: '-24px -24px 0px', padding: '24px 24px 0 24px', overflowY: 'auto' }}>
           {children}
         </div>
       </ProLayout>
