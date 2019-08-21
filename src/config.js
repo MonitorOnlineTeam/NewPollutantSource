@@ -17,7 +17,7 @@ module.exports = {
   isMultiEnterprise: false,
   apiPrefix: '/mock',
   webSocketPushURL: '172.16.12.152:40005',
-  imgaddress: 'http://172.16.12.152:8066/api/upload/',
+  imgaddress: 'http://172.16.9.41:7001/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
   // 使用文档路径
@@ -35,7 +35,7 @@ module.exports = {
   // autoForm文件上传地址
   fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
   // autoForm文件上传地址
-  templateUploadUrl: 'http://localhost:52198/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
+  templateUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

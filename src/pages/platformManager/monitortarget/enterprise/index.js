@@ -16,8 +16,7 @@ import { PointIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-// import SdlTable from '@/components/AutoForm/Table';
-import SdlTable from '../../AutoFormManager/Table';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
@@ -116,7 +115,7 @@ export default class MonitorTarget extends Component {
                             onSubmitForm={(form) => this.loadReportList(form)}
                             configId={configId}
                         ></SearchWrapper>
-                        <SdlTable
+                        <AutoFormTable
                             style={{ marginTop: 10 }}
                             // columns={columns}
                             configId={configId}
@@ -144,7 +143,7 @@ export default class MonitorTarget extends Component {
                             parentName="platformconfig"
                             {...this.props}
                         >
-                        </SdlTable>
+                        </AutoFormTable>
                     </Card>
                 </div>
                 {/* </MonitorContent> */}

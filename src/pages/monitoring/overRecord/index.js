@@ -17,7 +17,6 @@ import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlTable from '../../../components/AutoForm/Table';
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import RangePicker_ from '../../../components/RangePicker'
@@ -301,7 +300,7 @@ class Index extends Component {
             <PageHeaderWrapper>
                 <RecordEchartTableOver  DGIMN={this.state.dgimn}  />
             </PageHeaderWrapper>
-            
+
         </div>
         );
     }

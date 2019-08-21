@@ -168,7 +168,7 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt,Type:node.PollutantType });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -487,8 +487,10 @@ class NavigationTree extends Component {
     //处理选中的数据格式
     const rtnList = [];
     data.map(item => {
-      var isEnt = dataList.filter(m => m.key == item)[0].IsEnt == 1 ? true : false
-      rtnList.push({ key: item, IsEnt: isEnt })
+      var list=dataList.filter(m => m.key == item)
+      var isEnt = list[0].IsEnt == 1 ? true : false
+      var type=list[0].Type
+      rtnList.push({ key: item, IsEnt: isEnt,Type:type })
     })
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
@@ -613,7 +615,6 @@ class NavigationTree extends Component {
           key={item.key} dataRef={item}>
         </TreeNode>
       });
-
     return (
       <div >
 

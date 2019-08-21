@@ -160,24 +160,24 @@ export default {
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId',
+                  path: '/platformconfig/monitortarget/:configId/:targetType',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:pollutantTypes',
+                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/monitorpoint/:targetType/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {
@@ -222,7 +222,7 @@ export default {
                    name: 'standardgasmanage',
                    path: '/platformconfig/standardgasmanage/:configId',
                    component: './OperationSysManager/StandardGasManage/',
-                 }, 
+                 },
                   {
                     name: 'handhelddevicesmanage',
                     path: '/platformconfig/handhelddevicesmanage/:configId',
@@ -264,6 +264,27 @@ export default {
                   component: './report/summaryReportPage',
                 },
               ],
+            },
+            {
+              path: "/operations",
+              name: "operations",
+              routes: [
+                {
+                  path: '/operations/calendar',
+                  name: "calendar",
+                  component: "./operations/CalendarPage"
+                },
+                {
+                  path: '/operations/log',
+                  name: "log",
+                  component: "./operations/Log"
+                },
+                {
+                  path: '/operations/operationRecord',
+                  name: "operationRecord",
+                  component: "./operations/operationRecord"
+                }
+              ]
             },
             {
               path: '/rolesmanager',
@@ -390,7 +411,7 @@ export default {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
-               
+
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
@@ -401,7 +422,7 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
                   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
                 },
-               
+
               ],
             },
             {
@@ -514,7 +535,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.13:9090/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

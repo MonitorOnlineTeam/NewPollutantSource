@@ -417,7 +417,7 @@ class dataList extends PureComponent {
 
         return (
             <PageHeaderWrapper>
-                <div style={{ width: '100%', height: 'calc(100vh - 65px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
+                <div style={{ width: '100%', height: 'calc(100vh - 40px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
                     <Card
                         bordered={false}
                         className={styles.cardextra}

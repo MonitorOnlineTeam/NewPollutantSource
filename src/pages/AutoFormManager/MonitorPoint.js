@@ -116,7 +116,7 @@ export default class MonitorPoint extends Component {
                 pointDataWhere: [
                     {
                         Key: "dbo__T_Cod_MonitorPointBase__BaseCode",
-                        Value: match.params.targetId,
+                        Value: match.params.targetId, 
                         Where: "$="
                     }
                 ]
