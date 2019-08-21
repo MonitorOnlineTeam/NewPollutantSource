@@ -318,12 +318,18 @@ class AutoFormTable extends PureComponent {
         width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
           const type = col.formatType;
+          if (type === "标签") {
+            const types = str.indexOf("|") ? str.split("|") : str.split(",")
+            return types.map(item => {
+              return <Tag>{item}</Tag>
+            })
+          }
           return text && <div>
             {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             }
             {type == '小圆点' && <Badge status="warning" text={text} />}
-            {type === '标签' && <Tag>{text}</Tag>}
+            {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
             {!type && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
               {text}
@@ -372,8 +378,8 @@ class AutoFormTable extends PureComponent {
                               postData[item] = record[item]
                             }
                           })
-                          // this.props.onEdit ? this.props.onEdit() : dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
-                          dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          this.props.onEdit ? this.props.onEdit() : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
