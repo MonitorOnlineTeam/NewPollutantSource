@@ -337,7 +337,7 @@ class AutoFormTable extends PureComponent {
         render: (text, record) => {
           const type = col.formatType;
           if (type === "标签") {
-            const types = str.indexOf("|") ? str.split("|") : str.split(",")
+            const types = text ?(text.indexOf("|") ? text.split("|") : text.split(",")):[]
             return types.map(item => {
               return <Tag>{item}</Tag>
             })
