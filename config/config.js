@@ -212,11 +212,7 @@ export default {
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
-                {
-                  name: 'consumablesmanage',
-                  path: '/platformconfig/consumablesmanage/:configId',
-                  component: './OperationSysManager/ConsumablesManage/',
-                },
+               
                 {
                   name: 'sparepartmanage',
                   path: '/platformconfig/sparepartmanage/:configId',
@@ -241,6 +237,11 @@ export default {
                     name: 'equipmentinfomanage',
                     path: '/platformconfig/equipmentinfomanage/:configId',
                     component: './OperationSysManager/EquipmentInfoManage/',
+                  },
+                    {
+                    name: 'certificatemanage',
+                    path: '/platformconfig/certificatemanage/:configId',
+                    component: './OperationSysManager/CertificateManage/',
                   },
               ],
             },

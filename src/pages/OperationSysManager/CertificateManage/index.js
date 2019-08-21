@@ -5,8 +5,8 @@ import {
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './index.less';
-import NavigationTree from '../../../components/NavigationTree'
-import EquipmentInfoManage from './components/index'
+import UserTree from '../../../components/UserTree'
+import CertificateManage from './components/index'
 
 
 @connect(({ loading, autoForm }) => ({
@@ -22,7 +22,7 @@ import EquipmentInfoManage from './components/index'
     constructor(props) {
         super(props);
         this.state = {
-            dgimn: '',
+            userId: '',
         };
     }
 
@@ -36,13 +36,13 @@ import EquipmentInfoManage from './components/index'
         const { match: { params: { configId } } } = this.props;
 
         return (
-            <div id="EquipmentInfoManage">
+            < div id = "CertificateManage" >
                 <PageHeaderWrapper>
-                 <EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />
+                 <CertificateManage UserID={this.state.userId} configId={configId} {...this.props} />
                 </PageHeaderWrapper>
-                <NavigationTree domId="#EquipmentInfoManage" choice={false} onItemClick={value => {
+                <UserTree domId="#CertificateManage" onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
-                            this.changeDgimn(value[0].key)
+                            this.changeDgimn(value[0].UserID)
                             }
                         }} />
             </div>
