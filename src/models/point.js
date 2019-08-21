@@ -75,13 +75,16 @@ export default Model.extend({
         },
         *delPoint({ payload }, { call, put, update, select }) {
 
-
             let result=yield call(deletePoints,[payload.DGIMN]);
             if(result.IsSuccess)
             {
                 sdlMessage('操作成功！', 'success');
+                payload.callback(result);
+            }else
+            {
+                sdlMessage('操作失败！', 'error');
             }
-            payload.callback(result);
+            
             // let pointParam = {
             //     'dbo.T_Bas_CommonPoint.PointCode': payload.PointCode,
             // };

@@ -45,7 +45,14 @@ class AutoFormTable extends PureComponent {
     this._renderHandleButtons = this._renderHandleButtons.bind(this);
     this._handleTableChange = this._handleTableChange.bind(this);
     this.moreClick = this.moreClick.bind(this);
+    this.delRowData = this.delRowData.bind(this);
+    this.batchDel = this.batchDel.bind(this);
   }
+
+  componentWillMount = () => {
+    const { onRef } = this.props;
+    onRef && onRef(this);
+  };
 
   componentDidMount() {
     this.loadDataSource();
@@ -118,7 +125,41 @@ class AutoFormTable extends PureComponent {
       this.loadDataSource(sorterObj);
     }
   }
-
+  //行删除
+  delRowData(record) {
+    const { keys, dispatch, configId } = this.props;
+    const postData = {
+    };
+    keys[configId].map(item => {
+      if (record[item]) {
+        postData[item] = record[item]
+      }
+    })
+    dispatch({
+      type: 'autoForm/del',
+      payload: {
+        configId,
+        FormData: JSON.stringify(postData),
+      },
+    })
+  }
+  //批量删除
+  batchDel() {
+    const postData = this.state.delPostData;
+    confirm({
+      title: '是否删除?',
+      content: '确认是否删除',
+      onOk() {
+        dispatch({
+          type: 'autoForm/del',
+          payload: {
+            configId,
+            FormData: JSON.stringify(postData),
+          },
+        })
+      },
+    });
+  }
   _renderHandleButtons() {
     const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
@@ -147,20 +188,7 @@ class AutoFormTable extends PureComponent {
             key={btn.DISPLAYBUTTON}
             type="primary"
             onClick={() => {
-              const postData = this.state.delPostData;
-              confirm({
-                title: '是否删除?',
-                content: '确认是否删除',
-                onOk() {
-                  dispatch({
-                    type: 'autoForm/del',
-                    payload: {
-                      configId,
-                      FormData: JSON.stringify(postData),
-                    },
-                  })
-                },
-              });
+              this.batchDel();
             }}
           >批量删除
                          </Button>;
@@ -308,12 +336,18 @@ class AutoFormTable extends PureComponent {
         width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
           const type = col.formatType;
+          if (type === "标签") {
+            const types = str.indexOf("|") ? str.split("|") : str.split(",")
+            return types.map(item => {
+              return <Tag>{item}</Tag>
+            })
+          }
           return text && <div>
             {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             }
             {type == '小圆点' && <Badge status="warning" text={text} />}
-            {type === '标签' && <Tag>{text}</Tag>}
+            {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
             {!type && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
               {text}
@@ -362,8 +396,8 @@ class AutoFormTable extends PureComponent {
                               postData[item] = record[item]
                             }
                           })
-                          // this.props.onEdit ? this.props.onEdit() : dispatch(routerRedux.push(`/AutoFormManager/AutoFormEdit/${configId}/${JSON.stringify(postData)}/${uid}`))
-                          dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          this.props.onEdit ? this.props.onEdit() : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
@@ -398,20 +432,7 @@ class AutoFormTable extends PureComponent {
                         placement="left"
                         title="确认是否删除?"
                         onConfirm={() => {
-                          const postData = {
-                          };
-                          keys[configId].map(item => {
-                            if (record[item]) {
-                              postData[item] = record[item]
-                            }
-                          })
-                          dispatch({
-                            type: 'autoForm/del',
-                            payload: {
-                              configId,
-                              FormData: JSON.stringify(postData),
-                            },
-                          })
+                          this.delRowData(record);
                         }}
                         okText="是"
                         cancelText="否">
@@ -537,6 +558,8 @@ class AutoFormTable extends PureComponent {
               // return;
               this.setState({
                 selectedRowKeys: keys
+              }, () => {
+                this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record)
               })
             },
           })}

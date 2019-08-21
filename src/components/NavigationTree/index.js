@@ -615,7 +615,6 @@ class NavigationTree extends Component {
           key={item.key} dataRef={item}>
         </TreeNode>
       });
-
     return (
       <div >
 

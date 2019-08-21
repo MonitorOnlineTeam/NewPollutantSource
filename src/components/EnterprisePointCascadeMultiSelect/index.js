@@ -44,7 +44,7 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
           dropdownClassName={'ucms-drop'}
           config={config}
           placeholder={placeholder}
-          cascadeSize={cascadeSize}
+          cascadeSize={cascadeSize * 1}
           notFoundContent={"沒有数据"}
           options={enterpriseAndPointList}
           // onSelect={(valueList, labelList, leafList) => {
