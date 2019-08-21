@@ -276,7 +276,12 @@ export default {
                 {
                   path: '/operations/log',
                   name: "log",
-                  component: "./operations/Log"
+                  component: "./operations/LogPage"
+                },
+                {
+                  path: "/operations/vehicleApplication",
+                  name: "vehicleApplication",
+                  component: "./operations/VehicleApplication"
                 }
               ]
             },

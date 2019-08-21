@@ -17,7 +17,11 @@ export default Model.extend({
     recordTypeList: [],
     timeLineList: [],
     timeLineTotal: 0,
-    imageList: []
+    imageList: [],
+    // 车辆申请
+    VehicleApplication: {
+
+    },
   },
   effects: {
     // 获取日历信息
