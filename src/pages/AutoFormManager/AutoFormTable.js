@@ -223,6 +223,24 @@ class AutoFormTable extends PureComponent {
     }) : null;
   }
 
+
+  componentWillReceiveProps(nextProps) {
+    console.log('props1=',this.props.searchParams)
+      console.log('props2=',nextProps.searchParams)
+    if((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
+      console.log('props1=',this.props.searchParams)
+      console.log('props2=',nextProps.searchParams)
+      this.props.dispatch({
+        type: 'autoForm/getAutoFormData',
+        payload: {
+          configId: nextProps.configId,
+          searchParams: nextProps.searchParams,
+          otherParams: nextProps.otherParams,
+        },
+      });
+    }
+  }
+
   // 更多按钮点击
   moreClick(e) {
     const { dispatch } = this.props;
@@ -452,6 +470,8 @@ class AutoFormTable extends PureComponent {
       //   }
       // },
     };
+    console.log('dataSource=',dataSource)
+    console.log('_columns=',_columns)
     return (
       <Fragment>
         <Row className={styles.buttonWrapper}>

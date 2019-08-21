@@ -83,9 +83,8 @@ export default Model.extend({
           pageSize: searchForm.pageSize || 10,
           ...payload.otherParams
         };
-  
         const searchParams = payload.searchParams || [];
-  
+        debugger
         (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
           // group.length? postData.ConditionWhere = JSON.stringify({
           "rel": "$and",
@@ -97,7 +96,7 @@ export default Model.extend({
             ]
           }]
         }) : '';
-  
+        debugger
         const result = yield call(services.getListPager, { ...postData });
         if (result.IsSuccess) {
           state = yield select(state => state.autoForm);

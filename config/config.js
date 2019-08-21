@@ -277,6 +277,11 @@ export default {
                   path: '/operations/log',
                   name: "log",
                   component: "./operations/Log"
+                },
+                {
+                  path: '/operations/operationRecord',
+                  name: "operationRecord",
+                  component: "./operations/operationRecord"
                 }
               ]
             },
@@ -529,7 +534,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.13:9090/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
