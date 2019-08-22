@@ -25,11 +25,11 @@ export default Model.extend({
     //   pageSize: 10,
     //   total: 0
     // },
-    routerConfig: "",
+    routerConfig: '',
     tableInfo: {},
     searchForm: {},
     searchConfigItems: { // 搜索条件配置项
-      searchConditions: []
+      searchConditions: [],
     },
     configIdList: {}, // 获取下拉列表数据
     opreationButtons: [],
@@ -48,23 +48,23 @@ export default Model.extend({
     * getAutoFormData({ payload }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       let group = [];
-      const configId = payload.configId;
+      const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
       const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
-      console.log("searchForm=", searchForm)
+      console.log('searchForm=', searchForm)
       if (searchForm) {
-        for (let key in searchForm) {
+        for (const key in searchForm) {
           let groupItem = {};
           // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
           if (searchForm[key].value) {
             // 是否是moment对象
             const isMoment = moment.isMoment(searchForm[key].value);
             groupItem = {
-              "Key": key,
-              "Value": isMoment ? moment(searchForm[key].value).format("YYYY-MM-DD HH:mm:ss") : searchForm[key].value.toString(),
+              Key: key,
+              Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
             };
 
-            for (let whereKey in state.whereList[configId]) {
+            for (const whereKey in state.whereList[configId]) {
               if (key === whereKey) {
                 groupItem.Where = state.whereList[configId][whereKey];
               }
@@ -75,27 +75,27 @@ export default Model.extend({
           }
         }
       }
-      console.log("group=", group)
+      console.log('group=', group)
 
       const postData = {
         configId: payload.configId,
         pageIndex: searchForm.current || 1,
         pageSize: searchForm.pageSize || 10,
-        ...payload.otherParams
+        ...payload.otherParams,
       };
 
       const searchParams = payload.searchParams || [];
 
       (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
         // group.length? postData.ConditionWhere = JSON.stringify({
-        "rel": "$and",
-        "group": [{
-          "rel": "$and",
+        rel: '$and',
+        group: [{
+          rel: '$and',
           group: [
             ...group,
-            ...searchParams
-          ]
-        }]
+            ...searchParams,
+          ],
+        }],
       }) : '';
 
       const result = yield call(services.getListPager, { ...postData });
@@ -113,15 +113,15 @@ export default Model.extend({
             [configId]: {
               ...state.tableInfo[configId],
               dataSource: result.Datas.DataSource,
-            }
+            },
           },
           searchForm: {
             ...state.searchForm,
             [configId]: {
               ...state.searchForm[configId],
               total: result.Total,
-            }
-          }
+            },
+          },
         });
       }
     },
@@ -129,38 +129,38 @@ export default Model.extend({
     * getConfigIdList({ payload }, { call, update, select }) {
       const result = yield call(services.getListPager, { ...payload });
       if (result.IsSuccess) {
-        let configIdList = yield select(state => state.autoForm.configIdList);
+        const configIdList = yield select(state => state.autoForm.configIdList);
         yield update({
           configIdList: {
             ...configIdList,
-            [payload.configId]: result.Datas.DataSource
-          }
+            [payload.configId]: result.Datas.DataSource,
+          },
         });
       }
     },
-    //FOREIGN_DF_NAME /// FOREIGN_DF_ID
+    // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
     * getPageConfig({ payload }, { call, put, update, select }) {
       const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
-        let columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === "").map((item, index) => ({
+        const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '').map((item, index) => ({
           title: item.DF_NAME_CN,
-          dataIndex: item.DF_FOREIGN_TYPE === 2 ? item.FullFieldName + '_Name' : item.FullFieldName,
+          dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
           align: item.DF_ALIGN,
           width: item.DF_WIDTH,
           sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
           fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
           formatType: item.DF_ISFormat,
-          type: item.DF_CONTROL_TYPE
-        })
+          type: item.DF_CONTROL_TYPE,
+        }),
         );
 
         const checkboxOrRadio = result.Datas.MulType;
 
-        let whereList = {};
-        let searchConditions = result.Datas.CfgField.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
+        const whereList = {};
+        const searchConditions = result.Datas.CfgField.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
           index === 0 ? whereList[configId] = {} : '';
           whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
           return {
@@ -173,10 +173,10 @@ export default Model.extend({
             configId: item.FOREIGH_DT_CONFIGID,
             configDataItemName: item.FOREIGN_DF_NAME,
             configDataItemValue: item.FOREIGN_DF_ID,
-            dateFormat: item.DF_DATEFORMAT
+            dateFormat: item.DF_DATEFORMAT,
           };
         });
-        //添加
+        // 添加
         const addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISADD === 1);
         // const colSpanLen = ;
         let layout = 12;
@@ -189,7 +189,7 @@ export default Model.extend({
         } else {
           layout = false
         }
-        let addFormItems = addCfgField.map(item => ({
+        const addFormItems = addCfgField.map(item => ({
           type: item.DF_CONTROL_TYPE,
           labelText: item.DF_NAME_CN,
           fieldName: item.DF_NAME,
@@ -202,7 +202,7 @@ export default Model.extend({
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,
           required: item.DF_ISNOTNULL === 1,
-          validator: item.DF_ISNOTNULL === 1 && (item.DF_TOOLTIP || ""),//TODO：正则？
+          validator: item.DF_ISNOTNULL === 1 && (item.DF_TOOLTIP || ''), // TODO：正则？
           validate: item.DF_VALIDATE ? item.DF_VALIDATE.split(',') : [],
           colSpan: item.DF_COLSPAN,
           dateFormat: item.DF_DATEFORMAT,
@@ -212,21 +212,21 @@ export default Model.extend({
 
 
         // 主键
-        let keys = result.Datas.Keys.map(item => item.FullFieldName)
+        const keys = result.Datas.Keys.map(item => item.FullFieldName)
         // let keys = {
         //   fullFieldName: result.Datas.Keys.map(item => item.FullFieldName),
         //   names: result.Datas.Keys.map(item => item.DF_NAME),
         // }
         // console.log('keys=', keys);
 
-        let state = yield select(state => state.autoForm);
+        const state = yield select(state => state.autoForm);
         yield put({
           type: 'saveConfigIdList',
         })
         yield update({
           searchConfigItems: {
             ...state.searchConfigItems,
-            [configId]: searchConditions
+            [configId]: searchConditions,
           },
           tableInfo: {
             ...state.tableInfo,
@@ -234,25 +234,25 @@ export default Model.extend({
               ...state.tableInfo[configId],
               columns,
               checkboxOrRadio,
-            }
+            },
           },
           opreationButtons: {
             ...state.opreationButtons,
-            [configId]: result.Datas.OpreationButtons
+            [configId]: result.Datas.OpreationButtons,
           },
           whereList,
           keys: {
             ...state.keys,
-            [configId]: keys
+            [configId]: keys,
           },
           addFormItems: {
             ...state.addFormItems,
-            [configId]: addFormItems
+            [configId]: addFormItems,
           },
           formLayout: {
             ...state.formLayout,
-            [configId]: layout
-          }
+            [configId]: layout,
+          },
         });
       }
     },
@@ -264,22 +264,21 @@ export default Model.extend({
         yield put({
           type: 'getAutoFormData',
           payload: {
-            configId: payload.configId
-          }
+            configId: payload.configId,
+          },
         });
       }
     },
 
     * add({ payload }, { call, update, put }) {
-
       const result = yield call(services.postAutoFromDataAdd, { ...payload, FormData: JSON.stringify(payload.FormData) });
       if (result.IsSuccess) {
         message.success('添加成功！');
         yield put({
           type: 'getAutoFormData',
           payload: {
-            configId: payload.configId
-          }
+            configId: payload.configId,
+          },
         });
       } else {
         message.error(result.Message);
@@ -301,14 +300,14 @@ export default Model.extend({
     },
 
     * getFormData({ payload }, { call, select, update, put }) {
-      let state = yield select(state => state.autoForm);
+      const state = yield select(state => state.autoForm);
       const result = yield call(services.getFormData, { ...payload });
       if (result.IsSuccess && result.Datas.length) {
         yield update({
           editFormData: {
             ...state.editFormData,
-            [payload.configId]: result.Datas[0]
-          }
+            [payload.configId]: result.Datas[0],
+          },
         })
       } else {
         message.error(result.Message);
@@ -317,14 +316,13 @@ export default Model.extend({
 
     // 获取详情页面配置
     * getDetailsConfigInfo({ payload }, { call, select, update, put }) {
-      let state = yield select(state => state.autoForm);
+      const state = yield select(state => state.autoForm);
       const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
-
-        let detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(item => ({
+        const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(item => ({
           type: item.DF_CONTROL_TYPE,
           labelText: item.DF_NAME_CN,
-          fieldName: item.DF_FOREIGN_TYPE === 2 ? item.FullFieldName + "_Name" : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME),  // 判断是否是外键或表连接
+          fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
           // configId: item.DT_CONFIG_ID,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
@@ -333,8 +331,8 @@ export default Model.extend({
         yield update({
           detailConfigInfo: {
             ...state.detailData,
-            [payload.configId]: detailFormItems
-          }
+            [payload.configId]: detailFormItems,
+          },
         })
       } else {
         message.error(result.Message);
@@ -346,7 +344,7 @@ export default Model.extend({
       const result = yield call(services.getRegions, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          regionList: result.Datas
+          regionList: result.Datas,
         })
         callback && callback(result)
       }
@@ -357,16 +355,14 @@ export default Model.extend({
       const result = yield call(services.getAttachmentList, { ...payload });
       if (result.IsSuccess) {
         let fileList = [];
-        fileList = result.Datas.map((item, index) => {
-          return {
+        fileList = result.Datas.map((item, index) => ({
             uid: index,
             name: item.FileName,
-            status: "done",
-            url: item.Url
-          }
-        })
+            status: 'done',
+            url: item.Url,
+          }))
         yield update({
-          fileList
+          fileList,
         })
       }
     },
@@ -409,9 +405,9 @@ export default Model.extend({
         ...state,
         configIdList: {
           ...state.configIdList,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
     },
-  }
+  },
 });
