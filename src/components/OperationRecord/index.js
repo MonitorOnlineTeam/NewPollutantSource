@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card,Tag  } from 'antd';
 import { connect } from 'dva';
 import Center from '@/pages/account/center';
 import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';
+import { router } from 'umi'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
+import BdTestRecordContent from '@/pages/EmergencyTodoList/BdTestRecordContent'
+import SDLTable from '@/components/SdlTable'
+import { routerRedux } from 'dva/router';
 
 const { Option } = Select;
 
 @connect(({ operationform, loading }) => ({
     RecordTypeTree: operationform.RecordTypeTree,
     RecordTypeTreeLoading: loading.effects['operationform/getrecordtypebymn'],
+    JZDatas: operationform.JZDatas
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -25,7 +30,44 @@ class OperationRecord extends Component {
             RecordType: "",
             DGIMN: "",
             configName: "",
-            search: []
+            search: [],
+            columns: [
+                {
+                    title: '运维人',
+                    dataIndex: 'CreateUserID',
+                    key: 'CreateUserID',
+                },
+                {
+                    title: '分析仪校准是否正常',
+                    dataIndex: 'Content',
+                    key: 'Content',
+                    render: (text, record) => {
+                        var item=record.Content.split('),')
+                        var itemlist=[]
+                        item.map((m,index)=>
+                        itemlist.push(<Tag>{m+(index!=item.length-1?')':'')}</Tag>)
+                        )
+                        return itemlist
+                      }
+                },
+                {
+                    title: '记录时间',
+                    dataIndex: 'CreateTime',
+                    key: 'CreateTime',
+                },
+                {
+                    title: '操作',
+                    dataIndex: 'TaskID',
+                    key: 'TaskID',
+                    render: (text, record) => {
+                        return <Tooltip title="详情">
+                        <a onClick={() => {
+                            console.log('row', record)
+                        }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
+                    </Tooltip>
+                      }
+                },
+            ]
         }
     }
 
@@ -39,7 +81,17 @@ class OperationRecord extends Component {
         this.setState({
             RecordType: value
         })
-
+        if(value=='8')
+        {
+            this.props.dispatch({
+                type: 'operationform/getjzhistoryinfo',
+                payload: {
+                    DGIMN:this.props.DGIMN,
+                    BeginTime:this.state.beginTime,
+                    EndTime:this.state.endTime
+                }
+            })
+        }
     }
     onTreeSearch = (val) => {
         console.log('search:', val);
@@ -143,6 +195,7 @@ class OperationRecord extends Component {
 
     render() {
         const { RecordTypeTree } = this.props
+        const { columns } = this.state
         return (
             <div >
                 <Card
@@ -176,37 +229,37 @@ class OperationRecord extends Component {
                     }
                 >
                     <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
-                        <AutoFormTable
-                            configId={this.state.configName}
-                            rowChange={(key, row) => {
-                                this.setState({
-                                    key, row
-                                })
-                            }}
-                            appendHandleRows={row => {
-                                return <Tooltip title="详情">
-                                    <a onClick={() => {
-                                        console.log('row',row)
-                                    }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
-                                </Tooltip>
+                        {this.state.RecordType == '8' ?
+                            <SDLTable
+                                dataSource={this.props.JZDatas}
+                                columns={columns}
+                            >
 
-                            }}
-                            searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN, "Where": "$=" },
-                            { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
-                            { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
-                            { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
-                            ]}
-                            {...this.props}
-                        // searchParams={[
-                        //   {
-                            
-                        //     Key: "test",
-                        //     Value: false,
-                        //     Where: "$like"
-                        //   }
-                        // ]}
-                        ></AutoFormTable>
+                            </SDLTable>
+                            :
+                            <AutoFormTable
+                                configId={this.state.configName}
+                                rowChange={(key, row) => {
+                                    this.setState({
+                                        key, row
+                                    })
+                                }}
+                                appendHandleRows={row => {
+                                    return <Tooltip title="详情">
+                                        <a onClick={() => {
+                                        router.push('/operations/recordForm/8/' + row['dbo.T_Bas_Task.ID'])
+                                        }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
+                                    </Tooltip>
+                                }}
+                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN, "Where": "$=" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
+                                ]}
+                                {...this.props}
+                            ></AutoFormTable>}
 
+                        {/* <BdTestRecordContent TaskID="1f22ede2-68a0-4594-a93b-a5f706fe6662" /> */}
                     </Card.Grid>
                 </Card>
             </div>

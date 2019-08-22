@@ -283,6 +283,11 @@ export default {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
                   component: "./operations/operationRecord"
+                },
+                {
+                  path: '/operations/recordForm/:typeID/:taskID',
+                  name: "recordForm",
+                  component: "./operations/recordForm"
                 }
               ]
             },

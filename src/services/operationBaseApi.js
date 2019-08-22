@@ -9,5 +9,12 @@ export async function getrecordtypebymn(params) {
         data: null
     } : result;
 }
+// 获取校准历史记录
+export async function getjzhistoryinfo(params) {
+    const result = post('/api/rest/PollutantSourceApi/TaskFormApi/GetJzHistoryInfo', params);
+    return result === null ? {
+        data: null
+    } : result;
+}
 
 
