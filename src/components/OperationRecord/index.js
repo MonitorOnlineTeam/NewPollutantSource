@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card,Tag  } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card, Tag } from 'antd';
 import { connect } from 'dva';
 import Center from '@/pages/account/center';
 import RangePicker_ from '@/components/RangePicker'
@@ -9,6 +9,7 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BdTestRecordContent from '@/pages/EmergencyTodoList/BdTestRecordContent'
 import SDLTable from '@/components/SdlTable'
 import { routerRedux } from 'dva/router';
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
 
 const { Option } = Select;
 
@@ -30,6 +31,7 @@ class OperationRecord extends Component {
             RecordType: "",
             DGIMN: "",
             configName: "",
+            PollutantTypeByPoint: '',
             search: [],
             columns: [
                 {
@@ -42,13 +44,13 @@ class OperationRecord extends Component {
                     dataIndex: 'Content',
                     key: 'Content',
                     render: (text, record) => {
-                        var item=record.Content.split('),')
-                        var itemlist=[]
-                        item.map((m,index)=>
-                        itemlist.push(<Tag>{m+(index!=item.length-1?')':'')}</Tag>)
+                        var item = record.Content.split('),')
+                        var itemlist = []
+                        item.map((m, index) =>
+                            itemlist.push(<Tag>{m + (index != item.length - 1 ? ')' : '')}</Tag>)
                         )
                         return itemlist
-                      }
+                    }
                 },
                 {
                     title: '记录时间',
@@ -61,11 +63,11 @@ class OperationRecord extends Component {
                     key: 'TaskID',
                     render: (text, record) => {
                         return <Tooltip title="详情">
-                        <a onClick={() => {
-                            console.log('row', record)
-                        }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
-                    </Tooltip>
-                      }
+                            <a onClick={() => {
+                                router.push('/operations/recordForm/' + record.TypeID + '/' + record.TaskID)
+                            }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
+                        </Tooltip>
+                    }
                 },
             ]
         }
@@ -81,14 +83,13 @@ class OperationRecord extends Component {
         this.setState({
             RecordType: value
         })
-        if(value=='8')
-        {
+        if (value == '8') {
             this.props.dispatch({
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
-                    DGIMN:this.props.DGIMN,
-                    BeginTime:this.state.beginTime,
-                    EndTime:this.state.endTime
+                    DGIMN: this.props.DGIMN,
+                    BeginTime: this.state.beginTime,
+                    EndTime: this.state.endTime
                 }
             })
         }
@@ -141,7 +142,8 @@ class OperationRecord extends Component {
 
     getRecordType = (key) => {
         var configid = ''
-        if (this.state.PollutantTypeByPoint == "2") {
+        var type=this.state.PollutantTypeByPoint||this.props.PollutantType
+        if ( type== "2") {
             switch (key) {
                 case 1://维修记录表
                     configid = 'FormMainInfoRepair'
@@ -247,18 +249,34 @@ class OperationRecord extends Component {
                                 appendHandleRows={row => {
                                     return <Tooltip title="详情">
                                         <a onClick={() => {
-                                        router.push('/operations/recordForm/8/' + row['dbo.T_Bas_Task.ID'])
+                                            if (this.state.PollutantTypeByPoint == "2") {
+                                                router.push('/operations/recordForm/' + this.state.RecordType + '/' + row['dbo.T_Bas_Task.ID'])
+                                            } else {
+                                                // 获取详情图片
+                                                this.props.dispatch({
+                                                    type: "operations/getOperationImageList",
+                                                    payload: {
+                                                        // FormMainID: row['dbo.T_Bas_Task.ID']
+                                                        FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                                                    },
+                                                    callback: (res) => {
+                                                        this.setState({
+                                                            visible: true
+                                                        })
+                                                    }
+                                                })
+                                            }
                                         }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
                                     </Tooltip>
                                 }}
-                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN, "Where": "$=" },
+                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN||this.props.DGIMN, "Where": "$=" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
                             ></AutoFormTable>}
-
+                            {this.state.visible && <ViewImagesModal />}
                         {/* <BdTestRecordContent TaskID="1f22ede2-68a0-4594-a93b-a5f706fe6662" /> */}
                     </Card.Grid>
                 </Card>
