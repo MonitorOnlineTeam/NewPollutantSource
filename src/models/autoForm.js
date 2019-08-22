@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
@@ -74,53 +74,6 @@ export default Model.extend({
             group = []
           }
         }
-<<<<<<< HEAD
-        console.log("group=", group)
-  
-        const postData = {
-          configId: payload.configId,
-          pageIndex: searchForm.current || 1,
-          pageSize: searchForm.pageSize || 10,
-          ...payload.otherParams
-        };
-        const searchParams = payload.searchParams || [];
-        debugger
-        (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
-          // group.length? postData.ConditionWhere = JSON.stringify({
-          "rel": "$and",
-          "group": [{ 
-            "rel": "$and",
-            group: [
-              ...group,
-              ...searchParams
-            ]
-          }]
-        }) : '';
-        debugger
-        const result = yield call(services.getListPager, { ...postData });
-        if (result.IsSuccess) {
-          state = yield select(state => state.autoForm);
-          // const configId = payload.configId;
-          // const configId = "TestCommonPoint";
-  
-          yield update({
-            // configIdList: {
-            //   [payload.configId]: result.data
-            // }
-            tableInfo: {
-              ...state.tableInfo,
-              [configId]: {
-                ...state.tableInfo[configId],
-                dataSource: result.Datas.DataSource,
-              }
-            },
-            searchForm: {
-              ...state.searchForm,
-              [configId]: {
-                ...state.searchForm[configId],
-                total: result.Total,
-              }
-=======
       }
       console.log("group=", group)
 
@@ -160,7 +113,6 @@ export default Model.extend({
             [configId]: {
               ...state.tableInfo[configId],
               dataSource: result.Datas.DataSource,
->>>>>>> 5878b307050fbb8bdee567b183a9a58a682fde21
             }
           },
           searchForm: {
