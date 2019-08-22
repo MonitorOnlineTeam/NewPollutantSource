@@ -96,6 +96,7 @@ class SdlForm extends PureComponent {
   }
 
   componentDidMount() {
+    debugger;
     const { addFormItems, dispatch, noLoad } = this.props;
     const { configId, isEdit, keysParams, uid } = this._SELF_;
     // if (!addFormItems || addFormItems.length === 0) {
@@ -155,7 +156,6 @@ class SdlForm extends PureComponent {
     }
     // 年-月-日 时:分:秒
     return <DatePicker showTime format={format} style={{ width: '100%' }} />
-
   }
 
   // 渲染FormItem
@@ -356,17 +356,17 @@ class SdlForm extends PureComponent {
         // AT-UserID, AT-UserName,AT-GetDate
         const currentUser = JSON.parse(Cookie.get('currentUser'));
         switch (item.defaultValue) {
-          case "AT-UserID":
+          case 'AT-UserID':
             console.log('AT-UserID=', currentUser.UserId)
             initialValue = currentUser.UserId
             break;
-          case "AT-UserName":
+          case 'AT-UserName':
             console.log('AT-UserName=', currentUser.UserName)
             initialValue = currentUser.UserName
             break;
-          case "AT-GetDate":
-            console.log('AT-GetDate=', moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss"))
-            initialValue = moment().format(item.dateFormat || "YYYY-MM-DD HH:mm:ss")
+          case 'AT-GetDate':
+            console.log('AT-GetDate=', moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss'))
+            initialValue = moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss')
             break;
           default:
             break;
@@ -402,7 +402,7 @@ class SdlForm extends PureComponent {
             pattern: `/${reg}/`,
             message: "格式错误。",
           }
-        } else if (checkRules[vid.replace(/\'/g, "")]) {
+        } if (checkRules[vid.replace(/\'/g, "")]) {
           return checkRules[vid.replace(/\'/g, "")]
         } else {
           return {}
@@ -450,7 +450,7 @@ class SdlForm extends PureComponent {
   _onSubmitForm() {
     const { form, onSubmitForm } = this.props;
     const { uid, configId, isEdit, keysParams } = this._SELF_;
-    console.log('submitFormData=',this.props.form.getFieldsValue())
+    console.log('submitFormData=', this.props.form.getFieldsValue())
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // let formData = {};

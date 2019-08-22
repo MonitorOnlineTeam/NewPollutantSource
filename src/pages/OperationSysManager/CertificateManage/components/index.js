@@ -30,11 +30,11 @@ import { handleFormData } from '@/utils/utils';
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.DGIMN !== this.props.DGIMN) {
+        if (nextProps.UserID !== this.props.UserID) {
             {
                const pointDataWhere = [{
-                     Key: '[dbo]__[T_Bas_EquipmentInfo]__PointCode',
-                     Value: nextProps.DGIMN,
+                     Key: '[dbo]__[T_Bas_CertificateInfo]__User_ID',
+                     Value: nextProps.UserID,
                      Where: '$=',
                    },
                  ];
