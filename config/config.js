@@ -277,7 +277,7 @@ export default {
                 {
                   path: '/operations/log',
                   name: "log",
-                  component: "./operations/Log"
+                  component: "./operations/LogPage"
                 },
                 {
                   path: '/operations/operationRecord',

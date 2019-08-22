@@ -89,14 +89,13 @@ class OperationRecord extends Component {
 
     getRecordType = (key) => {
         var configid = ''
-        var search = []
         if (this.state.PollutantTypeByPoint == "2") {
             switch (key) {
                 case 1://维修记录表
                     configid = 'FormMainInfoRepair'
                     break;
                 case 2://停机记录表
-                    configid = ''
+                    configid = 'FormMainInfoStop'
                     break;
                 case 3://易耗品更换记录表
                     configid = 'FormMainInfoCon'
@@ -127,13 +126,8 @@ class OperationRecord extends Component {
         else {
             configid = 'FormMainInfoPic'
         }
-        search = [{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN, "Where": "$=" },
-        { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }]
         this.setState({
             configName: configid,
-            search
         })
         return configid
     }
@@ -197,10 +191,15 @@ class OperationRecord extends Component {
                                 </Tooltip>
 
                             }}
-                            searchParams={this.state.search}
+                            searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN, "Where": "$=" },
+                            { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
+                            { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
+                            { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
+                            ]}
                             {...this.props}
                         // searchParams={[
                         //   {
+                            
                         //     Key: "test",
                         //     Value: false,
                         //     Where: "$like"

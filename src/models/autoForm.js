@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
@@ -48,7 +48,7 @@ export default Model.extend({
     * getAutoFormData({ payload }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       let group = [];
-      const {configId} = payload;
+      const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
       const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
       console.log('searchForm=', searchForm)
@@ -146,7 +146,7 @@ export default Model.extend({
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '').map((item, index) => ({
           title: item.DF_NAME_CN,
-          dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName  }_Name` : item.FullFieldName,
+          dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
           align: item.DF_ALIGN,
           width: item.DF_WIDTH,
@@ -322,7 +322,7 @@ export default Model.extend({
         const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(item => ({
           type: item.DF_CONTROL_TYPE,
           labelText: item.DF_NAME_CN,
-          fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName  }_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
+          fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
           // configId: item.DT_CONFIG_ID,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
@@ -358,8 +358,8 @@ export default Model.extend({
         fileList = result.Datas.map((item, index) => ({
             uid: index,
             name: item.FileName,
-            status: "done",
-            url: item.Url
+            status: 'done',
+            url: item.Url,
           }))
         yield update({
           fileList,
