@@ -18,6 +18,7 @@ export default Model.extend({
     timeLineList: [],
     timeLineTotal: 0,
     imageList: [],
+    imageListVisible: false,
     // 车辆申请
     VehicleApplication: {
 
@@ -78,9 +79,12 @@ export default Model.extend({
           })
         }
         yield update({
-          imageList: imageList
+          imageList: imageList,
+          imageListVisible: true
         })
-        callback && callback(result)
+        // callback && callback(result)
+      }else{
+        message.error("暂无数据")
       }
     }
   }

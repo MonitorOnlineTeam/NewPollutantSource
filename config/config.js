@@ -285,6 +285,11 @@ export default {
                   component: "./operations/VehicleApplication"
                 },
                 {
+                  path: "/operations/vehicleApprove",
+                  name: "vehicleApprove",
+                  component: "./operations/VehicleApprove"
+                },
+                {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
                   component: "./operations/operationRecord"

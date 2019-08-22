@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
 import { connect } from 'dva';
 import moment from 'moment';
+import { router } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import ViewImagesModal from './ViewImagesModal'
 import NavigationTree from '@/components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker'
 import styles from '../index.less'
@@ -23,6 +25,7 @@ function getBase64(file) {
   timeLineList: operations.timeLineList,
   timeLineTotal: operations.timeLineTotal,
   imageList: operations.imageList,
+  imageListVisible: operations.imageListVisible,
 }))
 class LogTimeList extends Component {
   constructor(props) {
@@ -126,6 +129,8 @@ class LogTimeList extends Component {
                 if (node.PollutantType != 2) {
                   // 查看图片
                   this.getOperationImageList(node)
+                }else{
+                  router.push(`/operations/recordForm/${node.TypeID}/${"a9f52d68-1a80-4d84-8672-db1eb9b6a115"}`)
                 }
               }}
             >
@@ -160,17 +165,8 @@ class LogTimeList extends Component {
       type: "operations/getOperationImageList",
       payload: {
         FormMainID: data.MainFormID
+        // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
       },
-      callback: (res) => {
-        if (res.Datas) {
-          this.setState({
-            visible: true
-          })
-        } else {
-          message.warning("暂无数据！")
-        }
-
-      }
     })
   }
 
@@ -181,24 +177,6 @@ class LogTimeList extends Component {
       this.getOperationLogList()
     })
   }
-
-  modalHandleCancel = e => {
-    this.setState({
-      visible: false,
-      // previewVisible: false,
-    });
-  };
-
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    console.log('file=', file)
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-    });
-  };
 
 
   render() {
@@ -267,33 +245,9 @@ class LogTimeList extends Component {
           }
           {/* </div> */}
         </Card>
-        <Modal
-          title="详情"
-          visible={this.state.visible}
-          footer=""
-          // onOk={this.handleOk}
-          onCancel={this.modalHandleCancel}
-        >
-          <div style={{ overflow: "hidden" }}>
-            <Upload
-              action=""
-              listType="picture-card"
-              fileList={imageList}
-              disabled
-              onPreview={this.handlePreview}
-            // onChange={this.handleChange}
-            >
-              {/* {fileList.length >= 8 ? null : uploadButton} */}
-            </Upload>
-            <Modal visible={previewVisible} width={800} footer={null} onCancel={() => {
-              this.setState({
-                previewVisible: false
-              })
-            }}>
-              <img alt="example" style={{ width: '100%' }} src={previewImage} />
-            </Modal>
-          </div>
-        </Modal>
+        {
+          this.props.imageListVisible && <ViewImagesModal />
+        }
       </>
     );
   }
