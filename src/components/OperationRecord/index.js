@@ -193,6 +193,16 @@ class OperationRecord extends Component {
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
         });
+        if (this.state.RecordType=='8') {
+            this.props.dispatch({
+                type: 'operationform/getjzhistoryinfo',
+                payload: {
+                    DGIMN: this.state.DGIMN,
+                    BeginTime:  date[0].format('YYYY-MM-DD HH:mm:ss'),
+                    EndTime:date[1].format('YYYY-MM-DD HH:mm:ss')
+                }
+            })
+        }
     };
 
     render() {

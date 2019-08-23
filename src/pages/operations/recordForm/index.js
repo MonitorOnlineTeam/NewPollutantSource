@@ -18,6 +18,7 @@ import StopCemsRecordContent from '@/pages/EmergencyTodoList/StopCemsRecordConte
 import JzRecordContent from '@/pages/EmergencyTodoList/JzRecordContent'
 import Button from 'antd/es/button/button';
 import {FormIcon } from '@/utils/icon';
+import { router } from 'umi'
 
 
 
@@ -75,7 +76,9 @@ class Index extends Component {
         return (
             <PageHeaderWrapper>
                 <div width="70%" style={{ backgroundColor: '#fff' }}>
-                    <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }}><FormIcon />任务单</Button>
+                    <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={()=>{
+                       router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
+                    }}><FormIcon />任务单</Button>
                     <Button style={{ marginTop: 5, marginLeft: 10 }} onClick={() => {
                         history.go(-1)
                     }}>返回</Button>

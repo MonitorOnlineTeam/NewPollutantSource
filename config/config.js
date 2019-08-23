@@ -496,7 +496,9 @@ export default {
                 },
               ],
             },
-
+             /* 任务详情 */
+             { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
+ 
             {
               component: '404',
             },
