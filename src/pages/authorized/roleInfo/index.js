@@ -384,7 +384,9 @@ class RoleIndex extends Component {
 
         this.props.dispatch({
             type: 'roleinfo/getrolestreeandobj',
-            payload: {}
+            payload: {
+                Type:'1'
+            }
         })
         this.setState({
             visible: true,
