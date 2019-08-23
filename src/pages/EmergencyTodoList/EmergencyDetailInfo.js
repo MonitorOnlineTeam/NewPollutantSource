@@ -290,6 +290,43 @@ class EmergencyDetailInfo extends Component {
             </Button>
         );
     }
+    getUserIcon=(data)=>{
+        var iconList=[]
+        if(data)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                if(data[i].CertificateTypeID==240)//废气
+                {
+                    var gasUrl='/废气.png'
+                    if(data[i].IsExpire==false)
+                    {
+                        gasUrl='/废气灰.png'
+                    }
+                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                }
+                if(data[i].CertificateTypeID==241)//水
+                {
+                    var gasUrl='/水.png'
+                    if(data[i].IsExpire==false)
+                    {
+                        gasUrl='/水灰.png'
+                    }
+                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                }
+                if(data[i].CertificateTypeID==242)//voc
+                {
+                    var gasUrl='/voc.png'
+                    if(data[i].IsExpire==false)
+                    {
+                        gasUrl='/voc灰.png'
+                    }
+                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                }
+            }
+        }
+        return iconList
+    }
 
     GetAlarmInfo = (AlarmList, type) => {
         const alarmList = AlarmList.filter(item => item.MsgTypeText === type);
@@ -459,7 +496,7 @@ class EmergencyDetailInfo extends Component {
                             {this.getGoBack()}
                         </div>}
                 >
-
+                    
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
                         <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
@@ -474,7 +511,7 @@ class EmergencyDetailInfo extends Component {
                                 <Description term="任务内容">{isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null}</Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="运维人">{isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}</Description>
+                                <Description term="运维人">{isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
                                 <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
                             </DescriptionList>
                             {
