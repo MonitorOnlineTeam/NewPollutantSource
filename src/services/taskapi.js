@@ -6,7 +6,7 @@ export async function GetTaskRecord(params) {
         TaskID: params.TaskID
     };
 
-    const result = await post('/api/rest/PollutantSourceApi/PTaskProcessing/GetTaskDetails', body, null);
+    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTaskDetails', body, null);
     return result === null ? { Datas: null } : result;
 }
 

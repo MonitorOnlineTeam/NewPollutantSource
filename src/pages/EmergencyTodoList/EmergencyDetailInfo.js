@@ -5,15 +5,17 @@ import { routerRedux } from 'dva/router';
 import { CALL_HISTORY_METHOD } from 'react-router-redux';
 import { async } from 'q';
 import moment from 'moment';
-import Lightbox from "react-image-lightbox-rotate";
+// import Lightbox from "react-image-lightbox-rotate";
 import styles from "./EmergencyDetailInfo.less";
 import DescriptionList from '../../components/DescriptionList';
-import AlarmDetails from '../../components/EmergencyDetailInfo/AlarmDetails';
+// import AlarmDetails from '../../components/EmergencyDetailInfo/AlarmDetails';
 import { EnumRequstResult, EnumPatrolTaskType, EnumPsOperationForm, EnumOperationTaskStatus } from '../../utils/enum';
 import { imgaddress } from '../../config.js';
 import MonitorContent from '../../components/MonitorContent/index';
-import { get } from '../../dvapack/request';
-import "react-image-lightbox/style.css";
+import { get, post, authorpost } from '@/utils/request';
+import { router } from 'umi'
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
+// import "react-image-lightbox/style.css";
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -43,7 +45,8 @@ class EmergencyDetailInfo extends Component {
             TaskID: TaskID,
             moreAlarmList: null,
             visible: false,
-            alarmType: null
+            alarmType: null,
+            visibleImg:false
         };
     }
 
@@ -93,43 +96,49 @@ class EmergencyDetailInfo extends Component {
         });
     }
 
-    renderItem = (data, taskID) => {
+    renderItem = (data, taskID, types) => {
+        debugger
         const rtnVal = [];
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                switch (item.ID) {
-                    case EnumPsOperationForm.Repair:
-                        this.GoToForm(taskID, item.CnName, "RepairRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.StopMachine:
-                        this.GoToForm(taskID, item.CnName, "StopCemsRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.YhpReplace:
-                        this.GoToForm(taskID, item.CnName, "ConsumablesReplaceRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.StandardGasReplace:
-                        this.GoToForm(taskID, item.CnName, "StandardGasRepalceRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CqfPatrol:
-                        this.GoToForm(taskID, item.CnName, "CompleteExtractionRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CyfPatrol:
-                        this.GoToForm(taskID, item.CnName, "DilutionSamplingRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.ClfPatrol:
-                        this.GoToForm(taskID, item.CnName, "DirectMeasurementRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CheckRecord:
-                        this.GoToForm(taskID, item.CnName, "JzRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.TestRecord:
-                        this.GoToForm(taskID, item.CnName, "BdTestRecord", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.DataException:
-                        this.GoToForm(taskID, item.CnName, "DeviceExceptionRecord", rtnVal, key);
-                        break;
-                    default:
-                        break;
+                if (types == "2") {
+                    switch (item.ID) {
+                        case EnumPsOperationForm.Repair:
+                            this.GoToForm(taskID, item.CnName, "1", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.StopMachine:
+                            this.GoToForm(taskID, item.CnName, "2", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.YhpReplace:
+                            this.GoToForm(taskID, item.CnName, "3", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.StandardGasReplace:
+                            this.GoToForm(taskID, item.CnName, "4", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CqfPatrol:
+                            this.GoToForm(taskID, item.CnName, "5", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CyfPatrol:
+                            this.GoToForm(taskID, item.CnName, "6", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.ClfPatrol:
+                            this.GoToForm(taskID, item.CnName, "7", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CheckRecord:
+                            this.GoToForm(taskID, item.CnName, "8", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.TestRecord:
+                            this.GoToForm(taskID, item.CnName, "9", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.DataException:
+                            this.GoToForm(taskID, item.CnName, "10", rtnVal, key);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    this.GoToForm(taskID, item.CnName, "-1", rtnVal, key);
                 }
             }
         });
@@ -137,19 +146,36 @@ class EmergencyDetailInfo extends Component {
     }
 
     GoToForm = (taskID, cnName, recordType, rtnVal, key) => {
-        let taskfrom = this.props.taskfrom || '';
-        if (taskfrom.indexOf("qcontrollist") > -1) {
-            taskfrom = taskfrom.split('-')[0];
-        }
+        // let taskfrom = this.props.taskfrom || '';
+        // if (taskfrom.indexOf("qcontrollist") > -1) {
+        //     taskfrom = taskfrom.split('-')[0];
+        // }
         rtnVal.push(<p key={key} style={{ marginBottom: 0 }}><Button
             style={{ marginBottom: '5px' }}
             icon="check-circle-o"
             onClick={() => {
-                this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
+                if (recordType == "-1") {
+                    // 获取详情图片
+                    this.props.dispatch({
+                        type: "operations/getOperationImageList",
+                        payload: {
+                            FormMainID: row['dbo.T_Bas_Task.ID']
+                            // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                        },
+                        callback: (res) => {
+                            this.setState({
+                                visibleImg: true
+                            })
+                        }
+                    })
+                } else {
+                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                }
+                // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
             }}
         >{cnName}
-                                                             </Button>
-                    </p>);
+        </Button>
+        </p>);
     }
 
     //获取撤单按钮
@@ -287,6 +313,38 @@ class EmergencyDetailInfo extends Component {
             </Button>
         );
     }
+    getUserIcon = (data) => {
+        var iconList = []
+        if (data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].CertificateTypeID == 240)//废气
+                {
+                    var gasUrl = '/废气.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/废气灰.png'
+                    }
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                }
+                if (data[i].CertificateTypeID == 241)//水
+                {
+                    var gasUrl = '/水.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/水灰.png'
+                    }
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                }
+                if (data[i].CertificateTypeID == 242)//voc
+                {
+                    var gasUrl = '/voc.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/voc灰.png'
+                    }
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                }
+            }
+        }
+        return iconList
+    }
 
     GetAlarmInfo = (AlarmList, type) => {
         const alarmList = AlarmList.filter(item => item.MsgTypeText === type);
@@ -314,17 +372,17 @@ class EmergencyDetailInfo extends Component {
             );
         }
         //是否存在任务信息
-        const isExistTask = this.props.taskInfo.requstresult == EnumRequstResult.Success && this.props.taskInfo.data !== null && this.props.taskInfo.data.length > 0;
+        const isExistTask = this.props.taskInfo.IsSuccess && this.props.taskInfo.Datas !== null && this.props.taskInfo.Datas.length > 0;
         let AlarmList = []; // 报警记录
         let Attachments = ''; // 附件
         let TaskLogList = []; // 任务日志列表
         let RecordTypeInfo = [];
         if (isExistTask) {
-            Attachments = this.props.taskInfo.data[0].Attachments;
-            TaskLogList = this.props.taskInfo.data[0].TaskLogList;
-            RecordTypeInfo = this.props.taskInfo.data[0].TaskFormList;
-            if (this.props.taskInfo.data[0].AlarmList.length > 0) {
-                this.props.taskInfo.data[0].AlarmList[0].map((item) => {
+            Attachments = this.props.taskInfo.Datas[0].Attachments;
+            TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
+            RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
+            if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+                this.props.taskInfo.Datas[0].AlarmList[0].map((item) => {
                     if (item !== null) {
                         let AlarmType = "";
                         let AlarmCount = 0;
@@ -413,8 +471,8 @@ class EmergencyDetailInfo extends Component {
                                 }
                             }
                         >{item}
-                                         </a>{dot}
-                                   </span>);
+                        </a>{dot}
+                        </span>);
                     });
                     return {
                         children: types
@@ -452,7 +510,7 @@ class EmergencyDetailInfo extends Component {
                     title={<span style={{ fontWeight: '900' }}>任务详情</span>}
                     extra={
                         <div>
-                            <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.data[0].CreateTime : null, isExistTask ? this.props.taskInfo.data[0].TaskStatus : null)}</span>
+                            <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
                             {this.getGoBack()}
                         </div>}
                 >
@@ -460,34 +518,34 @@ class EmergencyDetailInfo extends Component {
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
                         <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
-                                <Description term="任务单号">{isExistTask ? this.props.taskInfo.data[0].TaskCode : null}</Description>
-                                <Description term="排口">{isExistTask ? this.props.taskInfo.data[0].PointName : null}</Description>
-                                <Description term="企业">{isExistTask ? this.props.taskInfo.data[0].EnterpriseName : null}</Description>
+                                <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
+                                <Description term="排口">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
+                                <Description term="企业">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="任务来源">{isExistTask ? this.props.taskInfo.data[0].TaskFromText : null}</Description>
-                                <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.data[0].EmergencyStatusText : null}</div></Description>
-                                <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.data[0].TaskStatusText : null}</div></Description>
-                                <Description term="任务内容">{isExistTask ? this.props.taskInfo.data[0].TaskDescription : null}</Description>
+                                <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
+                                <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description>
+                                <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}</div></Description>
+                                <Description term="任务内容">{isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null}</Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="运维人">{isExistTask ? this.props.taskInfo.data[0].OperationsUserName : null}</Description>
-                                <Description term="创建时间">{isExistTask ? this.props.taskInfo.data[0].CreateTime : null}</Description>
+                                <Description term="运维人">{isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
+                                <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
                             </DescriptionList>
                             {
-                                (isExistTask ? this.props.taskInfo.data[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
+                                (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
                             }
 
                             {
 
-                                (isExistTask ? this.props.taskInfo.data[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                                <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
+                                (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
+                                    <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
                             }
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20 }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
-                                    <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.data[0].Remark : null} />
+                                    <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].Remark : null} />
                                 </Description>
                             </DescriptionList>
                         </Card>
@@ -495,16 +553,16 @@ class EmergencyDetailInfo extends Component {
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
-                                        this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.data[0].TaskID : null)
+                                        this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType)
                                     }
                                 </Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="2">
                                 <Description term="处理人">
-                                    {isExistTask ? this.props.taskInfo.data[0].OperationsUserName : null}
+                                    {isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}
                                 </Description>
                                 <Description term="处理时间">
-                                    {isExistTask ? this.props.taskInfo.data[0].CompleteTime : null}
+                                    {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}
                                 </Description>
                             </DescriptionList>
                         </Card>
@@ -550,22 +608,23 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
                 {this.state.previewVisible && (
-                    <Lightbox
-                        mainSrc={ImageList[photoIndex]}
-                        nextSrc={ImageList[(photoIndex + 1) % ImageList.length]}
-                        prevSrc={ImageList[(photoIndex + ImageList.length - 1) % ImageList.length]}
-                        onCloseRequest={() => this.setState({ previewVisible: false })}
-                        onPreMovePrevRequest={() =>
-                            this.setState({
-                                photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
-                            })
-                        }
-                        onPreMoveNextRequest={() =>
-                            this.setState({
-                                photoIndex: (photoIndex + 1) % ImageList.length
-                            })
-                        }
-                    />
+                    <div></div>
+                    // <Lightbox
+                    //     mainSrc={ImageList[photoIndex]}
+                    //     nextSrc={ImageList[(photoIndex + 1) % ImageList.length]}
+                    //     prevSrc={ImageList[(photoIndex + ImageList.length - 1) % ImageList.length]}
+                    //     onCloseRequest={() => this.setState({ previewVisible: false })}
+                    //     onPreMovePrevRequest={() =>
+                    //         this.setState({
+                    //             photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
+                    //         })
+                    //     }
+                    //     onPreMoveNextRequest={() =>
+                    //         this.setState({
+                    //             photoIndex: (photoIndex + 1) % ImageList.length
+                    //         })
+                    //     }
+                    // />
                 )}
 
                 <Modal
@@ -576,8 +635,9 @@ class EmergencyDetailInfo extends Component {
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                 >
-                    <AlarmDetails data={isExistTask ? this.state.moreAlarmList : []} />
+                    {/* <AlarmDetails data={isExistTask ? this.state.moreAlarmList : []} /> */}
                 </Modal>
+                {this.state.visibleImg && <ViewImagesModal />}
             </div>
         );
     }

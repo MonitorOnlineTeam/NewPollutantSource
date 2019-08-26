@@ -77,7 +77,7 @@ export async function GetAlarmResponseList(params) {
         TaskId: params.TaskID
     };
 
-    const result = post('/api/rest/PollutantSourceApi/PWorkbench/GetAlarmResponseList', body, null);
+    const result = post('/api/rest/PollutantSourceApi/PWorkbench/GetAlarmResponseList?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', body, null);
 
     return result === null ? {
         Datas: null

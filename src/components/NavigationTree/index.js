@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
@@ -32,8 +32,8 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   ConfigInfo: global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
   PollutantType: navigationtree.PollutantType,
-  EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
-  PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
+  EntAndPointLoading: loading.effects['navigationtree/getentandpoint'],
+  PollutantTypeLoading: loading.effects['navigationtree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
@@ -177,6 +177,7 @@ class NavigationTree extends Component {
         this.state.panelDataList.push(pushItem)
         // }
       }
+      console.log('entandpoint=',data)
       if (this.defaultKey == 0 && node.IsEnt == 0) {
         this.defaultKey = 1;
         var nowKey = [key]
@@ -698,6 +699,7 @@ class NavigationTree extends Component {
 
 
           {this.state.treeVis ? <div >
+            {console.log('this.props.EntAndPointLoading=',this.props.EntAndPointLoading)}
             {
               this.props.EntAndPointLoading ? <Spin
                 style={{
@@ -741,7 +743,7 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer" }}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer",maxHeight: 'calc(100vh - 330px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 
