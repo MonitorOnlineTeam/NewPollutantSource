@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
   Form,
   Select,
   Input,
   Button,
   Drawer,
-  Radio,
+  Popover,
   Collapse,
   Table,
   Badge,
@@ -14,13 +14,16 @@ import {
   Row,
   Spin,
   Empty,
-  Col,
+  Tag,
   Tooltip,
 } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
+import {
+  ManIcon,
+  WomanIcon,
+} from '@/utils/icon';
 import global from '@/global.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
@@ -32,6 +35,7 @@ const floats = Setting.layout
 @connect(({ usertree, loading }) => ({
   UserList: usertree.UserList,
   IsLoading: loading.effects['usertree/GetUserList'],
+  selectedKeys: usertree.selectedKeys,
 }))
 @Form.create()
 class UserTree extends Component {
@@ -41,12 +45,14 @@ class UserTree extends Component {
     this.state = {
       visible: true,
       right: floats === 'topmenu' ? 'caret-left' : 'caret-right',
-      selectedKeys: [],
+      selectedKeys: this.props.selectedKeys,
     }
   }
 
 
+  /** 初始化加载 */
   componentDidMount() {
+    debugger;
     const dom = document.querySelector(this.props.domId);
     if (dom) {
       floats === 'topmenu' ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
@@ -55,10 +61,46 @@ class UserTree extends Component {
     dispatch({
       type: 'usertree/GetUserList',
       payload: {
+        callback: () => {
+          this.generateList();
+        },
       },
     })
+    // this.generateList();
   }
 
+  /** props改变 */
+  componentWillReceiveProps(nextProps) {
+          if (this.props.selKeys !== nextProps.selKeys) {
+            this.defaultKey = 0;
+            this.generateList(nextProps.selKeys)
+          }
+        }
+
+  /** 默认选中 */
+  generateList=selKeys => {
+    debugger;
+   const { UserList } = this.props;
+   const node = UserList[0];
+   const { UserID } = node;
+   let nowKey = [UserID];
+   if (selKeys || this.props.selKeys) {
+     nowKey = [selKeys || this.props.selKeys];
+      this.props.dispatch({
+        type: 'usertree/updateState',
+        payload: {
+          selectedKeys: nowKey,
+        },
+      })
+   } else if (this.props.selectedKeys.length !== 0) {
+        nowKey = this.props.selectedKeys
+      }
+   this.setState({
+          selectedKeys: nowKey,
+        })
+        const rtnKey = [{ UserID: nowKey[0] }]
+        this.props.onItemClick && this.props.onItemClick(rtnKey)
+  }
 
   showDrawer = () => {
     this.setState({
@@ -72,11 +114,6 @@ class UserTree extends Component {
     });
   };
 
-  onChange = e => {
-    this.setState({
-      placement: e.target.value,
-    });
-  };
 
   // 污染物筛选
   handleChange = value => {
@@ -139,28 +176,13 @@ class UserTree extends Component {
     });
   };
 
-  onExpand = expandedKeys => {
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
-    this.setState({
-      expandedKeys,
-      autoExpandParent: false,
-    });
-    this.props.dispatch({
-      type: 'navigationtree/updateState',
-      payload: {
-        overallexpkeys: expandedKeys,
-      },
-    })
-  };
-
 
   /** table 选中行 */
   onClickRow = record => ({
       onClick: () => {
         this.setState({
           selectedKeys: [record.UserID],
-        }, () => { this.returnData([record]) });
+        }, () => { this.returnData(record) });
       },
     })
 
@@ -170,8 +192,12 @@ class UserTree extends Component {
      const rtnList = [];
       rtnList.push({
          UserID: record.UserID,
-         RolesID: record.RolesID,
-         UserGroupID: record.UserGroupID,
+       })
+       this.props.dispatch({
+         type: 'usertree/updateState',
+         payload: {
+           selectedKeys: [record.UserID],
+         },
        })
      // 向外部返回选中的数据
      this.props.onItemClick && this.props.onItemClick(rtnList);
@@ -185,14 +211,14 @@ class UserTree extends Component {
         title: 'UserSex',
         dataIndex: 'UserSex',
         width: '10%',
-        render: (text, record) => (record.UserSex === 1 ? < a > < PanelWaterIcon style = {
+        render: (text, record) => (record.UserSex === 1 ? <a title="男"> <ManIcon style = {
             {
-              fontSize: 25,
+              fontSize: '35px',
             }
           }
-          /></a > : < a > < PanelGasIcon style = {
+          /></a > : < a title="女"> <WomanIcon style = {
             {
-              fontSize: 25,
+              fontSize: 35,
             }
           }
           /></a >),
@@ -200,32 +226,34 @@ class UserTree extends Component {
       {
         title: 'UserName',
         dataIndex: 'UserName',
-        width: '20%',
+
         render: (text, record) => <span> <b style = {
           {
-            fontSize: 15,
+            fontSize: 12,
           }
         } > {
           record.UserName
-        } </b></span>,
+        } </b><br></br><span style={{ fontSize: 10 }}>{record.Phone}</span></span>,
       },
       {
         title: 'UserGroupName',
         dataIndex: 'UserGroupName',
-        width: '70%',
-        render: (text, record) => <span > <b style = {
-            {
-              fontSize: 10,
-            }
-          } > {
-            record.RolesName
-          } </b><br></br > < span style = {
-            {
-              fontSize: 10,
-            }
-          } > {
-            record.UserGroupName
-          } </span></span >,
+        width: '40%',
+        render: (text, record) =>
+           <Fragment>
+          {
+            record.UserGroupName &&
+            <Popover placement = "topLeft" title = "部门：" content = { record.UserGroupName } arrowPointAtCenter > <Tag color="blue">部门</Tag>
+            </Popover>
+
+          }
+          {
+            record.RolesName &&
+            < Popover placement = "topLeft" title = "角色：" content = { record.RolesName } arrowPointAtCenter > <Tag color="geekblue">角色</Tag>
+                              </Popover>
+          }
+          </Fragment>
+          ,
       },
     ]
     return (
