@@ -1,6 +1,6 @@
 import Model from '@/utils/model';
 import {
-    getrecordtypebymn
+    getrecordtypebymn,getjzhistoryinfo
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 /*
@@ -13,6 +13,7 @@ export default Model.extend({
 
     state: {
         RecordTypeTree: [],
+        JZDatas:[],
     },
     subscriptions: {
         setup({
@@ -25,7 +26,7 @@ export default Model.extend({
     },
 
     effects: {
-        /*【智能监控】获取污染物系统污染物**/
+        /*【智能运维】获取污染物系统污染物**/
         * getrecordtypebymn({
             payload
         }, {
@@ -36,6 +37,20 @@ export default Model.extend({
             if (result.IsSuccess) {
                 yield update({
                     RecordTypeTree: result.Datas
+                });
+            }
+        },
+        /*【智能运维】获取零点量程漂移与校准记录表**/
+        * getjzhistoryinfo({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const result = yield call(getjzhistoryinfo, { ...payload });
+            if (result.IsSuccess) {
+                yield update({
+                    JZDatas: result.Datas
                 });
             }
         },

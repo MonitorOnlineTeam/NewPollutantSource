@@ -10,7 +10,6 @@ import styles from './index.less'
 
 const { Option } = Select;
 
-
 class LogPage extends Component {
   constructor(props) {
     super(props);

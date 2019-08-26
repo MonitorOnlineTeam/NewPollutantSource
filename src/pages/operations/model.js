@@ -17,7 +17,12 @@ export default Model.extend({
     recordTypeList: [],
     timeLineList: [],
     timeLineTotal: 0,
-    imageList: []
+    imageList: [],
+    imageListVisible: false,
+    // 车辆申请
+    VehicleApplication: {
+
+    },
   },
   effects: {
     // 获取日历信息
@@ -47,7 +52,7 @@ export default Model.extend({
 
     // 获取运维日志信息
     * getOperationLogList({ payload }, { call, put, update }) {
-      console.log('payload=',payload)
+      console.log('payload=', payload)
       const result = yield call(services.getOperationLogList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -72,11 +77,16 @@ export default Model.extend({
               url: config.imgaddress + item
             }
           })
+          yield update({
+            imageListVisible: true
+          })
+          callback && callback(result)
+        } else {
+          message.error("暂无数据")
         }
         yield update({
-          imageList: imageList
+          imageList: imageList,
         })
-        callback && callback(result)
       }
     }
   }

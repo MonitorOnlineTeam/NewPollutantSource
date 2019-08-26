@@ -212,7 +212,7 @@ export default {
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
-               
+
                 {
                   name: 'sparepartmanage',
                   path: '/platformconfig/sparepartmanage/:configId',
@@ -280,9 +280,24 @@ export default {
                   component: "./operations/LogPage"
                 },
                 {
+                  path: "/operations/vehicleApplication",
+                  name: "vehicleApplication",
+                  component: "./operations/VehicleApplication"
+                },
+                {
+                  path: "/operations/vehicleApprove",
+                  name: "vehicleApprove",
+                  component: "./operations/VehicleApprove"
+                },
+                {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
                   component: "./operations/operationRecord"
+                },
+                {
+                  path: '/operations/recordForm/:typeID/:taskID',
+                  name: "recordForm",
+                  component: "./operations/recordForm"
                 }
               ]
             },
@@ -481,7 +496,9 @@ export default {
                 },
               ],
             },
-
+             /* 任务详情 */
+             { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
+ 
             {
               component: '404',
             },

@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_2y1fkmwiyg3.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_wfrixzb31mk.js';
 const style = {
   fontSize: 16,
 }
@@ -35,7 +35,7 @@ export const PanelIcon = () => <IconConfig type="icon-jiedian1" style={{ ...styl
 export const BellIcon = props => <IconConfig type="icon-lingdang" style={{ ...styles }} {...props} />
 export const ManIcon = val => <IconConfig type="icon-nan" style={ val.style } />
 export const WomanIcon = val => <IconConfig type="icon-nv" style={ val.style } />
-
+export const FormIcon = () => <IconConfig type="icon-danzi" style={{ ...style }} />
 /** 视频操作图标 */
 export const Top = () => <IconConfig type="icon-jiantou_xiangshang" style={{ ...style }} />
 export const Down = () => <IconConfig type="icon-jiantou_xiangxia" style={{ ...style }} />
