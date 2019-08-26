@@ -121,15 +121,15 @@ export function asc(a, b) {
 /**
  * autoForm 处理form数据
  * @param {object} values form对象
- * @param {uid} uid 附件唯一标识
+ * @param {cuid} cuid 附件唯一标识
  */
-export function handleFormData(values, uid) {
+export function handleFormData(values) {
   let formData = {};
   for (let key in values) {
     if (values[key] && values[key]["fileList"]) {
       // 处理附件列表
-      if (uid) {
-        formData[key] = uid;
+      if (values.cuid) {
+        formData[key] = values.cuid;
       }
     } else if (values[key] && moment.isMoment(values[key])) {
       // 格式化moment对象

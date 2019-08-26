@@ -91,6 +91,7 @@ class SdlForm extends PureComponent {
       configId: props.configId,
       isEdit: props.isEdit,
     };
+    console.log('uid=', this._SELF_.uid)
     this.renderFormItem = this.renderFormItem.bind(this);
     this.renderContent = this.renderContent.bind(this);
   }
@@ -110,12 +111,15 @@ class SdlForm extends PureComponent {
     // 编辑时获取数据
     if (isEdit) {
       // 获取上传组件文件列表
-      uid && dispatch({
-        type: 'autoForm/getAttachmentList',
-        payload: {
-          FileUuid: uid,
-        },
-      })
+      if (uid) {
+        this.props.form.setFieldsValue({ "cuid": uid })
+        dispatch({
+          type: 'autoForm/getAttachmentList',
+          payload: {
+            FileUuid: uid,
+          },
+        })
+      }
       // 获取编辑页面数据
       // !noLoad && dispatch({
       dispatch({
@@ -129,7 +133,7 @@ class SdlForm extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.fileList !== nextProps.fileList){
+    if (this.props.fileList !== nextProps.fileList) {
       this.setState({
         defaultFileList: nextProps.fileList
       })
@@ -313,6 +317,8 @@ class SdlForm extends PureComponent {
               // onChange: this.handleChange(fieldName),
               onChange(info) {
                 if (info.file.status === 'done') {
+                  console.log('info=', info)
+                  setFieldsValue({ "cuid": uid })
                   // message.success(`${info.file.name} file uploaded successfully`);
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
@@ -465,6 +471,9 @@ class SdlForm extends PureComponent {
         //     formData[key] = values[key] && values[key].toString()
         //   }
         // }
+        // let cuid = isEdit ? uid : cuid();
+        // values.uid = uid;
+        console.log('values====', values)
         let formData = handleFormData(values, uid)
         console.log('!errAddSubmitFormData=', formData);
         // return;
@@ -488,7 +497,7 @@ class SdlForm extends PureComponent {
   }
 
   renderContent() {
-    const { onSubmitForm, form } = this.props;
+    const { onSubmitForm, form, form: { getFieldDecorator, setFieldsValue, getFieldValue } } = this.props;
     const submitFormLayout = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
@@ -505,6 +514,14 @@ class SdlForm extends PureComponent {
           {
             this.renderFormItem()
           }
+          <Col style={{ display: 'none' }}>
+            <FormItem key="cuid">
+              {getFieldDecorator("cuid", {
+              })(
+                <Input />
+              )}
+            </FormItem>
+          </Col>
         </Row>
         {
           this.props.children && this.props.children
