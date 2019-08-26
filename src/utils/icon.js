@@ -33,8 +33,8 @@ export const VocIcon = () => <IconConfig type="icon-ziyuan" style={{ ...style }}
 export const TreeIcon = () => <IconConfig type="icon-jiedian" style={{ ...style }} />
 export const PanelIcon = () => <IconConfig type="icon-jiedian1" style={{ ...styles }} />
 export const BellIcon = props => <IconConfig type="icon-lingdang" style={{ ...styles }} {...props} />
-export const ManIcon = () => <Icon type="icon-nan" style={{ ...style }} />
-export const WomanIcon = () => <Icon type="icon-nv" style={{ ...style }} />
+export const ManIcon = val => <IconConfig type="icon-nan" style={ val.style } />
+export const WomanIcon = val => <IconConfig type="icon-nv" style={ val.style } />
 export const FormIcon = () => <IconConfig type="icon-danzi" style={{ ...style }} />
 /** 视频操作图标 */
 export const Top = () => <IconConfig type="icon-jiantou_xiangshang" style={{ ...style }} />

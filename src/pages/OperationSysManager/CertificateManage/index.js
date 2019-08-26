@@ -26,9 +26,10 @@ import CertificateManage from './components/index'
         };
     }
 
-  changeDgimn = dgimn => {
+  changeDgimn = UserId => {
+      debugger;
     this.setState({
-      dgimn,
+      UserId,
     })
   }
 
@@ -36,12 +37,12 @@ import CertificateManage from './components/index'
         const { match: { params: { configId } } } = this.props;
 
         return (
-            < div id = "CertificateManage" >
+            <div id = "CertificateManage" >
                 <PageHeaderWrapper>
-                 <CertificateManage UserID={this.state.userId} configId={configId} {...this.props} />
+                 <CertificateManage UserID={this.state.UserId} configId={configId} {...this.props} />
                 </PageHeaderWrapper>
                 <UserTree domId="#CertificateManage" onItemClick={value => {
-                            if (value.length > 0 && !value[0].IsEnt) {
+                            if (value.length > 0) {
                             this.changeDgimn(value[0].UserID)
                             }
                         }} />

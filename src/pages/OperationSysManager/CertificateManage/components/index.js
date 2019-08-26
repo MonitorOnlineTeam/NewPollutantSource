@@ -30,6 +30,7 @@ import { handleFormData } from '@/utils/utils';
     }
 
     componentWillReceiveProps(nextProps) {
+        debugger;
         if (nextProps.UserID !== this.props.UserID) {
             {
                const pointDataWhere = [{

@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import {
-    Card, Spin,
+    Card, Spin, Divider, Tooltip, Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import styles from './index.less';
+import {
+  DelIcon,
+} from '@/utils/icon';
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -50,6 +53,18 @@ import styles from './index.less';
         })
     }
 
+    /** 逻辑删除 */
+    delete=ID => {
+        const { dispatch, match } = this.props;
+        dispatch({
+            type: 'operationsysmanage/DeleteOperationSys',
+            payload: {
+                configId: match.params.configId,
+                VehicleInfoID: ID,
+            },
+        });
+    }
+
     render() {
         const { match: { params: { configId } } } = this.props;
         if (this.props.loading) {
@@ -75,6 +90,24 @@ import styles from './index.less';
                         <SdlTable
                             style={{ marginTop: 10 }}
                             configId={configId}
+                            appendHandleRows={row => <Fragment>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="删除">
+                                    <Popconfirm
+                                        title="确认要删除吗?"
+                                        onConfirm={() => {
+                                        this.delete(
+                                            row['dbo.T_Bas_VehicleInfo.ID'],
+                                        );
+                                        }}
+                                        onCancel={this.cancel}
+                                        okText="是"
+                                        cancelText="否"
+                                    >
+                                        <a href="#"><DelIcon /></a>
+                                    </Popconfirm>
+                                    </Tooltip>
+                                </Fragment>}
                             {...this.props}
                         >
                         </SdlTable>

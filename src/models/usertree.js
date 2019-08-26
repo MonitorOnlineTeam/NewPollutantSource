@@ -7,6 +7,7 @@ export default Model.extend({
   namespace: 'usertree',
   state: {
     UserList: [],
+    selectedKeys: [],
   },
   effects: {
       /** 获取用户信息组件 */
@@ -23,6 +24,7 @@ export default Model.extend({
              UserList: [],
            });
          }
+         payload.callback();
       },
   },
 });
