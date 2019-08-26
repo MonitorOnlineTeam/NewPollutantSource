@@ -40,7 +40,7 @@ export default Model.extend({
     detailData: {}, // 详情页面数据
     detailConfigInfo: {}, // 详情页面配置信息,
     regionList: [], // 联动数据
-    fileList: [], // 文件列表
+    fileList: null, // 文件列表
     formLayout: {}, // 添加编辑布局
   },
   effects: {

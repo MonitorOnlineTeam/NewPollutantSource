@@ -215,6 +215,7 @@ class SdlForm extends PureComponent {
           )
           break;
         case '日期框':
+          initialValue = moment(initialValue);
           element = this._rtnDateEl(item);
           break;
         case '单选':
@@ -332,7 +333,8 @@ class SdlForm extends PureComponent {
             };
             if (isEdit) {
               // if (fileList.length) {
-              if (this.state.defaultFileList.length) {
+              if (this.props.fileList) {
+                // if(this.props.)
                 element = <Upload {...props} defaultFileList={this.state.defaultFileList}>
                   <Button>
                     <Icon type="upload" /> 文件上传
