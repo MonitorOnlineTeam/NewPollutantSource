@@ -58,7 +58,7 @@ class LogTimeList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.DGIMN !== nextProps.DGIMN){
+    if (this.props.DGIMN !== nextProps.DGIMN) {
       this.setState({
         DGIMN: nextProps.DGIMN
       }, () => {
@@ -120,22 +120,25 @@ class LogTimeList extends Component {
             position="left"
           // key={node.MainFormID}
           >
-            {`${node.CreateUser}${node.DisplayInfo}`}
+            {`${node.CreateUser}于 ${node.DisplayInfo}`}
             <br />
-            <Tag
-              color="#43b9ff"
-              style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
-              onClick={() => {
-                if (node.PollutantType != 2) {
-                  // 查看图片
-                  this.getOperationImageList(node)
-                }else{
-                  router.push(`/operations/recordForm/${node.TypeID}/${"a9f52d68-1a80-4d84-8672-db1eb9b6a115"}`)
-                }
-              }}
-            >
-              查看详情
+            {
+              node.TypeID !== 0 && <Tag
+                color="#43b9ff"
+                style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
+                onClick={() => {
+                  if (node.PollutantType != 2) {
+                    // 查看图片
+                    this.getOperationImageList(node)
+                  } else {
+                    router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`)
+                  }
+                }}
+              >
+                查看详情
             </Tag>
+            }
+
           </Timeline.Item>
         )
       })
@@ -224,7 +227,7 @@ class LogTimeList extends Component {
           }>
           {/* <div style={{overflowY: "auto", height: "calc(100vh - 282px)"}}> */}
           {
-            timeLineList.length ? <div className={styles.timelineContent} style={{...style}}>
+            timeLineList.length ? <div className={styles.timelineContent} style={{ ...style }}>
               <div className={styles.timeline}>
                 <Timeline>
                   {this.renderTimeLineItem()}

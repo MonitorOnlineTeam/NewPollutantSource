@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Calendar, Badge, Card, Divider, Tag, Empty, message } from 'antd';
 import { connect } from 'dva';
+import { router } from 'umi';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import EnumOperationExceptionType from '@/utils/enum'
 import SdlTable from '@/components/SdlTable'
 import styles from './index.less'
 
@@ -100,7 +100,9 @@ const abnormalColums = [
   {
     title: '操作',
     render: (text, record) => {
-      return <a>详情</a>
+      return <a onClick={()=> {
+        router.push(`/operations/calendar/details/${record.TaskID}/${record.DGIMN}`)
+      }}>详情</a>
     }
   },
 ];

@@ -31,11 +31,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -218,31 +218,31 @@ export default {
                   path: '/platformconfig/sparepartmanage/:configId',
                   component: './OperationSysManager/SparepartManage/',
                 },
-                 {
-                   name: 'standardgasmanage',
-                   path: '/platformconfig/standardgasmanage/:configId',
-                   component: './OperationSysManager/StandardGasManage/',
-                 },
-                  {
-                    name: 'handhelddevicesmanage',
-                    path: '/platformconfig/handhelddevicesmanage/:configId',
-                    component: './OperationSysManager/HandheldDevicesManage/',
-                  },
-                  {
-                    name: 'vehiclemanage',
-                    path: '/platformconfig/vehiclemanage/:configId',
-                    component: './OperationSysManager/VehicleManage/',
-                  },
-                  {
-                    name: 'equipmentinfomanage',
-                    path: '/platformconfig/equipmentinfomanage/:configId',
-                    component: './OperationSysManager/EquipmentInfoManage/',
-                  },
-                    {
-                    name: 'certificatemanage',
-                    path: '/platformconfig/certificatemanage/:configId',
-                    component: './OperationSysManager/CertificateManage/',
-                  },
+                {
+                  name: 'standardgasmanage',
+                  path: '/platformconfig/standardgasmanage/:configId',
+                  component: './OperationSysManager/StandardGasManage/',
+                },
+                {
+                  name: 'handhelddevicesmanage',
+                  path: '/platformconfig/handhelddevicesmanage/:configId',
+                  component: './OperationSysManager/HandheldDevicesManage/',
+                },
+                {
+                  name: 'vehiclemanage',
+                  path: '/platformconfig/vehiclemanage/:configId',
+                  component: './OperationSysManager/VehicleManage/',
+                },
+                {
+                  name: 'equipmentinfomanage',
+                  path: '/platformconfig/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                },
+                {
+                  name: 'certificatemanage',
+                  path: '/platformconfig/certificatemanage/:configId',
+                  component: './OperationSysManager/CertificateManage/',
+                },
               ],
             },
             {
@@ -270,9 +270,29 @@ export default {
               name: "operations",
               routes: [
                 {
+                  path: '/operations',
+                  redirect: '/operations/operationrecord',
+                },
+                {
                   path: '/operations/calendar',
                   name: "calendar",
-                  component: "./operations/CalendarPage"
+                  // component: "./operations/CalendarPage",
+                  routes: [
+                    {
+                      path: '/operations/calendar',
+                      redirect: '/operations/calendar/index',
+                    },
+                    {
+                      path: '/operations/calendar/index',
+                      name: "index",
+                      component: "./operations/CalendarPage",
+                    },
+                    {
+                      path: '/operations/calendar/details/:TaskID/:DGIMN',
+                      name: "calendar",
+                      component: "./EmergencyTodoList/EmergencyDetailInfoLayout",
+                    }
+                  ]
                 },
                 {
                   path: '/operations/log',
@@ -293,6 +313,11 @@ export default {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
                   component: "./operations/operationRecord"
+                },
+                {
+                  path: '/operations/:from/recordForm/:typeID/:taskID',
+                  name: "recordForm",
+                  component: "./operations/recordForm"
                 },
                 {
                   path: '/operations/recordForm/:typeID/:taskID',
@@ -400,7 +425,7 @@ export default {
               name: 'monitoring',
               routes: [
                 {
-                  name:'realtimedata',
+                  name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
 
@@ -415,7 +440,7 @@ export default {
                   path: '/monitoring/mapview',
                   component: './monitoring/mapview',
                 },
-                 {
+                {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
@@ -473,11 +498,11 @@ export default {
                   path: '/dataquery/originaldata',
                   component: './monitoring/originaldata',
                 },
-                 {
-                   name: 'alarmverifyrecord',
-                   path: '/dataquery/alarmverifyrecord',
-                   component: './monitoring/alarmverifyrecord/index',
-                 },
+                {
+                  name: 'alarmverifyrecord',
+                  path: '/dataquery/alarmverifyrecord',
+                  component: './monitoring/alarmverifyrecord/index',
+                },
               ]
             },
             {
@@ -496,9 +521,9 @@ export default {
                 },
               ],
             },
-             /* 任务详情 */
-             { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
- 
+            /* 任务详情 */
+            { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
+
             {
               component: '404',
             },

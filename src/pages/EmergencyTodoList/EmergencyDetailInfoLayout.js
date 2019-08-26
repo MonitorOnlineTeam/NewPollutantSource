@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MonitorContent from '../../components/MonitorContent/index';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 // import "react-image-lightbox/style.css";
 import EmergencyDetailInfo from './EmergencyDetailInfo';
 
@@ -60,9 +60,9 @@ class EmergencyDetailInfoLayout extends Component {
         return (
             //breadCrumbList={this.renderBreadCrumb()}
             <div>
-                <MonitorContent >
+                <PageHeaderWrapper title="任务单详情">
                     <EmergencyDetailInfo {...match.params} history={this.props.history} />
-                </MonitorContent>
+                </PageHeaderWrapper>
             </div>
         );
     }

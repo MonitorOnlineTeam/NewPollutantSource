@@ -97,7 +97,6 @@ class EmergencyDetailInfo extends Component {
     }
 
     renderItem = (data, taskID, types) => {
-        debugger
         const rtnVal = [];
         data.map((item, key) => {
             if (item.FormMainID !== null) {

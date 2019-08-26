@@ -29,3 +29,46 @@ export async function getOperationImageList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
   return result;
 }
+
+// 车辆申请、审批列表
+export async function getVehicleApplicationList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/GetVehicleApplicationList', params, null);
+  return result;
+}
+
+// 获取车辆列表
+export async function getVehicleList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/GetVehicleList?type=' + params.type, null);
+  return result;
+}
+
+// 车辆申请
+export async function addVehicleApplication(params) {
+  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/AddVehicleApplication', params, null);
+  return result;
+}
+
+// 撤销申请
+export async function cancelApplication(params) {
+  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/CancelApplication/' + params.ID, null);
+  return result;
+}
+
+// 车辆审批
+export async function approve(params) {
+  console.log('////2',params)
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/ApprovalApplication/${params.ID}?RefuseReason=${params.RefuseReason}&type=${params.type}`, {}, null);
+  return result;
+}
+
+// 车辆归还
+export async function returnVehicle(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/ReturnVehicle/${params.ID}`, {}, null);
+  return result;
+}
+
+// 车辆归还
+export async function getApplicant(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/GetApplicant`, params, null);
+  return result;
+}
