@@ -8,6 +8,8 @@ export default Model.extend({
   state: {
     UserList: [],
     selectedKeys: [],
+    RolesTree: [],
+    DepartTree: [],
   },
   effects: {
       /** 获取用户信息组件 */
@@ -24,7 +26,39 @@ export default Model.extend({
              UserList: [],
            });
          }
-         payload.callback();
+         payload.callback(result.Datas);
       },
+      /* 获取角色树(带根结点)* */
+      * getrolestreeandobj({
+        payload,
+      }, {
+        call,
+        update,
+      }) {
+        const result = yield call(services.getrolestreeandobj, {
+          ...payload,
+        });
+        if (result.IsSuccess) {
+          yield update({
+            RolesTree: result.Datas,
+          });
+        }
+      },
+       /* 获取部门树(带根结点)* */
+        * getdeparttreeandobj({
+            payload,
+        }, {
+            call,
+            update,
+        }) {
+            const result = yield call(services.getdeparttreeandobj, {
+                ...payload,
+            });
+            if (result.IsSuccess) {
+                yield update({
+                    DepartTree: result.Datas,
+                });
+            }
+        },
   },
 });

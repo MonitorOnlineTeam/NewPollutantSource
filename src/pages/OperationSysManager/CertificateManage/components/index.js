@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import {
-    Card, Spin, Modal, Button, Form,
+    Card, Spin, Modal, Button, Form, Divider, Tooltip, Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
-import cuid from 'cuid';
 import SdlTable from '../../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../../AutoFormManager/SearchWrapper';
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
 import { handleFormData } from '@/utils/utils';
-
+import {
+  DelIcon, EditIcon,
+} from '@/utils/icon';
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -23,26 +24,42 @@ import { handleFormData } from '@/utils/utils';
     constructor(props) {
         super(props);
         this.state = {
-            pointDataWhere: [],
+            DataWhere: [],
             visible: false,
-            uid: cuid(),
+            Evisible: false,
+            keysParams: null,
+            AttachmentID: '',
+            ID: '',
         };
     }
 
+    componentDidMount() {
+      const {
+        configId,
+      } = this.props;
+      this.reloadPage(configId);
+    }
+
     componentWillReceiveProps(nextProps) {
-        debugger;
         if (nextProps.UserID !== this.props.UserID) {
             {
-               const pointDataWhere = [{
+                const { dispatch, configId } = this.props;
+               const DataWhere = [{
                      Key: '[dbo]__[T_Bas_CertificateInfo]__User_ID',
                      Value: nextProps.UserID,
                      Where: '$=',
                    },
                  ];
                  this.setState({
-                     pointDataWhere,
+                   DataWhere,
                  }, () => {
-                     this.reloadPage()
+                   dispatch({
+                     type: 'autoForm/getAutoFormData',
+                     payload: {
+                       configId,
+                       searchParams: this.state.DataWhere,
+                     },
+                   })
                  })
             }
         }
@@ -69,26 +86,73 @@ import { handleFormData } from '@/utils/utils';
       const {
         dispatch,
         form,
-        DGIMN,
+        UserID,
         configId,
       } = this.props;
       form.validateFields((err, values) => {
         if (!err) {
-          const formData = handleFormData(values, this.state.uid);
-          formData.PointCode = DGIMN;
+          const formData = handleFormData(values);
+          formData.User_ID = UserID;
           dispatch({
-            type: 'operationsysmanage/AddEquipmentInfo',
+            type: 'operationsysmanage/Add',
             payload: {
               configId,
               FormData: formData,
+               callback: result => {
+                 if (result.IsSuccess) {
+                   this.setState({
+                     visible: false,
+                   }, () => {
+                     dispatch({
+                       type: 'autoForm/getAutoFormData',
+                       payload: {
+                         configId,
+                         searchParams: this.state.DataWhere,
+                       },
+                     })
+                   })
+                 }
+               },
+            },
+          });
+        }
+      });
+    };
+
+    SaveOk = e => {
+      const {
+        dispatch,
+        form,
+        UserID,
+        configId,
+      } = this.props;
+      form.validateFields((err, values) => {
+        if (!err) {
+          const formData = handleFormData(values);
+          formData.User_ID = UserID;
+
+          dispatch({
+            type: 'operationsysmanage/Edit',
+            payload: {
+              configId,
+              FormData: {
+                ...formData,
+                ID: this.state.ID,
+              },
               callback: result => {
-                  if (result.IsSuccess) {
-                      this.setState({
-                          visible: false,
-                      }, () => {
-                          this.reloadPage();
-                      })
-                  }
+                if (result.IsSuccess) {
+                  this.setState({
+                    Evisible: false,
+                  }, () => {
+                    dispatch({
+                      type: 'autoForm/getAutoFormData',
+                      payload: {
+                        configId,
+                        searchParams: this.state.DataWhere,
+                      },
+                    })
+                  })
+                }
               },
             },
           });
@@ -97,9 +161,9 @@ import { handleFormData } from '@/utils/utils';
     };
 
     render() {
-        console.log('this.props', this.props);
+        console.log('this.props111111111111111111111', this.props);
         const { configId } = this.props;
-        const { pointDataWhere } = this.state;
+        const { DataWhere } = this.state;
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -123,7 +187,7 @@ import { handleFormData } from '@/utils/utils';
                             style={{ marginTop: 10 }}
                             configId={configId}
                             parentcode="ddd"
-                            searchParams={pointDataWhere}
+                            searchParams={DataWhere}
                             appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
                                 <Button icon="plus" type="primary" onClick={() => {
                                     this.setState({
@@ -131,6 +195,43 @@ import { handleFormData } from '@/utils/utils';
                                     })
                                 }}>添加</Button>
                               </Fragment>}
+                            appendHandleRows={row => <Fragment>
+                                     <Tooltip title="编辑">
+                                        <a onClick={() => {
+                                            const keysParams = {
+                                              'dbo.T_Bas_CertificateInfo.ID': row['dbo.T_Bas_CertificateInfo.ID'],
+                                            };
+                                            debugger;
+                                            const arr = row['dbo.T_Bas_CertificateInfo.AttachmentID'] ? row['dbo.T_Bas_CertificateInfo.AttachmentID'].split('|') : [];
+
+                                            this.setState({
+                                             keysParams,
+                                             AttachmentID: arr.length > 0 ? arr[arr.length - 2] : '',
+                                             ID: row['dbo.T_Bas_CertificateInfo.ID'],
+                                            }, () => {
+                                              this.setState({
+                                                Evisible: true,
+                                              })
+                                            })
+                                        }}><EditIcon/></a>
+                                    </Tooltip>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="删除">
+                                    <Popconfirm
+                                        title="确认要删除吗?"
+                                        onConfirm={() => {
+                                        this.delete(
+                                            row['dbo.T_Bas_EquipmentInfo.ID'],
+                                        );
+                                        }}
+                                        onCancel={this.cancel}
+                                        okText="是"
+                                        cancelText="否"
+                                    >
+                                        <a href="#"><DelIcon /></a>
+                                    </Popconfirm>
+                                    </Tooltip>
+                                </Fragment>}
                             {...this.props}
                         >
                         </SdlTable>
@@ -149,6 +250,22 @@ import { handleFormData } from '@/utils/utils';
                               width="50%"
                             >
                               <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
+                        </Modal>
+                          <Modal
+                              title="编辑"
+                              visible={this.state.Evisible}
+                              destroyOnClose // 清除上次数据
+                              onOk={this.SaveOk}
+                              okText="保存"
+                              cancelText="关闭"
+                              onCancel={() => {
+                                this.setState({
+                                  Evisible: false,
+                                });
+                              }}
+                              width="50%"
+                            >
+                              <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
                         </Modal>
                     </Card>
                 </div>
