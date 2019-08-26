@@ -96,7 +96,6 @@ class SdlForm extends PureComponent {
   }
 
   componentDidMount() {
-    debugger;
     const { addFormItems, dispatch, noLoad } = this.props;
     const { configId, isEdit, keysParams, uid } = this._SELF_;
     // if (!addFormItems || addFormItems.length === 0) {
@@ -118,7 +117,8 @@ class SdlForm extends PureComponent {
         },
       })
       // 获取编辑页面数据
-      !noLoad && dispatch({
+      // !noLoad && dispatch({
+      dispatch({
         type: 'autoForm/getFormData',
         payload: {
           configId,
