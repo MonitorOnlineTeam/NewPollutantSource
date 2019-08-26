@@ -155,8 +155,8 @@ class VehicleApprove extends Component {
           align: 'center',
           key: 'operation',
           render: (text, record) => {
-            return <>
-              {record.ApprovalStatus === 0 && <a onClick={() => {
+            if (record.ApprovalStatus === 0) {
+              return <a onClick={() => {
                 this.props.dispatch({
                   type: 'operations/updateState',
                   payload: {
@@ -164,11 +164,9 @@ class VehicleApprove extends Component {
                     approveModalData: record
                   }
                 })
-              }}>审批</a>}
-              
-              {record.VihicleStatus === 1 && record.ApprovalStatus === 1 && 
-              
-              <Popconfirm
+              }}>审批</a>
+            } else if (record.VihicleStatus === 1 && record.ApprovalStatus === 1) {
+              return <Popconfirm
                 title="确认是否归还车辆？"
                 onConfirm={() => {
                   this.props.dispatch({
@@ -184,8 +182,9 @@ class VehicleApprove extends Component {
               >
                 <a>归还</a>
               </Popconfirm>
-              }
-            </>
+            } else {
+              return "-"
+            }
           }
         },
       ],
