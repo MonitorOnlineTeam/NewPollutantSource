@@ -357,8 +357,8 @@ class SdlForm extends PureComponent {
           }
           break;
       }
-      // 添加设置默认值
-      if (!isEdit && item.defaultValue) {
+      // 设置默认值
+      if (item.defaultValue) {
         // AT-UserID, AT-UserName,AT-GetDate
         const currentUser = JSON.parse(Cookie.get('currentUser'));
         switch (item.defaultValue) {
