@@ -15,7 +15,7 @@ import {
   Spin,
   Empty,
   Tag,
-  Tooltip,
+  TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
@@ -32,10 +32,15 @@ const { Search } = Input;
 const floats = Setting.layout
 
 
-@connect(({ usertree, loading }) => ({
+@connect(({
+      usertree,
+      loading,
+    }) => ({
   UserList: usertree.UserList,
   IsLoading: loading.effects['usertree/GetUserList'],
   selectedKeys: usertree.selectedKeys,
+  RolesTreeData: usertree.RolesTree,
+  DepartTree: usertree.DepartTree,
 }))
 @Form.create()
 class UserTree extends Component {
@@ -46,6 +51,9 @@ class UserTree extends Component {
       visible: true,
       right: floats === 'topmenu' ? 'caret-left' : 'caret-right',
       selectedKeys: this.props.selectedKeys,
+      Roles: '',
+      Depart: '',
+      UserName: '',
     }
   }
 
@@ -57,12 +65,16 @@ class UserTree extends Component {
     if (dom) {
       floats === 'topmenu' ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
     }
+    this.getroles();
+    this.getdepart();
     const { dispatch } = this.props;
     dispatch({
       type: 'usertree/GetUserList',
       payload: {
-        callback: () => {
-          this.generateList();
+        callback: model => {
+            if (model.length > 0) {
+              this.generateList();
+            }
         },
       },
     })
@@ -76,6 +88,92 @@ class UserTree extends Component {
             this.generateList(nextProps.selKeys)
           }
         }
+
+  /** 加載角色 */
+  getroles = () => {
+    this.props.dispatch({
+      type: 'usertree/getrolestreeandobj',
+      payload: {
+        Type: '0',
+      },
+    })
+  }
+
+  /** 选中角色加载树 */
+  onRolesChange=value => {
+    const { dispatch } = this.props;
+    this.setState({
+      Roles: value,
+    }, () => {
+    dispatch({
+        type: 'usertree/GetUserList',
+        payload: {
+          RolesID: this.state.Roles,
+          UserGroupID: this.state.Depart,
+          UserName: this.state.UserName,
+          callback: model => {
+            if (model.length > 0) {
+            this.generateList();
+          }
+          },
+        },
+      })
+    })
+  }
+
+  /** 加载部门 */
+  getdepart = () => {
+    this.props.dispatch({
+      type: 'usertree/getdeparttreeandobj',
+      payload: {
+        Type: '0',
+      },
+    })
+  }
+
+  /** 选中部门加载树 */
+  onDepartChange = value => {
+    const { dispatch } = this.props;
+    this.setState({
+      Depart: value,
+    }, () => {
+      dispatch({
+        type: 'usertree/GetUserList',
+        payload: {
+          RolesID: this.state.Roles,
+          UserGroupID: this.state.Depart,
+          UserName: this.state.UserName,
+          callback: model => {
+            if (model.length > 0) {
+              this.generateList();
+            }
+          },
+        },
+      })
+    })
+  }
+
+  /** 文本框搜索 */
+  onChangeSearch=value => {
+    const { dispatch } = this.props;
+    this.setState({
+      UserName: value,
+    }, () => {
+      dispatch({
+        type: 'usertree/GetUserList',
+        payload: {
+          RolesID: this.state.Roles,
+          UserGroupID: this.state.Depart,
+          UserName: this.state.UserName,
+          callback: model => {
+            if (model.length > 0) {
+              this.generateList();
+            }
+          },
+        },
+      })
+    })
+  }
 
   /** 默认选中 */
   generateList=selKeys => {
@@ -270,19 +368,37 @@ class UserTree extends Component {
             marginTop: 64,
           }}
         >
-          <SelectPollutantType
-            mode="multiple"
-            style={{ width: '100%', marginBottom: 10 }}
-            onChange={this.handleChange}
-          />
-          <EnterprisePointCascadeMultiSelect
-            searchRegion
-            onChange={this.regionChange}
-            placeholder="请选择区域"
-          />
+         <TreeSelect
+          // showSearch
+          style={{ width: 300 }}
+          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
+          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+          placeholder="请选择部门"
+          allowClear
+          treeDefaultExpandAll
+          onChange={this.onDepartChange}
+          treeData={this.props.DepartTree}
+          style={{ width: '100%' }}
+        >
+        </TreeSelect>
+        <div style={{ marginTop: '10px' }}>
+          <TreeSelect
+          // showSearch
+          style={{ marginTop: '10px', width: 300 }}
+          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
+          dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
+          placeholder="请选择角色"
+          allowClear
+          treeDefaultExpandAll
+          onChange={this.onRolesChange}
+          treeData={this.props.RolesTreeData}
+          style={{ width: '100%' }}
+      >
+      </TreeSelect>
+      </div>
           <Search
             placeholder="请输入关键字查询"
-            onChange={this.onChangeSearch}
+            onSearch={this.onChangeSearch}
             style={{ marginTop: 10, width: '67%' }}
           />
           <Divider />

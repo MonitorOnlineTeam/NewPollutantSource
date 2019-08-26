@@ -8,9 +8,14 @@ export default Model.extend({
   state: {
   },
   effects: {
-      /** 添加设备资料信息 */
-    * AddEquipmentInfo({ payload }, { call }) {
+      /** 添加 */
+    * Add({ payload }, { call }) {
         const result = yield call(services.postAutoFromDataAdd, { ...payload, FormData: JSON.stringify(payload.FormData) });
+        payload.callback(result);
+      },
+       /** 编辑 */
+    * Edit({ payload }, { call }) {
+        const result = yield call(services.postAutoFromDataUpdate, { ...payload, FormData: JSON.stringify(payload.FormData) });
         payload.callback(result);
       },
       /** 逻辑删除运维系统设置 */
@@ -27,6 +32,7 @@ export default Model.extend({
           type: 'autoForm/getAutoFormData',
           payload: {
             configId: payload.configId,
+            searchParams: payload.searchParams ? payload.searchParams : '',
           },
         })
         }
