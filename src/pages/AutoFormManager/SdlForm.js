@@ -51,6 +51,7 @@ const FormItem = Form.Item;
   editFormData: autoForm.editFormData,
   formItemLayout: autoForm.formLayout,
   fileList: autoForm.fileList,
+  fileLoading: loading.effects['autoForm/getFormData'],
 }))
 
 class SdlForm extends PureComponent {
@@ -112,7 +113,7 @@ class SdlForm extends PureComponent {
     if (isEdit) {
       // 获取上传组件文件列表
       if (uid) {
-        this.props.form.setFieldsValue({ "cuid": uid })
+        this.props.form.setFieldsValue({ cuid: uid })
         dispatch({
           type: 'autoForm/getAttachmentList',
           payload: {
@@ -135,7 +136,7 @@ class SdlForm extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
-        defaultFileList: nextProps.fileList
+        defaultFileList: nextProps.fileList,
       })
     }
   }
@@ -164,7 +165,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList } = this.props;
+    const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -319,7 +320,7 @@ class SdlForm extends PureComponent {
               onChange(info) {
                 if (info.file.status === 'done') {
                   console.log('info=', info)
-                  setFieldsValue({ "cuid": uid })
+                  setFieldsValue({ cuid: uid })
                   // message.success(`${info.file.name} file uploaded successfully`);
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
@@ -333,9 +334,9 @@ class SdlForm extends PureComponent {
             };
             if (isEdit) {
               // if (fileList.length) {
-              if (this.props.fileList) {
+              if (this.props.fileList && !fileLoading) {
                 // if(this.props.)
-                element = <Upload {...props} defaultFileList={this.state.defaultFileList}>
+                element = <Upload {...props} defaultFileList={this.props.fileList}>
                   <Button>
                     <Icon type="upload" /> 文件上传
                   </Button>
@@ -383,19 +384,19 @@ class SdlForm extends PureComponent {
       // 匹配校验规则
       validate = item.validate.map(vid => {
         // 最大长度
-        if (vid.indexOf("maxLength") > -1) {
+        if (vid.indexOf('maxLength') > -1) {
           const max = vid.replace(/[^\d]/g, '') * 1
           return {
             max: max / 1,
             message: `最多输入${max}位`,
           }
-        } if (vid.indexOf("minLength") > -1) { // 最小长度
+        } if (vid.indexOf('minLength') > -1) { // 最小长度
           const min = vid.replace(/[^\d]/g, '') * 1
           return {
             min: min / 1,
             message: `最少输入${min}位`,
           }
-        } if (vid.indexOf("rangeLength") > -1) { // 最小最大长度限制
+        } if (vid.indexOf('rangeLength') > -1) { // 最小最大长度限制
           const range = vid.match(/\d+(,\d+)?/g);
           const max = range[1];
           const min = range[0];
@@ -404,17 +405,16 @@ class SdlForm extends PureComponent {
             min: min / 1,
             message: `最少输入${min}位, 最多输入${max}位。`,
           }
-        } if (vid.indexOf("reg") > -1) { // 自定义正则
-          const reg = vid.replace("reg", "");
+        } if (vid.indexOf('reg') > -1) { // 自定义正则
+          const reg = vid.replace('reg', '');
           return {
             pattern: `/${reg}/`,
-            message: "格式错误。",
+            message: '格式错误。',
           }
-        } if (checkRules[vid.replace(/\'/g, "")]) {
-          return checkRules[vid.replace(/\'/g, "")]
-        } else {
-          return {}
+        } if (checkRules[vid.replace(/\'/g, '')]) {
+          return checkRules[vid.replace(/\'/g, '')]
         }
+          return {}
       })
       if (element) {
         // 布局方式
@@ -518,9 +518,9 @@ class SdlForm extends PureComponent {
           }
           <Col style={{ display: 'none' }}>
             <FormItem key="cuid">
-              {getFieldDecorator("cuid", {
+              {getFieldDecorator('cuid', {
               })(
-                <Input />
+                <Input />,
               )}
             </FormItem>
           </Col>

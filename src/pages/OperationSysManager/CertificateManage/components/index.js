@@ -265,7 +265,7 @@ import {
                               }}
                               width="50%"
                             >
-                              <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
+                              <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
                         </Modal>
                     </Card>
                 </div>
