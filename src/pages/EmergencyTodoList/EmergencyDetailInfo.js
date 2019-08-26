@@ -12,8 +12,9 @@ import DescriptionList from '../../components/DescriptionList';
 import { EnumRequstResult, EnumPatrolTaskType, EnumPsOperationForm, EnumOperationTaskStatus } from '../../utils/enum';
 import { imgaddress } from '../../config.js';
 import MonitorContent from '../../components/MonitorContent/index';
-import { get,post,authorpost } from '@/utils/request';
+import { get, post, authorpost } from '@/utils/request';
 import { router } from 'umi'
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
 // import "react-image-lightbox/style.css";
 
 const { Description } = DescriptionList;
@@ -44,7 +45,8 @@ class EmergencyDetailInfo extends Component {
             TaskID: TaskID,
             moreAlarmList: null,
             visible: false,
-            alarmType: null
+            alarmType: null,
+            visibleImg:false
         };
     }
 
@@ -94,44 +96,49 @@ class EmergencyDetailInfo extends Component {
         });
     }
 
-    renderItem = (data, taskID) => {
+    renderItem = (data, taskID, types) => {
         debugger
         const rtnVal = [];
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                switch (item.ID) {
-                    case EnumPsOperationForm.Repair:
-                        this.GoToForm(taskID, item.CnName, "1", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.StopMachine:
-                        this.GoToForm(taskID, item.CnName, "2", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.YhpReplace:
-                        this.GoToForm(taskID, item.CnName, "3", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.StandardGasReplace:
-                        this.GoToForm(taskID, item.CnName, "4", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CqfPatrol:
-                        this.GoToForm(taskID, item.CnName, "5", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CyfPatrol:
-                        this.GoToForm(taskID, item.CnName, "6", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.ClfPatrol:
-                        this.GoToForm(taskID, item.CnName, "7", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.CheckRecord:
-                        this.GoToForm(taskID, item.CnName, "8", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.TestRecord:
-                        this.GoToForm(taskID, item.CnName, "9", rtnVal, key);
-                        break;
-                    case EnumPsOperationForm.DataException:
-                        this.GoToForm(taskID, item.CnName, "10", rtnVal, key);
-                        break;
-                    default:
-                        break;
+                if (types == "2") {
+                    switch (item.ID) {
+                        case EnumPsOperationForm.Repair:
+                            this.GoToForm(taskID, item.CnName, "1", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.StopMachine:
+                            this.GoToForm(taskID, item.CnName, "2", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.YhpReplace:
+                            this.GoToForm(taskID, item.CnName, "3", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.StandardGasReplace:
+                            this.GoToForm(taskID, item.CnName, "4", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CqfPatrol:
+                            this.GoToForm(taskID, item.CnName, "5", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CyfPatrol:
+                            this.GoToForm(taskID, item.CnName, "6", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.ClfPatrol:
+                            this.GoToForm(taskID, item.CnName, "7", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.CheckRecord:
+                            this.GoToForm(taskID, item.CnName, "8", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.TestRecord:
+                            this.GoToForm(taskID, item.CnName, "9", rtnVal, key);
+                            break;
+                        case EnumPsOperationForm.DataException:
+                            this.GoToForm(taskID, item.CnName, "10", rtnVal, key);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    this.GoToForm(taskID, item.CnName, "-1", rtnVal, key);
                 }
             }
         });
@@ -139,20 +146,36 @@ class EmergencyDetailInfo extends Component {
     }
 
     GoToForm = (taskID, cnName, recordType, rtnVal, key) => {
-        let taskfrom = this.props.taskfrom || '';
-        if (taskfrom.indexOf("qcontrollist") > -1) {
-            taskfrom = taskfrom.split('-')[0];
-        }
+        // let taskfrom = this.props.taskfrom || '';
+        // if (taskfrom.indexOf("qcontrollist") > -1) {
+        //     taskfrom = taskfrom.split('-')[0];
+        // }
         rtnVal.push(<p key={key} style={{ marginBottom: 0 }}><Button
             style={{ marginBottom: '5px' }}
             icon="check-circle-o"
             onClick={() => {
-                router.push(`/operations/recordForm/${recordType}/${taskID}`) 
+                if (recordType == "-1") {
+                    // 获取详情图片
+                    this.props.dispatch({
+                        type: "operations/getOperationImageList",
+                        payload: {
+                            FormMainID: row['dbo.T_Bas_Task.ID']
+                            // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                        },
+                        callback: (res) => {
+                            this.setState({
+                                visibleImg: true
+                            })
+                        }
+                    })
+                } else {
+                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
             }}
         >{cnName}
-                                                             </Button>
-                    </p>);
+        </Button>
+        </p>);
     }
 
     //获取撤单按钮
@@ -290,38 +313,33 @@ class EmergencyDetailInfo extends Component {
             </Button>
         );
     }
-    getUserIcon=(data)=>{
-        var iconList=[]
-        if(data)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                if(data[i].CertificateTypeID==240)//废气
+    getUserIcon = (data) => {
+        var iconList = []
+        if (data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].CertificateTypeID == 240)//废气
                 {
-                    var gasUrl='/废气.png'
-                    if(data[i].IsExpire==false)
-                    {
-                        gasUrl='/废气灰.png'
+                    var gasUrl = '/废气.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/废气灰.png'
                     }
-                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
-                if(data[i].CertificateTypeID==241)//水
+                if (data[i].CertificateTypeID == 241)//水
                 {
-                    var gasUrl='/水.png'
-                    if(data[i].IsExpire==false)
-                    {
-                        gasUrl='/水灰.png'
+                    var gasUrl = '/水.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/水灰.png'
                     }
-                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
-                if(data[i].CertificateTypeID==242)//voc
+                if (data[i].CertificateTypeID == 242)//voc
                 {
-                    var gasUrl='/voc.png'
-                    if(data[i].IsExpire==false)
-                    {
-                        gasUrl='/voc灰.png'
+                    var gasUrl = '/voc.png'
+                    if (data[i].IsExpire == false) {
+                        gasUrl = '/voc灰.png'
                     }
-                    iconList.push(<img style={{marginLeft:5,width:35}} src={gasUrl}></img>)
+                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
             }
         }
@@ -453,8 +471,8 @@ class EmergencyDetailInfo extends Component {
                                 }
                             }
                         >{item}
-                                         </a>{dot}
-                                   </span>);
+                        </a>{dot}
+                        </span>);
                     });
                     return {
                         children: types
@@ -496,7 +514,7 @@ class EmergencyDetailInfo extends Component {
                             {this.getGoBack()}
                         </div>}
                 >
-                    
+
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
                         <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
@@ -521,7 +539,7 @@ class EmergencyDetailInfo extends Component {
                             {
 
                                 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                                <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
+                                    <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
                             }
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20 }}>
@@ -535,7 +553,7 @@ class EmergencyDetailInfo extends Component {
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
-                                        this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null)
+                                        this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType)
                                     }
                                 </Description>
                             </DescriptionList>
@@ -619,6 +637,7 @@ class EmergencyDetailInfo extends Component {
                 >
                     {/* <AlarmDetails data={isExistTask ? this.state.moreAlarmList : []} /> */}
                 </Modal>
+                {this.state.visibleImg && <ViewImagesModal />}
             </div>
         );
     }
