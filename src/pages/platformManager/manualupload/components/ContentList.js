@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip } from 'antd';
+import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -35,6 +35,7 @@ export default class ContentList extends Component {
             // footer: null,
             uid: cuid(),
             width: 1000,
+            uploadLoading: false,
         };
     }
     componentWillReceiveProps = nextProps => {
@@ -130,7 +131,6 @@ export default class ContentList extends Component {
                 payload: {
                     PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
                     callback: (data) => {
-                        debugger
                         downloadFile(data);
                     }
                 }
@@ -188,7 +188,7 @@ export default class ContentList extends Component {
     }
     //表单提交
     handleSubmit = (e) => {
-        const { item, dispatch, form } = this.props;
+        const { dispatch, form } = this.props;
         const { data } = this.state;
         let PollutantCode = '';
         form.validateFieldsAndScroll((err, values) => {
@@ -200,8 +200,8 @@ export default class ContentList extends Component {
                         MonitorTime: values.MonitorTime.format('YYYY-MM-DD HH:mm:ss'),
                         AvgValue: values.AvgValue,
                         DGIMN: values.DGIMN,
+                        Flag: data ? "update" : "add",
                         callback: () => {
-                            debugger
                             this.GetManualSupplementList();
                         }
                     },
@@ -282,11 +282,20 @@ export default class ContentList extends Component {
         const props = {
             action: config.templateUploadUrl,
             onChange(info) {
+                that.setState({
+                    uploadLoading: true
+                });
                 if (info.file.status === 'done') {
                     message.success("导入成功！")
+                    that.setState({
+                        uploadLoading: false
+                    })
                     that.GetManualSupplementList();
                 } else if (info.file.status === 'error') {
                     message.error(info.file.response.Message)
+                    that.setState({
+                        uploadLoading: false
+                    })
                 }
             },
             multiple: true,
@@ -295,8 +304,8 @@ export default class ContentList extends Component {
             data: {
                 DGIMN: DGIMN,
                 FileUuid: uid,
-                FileActualType: "1",
-                ssoToken:Cookie.get('ssoToken')
+                FileActualType: "3",
+                ssoToken: Cookie.get('ssoToken')
             }
         };
         return (
@@ -305,6 +314,7 @@ export default class ContentList extends Component {
                     <Icon type="upload" /> 文件导入
                 </Button>
             </Upload>
+
         )
     }
     render() {
@@ -341,7 +351,7 @@ export default class ContentList extends Component {
                 align: 'right',
                 key: 'StandardLimits',
                 render: (text, record, index) => (
-                    text ? text: <span>-</span>
+                    text ? text : <span>-</span>
                 ),
             }, {
                 title: '达标情况',
@@ -419,6 +429,18 @@ export default class ContentList extends Component {
                                     添加
                             </Button>
                                 {this.upload()}
+                                {console.log("this.state.uploadLoading=", this.state.uploadLoading)}
+                                <Spin
+                                    delay={500}
+                                    spinning={this.state.uploadLoading}
+                                    style={{
+                                        marginLeft: 10,
+                                        height: '100%',
+                                        width: '30px',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                />
                             </Col>
 
 
