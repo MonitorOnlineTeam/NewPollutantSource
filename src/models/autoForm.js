@@ -356,7 +356,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         let fileList = [];
         fileList = result.Datas.map((item, index) => ({
-            uid: index,
+            uid: item.Guid,
             name: item.FileName,
             status: 'done',
             url: item.Url,
@@ -397,6 +397,15 @@ export default Model.extend({
       }
     },
 
+    // 下载导入模板
+    * deleteAttach({ payload }, { call, update }) {
+      const result = yield call(services.deleteAttach, { ...payload });
+      if (result.IsSuccess) {
+
+      } else {
+        message.error(result.Datas)
+      }
+    },
   },
   reducers: {
     // 保存搜索框数据

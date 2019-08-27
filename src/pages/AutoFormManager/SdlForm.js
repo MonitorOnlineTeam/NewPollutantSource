@@ -165,7 +165,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -325,6 +325,17 @@ class SdlForm extends PureComponent {
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
                 }
+              },
+              onRemove(file){
+                console.log('file=',file)
+                dispatch({
+                  type: "autoForm/deleteAttach",
+                  payload:{
+                    Guid: file.uid,
+                    // FileUuid: file.uid,
+                    // FileActualType: '1',
+                  }
+                })
               },
               multiple: true,
               data: {

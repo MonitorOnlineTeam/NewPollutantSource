@@ -204,4 +204,10 @@ export async function fileUpload(params) {
     const result = await post('/upload/rest/PollutantSourceApi/UploadApi/PostFiles', params, null);
     return result;
 }
+
+// 删除文件
+export async function deleteAttach(params) {
+    const result = await post('/api/rest/PollutantSourceApi/UploadApi/DeleteAttach', params, null);
+    return result;
+}
 // rest/PollutantSourceApi/UploadApi/PostFiles

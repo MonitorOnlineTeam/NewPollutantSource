@@ -37,7 +37,7 @@ const dataSource = [];
       VehicleName: Form.createFormField(props.vehicleApproveForm.VehicleName),
       LicensePlateNumber: Form.createFormField(props.vehicleApproveForm.LicensePlateNumber),
       ApplicationTime: Form.createFormField(props.vehicleApproveForm.ApplicationTime),
-      Applicant: Form.createFormField(props.vehicleApproveForm.Applicant),
+      ApplicantID: Form.createFormField(props.vehicleApproveForm.ApplicantID),
       ApprovalStatus: Form.createFormField(props.vehicleApproveForm.ApprovalStatus),
     };
   },
@@ -289,7 +289,7 @@ class VehicleApprove extends Component {
               </Col>
               <Col md={6} sm={24}>
                 <FormItem {...formLayout} label="申请人" style={{ width: '100%' }}>
-                  {getFieldDecorator("Applicant", {
+                  {getFieldDecorator("ApplicantID", {
                   })(
                     <Select
                       showSearch
