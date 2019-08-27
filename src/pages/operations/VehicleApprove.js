@@ -320,7 +320,14 @@ class VehicleApprove extends Component {
                 <FormItem {...formLayout} label="审批状态" style={{ width: '100%' }}>
                   {getFieldDecorator("ApprovalStatus", {
                   })(
-                    <Select placeholder="请选择审批状态">
+                    <Select
+                      placeholder="请选择审批状态"
+                      showSearch
+                      allowClear
+                      filterOption={(input, option) =>
+                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
                       <Option key="0">待审批</Option>
                       <Option key="1">同意</Option>
                       <Option key="2">拒绝</Option>

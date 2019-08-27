@@ -11,6 +11,7 @@ const FormItem = Form.Item;
 @connect(({ loading, operations }) => ({
   applicationModalVisible: operations.applicationModalVisible,
   applyVehicleList: operations.applyVehicleList,
+  loading: loading.effects["operations/addVehicleApplication"]
 }))
 @Form.create()
 class ApplicationModal extends PureComponent {
@@ -48,8 +49,8 @@ class ApplicationModal extends PureComponent {
   };
 
   render() {
-    console.log('applyVehicleList=',this.props.applyVehicleList)
-    const { form: { getFieldDecorator }, applyVehicleList } = this.props;
+    // console.log('applyVehicleList=',this.props.applyVehicleList)
+    const { form: { getFieldDecorator }, applyVehicleList, loading } = this.props;
     const formLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 17 },
@@ -58,6 +59,7 @@ class ApplicationModal extends PureComponent {
       <Modal
         title="车辆申请"
         visible={this.props.applicationModalVisible}
+        loading={loading}
         onOk={this.onSubmitForm}
         onCancel={this.closeModal}
       >

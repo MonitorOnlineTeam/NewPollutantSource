@@ -28,6 +28,7 @@ const dataSource = [];
   applicationModalVisible: operations.applicationModalVisible,
   vehicleList: operations.vehicleList,
   vehicleApplicationForm: operations.vehicleApplicationForm,
+  loading: loading.effects["operations/getVehicleApplicationList"],
 }))
 
 @Form.create({
@@ -239,7 +240,8 @@ class VehicleApplication extends Component {
       vehicleApplicationForm,
       applicationModalVisible,
       vehicleList,
-      vehicleApplicationList
+      vehicleApplicationList,
+      loading
     } = this.props;
     const { formLayout, columns } = this.SELF;
     return (
@@ -307,7 +309,7 @@ class VehicleApplication extends Component {
               </Col>
               <Col md={2} sm={24}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  <Button type="primary" onClick={() => {
+                  <Button loading={loading} type="primary" onClick={() => {
                     this.onTableChange(1);
                   }}>查询</Button>
                 </FormItem>
@@ -334,6 +336,7 @@ class VehicleApplication extends Component {
           <SdlTable
             dataSource={vehicleApplicationList}
             columns={columns}
+            loading={loading}
             pagination={{
               // showSizeChanger: true,
               showQuickJumper: true,
