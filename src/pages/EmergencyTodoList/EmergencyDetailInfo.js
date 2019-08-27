@@ -156,9 +156,9 @@ class EmergencyDetailInfo extends Component {
                 if (recordType == "-1") {
                     // 获取详情图片
                     this.props.dispatch({
-                        type: "operations/getOperationImageList",
+                        type: "common/getOperationImageList",
                         payload: {
-                            FormMainID: row['dbo.T_Bas_Task.ID']
+                            FormMainID: taskID
                             // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
                         },
                         callback: (res) => {

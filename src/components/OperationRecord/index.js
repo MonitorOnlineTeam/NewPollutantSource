@@ -143,6 +143,7 @@ class OperationRecord extends Component {
     getRecordType = (key) => {
         var configid = ''
         var type=this.state.PollutantTypeByPoint||this.props.PollutantType
+        // debugger
         if ( type== "2") {
             switch (key) {
                 case 1://维修记录表
@@ -249,7 +250,7 @@ class OperationRecord extends Component {
 
                             </SDLTable>
                             :
-                            <AutoFormTable
+                            this.state.configName && <AutoFormTable
                                 configId={this.state.configName}
                                 rowChange={(key, row) => {
                                     this.setState({
@@ -264,7 +265,7 @@ class OperationRecord extends Component {
                                             } else {
                                                 // 获取详情图片
                                                 this.props.dispatch({
-                                                    type: "operations/getOperationImageList",
+                                                    type: "common/getOperationImageList",
                                                     payload: {
                                                         FormMainID: row['dbo.T_Bas_Task.ID']
                                                         // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
