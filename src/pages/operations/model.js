@@ -136,7 +136,7 @@ export default Model.extend({
     * getVehicleApproveList({ payload }, { call, put, update, select }) {
       const searchForm = yield select(state => state.operations.vehicleApproveForm);
       const postData = {
-        Applicant: searchForm.Applicant && searchForm.Applicant.value,
+        ApplicantID: searchForm.ApplicantID && searchForm.ApplicantID.value,
         ApplicationCode: searchForm.ApplicationCode && searchForm.ApplicationCode.value,
         VehicleName: searchForm.VehicleName && searchForm.VehicleName.value,
         LicensePlateNumber: searchForm.LicensePlateNumber && searchForm.LicensePlateNumber.value,
