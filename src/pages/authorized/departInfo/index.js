@@ -372,7 +372,9 @@ class DepartIndex extends Component {
 
         this.props.dispatch({
             type: 'departinfo/getdeparttreeandobj',
-            payload: {}
+            payload: {
+                Type:'1'
+            }
         })
         this.setState({
             visible: true,

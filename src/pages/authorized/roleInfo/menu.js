@@ -19,7 +19,7 @@ import {
 import { connect } from 'dva';
 import router from 'umi/router';
 import MonitorContent from '@/components/MonitorContent';
-import SdlForm from "@/components/AutoForm/SdlForm"
+import SdlForm from "@/pages/AutoFormManager/SdlForm"
 const Search = Input.Search;
 const { Option } = Select;
 

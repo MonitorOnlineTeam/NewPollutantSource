@@ -58,3 +58,29 @@ export async function querypollutantlist(params) {
     data: null,
   } : result.Datas;
 }
+
+/**
+ * 删除监测点（支持批量）
+ * @params {
+          "params": ["31011500000002"]
+    }
+ */
+export async function deletePoints(params) {
+  // debugger
+  // console.log("params=",params);
+  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/DeletePoints', params, null);
+  return result;
+}
+
+/**
+ * 根据批量监控目标Id获取监测点
+ * @params {
+          "params": ["31011500000002"]
+    }
+ */
+export async function queryPointForTarget(params) {
+  // debugger
+  console.log("params=", params);
+  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
+  return result;
+}

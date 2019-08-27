@@ -31,11 +31,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -160,24 +160,24 @@ export default {
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId',
+                  path: '/platformconfig/monitortarget/:configId/:targetType',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:pollutantTypes',
+                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/monitorpoint/:targetType/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/monitortarget/:configId/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {
@@ -212,36 +212,37 @@ export default {
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
-                {
-                  name: 'consumablesmanage',
-                  path: '/platformconfig/consumablesmanage/:configId',
-                  component: './OperationSysManager/ConsumablesManage/',
-                },
+
                 {
                   name: 'sparepartmanage',
                   path: '/platformconfig/sparepartmanage/:configId',
                   component: './OperationSysManager/SparepartManage/',
                 },
-                 {
-                   name: 'standardgasmanage',
-                   path: '/platformconfig/standardgasmanage/:configId',
-                   component: './OperationSysManager/StandardGasManage/',
-                 }, 
-                  {
-                    name: 'handhelddevicesmanage',
-                    path: '/platformconfig/handhelddevicesmanage/:configId',
-                    component: './OperationSysManager/HandheldDevicesManage/',
-                  },
-                  {
-                    name: 'vehiclemanage',
-                    path: '/platformconfig/vehiclemanage/:configId',
-                    component: './OperationSysManager/VehicleManage/',
-                  },
-                  {
-                    name: 'equipmentinfomanage',
-                    path: '/platformconfig/equipmentinfomanage/:configId',
-                    component: './OperationSysManager/EquipmentInfoManage/',
-                  },
+                {
+                  name: 'standardgasmanage',
+                  path: '/platformconfig/standardgasmanage/:configId',
+                  component: './OperationSysManager/StandardGasManage/',
+                },
+                {
+                  name: 'handhelddevicesmanage',
+                  path: '/platformconfig/handhelddevicesmanage/:configId',
+                  component: './OperationSysManager/HandheldDevicesManage/',
+                },
+                {
+                  name: 'vehiclemanage',
+                  path: '/platformconfig/vehiclemanage/:configId',
+                  component: './OperationSysManager/VehicleManage/',
+                },
+                {
+                  name: 'equipmentinfomanage',
+                  path: '/platformconfig/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                },
+                {
+                  name: 'certificatemanage',
+                  path: '/platformconfig/certificatemanage/:configId',
+                  component: './OperationSysManager/CertificateManage/',
+                },
               ],
             },
             {
@@ -263,6 +264,67 @@ export default {
                   component: './report/summaryReportPage',
                 },
               ],
+            },
+            {
+              path: "/operations",
+              name: "operations",
+              routes: [
+                {
+                  path: '/operations',
+                  redirect: '/operations/operationrecord',
+                },
+                {
+                  path: '/operations/calendar',
+                  name: "calendar",
+                  // component: "./operations/CalendarPage",
+                  routes: [
+                    {
+                      path: '/operations/calendar',
+                      redirect: '/operations/calendar/index',
+                    },
+                    {
+                      path: '/operations/calendar/index',
+                      name: "index",
+                      component: "./operations/CalendarPage",
+                    },
+                    {
+                      path: '/operations/calendar/details/:TaskID/:DGIMN',
+                      name: "calendar",
+                      component: "./EmergencyTodoList/EmergencyDetailInfoLayout",
+                    }
+                  ]
+                },
+                {
+                  path: '/operations/log',
+                  name: "log",
+                  component: "./operations/LogPage"
+                },
+                {
+                  path: "/operations/vehicleApplication",
+                  name: "vehicleApplication",
+                  component: "./operations/VehicleApplication"
+                },
+                {
+                  path: "/operations/vehicleApprove",
+                  name: "vehicleApprove",
+                  component: "./operations/VehicleApprove"
+                },
+                {
+                  path: '/operations/operationRecord',
+                  name: "operationRecord",
+                  component: "./operations/operationRecord"
+                },
+                {
+                  path: '/operations/:from/recordForm/:typeID/:taskID',
+                  name: "recordForm",
+                  component: "./operations/recordForm"
+                },
+                {
+                  path: '/operations/recordForm/:typeID/:taskID',
+                  name: "recordForm",
+                  component: "./operations/recordForm"
+                }
+              ]
             },
             {
               path: '/rolesmanager',
@@ -363,7 +425,7 @@ export default {
               name: 'monitoring',
               routes: [
                 {
-                  name:'realtimedata',
+                  name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
 
@@ -378,7 +440,7 @@ export default {
                   path: '/monitoring/mapview',
                   component: './monitoring/mapview',
                 },
-                 {
+                {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
@@ -389,7 +451,7 @@ export default {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
-               
+
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
@@ -400,7 +462,7 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
                   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
                 },
-               
+
               ],
             },
             {
@@ -436,11 +498,11 @@ export default {
                   path: '/dataquery/originaldata',
                   component: './monitoring/originaldata',
                 },
-                 {
-                   name: 'alarmverifyrecord',
-                   path: '/dataquery/alarmverifyrecord',
-                   component: './monitoring/alarmverifyrecord/index',
-                 },
+                {
+                  name: 'alarmverifyrecord',
+                  path: '/dataquery/alarmverifyrecord',
+                  component: './monitoring/alarmverifyrecord/index',
+                },
               ]
             },
             {
@@ -459,6 +521,8 @@ export default {
                 },
               ],
             },
+            /* 任务详情 */
+            { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
 
             {
               component: '404',
@@ -513,7 +577,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.13:9090/',
+      target: 'http://172.16.9.52:8096/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

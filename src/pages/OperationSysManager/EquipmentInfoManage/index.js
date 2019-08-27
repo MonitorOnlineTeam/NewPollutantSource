@@ -4,9 +4,10 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlTable from '../../AutoFormManager/AutoFormTable';
-import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import styles from './index.less';
+import NavigationTree from '../../../components/NavigationTree'
+import EquipmentInfoManage from './components/index'
+
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -20,67 +21,31 @@ import styles from './index.less';
  class Index extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            dgimn: '',
+        };
     }
 
-    componentDidMount() {
-        const { match } = this.props;
-        this.reloadPage(match.params.configId);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.location.pathname !== this.props.location.pathname) {
-            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
-        }
-    }
-
-    reloadPage = configId => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
-        dispatch({
-            type: 'autoForm/getPageConfig',
-            payload: {
-                configId,
-            },
-        })
-    }
+  changeDgimn = dgimn => {
+    this.setState({
+      dgimn,
+    })
+  }
 
     render() {
         const { match: { params: { configId } } } = this.props;
-        if (this.props.loading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                size="large"
-            />);
-        }
+
         return (
-            <PageHeaderWrapper>
-                <div className={styles.cardTitle}>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <SdlTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            {...this.props}
-                        >
-                        </SdlTable>
-                    </Card>
-                </div>
-            </PageHeaderWrapper>
+            <div id="EquipmentInfoManage">
+                <PageHeaderWrapper>
+                 <EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />
+                </PageHeaderWrapper>
+                <NavigationTree domId="#EquipmentInfoManage" choice={false} onItemClick={value => {
+                            if (value.length > 0 && !value[0].IsEnt) {
+                            this.changeDgimn(value[0].key)
+                            }
+                        }} />
+            </div>
         );
     }
 }

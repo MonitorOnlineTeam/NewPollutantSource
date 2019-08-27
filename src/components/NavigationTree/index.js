@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
@@ -32,8 +32,8 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   ConfigInfo: global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
   PollutantType: navigationtree.PollutantType,
-  EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
-  PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
+  EntAndPointLoading: loading.effects['navigationtree/getentandpoint'],
+  PollutantTypeLoading: loading.effects['navigationtree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
@@ -136,9 +136,9 @@ class NavigationTree extends Component {
         RunState: state
       }
     })
-    panelDataList.splice(0, panelDataList.length)
-    this.generateList(EntAndPoint)
-
+    // panelDataList.splice(0, panelDataList.length)
+    // console.log('list1=',EntAndPoint)
+    // this.generateList(EntAndPoint)
     // // this.props.dispatch({
     // //   type: 'navigationtree/getPollutantTypeList',
     // //   payload: {
@@ -153,22 +153,27 @@ class NavigationTree extends Component {
       nextProps.PollutantType.map(m => children.push(<Option key={m.pollutantTypeCode}>{m.pollutantTypeName}</Option>));
     }
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
-      this.state.panelDataList.splice(0, this.state.panelDataList.length)
+      this.clearData()
+      this.tilingData(nextProps.EntAndPoint)
       this.generateList(nextProps.EntAndPoint)
     }
     if (this.props.selKeys !== nextProps.selKeys) {
-      this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
+      this.clearData()
+      this.tilingData(nextProps.EntAndPoint)
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
 
   }
-  //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
+  clearData=()=>{
+    this.state.panelDataList.splice(0, this.state.panelDataList.length)
+    dataList.splice(0,dataList.length)
+  }
+  tilingData = (data = this.props.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -177,6 +182,28 @@ class NavigationTree extends Component {
         this.state.panelDataList.push(pushItem)
         // }
       }
+      if (node.children) {
+        this.tilingData(node.children);
+      }
+    }
+  }
+
+  //处理接口返回的企业和排口数据
+  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
+
+    for (let i = 0; i < data.length; i++) {
+      const node = data[i];
+      const { key } = node;
+      // dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType });
+      // if (node.IsEnt == 0) {
+      //   var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
+      //   // var ddd=panelDataList.filter(item=>item.key==key);
+      //   // if(panelDataList.filter(item=>item.key==key).length==0)
+      //   // {
+      //   this.state.panelDataList.push(pushItem)
+      //   // }
+      // }
+      console.log('entandpoint=', data)
       if (this.defaultKey == 0 && node.IsEnt == 0) {
         this.defaultKey = 1;
         var nowKey = [key]
@@ -194,16 +221,21 @@ class NavigationTree extends Component {
             })//根据传入的状态判断是否更新全局
           }
         } else if (this.props.overallselkeys.length != 0) {
-          nowKey = this.props.overallselkeys
-          nowExpandKey = this.props.overallexpkeys
+          var state = !!dataList.find(m => m.key == this.props.overallselkeys[0].toString())
+          debugger
+          if (state) {
+            nowKey = this.props.overallselkeys
+            nowExpandKey = this.props.overallexpkeys
+          }
         }
         this.setState({
           selectedKeys: nowKey,
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var rtnKey = [{ key: nowKey[0], IsEnt: false }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: node.PollutantType }]
         this.props.onItemClick && this.props.onItemClick(rtnKey)
+        return
       }
 
       if (node.children) {
@@ -284,7 +316,7 @@ class NavigationTree extends Component {
   //搜索框改变查询数据
   onChangeSearch = e => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    this.generateList()
+    this.tilingData()
     // debugger
     const { value } = e.target;
     const expandedKeys = dataList
@@ -487,8 +519,13 @@ class NavigationTree extends Component {
     //处理选中的数据格式
     const rtnList = [];
     data.map(item => {
-      var isEnt = dataList.filter(m => m.key == item)[0].IsEnt == 1 ? true : false
-      rtnList.push({ key: item, IsEnt: isEnt })
+      var list = dataList.filter(m => m.key == item)
+      if(list)
+      {
+        var isEnt = list[0].IsEnt == 1 ? true : false
+        var type = list[0].Type
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type })
+      }
     })
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
@@ -613,7 +650,6 @@ class NavigationTree extends Component {
           key={item.key} dataRef={item}>
         </TreeNode>
       });
-
     return (
       <div >
 
@@ -697,6 +733,7 @@ class NavigationTree extends Component {
 
 
           {this.state.treeVis ? <div >
+            {console.log('this.props.EntAndPointLoading=', this.props.EntAndPointLoading)}
             {
               this.props.EntAndPointLoading ? <Spin
                 style={{
@@ -740,7 +777,7 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer" }}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer", maxHeight: 'calc(100vh - 330px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 

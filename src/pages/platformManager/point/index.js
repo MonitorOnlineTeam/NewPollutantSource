@@ -29,12 +29,12 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { sdlMessage } from '@/utils/utils';
-import PollutantType from '@/components/AutoForm/PollutantType';
+import PollutantType from '@/pages/AutoFormManager/PollutantType';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
 import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
-
+const { confirm } = Modal;
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 
@@ -188,7 +188,7 @@ export default class MonitorPoint extends Component {
   onMenu = (key, id, name, code) => {
     const {
       match: {
-        params: { configId, targetId, targetName },
+        params: { configId, targetId, targetName, targetType },
       },
     } = this.props;
     // match.params
@@ -196,7 +196,7 @@ export default class MonitorPoint extends Component {
       case '1':
         this.props.dispatch(
           routerRedux.push(
-            `/platformconfig/monitortarget/${configId}/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
+            `/platformconfig/monitortarget/${configId}/3/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
           ),
         );
         break;
@@ -277,11 +277,11 @@ export default class MonitorPoint extends Component {
           FormData.PointCode = this.state.selectedPointCode;
         }
         dispatch({
-          type: !this.state.isEdit ? 'monitorTarget/addPoint' : 'monitorTarget/editPoint',
+          type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
           payload: {
             configId: pointConfigIdEdit,
             targetId: match.params.targetId,
-            targetType:match.params.targetType,
+            targetType: match.params.targetType,
             FormData,
             callback: result => {
               if (result.IsSuccess) {
@@ -307,11 +307,11 @@ export default class MonitorPoint extends Component {
     const { dispatch, match, pointDataWhere } = this.props;
     const { pollutantType } = this.state;
     dispatch({
-      type: 'monitorTarget/delPoint',
+      type: 'point/delPoint',
       payload: {
         configId: pointConfigIdEdit,
         targetId: match.params.targetId,
-        targetType:match.params.targetType,
+        targetType: match.params.targetType,
         pollutantType,
         DGIMN,
         PointCode,
@@ -332,6 +332,24 @@ export default class MonitorPoint extends Component {
   onPollutantChange = e => {
     console.log(e);
     this.getPageConfig(e.target.value);
+  }
+
+  showDeleteConfirm = (PointCode, DGIMN) => {
+    let that = this;
+    const { dispatch } = this.props;
+    //console.log("row=", row);
+    confirm({
+      title: '确定要删除该条数据吗？',
+      content: '删除后不可恢复',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        that.delPoint(PointCode, DGIMN);
+      },
+      onCancel() {
+      },
+    });
   }
   render() {
     const {
@@ -460,20 +478,12 @@ export default class MonitorPoint extends Component {
                     </Tooltip>
                     <Divider type="vertical" />
                     <Tooltip title="删除">
-                      <Popconfirm
-                        title="确认要删除吗?"
-                        onConfirm={() => {
-                          this.delPoint(
-                            row['dbo.T_Bas_CommonPoint.PointCode'],
-                            row['dbo.T_Bas_CommonPoint.DGIMN'],
-                          );
-                        }}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                      >
-                        <a href="#"><DelIcon /></a>
-                      </Popconfirm>
+
+                      <a onClick={() => {
+                        this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
+                          row['dbo.T_Bas_CommonPoint.DGIMN']);
+                      }}><DelIcon />    </a>
+
                     </Tooltip>
                     <Divider type="vertical" />
                     <Dropdown

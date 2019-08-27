@@ -18,15 +18,15 @@ import {
     Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
 } from 'antd';
 import styles from './style.less';
-import { PointIcon } from '@/utils/icon'
+import { PointIcon, DelIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
-
+const { confirm } = Modal;
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -72,39 +72,84 @@ export default class MonitorTarget extends Component {
     }
 
     editMonitorInfo = (key, row) => {
-        const { match } = this.props;
-        const configId = match.params.configId;
+        const { match: { params: { targetType, configId, pollutantTypes } } } = this.props;
+        //const configId = match.params.configId;
 
+        var target = this.getTargetIds(row);
+        let targetId = target.targetId;
+        let targetName = target.targetName;
+
+        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`))
+    }
+
+    getTargetIds = (row) => {
+        const { match: { params: { targetType } } } = this.props;
         let targetId = '';
         let targetName = '';
-        let targetType = '';
-        switch (match.params.configId) {
-            case 'AEnterpriseTest'://企业
+
+        switch ((+targetType)) {
+            case 1://企业
                 targetId = row['dbo.T_Bas_Enterprise.EntCode'];
                 targetName = row['dbo.T_Bas_Enterprise.EntName'];
-                targetType = 1;
+                //targetType = 1;
                 break;
-            case 'basStation'://监测站
+            case 2://监测站
                 targetId = row['dbo.T_Bas_Station.StationCode'];
                 targetName = row['dbo.T_Bas_Station.StationName'];
-                targetType = 2;
+                //targetType = 2;
                 break;
-            case 'baseReach'://河段
+            case 3://河段
                 targetId = row['dbo.T_Bas_Reach.ReachCode'];
                 targetName = row['dbo.T_Bas_Reach.ReachName'];
-                targetType = 3;
+                //targetType = 3;
                 break;
-            case 'basBuildingSite'://工地
+            case 4://工地
                 targetId = row['dbo.T_Bas_BuildingSite.BuildingSiteCode'];
                 targetName = row['dbo.T_Bas_BuildingSite.BuildingSiteName'];
-                targetType = 4;
+                //targetType = 4;
                 break;
             default: break;
         }
 
-        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${match.params.configId}/${match.params.pollutantTypes}/monitorpoint/${targetType}/${targetId}/${targetName}`))
+        return { targetId: targetId, targetName: targetName };
     }
 
+    showDeleteConfirm = (row) => {
+        let that = this;
+        const { dispatch } = this.props;
+        //console.log("row=", row);
+        confirm({
+            title: '确定要删除该条数据吗？',
+            content: '删除后不可恢复',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+
+                let target = that.getTargetIds(row);
+                let where = [];
+                where.push(target.targetId);
+
+                dispatch({
+                    type: 'monitorTarget/queryPointForTarget',
+                    payload: {
+                        where,
+                        callback: (res) => {
+                            if (res.IsSuccess) {
+                                that.child.delRowData(row);
+                            }
+                        }
+                    }
+                })
+            },
+            onCancel() {
+
+            },
+        });
+    }
+    onRef1 = ref => {
+        this.child = ref;
+    };
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
         //console.log("this.props=", this.props);
@@ -131,24 +176,44 @@ export default class MonitorTarget extends Component {
                             onSubmitForm={(form) => this.loadReportList(form)}
                             configId={configId}
                         ></SearchWrapper>
-                        <SdlTable
-
+                        <AutoFormTable
+                            onRef={this.onRef1}
                             style={{ marginTop: 10 }}
                             // columns={columns}
                             configId={configId}
                             rowChange={(key, row) => {
+                                console.log("key=", key);
                                 this.setState({
                                     key, row
                                 })
                             }}
                             // onAdd={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
                             // }}
                             // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));  
+                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
                             // }}
+                            // appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                            //     <Fragment>
+                            //         <Button
+                            //             type="danger"
+                            //             onClick={() => {
+                            //                 this.showConfirm(selectedRowKeys, selectedRows);
+                            //             }}
+                            //             style={{ marginRight: 8 }}
+                            //         >
+                            //             重置密码
+                            //       </Button>
+                            //     </Fragment>
+                            // )}
                             appendHandleRows={row => {
                                 return <Fragment>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="删除">
+                                        <a onClick={() => {
+                                            this.showDeleteConfirm(row);
+                                        }}><DelIcon />    </a>
+                                    </Tooltip>
                                     <Divider type="vertical" />
                                     <Tooltip title="维护点信息">
                                         <a onClick={() => {
@@ -160,7 +225,7 @@ export default class MonitorTarget extends Component {
                             parentcode='platformconfig'
                             {...this.props}
                         >
-                        </SdlTable>
+                        </AutoFormTable>
                     </Card>
                 </div>
             </PageHeaderWrapper>

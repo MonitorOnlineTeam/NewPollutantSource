@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import * as services from '../services/commonApi';
+import config from '@/config'
 import Model from '@/utils/model';
 
 export default Model.extend({
@@ -9,7 +10,9 @@ export default Model.extend({
     defaultPollutantCode: null,
     enterpriseAndPointList: [],
     defaultSelected: [],
-    level: null
+    level: null,
+    imageListVisible: false,
+    imageList: [],
   },
 
   effects: {
@@ -63,6 +66,33 @@ export default Model.extend({
         });
 
         callback && callback(result.Datas.list, defaultValue)
+      }
+    },
+
+    // 获取运维日志详情图片
+    * getOperationImageList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.getOperationImageList, payload);
+      if (result.IsSuccess) {
+        let imageList = [];
+        if (result.Datas) {
+          imageList = result.Datas.map((item, index) => {
+            return {
+              uid: index,
+              name: item,
+              status: 'done',
+              url: config.imgaddress + item
+            }
+          })
+          yield update({
+            imageListVisible: true
+          })
+          callback && callback(result)
+        } else {
+          message.error("暂无数据")
+        }
+        yield update({
+          imageList: imageList,
+        })
       }
     },
   },
