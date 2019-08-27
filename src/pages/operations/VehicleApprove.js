@@ -251,6 +251,7 @@ class VehicleApprove extends Component {
                   })(
                     <Select
                       showSearch
+                      allowClear
                       filterOption={(input, option) =>
                         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                       }
@@ -271,6 +272,7 @@ class VehicleApprove extends Component {
                   })(
                     <Select
                       showSearch
+                      allowClear
                       placeholder="请选择车牌号"
                       filterOption={(input, option) =>
                         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -289,7 +291,14 @@ class VehicleApprove extends Component {
                 <FormItem {...formLayout} label="申请人" style={{ width: '100%' }}>
                   {getFieldDecorator("Applicant", {
                   })(
-                    <Select>
+                    <Select
+                      showSearch
+                      placeholder="请选择申请人"
+                      allowClear
+                      filterOption={(input, option) =>
+                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
                       {
                         applicantList.map(item => {
                           return <Option key={item.UserId} value={item.UserId}>{item.UserName}</Option>

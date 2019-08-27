@@ -20,12 +20,12 @@ function getBase64(file) {
   });
 }
 
-@connect(({ operations, loading }) => ({
+@connect(({ operations, loading, common }) => ({
   recordTypeList: operations.recordTypeList,
   timeLineList: operations.timeLineList,
   timeLineTotal: operations.timeLineTotal,
-  imageList: operations.imageList,
-  imageListVisible: operations.imageListVisible,
+  imageList: common.imageList,
+  imageListVisible: common.imageListVisible,
 }))
 class LogTimeList extends Component {
   constructor(props) {
@@ -120,23 +120,27 @@ class LogTimeList extends Component {
             position="left"
           // key={node.MainFormID}
           >
-            {`${node.CreateUser}于 ${node.DisplayInfo}`}
-            <br />
             {
-              node.TypeID !== 0 && <Tag
-                color="#43b9ff"
-                style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
-                onClick={() => {
+              node.TypeID !== 0 ?
+                <>
+                  <p><span style={{color: "#40a9ff", marginRight: 10}}>{node.CreateUser}</span>{node.DisplayInfo}</p>
+                  <Tag
+                    color="#43b9ff"
+                    style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
+                    onClick={() => {
                   if (node.PollutantType != 2) {
-                    // 查看图片
-                    this.getOperationImageList(node)
-                  } else {
-                    router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`)
-                  }
-                }}
-              >
-                查看详情
+                        // 查看图片
+                        this.getOperationImageList(node)
+                      } else {
+                        router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`)
+                      }
+                    }}
+                  >
+                    查看详情
             </Tag>
+                </>
+                : <><p><span style={{color: "#40a9ff", marginRight: 10}}>{node.CreateUser}</span>需要对当前排口进行处理</p>
+                  <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p></>
             }
 
           </Timeline.Item>
@@ -165,7 +169,7 @@ class LogTimeList extends Component {
   // 获取详情图片
   getOperationImageList = (data) => {
     this.props.dispatch({
-      type: "operations/getOperationImageList",
+      type: "common/getOperationImageList",
       payload: {
         FormMainID: data.MainFormID
         // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"

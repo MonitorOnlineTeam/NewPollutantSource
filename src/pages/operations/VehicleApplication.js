@@ -261,6 +261,7 @@ class VehicleApplication extends Component {
                   })(
                     <Select
                       showSearch
+                      allowClear
                       filterOption={(input, option) =>
                         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                       }
@@ -281,6 +282,7 @@ class VehicleApplication extends Component {
                   })(
                     <Select
                       showSearch
+                      allowClear
                       placeholder="请选择车牌号"
                       filterOption={(input, option) =>
                         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

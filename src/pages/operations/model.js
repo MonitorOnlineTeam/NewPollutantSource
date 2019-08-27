@@ -106,7 +106,7 @@ export default Model.extend({
         })
       }
     },
-    // 车辆申请、审批列表
+    // 车辆申请
     * getVehicleApplicationList({ payload }, { call, put, update, select }) {
       const searchForm = yield select(state => state.operations.vehicleApplicationForm);
       const postData = {
@@ -114,8 +114,8 @@ export default Model.extend({
         ApplicationCode: searchForm.ApplicationCode && searchForm.ApplicationCode.value,
         VehicleName: searchForm.VehicleName && searchForm.VehicleName.value,
         LicensePlateNumber: searchForm.LicensePlateNumber && searchForm.LicensePlateNumber.value,
-        ApplicationBTime: searchForm.ApplicationTime && moment(searchForm.ApplicationTime.value[0]).format("YYYY-MM-DD"),
-        ApplicationETime: searchForm.ApplicationTime && moment(searchForm.ApplicationTime.value[1]).format("YYYY-MM-DD"),
+        ApplicationBTime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[0] && moment(searchForm.ApplicationTime.value[0]).format("YYYY-MM-DD"),
+        ApplicationETime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[1] && moment(searchForm.ApplicationTime.value[1]).format("YYYY-MM-DD"),
         pageIndex: searchForm.current,
         pageSize: searchForm.pageSize,
         ...payload
@@ -140,8 +140,8 @@ export default Model.extend({
         ApplicationCode: searchForm.ApplicationCode && searchForm.ApplicationCode.value,
         VehicleName: searchForm.VehicleName && searchForm.VehicleName.value,
         LicensePlateNumber: searchForm.LicensePlateNumber && searchForm.LicensePlateNumber.value,
-        ApplicationBTime: searchForm.ApplicationTime && moment(searchForm.ApplicationTime.value[0]).format("YYYY-MM-DD"),
-        ApplicationETime: searchForm.ApplicationTime && moment(searchForm.ApplicationTime.value[1]).format("YYYY-MM-DD"),
+        ApplicationBTime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[0] && moment(searchForm.ApplicationTime.value[0]).format("YYYY-MM-DD"),
+        ApplicationETime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[1] && moment(searchForm.ApplicationTime.value[1]).format("YYYY-MM-DD"),
         ApprovalStatus: searchForm.ApprovalStatus && searchForm.ApprovalStatus.value,
         pageIndex: searchForm.current,
         pageSize: searchForm.pageSize,

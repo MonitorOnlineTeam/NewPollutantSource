@@ -17,8 +17,12 @@ export async function getPollutantTypeList(params) {
  * @params {}
  */
 export async function getSystemConfigInfo() {
- 
   const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
- 
+  return result;
+}
+
+// 获取运维日志详情图片
+export async function getOperationImageList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
   return result;
 }

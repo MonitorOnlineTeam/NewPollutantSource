@@ -11,9 +11,9 @@ function getBase64(file) {
   });
 }
 
-@connect(({ operations }) => ({
-  imageList: operations.imageList,
-  imageListVisible: operations.imageListVisible,
+@connect(({ common }) => ({
+  imageList: common.imageList,
+  imageListVisible: common.imageListVisible,
 }))
 class ViewImagesModal extends PureComponent {
   constructor(props) {
@@ -29,7 +29,7 @@ class ViewImagesModal extends PureComponent {
     //   visible: false,
     // });
     this.props.dispatch({
-      type: "operations/updateState",
+      type: "common/updateState",
       payload: {
         imageListVisible: false
       }
