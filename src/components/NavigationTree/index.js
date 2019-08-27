@@ -203,7 +203,7 @@ class NavigationTree extends Component {
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var rtnKey = [{ key: nowKey[0], IsEnt: false }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false ,Type:node.PollutantType}]
         this.props.onItemClick && this.props.onItemClick(rtnKey)
       }
 
