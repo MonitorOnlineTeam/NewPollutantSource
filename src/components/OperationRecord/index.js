@@ -241,7 +241,8 @@ class OperationRecord extends Component {
                         </Row>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 270px)', overflow: "auto", ...this.props.style, }}>
+                        {console.log('state=', this.state)}
                         {this.state.RecordType == '8' ?
                             <SDLTable
                                 dataSource={this.props.JZDatas}
@@ -250,7 +251,7 @@ class OperationRecord extends Component {
 
                             </SDLTable>
                             :
-                            this.state.configName && <AutoFormTable
+                            (this.state.configName ? <AutoFormTable
                                 configId={this.state.configName}
                                 rowChange={(key, row) => {
                                     this.setState({
@@ -286,7 +287,7 @@ class OperationRecord extends Component {
                                 { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
-                            ></AutoFormTable>}
+                            ></AutoFormTable> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />)}
                             {this.state.visible && <ViewImagesModal />}
                         {/* <BdTestRecordContent TaskID="1f22ede2-68a0-4594-a93b-a5f706fe6662" /> */}
                     </Card.Grid>
