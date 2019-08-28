@@ -177,7 +177,7 @@ class StandardGasRepalceRecord extends Component {
                                         供应商
                             </td>
                             <td style={{ width: '17%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        有效期
+                                        失效日期
                             </td>
                         </tr>
                         {
