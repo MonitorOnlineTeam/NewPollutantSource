@@ -241,7 +241,7 @@ class VehicleApprove extends Component {
                 <FormItem {...formLayout} label="申请单编号" style={{ width: '100%' }}>
                   {getFieldDecorator("ApplicationCode", {
                   })(
-                    <Input placeholder="请填写申请单编号" />
+                    <Input allowClear placeholder="请填写申请单编号" />
                   )}
                 </FormItem>
               </Col>

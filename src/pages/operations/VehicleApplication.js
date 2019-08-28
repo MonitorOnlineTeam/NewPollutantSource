@@ -253,7 +253,7 @@ class VehicleApplication extends Component {
                 <FormItem {...formLayout} label="申请单编号" style={{ width: '100%' }}>
                   {getFieldDecorator("ApplicationCode", {
                   })(
-                    <Input placeholder="请输入申请单编号" />
+                    <Input allowClear placeholder="请输入申请单编号" />
                   )}
                 </FormItem>
               </Col>
