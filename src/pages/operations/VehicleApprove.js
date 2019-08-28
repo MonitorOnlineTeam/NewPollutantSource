@@ -84,15 +84,28 @@ class VehicleApprove extends Component {
           key: 'VihicleStatus',
           render: (text, record) => {
             // 0：待借，1：已借出，2、申请中
-            switch (text) {
+            // switch (text) {
+            //   case 0:
+            //     return '待借'
+            //     break;
+            //   case 1:
+            //     return '已借出'
+            //     break;
+            //   case 2:
+            //     return '申请中'
+            //     break;
+            //   default:
+            //     break;
+            // }
+            switch (record.ApprovalStatus) {
               case 0:
-                return '待借'
+                return '申请中'
                 break;
               case 1:
                 return '已借出'
                 break;
               case 2:
-                return '申请中'
+                return '待借'
                 break;
               default:
                 break;
@@ -134,12 +147,15 @@ class VehicleApprove extends Component {
             switch (text) {
               case 0:
                 return "待审批"
+                // 申请中
                 break;
               case 1:
                 return "同意"
+                // 已借出
                 break;
               case 2:
                 return "拒绝"
+                // 待借出
                 break;
               case 3:
                 return "已撤销"
@@ -165,14 +181,14 @@ class VehicleApprove extends Component {
                   }
                 })
               }}>审批</a>
-            } else if (record.VihicleStatus === 1 && record.ApprovalStatus === 1) {
+            } else if (record.ApprovalStatus === 1 && record.IsReturn == 0) {
               return <Popconfirm
                 title="确认是否归还车辆？"
                 onConfirm={() => {
                   this.props.dispatch({
                     type: 'operations/returnVehicle',
                     payload: {
-                      ID: record.VehicleID
+                      ID: record.ID
                     }
                   })
                 }}

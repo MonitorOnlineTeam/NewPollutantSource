@@ -99,15 +99,28 @@ class VehicleApplication extends Component {
           key: 'VihicleStatus',
           render: (text, record) => {
             // 0：待借，1：已借出，2、申请中
-            switch (text) {
+            // switch (text) {
+            //   case 0:
+            //     return '待借'
+            //     break;
+            //   case 1:
+            //     return '已借出'
+            //     break;
+            //   case 2:
+            //     return '申请中'
+            //     break;
+            //   default:
+            //     break;
+            // }
+            switch (record.ApprovalStatus) {
               case 0:
-                return '待借'
+                return '申请中'
                 break;
               case 1:
                 return '已借出'
                 break;
               case 2:
-                return '申请中'
+                return '待借'
                 break;
               default:
                 break;
