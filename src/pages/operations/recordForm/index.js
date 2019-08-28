@@ -72,9 +72,8 @@ class Index extends Component {
         return form
     }
     render() {
-        console.log('this.props-', this.props)
         return (
-            <PageHeaderWrapper title="记录单详情">
+            <PageHeaderWrapper breadcrumb={[]} title="记录单详情">
                 <div width="70%" style={{ backgroundColor: '#fff' }}>
                     <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={()=>{
                        router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
