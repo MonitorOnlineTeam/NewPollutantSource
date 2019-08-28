@@ -39,7 +39,7 @@ export default Model.extend({
                 let monitorRelFormData = {
                     DGIMN: payload.FormData.DGIMN,
                     BaseCode: payload.targetId,
-                    BaseType: payload.FormData.PollutantType,
+                    BaseType: payload.targetType,
                     PointCode: result.Datas,
                 };
 
