@@ -268,7 +268,7 @@ class OperationRecord extends Component {
                                                 this.props.dispatch({
                                                     type: "common/getOperationImageList",
                                                     payload: {
-                                                        FormMainID: row['dbo.T_Bas_Task.ID']
+                                                        FormMainID: row['dbo.T_Bas_RecordFormPic.FormMainID']
                                                         // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
                                                     },
                                                     callback: (res) => {

@@ -72,7 +72,7 @@ class ViewImagesModal extends PureComponent {
               previewVisible: false
             })
           }}>
-            <img alt="example" style={{ width: '100%' }} src={this.props.previewImage} />
+            <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
           </Modal>
         </div>
       </Modal>
