@@ -7,7 +7,7 @@ import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
-import { EntIcon, GasIcon, WaterIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, VocIcon, DustIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
@@ -197,12 +197,14 @@ class MapView extends Component {
       } else {
         // 排口
         pointEl = <div className={styles.container}>
-          {
+          {/* {
             extData.position.PollutantType === "2" ?
               <GasIcon
                 style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
-          }
+          } */}
+          {/* 图标 */}
+          { this.getPollutantIcon(extData) }
           {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
           <>
             {/* <div className={styles.pulse}></div> */}
@@ -214,6 +216,22 @@ class MapView extends Component {
     }
     return pointEl;
   }
+
+  getPollutantIcon = (extData) => {
+    const style = { fontSize: 20, color: this.getColor(extData.position.Status) }
+    switch (extData.position.PollutantType) {
+      case "1":
+        return <WaterIcon style={style}/>
+      case "2":
+        return <GasIcon  style={style}/>
+      case "10":
+        return <VocIcon  style={style}/>
+      case "12":
+        return <DustIcon  style={style}/>
+    }
+  }
+
+
 
   // 渲染点或企业
   randomMarker = (dataList = this.state.currentEntInfo.children) => {

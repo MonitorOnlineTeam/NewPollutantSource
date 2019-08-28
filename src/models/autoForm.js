@@ -327,6 +327,7 @@ export default Model.extend({
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,
+          FullFieldName: item.FullFieldName
         }));
         yield update({
           detailConfigInfo: {

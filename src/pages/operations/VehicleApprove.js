@@ -105,6 +105,7 @@ class VehicleApprove extends Component {
                 return '已借出'
                 break;
               case 2:
+              case 3:
                 return '待借'
                 break;
               default:

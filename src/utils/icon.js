@@ -28,8 +28,8 @@ export const GasIcon = props => <IconConfig type="icon-wuranyuan" style={{ ...st
 export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style } />
 export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style } />
 export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />
-export const DustIcon = () => <IconConfig type="icon-yangchen" style={{ ...style }} />
-export const VocIcon = () => <IconConfig type="icon-ziyuan" style={{ ...style }} />
+export const DustIcon = (props) => <IconConfig type="icon-yangchen" style={{ ...style }} {...props} />
+export const VocIcon = (props) => <IconConfig type="icon-ziyuan" style={{ ...style }} {...props}/>
 export const TreeIcon = () => <IconConfig type="icon-jiedian" style={{ ...style }} />
 export const PanelIcon = () => <IconConfig type="icon-jiedian1" style={{ ...styles }} />
 export const BellIcon = props => <IconConfig type="icon-lingdang" style={{ ...styles }} {...props} />

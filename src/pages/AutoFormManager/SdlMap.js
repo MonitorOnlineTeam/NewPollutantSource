@@ -351,7 +351,7 @@ class SdlMap extends PureComponent {
                 // 厂界
                 if (handlePolygon && path) {
                   this.setState({
-                    mapCenter: path[0][0][0],
+                    mapCenter: path[0] && path[0][0] && path[0][0][0],
                     path: path
                   })
                 }
