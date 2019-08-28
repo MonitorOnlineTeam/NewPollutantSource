@@ -169,7 +169,7 @@ class AutoFormTable extends PureComponent {
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
       switch (btn.DISPLAYBUTTON) {
         case 'add':
-          if (btnsAuthority.includes('add')) {
+          // if (btnsAuthority.includes('add')) {
             return <Button
               style={{ marginRight: 8 }}
               key={btn.DISPLAYBUTTON}
@@ -180,7 +180,7 @@ class AutoFormTable extends PureComponent {
               }}
             >添加
                   </Button>;
-          }
+          // }
           break;
         case 'alldel':
           return <Button
@@ -366,7 +366,8 @@ class AutoFormTable extends PureComponent {
           <div>
             {
               this._SELF_.btnEl.map((item, index) => {
-                if (item.type === 'edit' && btnsAuthority.includes('edit')) {
+                // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
+                if (item.type === 'edit') {
                   // const uid = record.
                   return (
                     <Fragment key={item.type}>
@@ -392,8 +393,8 @@ class AutoFormTable extends PureComponent {
                       }
                     </Fragment>);
                 }
-                if (item.type === 'view' && btnsAuthority.includes('view')) {
-                  // if (item.type === "view") {
+                // if (item.type === 'view' && btnsAuthority.includes('view')) {
+                  if (item.type === "view") {
                   return (<Fragment key={item.type}>
                     <Tooltip title="详情">
                       <a onClick={() => {
@@ -412,7 +413,8 @@ class AutoFormTable extends PureComponent {
                     }
                   </Fragment>);
                 }
-                if (item.type === 'del' && btnsAuthority.includes('del')) {
+                // if (item.type === 'del' && btnsAuthority.includes('del')) {
+                if (item.type === 'del') {
                   return (<Fragment key={item.type}>
                     <Tooltip title="删除">
                       <Popconfirm
