@@ -389,7 +389,8 @@ class AutoFormTable extends PureComponent {
                         }}><EditIcon /></a>
                       </Tooltip>
                       {
-                        this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
+                        // this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
+                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
                       }
                     </Fragment>);
                 }
@@ -409,7 +410,8 @@ class AutoFormTable extends PureComponent {
 
                     </Tooltip>
                     {
-                      this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
+                      // this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
+                      this._SELF_.btnEl.length - 1 !== index  && <Divider type="vertical" />
                     }
                   </Fragment>);
                 }
