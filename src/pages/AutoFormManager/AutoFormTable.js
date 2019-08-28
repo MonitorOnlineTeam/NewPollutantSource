@@ -15,6 +15,8 @@ import {
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
+import AttachmentView from '@/components/AttachmentView'
+import { getAttachmentDataSource } from './utils'
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -253,11 +255,7 @@ class AutoFormTable extends PureComponent {
 
 
   componentWillReceiveProps(nextProps) {
-    console.log('props1=',this.props.searchParams)
-      console.log('props2=',nextProps.searchParams)
-    if((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
-      console.log('props1=',this.props.searchParams)
-      console.log('props2=',nextProps.searchParams)
+    if ((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
       this.props.dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
@@ -310,23 +308,11 @@ class AutoFormTable extends PureComponent {
       if (col.type === '上传') {
         return {
           ...col,
-          width: 400,
+          width: 200,
           render: (text, record) => {
-            const key = col.dataIndex;
-            const fileInfo = record[key] ? record[key].split(';') : [];
+            const attachmentDataSource = getAttachmentDataSource(text);
             return (
-              <div>
-                {
-                  fileInfo.map(item => {
-                    const itemList = item.split('|');
-                    return <Fragment>
-                      <a target="_blank" href={`${itemList[itemList.length - 1]}${itemList[0]}`}>{itemList[0]}</a>
-                      <a style={{ marginLeft: 10 }} href={`${itemList.pop()}${itemList[0]}`} download>下载</a>
-                      <br />
-                    </Fragment>
-                  })
-                }
-              </div>
+              <AttachmentView dataSource={attachmentDataSource} />
             )
           },
         }
@@ -335,10 +321,10 @@ class AutoFormTable extends PureComponent {
         ...col,
         width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
-          text= text ? text + "" : text;
+          text = text ? text + "" : text;
           const type = col.formatType;
           if (type === "标签") {
-            const types = text ?(text.indexOf("|") ? text.split("|") : text.split(",")):[]
+            const types = text ? (text.indexOf("|") ? text.split("|") : text.split(",")) : []
             return types.map(item => {
               return <Tag>{item}</Tag>
             })
@@ -492,8 +478,8 @@ class AutoFormTable extends PureComponent {
       //   }
       // },
     };
-    console.log('dataSource=',dataSource)
-    console.log('_columns=',_columns)
+    console.log('dataSource=', dataSource)
+    console.log('_columns=', _columns)
     return (
       <Fragment>
         <Row className={styles.buttonWrapper}>
