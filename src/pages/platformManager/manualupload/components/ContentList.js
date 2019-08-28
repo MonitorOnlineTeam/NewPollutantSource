@@ -76,8 +76,8 @@ export default class ContentList extends Component {
                 manualUploadParameters: {
                     ...this.props.manualUploadParameters,
                     ...{
-                        BeginTime: date[0].format('YYYY-MM-DD 00:00:00'),
-                        EndTime: date[1].format('YYYY-MM-DD 23:59:59'),
+                        BeginTime: date.length === 0 ? null : date[0].format('YYYY-MM-DD 00:00:00'),
+                        EndTime: date.length === 0 ? null : date[1].format('YYYY-MM-DD 23:59:59'),
                     }
                 }
             }
@@ -319,7 +319,11 @@ export default class ContentList extends Component {
     }
     render() {
         const { manualUploadParameters, DGIMN } = this.props;
-        let dateValues = [moment(manualUploadParameters.BeginTime), moment(manualUploadParameters.EndTime)]
+        let dateValues = [];
+        if (manualUploadParameters.BeginTime && manualUploadParameters.EndTime) {
+            dateValues = [moment(manualUploadParameters.BeginTime), moment(manualUploadParameters.EndTime)];
+        }
+
         var uploaddata = [];
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
@@ -358,6 +362,7 @@ export default class ContentList extends Component {
                 dataIndex: 'StandardSituation',
                 align: 'center',
                 key: 'StandardSituation',
+                sorter: (a, b) => a.StandardSituation - b.StandardSituation,
                 render: (text, record, index) => (
                     <span>
                         {text === 0 ? <Tag color="green">达标</Tag> : <Tag color="red">超标</Tag>}
@@ -375,7 +380,7 @@ export default class ContentList extends Component {
             {
                 title: '操作',
                 key: 'action',
-                width: '80px',
+                width: '100px',
                 align: 'center',
                 render: (text, record, index) => (
                     <span>
@@ -406,53 +411,51 @@ export default class ContentList extends Component {
                     </Button>
                 }
                 title={
-                    <Form >
-                        <Row>
-                            <Col span={7} >
-                                选择时间:  <RangePicker_ style={{ width: '300px' }} onChange={this._handleDateChange} format={'YYYY-MM-DD'} dateValue={dateValues} />
-                            </Col>
-                            <Col span={5} >
-                                <Select
-                                    mode="multiple"
-                                    style={{ width: '250px' }}
-                                    placeholder="请选择污染物"
-                                    filterOption={true}
-                                    onChange={this.SelectHandleChange}
-                                >
-                                    {this.SelectOptions()}
-                                </Select>
-                            </Col>
-                            <Col span={4} style={{ textAlign: 'center' }} >
-                                <Button style={{ marginRight: 5 }}
-                                    onClick={() => this.updateModel()}
-                                >
-                                    添加
+                    <Form layout="inline">
+                        <Form.Item>
+                            监测时间:  <RangePicker_ onChange={this._handleDateChange} format={'YYYY-MM-DD'} dateValue={dateValues} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Select
+                                mode="multiple"
+                                style={{ width: '280px' }}
+                                placeholder="请选择污染物"
+                                filterOption={true}
+                                allowClear={true}
+
+                                maxTagCount={2}
+                                onChange={this.SelectHandleChange}
+                            >
+                                {this.SelectOptions()}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button style={{ marginRight: 5 }}
+                                onClick={() => this.updateModel()}
+                            >
+                                添加
                             </Button>
-                                {this.upload()}
-                                {console.log("this.state.uploadLoading=", this.state.uploadLoading)}
-                                <Spin
-                                    delay={500}
-                                    spinning={this.state.uploadLoading}
-                                    style={{
-                                        marginLeft: 10,
-                                        height: '100%',
-                                        width: '30px',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                />
-                            </Col>
-
-
-                        </Row>
+                            {this.upload()}
+                            <Spin
+                                delay={500}
+                                spinning={this.state.uploadLoading}
+                                style={{
+                                    marginLeft: 10,
+                                    height: '100%',
+                                    width: '30px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            />
+                        </Form.Item>
                     </Form>
-                } style={{ height: 'calc(100vh - 150px)' }} bordered={false}>
+                } style={{ height: 'calc(100vh - 200px)' }} bordered={false}>
 
                 <SdlTable
                     loading={this.props.loading}
                     columns={columns}
                     dataSource={!DGIMN ? null : uploaddata}
-                    scroll={{ y: 'calc(100vh - 400px)' }}
+                    scroll={{ y: 'calc(100vh - 450px)' }}
                     // style={{minHeight:'200px'}}
                     pagination={{
                         showSizeChanger: true,

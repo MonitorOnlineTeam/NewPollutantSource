@@ -56,7 +56,7 @@ class Index extends Component {
         const { DGIMN } = this.state;
         return (
             <div id="manualupload">
-                <PageHeaderWrapper>
+                <PageHeaderWrapper >
                     <ContentList DGIMN={DGIMN} />
                 </PageHeaderWrapper>
                 <NavigationTree runState='0' domId="#manualupload" choice={false} onItemClick={value => {

@@ -335,6 +335,7 @@ class AutoFormTable extends PureComponent {
         ...col,
         width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
+          text= text ? text + "" : text;
           const type = col.formatType;
           if (type === "标签") {
             const types = text ?(text.indexOf("|") ? text.split("|") : text.split(",")):[]

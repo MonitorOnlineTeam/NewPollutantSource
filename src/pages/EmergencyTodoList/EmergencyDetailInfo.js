@@ -98,53 +98,54 @@ class EmergencyDetailInfo extends Component {
 
     renderItem = (data, taskID, types) => {
         const rtnVal = [];
+        console.log('data111=',data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
                 if (types == "2") {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
-                            this.GoToForm(taskID, item.CnName, "1", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "1", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.StopMachine:
-                            this.GoToForm(taskID, item.CnName, "2", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "2", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.YhpReplace:
-                            this.GoToForm(taskID, item.CnName, "3", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "3", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.StandardGasReplace:
-                            this.GoToForm(taskID, item.CnName, "4", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "4", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.CqfPatrol:
-                            this.GoToForm(taskID, item.CnName, "5", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "5", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, "6", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "6", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, "7", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "7", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.CheckRecord:
-                            this.GoToForm(taskID, item.CnName, "8", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "8", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.TestRecord:
-                            this.GoToForm(taskID, item.CnName, "9", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "9", rtnVal, key,item.FormMainID);
                             break;
                         case EnumPsOperationForm.DataException:
-                            this.GoToForm(taskID, item.CnName, "10", rtnVal, key);
+                            this.GoToForm(taskID, item.CnName, "10", rtnVal, key,item.FormMainID);
                             break;
                         default:
                             break;
                     }
                 }
                 else {
-                    this.GoToForm(taskID, item.CnName, "-1", rtnVal, key);
+                    this.GoToForm(taskID, item.CnName, "-1", rtnVal, key,item.FormMainID);
                 }
             }
         });
         return rtnVal;
     }
 
-    GoToForm = (taskID, cnName, recordType, rtnVal, key) => {
+    GoToForm = (taskID, cnName, recordType, rtnVal, key,FormMainID) => {
         // let taskfrom = this.props.taskfrom || '';
         // if (taskfrom.indexOf("qcontrollist") > -1) {
         //     taskfrom = taskfrom.split('-')[0];
@@ -158,7 +159,7 @@ class EmergencyDetailInfo extends Component {
                     this.props.dispatch({
                         type: "common/getOperationImageList",
                         payload: {
-                            FormMainID: taskID
+                            FormMainID: FormMainID
                             // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
                         },
                         callback: (res) => {
@@ -321,24 +322,30 @@ class EmergencyDetailInfo extends Component {
                     var gasUrl = '/废气.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/废气灰.png'
+                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    }else{
+                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
-                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
                 if (data[i].CertificateTypeID == 241)//水
                 {
                     var gasUrl = '/水.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/水灰.png'
+                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    }else{
+                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
-                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
                 if (data[i].CertificateTypeID == 242)//voc
                 {
                     var gasUrl = '/voc.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/voc灰.png'
+                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    }else{
+                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
-                    iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                 }
             }
         }
