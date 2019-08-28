@@ -12,6 +12,7 @@ import config from '@/config'
 import cuid from 'cuid';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
+import { LegendIcon } from '@/utils/icon';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
@@ -333,7 +334,7 @@ export default class ContentList extends Component {
                 title: '监测时间',
                 dataIndex: 'MonitorTime',
                 align: 'left',
-                width: '150px',
+                width: 150,
                 key: 'MonitorTime',
                 sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
             }, {
@@ -362,7 +363,17 @@ export default class ContentList extends Component {
                 dataIndex: 'StandardSituation',
                 align: 'center',
                 key: 'StandardSituation',
-                sorter: (a, b) => a.StandardSituation - b.StandardSituation,
+                filters: [
+                    {
+                        text: <span><LegendIcon style={{ color: "#34c066" }} />正常</span>,
+                        value: 0,
+                    },
+                    {
+                        text: <span><LegendIcon style={{ color: "#f04d4d" }} />超标</span>,
+                        value: 1,
+                    },
+                ],
+                onFilter: (value, record) => record.StandardSituation === value,
                 render: (text, record, index) => (
                     <span>
                         {text === 0 ? <Tag color="green">达标</Tag> : <Tag color="red">超标</Tag>}
@@ -380,7 +391,7 @@ export default class ContentList extends Component {
             {
                 title: '操作',
                 key: 'action',
-                width: '100px',
+                width: 100,
                 align: 'center',
                 render: (text, record, index) => (
                     <span>
