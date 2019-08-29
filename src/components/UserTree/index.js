@@ -428,7 +428,7 @@ class UserTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.props.UserList.length ? <Table rowKey="tabKey" columns={Column} dataSource={this.props.UserList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', width: '100%', cursor: 'pointer' }}
+                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', width: '100%', cursor: 'pointer', maxHeight: 'calc(100vh - 330px)' }}
                   onRow={this.onClickRow}
                   rowKey="UserID"
                   rowClassName={this.setRowClassName}
