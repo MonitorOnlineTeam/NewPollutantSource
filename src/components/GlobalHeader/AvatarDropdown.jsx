@@ -7,7 +7,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import Cookie from 'js-cookie';
 import ChangePwdView from './ChangePwdView';
-import config from '@/config'
+import configToken from '@/config'
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
@@ -15,7 +15,7 @@ class AvatarDropdown extends React.Component {
     const { dispatch } = this.props;
     if (key === 'logout') {
       if (dispatch) {
-        Cookie.set(config.cookieName,null);
+        Cookie.set(configToken.cookieName,null);
         Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',
