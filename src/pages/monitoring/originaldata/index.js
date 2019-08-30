@@ -185,7 +185,8 @@ class Index extends Component {
                                     <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
                                 </div>
                             }
-                            style={{ width: '100%', height: 'calc(100vh - 230px)' }}
+                            className="contentContainer"
+                            style={{ width: '100%'}}
                         >
                             {this.loaddata()}
                         </Card>

@@ -348,7 +348,7 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 100px)', ...this.props.style }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', ...this.props.style }}>
                         {this.loaddata()}
                     </Card.Grid>
                 </Card>

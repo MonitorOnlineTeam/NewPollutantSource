@@ -337,7 +337,7 @@ class SiteDailyPage extends PureComponent {
     }
     return (
       <PageHeaderWrapper>
-        <Card style={{ height: 'calc(100vh - 224px)' }}>
+        <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col md={3} sm={24}>

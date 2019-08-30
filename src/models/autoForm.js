@@ -353,19 +353,26 @@ export default Model.extend({
 
     // 获取联动
     * getAttachmentList({ payload }, { call, update }) {
-      const result = yield call(services.getAttachmentList, { ...payload });
-      if (result.IsSuccess) {
-        let fileList = [];
-        fileList = result.Datas.map((item, index) => ({
+      if (payload.uid && payload.uid !== "null") {
+        const result = yield call(services.getAttachmentList, { ...payload });
+        if (result.IsSuccess) {
+          let fileList = [];
+          fileList = result.Datas.map((item, index) => ({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
             url: item.Url,
           }))
+          yield update({
+            fileList,
+          })
+        }
+      } else {
         yield update({
-          fileList,
+          fileList: []
         })
       }
+
     },
 
     // 文件上传

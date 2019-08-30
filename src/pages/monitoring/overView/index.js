@@ -39,7 +39,8 @@ const RadioGroup = Radio.Group;
     selectpollutantTypeCode: overview.selectpollutantTypeCode,
     dataOverview: overview.dataOverview,
     configInfo: global.configInfo,
-    defaultPollutantCode: common.defaultPollutantCode
+    defaultPollutantCode: common.defaultPollutantCode,
+    noticeList: global.notices
 }))
 class dataList extends PureComponent {
     constructor(props) {
@@ -302,7 +303,7 @@ class dataList extends PureComponent {
                 ],
                 onFilter: (value, record) => record.status === value,
                 render: (value, record, index) => {
-                    return getPointStatusImg(record.status, record.stop);
+                    return getPointStatusImg(record, this.props.noticeList);
                 },
             },
         ];

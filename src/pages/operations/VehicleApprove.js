@@ -78,41 +78,41 @@ class VehicleApprove extends Component {
           dataIndex: 'LicensePlateNumber',
           key: 'LicensePlateNumber',
         },
-        {
-          title: '车辆申请状态',
-          dataIndex: 'VihicleStatus',
-          key: 'VihicleStatus',
-          render: (text, record) => {
-            // 0：待借，1：已借出，2、申请中
-            // switch (text) {
-            //   case 0:
-            //     return '待借'
-            //     break;
-            //   case 1:
-            //     return '已借出'
-            //     break;
-            //   case 2:
-            //     return '申请中'
-            //     break;
-            //   default:
-            //     break;
-            // }
-            switch (record.ApprovalStatus) {
-              case 0:
-                return '申请中'
-                break;
-              case 1:
-                return '已借出'
-                break;
-              case 2:
-              case 3:
-                return '待借'
-                break;
-              default:
-                break;
-            }
-          }
-        },
+        // {
+        //   title: '车辆申请状态',
+        //   dataIndex: 'VihicleStatus',
+        //   key: 'VihicleStatus',
+        //   render: (text, record) => {
+        //     // 0：待借，1：已借出，2、申请中
+        //     // switch (text) {
+        //     //   case 0:
+        //     //     return '待借'
+        //     //     break;
+        //     //   case 1:
+        //     //     return '已借出'
+        //     //     break;
+        //     //   case 2:
+        //     //     return '申请中'
+        //     //     break;
+        //     //   default:
+        //     //     break;
+        //     // }
+        //     switch (record.ApprovalStatus) {
+        //       case 0:
+        //         return '申请中'
+        //         break;
+        //       case 1:
+        //         return '已借出'
+        //         break;
+        //       case 2:
+        //       case 3:
+        //         return '待借'
+        //         break;
+        //       default:
+        //         break;
+        //     }
+        //   }
+        // },
         {
           title: '申请人',
           dataIndex: 'ApplicantName',

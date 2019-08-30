@@ -38,6 +38,20 @@ ol {
   list-style: none;
 }
 
+:global {
+  .ant-layout {
+    .ant-pro-basicLayout-content {
+      margin-bottom: 0;
+      // padding-top: 64px;
+    }
+  }
+}
+
+.contentContainer {
+  height: calc(100vh - 190px);
+  overflow-y: auto;
+}
+
 @media (max-width: @screen-xs) {
   .ant-table {
     width: 100%;

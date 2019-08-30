@@ -9,6 +9,10 @@ export default Model.extend({
   namespace: 'operations',
   state: {
     calendarList: [],
+    logForm: {
+      RecordType: "",
+      dateTime: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
+    },
     abnormalDetailList: [],
     abnormalForm: {
       current: 1,
@@ -69,17 +73,35 @@ export default Model.extend({
     },
 
     // 获取运维日志信息
-    * getOperationLogList({ payload }, { call, put, update }) {
-      const result = yield call(services.getOperationLogList, payload);
+    * getOperationLogList({ payload }, { call, put, update, select }) {
+      const logForm = yield select(state => state.operations.logForm);
+      const recordTypeList = yield select(state => state.operations.recordTypeList);
+      const postData = {
+        RecordType: logForm.RecordType,
+        "beginTime": logForm.dateTime[0].format('YYYY-MM-DD 00:00:00'),
+        "endTime": logForm.dateTime[1].format('YYYY-MM-DD 23:59:59'),
+        ...payload
+      }
+      const result = yield call(services.getOperationLogList, postData);
       if (result.IsSuccess) {
+        // if(JSON.stringify(result.Datas.RecordType) != JSON.stringify(recordTypeList)){
+        if (payload.RecordType == "") {
+          yield update({
+            recordTypeList: result.Datas.RecordType,
+            logForm: {
+              ...logForm,
+              RecordType: "",
+            }
+          })
+        }
         yield update({
           recordTypeList: result.Datas.RecordType,
           timeLineList: result.Datas.FormList,
           timeLineTotal: result.Total
         })
       }
-    },
 
+    },
     // 获取运维日志详情图片
     * getOperationImageList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getOperationImageList, payload);
@@ -199,7 +221,7 @@ export default Model.extend({
           type: "getVehicleApplicationList"
         })
         message.success("撤销成功")
-      }else{
+      } else {
         message.error("失败")
       }
     },

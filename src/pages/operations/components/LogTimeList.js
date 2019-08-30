@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
+import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message, Spin } from 'antd'
 import { connect } from 'dva';
 import moment from 'moment';
 import { router } from 'umi';
@@ -26,13 +26,15 @@ function getBase64(file) {
   timeLineTotal: operations.timeLineTotal,
   imageList: common.imageList,
   imageListVisible: common.imageListVisible,
+  logForm: operations.logForm,
+  loading: loading.effects["operations/getOperationLogList"]
 }))
 class LogTimeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentRecordType: "",
-      dateValues: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
+      dateValues: props.logForm.dateTime,
       current: 1,
       pageIndex: 10,
       previewVisible: false,
@@ -59,10 +61,11 @@ class LogTimeList extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.DGIMN !== nextProps.DGIMN) {
+      const flag = this.props.type != nextProps.type;
       this.setState({
         DGIMN: nextProps.DGIMN
       }, () => {
-        this.getOperationLogList()
+        this.getOperationLogList(flag)
       })
     }
   }
@@ -123,12 +126,12 @@ class LogTimeList extends Component {
             {
               node.TypeID !== 0 ?
                 <>
-                  <p><span style={{color: "#40a9ff", marginRight: 10}}>{node.CreateUser}</span>{node.DisplayInfo}</p>
+                  <p><span style={{ color: "#40a9ff", marginRight: 10 }}>{node.CreateUser}</span>{node.DisplayInfo}</p>
                   <Tag
                     color="#43b9ff"
                     style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
                     onClick={() => {
-                  if (node.PollutantType != 2) {
+                      if (node.PollutantType != 2) {
                         // 查看图片
                         this.getOperationImageList(node)
                       } else {
@@ -139,7 +142,7 @@ class LogTimeList extends Component {
                     查看详情
             </Tag>
                 </>
-                : <><p><span style={{color: "#40a9ff", marginRight: 10}}>{node.CreateUser}</span>需要对当前排口进行处理</p>
+                : <><p><span style={{ color: "#40a9ff", marginRight: 10 }}>{node.CreateUser}</span>需要对当前排口进行处理</p>
                   <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p></>
             }
 
@@ -151,7 +154,7 @@ class LogTimeList extends Component {
   }
 
   // 获取运维日志数据
-  getOperationLogList = () => {
+  getOperationLogList = (flag) => {
     const { dateValues, DGIMN, currentRecordType } = this.state;
     this.props.dispatch({
       type: "operations/getOperationLogList",
@@ -159,9 +162,9 @@ class LogTimeList extends Component {
         "pageIndex": this.state.current,
         "pageSize": this.state.pageIndex,
         "DGIMN": DGIMN,
-        "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
-        "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
-        "RecordType": currentRecordType
+        // "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
+        // "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
+        "RecordType": flag ? "" : this.props.logForm.RecordType
       }
     })
   }
@@ -185,10 +188,10 @@ class LogTimeList extends Component {
     })
   }
 
-
   render() {
-    const { recordTypeList, timeLineList, timeLineTotal, imageList, style } = this.props;
+    const { recordTypeList, timeLineList, timeLineTotal, imageList, style, logForm, loading } = this.props;
     const { dateValues, current, previewVisible, previewImage } = this.state;
+    let defaultValue = logForm.RecordType;
     return (
       <>
         <Card
@@ -196,10 +199,20 @@ class LogTimeList extends Component {
           extra={
             <div>
               <Select
+                value={defaultValue}
                 style={{ width: 220 }}
                 placeholder="请选择记录表"
                 allowClear
                 onChange={(value) => {
+                  this.props.dispatch({
+                    type: "operations/updateState",
+                    payload: {
+                      logForm: {
+                        ...logForm,
+                        RecordType: value
+                      }
+                    }
+                  })
                   this.setState({
                     currentRecordType: value,
                     current: 1
@@ -210,7 +223,7 @@ class LogTimeList extends Component {
               >
                 {
                   recordTypeList.map(item => {
-                    return <Option value={item.TypeId} key={item.TypeId}>{item.CnName}</Option>
+                    return <Option value={item.TypeId} key={item.TypeId}>{item.Abbreviation}</Option>
                   })
                 }
               </Select>
@@ -218,6 +231,15 @@ class LogTimeList extends Component {
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
                 dateValue={dateValues}
                 onChange={(date) => {
+                  this.props.dispatch({
+                    type: "operations/updateState",
+                    payload: {
+                      logForm: {
+                        ...logForm,
+                        dateTime: date
+                      }
+                    }
+                  })
                   this.setState({
                     dateValues: date,
                     current: 1
@@ -230,26 +252,42 @@ class LogTimeList extends Component {
             </div>
           }>
           {/* <div style={{overflowY: "auto", height: "calc(100vh - 282px)"}}> */}
-          {
-            timeLineList.length ? <div className={styles.timelineContent} style={{ ...style }}>
-              <div className={styles.timeline}>
-                <Timeline>
-                  {this.renderTimeLineItem()}
-                </Timeline>
-              </div>
-              <div style={{ width: "100%", marginTop: 20, marginBottom: -6 }}>
-                <Pagination
-                  style={{ float: "right" }}
-                  showQuickJumper
-                  // defaultCurrent={}
-                  pageSize={10}
-                  current={current}
-                  total={timeLineTotal}
-                  onChange={this.paginationChange}
-                />
-              </div>
-            </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          }
+          <div className={styles.timelineContent} style={{ ...style }}>
+            {
+              loading && <Spin
+                style={{
+                  width: '100%',
+                  height: 'calc(100vh/2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                size="large"
+              />
+            }
+            {
+              !loading && (timeLineList.length ?
+                <>
+                  <div className={styles.timeline}>
+                    <Timeline>
+                      {this.renderTimeLineItem()}
+                    </Timeline>
+                  </div>
+                  <div style={{ width: "100%", marginTop: 20, marginBottom: -6 }}>
+                    <Pagination
+                      style={{ float: "right" }}
+                      showQuickJumper
+                      // defaultCurrent={}
+                      pageSize={10}
+                      current={current}
+                      total={timeLineTotal}
+                      onChange={this.paginationChange}
+                    />
+                  </div>
+                </>
+                : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+            }
+          </div>
           {/* </div> */}
         </Card>
         {
