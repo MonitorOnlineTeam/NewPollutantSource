@@ -210,6 +210,10 @@ export default Model.extend({
           type: 'setConfigInfo',
           payload: response.Datas,
         });
+        yield put({
+          type: 'settings/getSetting',
+          payload: response.Datas,
+        });
       }
       // const { configInfo } = yield select(m => m.login);
       // console.log("setConfigInfo=", configInfo);

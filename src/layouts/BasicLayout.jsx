@@ -96,9 +96,9 @@ const BasicLayout = props => {
         type: 'user/fetchCurrent',
         payload: {},
       });
-      dispatch({
-        type: 'settings/getSetting',
-      });
+      // dispatch({
+      //   type: 'settings/getSetting',
+      // });
 
     }
   }, []);
@@ -133,20 +133,19 @@ const BasicLayout = props => {
     }
   };
 
-  const pageTitleRender = e => {
-    if(configInfo){
-      e.settings.title = configInfo.SystemName
-      e.title = configInfo.SystemName
-    }
-    // configInfo && (e.settings.title = configInfo.SystemName);
-    return e;
-  }
-  const myStyle = {};
+  // const pageTitleRender = e => {
+  //   if (configInfo) {
+  //     e.settings.title = configInfo.SystemName
+  //     e.title = configInfo.SystemName
+  //     return e;
+  //   }
+  // }
+  // const myStyle = {};
   return (
     <>
       <ProLayout
         logo={logoRender}
-        pageTitleRender={pageTitleRender}
+        // pageTitleRender={pageTitleRender}
         // headerRender={(e)=>{
         //   console.log('eee=',e)
         // }}
@@ -164,7 +163,7 @@ const BasicLayout = props => {
                 User_ID: JSON.parse(userCookie).User_ID,
               },
             });
-          }else if(userCookie === "null"){
+          } else if (userCookie === "null") {
             router.push("/user/login");
           }
 

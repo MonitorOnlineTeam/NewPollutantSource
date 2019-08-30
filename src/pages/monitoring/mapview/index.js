@@ -737,19 +737,19 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '60vh' }} />
+                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
             </Tabs>
           </Modal>

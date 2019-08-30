@@ -184,7 +184,9 @@ class SdlForm extends PureComponent {
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
 
-          element = <Input placeholder={placeholder} allowClear />;
+          element = <Input placeholder={placeholder} allowClear onChange={(e)=>{
+            console.log('e=',e)
+          }} />;
           break;
         case '下拉列表框':
         case '多选下拉列表':
