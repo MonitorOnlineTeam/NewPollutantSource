@@ -274,7 +274,26 @@ export default Model.extend({
         }, {
             call,
             update,
+            select,
+            take
         }) {
+            if (!payload.PollutantType) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
+                    }
+                }else {
+                    payload = {
+                        ...payload,
+                        PollutantType:global.defaultPollutantCode
+                    }
+                }
+                
+            }
             const result = yield call(getpointbydepid, {
                 ...payload
             });

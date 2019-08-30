@@ -13,6 +13,7 @@ import cuid from 'cuid';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
 import { LegendIcon } from '@/utils/icon';
+import config from '@/config'
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
@@ -306,7 +307,7 @@ export default class ContentList extends Component {
                 DGIMN: DGIMN,
                 FileUuid: uid,
                 FileActualType: "3",
-                ssoToken: Cookie.get('ssoToken')
+                ssoToken: Cookie.get(config.cookieName)
             }
         };
         return (

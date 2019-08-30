@@ -131,7 +131,8 @@ export async function getentandpoint(params) {
 // 获取当前部门的排口
 export async function getpointbydepid(params) {
     const body={
-        UserGroup_ID:params.UserGroup_ID
+        UserGroup_ID:params.UserGroup_ID,
+        PollutantType:params.PollutantType
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByDepID', body, null);
     return result === null ? {

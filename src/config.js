@@ -12,6 +12,7 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
+  cookieName:'ssToken9001',
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,
@@ -23,19 +24,19 @@ module.exports = {
   // 使用文档路径
   documentationaddress: 'http://172.16.12.152:8066/api/upload/documentation/',
   // 实时视频地址
-  realtimevideourl: 'http://172.16.9.33:8082/Web/HkVideo/RealtimeCamera.html',
+  realtimevideourl: 'http://172.16.9.52:9090/Web/HkVideo/RealtimeCamera.html',
   // 历史视频地址
-  hisvideourl: 'http://172.16.9.33:8082/Web/HkVideo/HistoryCamera.html',
+  hisvideourl: 'http://172.16.9.52:9090/Web/HkVideo/HistoryCamera.html',
   // 萤石云视频地址
-  ysyvideourl: 'http://172.16.9.33:8082/Web/YsyVideo/YsyVideo.html',
+  ysyvideourl: 'http://172.16.9.52:9090/Web/YsyVideo/YsyVideo.html',
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
   VideoServer: 1,
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 1000,
   // autoForm文件上传地址
-  fileUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+  fileUploadUrl: 'http://172.16.9.52:9090/rest/PollutantSourceApi/UploadApi/PostFiles',
   // 手工数据上传地址
-  templateUploadUrl: 'http://172.16.9.52:8095/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
+  templateUploadUrl: 'http://172.16.9.52:9090/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

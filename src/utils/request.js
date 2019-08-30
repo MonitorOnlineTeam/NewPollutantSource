@@ -7,6 +7,7 @@ import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
+import config from '@/config'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -65,7 +66,7 @@ function parseJSON(response) {
 }
 
 async function requestMy(url, options) {
-  const ssoToken = `${getCookie('ssoToken')}`;
+  const ssoToken = `${getCookie(config.cookieName)}`;
   const authHeader = getAuthHeader(ssoToken);
 
   const resp = await fetch(url, { ...options, ...authHeader })
@@ -75,7 +76,7 @@ async function requestMy(url, options) {
     .catch(e => {
       const status = e.name;
       if (status === 401) {
-        Cookie.set('ssoToken', null);
+        Cookie.set(config.cookieName, null);
         Cookie.set('currentUser', null);
         router.push('/user/login');
         return;

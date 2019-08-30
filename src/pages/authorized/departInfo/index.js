@@ -321,7 +321,8 @@ class DepartIndex extends Component {
         this.setState({ checkedKey });
     };
     onChecks = checkedKeys => {
-
+        console.log('select=',checkedKeys)
+        console.log('this.state.leafTreeDatas=',this.state.leafTreeDatas)
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
@@ -329,7 +330,7 @@ class DepartIndex extends Component {
                 leafTree.push(item);
             }
         });
-        this.setState({ checkedKeySel: leafTree });
+        this.setState({ checkedKeySel: checkedKeys });
     };
     onSelect = (record, selected, selectedRows) => {
         console.log("record=", record.key);
@@ -463,7 +464,8 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getpointbydepid',
             payload: {
-                UserGroup_ID: keys.toString()
+                UserGroup_ID: keys.toString(),
+                // PollutantType:this.state.pollutantType
             }
         })
 
