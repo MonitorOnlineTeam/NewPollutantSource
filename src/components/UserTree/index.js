@@ -26,6 +26,7 @@ import {
 } from '@/utils/icon';
 import global from '@/global.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
+import styles from './index.less'
 
 const { Option } = Select;
 const { Search } = Input;
@@ -324,33 +325,41 @@ class UserTree extends Component {
       {
         title: 'UserName',
         dataIndex: 'UserName',
-
+        width: '20%',
         render: (text, record) => <span> <b style = {
           {
             fontSize: 12,
           }
         } > {
           record.UserName
-        } </b><br></br><span style={{ fontSize: 10 }}>{record.Phone}</span></span>,
+        } </b><br></br><span style={{ fontSize: 10 }}><Icon type="mobile" theme="twoTone" style={{ fontSize: '5px', marginRight: '2px' }} />{record.Phone}</span></span>,
       },
       {
         title: 'UserGroupName',
         dataIndex: 'UserGroupName',
-        width: '40%',
-        render: (text, record) =>
-           <Fragment>
-          {
+        render: (text, record) => {
+            const itemlist = [];
             record.UserGroupName &&
-            <Popover placement = "topLeft" title = "部门：" content = { record.UserGroupName } arrowPointAtCenter > <Tag color="blue">部门</Tag>
-            </Popover>
-
-          }
-          {
+            record.UserGroupName.split(',').map((m, index) => {
+              if (index < 2) {
+                itemlist.push(<Tag title={m} color="rgb(206, 109, 222)" styles={{ fontSize: 8 }}>{m.length > 3 ? `${m.substring(0, 3)}...` : m}</Tag>);
+              }
+              if (index === 2) {
+                itemlist.push(<Tag title={record.UserGroupName} color="rgb(206, 109, 222)" styles={{ fontSize: 8 }}>...</Tag>);
+              }
+            })
+            record.RolesName && itemlist.push(<br></br>);
             record.RolesName &&
-            < Popover placement = "topLeft" title = "角色：" content = { record.RolesName } arrowPointAtCenter > <Tag color="geekblue">角色</Tag>
-                              </Popover>
+            record.RolesName.split(',').map((m, index) => {
+              if (index < 2) {
+                itemlist.push(<Tag title={m} color="rgb(170, 209, 237)" styles={{ fontSize: 8 }}>{m.length > 3 ? `${m.substring(0, 3)}...` : m}</Tag>);
+              }
+              if (index === 2) {
+                itemlist.push(<Tag title={record.RolesName} color="rgb(170, 209, 237)" styles={{ fontSize: 8 }}>...</Tag>);
+              }
+            })
+            return itemlist;
           }
-          </Fragment>
           ,
       },
     ]
@@ -427,7 +436,7 @@ class UserTree extends Component {
                     justifyContent: 'center',
                   }}
                   size="large"
-                /> : <div> {this.props.UserList.length ? <Table rowKey="tabKey" columns={Column} dataSource={this.props.UserList} showHeader={false} pagination={false}
+                /> : <div className={styles.dataTable}> {this.props.UserList.length ? <Table rowKey="tabKey" columns={Column} dataSource={this.props.UserList} showHeader={false} pagination={false}
                   style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', width: '100%', cursor: 'pointer', maxHeight: 'calc(100vh - 330px)' }}
                   onRow={this.onClickRow}
                   rowKey="UserID"

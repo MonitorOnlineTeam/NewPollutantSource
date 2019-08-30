@@ -189,7 +189,7 @@ export default {
                 {
                   name: 'ysyshowvideo',
                   path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
-                  component: './platformManager/ysyvideo/YsyShowVideo',
+                  component: './platformManager/ysyvideo/index',
                 },
                 {
                   name: 'hkvideo',
@@ -577,7 +577,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://172.16.9.52:8096/',
+      target: 'http://172.16.9.13:9090/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
