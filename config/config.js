@@ -191,7 +191,7 @@ export default {
                 {
                   name: 'ysyshowvideo',
                   path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
-                  component: './platformManager/ysyvideo/YsyShowVideo',
+                  component: './platformManager/ysyvideo/index',
                 },
                 {
                   name: 'hkvideo',
