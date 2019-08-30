@@ -22,7 +22,7 @@ const SettingModel = {
   namespace: 'settings',
   state: defaultSettings,
   reducers: {
-    getSetting(state = defaultSettings) {
+    getSetting(state = defaultSettings, { payload }) {
       const setting = {};
       const urlParams = new URL(window.location.href);
       Object.keys(state).forEach(key => {
@@ -31,6 +31,10 @@ const SettingModel = {
           setting[key] = value === '1' ? true : value;
         }
       });
+      console.log('payload=', payload)
+      if (payload) {
+        setting.title = payload.SystemName
+      }
       const { primaryColor, colorWeak } = setting;
 
       if (primaryColor && state.primaryColor !== primaryColor) {

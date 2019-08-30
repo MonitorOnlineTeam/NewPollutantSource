@@ -203,7 +203,7 @@ class NavigationTree extends Component {
       //   this.state.panelDataList.push(pushItem)
       //   // }
       // }
-      console.log('entandpoint=', data)
+      // console.log('entandpoint=', data)
       if (this.defaultKey == 0 && node.IsEnt == 0) {
         this.defaultKey = 1;
         var nowKey = [key]

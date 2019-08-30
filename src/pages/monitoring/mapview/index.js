@@ -501,18 +501,19 @@ class MapView extends Component {
           if (val[0]) {
             const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
+              const position = [entInfo[0].Longitude, entInfo[0].Latitude];
               if (this.state.currentEntInfo == entInfo[0]) {
                 // 点击的是当期企业
                 this.setState({
                   overAll: false,
+                  infoWindowVisible: false,
                 })
               } else {
                 // 切换企业
-                const position = [entInfo[0].Longitude, entInfo[0].Latitude];
+                // const position = [entInfo[0].Longitude, entInfo[0].Latitude];
                 this.setState({
                   displayType: 1,
                   infoWindowVisible: false,
-                  mapCenter: position,
                   overAll: false,
                   coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
@@ -522,6 +523,7 @@ class MapView extends Component {
               }
               this.setState({
                 currentEntInfo: entInfo[0],
+                mapCenter: position,
               })
               // 点击的企业
               // const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
@@ -639,7 +641,8 @@ class MapView extends Component {
                       <>
                         <Descriptions
                           title={
-                            <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                            // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                            <div>{this.state.currentPointInfo.title}</div>
                           }
                           size="small"
                           bordered>
@@ -734,19 +737,19 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '60vh' }} />
+                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '60vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
             </Tabs>
           </Modal>

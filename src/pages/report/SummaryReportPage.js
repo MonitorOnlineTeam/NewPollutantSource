@@ -60,13 +60,13 @@ class DailySummaryPage extends PureComponent {
 
     this.props.dispatch({
       type: 'common/getEnterpriseAndPoint',
-      payload:{
+      payload: {
         RegionCode: "",
         PointMark: "2"
       },
       callback: (sucRes, defaultValue) => {
         let RegionCode = defaultValue;
-        console.log('defaultValue=',defaultValue)
+        console.log('defaultValue=', defaultValue)
         this.setState({
           defaultRegionCode: RegionCode
         })
@@ -222,13 +222,13 @@ class DailySummaryPage extends PureComponent {
   }
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList,  } = this.props;
+    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList, } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
     return (
       <PageHeaderWrapper>
-        <Card>
+        <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col md={6} sm={24}>
@@ -246,7 +246,7 @@ class DailySummaryPage extends PureComponent {
                     //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
                     //   }
                     // </Select>
-                    <SelectPollutantType placeholder="请选择污染物类型"/>
+                    <SelectPollutantType placeholder="请选择污染物类型" />
                   )}
                 </FormItem>
               </Col>

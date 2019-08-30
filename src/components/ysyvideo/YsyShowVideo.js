@@ -72,11 +72,12 @@ class YsyShowVideo extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    // debugger;
+     debugger;
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.setState({
         dgimn: nextProps.DGIMN,
       })
+      this.tabsChange('1');
       this.changeDgimn(nextProps.DGIMN);
     }
   }
