@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Calendar, Badge, Card, Divider, Tag, Empty, message } from 'antd';
+import { Calendar, Badge, Card, Divider, Tag, Empty, message, List } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
@@ -7,110 +7,12 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '@/components/SdlTable'
 import styles from './index.less'
 
-// 企业名称、排口名称、运维状态、运维人、任务来源、任务状态、操作（详细）
-const columns = [
-  {
-    title: '企业名称',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '排口名称',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: '运维状态',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '运维人',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '任务来源',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '任务状态',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '操作',
-    render: (text, record) => {
-      return <a>详情</a>
-    }
-  },
-];
-// 企业名称、排口名称、运维状态、任务来源、任务状态、运维人、操作（详细）
-const abnormalColums = [
-  {
-    title: '企业名称',
-    dataIndex: 'EnterpriseName',
-    key: 'EnterpriseName',
-    width: 240,
-  },
-  {
-    title: '排口名称',
-    dataIndex: 'PointName',
-    key: 'PointName',
-    width: 180,
-    render: (text, record) => {
-      if(record.TaskType === 2){
-        return <div>
-          {text}
-          <Tag color="#ff5506" style={{position: "relative", top: '-10px'}} >应急</Tag>
-        </div>
-      }
-      return text
-    }
-  },
-  {
-    title: '运维状态',
-    dataIndex: 'ExceptionTypeText',
-    key: 'ExceptionTypeText',
-    width: 240,
-    render: (text, record) => {
-      if(text) {
-        return text.split(",").map(item => {
-          return <Tag color="volcano">{item}</Tag>
-        })
-      }
-    }
-  },
-  {
-    title: '任务来源',
-    dataIndex: 'TaskFromText',
-    key: 'TaskFromText',
-  },
-  {
-    title: '任务状态',
-    dataIndex: 'TaskStatusText',
-    key: 'TaskStatusText',
-  },
-  {
-    title: '运维人',
-    dataIndex: 'OperationName',
-    key: 'OperationName',
-  },
-  {
-    title: '操作',
-    render: (text, record) => {
-      return <a onClick={()=> {
-        router.push(`/operations/calendar/details/${record.TaskID}/${record.DGIMN}`)
-      }}>详情</a>
-    }
-  },
-];
 
 @connect(({ loading, operations }) => ({
   calendarList: operations.calendarList,
   abnormalDetailList: operations.abnormalDetailList,
   abnormalForm: operations.abnormalForm,
+  loading: loading.effects["operations/getAbnormalDetailList"]
 }))
 class CalendarPage extends PureComponent {
   constructor(props) {
@@ -119,7 +21,8 @@ class CalendarPage extends PureComponent {
       date: moment(),
       mode: "month",
       dateFormat: "YYYY年MM月DD日",
-      currentCellInfo: {}
+      currentCellInfo: {},
+      listData: [],
       // pageInfo: {
       //   pageIndex: 1,
       //   pageSize: 10
@@ -130,6 +33,37 @@ class CalendarPage extends PureComponent {
   componentDidMount() {
     this.getCalendarInfo();
     this.abnormalItemClick({ date: moment(), type: "", text: "运维记录" });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.abnormalDetailList !== nextProps.abnormalDetailList) {
+      const listData = nextProps.abnormalDetailList.map(item => {
+        return {
+          href: `/operations/calendar/details/${item.TaskID}/${item.DGIMN}`,
+          title: <div>
+            <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
+            {
+              item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
+                // 报警响应异常,打卡异常,工作超时
+                let color = itm === "报警响应异常" ? "#f50" : (itm === "打卡异常" ? "#108ee9" : "#2db7f5")
+                return <Tag color={color}>{itm}</Tag>
+              })
+            }
+          </div>,
+          description: <div style={{ color: "#333" }}>
+            {item.PointName}
+            {
+              item.TaskType === 2 && <Tag color="#ff5506" style={{ position: "relative", top: '-10px', marginLeft: 4 }} >应急</Tag>
+            }
+          </div>,
+          content:
+            <div>运维人：{item.OperationName} <Tag color={item.TaskStatus === 3 ? "green" : "volcano"}>{item.TaskStatusText}</Tag></div>
+        }
+      })
+      this.setState({
+        listData: listData
+      })
+    }
   }
 
   // 获取日历数据
@@ -185,7 +119,7 @@ class CalendarPage extends PureComponent {
             return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
           }
           return <li key={item.content} style={{ marginBottom: 2 }}>
-            <Tag color={item.color} style={{cursor: "pointer"}} onClick={(e) => {
+            <Tag color={item.color} style={{ cursor: "pointer" }} onClick={(e) => {
               e.stopPropagation()
               this.updateState({ current: 1 });
               setTimeout(() => {
@@ -227,8 +161,6 @@ class CalendarPage extends PureComponent {
     // this.setState({
     //   currentAbnormalData: data
     // })
-
-    // window.scrollTo(0, 400);
   }
 
   updateState = (params) => {
@@ -252,56 +184,82 @@ class CalendarPage extends PureComponent {
     }, 0);
   }
 
-  render() {
-    const { abnormalDetailList, abnormalForm } = this.props;
-    const { currentCellInfo, dateFormat } = this.state;
 
+
+  render() {
+    const { abnormalDetailList, abnormalForm, loading } = this.props;
+    const { currentCellInfo, dateFormat, listData } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
       <PageHeaderWrapper title="运维日历">
-        {/* <div style={{ display: "flex", height: "calc(100vh - 64px)" }}>
-          <div style={{ flex: 3, marginRight: 10 }}>
-            <Card>
-              <Calendar dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender}></Calendar>
-            </Card>
+        <div className={styles.calendarWrapper}>
+          <div style={{ display: "flex" }}>
+            <div style={{ flex: 5, marginRight: 10 }}>
+              <Card className="contentContainer">
+                <Calendar
+                  dateCellRender={this.cellRender}
+                  monthCellRender={this.cellRender}
+                  onSelect={(date) => {
+                    // this.setState({
+                    //   currentAbnormalData: {
+                    //     ...currentAbnormalData,
+                    //     text: '运维记录'
+                    //   }
+                    // })
+                    this.updateState({ current: 1 });
+                    setTimeout(() => {
+                      this.abnormalItemClick({ date: date, type: "", text: "运维记录" })
+                    }, 0)
+                  }}
+                  onPanelChange={(date, mode) => {
+                    console.log('date=', moment(date).format("YYYY-MM-DD HH:mm:ss"))
+                    console.log('stateDate=', moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"))
+                    console.log('mode=', mode);
+                    console.log('stateMode=', this.state.mode)
+                    this.setState({
+                      date, mode
+                    }, () => {
+                      this.getCalendarInfo();
+                      // this.abnormalItemClick({ date: date, type: "", text: "运维记录" });
+                    })
+                  }}
+                />
+              </Card>
+            </div>
+            <div style={{ flex: 3 }}>
+              <Card className="contentContainer" title={cardTitle} bordered={false}>
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  loading={loading}
+                  pagination={{
+                    size: "small",
+                    showQuickJumper: true,
+                    pageSize: abnormalForm.pageSize,
+                    current: abnormalForm.current,
+                    onChange: this.onTableChange,
+                    total: abnormalForm.total
+                  }}
+                  dataSource={listData}
+                  renderItem={item => (
+                    <List.Item
+                      key={item.title}
+                    >
+                      <List.Item.Meta
+                        title={<a onClick={() => {
+                          router.push(item.href);
+                        }}>{item.title}</a>}
+                        description={item.description}
+                      />
+                      {item.content}
+                    </List.Item>
+                  )}
+                />
+              </Card>
+            </div>
           </div>
-          <div style={{ flex: 4 }}>
-            <Card title="运维记录 - 2019年08月13日" bordered={false}>
-              <SdlTable dataSource={dataSource} columns={columns} />
-            </Card>
-          </div>
-        </div> */}
-        <Card className={styles.calendarWrapper}>
-          <Calendar
-            dateCellRender={this.cellRender}
-            monthCellRender={this.cellRender}
-            onSelect={(date) => {
-              // this.setState({
-              //   currentAbnormalData: {
-              //     ...currentAbnormalData,
-              //     text: '运维记录'
-              //   }
-              // })
-              this.updateState({ current: 1 });
-              setTimeout(() => {
-                this.abnormalItemClick({ date: date, type: "", text: "运维记录" })
-              }, 0)
-            }}
-            onPanelChange={(date, mode) => {
-              console.log('date=', moment(date).format("YYYY-MM-DD HH:mm:ss"))
-              console.log('stateDate=', moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"))
-              console.log('mode=', mode);
-              console.log('stateMode=', this.state.mode)
-              this.setState({
-                date, mode
-              }, () => {
-                this.getCalendarInfo();
-                // this.abnormalItemClick({ date: date, type: "", text: "运维记录" });
-              })
-            }}
-          />
           {/* <Divider /> */}
-          <Card title={cardTitle} bordered={false}>
+          {/* <Card title={cardTitle} bordered={false}>
             <SdlTable
               dataSource={abnormalDetailList}
               columns={abnormalColums}
@@ -315,9 +273,9 @@ class CalendarPage extends PureComponent {
                 total: abnormalForm.total
               }}
             />
-          </Card>
+          </Card> */}
 
-        </Card>
+        </div>
       </PageHeaderWrapper>
     );
   }

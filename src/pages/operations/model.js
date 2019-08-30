@@ -16,7 +16,7 @@ export default Model.extend({
     abnormalDetailList: [],
     abnormalForm: {
       current: 1,
-      pageSize: 10,
+      pageSize: 6,
       total: 0
     },
     recordTypeList: [],
@@ -63,7 +63,7 @@ export default Model.extend({
       const result = yield call(services.getAbnormalDetailList, payload);
       if (result.IsSuccess) {
         yield update({
-          abnormalDetailList: result.Datas,
+          abnormalDetailList: result.Datas || [],
           abnormalForm: {
             ...abnormalForm,
             total: result.Total
