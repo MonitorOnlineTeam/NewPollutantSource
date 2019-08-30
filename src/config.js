@@ -1,9 +1,16 @@
+// 接口地址
+const apiHost = "http://172.16.9.52:9090/";
+// 文件上传地址
+const uploadHost = "http://172.16.9.13:9090/"
+
 module.exports = {
   name: '污染源智能分析平台',
   logindesc: 'SDL 您身边的环境污染分析专家',
   prefix: 'monitorEnterprise',
   footerText: '污染源智能分析平台   2018 sdl',
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
+  apiHost: apiHost,
+  uploadHost: uploadHost,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,

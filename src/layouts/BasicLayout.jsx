@@ -132,19 +132,23 @@ const BasicLayout = props => {
       return <div></div>
     }
   };
+
+  const pageTitleRender = e => {
+    if(configInfo){
+      e.settings.title = configInfo.SystemName
+      e.title = configInfo.SystemName
+    }
+    // configInfo && (e.settings.title = configInfo.SystemName);
+    return e;
+  }
   const myStyle = {};
   return (
     <>
       <ProLayout
         logo={logoRender}
-        pageTitleRender={(e) => {
-          // e.title = "123123";
-          configInfo && (e.settings.title = configInfo.SystemName);
-          return e;
-        }}
+        pageTitleRender={pageTitleRender}
         // headerRender={(e)=>{
-        //   debugger;
-
+        //   console.log('eee=',e)
         // }}
         onCollapse={handleMenuCollapse}
         menuItemRender={(menuItemProps, defaultDom) => {

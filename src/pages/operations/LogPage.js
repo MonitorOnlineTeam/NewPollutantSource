@@ -25,17 +25,19 @@ class LogPage extends Component {
     return (
       <>
         <NavigationTree choice={false} onItemClick={value => {
-          if (this.state.DGIMN !== value[0].key) {
-            console.log('value=', value)
-            this.setState({
-              DGIMN: value[0].key
-            })
+          if (!value[0].IsEnt) {
+            if (this.state.DGIMN !== value[0].key) {
+              this.setState({
+                DGIMN: value[0].key,
+                type: value[0].Type
+              })
+            }
           }
         }} />
         <div id="contentWrapper" className={styles.operationLogWrapper}>
           <PageHeaderWrapper>
             {
-              this.state.DGIMN && <LogTimeList DGIMN={this.state.DGIMN} />
+              this.state.DGIMN && <LogTimeList DGIMN={this.state.DGIMN} type={this.state.type} />
             }
           </PageHeaderWrapper>
         </div>
