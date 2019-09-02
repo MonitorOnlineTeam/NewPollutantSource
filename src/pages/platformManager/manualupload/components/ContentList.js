@@ -306,7 +306,7 @@ export default class ContentList extends Component {
                 DGIMN: DGIMN,
                 FileUuid: uid,
                 FileActualType: "3",
-                ssoToken: Cookie.get('ssoToken')
+                ssoToken: Cookie.get(config.cookieName)
             }
         };
         return (

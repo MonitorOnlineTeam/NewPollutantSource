@@ -3,6 +3,7 @@ import { post, get } from '@/utils/request';
 import Cookie from 'js-cookie';
 
 import { async } from 'q';
+import configToken from '@/config'
 
 /**
  * 系统登录
@@ -18,9 +19,9 @@ export async function systemLogin(params) {
   const body = Object.assign(defaults);
   const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
   if (result.IsSuccess && result.Datas) {
-    Cookie.set('ssoToken', result.Datas.Ticket);
+    Cookie.set(configToken.cookieName, result.Datas.Ticket);
   } else {
-    Cookie.set('ssoToken', "");
+    Cookie.set(configToken.cookieName, "");
   }
   return result;
 }

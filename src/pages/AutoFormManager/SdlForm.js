@@ -40,6 +40,7 @@ import SdlCheckbox from './SdlCheckbox';
 import SdlUpload from './SdlUpload'
 import MapModal from './MapModal';
 import SdlMap from './SdlMap'
+import configToken from '@/config'
 
 const { RangePicker, MonthPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -310,7 +311,7 @@ class SdlForm extends PureComponent {
         default:
           if (item.type === '上传') {
             // if (!isEdit) {
-            const ssoToken = Cookie.get('ssoToken');
+            const ssoToken = Cookie.get(configToken.cookieName);
             const props = {
               action: `${config.proxy['/upload'].target}/rest/PollutantSourceApi/UploadApi/PostFiles`,
               // headers: {

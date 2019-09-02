@@ -83,7 +83,7 @@ class NavigationTree extends Component {
           dataIndex: 'pointName',
           width: '60%',
           render: (text, record) => {
-            return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
+            return <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}</span></div>
           }
         },
         {
@@ -631,7 +631,7 @@ class NavigationTree extends Component {
         if (item.children) {
           return (
             <TreeNode style={{ width: "100%" }} title={
-              <div style={{ width: "271px" }}>{this.getEntIcon(item.MonitorObjectType)}{title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
+              <div style={{ width: "271px" }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -639,8 +639,8 @@ class NavigationTree extends Component {
 
         }
         return <TreeNode style={{ width: "100%" }} title={
-          <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+          <div style={{ width: "253px" }}>
+            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
               <div className={styles.bell}>
                 <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
               </div>
