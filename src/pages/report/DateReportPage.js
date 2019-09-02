@@ -76,62 +76,64 @@ class SiteDailyPage extends PureComponent {
     // 获取污染物 - 查询条件
     this.props.dispatch({
       type: "report/getPollutantTypeList",
-    })
-
-    this.props.dispatch({
-      type: 'common/getEnterpriseAndPoint',
-      payload: {
-        RegionCode: "",
-        PointMark: "2"
-      },
-      callback: (sucRes, defaultValue) => {
-        // let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
-        let RegionCode = defaultValue;
-        this.setState({
-          defaultRegionCode: RegionCode
-        })
-        // 初始化省市区
-        this.props.form.setFieldsValue({ Regions: RegionCode })
-        // 根据省市区获取企业
+      callback: (data) => {
+        const defalutVal = data.Datas[0].pollutantTypeCode;
         this.props.dispatch({
-          type: 'report/getEnterpriseList',
+          type: 'common/getEnterpriseAndPoint',
           payload: {
-            RegionCode: RegionCode,
-            callback: (res) => {
-              res.Datas.length && this.setState({
-                currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
-              })
-              // 获取污染物类型 = 表头
-              this.props.dispatch({
-                type: "report/getPollutantList",
-                payload: {
-                  pollutantTypes: 1,
-                  callback: () => {
-                    if (res.Datas.length) {
-                      // 获取表格数据
-                      this.props.dispatch({
-                        type: "report/getDateReportData",
-                        payload: {
-                          "type": this.SELF.actionType,
-                          // "PollutantSourceType": "2",
-                          // "Regions": "130000000,130200000,130201000",
-                          // // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
-                          // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
-                          // "ReportTime": "2019-06-29"
+            RegionCode: "",
+            PointMark: "2"
+          },
+          callback: (sucRes, defaultValue) => {
+            // let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
+            let RegionCode = defaultValue;
+            this.setState({
+              defaultRegionCode: RegionCode
+            })
+            // 初始化省市区
+            this.props.form.setFieldsValue({ Regions: RegionCode })
+            // 根据省市区获取企业
+            this.props.dispatch({
+              type: 'report/getEnterpriseList',
+              payload: {
+                RegionCode: RegionCode,
+                callback: (res) => {
+                  res.Datas.length && this.setState({
+                    currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
+                  })
+                  // 获取污染物类型 = 表头
+                  this.props.dispatch({
+                    type: "report/getPollutantList",
+                    payload: {
+                      pollutantTypes: defalutVal,
+                      callback: () => {
+                        if (res.Datas.length) {
+                          // 获取表格数据
+                          this.props.dispatch({
+                            type: "report/getDateReportData",
+                            payload: {
+                              "type": this.SELF.actionType,
+                              // "PollutantSourceType": "2",
+                              // "Regions": "130000000,130200000,130201000",
+                              // // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
+                              // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
+                              // "ReportTime": "2019-06-29"
+                            }
+                          })
+                        } else {
+                          this.props.dispatch({
+                            type: "report/updateState",
+                            payload: {
+                              dateReportData: []
+                            }
+                          })
                         }
-                      })
-                    } else {
-                      this.props.dispatch({
-                        type: "report/updateState",
-                        payload: {
-                          dateReportData: []
-                        }
-                      })
+                      }
                     }
-                  }
+                  })
                 }
-              })
-            }
+              }
+            })
           }
         })
       }
