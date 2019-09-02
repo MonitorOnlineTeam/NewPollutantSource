@@ -233,6 +233,7 @@ class SdlMap extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (this.props.path !== nextProps.path) {
       nextProps.path && this.setState({
+        path: nextProps.path,
         mapCenter: nextProps.path[0][0][0]
       })
     }
@@ -306,8 +307,8 @@ class SdlMap extends PureComponent {
   // 绘制厂界
   getPolygon = () => {
     const res = [];
-    if (this.props.path) {
-      const arr = eval(this.props.path);
+    if (this.state.path) {
+      const arr = eval(this.state.path);
       for (let i = 0; i < arr.length; i++) {
         res.push(<Polygon
           // events={this.polygonEvents}
