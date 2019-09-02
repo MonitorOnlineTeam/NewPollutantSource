@@ -84,25 +84,27 @@ class MapView extends Component {
   }
 
   componentDidMount() {
+
+
     // 获取所有企业及排口信息
     this.props.dispatch({
       type: 'mapView/getAllEntAndPoint',
     })
 
     // 获取废水污染物
-    this.props.dispatch({
-      type: 'mapView/getPollutantWaterList',
-      payload: {
-        pollutantTypes: 1,
-      },
-    })
-    // 获取废气污染物
-    this.props.dispatch({
-      type: 'mapView/getPollutantGasList',
-      payload: {
-        pollutantTypes: 2,
-      },
-    })
+    // this.props.dispatch({
+    //   type: 'mapView/getPollutantWaterList',
+    //   payload: {
+    //     pollutantTypes: 1,
+    //   },
+    // })
+    // // 获取废气污染物
+    // this.props.dispatch({
+    //   type: 'mapView/getPollutantGasList',
+    //   payload: {
+    //     pollutantTypes: 2,
+    //   },
+    // })
   }
 
   // 渲染坐标点
@@ -263,7 +265,7 @@ class MapView extends Component {
   getPointInfo = pollutantType => {
     // 获取table数据
     this.props.dispatch({
-      type: 'mapView/getPointTableData',
+      type: 'mapView/getPollutantList',
       payload: {
         DGIMNs: this.state.currentKey,
         dataType: 'HourData',
