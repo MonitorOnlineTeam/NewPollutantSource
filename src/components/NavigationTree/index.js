@@ -75,7 +75,8 @@ class NavigationTree extends Component {
           dataIndex: 'Pollutant',
           width: '10%',
           render: (text, record) => {
-            return record.Pollutant == 1 ? <a><PanelWaterIcon style={{ fontSize: 25 }} /></a> : <a><PanelGasIcon style={{ fontSize: 25 }} /></a>
+            return <span>{this.getPollutantIcon(record.Pollutant,25)}</span>
+           
           }
         },
         {
@@ -597,16 +598,16 @@ class NavigationTree extends Component {
         return <a><SiteIcon /></a>
     }
   }
-  getPollutantIcon = (type) => {
+  getPollutantIcon = (type,size) => {
     switch (type) {
       case "1":
-        return <a><WaterIcon /></a>
+        return <a><WaterIcon style={{fontSize:size}} /></a>
       case "2":
-        return <a><GasIcon /></a>
+        return <a><GasIcon style={{fontSize:size}}  /></a>
       case "10":
-        return <a><VocIcon /></a>
+        return <a><VocIcon style={{fontSize:size}}  /></a>
       case "12":
-        return <a><DustIcon /></a>
+        return <a><DustIcon style={{fontSize:size}}  /></a>
     }
   }
 
@@ -640,7 +641,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>
-            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType,16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
               <div className={styles.bell}>
                 <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
               </div>

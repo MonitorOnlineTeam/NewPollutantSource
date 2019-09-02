@@ -38,14 +38,19 @@ export default Model.extend({
         })
       }
     },
-    // 获取水污染物
-    * getPollutantWaterList({
+    // 获取污染物
+    * getPollutantList({
       payload,
-    }, { call, update, select }) {
-      const result = yield call(services.getPollutantList, payload);
+    }, { call, update, select, put }) {
+      const pollutantType = "pollutantType" + payload.type;
+      const result = yield call(services.getPollutantList, { pollutantTypes: payload.type });
       if (result.IsSuccess) {
         yield update({
-          waterList: result.Datas
+          [pollutantType]: result.Datas
+        })
+        yield put({
+          type: "getPointTableData",
+          payload: payload
         })
       }
     },
@@ -64,11 +69,13 @@ export default Model.extend({
     * getPointTableData({
       payload,
     }, { call, update, select, take, put }) {
+      const pollutantType = yield select(state => state.mapView[`pollutantType${payload.type}`])
+      console.log("pollutantType=",pollutantType)
       const result = yield call(services.getPointTableData, payload);
       // console.log('aaa',result)
       if (result.IsSuccess) {
         const type = payload.type;
-        const pollutantType = type == 1 ? yield select(state => state.mapView.waterList) : yield select(state => state.mapView.gasList)
+        // const pollutantType = type == 1 ? yield select(state => state.mapView.waterList) : yield select(state => state.mapView.gasList)
         const tableList = [];
         pollutantType.map(item => {
           result.Datas.map(itm => {

@@ -59,17 +59,31 @@ export default Model.extend({
           if (searchForm[key].value) {
             // 是否是moment对象
             const isMoment = moment.isMoment(searchForm[key].value);
-            groupItem = {
-              Key: key,
-              Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
-            };
+            const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+            if (isArrMoment) {
+              groupItem = [{
+                Key: key,
+                Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
+                Where: "$gte"
+              }, {
+                Key: key,
+                Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
+                Where: "$lte"
+              }]
+              group.push(...groupItem);
+            } else {
+              groupItem = {
+                Key: key,
+                Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
+              };
 
-            for (const whereKey in state.whereList[configId]) {
-              if (key === whereKey) {
-                groupItem.Where = state.whereList[configId][whereKey];
+              for (const whereKey in state.whereList[configId]) {
+                if (key === whereKey) {
+                  groupItem.Where = state.whereList[configId][whereKey];
+                }
               }
+              group.push(groupItem);
             }
-            group.push(groupItem);
           } else {
             group = []
           }

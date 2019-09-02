@@ -57,48 +57,46 @@ class DailySummaryPage extends PureComponent {
     //   }
     // })
     const { defaultSearchForm } = this.SELF;
-
+    // 获取污染物 - 查询条件
     this.props.dispatch({
-      type: 'common/getEnterpriseAndPoint',
-      payload: {
-        RegionCode: "",
-        PointMark: "2"
-      },
-      callback: (sucRes, defaultValue) => {
-        let RegionCode = defaultValue;
-        console.log('defaultValue=', defaultValue)
-        this.setState({
-          defaultRegionCode: RegionCode
-        })
-        // 获取污染物类型 = 表头
+      type: "report/getPollutantTypeList",
+      callback: (data) => {
+        const defalutVal = data.Datas[0].pollutantTypeCode;
         this.props.dispatch({
-          type: "report/getPollutantList",
+          type: 'common/getEnterpriseAndPoint',
           payload: {
-            pollutantTypes: 1,
-            callback: () => {
-              // 获取表格数据
-              this.props.dispatch({
-                type: "report/getDailySummaryDataList",
-                payload: {
-                  "type": this.props.match.params.reportType,
-                  "PollutantSourceType": "1",
-                  "Regions": RegionCode.toString(),
-                  // "Regions": "130000000,130200000,130201000",
-                  "ReportTime": moment().format("YYYY-MM-DD")
+            RegionCode: "",
+            PointMark: "2"
+          },
+          callback: (sucRes, defaultValue) => {
+            let RegionCode = defaultValue;
+            this.setState({
+              defaultRegionCode: RegionCode
+            })
+            // 获取污染物类型 = 表头
+            this.props.dispatch({
+              type: "report/getPollutantList",
+              payload: {
+                pollutantTypes: 1,
+                callback: () => {
+                  // 获取表格数据
+                  this.props.dispatch({
+                    type: "report/getDailySummaryDataList",
+                    payload: {
+                      "type": this.props.match.params.reportType,
+                      "PollutantSourceType": defalutVal,
+                      "Regions": RegionCode.toString(),
+                      // "Regions": "130000000,130200000,130201000",
+                      "ReportTime": moment().format("YYYY-MM-DD")
+                    }
+                  })
                 }
-              })
-            }
+              }
+            })
           }
         })
       }
     })
-
-
-    // 获取污染物 - 查询条件
-    this.props.dispatch({
-      type: "report/getPollutantTypeList",
-    })
-
   }
 
   componentWillReceiveProps(nextProps) {

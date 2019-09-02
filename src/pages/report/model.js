@@ -94,13 +94,14 @@ export default Model.extend({
 
     // 获取系统污染物
     * getPollutantTypeList({
-      payload
+      payload, callback
     }, { call, update }) {
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
         yield update({
           pollutantTypeList: result.Datas
         })
+        callback && callback(result)
       }
     },
 

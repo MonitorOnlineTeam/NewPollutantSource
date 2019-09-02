@@ -3,6 +3,7 @@ import {
     getrecordtypebymn,getjzhistoryinfo
 } from '../services/operationBaseApi';
 import { message } from 'antd';
+import moment from 'moment';
 /*
 运维记录相关接口
 add by lzp
@@ -14,6 +15,11 @@ export default Model.extend({
     state: {
         RecordTypeTree: [],
         JZDatas:[],
+        RecordType:'',
+        rangDate:[moment(new Date()).add(-3, 'month'), moment(new Date())],
+        PollutantTypes:'',
+        BeginTime:'',
+        EndTime:''
     },
     subscriptions: {
         setup({

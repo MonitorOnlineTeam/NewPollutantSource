@@ -16,7 +16,10 @@ const { Option } = Select;
 @connect(({ operationform, loading }) => ({
     RecordTypeTree: operationform.RecordTypeTree,
     RecordTypeTreeLoading: loading.effects['operationform/getrecordtypebymn'],
-    JZDatas: operationform.JZDatas
+    JZDatas: operationform.JZDatas,
+    rangDate: operationform.rangDate,
+    RecordType: operationform.RecordType,
+    PollutantTypes: operationform.PollutantTypes
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -80,6 +83,13 @@ class OperationRecord extends Component {
                 configId: this.getRecordType(value)
             }
         })
+        this.props.dispatch({
+            type: "operationform/updateState",
+            payload: {
+                RecordType: value
+            }
+        })
+        console.log('props', this.props)
         this.setState({
             RecordType: value
         })
@@ -88,8 +98,8 @@ class OperationRecord extends Component {
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
                     DGIMN: this.props.DGIMN,
-                    BeginTime: this.state.beginTime,
-                    EndTime: this.state.endTime
+                    BeginTime: this.props.beginTime,
+                    EndTime: this.props.endTime
                 }
             })
         }
@@ -125,6 +135,16 @@ class OperationRecord extends Component {
                 DGIMN: nextProps.DGIMN,
                 PollutantTypeByPoint: nextProps.PollutantType
             })
+            debugger
+            if (this.props.PollutantTypes != nextProps.PollutantType) {
+                this.props.dispatch({
+                    type: "operationform/updateState",
+                    payload: {
+                        RecordType: '',
+                        PollutantTypes: nextProps.PollutantType
+                    }
+                })
+            }
         }
         if (this.props.RecordTypeTree != nextProps.RecordTypeTree) {
             var key = nextProps.RecordTypeTree.length > 0 ? nextProps.RecordTypeTree[0].key : -1
@@ -137,14 +157,22 @@ class OperationRecord extends Component {
             this.setState({
                 RecordType: key
             })
+            if (this.props.PollutantTypes == '') {
+                this.props.dispatch({
+                    type: "operationform/updateState",
+                    payload: {
+                        RecordType: key,
+                    }
+                })
+            }
         }
     }
 
     getRecordType = (key) => {
         var configid = ''
-        var type=this.state.PollutantTypeByPoint||this.props.PollutantType
+        var type = this.state.PollutantTypeByPoint || this.props.PollutantTypes
         // debugger
-        if ( type== "2") {
+        if (type == "2") {
             switch (key) {
                 case 1://维修记录表
                     configid = 'FormMainInfoRepair'
@@ -194,13 +222,21 @@ class OperationRecord extends Component {
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
         });
-        if (this.state.RecordType=='8') {
+        this.props.dispatch({
+            type: "operationform/updateState",
+            payload: {
+                rangDate: date,
+                BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+            }
+        })
+        if (this.props.RecordType == '8') {
             this.props.dispatch({
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
                     DGIMN: this.state.DGIMN,
-                    BeginTime:  date[0].format('YYYY-MM-DD HH:mm:ss'),
-                    EndTime:date[1].format('YYYY-MM-DD HH:mm:ss')
+                    BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+                    EndTime: date[1].format('YYYY-MM-DD HH:mm:ss')
                 }
             })
         }
@@ -217,7 +253,7 @@ class OperationRecord extends Component {
                             style={{ width: 270 }}
                             onChange={this.onTreeChange}
                             onSearch={this.onTreeSearch}
-                            value={this.state.RecordType}
+                            value={this.props.RecordType}
                             placeholder="请选择表单类型"
                             loading={this.props.RecordTypeTreeLoading}
                         >
@@ -236,14 +272,14 @@ class OperationRecord extends Component {
                                 <span style={{ display: 'block', marginTop: 7, fontSize: 14 }}>记录时间：</span>
                             </Col>
                             <Col span={2}>
-                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, }} dateValue={this.state.rangeDate} allowClear={false} format={this.state.formats} onChange={this._handleDateChange} />
+                                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, }} dateValue={this.props.rangDate} allowClear={false} format={this.state.formats} onChange={this._handleDateChange} />
                             </Col>
                         </Row>
                     }
                 >
                     <Card.Grid style={{ width: '100%', height: 'calc(100vh - 270px)', overflow: "auto", ...this.props.style, }}>
                         {console.log('state=', this.state)}
-                        {this.state.RecordType == '8' ?
+                        {this.props.RecordType == '8' ?
                             <SDLTable
                                 dataSource={this.props.JZDatas}
                                 columns={columns}
@@ -262,7 +298,7 @@ class OperationRecord extends Component {
                                     return <Tooltip title="详情">
                                         <a onClick={() => {
                                             if (this.state.PollutantTypeByPoint == "2") {
-                                                router.push('/operations/recordForm/' + this.state.RecordType + '/' + row['dbo.T_Bas_Task.ID'])
+                                                router.push('/operations/recordForm/' + this.props.RecordType + '/' + row['dbo.T_Bas_Task.ID'])
                                             } else {
                                                 // 获取详情图片
                                                 this.props.dispatch({
@@ -281,14 +317,14 @@ class OperationRecord extends Component {
                                         }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
                                     </Tooltip>
                                 }}
-                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN||this.props.DGIMN, "Where": "$=" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.state.RecordType, "Where": "$=" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.beginTime, "Where": "$gte" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.endTime, "Where": "$lte" }
+                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN || this.props.DGIMN, "Where": "$=" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.beginTime, "Where": "$gte" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.endTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
                             ></AutoFormTable> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />)}
-                            {this.state.visible && <ViewImagesModal />}
+                        {this.state.visible && <ViewImagesModal />}
                         {/* <BdTestRecordContent TaskID="1f22ede2-68a0-4594-a93b-a5f706fe6662" /> */}
                     </Card.Grid>
                 </Card>
