@@ -211,4 +211,9 @@ export async function deleteAttach(params) {
     const result = await post('/api/rest/PollutantSourceApi/UploadApi/DeleteAttach', params, null);
     return result;
 }
-// rest/PollutantSourceApi/UploadApi/PostFiles
+// rest/PollutantSourceApi/AutoFormDataApi/VerificationData
+// 校验重复
+export async function checkRepeat(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/VerificationData', params, null);
+    return result;
+}
