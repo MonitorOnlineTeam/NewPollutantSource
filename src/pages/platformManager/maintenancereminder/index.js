@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Input,
   Form,
   DatePicker,
   Row,
@@ -17,10 +16,14 @@ import moment from 'moment';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
-
+/**
+ * 运维周期提醒设置
+ * xpy 2019-09-02
+ */
 @connect(({ loading, maintenances }) => ({
   ...loading,
     Isloading: loading.effects['maintenances/GetMaintenanceReminder'],
+    Addloading: loading.effects['maintenances/AddOrUpdateMaintenanceReminder'],
     Maintenancereminderdata: maintenances.maintenancereminderdata,
 }))
 
@@ -124,7 +127,6 @@ class Index extends Component {
         PointCode,
         Type: type,
         callback: Maintenancereminderdata => {
-            debugger;
             if (Maintenancereminderdata !== undefined) {
                 this.setState({
                     ID: Maintenancereminderdata.ID,
@@ -148,7 +150,6 @@ class Index extends Component {
             RemindCycle,
             LastRemindDate,
     } = Maintenancereminderdata === null ? {} : Maintenancereminderdata;
-    console.log('this.state.ID-------', ID);
         const formItemLayout = {
             labelCol: {
                 xs: { span: 12 },
@@ -163,7 +164,7 @@ class Index extends Component {
         if (this.props.Isloading) {
               return (<Spin
                   style={{ width: '100%',
-                      height: 'calc(100vh/2)',
+                      height: 'calc(50vh/2)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center' }}
@@ -211,6 +212,7 @@ class Index extends Component {
                                     type="primary"
                                     htmlType="submit"
                                     className="login-form-button"
+                                    loading={this.props.Addloading}
                                 >
                                     保存
                                 </Button>
@@ -232,7 +234,6 @@ class Index extends Component {
     }
 
     render() {
-        console.log('maintenances-----------', this.props.maintenances);
         return (
             <div>
                 <Tabs defaultActiveKey="233" onChange={this.onChange}>
