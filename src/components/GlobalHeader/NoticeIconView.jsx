@@ -29,9 +29,10 @@ export default class GlobalHeaderRight extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'global/fetchNotices',
-      payload: {}
+      payload: {},
     });
   }
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -41,7 +42,7 @@ export default class GlobalHeaderRight extends PureComponent {
     const newNotices = noticesAsc.map(notice => {
       const newNotice = { ...notice };
       if (newNotice.exceptiontypes) {
-        let exceptiontypes = newNotice.exceptiontypes.split(',');
+        const exceptiontypes = newNotice.exceptiontypes.split(',');
         const color = {
           warn: 'blue',
           over: 'red',
@@ -57,18 +58,18 @@ export default class GlobalHeaderRight extends PureComponent {
         if (newNotice.type === 'alarm') {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src='/over.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/over.png">
               </Avatar>
 
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src='/earlywarning.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/earlywarning.png">
               </Avatar>
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src='/exception.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
               </Avatar>
             );
           }
@@ -109,10 +110,11 @@ export default class GlobalHeaderRight extends PureComponent {
       payload: id,
     });
   };
-  //取消Model
+
+  // 取消Model
   onCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   }
 
@@ -142,7 +144,7 @@ export default class GlobalHeaderRight extends PureComponent {
               DGIMN: item.DGIMN,
               pointname: item.pointname,
             });
-            //报警
+            // 报警
             if (item.type === 'alarm') {
               if (item.sontype === 'warn') {
                 this.setState({
@@ -186,22 +188,22 @@ export default class GlobalHeaderRight extends PureComponent {
         >
 
             {
-              this.state.flag === "over" ?
+              this.state.flag === 'over' ?
                 <AlarmRecord
-                initLoadData 
-                style={{ maxHeight: '60vh' }}
+                initLoadData
+                style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
                   lasttime={moment(this.state.lasttime)}
                 />
                 :
                 <RecordEchartTable
-                initLoadData 
+                initLoadData
                 style={{ maxHeight: '60vh' }}
                   DGIMN={this.state.DGIMN}
                 />
             }
-   
+
         </Modal>
       </div>
     );
