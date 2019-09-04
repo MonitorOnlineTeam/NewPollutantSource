@@ -27,7 +27,7 @@ export default Model.extend({
           beginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
           endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           pageIndex: 1,
-          pageSize: 15,
+          pageSize: 10,
         },
         AlarmRecordList: [],
     },
