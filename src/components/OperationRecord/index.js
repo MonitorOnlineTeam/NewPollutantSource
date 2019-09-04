@@ -319,8 +319,8 @@ class OperationRecord extends Component {
                                 }}
                                 searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN || this.props.DGIMN, "Where": "$=" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.beginTime, "Where": "$gte" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.endTime, "Where": "$lte" }
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.BeginTime, "Where": "$gte" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.EndTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
                             ></AutoFormTable> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />)}
