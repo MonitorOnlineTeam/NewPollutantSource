@@ -18,8 +18,8 @@ export default Model.extend({
         RecordType:'',
         rangDate:[moment(new Date()).add(-3, 'month'), moment(new Date())],
         PollutantTypes:'',
-        BeginTime:'',
-        EndTime:''
+        BeginTime:moment(new Date()).add(-3, 'month'),
+        EndTime:moment(new Date())
     },
     subscriptions: {
         setup({
