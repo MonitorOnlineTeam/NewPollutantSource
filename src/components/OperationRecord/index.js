@@ -29,8 +29,8 @@ class OperationRecord extends Component {
         this.state = {
             rangeDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
             formats: 'YYYY-MM-DD',
-            beginTime: "",
-            endTime: "",
+            BeginTime: "",
+            EndTime: "",
             RecordType: "",
             DGIMN: "",
             configName: "",
@@ -98,8 +98,8 @@ class OperationRecord extends Component {
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
                     DGIMN: this.props.DGIMN,
-                    BeginTime: this.props.beginTime,
-                    EndTime: this.props.endTime
+                    BeginTime: this.props.BeginTime,
+                    EndTime: this.props.EndTime
                 }
             })
         }
@@ -135,7 +135,6 @@ class OperationRecord extends Component {
                 DGIMN: nextProps.DGIMN,
                 PollutantTypeByPoint: nextProps.PollutantType
             })
-            debugger
             if (this.props.PollutantTypes != nextProps.PollutantType) {
                 this.props.dispatch({
                     type: "operationform/updateState",
@@ -157,7 +156,7 @@ class OperationRecord extends Component {
             this.setState({
                 RecordType: key
             })
-            if (this.props.PollutantTypes == '') {
+            if (this.props.RecordType == '') {
                 this.props.dispatch({
                     type: "operationform/updateState",
                     payload: {
@@ -219,8 +218,8 @@ class OperationRecord extends Component {
     _handleDateChange = (date, dateString) => {
         this.setState({
             rangeDate: date,
-            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+            BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
         });
         this.props.dispatch({
             type: "operationform/updateState",
@@ -319,8 +318,8 @@ class OperationRecord extends Component {
                                 }}
                                 searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN || this.props.DGIMN, "Where": "$=" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.BeginTime, "Where": "$gte" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.EndTime, "Where": "$lte" }
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.BeginTime, "Where": "$gte" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.state.EndTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
                             ></AutoFormTable> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />)}
