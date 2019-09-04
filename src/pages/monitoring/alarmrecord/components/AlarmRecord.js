@@ -47,7 +47,7 @@ class AlarmRecord extends Component {
         this.state = {
             rangeDate: [firsttime, lasttime],
             current: 1,
-            pageSize: 15,
+            pageSize: 10,
             // 参数改变让页面刷新
             firsttime,
             lasttime,
@@ -59,7 +59,23 @@ class AlarmRecord extends Component {
     }
 
     componentDidMount() {
-      this.props.initLoadData && this.changeDgimn(this.props.DGIMN, this.props.overdataparams)
+      const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
+      debugger;
+      if (initLoadData) {
+      let {
+        overdataparams,
+      } = this.props;
+      overdataparams = {
+        ...overdataparams,
+        DGIMN,
+        beginTime: moment(firsttime).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(lasttime).format('YYYY-MM-DD HH:mm:ss'),
+      }
+      this.setState({
+        rangeDate: [firsttime, lasttime],
+      })
+      this.changeDgimn(this.props.DGIMN, overdataparams)
+    }
     }
 
      componentWillReceiveProps = nextProps => {
@@ -77,6 +93,8 @@ class AlarmRecord extends Component {
                    } = this.props;
                    overdataparams = {
                      ...overdataparams,
+                      pageIndex: 1,
+                      pageSize: 10,
                      DGIMN: nextProps.DGIMN,
                      beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
                      endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
@@ -122,7 +140,7 @@ class AlarmRecord extends Component {
           ...params,
           pollutantCode: '',
           pageIndex: 1,
-          pageSiz: 10,
+          pageSize: 10,
         }
       dispatch({
         type: 'alarmrecord/updateState',
@@ -152,7 +170,7 @@ class AlarmRecord extends Component {
             beginTime: date[0] && formatMoment(date[0]),
             endTime: date[0] && formatMoment(date[1]),
             pageIndex: 1,
-            pageSiz: 10,
+            pageSize: 10,
         }
         this.setState({
             rangeDate: date,
@@ -187,7 +205,7 @@ class AlarmRecord extends Component {
         ...overdataparams,
         pollutantCode: value,
         pageIndex: 1,
-        pageSiz: 10,
+        pageSize: 10,
       }
       this.reloaddatalist(overdataparams);
     };

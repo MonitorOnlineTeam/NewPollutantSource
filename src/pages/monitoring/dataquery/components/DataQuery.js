@@ -41,12 +41,14 @@ class DataQuery extends Component {
             selectP: '',
         };
     }
+
     componentDidMount() {
         this.props.initLoadData && this.changeDgimn(this.props.DGIMN)
     }
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
+        debugger;
         if (nextProps.DGIMN !== this.props.DGIMN) {
             this.changeDgimn(nextProps.DGIMN);
         }
@@ -240,10 +242,13 @@ class DataQuery extends Component {
             dispatch,
         } = this.props;
         let { historyparams } = this.props;
+        const { rangeDate } = this.state;
         historyparams = {
             ...historyparams,
             payloadpollutantCode: '',
             payloadpollutantName: '',
+            beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
             pageIndex: 1,
             pageSize: 20,
         }
