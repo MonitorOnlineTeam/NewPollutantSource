@@ -84,6 +84,7 @@ export default Model.extend({
                 label: item.name,
                 value: itm[item.field],
                 key: item.field,
+                title: item.title,
                 status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
               })
             }
@@ -105,7 +106,8 @@ export default Model.extend({
               dataType: "hour",
               isAsc: true
             },
-            tableList: tableList
+            tableList: tableList,
+            pollutantType: pollutantType
           }
         })
       }
@@ -118,21 +120,35 @@ export default Model.extend({
       if (result.IsSuccess) {
         // const tableList = yield select(state => state.mapView.tableList);
         const tableList = payload.tableList;
+        const pollutantType = payload.pollutantType;
         const first = tableList[0];
-        console.log('first=', first)
         const xAxisData = [];
         const legend = first && first.label;
-        const seriesData = first && result.Datas.map(item => {
-          if (item[first.key]) {
-            xAxisData.push(moment(item.MonitorTime).hour())
-            return item[first.key]
-          }
+        // const seriesData = first && result.Datas.map(item => {
+        //   if (item[first.key]) {
+        //     xAxisData.push(moment(item.MonitorTime).hour())
+        //     return item[first.key]
+        //   }
+        // })
+        let seriesData = [];
+        pollutantType.map(item => {
+          let arrItem = [];
+          result.Datas.map(itm => {
+            if (itm[item.field]) {
+              // tableList.push({
+              //   label: item.name,
+              //   value: itm[item.field],
+              //   key: item.field,
+              //   status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
+              // })
+              arrItem.push(itm[item.field])
+            }
+          })
+          seriesData.push(arrItem)
         })
-        console.log('seriesData=', seriesData)
-        console.log('xAxisData=', xAxisData)
         yield update({
           chartData: {
-            seriesData: seriesData || [], xAxisData, legend,
+            seriesData: seriesData[0] || [], xAxisData, legend,
             allData: result.Datas
           }
         })
