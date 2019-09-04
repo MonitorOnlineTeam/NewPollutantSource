@@ -207,6 +207,7 @@ export default Model.extend({
           type: item.DF_CONTROL_TYPE,
           labelText: item.DF_NAME_CN,
           fieldName: item.DF_NAME,
+          dtName: item.DT_NAME,
           fullFieldName: item.FullFieldName,
           value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
           placeholder: item.DF_TOOLTIP,
@@ -426,6 +427,14 @@ export default Model.extend({
 
       } else {
         message.error(result.Datas)
+      }
+    },
+     // 校验重复
+     * checkRepeat({ payload, callback }, { call, update }) {
+      const result = yield call(services.checkRepeat, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
       }
     },
   },

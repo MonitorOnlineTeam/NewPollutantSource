@@ -164,6 +164,31 @@ class SdlForm extends PureComponent {
     return <DatePicker showTime format={format} style={{ width: '100%' }} />
   }
 
+  // 检验重复
+  handleCheckRepeat = (rule, value, callback) => {
+    const { addFormItems } = this.props;
+    const configId = this._SELF_.configId;
+    const formItems = addFormItems[configId] || [];
+    // _.debounce(() => {
+    this.props.dispatch({
+      type: "autoForm/checkRepeat",
+      payload: {
+        DT_Name: formItems[0].dtName,
+        DF_Name: rule.field,
+        DF_Value: value,
+        DT_ConfigID: configId
+      },
+      callback: (success) => {
+        if (success) {
+          callback(rule.message)
+        } else {
+          callback()
+        }
+      }
+    })
+    // }, 150)
+  }
+
   // 渲染FormItem
   renderFormItem() {
     const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading } = this.props;
@@ -185,9 +210,7 @@ class SdlForm extends PureComponent {
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
 
-          element = <Input placeholder={placeholder} allowClear onChange={(e)=>{
-            console.log('e=',e)
-          }} />;
+          element = <Input placeholder={placeholder} allowClear />;
           break;
         case '下拉列表框':
         case '多选下拉列表':
@@ -329,11 +352,10 @@ class SdlForm extends PureComponent {
                   message.error('上传文件失败！')
                 }
               },
-              onRemove(file){
-                console.log('file=',file)
+              onRemove(file) {
                 dispatch({
                   type: "autoForm/deleteAttach",
-                  payload:{
+                  payload: {
                     Guid: file.uid,
                     // FileUuid: file.uid,
                     // FileActualType: '1',
@@ -425,10 +447,16 @@ class SdlForm extends PureComponent {
             pattern: `/${reg}/`,
             message: '格式错误。',
           }
-        } if (checkRules[vid.replace(/\'/g, '')]) {
+        }
+        if (checkRules[vid.replace(/\'/g, '')]) {
           return checkRules[vid.replace(/\'/g, '')]
         }
-          return {}
+        if (vid.indexOf('isExistDiy[]') > -1) {
+          return {
+            validator: this.handleCheckRepeat, message: '已有重复数据，请重新输入'
+          }
+        }
+        return {}
       })
       if (element) {
         // 布局方式
