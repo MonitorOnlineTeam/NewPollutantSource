@@ -327,30 +327,30 @@ class UserTree extends Component {
         dataIndex: 'UserName',
         render: (text, record) => {
           const itemlist = [];
-          itemlist.push(<div style={{ fontSize: '12px', fontWeight: 'bold' }}>
+          itemlist.push(<div style={{ fontSize: '14px', fontWeight: 'bolder' }}>
           <div style={{ float: 'left' }}>{record.UserName.length > 0 ? record.UserName.substring(0, 10) : `${record.UserName}...`}</div>
           {record.Phone && <div style={{ float: 'right', marginRight: '10px' }}><Icon type="mobile" theme="twoTone"style={{ marginRight: '5px' }} />{record.Phone}</div>}
           </div>)
           record.UserGroupName && itemlist.push(<br></br>);
-          record.UserGroupName && itemlist.push(<span style={{ fontSize: '8px', color: 'rgb(206, 109, 222)', marginRight: '5px' }}>部门:</span>);
+
             record.UserGroupName &&
             record.UserGroupName.split(',').map((m, index) => {
               if (index < 2) {
-                itemlist.push(<Tag title={m} color="rgb(206, 109, 222)" styles={{ fontSize: 8 }}>{m.length > 5 ? `${m.substring(0, 5)}...` : m}</Tag>);
+                itemlist.push(<Tag title={m} color="geekblue" styles={{ fontSize: 5 }}>{m.length > 5 ? `${m.substring(0, 5)}...` : m}</Tag>);
               }
               if (index === 2) {
-                itemlist.push(<Tag title={record.UserGroupName} color="rgb(206, 109, 222)" styles={{ fontSize: 8 }}>...</Tag>);
+                itemlist.push(<Tag title={record.UserGroupName} color="geekblue" styles={{ fontSize: 5 }}>...</Tag>);
               }
             })
             record.RolesName && itemlist.push(<br></br>);
-             record.RolesName && itemlist.push(<span style={{ fontSize: '8px', color: 'rgb(72, 135, 181)', marginRight: '5px' }}>角色:</span>);
+
             record.RolesName &&
             record.RolesName.split(',').map((m, index) => {
               if (index < 2) {
-                itemlist.push(<Tag title={m} color="rgb(72, 135, 181)" styles={{ fontSize: 8 }}>{m.length > 5 ? `${m.substring(0, 5)}...` : m}</Tag>);
+                itemlist.push(<Tag title={m} color="orange" styles={{ fontSize: 5 }}>{m.length > 5 ? `${m.substring(0, 5)}...` : m}</Tag>);
               }
               if (index === 2) {
-                itemlist.push(<Tag title={record.RolesName} color="rgb(72, 135, 181)" styles={{ fontSize: 8 }}>...</Tag>);
+                itemlist.push(<Tag title={record.RolesName} color="orange" styles={{ fontSize: 5 }}>...</Tag>);
               }
             })
           return itemlist;
