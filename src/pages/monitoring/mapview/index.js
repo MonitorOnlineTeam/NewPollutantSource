@@ -7,8 +7,7 @@ import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
-import Item from 'antd/lib/list/Item';
-import { EntIcon, GasIcon, WaterIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, VocIcon, DustIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
@@ -48,6 +47,7 @@ class MapView extends Component {
       coordinateSet: [],
       markersList: [],
       currentEntInfo: {},
+      chartTitle: null,
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -85,25 +85,27 @@ class MapView extends Component {
   }
 
   componentDidMount() {
+
+
     // 获取所有企业及排口信息
     this.props.dispatch({
       type: 'mapView/getAllEntAndPoint',
     })
 
     // 获取废水污染物
-    this.props.dispatch({
-      type: 'mapView/getPollutantWaterList',
-      payload: {
-        pollutantTypes: 1,
-      },
-    })
-    // 获取废气污染物
-    this.props.dispatch({
-      type: 'mapView/getPollutantGasList',
-      payload: {
-        pollutantTypes: 2,
-      },
-    })
+    // this.props.dispatch({
+    //   type: 'mapView/getPollutantWaterList',
+    //   payload: {
+    //     pollutantTypes: 1,
+    //   },
+    // })
+    // // 获取废气污染物
+    // this.props.dispatch({
+    //   type: 'mapView/getPollutantGasList',
+    //   payload: {
+    //     pollutantTypes: 2,
+    //   },
+    // })
   }
 
   // 渲染坐标点
@@ -135,13 +137,15 @@ class MapView extends Component {
             newState = {
               infoWindowVisible: true,
               currentPointInfo: extData.position,
+              overAll: true,
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
             // 排口
             newState = {
               coordinateSet: this.state.currentEntInfo.CoordinateSet,
-              displayType: 1
+              displayType: 1,
+              overAll: false,
             }
             _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
             this.randomMarker(extData.position.children)
@@ -196,26 +200,41 @@ class MapView extends Component {
       } else {
         // 排口
         pointEl = <div className={styles.container}>
-          {
+          {/* {
             extData.position.PollutantType === "2" ?
               <GasIcon
                 style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} /> :
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
-          }
-          {extData.position.Status === 2 && !!["yastqsn0000002"].find(m => m === extData.position.DGIMN) &&
+          } */}
+          {/* 图标 */}
+          {this.getPollutantIcon(extData)}
+          {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
             <>
-              <div className={styles.pulse}></div>
+              {/* <div className={styles.pulse}></div> */}
               <div className={styles.pulse1}></div>
             </>
           }
-          {/* {extData.position.Status === 2 && !!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
-          <div className={styles.pulse1}></div>
-          } */}
         </div>
       }
     }
     return pointEl;
   }
+
+  getPollutantIcon = (extData) => {
+    const style = { fontSize: 20, color: this.getColor(extData.position.Status) }
+    switch (extData.position.PollutantType) {
+      case "1":
+        return <WaterIcon style={style} />
+      case "2":
+        return <GasIcon style={style} />
+      case "10":
+        return <VocIcon style={style} />
+      case "12":
+        return <DustIcon style={style} />
+    }
+  }
+
+
 
   // 渲染点或企业
   randomMarker = (dataList = this.state.currentEntInfo.children) => {
@@ -247,7 +266,7 @@ class MapView extends Component {
   getPointInfo = pollutantType => {
     // 获取table数据
     this.props.dispatch({
-      type: 'mapView/getPointTableData',
+      type: 'mapView/getPollutantList',
       payload: {
         DGIMNs: this.state.currentKey,
         dataType: 'HourData',
@@ -419,7 +438,7 @@ class MapView extends Component {
       },
       yAxis: {
         type: 'value',
-        name: '浓度(' + 'mg/m³' + ')',
+        name: this.state.chartTitle ? this.state.chartTitle : (this.props.tableList.length && this.props.tableList[0].title),
         axisLabel: {
           formatter: '{value}',
         },
@@ -479,23 +498,26 @@ class MapView extends Component {
         size="large"
       />);
     }
-
     return (
       <div className={styles.mapWrapper}>
-        <NavigationTree choice={false} selKeys={this.state.currentKey} onMapClick={val => {
+        <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
             const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
+              const position = [entInfo[0].Longitude, entInfo[0].Latitude];
               if (this.state.currentEntInfo == entInfo[0]) {
                 // 点击的是当期企业
+                this.setState({
+                  overAll: false,
+                  infoWindowVisible: false,
+                })
               } else {
                 // 切换企业
-                const position = [entInfo[0].Longitude, entInfo[0].Latitude];
-
+                // const position = [entInfo[0].Longitude, entInfo[0].Latitude];
                 this.setState({
                   displayType: 1,
                   infoWindowVisible: false,
-                  mapCenter: position,
+                  overAll: false,
                   coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
                   _thismap.setZoomAndCenter(pointZoom, position)
@@ -504,6 +526,7 @@ class MapView extends Component {
               }
               this.setState({
                 currentEntInfo: entInfo[0],
+                mapCenter: position,
               })
               // 点击的企业
               // const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
@@ -542,6 +565,7 @@ class MapView extends Component {
                   currentEntInfo: entInfo,
                   currentPointInfo: pointInfo,
                   currentKey: val[0].key,
+                  overAll: true,
                   coordinateSet: entInfo.CoordinateSet || this.props.coordinateSet,
                 }, () => {
                   this.getPointInfo(pointInfo.PollutantType)
@@ -620,12 +644,16 @@ class MapView extends Component {
                       <>
                         <Descriptions
                           title={
-                            <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                            // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                            <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                           }
                           size="small"
                           bordered>
                           {
                             this.props.tableList.map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                              this.setState({
+                                chartTitle: item.title
+                              })
                               this.props.dispatch({
                                 type: "mapView/updateChartData",
                                 payload: {
@@ -640,7 +668,8 @@ class MapView extends Component {
                         {
                           // !this.props.chartLoading && (!this.props.chartData.seriesData.length ?
                           !this.props.chartData.seriesData.length ?
-                            <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"  />
+                            // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                             : <ReactEcharts
                               className={styles.echartdiv}
                               style={{ width: '100%', height: '200px', textAlign: 'center' }}
@@ -652,6 +681,13 @@ class MapView extends Component {
                         <a className={styles.pointDetails} size="small" onClick={() => {
                           this.setState({
                             pointVisible: true,
+                            //   DGIMN: "",
+                            // }, () => {
+                            //   setTimeout(() => {
+                            //     this.setState({
+                            //       DGIMN: this.state.currentKey
+                            //     })
+                            //   }, 200);
                           })
                         }}>排口详情</a>
                       </>)
@@ -692,21 +728,35 @@ class MapView extends Component {
               });
             }}
           >
-            <Tabs>
+            <Tabs onChange={(activeKey) => {
+              // this.setState({
+              //   ["DGIMN" + activeKey]: this.state.currentKey
+              // })
+              // this.setState({
+              //   DGIMN: undefined,
+              //   // clickKey: this.state.clickKey.push(activeKey)
+              // }, () => {
+              //   setTimeout(() => {
+              //     this.setState({
+              //       DGIMN: this.state.currentKey
+              //     })
+              //   }, 200);
+              // })
+            }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} style={{ overflowY: "auto", maxHeight: '60vh' }} />
+                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} style={{ maxHeight: '60vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
             </Tabs>
           </Modal>

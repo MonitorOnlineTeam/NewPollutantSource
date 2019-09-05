@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
+import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
 const RadioGroup = Radio.Group;
@@ -31,8 +32,8 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   ConfigInfo: global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
   PollutantType: navigationtree.PollutantType,
-  EntAndPointLoading: loading.effects['navigationTree/getentandpoint'],
-  PollutantTypeLoading: loading.effects['navigationTree/getPollutantTypeList'],
+  EntAndPointLoading: loading.effects['navigationtree/getentandpoint'],
+  PollutantTypeLoading: loading.effects['navigationtree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
@@ -66,6 +67,7 @@ class NavigationTree extends Component {
       panelVis: "none",
       panelData: [],
       panelDataList: [],
+      RunState: "",
       // panelSelKey:"",
       panelColumn: [
         {
@@ -73,33 +75,45 @@ class NavigationTree extends Component {
           dataIndex: 'Pollutant',
           width: '10%',
           render: (text, record) => {
-            return record.Pollutant == 1 ? <a><PanelWaterIcon style={{ fontSize: 25 }} /></a> : <a><PanelGasIcon style={{ fontSize: 25 }} /></a>
+            return <span>{this.getPollutantIcon(record.Pollutant,25)}</span>
+           
           }
         },
         {
           title: 'Age',
           dataIndex: 'pointName',
-          width: '70%',
+          width: '60%',
           render: (text, record) => {
-            return <span><b style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span style={{ fontSize: 7 }}>{record.entName}</span></span>
+            return <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}</span></div>
           }
         },
         {
           title: 'Age',
           dataIndex: 'Status',
-          width: '10%',
+          width: 100,
+          align: "left",
           render: (text, record) => {
-            return record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""
+            return (
+              <>
+                {
+                  record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: "0 10px" }} /> : ""
+                }
+                {
+                  !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>
+                }
+              </>
+            )
+            return
           }
         },
-        {
-          title: 'Bell',
-          dataIndex: 'key',
-          width: '10%',
-          render: (text, record) => {
-            return this.props.BellList.indexOf(record.key) > -1 ? <BellIcon style={{ fontSize: 10, marginTop: 7 }} /> : ""
-          }
-        },
+        // {
+        //   title: 'Bell',
+        //   dataIndex: 'key',
+        //   width: '10%',
+        //   render: (text, record) => {
+        //     return !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon  className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>;
+        //   }
+        // },
       ]
     }
   }
@@ -112,16 +126,20 @@ class NavigationTree extends Component {
     }
     const { dispatch, EntAndPoint } = this.props;
     const { panelDataList, screenList } = this.state;
-
+    var state = this.props.runState == undefined ? "" : this.props.runState
+    this.setState({
+      RunState: state
+    })
     dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Status: screenList,
+        RunState: state
       }
     })
-    panelDataList.splice(0, panelDataList.length)
-    this.generateList(EntAndPoint)
-
+    // panelDataList.splice(0, panelDataList.length)
+    // console.log('list1=',EntAndPoint)
+    // this.generateList(EntAndPoint)
     // // this.props.dispatch({
     // //   type: 'navigationtree/getPollutantTypeList',
     // //   payload: {
@@ -136,33 +154,27 @@ class NavigationTree extends Component {
       nextProps.PollutantType.map(m => children.push(<Option key={m.pollutantTypeCode}>{m.pollutantTypeName}</Option>));
     }
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
-      this.state.panelDataList.splice(0, this.state.panelDataList.length)
+      this.clearData()
+      this.tilingData(nextProps.EntAndPoint)
       this.generateList(nextProps.EntAndPoint)
     }
     if (this.props.selKeys !== nextProps.selKeys) {
-      this.state.panelDataList.splice(0, this.state.panelDataList.length)
       this.defaultKey = 0
-      this.generateList(nextProps.EntAndPoint, nextProps.selKeys)
+      this.clearData()
+      this.tilingData(nextProps.EntAndPoint)
+      this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
-    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-    //   this.setState({
-    //     PollutantTypes:nextProps.ConfigInfo.SystemPollutantType
-    //   })
-    //   this.props.dispatch({
-    //     type: 'navigationtree/getentandpoint',
-    //     payload: {
-    //       Status: this.state.screenList,
-    //       PollutantTypes: nextProps.ConfigInfo.SystemPollutantType,
-    //     }
-    //   })
-    // }
+
   }
-  //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys) => {
+  clearData=()=>{
+    this.state.panelDataList.splice(0, this.state.panelDataList.length)
+    dataList.splice(0,dataList.length)
+  }
+  tilingData = (data = this.props.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -171,6 +183,28 @@ class NavigationTree extends Component {
         this.state.panelDataList.push(pushItem)
         // }
       }
+      if (node.children) {
+        this.tilingData(node.children);
+      }
+    }
+  }
+
+  //处理接口返回的企业和排口数据
+  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
+
+    for (let i = 0; i < data.length; i++) {
+      const node = data[i];
+      const { key } = node;
+      // dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType });
+      // if (node.IsEnt == 0) {
+      //   var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
+      //   // var ddd=panelDataList.filter(item=>item.key==key);
+      //   // if(panelDataList.filter(item=>item.key==key).length==0)
+      //   // {
+      //   this.state.panelDataList.push(pushItem)
+      //   // }
+      // }
+      // console.log('entandpoint=', data)
       if (this.defaultKey == 0 && node.IsEnt == 0) {
         this.defaultKey = 1;
         var nowKey = [key]
@@ -178,27 +212,35 @@ class NavigationTree extends Component {
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
-          // this.props.dispatch({
-          //   type: "navigationtree/updateState",
-          //   payload: {
-          //     overallselkeys: nowKey,
-          //     overallexpkeys: [nowExpandKey],
-          //   }
-          // })当前页面传入的值只供当前页面使用
+          if (overAll || this.props.overAll) {
+            this.props.dispatch({
+              type: "navigationtree/updateState",
+              payload: {
+                overallselkeys: nowKey,
+                overallexpkeys: [nowExpandKey],
+              }
+            })//根据传入的状态判断是否更新全局
+          }
         } else if (this.props.overallselkeys.length != 0) {
-          nowKey = this.props.overallselkeys
-          nowExpandKey = this.props.overallexpkeys
+          var state = !!dataList.find(m => m.key == this.props.overallselkeys[0].toString())
+          debugger
+          if (state) {
+            nowKey = this.props.overallselkeys
+            nowExpandKey = this.props.overallexpkeys
+          }
         }
         this.setState({
           selectedKeys: nowKey,
+          overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var rtnKey = [{ key: nowKey[0], IsEnt: false }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: node.PollutantType }]
         this.props.onItemClick && this.props.onItemClick(rtnKey)
+        return
       }
 
       if (node.children) {
-        this.generateList(node.children, selKeys);
+        this.generateList(node.children, selKeys, overAll);
       }
     }
   };
@@ -252,6 +294,7 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         Name: this.state.Name,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -267,13 +310,14 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
   //搜索框改变查询数据
   onChangeSearch = e => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    this.generateList()
+    this.tilingData()
     // debugger
     const { value } = e.target;
     const expandedKeys = dataList
@@ -326,6 +370,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
         Status: this.state.screenList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -402,6 +447,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: typeList,
+        RunState: this.state.RunState
       }
     })
   }
@@ -474,22 +520,30 @@ class NavigationTree extends Component {
     //处理选中的数据格式
     const rtnList = [];
     data.map(item => {
-      var isEnt = dataList.filter(m => m.key == item)[0].IsEnt == 1 ? true : false
-      rtnList.push({ key: item, IsEnt: isEnt })
+      var list = dataList.filter(m => m.key == item)
+      if(list)
+      {
+        var isEnt = list[0].IsEnt == 1 ? true : false
+        var type = list[0].Type
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type })
+      }
     })
     //向外部返回选中的数据
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
-    console.log("overallselkeys=", this.state.selectedKeys);
-    //更新到model
-    this.props.dispatch({
-      type: "navigationtree/updateState",
-      payload: {
-        selectTreeKeys: rtnList,
-        overallselkeys: this.state.selectedKeys,
-        overallexpkeys: this.state.expandedKeys,
-      }
-    })
+    if (this.props.isMap === true && rtnList[0].IsEnt) {
+    } else {
+      //更新到model
+      this.props.dispatch({
+        type: "navigationtree/updateState",
+        payload: {
+          selectTreeKeys: rtnList,
+          overallselkeys: this.state.selectedKeys,
+          overallexpkeys: this.state.expandedKeys,
+        }
+      })
+    }
+
 
   }
   onRadioChange = (e) => {
@@ -544,16 +598,16 @@ class NavigationTree extends Component {
         return <a><SiteIcon /></a>
     }
   }
-  getPollutantIcon = (type) => {
+  getPollutantIcon = (type,size) => {
     switch (type) {
       case "1":
-        return <a><WaterIcon /></a>
+        return <a><WaterIcon style={{fontSize:size}} /></a>
       case "2":
-        return <a><GasIcon /></a>
+        return <a><GasIcon style={{fontSize:size}}  /></a>
       case "10":
-        return <a><VocIcon /></a>
+        return <a><VocIcon style={{fontSize:size}}  /></a>
       case "12":
-        return <a><DustIcon /></a>
+        return <a><DustIcon style={{fontSize:size}}  /></a>
     }
   }
 
@@ -578,7 +632,7 @@ class NavigationTree extends Component {
         if (item.children) {
           return (
             <TreeNode style={{ width: "100%" }} title={
-              <div style={{ width: "271px" }}>{this.getEntIcon(item.MonitorObjectType)}{title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
+              <div style={{ width: "271px" }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -586,14 +640,17 @@ class NavigationTree extends Component {
 
         }
         return <TreeNode style={{ width: "100%" }} title={
-          <div style={{ width: "253px" }}>{this.getPollutantIcon(item.PollutantType)}
-            {title}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ? <BellIcon style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right',color:"red" }} /> : ""}
+          <div style={{ width: "253px" }}>
+            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType,16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.bell}>
+                <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
+              </div>
+              : ""}
           </div>
         }
           key={item.key} dataRef={item}>
         </TreeNode>
       });
-
     return (
       <div >
 
@@ -677,6 +734,7 @@ class NavigationTree extends Component {
 
 
           {this.state.treeVis ? <div >
+            {console.log('this.props.EntAndPointLoading=', this.props.EntAndPointLoading)}
             {
               this.props.EntAndPointLoading ? <Spin
                 style={{
@@ -720,7 +778,7 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer" }}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer", maxHeight: 'calc(100vh - 330px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 

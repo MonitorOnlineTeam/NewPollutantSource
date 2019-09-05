@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Popover, Button } from 'antd';
+import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Popover, Button, Modal } from 'antd';
 import { connect } from 'dva';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '../SelectLang';
@@ -8,10 +8,7 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
-// import RealTimeWarningModal from '../../components/SpecialWorkbench/RealTimeWarningModal';
-import AlarmRecordModal from './AlarmRecordModal';
-import ExceptionModal from './ExceptionModal';
-// import EmergencyDetailInfoModal from './EmergencyDetailInfoModal';
+import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmRecord';
 import RecordEchartTable from '@/components/recordEchartTable'
 
 @connect(({ loading, global }) => ({
@@ -20,14 +17,22 @@ import RecordEchartTable from '@/components/recordEchartTable'
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 export default class GlobalHeaderRight extends PureComponent {
-  
+  constructor(props) {
+    super(props);
+    const _this = this;
+    this.state = {
+      visible: false,
+    };
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'global/fetchNotices',
-      payload:{}
+      payload: {},
     });
   }
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -37,7 +42,7 @@ export default class GlobalHeaderRight extends PureComponent {
     const newNotices = noticesAsc.map(notice => {
       const newNotice = { ...notice };
       if (newNotice.exceptiontypes) {
-        let exceptiontypes = newNotice.exceptiontypes.split(',');
+        const exceptiontypes = newNotice.exceptiontypes.split(',');
         const color = {
           warn: 'blue',
           over: 'red',
@@ -53,18 +58,18 @@ export default class GlobalHeaderRight extends PureComponent {
         if (newNotice.type === 'alarm') {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src='/over.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/over.png">
               </Avatar>
-              
+
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src='/earlywarning.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/earlywarning.png">
               </Avatar>
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{verticalAlign: 'middle' }} src='/exception.png'>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
               </Avatar>
             );
           }
@@ -106,19 +111,12 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
-  onRefWarning = ref => {
-    this.childWarning = ref;
-  };
-
-  onRefAlarm = ref => {
-    this.childAlarm = ref;
-  };
-  onRefException = ref => {
-    this.childException = ref;
-  };
-  // onRefEmergencyDetailInfo = (ref) => {
-  //   this.childEmergencyDetailInfo = ref;
-  // }
+  // 取消Model
+  onCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
 
   render() {
     const {
@@ -138,41 +136,34 @@ export default class GlobalHeaderRight extends PureComponent {
         <NoticeIcon
           count={currentUserNoticeCnt.unreadCount}
           onItemClick={(item, tabProps) => {
-            //报警
+            debugger
+            this.setState({
+              visible: true,
+              firsttime: item.firsttime,
+              lasttime: item.lasttime,
+              DGIMN: item.DGIMN,
+              pointname: item.pointname,
+            });
+            // 报警
             if (item.type === 'alarm') {
               if (item.sontype === 'warn') {
-                this.childAlarm.showModal(
-                  item.firsttime,
-                  item.lasttime,
-                  item.DGIMN,
-                  item.pointname,
-                );
-                // this.childWarning.showModal(item.pointname, item.DGIMN, item.overwarnings[0].PollutantCode, item.overwarnings[0].PollutantName, item.overwarnings[0].SuggestValue);
+                this.setState({
+                  title: '预警消息',
+                  flag: 'over',
+                });
               } else if (item.sontype === 'over') {
-                // dispatch(routerRedux.push(`/pointdetail/${item.DGIMN}/alarmrecord/alarmrecord`));
-                this.childAlarm.showModal(
-                  item.firsttime,
-                  item.lasttime,
-                  item.DGIMN,
-                  item.pointname,
-                );
+                this.setState({
+                  title: '超标报警消息',
+                  flag: 'over',
+
+                });
               } else if (item.sontype === 'exception') {
-                // this.props.dispatch({
-                //   type: 'urgentdispatch/queryoperationInfo',
-                //   payload: {
-                //     dgimn: item.DGIMN
-                //   }
-                // });
-                this.childException.showModal(
-                  // item.firsttime,
-                  // item.lasttime,
-                  item.DGIMN,
-                  // item.pointname,
-                );
+                this.setState({
+                  title: '异常报警消息',
+                  flag: 'exception',
+                });
               }
             }
-            //修改通知的已读状态
-            //   this.changeReadState(item, tabProps);
           }}
           loading={fetchingNotices}
           onViewMore={() => message.info('Click on view more')}
@@ -186,14 +177,34 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
         </NoticeIcon>
-        {/* 预警 */}
-        {/* <RealTimeWarningModal {...this.props} onRef={this.onRefWarning} /> */}
-        {/* 超标 */}
-        <AlarmRecordModal {...this.props} onRef={this.onRefAlarm} />
-        {/* 异常 */}
-        <ExceptionModal {...this.props} onRef={this.onRefException} />
-        {/* 消息 */}
-        {/* <EmergencyDetailInfoModal  {...this.props} onRef={this.onRefEmergencyDetailInfo} /> */}
+
+        <Modal
+          destroyOnClose="true"
+          visible={this.state.visible}
+          title={this.state.title}
+          width="70%"
+          footer={null}
+          onCancel={this.onCancel}
+        >
+
+            {
+              this.state.flag === 'over' ?
+                <AlarmRecord
+                initLoadData
+                style={{ maxHeight: '70vh' }}
+                  DGIMN={this.state.DGIMN}
+                  firsttime={moment(this.state.firsttime)}
+                  lasttime={moment(this.state.lasttime)}
+                />
+                :
+                <RecordEchartTable
+                initLoadData
+                style={{ maxHeight: '60vh' }}
+                  DGIMN={this.state.DGIMN}
+                />
+            }
+
+        </Modal>
       </div>
     );
   }

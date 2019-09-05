@@ -12,7 +12,7 @@ import { post } from '@/utils/request';
     }
  *  */
 export async function queryoverdatalist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetExceptionProcessingList', params, null);
+    const result = await post('/api/rest/PollutantSourceApi/AlarmDataApi/GetLocalMemoryExceptionProcessing', params, null);
     return result;
 }
 /** 更新报警记录表

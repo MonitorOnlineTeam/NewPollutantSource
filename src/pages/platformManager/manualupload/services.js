@@ -20,7 +20,7 @@ export async function uploadfiles(params) {
  * @params {"DGIMN":""}
  */
 export async function GetPollutantByPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMN', params, null);
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMN', params, null);
   return result;
 }
 /**
@@ -28,7 +28,7 @@ export async function GetPollutantByPoint(params) {
  * @params {"DGIMN":""}
  */
 export async function addGetPollutantByPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAdd', params, null);
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAdd', params, null);
   return result;
 }
 
@@ -37,8 +37,7 @@ export async function addGetPollutantByPoint(params) {
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetManualSupplementList(params) {
-  debugger
-  const result = await post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementList', params, null);
+  const result = await get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementList', params, null);
   return result;
 }
 /**
@@ -46,35 +45,7 @@ export async function GetManualSupplementList(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplate(params) {
-  const body = {
-      PollutantType:params.PollutantType
-  };
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplate', params, null);
-  return result;
-}
-/**
- * 获取污染物类型列表
- * @params {"DGIMN":""}
- */
-export async function GetAllPollutantTypes(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetAllPollutantTypes', params, null);
-  return result;
-}
-/**
- * 添加手工数据
- * @params {"pollutantCode":"","monitorTime":"","avgValue":"","DGIMN":""}
- */
-export async function AddUploadFiles(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/AddUploadFiles', params, null);
-  return result;
-}
-
-/**
- * 获取污染物单位
- * @params {"pollutantCode":""}
- */
-export async function GetUnitByPollutant(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/GetUnitByPollutant', params, null);
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplate', params, null);
   return result;
 }
 /**
@@ -90,6 +61,6 @@ export async function DeleteUploadFiles(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function UpdateManualSupplementData(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateHourData', params, null);
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateManualSupplement', params, null);
   return result;
 }

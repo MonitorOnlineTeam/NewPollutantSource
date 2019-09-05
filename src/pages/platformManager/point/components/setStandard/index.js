@@ -13,14 +13,17 @@ import {
   Row,
   Col,
   Empty,
+  Tooltip
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
 import PollutantView from './pollutantView';
 import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
-import SdlTable from '@/components/AutoForm/Table';
+import SdlTable from '@/components/SdlTable';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { EditIcon } from '@/utils/icon'
 
 @connect(({ loading, standardlibrary, autoForm }) => ({
   ...loading,
@@ -302,22 +305,25 @@ class UseStandardLibrary extends Component {
         render: (text, record) => {
           if (record.IsUse === '1') {
             return (
-              <a
-                onClick={() =>
-                  this.setState({
-                    Fvisible: true,
-                    title: '编辑污染物',
-                    width: '50%',
-                    PollutantCode: record.PollutantCode,
-                  })
-                }
-              >
-                {' '}
-                编辑
-              </a>
+
+              <Tooltip title="编辑污染物">
+                <a
+                  onClick={() =>
+                    this.setState({
+                      Fvisible: true,
+                      title: '编辑污染物',
+                      width: '50%',
+                      PollutantCode: record.PollutantCode,
+                    })
+                  }
+                ><EditIcon /></a>
+              </Tooltip>
+
             );
           }
-          return <a style={{ color: '#D1D1D1' }}> 编辑 </a>;
+          return <Tooltip >
+            <a style={{ color: '#D1D1D1' }}><EditIcon /></a>
+          </Tooltip>;
         },
       },
     ];
@@ -369,50 +375,14 @@ class UseStandardLibrary extends Component {
             </Button>
           }
         >
-          {/* <div className={styles.card}>
-                        {
-                            this.renderStandardList()
-                        }
-                    </div>
-
-                    <div className={styles.Pagination}>
-                        <Pagination
-                            defaultCurrent={1}
-                            pageSize={4}
-                            total={this.props.total}
-                            current={this.props.pageIndex}
-                            onChange={this.onChange}
-                            size="small"
-                        />
-                    </div> */}
-          {/* <div className={styles.pageHeader} style={{ marginBottom: 10 }}>
-                        <Button onClick={() => {
-                            this.setState({
-                                standardlibraryModal: true
-                            })
-                        }} icon="search">查看标准库</Button>
-                    </div> */}
-          <Card className={styles.antCss}>
-            <div className={styles.table}>
-              <Table
-                rowKey={(record, index) => `complete${index}`}
-                bordered={false}
-                loading={this.props.effects['standardlibrary/getpollutantbydgimn']}
-                columns={columns}
-                size="small"
-                dataSource={PollutantListByDGIMN}
-                pagination={true}
-                rowClassName={(record, index, indent) => {
-                  if (index === 0) {
-                    return;
-                  }
-                  if (index % 2 !== 0) {
-                    return 'light';
-                  }
-                }}
-              />
-            </div>
-          </Card>
+          <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            bordered={false}
+            loading={this.props.effects['standardlibrary/getpollutantbydgimn']}
+            columns={columns}
+            dataSource={PollutantListByDGIMN}
+            pagination={true}
+          />
           <Modal
             visible={this.state.standardlibraryModal}
             title={'选择标准库'}
@@ -426,7 +396,7 @@ class UseStandardLibrary extends Component {
             }}
           >
             {
-              <SdlTable
+              <AutoFormTable
                 style={{ marginTop: 10 }}
                 configId={'service_StandardLibrary'}
                 searchParams={[

@@ -15,9 +15,9 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlTable from '@/components/AutoForm/Table';
-import SearchWrapper from '@/components/AutoForm/SearchWrapper';
-import SdlForm from '@/components/AutoForm/SdlForm';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
+import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { DelIcon } from '@/utils/icon'
 
 @connect(({ loading, autoForm }) => ({
@@ -160,7 +160,7 @@ class YsyCameraIndex extends Component {
                   返回上级
                 </Button></span>}>
             <SearchWrapper configId="VideoCamera" />
-            <SdlTable
+            <AutoFormTable
               style={{ marginTop: 10 }}
               configId="CameraMonitor"
               searchParams={pointDataWhere}

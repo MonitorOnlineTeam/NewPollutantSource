@@ -1,42 +1,71 @@
 import React, { Component } from 'react';
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '../../../components/NavigationTree'
 import ContentList from './components/ContentList'
+import moment from "moment";
 
+@connect(({ manualupload, loading }) => ({
+
+}))
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            DGIMN: "62262431qlsp02",
+            DGIMN: "",
         };
     }
 
     componentDidMount() {
     }
-    changeDgimn = dgimn => {
+    changeDgimn = (DGIMN) => {
+        const { dispatch } = this.props;
         this.setState({
-            DGIMN:dgimn,
+            DGIMN,
         })
+        if (DGIMN) {
+            dispatch({
+                type: 'manualupload/updateState',
+                payload: {
+                    manualUploadParameters: {
+                        ...this.props.manualUploadParameters,
+                        ...{
+                            PageIndex: 1,
+                            PageSize: 10,
+                            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+                            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+                            PollutantCode: '',
+                        }
+                    }
+                }
+            });
+            this.GetAllPollutantTypes(DGIMN);
+        }
     }
-
+    //根据MN号获取污染物与类型
+    GetAllPollutantTypes = (DGIMN) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'manualupload/addGetPollutantByPoint',
+            payload: {
+                DGIMN
+            },
+        });
+    }
     render() {
         const { DGIMN } = this.state;
         return (
             <div id="manualupload">
-                <PageHeaderWrapper>
+                <PageHeaderWrapper >
                     <ContentList DGIMN={DGIMN} />
                 </PageHeaderWrapper>
-                <NavigationTree domId="#manualupload" choice={false} onItemClick={value => {
+                <NavigationTree runState='0' domId="#manualupload" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }
                 }} />
             </div>
         )
-
-
     }
 }
 export default Index;

@@ -38,14 +38,19 @@ export default Model.extend({
         })
       }
     },
-    // 获取水污染物
-    * getPollutantWaterList({
+    // 获取污染物
+    * getPollutantList({
       payload,
-    }, { call, update, select }) {
-      const result = yield call(services.getPollutantList, payload);
+    }, { call, update, select, put }) {
+      const pollutantType = "pollutantType" + payload.type;
+      const result = yield call(services.getPollutantList, { pollutantTypes: payload.type });
       if (result.IsSuccess) {
         yield update({
-          waterList: result.Datas
+          [pollutantType]: result.Datas
+        })
+        yield put({
+          type: "getPointTableData",
+          payload: payload
         })
       }
     },
@@ -64,11 +69,13 @@ export default Model.extend({
     * getPointTableData({
       payload,
     }, { call, update, select, take, put }) {
+      const pollutantType = yield select(state => state.mapView[`pollutantType${payload.type}`])
+      console.log("pollutantType=",pollutantType)
       const result = yield call(services.getPointTableData, payload);
       // console.log('aaa',result)
       if (result.IsSuccess) {
         const type = payload.type;
-        const pollutantType = type == 1 ? yield select(state => state.mapView.waterList) : yield select(state => state.mapView.gasList)
+        // const pollutantType = type == 1 ? yield select(state => state.mapView.waterList) : yield select(state => state.mapView.gasList)
         const tableList = [];
         pollutantType.map(item => {
           result.Datas.map(itm => {
@@ -77,6 +84,7 @@ export default Model.extend({
                 label: item.name,
                 value: itm[item.field],
                 key: item.field,
+                title: item.title,
                 status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
               })
             }
@@ -98,7 +106,8 @@ export default Model.extend({
               dataType: "hour",
               isAsc: true
             },
-            tableList: tableList
+            tableList: tableList,
+            pollutantType: pollutantType
           }
         })
       }
@@ -111,21 +120,35 @@ export default Model.extend({
       if (result.IsSuccess) {
         // const tableList = yield select(state => state.mapView.tableList);
         const tableList = payload.tableList;
+        const pollutantType = payload.pollutantType;
         const first = tableList[0];
-        console.log('first=', first)
         const xAxisData = [];
         const legend = first && first.label;
-        const seriesData = first && result.Datas.map(item => {
-          if (item[first.key]) {
-            xAxisData.push(moment(item.MonitorTime).hour())
-            return item[first.key]
-          }
+        // const seriesData = first && result.Datas.map(item => {
+        //   if (item[first.key]) {
+        //     xAxisData.push(moment(item.MonitorTime).hour())
+        //     return item[first.key]
+        //   }
+        // })
+        let seriesData = [];
+        pollutantType.map(item => {
+          let arrItem = [];
+          result.Datas.map(itm => {
+            if (itm[item.field]) {
+              // tableList.push({
+              //   label: item.name,
+              //   value: itm[item.field],
+              //   key: item.field,
+              //   status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
+              // })
+              arrItem.push(itm[item.field])
+            }
+          })
+          seriesData.push(arrItem)
         })
-        console.log('seriesData=', seriesData)
-        console.log('xAxisData=', xAxisData)
         yield update({
           chartData: {
-            seriesData: seriesData || [], xAxisData, legend,
+            seriesData: seriesData[0] || [], xAxisData, legend,
             allData: result.Datas
           }
         })

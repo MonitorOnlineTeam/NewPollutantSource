@@ -14,6 +14,8 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import SdlMap from './SdlMap'
 import ReturnName from './ReturnName'
+import { getAttachmentDataSource } from './utils'
+import AttachmentView from '@/components/AttachmentView'
 import styles from '../../components/DescriptionList/index.less';
 
 const FormItem = Form.Item;
@@ -105,6 +107,13 @@ class AutoFormViewItems extends Component {
             zoom={12}
           /></div>
         </Col>
+      }
+
+      if (item.type === "上传") {
+        const dataSource = getAttachmentDataSource(formData[item.FullFieldName]);
+        el = <div className={styles.detail}>
+          <AttachmentView dataSource={dataSource} />
+        </div>;
       }
 
       return (

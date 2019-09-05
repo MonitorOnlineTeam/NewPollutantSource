@@ -47,7 +47,7 @@ class AlarmRecord extends Component {
         this.state = {
             rangeDate: [firsttime, lasttime],
             current: 1,
-            pageSize: 15,
+            pageSize: 10,
             // 参数改变让页面刷新
             firsttime,
             lasttime,
@@ -58,8 +58,28 @@ class AlarmRecord extends Component {
         };
     }
 
+    componentDidMount() {
+      const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
+      debugger;
+      if (initLoadData) {
+      let {
+        overdataparams,
+      } = this.props;
+      overdataparams = {
+        ...overdataparams,
+        DGIMN,
+        beginTime: moment(firsttime).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(lasttime).format('YYYY-MM-DD HH:mm:ss'),
+      }
+      this.setState({
+        rangeDate: [firsttime, lasttime],
+      })
+      this.changeDgimn(this.props.DGIMN, overdataparams)
+    }
+    }
 
      componentWillReceiveProps = nextProps => {
+       debugger
        console.log('------------------------------------------000', nextProps.DGIMN);
        console.log('------------------------------------------111', this.props.DGIMN);
           const { DGIMN, lasttime, firsttime } = this.props;
@@ -73,6 +93,8 @@ class AlarmRecord extends Component {
                    } = this.props;
                    overdataparams = {
                      ...overdataparams,
+                      pageIndex: 1,
+                      pageSize: 10,
                      DGIMN: nextProps.DGIMN,
                      beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
                      endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
@@ -118,7 +140,7 @@ class AlarmRecord extends Component {
           ...params,
           pollutantCode: '',
           pageIndex: 1,
-          pageSiz: 10,
+          pageSize: 10,
         }
       dispatch({
         type: 'alarmrecord/updateState',
@@ -148,7 +170,7 @@ class AlarmRecord extends Component {
             beginTime: date[0] && formatMoment(date[0]),
             endTime: date[0] && formatMoment(date[1]),
             pageIndex: 1,
-            pageSiz: 10,
+            pageSize: 10,
         }
         this.setState({
             rangeDate: date,
@@ -183,7 +205,7 @@ class AlarmRecord extends Component {
         ...overdataparams,
         pollutantCode: value,
         pageIndex: 1,
-        pageSiz: 10,
+        pageSize: 10,
       }
       this.reloaddatalist(overdataparams);
     };
@@ -220,7 +242,7 @@ class AlarmRecord extends Component {
       });
     };
 
-    /** 显示核查单 */
+    /** 显示核实单 */
     BtnVerify=() => {
       const { form } = this.props;
       form.setFieldsValue({
@@ -235,7 +257,28 @@ class AlarmRecord extends Component {
     }
     }
 
-    /** 保存核查单 */
+      /** 分页 */
+     onShowSizeChange = (pageIndex, pageSize) => {
+        let { overdataparams } = this.props;
+        overdataparams = {
+            ...overdataparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(overdataparams);
+    }
+
+    onChange = (pageIndex, pageSize) => {
+        let { overdataparams } = this.props;
+        overdataparams = {
+            ...overdataparams,
+            pageIndex,
+            pageSize,
+        }
+        this.reloaddatalist(overdataparams);
+    }
+
+    /** 保存核实单 */
      handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN } = this.props;
     form.validateFields((err, values) => {
@@ -314,15 +357,15 @@ class AlarmRecord extends Component {
               key: 'AlarmCount',
           },
           {
-            title: '核查状态',
+            title: '核实状态',
             dataIndex: 'State',
             width: 50,
             key: 'State',
              render: (text, record) => {
                 if (text === '0') {
-                    return <span> <Badge status="error" text="未核查" /> </span>;
+                    return <span> <Badge status="error" text="未核实" /> </span>;
                 }
-                return <span> <Badge status="default" text="已核查" /> </span>;
+                return <span> <Badge status="default" text="已核实" /> </span>;
             },
             filters: [{
                   text: '未核实',
@@ -362,7 +405,7 @@ class AlarmRecord extends Component {
                   <div className={Styles.check}>
                       <Card
                           title={
-                            <Button onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核查</Button>
+                            <Button onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
                           }
                           extra={
                               <div>
@@ -370,7 +413,8 @@ class AlarmRecord extends Component {
                                   <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm:ss" onChange={this._handleDateChange} dateValue={this.state.rangeDate} />
                               </div>
                           }
-                          style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}
+                          className="contentContainer"
+                          style={{ width: '100%', ...this.props.style }}
                       >
                           <SdlTable
                               loading={this.props.dataloading}
@@ -378,9 +422,20 @@ class AlarmRecord extends Component {
                               dataSource={this.props.data}
                               rowKey = "ID"
                               rowSelection={rowSelection}
-                              pagination={{
-                                   pageSize: 10,
-                              }}
+                              scroll={{ y: 'calc(100vh - 550px)' }}
+                             pagination = {
+                                {
+                                  size: 'small',
+                                  showSizeChanger: true,
+                                  showQuickJumper: true,
+                                  total: this.props.total,
+                                  pageSize: this.props.overdataparams.pageSize,
+                                  current: this.props.overdataparams.pageIndex,
+                                  onChange: this.onChange,
+                                  onShowSizeChange: this.onShowSizeChange,
+                                  pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
+                                }
+                              }
                               onRow={(record, index) => ({
                                   onClick: event => {
                                     const { selectedRowKeys } = this.state;
@@ -397,7 +452,7 @@ class AlarmRecord extends Component {
                                 })}
                           />
                           <Modal
-                              title="核查单详情"
+                              title="核实单详情"
                               visible={this.state.visible}
                               destroyOnClose // 清除上次数据
                               onOk={this.handleOk}
@@ -413,13 +468,13 @@ class AlarmRecord extends Component {
                               <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
                               <Row>
                               <Col span={12}>
-                                <FormItem {...formLayout} label="核查人">
+                                <FormItem {...formLayout} label="核实人">
                                   {getFieldDecorator('VerifyPerSon1', {
                                     initialValue: UserName,
                                     rules: [
                                       {
                                         required: true,
-                                        message: '核查人不能为空',
+                                        message: '核实人不能为空',
                                       },
                                     ],
                                   })(
@@ -428,13 +483,13 @@ class AlarmRecord extends Component {
                                 </FormItem>
                               </Col>
                               <Col span={12}>
-                                <FormItem {...formLayout} label="核查时间">
+                                <FormItem {...formLayout} label="核实时间">
                                   {getFieldDecorator('VerifyTime1', {
                                     initialValue: moment(),
                                     rules: [
                                       {
                                         required: true,
-                                        message: '核查时间不能为空',
+                                        message: '核实时间不能为空',
                                       },
                                     ],
                                   })(

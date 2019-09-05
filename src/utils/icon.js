@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_7k9r1d9w7uy.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_wfrixzb31mk.js';
 const style = {
   fontSize: 16,
 }
@@ -19,23 +19,24 @@ export const IconConfig = Icon.createFromIconfontCN({
 })
 
 export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{ ...style }} />
-export const EntIcon = (props) => <IconConfig type="icon-qiye1" style={{ ...style }} {...props}/>
-export const StationIcon = (props) => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props}/>
-export const ReachIcon = (props) => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props}/>
-export const SiteIcon = (props) => <IconConfig type="icon-tadiaogongdijianshe" style={{ ...style }} {...props}/>
-export const WaterIcon = (props) => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} {...props} />
-export const GasIcon = (props) => <IconConfig type="icon-wuranyuan" style={{ ...style }} {...props} />
+export const EntIcon = props => <IconConfig type="icon-qiye1" style={{ ...style }} {...props}/>
+export const StationIcon = props => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props}/>
+export const ReachIcon = props => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props}/>
+export const SiteIcon = props => <IconConfig type="icon-tadiaogongdijianshe" style={{ ...style }} {...props}/>
+export const WaterIcon = props => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} {...props} />
+export const GasIcon = props => <IconConfig type="icon-wuranyuan" style={{ ...style }} {...props} />
 export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style } />
 export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style } />
 export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />
-export const DustIcon = () => <IconConfig type="icon-yangchen" style={{...style}} />
-export const VocIcon =  () => <IconConfig type="icon-ziyuan" style={{...style}} />
-export const TreeIcon=()=><IconConfig type="icon-jiedian" style={{...style}} />
-export const PanelIcon=()=><IconConfig type="icon-jiedian1" style={{...styles}} />
-export const BellIcon=(val)=><IconConfig type="icon-lingdang" style={val.style} />
-
-
-/**视频操作图标 */
+export const DustIcon = (props) => <IconConfig type="icon-yangchen" style={{ ...style }} {...props} />
+export const VocIcon = (props) => <IconConfig type="icon-ziyuan" style={{ ...style }} {...props}/>
+export const TreeIcon = () => <IconConfig type="icon-jiedian" style={{ ...style }} />
+export const PanelIcon = () => <IconConfig type="icon-jiedian1" style={{ ...styles }} />
+export const BellIcon = props => <IconConfig type="icon-lingdang" style={{ ...styles }} {...props} />
+export const ManIcon = val => <IconConfig type="icon-nan" style={ val.style } />
+export const WomanIcon = val => <IconConfig type="icon-nv" style={ val.style } />
+export const FormIcon = () => <IconConfig type="icon-danzi" style={{ ...style }} />
+/** 视频操作图标 */
 export const Top = () => <IconConfig type="icon-jiantou_xiangshang" style={{ ...style }} />
 export const Down = () => <IconConfig type="icon-jiantou_xiangxia" style={{ ...style }} />
 export const Left = () => <IconConfig type="icon-jiantou_xiangzuo" style={{ ...style }} />

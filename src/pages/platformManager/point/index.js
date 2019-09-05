@@ -21,20 +21,22 @@ import {
   InputNumber,
   Tooltip,
 } from 'antd';
-import styles from './index.less';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { sdlMessage } from '@/utils/utils';
-import PollutantType from '@/components/AutoForm/PollutantType';
+import PollutantType from '@/pages/AutoFormManager/PollutantType';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
 import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
+import Maintenancereminder from '../maintenancereminder/index';
 
+const { confirm } = Modal;
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 
@@ -50,7 +52,7 @@ let pointConfigIdEdit = '';
   pointDataWhere: monitorTarget.pointDataWhere,
   isEdit: monitorTarget.isEdit,
   defaultPollutantCode: common.defaultPollutantCode,
-  configInfo: global.configInfo
+  configInfo: global.configInfo,
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -62,6 +64,8 @@ export default class MonitorPoint extends Component {
       FormDatas: {},
       selectedPointCode: '',
       isView: false,
+      Mvisible: false,
+      PointCode: '',
     };
   }
 
@@ -70,14 +74,14 @@ export default class MonitorPoint extends Component {
     // 2.污染物类型
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
-    console.log("match=", match);
+    console.log('match=', match);
     dispatch({
       type: 'point/getPointList',
       payload: {
         callback: res => {
           this.getPageConfig(res);
-        }
-      }
+        },
+      },
     });
 
     // dispatch({
@@ -116,17 +120,16 @@ export default class MonitorPoint extends Component {
     // 25	市控
 
     try {
-      let { SystemPollutantTypeConfigId } = configInfo;
-      let configIds = SystemPollutantTypeConfigId.split(',');
+      const { SystemPollutantTypeConfigId } = configInfo;
+      const configIds = SystemPollutantTypeConfigId.split(',');
       let thisConfigId = null;
       if (configIds.length > 0) {
         thisConfigId = configIds.filter(m => m.split(':')[0] == type);
         if (thisConfigId.length > 0) {
           pointConfigIdEdit = thisConfigId[0].split(':')[1];
-          pointConfigId = pointConfigIdEdit + "New";
+          pointConfigId = `${pointConfigIdEdit}New`;
         }
       }
-
     } catch (e) {
       sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
@@ -135,13 +138,13 @@ export default class MonitorPoint extends Component {
     switch (type) {
       case 1:
         // 废水
-        //pointConfigId = 'WaterOutputNew';
-        //pointConfigIdEdit = 'WaterOutput';
+        // pointConfigId = 'WaterOutputNew';
+        // pointConfigIdEdit = 'WaterOutput';
         break;
       case 2:
         // 废气
         // pointConfigId = 'GasOutputNew';
-        //pointConfigIdEdit = 'GasOutput';
+        // pointConfigIdEdit = 'GasOutput';
         break;
       case 3:
         // 噪声
@@ -188,7 +191,7 @@ export default class MonitorPoint extends Component {
   onMenu = (key, id, name, code) => {
     const {
       match: {
-        params: { configId, targetId, targetName },
+        params: { configId, targetId, targetName, targetType },
       },
     } = this.props;
     // match.params
@@ -196,16 +199,12 @@ export default class MonitorPoint extends Component {
       case '1':
         this.props.dispatch(
           routerRedux.push(
-            `/platformconfig/monitortarget/${configId}/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
+            `/platformconfig/monitortarget/${configId}/3/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
           ),
         );
         break;
       case '2':
-        this.props.dispatch(
-          routerRedux.push(
-            `/sysmanage/stopmanagement/${id}/${name}/${configId}/${targetId}/${targetName}`,
-          ),
-        );
+        this.showMaintenancereminder(code);
         break;
       case '3':
         this.props.dispatch(
@@ -221,6 +220,20 @@ export default class MonitorPoint extends Component {
         break;
     }
   };
+
+  /** 设置运维周期 */
+  showMaintenancereminder = PointCode => {
+  this.setState({
+    Mvisible: true,
+    PointCode,
+  })
+  }
+
+  handleMCancel=() => {
+    this.setState({
+      Mvisible: false,
+    });
+  }
 
   showModal = PointCode => {
     const { dispatch } = this.props;
@@ -268,7 +281,7 @@ export default class MonitorPoint extends Component {
             FormData[key] = values[key] && values[key].toString();
           }
         }
-
+        // FormData.PollutantType = match.params.targetType;
         if (!Object.keys(FormData).length) {
           sdlMessage('数据为空', 'error');
           return false;
@@ -277,10 +290,11 @@ export default class MonitorPoint extends Component {
           FormData.PointCode = this.state.selectedPointCode;
         }
         dispatch({
-          type: !this.state.isEdit ? 'monitorTarget/addPoint' : 'monitorTarget/editPoint',
+          type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
           payload: {
             configId: pointConfigIdEdit,
             targetId: match.params.targetId,
+            targetType: match.params.targetType,
             FormData,
             callback: result => {
               if (result.IsSuccess) {
@@ -306,10 +320,11 @@ export default class MonitorPoint extends Component {
     const { dispatch, match, pointDataWhere } = this.props;
     const { pollutantType } = this.state;
     dispatch({
-      type: 'monitorTarget/delPoint',
+      type: 'point/delPoint',
       payload: {
         configId: pointConfigIdEdit,
         targetId: match.params.targetId,
+        targetType: match.params.targetType,
         pollutantType,
         DGIMN,
         PointCode,
@@ -327,10 +342,30 @@ export default class MonitorPoint extends Component {
       },
     });
   }
+
   onPollutantChange = e => {
     console.log(e);
     this.getPageConfig(e.target.value);
   }
+
+  showDeleteConfirm = (PointCode, DGIMN) => {
+    const that = this;
+    const { dispatch } = this.props;
+    // console.log("row=", row);
+    confirm({
+      title: '确定要删除该条数据吗？',
+      content: '删除后不可恢复',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        that.delPoint(PointCode, DGIMN);
+      },
+      onCancel() {
+      },
+    });
+  }
+
   render() {
     const {
       searchConfigItems,
@@ -369,7 +404,7 @@ export default class MonitorPoint extends Component {
           <Icon type="bars" />
           监测标准
         </Menu.Item>
-        {/* <Menu.Item key="2"><Icon type="tool" />停产管理</Menu.Item> */}
+       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item>
         <Menu.Item key="3">
           <Icon type="youtube" />
           视频管理
@@ -458,20 +493,12 @@ export default class MonitorPoint extends Component {
                     </Tooltip>
                     <Divider type="vertical" />
                     <Tooltip title="删除">
-                      <Popconfirm
-                        title="确认要删除吗?"
-                        onConfirm={() => {
-                          this.delPoint(
-                            row['dbo.T_Bas_CommonPoint.PointCode'],
-                            row['dbo.T_Bas_CommonPoint.DGIMN'],
-                          );
-                        }}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                      >
-                        <a href="#"><DelIcon /></a>
-                      </Popconfirm>
+
+                      <a onClick={() => {
+                        this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
+                          row['dbo.T_Bas_CommonPoint.DGIMN']);
+                      }}><DelIcon />    </a>
+
                     </Tooltip>
                     <Divider type="vertical" />
                     <Dropdown
@@ -512,6 +539,16 @@ export default class MonitorPoint extends Component {
                   keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
                 />
               )}
+          </Modal>
+          <Modal
+            title="设置运维周期"
+            visible={this.state.Mvisible}
+            onCancel={this.handleMCancel}
+            width="50%"
+            destroyOnClose
+            footer={false}
+          >
+          < Maintenancereminder PointCode={this.state.PointCode}/ >
           </Modal>
         </div>
         {/* </MonitorContent> */}

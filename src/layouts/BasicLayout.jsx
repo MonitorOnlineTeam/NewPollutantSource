@@ -96,9 +96,9 @@ const BasicLayout = props => {
         type: 'user/fetchCurrent',
         payload: {},
       });
-      dispatch({
-        type: 'settings/getSetting',
-      });
+      // dispatch({
+      //   type: 'settings/getSetting',
+      // });
 
     }
   }, []);
@@ -132,19 +132,22 @@ const BasicLayout = props => {
       return <div></div>
     }
   };
-  const myStyle = {};
+
+  // const pageTitleRender = e => {
+  //   if (configInfo) {
+  //     e.settings.title = configInfo.SystemName
+  //     e.title = configInfo.SystemName
+  //     return e;
+  //   }
+  // }
+  // const myStyle = {};
   return (
     <>
       <ProLayout
         logo={logoRender}
-        pageTitleRender={(e) => {
-          // e.title = "123123";
-          configInfo && (e.settings.title = configInfo.SystemName);
-          return e;
-        }}
+        // pageTitleRender={pageTitleRender}
         // headerRender={(e)=>{
-        //   debugger;
-
+        //   console.log('eee=',e)
         // }}
         onCollapse={handleMenuCollapse}
         menuItemRender={(menuItemProps, defaultDom) => {
@@ -160,7 +163,7 @@ const BasicLayout = props => {
                 User_ID: JSON.parse(userCookie).User_ID,
               },
             });
-          }else if(userCookie === "null"){
+          } else if (userCookie === "null") {
             router.push("/user/login");
           }
 
@@ -189,7 +192,7 @@ const BasicLayout = props => {
         {...props}
         {...settings}
       >
-        <div style={{ margin: '-24px -24px 0px', padding: '24px', overflowY: 'auto' }}>
+        <div style={{ margin: '-24px -24px 0px', padding: '24px 24px 0 24px', overflowY: 'auto' }}>
           {children}
         </div>
       </ProLayout>

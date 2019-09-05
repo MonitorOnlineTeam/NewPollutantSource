@@ -31,12 +31,14 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
     });
   }
 
+
+
   render() {
-    let { enterpriseAndPointList, searchEnterprise, level, searchRegion, placeholder, defaultValue } = this.props;
+    let { enterpriseAndPointList, searchEnterprise, level, searchRegion, placeholder, defaultValue, value } = this.props;
     const config = [{ showSearch: true, checkable: true }, {}, {}, {}, {}];
     const cascadeSize = searchRegion ? level : (searchEnterprise ? level * 1 + 1 : level * 1 + 2);
     // const cascadeSize = searchEnterprise ? level * 1 + 1 : level * 1 + 2;
-    const props = defaultValue ? { value: defaultValue } : {};
+    const props = value ? { value: value } : {};
     return (
       <div>
         <CascadeMultiSelect
@@ -44,7 +46,7 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
           dropdownClassName={'ucms-drop'}
           config={config}
           placeholder={placeholder}
-          cascadeSize={cascadeSize}
+          cascadeSize={cascadeSize * 1}
           notFoundContent={"沒有数据"}
           options={enterpriseAndPointList}
           // onSelect={(valueList, labelList, leafList) => {

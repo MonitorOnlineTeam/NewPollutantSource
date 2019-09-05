@@ -5,6 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment'
 import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
+import SdlTable from '@/components/SdlTable'
 import SelectPollutantType from '@/components/SelectPollutantType'
 
 const FormItem = Form.Item;
@@ -56,47 +57,46 @@ class DailySummaryPage extends PureComponent {
     //   }
     // })
     const { defaultSearchForm } = this.SELF;
-
+    // 获取污染物 - 查询条件
     this.props.dispatch({
-      type: 'common/getEnterpriseAndPoint',
-      payload:{
-        RegionCode: "",
-        PointMark: "2"
-      },
-      callback: (sucRes, defaultValue) => {
-        let RegionCode = defaultValue;
-        this.setState({
-          defaultRegionCode: RegionCode
-        })
-        // 获取污染物类型 = 表头
+      type: "report/getPollutantTypeList",
+      callback: (data) => {
+        const defalutVal = data.Datas[0].pollutantTypeCode;
         this.props.dispatch({
-          type: "report/getPollutantList",
+          type: 'common/getEnterpriseAndPoint',
           payload: {
-            pollutantTypes: 1,
-            callback: () => {
-              // 获取表格数据
-              this.props.dispatch({
-                type: "report/getDailySummaryDataList",
-                payload: {
-                  "type": this.props.match.params.reportType,
-                  "PollutantSourceType": "1",
-                  "Regions": RegionCode,
-                  // "Regions": "130000000,130200000,130201000",
-                  "ReportTime": moment().format("YYYY-MM-DD")
+            RegionCode: "",
+            PointMark: "2"
+          },
+          callback: (sucRes, defaultValue) => {
+            let RegionCode = defaultValue;
+            this.setState({
+              defaultRegionCode: RegionCode
+            })
+            // 获取污染物类型 = 表头
+            this.props.dispatch({
+              type: "report/getPollutantList",
+              payload: {
+                pollutantTypes: 1,
+                callback: () => {
+                  // 获取表格数据
+                  this.props.dispatch({
+                    type: "report/getDailySummaryDataList",
+                    payload: {
+                      "type": this.props.match.params.reportType,
+                      "PollutantSourceType": defalutVal,
+                      "Regions": RegionCode.toString(),
+                      // "Regions": "130000000,130200000,130201000",
+                      "ReportTime": moment().format("YYYY-MM-DD")
+                    }
+                  })
                 }
-              })
-            }
+              }
+            })
           }
         })
       }
     })
-
-
-    // 获取污染物 - 查询条件
-    this.props.dispatch({
-      type: "report/getPollutantTypeList",
-    })
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -220,13 +220,13 @@ class DailySummaryPage extends PureComponent {
   }
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList,  } = this.props;
+    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList, } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
     return (
       <PageHeaderWrapper>
-        <Card>
+        <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col md={6} sm={24}>
@@ -244,24 +244,24 @@ class DailySummaryPage extends PureComponent {
                     //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
                     //   }
                     // </Select>
-                    <SelectPollutantType placeholder="请选择污染物类型"/>
+                    <SelectPollutantType placeholder="请选择污染物类型" />
                   )}
                 </FormItem>
               </Col>
               <Col md={6} sm={24}>
-                <FormItem {...formLayout} label="省市区" style={{ width: '100%' }}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     // initialValue: defaultSearchForm.Regions,
                     initialValue: this.state.defaultRegionCode,
                     rules: [{
                       required: true,
-                      message: '请选择省市区',
+                      message: '请选择行政区',
                     }],
                   })(
                     <SdlCascader
                       changeOnSelect={false}
                       data={regionList}
-                      placeholder="请选择"
+                      placeholder="请选择行政区"
                     />
                   )}
                 </FormItem>
@@ -293,12 +293,13 @@ class DailySummaryPage extends PureComponent {
             </Row>
           </Form>
           <p className={style.title}>{this.state.currentYear}年{reportText}</p>
-          <Table
+          <SdlTable
             loading={loading}
             style={{ minHeight: 80 }}
             size="small"
             columns={this.state.columns}
             dataSource={dailySummaryDataList}
+            defaultWidth={80}
             rowClassName={
               (record, index, indent) => {
                 if (index === 0 || record.time === "0时") {

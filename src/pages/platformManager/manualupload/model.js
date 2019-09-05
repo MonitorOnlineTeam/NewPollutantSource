@@ -10,8 +10,6 @@ import {
     getUploadTemplate,
     GetAllPollutantTypes,
     addGetPollutantByPoint,
-    AddUploadFiles,
-    GetUnitByPollutant,
     DeleteUploadFiles,
     UpdateManualSupplementData,
     getPollutantTypeList
@@ -33,21 +31,20 @@ export default Model.extend({
         total: 0,
         selectdata: [],
         uploaddatalist: [],
-        PollutantTypesList: [],
+        // pollutantTypesItem: null,
         addSelectPollutantData: [],
-        unit: null,
+        // unit: null,
         DGIMN: null,
         pointName: null,
         //手工数据上传参数
         manualUploadParameters: {
             DGIMN: '',
-            pollutantCode: [],
+            PollutantCode: '',
             BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
             EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-            pageIndex: 1,
-            pageSize: 10,
-            pointName: '',
-            PollutantType: '2'
+            PageIndex: 1,
+            PageSize: 10,
+            PointName: '',
         }
 
     },
@@ -60,12 +57,15 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(uploadfiles, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
-                payload.callback(result.Datas);
+            if(result.IsSuccess)
+            {
+                message.success("添加成功！");
             }
+            else
+            {
+                message.error(result.Message);
+            }
+
         },
         //根据排口获取污染物
         * GetPollutantByPoint({
@@ -89,7 +89,6 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(addGetPollutantByPoint, payload);
-            debugger
             if (result.IsSuccess) {
                 yield update({
                     addSelectPollutantData: result.Datas,
@@ -109,12 +108,12 @@ export default Model.extend({
             const result = yield call(GetManualSupplementList, { ...manualUploadParameters });
             if (result.IsSuccess) {
                 //根据MN号码获取所对应的污染物信息
-                    yield put({
-                        type: 'GetPollutantByPoint',
-                        payload: {
-                            DGIMN: manualUploadParameters.DGIMN
-                        }
-                    });
+                yield put({
+                    type: 'GetPollutantByPoint',
+                    payload: {
+                        DGIMN: manualUploadParameters.DGIMN
+                    }
+                });
                 yield update({
                     uploaddatalist: result.Datas,
                     total: result.Total,
@@ -135,53 +134,6 @@ export default Model.extend({
 
         },
 
-        //获取污染物类型列表
-        * GetAllPollutantTypes({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(GetAllPollutantTypes, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    PollutantTypesList: result.Datas,
-                });
-            }
-        },
-
-        //添加手工上传数据
-        * AddUploadFiles({
-            payload,
-
-        }, {
-            call,
-            update,
-        }) {
-            debugger
-            const result = yield call(AddUploadFiles, payload);
-            debugger
-            if (result.IsSuccess) {
-                    payload.callback(result.StatusCode);
-            }
-        },
-
-        //根据污染物获取单位
-        * GetUnitByPollutant({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            debugger
-            const result = yield call(GetUnitByPollutant, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    unit: result.Datas,
-                });
-            }
-        },
-
         //根据MN号码 污染物编号 时间删除数据
         * DeleteUploadFiles({
             payload
@@ -190,10 +142,13 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(DeleteUploadFiles, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
+            if(result.IsSuccess)
+            {
+                message.success("操作成功！");
+            }
+            else
+            {
+                message.error(result.Message);
             }
         },
 
@@ -205,10 +160,14 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(UpdateManualSupplementData, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    requstresult: result.Datas,
-                });
+            if(result.IsSuccess)
+            {
+                message.success("操作成功！");
+                payload.callback()
+            }
+            else
+            {
+                message.error(result.Message);
             }
         },
     },

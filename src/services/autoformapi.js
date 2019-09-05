@@ -8,6 +8,7 @@
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
 import { async } from 'q';
+import configToken from '@/config'
 
 /**
  * 【AutoForm】系统登录
@@ -22,9 +23,9 @@ export async function systemLogin(params) {
     const body = Object.assign(defaults);
     const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
     if (result.IsSuccess && result.Datas) {
-        Cookie.set('ssoToken', result.Datas.Ticket);
+        Cookie.set(configToken.cookieName, result.Datas.Ticket);
     } else {
-        Cookie.set('ssoToken', "");
+        Cookie.set(configToken.cookieName, "");
     }
     return result;
 }
@@ -204,4 +205,15 @@ export async function fileUpload(params) {
     const result = await post('/upload/rest/PollutantSourceApi/UploadApi/PostFiles', params, null);
     return result;
 }
-// rest/PollutantSourceApi/UploadApi/PostFiles
+
+// 删除文件
+export async function deleteAttach(params) {
+    const result = await post('/api/rest/PollutantSourceApi/UploadApi/DeleteAttach', params, null);
+    return result;
+}
+// rest/PollutantSourceApi/AutoFormDataApi/VerificationData
+// 校验重复
+export async function checkRepeat(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/VerificationData', params, null);
+    return result;
+}

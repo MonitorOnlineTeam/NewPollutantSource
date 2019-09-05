@@ -60,7 +60,7 @@ class SdlCascader extends Component {
       <Cascader
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
-        changeOnSelect={true}
+        // changeOnSelect={true}
         {...this.props}
       />
     );

@@ -26,19 +26,21 @@ import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
+import style from '../mapview/index.less'
 
 const RadioGroup = Radio.Group;
-@connect(({ loading, overview,global,common }) => ({
+@connect(({ loading, overview, global, common }) => ({
     columnsdata: overview.columns,
     data: overview.data,
     gwidth: overview.gwidth,
     isloading: loading.effects['overview/querypollutanttypecode'],
-    timeLoading:loading.effects['overview/querydatalist'],
+    timeLoading: loading.effects['overview/querydatalist'],
     // pollutantTypelist: overview.pollutantTypelist,
     selectpollutantTypeCode: overview.selectpollutantTypeCode,
     dataOverview: overview.dataOverview,
-    configInfo:global.configInfo,
-    defaultPollutantCode: common.defaultPollutantCode
+    configInfo: global.configInfo,
+    defaultPollutantCode: common.defaultPollutantCode,
+    noticeList: global.notices
 }))
 class dataList extends PureComponent {
     constructor(props) {
@@ -46,8 +48,8 @@ class dataList extends PureComponent {
     }
     /**页面初始化 */
     componentDidMount() {
-        const { dispatch, dataOverview,defaultPollutantCode } = this.props;
-      
+        const { dispatch, dataOverview, defaultPollutantCode } = this.props;
+
         // // 由于数据一览没有全部，初始化为废气
         // !!!this.props.selectpollutantTypeCode &&
         //     dispatch({
@@ -78,10 +80,10 @@ class dataList extends PureComponent {
                         payload: {},
                     });
                     this.reloadData(dataOverview)
-                  }
+                }
             },
         });
-        
+
     }
     /**加载数据 */
     reloadData = dataOverview => {
@@ -270,7 +272,7 @@ class dataList extends PureComponent {
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
         let fixed = false;
-        if (coldata&&coldata[0]) {
+        if (coldata && coldata[0]) {
             fixed = true;
         }
         let columns = [
@@ -283,25 +285,25 @@ class dataList extends PureComponent {
                 fixed: fixed,
                 filters: [
                     {
-                        text: <span><LegendIcon style={{color:"#34c066"}} />正常</span>,
+                        text: <span><LegendIcon style={{ color: "#34c066" }} />正常</span>,
                         value: 1,
                     },
                     {
-                        text: <span><LegendIcon style={{color:"#f04d4d"}} />超标</span>,
+                        text: <span><LegendIcon style={{ color: "#f04d4d" }} />超标</span>,
                         value: 2,
                     },
                     {
-                        text:<span><LegendIcon style={{color:"#999999"}} />离线</span>,
+                        text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
                         value: 0,
                     },
                     {
-                        text: <span><LegendIcon style={{color:"#e94"}} />异常</span>,
+                        text: <span><LegendIcon style={{ color: "#e94" }} />异常</span>,
                         value: 3,
                     },
                 ],
                 onFilter: (value, record) => record.status === value,
                 render: (value, record, index) => {
-                    return getPointStatusImg(record.status, record.stop);
+                    return getPointStatusImg(record, this.props.noticeList);
                 },
             },
         ];
@@ -416,7 +418,7 @@ class dataList extends PureComponent {
 
         return (
             <PageHeaderWrapper>
-                <div style={{ width: '100%', height: 'calc(100vh - 65px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
+                <div style={{ width: '100%', height: 'calc(100vh - 40px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
                     <Card
                         bordered={false}
                         className={styles.cardextra}
@@ -466,14 +468,14 @@ class dataList extends PureComponent {
                             rowKey={(record, index) => `complete${index}`}
                             style={{
                                 marginTop: 20,
-                                paddingBottom:10
+                                paddingBottom: 10
                             }}
                             // className={styles.tableCss}
                             columns={columns}
                             size="middle"
                             dataSource={this.props.data}
                             pagination={false}
-                            loading={this.props.isloading||this.props.timeLoading}
+                            loading={this.props.isloading || this.props.timeLoading}
                             scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
                             bordered={true}
                         // rowClassName={(record, index, indent) => {

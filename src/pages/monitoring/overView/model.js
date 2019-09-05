@@ -96,7 +96,7 @@ export default Model.extend({
       if (data) {
         gwidth += 200 * data.length;
       }
-      yield update({ columns: data, gwidth });
+      yield update({ columns: data || [], gwidth });
     },
     *querydatalist({ payload }, { call, update, put, select }) {
       const {
@@ -171,7 +171,7 @@ export default Model.extend({
       yield update({
         upLoadParameters: {
           ...upLoadParameters,
-          manualUploaddataOne: data == null ? '0' : data[0].DGIMN,
+          manualUploaddataOne: data == null ? '0' : data.length == 0 ? '0' : data[0].DGIMN,
         },
       });
     },

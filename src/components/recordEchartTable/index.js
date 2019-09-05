@@ -73,10 +73,11 @@ class Index extends Component {
         this.setState({
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+        }, () => {
+            this.props.initLoadData &&  this.getLoadData(this.props);
         })
 
 
-        console.log("props=", this.props)
     }
     componentWillReceiveProps(nextProps) {
         // if (this.props.excount != nextProps.excount) {
@@ -90,37 +91,9 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-        let beginTime = moment(new Date()).add(-60, 'minutes');
-        const endTime = moment(new Date());
+      
         if (this.props.DGIMN != nextProps.DGIMN) {
-            this.props.dispatch({
-                type: 'recordEchartTable/updateState',
-                payload: {
-                    exceptionData: [],
-                },
-            })
-            if (this.props.startTimes && this.props.endTimes) {
-                this.props.dispatch({
-                    type: "recordEchartTable/getexmodellist",
-                    payload: {
-                        beginTime: this.props.startTimes == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.props.startTimes,
-                        endTime: this.props.endTimes == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.props.endTimes,
-                        dataType: this.state.dataType,
-                        DGIMN: [nextProps.DGIMN],
-                    }
-                })
-            } else {
-                this.props.dispatch({
-                    type: "recordEchartTable/getexmodellist",
-                    payload: {
-                        beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-                        endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
-                        dataType: this.state.dataType,
-                        DGIMN: [nextProps.DGIMN],
-                    }
-                })
-            }
-
+           this.getLoadData(nextProps);
         }
 
     }
@@ -130,6 +103,39 @@ class Index extends Component {
     //         dispatch,
     //     } = this.props;
     //     console.log("dgmn=",this.props.DGIMN)
+
+    getLoadData=(nextProps)=>{
+        let beginTime = moment(new Date()).add(-60, 'minutes');
+        const endTime = moment(new Date());
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                exceptionData: [],
+            },
+        })
+        if (this.props.startTimes && this.props.endTimes) {
+            this.props.dispatch({
+                type: "recordEchartTable/getexmodellist",
+                payload: {
+                    beginTime: this.props.startTimes == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.props.startTimes,
+                    endTime: this.props.endTimes == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.props.endTimes,
+                    dataType: this.state.dataType,
+                    DGIMN: [nextProps.DGIMN],
+                }
+            })
+        } else {
+            this.props.dispatch({
+                type: "recordEchartTable/getexmodellist",
+                payload: {
+                    beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                    endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
+                    dataType: this.state.dataType,
+                    DGIMN: [nextProps.DGIMN],
+                }
+            })
+        }
+
+    }
 
     // }
     /** 数据类型切换 */
