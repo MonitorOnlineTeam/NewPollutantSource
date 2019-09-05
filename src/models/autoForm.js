@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-06-14 14:26:42
+ * @Last Modified time: 2019-09-05 10:46:27
  */
 import { message } from 'antd';
 import
@@ -368,7 +368,7 @@ export default Model.extend({
 
     // 获取联动
     * getAttachmentList({ payload }, { call, update }) {
-      if (payload.uid && payload.uid !== "null") {
+      if (payload.FileUuid && payload.FileUuid !== "null") {
         const result = yield call(services.getAttachmentList, { ...payload });
         if (result.IsSuccess) {
           let fileList = [];
