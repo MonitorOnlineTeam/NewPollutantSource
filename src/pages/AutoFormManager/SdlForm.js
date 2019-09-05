@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-06-14 15:35:22
+ * @Last Modified time: 2019-09-05 14:00:06
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -21,10 +21,12 @@ import {
   Divider,
   DatePicker,
   message,
+  Modal,
 } from 'antd';
 import moment from 'moment';
 import cuid from 'cuid';
 import { handleFormData } from '@/utils/utils'
+import { getBase64 } from './utils'
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import router from 'umi/router';
@@ -88,7 +90,7 @@ class SdlForm extends PureComponent {
       inputPlaceholder: '请输入',
       selectPlaceholder: '请选择',
       // uid: props.isEdit ? (props.uid || (props.match && props.match.params.uid) || null) : cuid(),
-      uid: props.uid || (props.match && props.match.params.uid) || cuid(),
+      uid: props.uid || (props.match && props.match.params.uid !== "null" && props.match.params.uid) || cuid(),
       keysParams: props.keysParams || {},
       configId: props.configId,
       isEdit: props.isEdit,
@@ -166,27 +168,30 @@ class SdlForm extends PureComponent {
 
   // 检验重复
   handleCheckRepeat = (rule, value, callback) => {
-    const { addFormItems } = this.props;
-    const configId = this._SELF_.configId;
+    const { addFormItems, editFormData } = this.props;
+    const { configId, isEdit } = this._SELF_;
     const formItems = addFormItems[configId] || [];
-    // _.debounce(() => {
-    this.props.dispatch({
-      type: "autoForm/checkRepeat",
-      payload: {
-        DT_Name: formItems[0].dtName,
-        DF_Name: rule.field,
-        DF_Value: value,
-        DT_ConfigID: configId
-      },
-      callback: (success) => {
-        if (success) {
-          callback(rule.message)
-        } else {
-          callback()
+    const formData = isEdit ? (editFormData[configId] || {}) : {};
+    if (value !== formData[rule.field]) {
+      this.props.dispatch({
+        type: "autoForm/checkRepeat",
+        payload: {
+          DT_Name: formItems[0].dtName,
+          DF_Name: rule.field,
+          DF_Value: value,
+          DT_ConfigID: configId
+        },
+        callback: (success) => {
+          if (success) {
+            callback(rule.message)
+          } else {
+            callback()
+          }
         }
-      }
-    })
-    // }, 150)
+      })
+    } else {
+      callback()
+    }
   }
 
   // 渲染FormItem
@@ -333,21 +338,12 @@ class SdlForm extends PureComponent {
         //   break;
         default:
           if (item.type === '上传') {
-            // if (!isEdit) {
-            const ssoToken = Cookie.get(configToken.cookieName);
+            let uploadElement = null;
             const props = {
               action: `${config.proxy['/upload'].target}/rest/PollutantSourceApi/UploadApi/PostFiles`,
-              // headers: {
-              //   Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
-              //   // 'Content-Type': 'application/json',
-              // },
-              // action: config.fileUploadUrl,
-              // onChange: this.handleChange(fieldName),
               onChange(info) {
                 if (info.file.status === 'done') {
-                  console.log('info=', info)
                   setFieldsValue({ cuid: uid })
-                  // message.success(`${info.file.name} file uploaded successfully`);
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
                 }
@@ -357,42 +353,42 @@ class SdlForm extends PureComponent {
                   type: "autoForm/deleteAttach",
                   payload: {
                     Guid: file.uid,
-                    // FileUuid: file.uid,
-                    // FileActualType: '1',
                   }
                 })
               },
+              onPreview: this.handlePreview,
               multiple: true,
+              listType: "picture-card",
               data: {
                 FileUuid: uid,
                 FileActualType: '1',
               },
             };
             if (isEdit) {
-              // if (fileList.length) {
               if (this.props.fileList && !fileLoading) {
-                // if(this.props.)
-                element = <Upload {...props} defaultFileList={this.props.fileList}>
-                  <Button>
-                    <Icon type="upload" /> 文件上传
-                  </Button>
+                uploadElement = <Upload {...props} defaultFileList={this.props.fileList}>
+                  <div>
+                    <Icon type="plus" />
+                    <div className="ant-upload-text">文件上传</div>
+                  </div>
                 </Upload>
               }
             } else {
-              element = <Upload {...props}>
-                <Button>
-                  <Icon type="upload" /> 文件上传
-                </Button>
+              uploadElement = <Upload {...props}>
+                <div>
+                  <Icon type="plus" />
+                  <div className="ant-upload-text">文件上传</div>
+                </div>
               </Upload>
             }
-
-            // } else {
-            //   console.log('edit')
-            //   element = <SdlUpload
-            //     // defaultFileList={[fileList]}
-            //     uid={isEdit ? uid : undefined}
-            //   />
-            // }
+            element = <>
+              {uploadElement}
+              <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
+                this.setState({ previewVisible: false })
+              }}>
+                <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+              </Modal>
+            </>
           }
           break;
       }
@@ -477,6 +473,17 @@ class SdlForm extends PureComponent {
             },
           }
         }
+        if (item.type === '上传' && element) {
+          colSpan = 24;
+          layout = {
+            labelCol: {
+              span: 4,
+            },
+            wrapperCol: {
+              span: 19,
+            },
+          }
+        }
         return (
           <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
@@ -496,6 +503,17 @@ class SdlForm extends PureComponent {
       }
     });
   }
+
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+    });
+  };
 
   _onSubmitForm() {
     const { form, onSubmitForm } = this.props;
