@@ -6,28 +6,29 @@ import { CALL_HISTORY_METHOD } from 'react-router-redux';
 import { async } from 'q';
 import moment from 'moment';
 // import Lightbox from "react-image-lightbox-rotate";
-import styles from "./EmergencyDetailInfo.less";
+import { router } from 'umi'
+import styles from './EmergencyDetailInfo.less';
 import DescriptionList from '../../components/DescriptionList';
 // import AlarmDetails from '../../components/EmergencyDetailInfo/AlarmDetails';
 import { EnumRequstResult, EnumPatrolTaskType, EnumPsOperationForm, EnumOperationTaskStatus } from '../../utils/enum';
 import { imgaddress } from '../../config.js';
 import MonitorContent from '../../components/MonitorContent/index';
 import { get, post, authorpost } from '@/utils/request';
-import { router } from 'umi'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
+import ViewImagesListModal from '../../components/ImgView'
 // import "react-image-lightbox/style.css";
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const Step = Steps.Step;
+const { Step } = Steps;
 let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
 
 @Form.create()
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetTaskRecord'],
     taskInfo: task.TaskRecord,
-    alarmList: []
+    alarmList: [],
 }))
 class EmergencyDetailInfo extends Component {
     constructor(props) {
@@ -40,13 +41,15 @@ class EmergencyDetailInfo extends Component {
             cdvisible: false,
             // uid: null,
             photoIndex: 0,
-            //参数改变让页面刷新
-            DGIMN: DGIMN,
-            TaskID: TaskID,
+            // 参数改变让页面刷新
+            DGIMN,
+            TaskID,
             moreAlarmList: null,
             visible: false,
             alarmType: null,
-            visibleImg:false
+            visibleImg: false,
+            ImgListvisible: false,
+            FileUuid: '',
         };
     }
 
@@ -56,12 +59,12 @@ class EmergencyDetailInfo extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { DGIMN, TaskID } = this.props;
-        //如果传入参数有变化，则重新加载数据
+        // 如果传入参数有变化，则重新加载数据
         if (nextProps.DGIMN !== DGIMN || nextProps.TaskID !== TaskID) {
             this.setState({
-                //参数改变让页面刷新
+                // 参数改变让页面刷新
                 DGIMN: nextProps.DGIMN,
-                TaskID: nextProps.TaskID
+                TaskID: nextProps.TaskID,
             });
             this.reloaddata();
         }
@@ -76,13 +79,13 @@ class EmergencyDetailInfo extends Component {
         });
         this.setState({
             previewVisible: true,
-            photoIndex: ImageList
+            photoIndex: ImageList,
         });
     }
 
     handleCancels = () => {
         this.setState({
-            previewVisible: false
+            previewVisible: false,
         });
     }
 
@@ -91,61 +94,60 @@ class EmergencyDetailInfo extends Component {
             type: 'task/GetTaskRecord',
             payload: {
                 TaskID: this.props.TaskID,
-                DGIMN: this.props.DGIMN
-            }
+                DGIMN: this.props.DGIMN,
+            },
         });
     }
 
     renderItem = (data, taskID, types) => {
         const rtnVal = [];
-        console.log('data111=',data)
+        console.log('data111=', data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                if (types == "2") {
+                if (types == '2') {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
-                            this.GoToForm(taskID, item.CnName, "1", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.StopMachine:
-                            this.GoToForm(taskID, item.CnName, "2", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.YhpReplace:
-                            this.GoToForm(taskID, item.CnName, "3", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.StandardGasReplace:
-                            this.GoToForm(taskID, item.CnName, "4", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CqfPatrol:
-                            this.GoToForm(taskID, item.CnName, "5", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, "6", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, "7", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CheckRecord:
-                            this.GoToForm(taskID, item.CnName, "8", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.TestRecord:
-                            this.GoToForm(taskID, item.CnName, "9", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.DataException:
-                            this.GoToForm(taskID, item.CnName, "10", rtnVal, key,item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID);
                             break;
                         default:
                             break;
                     }
-                }
-                else {
-                    this.GoToForm(taskID, item.CnName, "-1", rtnVal, key,item.FormMainID);
+                } else {
+                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                 }
             }
         });
         return rtnVal;
     }
 
-    GoToForm = (taskID, cnName, recordType, rtnVal, key,FormMainID) => {
+    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID) => {
         // let taskfrom = this.props.taskfrom || '';
         // if (taskfrom.indexOf("qcontrollist") > -1) {
         //     taskfrom = taskfrom.split('-')[0];
@@ -154,19 +156,19 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon="check-circle-o"
             onClick={() => {
-                if (recordType == "-1") {
+                if (recordType == '-1') {
                     // 获取详情图片
                     this.props.dispatch({
-                        type: "common/getOperationImageList",
+                        type: 'common/getOperationImageList',
                         payload: {
-                            FormMainID: FormMainID
+                            FormMainID,
                             // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
                         },
-                        callback: (res) => {
+                        callback: res => {
                             this.setState({
-                                visibleImg: true
+                                visibleImg: true,
                             })
-                        }
+                        },
                     })
                 } else {
                     router.push(`/operations/recordForm/${recordType}/${taskID}`)
@@ -178,50 +180,49 @@ class EmergencyDetailInfo extends Component {
         </p>);
     }
 
-    //获取撤单按钮
+    // 获取撤单按钮
     getCancelOrderButton = (createtime, TaskStatus) => {
         if (moment(createtime) > moment(new Date()).add(-7, 'day') && TaskStatus == 3) {
             return <Button onClick={this.cdShow}><Icon type="close-circle" />打回</Button>;
         }
 
-        return <Button disabled={true}><Icon type="close-circle" />打回</Button>;
-
+        return <Button disabled><Icon type="close-circle" />打回</Button>;
     }
 
     cdShow = () => {
         this.setState({
-            cdvisible: true
+            cdvisible: true,
         });
     }
 
     cdClose = () => {
         this.setState({
-            cdvisible: false
+            cdvisible: false,
         });
     }
 
-    cdOk = (TaskID) => {
+    cdOk = TaskID => {
         this.props.dispatch({
             type: 'task/RevokeTask',
             payload: {
                 taskID: TaskID,
                 revokeReason: this.props.form.getFieldValue('reason'),
                 reload: () => this.reloaddata(),
-                close: () => this.cdClose()
-            }
+                close: () => this.cdClose(),
+            },
         });
     }
 
-    handleCancel = (e) => {
+    handleCancel = e => {
         this.setState({
             visible: false,
         });
     }
 
-    //步骤条
-    TaskLogList = (TaskLogList) => {
-        let returnStepList = [];
-        TaskLogList.map((item) => {
+    // 步骤条
+    TaskLogList = TaskLogList => {
+        const returnStepList = [];
+        TaskLogList.map(item => {
             returnStepList.push(
                 <Step
                     status="finish"
@@ -231,31 +232,31 @@ class EmergencyDetailInfo extends Component {
                         this.showIcon(item.TaskStatusText)
                     }
                     />}
-                />
+                />,
             );
         });
         return returnStepList;
     }
 
     //图标
-    showIcon = (TaskStatusText) => {
+    showIcon = TaskStatusText => {
         switch (TaskStatusText) {
             case '待执行': return 'minus-circle';
             case '进行中': return 'clock-circle';
             case '已完成': return 'check-circle';
             case '待审核': return 'exclamation-circle';
-            case "审核通过": return 'check-square';
-            case "驳回": return 'close-circle';
-            case "待调整": return 'warning';
-            case "已调整": return 'check-square';
+            case '审核通过': return 'check-square';
+            case '驳回': return 'close-circle';
+            case '待调整': return 'warning';
+            case '已调整': return 'check-square';
             default: return 'schedule';
         }
     }
 
 
-    //步骤条描述
-    description = (item) => {
-        if (item.TaskRemark === "" || item.TaskRemark === null) {
+    // 步骤条描述
+    description = item => {
+        if (item.TaskRemark === '' || item.TaskRemark === null) {
             return (
                 <div style={{ marginBottom: 40 }}>
                     <div style={{ marginTop: 5 }}>
@@ -288,24 +289,22 @@ class EmergencyDetailInfo extends Component {
                 </div>
             </Popover>
         );
-
-
     }
 
-    stepsWidth = (item) => {
-        let width = item.length * 350;
+    stepsWidth = item => {
+        const width = item.length * 350;
         return width;
     }
 
     getGoBack = () => {
         const { history, goback } = this.props;
-        if (goback === "none") {
+        if (goback === 'none') {
             SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 500;
             return (<span />);
         }
         return (
             <Button
-                style={{ float: "right", marginRight: 30 }}
+                style={{ float: 'right', marginRight: 30 }}
                 onClick={() => {
                     history.goBack(-1);
                 }}
@@ -313,38 +312,66 @@ class EmergencyDetailInfo extends Component {
             </Button>
         );
     }
-    getUserIcon = (data) => {
-        var iconList = []
+
+    showImagList=id => {
+        this.setState({
+            ImgListvisible: true,
+            FileUuid: id,
+        })
+    }
+
+      modalHandleCancel = e => {
+        this.setState({
+          ImgListvisible: false,
+        });
+      };
+
+    getUserIcon = data => {
+        const iconList = []
+
         if (data) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].CertificateTypeID == 240)//废气
+            for (let i = 0; i < data.length; i++) {
+                const ID = data[i].AttachmentID;
+                if (data[i].CertificateTypeID == 240)// 废气
                 {
                     var gasUrl = '/废气.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/废气灰.png'
-                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
-                    }else{
-                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                        iconList.push(<Tooltip title="证书已过期"><img onClick={() => {
+                            this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    } else {
+                        iconList.push(<img onClick={() => {
+                            this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
                 }
-                if (data[i].CertificateTypeID == 241)//水
+                if (data[i].CertificateTypeID == 241)// 水
                 {
                     var gasUrl = '/水.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/水灰.png'
-                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
-                    }else{
-                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                        iconList.push(<Tooltip title="证书已过期"><img onClick={() => {
+                          this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    } else {
+                        iconList.push(<img onClick={() => {
+                           this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
                 }
-                if (data[i].CertificateTypeID == 242)//voc
+                if (data[i].CertificateTypeID == 242)// voc
                 {
                     var gasUrl = '/voc.png'
                     if (data[i].IsExpire == false) {
                         gasUrl = '/voc灰.png'
-                        iconList.push(<Tooltip title='证书已过期'><img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
-                    }else{
-                        iconList.push(<img style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
+                        iconList.push(<Tooltip title="证书已过期"><img onClick={() => {
+                            this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
+                    } else {
+                        iconList.push(<img onClick={() => {
+                            this.showImagList(ID);
+                        }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
                 }
             }
@@ -357,7 +384,7 @@ class EmergencyDetailInfo extends Component {
         this.setState({
             moreAlarmList: alarmList,
             typeName: type,
-            visible: true
+            visible: true,
         });
     }
 
@@ -377,9 +404,9 @@ class EmergencyDetailInfo extends Component {
                 <div />
             );
         }
-        //是否存在任务信息
+        // 是否存在任务信息
         const isExistTask = this.props.taskInfo.IsSuccess && this.props.taskInfo.Datas !== null && this.props.taskInfo.Datas.length > 0;
-        let AlarmList = []; // 报警记录
+        const AlarmList = []; // 报警记录
         let Attachments = ''; // 附件
         let TaskLogList = []; // 任务日志列表
         let RecordTypeInfo = [];
@@ -388,11 +415,11 @@ class EmergencyDetailInfo extends Component {
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
             if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
-                this.props.taskInfo.Datas[0].AlarmList[0].map((item) => {
+                this.props.taskInfo.Datas[0].AlarmList[0].map(item => {
                     if (item !== null) {
-                        let AlarmType = "";
+                        let AlarmType = '';
                         let AlarmCount = 0;
-                        item.MsgTypeList.map((item) => {
+                        item.MsgTypeList.map(item => {
                             AlarmType += `${item.MsgTypeText},`;
                             AlarmCount += item.AlarmCount;
                         });
@@ -400,10 +427,10 @@ class EmergencyDetailInfo extends Component {
                             key: item.AlarmSourceType,
                             FirstAlarmTime: item.FirstAlarmTime,
                             LastAlarmTime: item.LastAlarmTime,
-                            AlarmMsg: AlarmType !== "" ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
-                            AlarmCount: AlarmCount,
+                            AlarmMsg: AlarmType !== '' ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
+                            AlarmCount,
                             MsgTypeList: item.MsgTypeList,
-                            AlarmType: item.AlarmSourceTypeText
+                            AlarmType: item.AlarmSourceTypeText,
                         });
                     }
                 });
@@ -419,7 +446,7 @@ class EmergencyDetailInfo extends Component {
                     uid: index,
                     name: item,
                     status: 'done',
-                    url: `/NoPic.png`,
+                    url: '/NoPic.png',
                 });
             } else {
                 fileList.push({
@@ -429,16 +456,15 @@ class EmergencyDetailInfo extends Component {
                     url: `${imgaddress}${item}`,
                 });
             }
-
         });
-        //拼接图片地址数组
-        let ImageList = [];
-        fileList.map((item) => {
+        // 拼接图片地址数组
+        const ImageList = [];
+        fileList.map(item => {
             ImageList.push(
-                `${imgaddress}${item.name}`
+                `${imgaddress}${item.name}`,
             );
         });
-        //报警列表列名
+        // 报警列表列名
         const columns = [{
             title: '开始报警时间',
             width: '20%',
@@ -460,10 +486,10 @@ class EmergencyDetailInfo extends Component {
             width: '35%',
             key: 'AlarmMsg',
             render: (text, row, index) => {
-                if (text !== null && text !== "") {
-                    let types = [];
-                    text.split(',').map((item) => {
-                        const dot = types.length + 1 < text.split(',').length ? "，" : "";
+                if (text !== null && text !== '') {
+                    const types = [];
+                    text.split(',').map(item => {
+                        const dot = types.length + 1 < text.split(',').length ? '，' : '';
                         types.push(<span><a
                             href="javascript:;"
                             onClick={
@@ -472,7 +498,7 @@ class EmergencyDetailInfo extends Component {
                                     this.setState({
                                         moreAlarmList: alarmList,
                                         alarmType: row.AlarmType,
-                                        visible: true
+                                        visible: true,
                                     });
                                 }
                             }
@@ -481,7 +507,7 @@ class EmergencyDetailInfo extends Component {
                         </span>);
                     });
                     return {
-                        children: types
+                        children: types,
                     };
                 }
             },
@@ -494,7 +520,7 @@ class EmergencyDetailInfo extends Component {
         const upload = {
             showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
             listType: 'picture-card',
-            fileList: [...fileList]
+            fileList: [...fileList],
         };
         const { isloading } = this.props;
         if (isloading) {
@@ -504,7 +530,7 @@ class EmergencyDetailInfo extends Component {
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}
                 size="large"
             />);
@@ -576,7 +602,7 @@ class EmergencyDetailInfo extends Component {
                             {
                                 upload.fileList.length === 0 ? '没有上传附件' : (<Upload
                                     {...upload}
-                                    onPreview={(file) => {
+                                    onPreview={file => {
                                         this.handlePreview(file, fileList);
                                     }}
                                 />)
@@ -607,7 +633,7 @@ class EmergencyDetailInfo extends Component {
                             {getFieldDecorator('reason', {
                                 rules: [{ required: true, message: '请输入打回说明' }],
                             })(
-                                <Input.TextArea rows="3" prefix={<Icon type="rollback" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                                <Input.TextArea rows="3" prefix={<Icon type="rollback" style={{ color: 'rgba(0,0,0,.25)' }} />} />,
                             )}
                         </FormItem>
                     </Form>
@@ -644,6 +670,18 @@ class EmergencyDetailInfo extends Component {
                     {/* <AlarmDetails data={isExistTask ? this.state.moreAlarmList : []} /> */}
                 </Modal>
                 {this.state.visibleImg && <ViewImagesModal />}
+                <Modal
+                destroyOnClose = "true"
+                title = "证书详细"
+                visible = {
+                  this.state.ImgListvisible
+                }
+                footer = ""
+                onCancel = {
+                    this.modalHandleCancel
+                  } >
+                  <ViewImagesListModal FileUuid={this.state.FileUuid}/>
+                  </Modal>
             </div>
         );
     }
