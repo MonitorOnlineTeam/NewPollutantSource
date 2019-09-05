@@ -79,7 +79,7 @@ export async function getListPager(params) {
     // };
     // const body=Object.assign(param,params);
     // console.log('params=',body)
-    const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetListPager', params, null);
+    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetListPager', params, null);
     return result;
 }
 

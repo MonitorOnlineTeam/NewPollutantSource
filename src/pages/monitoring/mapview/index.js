@@ -47,6 +47,7 @@ class MapView extends Component {
       coordinateSet: [],
       markersList: [],
       currentEntInfo: {},
+      chartTitle: null,
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -206,12 +207,12 @@ class MapView extends Component {
               <WaterIcon style={{ fontSize: 20, color: this.getColor(extData.position.Status) }} />
           } */}
           {/* 图标 */}
-          { this.getPollutantIcon(extData) }
+          {this.getPollutantIcon(extData)}
           {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
-          <>
-            {/* <div className={styles.pulse}></div> */}
-            <div className={styles.pulse1}></div>
-          </>
+            <>
+              {/* <div className={styles.pulse}></div> */}
+              <div className={styles.pulse1}></div>
+            </>
           }
         </div>
       }
@@ -223,13 +224,13 @@ class MapView extends Component {
     const style = { fontSize: 20, color: this.getColor(extData.position.Status) }
     switch (extData.position.PollutantType) {
       case "1":
-        return <WaterIcon style={style}/>
+        return <WaterIcon style={style} />
       case "2":
-        return <GasIcon  style={style}/>
+        return <GasIcon style={style} />
       case "10":
-        return <VocIcon  style={style}/>
+        return <VocIcon style={style} />
       case "12":
-        return <DustIcon  style={style}/>
+        return <DustIcon style={style} />
     }
   }
 
@@ -437,7 +438,7 @@ class MapView extends Component {
       },
       yAxis: {
         type: 'value',
-        name: '浓度(' + 'mg/m³' + ')',
+        name: this.state.chartTitle ? this.state.chartTitle : (this.props.tableList.length && this.props.tableList[0].title),
         axisLabel: {
           formatter: '{value}',
         },
@@ -596,7 +597,7 @@ class MapView extends Component {
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
               events={this.windowEvents}
-              // isCustom
+            // isCustom
             >
               {
                 // this.state.displayType == 0 ?
@@ -644,12 +645,15 @@ class MapView extends Component {
                         <Descriptions
                           title={
                             // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                            <div>{this.state.currentPointInfo.title}</div>
+                            <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                           }
                           size="small"
                           bordered>
                           {
                             this.props.tableList.map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                              this.setState({
+                                chartTitle: item.title
+                              })
                               this.props.dispatch({
                                 type: "mapView/updateChartData",
                                 payload: {
@@ -664,7 +668,8 @@ class MapView extends Component {
                         {
                           // !this.props.chartLoading && (!this.props.chartData.seriesData.length ?
                           !this.props.chartData.seriesData.length ?
-                            <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"  />
+                            // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                             : <ReactEcharts
                               className={styles.echartdiv}
                               style={{ width: '100%', height: '200px', textAlign: 'center' }}
@@ -695,7 +700,7 @@ class MapView extends Component {
               markers={this.state.markersList}
               events={this.markersEvents}
               render={this.renderMarker}
-              // content={<span>111</span>}
+            // content={<span>111</span>}
             />
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>

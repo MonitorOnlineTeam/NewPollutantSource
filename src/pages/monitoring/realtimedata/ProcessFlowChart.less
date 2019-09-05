@@ -1,0 +1,158 @@
+.demoinfinitecontainer {
+    overflow: auto;
+  }
+  .demoloading {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+  }
+
+  .listTh{
+    height: 30px;
+  }
+
+  
+// /*工艺流程图*/
+.GyProcessPic{
+ // width: 100%;
+  // height: calc(100vh-10px);
+  overflow-x:hidden;
+  overflow-y: scroll; 
+ 
+}
+.divClick{
+  cursor: pointer;
+}
+.overstatus :global{
+  .ant-badge-status-processing
+  {
+      background-color: #E64B49;
+  }
+  .ant-badge-status-processing:after
+  {
+      border: 1px solid #E64B49;
+  }
+  .ant-badge-status-dot{
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.normalstatus :global{
+  .ant-badge-status-processing
+  {
+      background-color: #4EC062;
+  }
+  .ant-badge-status-processing:after
+  {
+      border: 1px solid #4EC062;
+  }
+  .ant-badge-status-dot{
+    width: 12px;
+    height: 12px;
+  }
+}
+
+
+.imgBg1{
+  background: url(../../../../public/gylct.png);
+  background-repeat: no-repeat;
+  width: 1530px;
+  height: 755px;
+}
+
+.lasttr{
+  border: none;
+}
+
+.FormTable {
+  text-indent:2em;
+  overflow: hidden;
+  width:90%;
+  border-collapse: collapse;/* 边框合并属性  */
+  font-size: 10px;
+  margin:auto;
+  background-color: #fff;
+  border: none;
+  margin-bottom: 10px;
+}
+.FormTable>thead>th {
+      text-align: right;
+      border: 1px solid #ccc;
+      font-weight: normal;
+      display: table-cell;
+      vertical-align: inherit;
+      line-height: 25px;
+      height: 25px;
+      white-space: nowrap;
+      padding-left: 9px;
+      background-color: rgb(114,135,178);
+      color: #fff;
+      border-bottom:  1px solid #ccc;
+  }
+  .FormTable>tbody>tr {
+    border-bottom:  1px solid #7487b221;
+    line-height: 30px;
+}
+
+  .FormTable>tbody>tr>td {
+     // border: 1px solid #ccc;
+      display: table-cell;
+      vertical-align: inherit;
+      text-align: left;
+      padding-left: 9px;
+      padding-top:9px;
+      padding-bottom:9px;
+  }
+
+  .AlarmRed{
+  color: red;  
+  }
+
+  .AlarmCommon{
+    color: #000; 
+  }
+
+/*工艺流程图*/
+
+.cardcss :global {
+    .ant-card-head{
+      color: #fff; 
+      background: #7487b2;
+      border-radius: 9px 9px 0 0;
+    }
+    .ant-card-head-title {
+   
+      font-size: 16px;
+      padding: 16px 0;
+      -o-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      color: #fff; 
+      white-space: nowrap;
+      font-weight: 500;
+      display: inline-block;
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+  }
+  .ant-card-body{
+    padding: 10px 0 0 0;
+  }
+}
+
+
+
+
+  @-webkit-keyframes  shineRed {  
+    from { -webkit-box-shadow: 0 0 5px red; }  
+    50% { -webkit-box-shadow: 0 0 20px red; }  
+    to { -webkit-box-shadow: 0 0 10px red; }  
+    }  
+    .shine_red{  
+      color: red; 
+    -webkit-animation-name: shineRed;   
+    -webkit-animation-duration: 2s;  
+    -webkit-animation-iteration-count: infinite;   
+    }  
+ 
