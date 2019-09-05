@@ -447,6 +447,11 @@ export default {
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
                 },
+                {
+                  name: 'realtimedata',
+                  path: '/monitoring/realtimedata',
+                  component: './monitoring/realtimedata',
+                },
               ],
             },
             {

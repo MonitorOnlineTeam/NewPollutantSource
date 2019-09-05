@@ -19,7 +19,9 @@ const { Option } = Select;
     JZDatas: operationform.JZDatas,
     rangDate: operationform.rangDate,
     RecordType: operationform.RecordType,
-    PollutantTypes: operationform.PollutantTypes
+    PollutantTypes: operationform.PollutantTypes,
+    BeginTime: operationform.BeginTime,
+    EndTime: operationform.EndTime,
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -29,12 +31,11 @@ class OperationRecord extends Component {
         this.state = {
             rangeDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
             formats: 'YYYY-MM-DD',
-            beginTime: "",
-            endTime: "",
+            BeginTime: "",
+            EndTime: "",
             RecordType: "",
             DGIMN: "",
             configName: "",
-            PollutantTypeByPoint: '',
             search: [],
             columns: [
                 {
@@ -98,8 +99,8 @@ class OperationRecord extends Component {
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
                     DGIMN: this.props.DGIMN,
-                    BeginTime: this.props.beginTime,
-                    EndTime: this.props.endTime
+                    BeginTime: this.props.BeginTime,
+                    EndTime: this.props.EndTime
                 }
             })
         }
@@ -108,19 +109,21 @@ class OperationRecord extends Component {
         console.log('search:', val);
     }
     componentDidMount() {
-        // console.log(1231231231231)
-        // this.props.dispatch({
-        //     type: 'autoForm/getPageConfig',
-        //     payload: {
-        //         configId: "FormMainInfoCon"
-        //     }
-        // })
-        // this.props.dispatch({
-        //     type: 'autoForm/getPageConfig',
-        //     payload: {
-        //         configId: "FormMainInfoGas"
-        //     }
-        // })
+        const { BeginTime, EndTime, PollutantTypes, RecordType } = this.props
+        if (BeginTime != '' && EndTime != '' && PollutantTypes != '' && RecordType != '') {
+            this.props.dispatch({
+                type: 'autoForm/getPageConfig',
+                payload: {
+                    configId: this.getRecordType(RecordType)
+                }
+            })
+        }
+        this.props.dispatch({
+            type: 'operationform/getrecordtypebymn',
+            payload: {
+                DGIMN: this.props.DGIMN
+            }
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -131,23 +134,12 @@ class OperationRecord extends Component {
                     DGIMN: nextProps.DGIMN
                 }
             });
-            this.setState({
-                DGIMN: nextProps.DGIMN,
-                PollutantTypeByPoint: nextProps.PollutantType
-            })
-            debugger
-            if (this.props.PollutantTypes != nextProps.PollutantType) {
-                this.props.dispatch({
-                    type: "operationform/updateState",
-                    payload: {
-                        RecordType: '',
-                        PollutantTypes: nextProps.PollutantType
-                    }
-                })
-            }
         }
-        if (this.props.RecordTypeTree != nextProps.RecordTypeTree) {
+        if (JSON.stringify(this.props.RecordTypeTree) !== JSON.stringify(nextProps.RecordTypeTree)) {
+            console.log('this.props=', this.props.RecordTypeTree)
+            console.log('nextprops=', nextProps.RecordTypeTree)
             var key = nextProps.RecordTypeTree.length > 0 ? nextProps.RecordTypeTree[0].key : -1
+            console.log('configKey=', key)
             this.props.dispatch({
                 type: 'autoForm/getPageConfig',
                 payload: {
@@ -157,21 +149,20 @@ class OperationRecord extends Component {
             this.setState({
                 RecordType: key
             })
-            if (this.props.PollutantTypes == '') {
-                this.props.dispatch({
-                    type: "operationform/updateState",
-                    payload: {
-                        RecordType: key,
-                    }
-                })
-            }
+            this.props.dispatch({
+                type: "operationform/updateState",
+                payload: {
+                    RecordType: key,
+                }
+            })
         }
     }
 
     getRecordType = (key) => {
         var configid = ''
-        var type = this.state.PollutantTypeByPoint || this.props.PollutantTypes
+        var type = this.props.PollutantTypes
         // debugger
+        console.log('configidType=', type)
         if (type == "2") {
             switch (key) {
                 case 1://维修记录表
@@ -209,6 +200,7 @@ class OperationRecord extends Component {
         else {
             configid = 'FormMainInfoPic'
         }
+        console.log('configid=', configid)
         this.setState({
             configName: configid,
         })
@@ -219,8 +211,8 @@ class OperationRecord extends Component {
     _handleDateChange = (date, dateString) => {
         this.setState({
             rangeDate: date,
-            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+            BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
         });
         this.props.dispatch({
             type: "operationform/updateState",
@@ -234,7 +226,7 @@ class OperationRecord extends Component {
             this.props.dispatch({
                 type: 'operationform/getjzhistoryinfo',
                 payload: {
-                    DGIMN: this.state.DGIMN,
+                    DGIMN: this.props.DGIMN,
                     BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: date[1].format('YYYY-MM-DD HH:mm:ss')
                 }
@@ -245,6 +237,8 @@ class OperationRecord extends Component {
     render() {
         const { RecordTypeTree } = this.props
         const { columns } = this.state
+        console.log('-----------begintime=', this.props)
+        console.log(' this.props.PollutantTypes=', this.props.PollutantTypes)
         return (
             <div >
                 <Card
@@ -297,7 +291,7 @@ class OperationRecord extends Component {
                                 appendHandleRows={row => {
                                     return <Tooltip title="详情">
                                         <a onClick={() => {
-                                            if (this.state.PollutantTypeByPoint == "2") {
+                                            if (this.props.PollutantTypes == "2") {
                                                 router.push('/operations/recordForm/' + this.props.RecordType + '/' + row['dbo.T_Bas_Task.ID'])
                                             } else {
                                                 // 获取详情图片
@@ -317,10 +311,10 @@ class OperationRecord extends Component {
                                         }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
                                     </Tooltip>
                                 }}
-                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.state.DGIMN || this.props.DGIMN, "Where": "$=" },
+                                searchParams={[{ "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.props.DGIMN, "Where": "$=" },
                                 { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.beginTime, "Where": "$gte" },
-                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.endTime, "Where": "$lte" }
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.BeginTime, "Where": "$gte" },
+                                { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.EndTime, "Where": "$lte" }
                                 ]}
                                 {...this.props}
                             ></AutoFormTable> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />)}
