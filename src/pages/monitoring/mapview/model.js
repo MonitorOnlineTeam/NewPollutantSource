@@ -141,6 +141,7 @@ export default Model.extend({
               //   key: item.field,
               //   status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
               // })
+              xAxisData.push(moment(item.MonitorTime).hour())
               arrItem.push(itm[item.field])
             }
           })
