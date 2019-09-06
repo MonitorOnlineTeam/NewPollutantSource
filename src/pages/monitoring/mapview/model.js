@@ -70,7 +70,6 @@ export default Model.extend({
       payload,
     }, { call, update, select, take, put }) {
       const pollutantType = yield select(state => state.mapView[`pollutantType${payload.type}`])
-      console.log("pollutantType=",pollutantType)
       const result = yield call(services.getPointTableData, payload);
       // console.log('aaa',result)
       if (result.IsSuccess) {
@@ -104,7 +103,8 @@ export default Model.extend({
               endTime: moment(new Date()).format('YYYY-MM-DD HH:00:00'),
               beginTime: moment(new Date()).add('hour', -23).format('YYYY-MM-DD HH:00:00'),
               dataType: "hour",
-              isAsc: true
+              isAsc: true,
+              IsSupplyData: true
             },
             tableList: tableList,
             pollutantType: pollutantType
@@ -124,32 +124,41 @@ export default Model.extend({
         const first = tableList[0];
         const xAxisData = [];
         const legend = first && first.label;
-        // const seriesData = first && result.Datas.map(item => {
-        //   if (item[first.key]) {
-        //     xAxisData.push(moment(item.MonitorTime).hour())
-        //     return item[first.key]
-        //   }
-        // })
-        let seriesData = [];
-        pollutantType.map(item => {
-          let arrItem = [];
-          result.Datas.map(itm => {
-            if (itm[item.field]) {
-              // tableList.push({
-              //   label: item.name,
-              //   value: itm[item.field],
-              //   key: item.field,
-              //   status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
-              // })
-              xAxisData.push(moment(item.MonitorTime).hour())
-              arrItem.push(itm[item.field])
-            }
-          })
-          seriesData.push(arrItem)
+        let flag = false;
+        let seriesData = first && result.Datas.map(item => {
+          xAxisData.push(moment(item.MonitorTime).hour())
+          if (item[first.key]) {
+            flag = true;
+            return item[first.key]
+          } else {
+            return "-"
+          }
         })
+        seriesData = !flag ? [] : seriesData;
+        // let seriesData = [];
+        // let flag = false;
+        // // let arrItem = [];
+        // // let seriesData = [];
+        // pollutantType.map(item => {
+        //   result.Datas.map(itm => {
+        //     if (!flag) {
+        //       if (itm[item.field]) {
+        //         flag = true;
+        //         seriesData.push(itm[item.field])
+        //       } else {
+        //         seriesData.push("-")
+        //       }
+        //       xAxisData.push(moment(itm.MonitorTime).hour())
+        //     }
+        //   })
+        //   // xAxisData.push(timeItem)
+        //   // seriesData.push(arrItem)
+        // })
+        console.log('seriesData=', seriesData)
+        console.log('xAxisData=', xAxisData)
         yield update({
           chartData: {
-            seriesData: seriesData[0] || [], xAxisData, legend,
+            seriesData: seriesData || [], xAxisData: xAxisData, legend,
             allData: result.Datas
           }
         })
@@ -161,14 +170,23 @@ export default Model.extend({
       const chartData = yield select(state => state.mapView.chartData);
       const xAxisData = [];
       const legend = payload.label;
-      const seriesData = chartData.allData.map(item => {
+      let flag = false;
+      let seriesData = chartData.allData.map((item, index) => {
+        // if(index === 0){
+        //   xAxisData.push(`${moment(item.MonitorTime).hour()}\r\n09-04`);
+        // }else if(index === chartData.allData.length-1){
+        //   xAxisData.push(`${moment(item.MonitorTime).hour()}\r\n09-04`);
+        // } else{
+        xAxisData.push(moment(item.MonitorTime).hour())
+        // }
         if (item[key]) {
-          xAxisData.push(moment(item.MonitorTime).hour())
+          flag = true;
           return item[key]
+        } else {
+          return "-"
         }
       })
-      console.log('seriupdateesData=', seriesData)
-      console.log('xAxisData=', xAxisData)
+      seriesData = !flag ? [] : seriesData;
       yield update({
         chartData: {
           ...chartData,
