@@ -28,8 +28,8 @@ class Index extends PureComponent {
        dispatch({
              type: 'autoForm/getAttachmentList',
              payload: {
-               FileUuid: '1508522070404.91',
-               uid: '1508522070404.91',
+               FileUuid: this.props.FileUuid,
+               uid: this.props.FileUuid,
              },
             });
   }
