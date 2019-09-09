@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-05 14:00:06
+ * @Last Modified time: 2019-09-05 17:42:16
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -366,7 +366,7 @@ class SdlForm extends PureComponent {
             };
             if (isEdit) {
               if (this.props.fileList && !fileLoading) {
-                uploadElement = <Upload {...props} defaultFileList={this.props.fileList}>
+                element = <Upload {...props} defaultFileList={this.props.fileList}>
                   <div>
                     <Icon type="plus" />
                     <div className="ant-upload-text">文件上传</div>
@@ -374,21 +374,14 @@ class SdlForm extends PureComponent {
                 </Upload>
               }
             } else {
-              uploadElement = <Upload {...props}>
+              element = <Upload {...props}>
                 <div>
                   <Icon type="plus" />
                   <div className="ant-upload-text">文件上传</div>
                 </div>
               </Upload>
             }
-            element = <>
-              {uploadElement}
-              <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-                this.setState({ previewVisible: false })
-              }}>
-                <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-              </Modal>
-            </>
+            // element =  {uploadElement}
           }
           break;
       }
@@ -612,6 +605,11 @@ class SdlForm extends PureComponent {
           </Divider>
         } */}
       </Form>
+      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
+        this.setState({ previewVisible: false })
+      }}>
+        <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+      </Modal>
     </Card>
   }
 

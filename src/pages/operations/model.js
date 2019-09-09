@@ -45,6 +45,7 @@ export default Model.extend({
     approveModalVisible: false,
     approveModalData: {},
     applicantList: [],
+    operationsUserList: [],
   },
   effects: {
     // 获取日历信息
@@ -256,6 +257,44 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           applicantList: result.Datas
+        })
+      }
+    },
+
+    // 派单
+    *addTask({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.addTask, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功');
+        yield put({
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'TaskRecord'
+          }
+        })
+        callback && callback(result.Datas);
+      }
+    },
+    // 驳回
+    *rejectTask({ payload }, { call, put, update }) {
+      const result = yield call(services.rejectTask, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功');
+        yield put({
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'TaskRecord'
+          }
+        })
+      }
+    },
+
+    // 获取运维人员列表
+    *getOperationsUserList({ payload }, { call, put, update }) {
+      const result = yield call(services.getOperationsUserList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          operationsUserList: result.Datas
         })
       }
     },

@@ -68,17 +68,16 @@ export async function getPageConfigInfo(params) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getListPager(params) {
-    const postData = {
-        configId: "TestCommonPoint",
-        ...params,
-        // ConditionWhere: JSON.stringify(params.ConditionWhere),
-    };
+    // const postData = {
+    //     configId: "TestCommonPoint",
+    //     ...params,
+    //     // ConditionWhere: JSON.stringify(params.ConditionWhere),
+    // };
     // const defaults = {
     //     PageIndex:1,
     //     PageSize:200
     // };
     // const body=Object.assign(param,params);
-    // console.log('params=',body)
     const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetListPager', params, null);
     return result;
 }

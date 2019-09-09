@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-05 10:46:27
+ * @Last Modified time: 2019-09-09 13:53:46
  */
 import { message } from 'antd';
 import
@@ -84,9 +84,10 @@ export default Model.extend({
               }
               group.push(groupItem);
             }
-          } else {
-            group = []
           }
+          // } else {
+          //   group = []
+          // }
         }
       }
       console.log('group=', group)
@@ -188,6 +189,7 @@ export default Model.extend({
             configDataItemName: item.FOREIGN_DF_NAME,
             configDataItemValue: item.FOREIGN_DF_ID,
             dateFormat: item.DF_DATEFORMAT,
+            ...item
           };
         });
         // 添加
@@ -429,8 +431,8 @@ export default Model.extend({
         message.error(result.Datas)
       }
     },
-     // 校验重复
-     * checkRepeat({ payload, callback }, { call, update }) {
+    // 校验重复
+    * checkRepeat({ payload, callback }, { call, update }) {
       const result = yield call(services.checkRepeat, { ...payload });
       if (result.IsSuccess) {
         callback && callback(result.Datas)
