@@ -174,7 +174,7 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType,EntCode:node.IsEnt?node.key:node.EntCode });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -223,7 +223,6 @@ class NavigationTree extends Component {
           }
         } else if (this.props.overallselkeys.length != 0) {
           var state = !!dataList.find(m => m.key == this.props.overallselkeys[0].toString())
-          debugger
           if (state) {
             nowKey = this.props.overallselkeys
             nowExpandKey = this.props.overallexpkeys
@@ -235,7 +234,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType=dataList.find(m => m.key == nowKey[0].toString()).Type
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType,EntCode:node.EntCode }]
         console.log('rtnKey=',rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -527,10 +526,11 @@ class NavigationTree extends Component {
       {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type })
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type ,EntCode:list[0].EntCode})
       }
     })
     //向外部返回选中的数据
+    console.log('rtnlist=',rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (this.props.isMap === true && rtnList[0].IsEnt) {
