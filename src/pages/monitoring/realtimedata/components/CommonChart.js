@@ -4,7 +4,6 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Card, Col, Row, Tabs, Badge, Icon, Divider } from 'antd';
 import styles from './ProcessFlowChart.less';
-import OfflineData from '@/pages/dashboard/analysis/components/CommonData'
 const { TabPane } = Tabs;
 @connect(({ loading, dataquery, realtimeserver }) => ({
     pollutantlist: dataquery.pollutantlist,
