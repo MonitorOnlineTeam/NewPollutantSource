@@ -72,3 +72,22 @@ export async function getApplicant(params) {
   const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/GetApplicant`, params, null);
   return result;
 }
+
+// 派单
+export async function addTask(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/AddTask`, params, null);
+  return result;
+}
+
+// 驳回
+export async function rejectTask(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/RejectTask?taskId=${params.taskId}`, {}, null);
+  return result;
+}
+
+// 获取运维人员
+export async function getOperationsUserList(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/UserApi/GetUserRolesGroupList`, params, null);
+  return result;
+}
+

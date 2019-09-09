@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-06-13 15:22:08
+ * @Last Modified time: 2019-09-09 13:55:03
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -27,6 +27,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
+import EnterprisePointCascadeMultiSelect from '@/components/EnterprisePointCascadeMultiSelect'
 import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
@@ -88,6 +89,15 @@ class SearchWrapper extends Component {
     this._renderFormItem = this._renderFormItem.bind(this);
     this.onSubmitForm = this.onSubmitForm.bind(this);
     this._handleExpand = this._handleExpand.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.searchConfigItems[nextProps.configId] !== nextProps.searchConfigItems[nextProps.configId]) {
+      this.setState({
+        isShowExpand: nextProps.searchConfigItems[nextProps.configId].length > 2,
+        expand: nextProps.searchConfigItems[nextProps.configId].length > 2,
+      })
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -178,10 +188,20 @@ class SearchWrapper extends Component {
           placeholder = placeholder || inputPlaceholder;
           element = <Input placeholder={placeholder} allowClear={true} />;
           break;
+        case '监测点':
+          placeholder = placeholder || inputPlaceholder;
+          let props = {};
+          if (item.DF_NAME === "DGIMN") {
+            props = {
+              rtnValType: "DGIMN",
+            }
+          }
+          element = <EnterprisePointCascadeMultiSelect {...props}/>
+          break;
         case '下拉列表框':
-        case '多选下拉列表':
+        case '下拉多选':
           placeholder = placeholder || selectPlaceholder;
-          const mode = item.type === "多选下拉列表" ? 'multiple' : '';
+          const mode = item.type === "下拉多选" ? 'multiple' : '';
           element = (
             <SearchSelect
               configId={item.configId}
@@ -272,7 +292,25 @@ class SearchWrapper extends Component {
           }
           {
             searchConditions.length ? <Col style={{ marginTop: 6, ...style }}>
-              <Button type="primary" onClick={this.onSubmitForm}>
+              <Button type="primary" onClick={() => {
+                // 重置分页并查询数据
+                this.props.dispatch({
+                  type: 'autoForm/updateState',
+                  payload: {
+                    searchForm: {
+                      ...this.props.searchForm,
+                      [configId]: {
+                        ...this.props.searchForm[configId],
+                        current: 1,
+                        pageSize: 10
+                      }
+                    }
+                  }
+                });
+                setTimeout(() => {
+                  this.onSubmitForm()
+                }, 0)
+              }}>
                 查询
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>

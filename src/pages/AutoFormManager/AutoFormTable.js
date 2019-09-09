@@ -170,15 +170,15 @@ class AutoFormTable extends PureComponent {
       switch (btn.DISPLAYBUTTON) {
         case 'add':
           // if (btnsAuthority.includes('add')) {
-            return <Button
-              style={{ marginRight: 8 }}
-              key={btn.DISPLAYBUTTON}
-              icon="plus"
-              type="primary"
-              onClick={() => {
-                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
-              }}
-            >添加
+          return <Button
+            style={{ marginRight: 8 }}
+            key={btn.DISPLAYBUTTON}
+            icon="plus"
+            type="primary"
+            onClick={() => {
+              this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
+            }}
+          >添加
                   </Button>;
           // }
           break;
@@ -354,7 +354,6 @@ class AutoFormTable extends PureComponent {
     // const showHandle = rowKey.length;
     // console.log("showHandle=",showHandle)
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
-
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       const isFixed = scrollXWidth > (window.innerWidth - 64 - 48) ? 'right' : ''
       _columns.push({
@@ -362,8 +361,9 @@ class AutoFormTable extends PureComponent {
         title: '操作',
         width: 180,
         fixed: isFixed,
-        render: (text, record) => (
-          <div>
+        render: (text, record) => {
+          const returnKey = keys[configId] && record[keys[configId][0]];
+          return <div>
             {
               this._SELF_.btnEl.map((item, index) => {
                 // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
@@ -395,7 +395,7 @@ class AutoFormTable extends PureComponent {
                     </Fragment>);
                 }
                 // if (item.type === 'view' && btnsAuthority.includes('view')) {
-                  if (item.type === "view") {
+                if (item.type === "view") {
                   return (<Fragment key={item.type}>
                     <Tooltip title="详情">
                       <a onClick={() => {
@@ -411,7 +411,7 @@ class AutoFormTable extends PureComponent {
                     </Tooltip>
                     {
                       // this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
-                      this._SELF_.btnEl.length - 1 !== index  && <Divider type="vertical" />
+                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
                     }
                   </Fragment>);
                 }
@@ -446,10 +446,10 @@ class AutoFormTable extends PureComponent {
               })
             } */}
             {
-              this.props.appendHandleRows && this.props.appendHandleRows(record)
+              this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)
             }
           </div>
-        ),
+        },
       });
     }
 
@@ -482,8 +482,6 @@ class AutoFormTable extends PureComponent {
       //   }
       // },
     };
-    console.log('dataSource=', dataSource)
-    console.log('_columns=', _columns)
     return (
       <Fragment>
         <Row className={styles.buttonWrapper}>
@@ -517,7 +515,11 @@ class AutoFormTable extends PureComponent {
 
         </Row>
         <Table
-          rowKey={(record, index) => index}
+          rowKey={(record, index) => {
+            if (keys[configId]) {
+              return record[keys[configId][0]]
+            }
+          }}
           size="small"
           loading={this.props.loading}
           // className={styles.dataTable}

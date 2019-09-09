@@ -28,22 +28,22 @@ const UserLayout = props => {
   const {
     children,
     location = {
-      pathname: configInfo&&configInfo.SystemName,
+      pathname: configInfo && configInfo.SystemName,
     },
     configInfo
   } = props;
-  console.log("configInfo=", configInfo);
   const { breadcrumb } = getMenuData(routes);
- 
+  const title = configInfo ? `登录 - ${configInfo.SystemName}` : "登录";
   return (
     <DocumentTitle
-      title={getPageTitle({
-        // pathname: configInfo && configInfo.SystemName,
-        pathname:location.pathname,
-        breadcrumb,
-        formatMessage,
-        ...props,
-      })}
+      // title={getPageTitle({
+      //   // pathname: configInfo && configInfo.SystemName,
+      //   pathname: location.pathname,
+      //   breadcrumb,
+      //   formatMessage,
+      //   ...props,
+      // })}
+      title={title}
     >
       <div className={styles.container}>
         <div className={styles.lang}>

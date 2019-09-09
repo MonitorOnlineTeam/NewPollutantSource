@@ -19,14 +19,15 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
   }
 
   componentDidMount() {
-    const { searchEnterprise, searchRegion, dispatch } = this.props;
+    const { searchEnterprise, searchRegion, dispatch, rtnValType } = this.props;
     let type = 1;
     type = searchRegion ? 2 : (searchEnterprise ? 0 : 1);
     dispatch({
       type: 'common/getEnterpriseAndPoint',
       payload: {
         RegionCode: "",
-        PointMark: type
+        PointMark: type,
+        RtnValType: rtnValType
       }
     });
   }
@@ -67,6 +68,10 @@ class EnterprisePointCascadeMultiSelect extends PureComponent {
           //   }
           // }}
           onOk={(valueList, labelList, leafList, level) => {
+            // console.log('leafList=',leafList)
+            // console.log('valueList=',valueList)
+            // console.log('labelList=',labelList)
+            // console.log('level=',level)
             const values = leafList.map(p => p.value);
             this.props.onChange && this.props.onChange(values);
           }}
@@ -93,7 +98,7 @@ EnterprisePointCascadeMultiSelect.propTypes = {
 EnterprisePointCascadeMultiSelect.delfultProps = {
   searchEnterprise: false,
   searchRegion: false,
-  placeholder: "请选择行政区"
+  placeholder: "请选择行政区",
 }
 
 export default EnterprisePointCascadeMultiSelect;
