@@ -86,6 +86,7 @@ export default class ProcessFlowChart extends Component {
        let paramInfolist=[];
        let stateInfolist=[];
        let dataInfolist=[];
+       debugger
        if(paramlist && paramstatusInfo)
        {
             paramlist.map(item=>{

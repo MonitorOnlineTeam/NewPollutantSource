@@ -25,7 +25,7 @@ export default Model.extend({
           pageIndex: null,
           pageSize: null,
           beginTime: null,
-          endTime: null,
+          endTime: '2019-09-09 11:00:00',
           payloadpollutantCode: null,
           payloadpollutantName: null,
           isAsc: true,
@@ -78,6 +78,7 @@ export default Model.extend({
             //     historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
             //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
             // }
+            debugger
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
             if (result.length === 0) {
@@ -177,7 +178,7 @@ export default Model.extend({
                 }];
                 columns = columns.concat(pollutantcols);
             }
-
+            debugger
             let option = null;
             if (arr && arr.length > 0) {
                 option = {
