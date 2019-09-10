@@ -25,6 +25,7 @@ class Index extends PureComponent {
 
   componentDidMount() {
       const { dispatch } = this.props;
+      debugger;
        dispatch({
              type: 'autoForm/getAttachmentList',
              payload: {
