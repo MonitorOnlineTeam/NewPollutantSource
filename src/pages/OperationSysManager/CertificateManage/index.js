@@ -27,7 +27,6 @@ import CertificateManage from './components/index'
     }
 
   changeDgimn = UserId => {
-      debugger;
     this.setState({
       UserId,
     })

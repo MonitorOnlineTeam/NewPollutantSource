@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-09 13:53:46
+ * @Last Modified time: 2019-09-10 16:51:51
  */
 import { message } from 'antd';
 import
@@ -295,6 +295,7 @@ export default Model.extend({
           type: 'getAutoFormData',
           payload: {
             configId: payload.configId,
+            searchParams: payload.searchParams,
           },
         });
       } else {

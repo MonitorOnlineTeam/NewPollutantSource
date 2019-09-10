@@ -17,6 +17,7 @@ import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
+import PageLoading from '@/components/PageLoading'
 /**
  * use Authorized check all menu item
  */
@@ -82,7 +83,7 @@ const footerRender = (_, defaultDom) => {
 };
 
 const BasicLayout = props => {
-  const { dispatch, children, settings, currentMenu, configInfo } = props;
+  const { dispatch, children, settings, currentMenu, configInfo, loading } = props;
   /**
    * constructor
    */
@@ -141,6 +142,9 @@ const BasicLayout = props => {
   //   }
   // }
   // const myStyle = {};
+  if (loading) {
+    return (<PageLoading />);
+  }
   return (
     <>
       <ProLayout
@@ -209,10 +213,11 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, user }) => ({
+export default connect(({ global, settings, user, loading }) => ({
   collapsed: global.collapsed,
   changePwdVisible: global.changePwdVisible,
   settings,
   currentMenu: user.currentMenu,
-  configInfo: global.configInfo
+  configInfo: global.configInfo,
+  loading: loading.effects["global/getSystemConfigInfo"],
 }))(BasicLayout);

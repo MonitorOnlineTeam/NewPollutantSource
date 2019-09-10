@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-09-06 15:21:22 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-09 14:04:20
+ * @Last Modified time: 2019-09-10 16:02:47
  * @desc: 任务记录页面
  */
 import React, { Component } from 'react';
@@ -59,18 +59,16 @@ class TaskRecord extends Component {
   addTask = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('values=', values)
-        // return;
         const userCookie = Cookie.get('currentUser');
         const user = JSON.parse(userCookie);
         this.props.dispatch({
           type: "operations/addTask",
           payload: {
             taskType: 1,
-            // DGIMNs: values.DGIMNs.toString(),
-            DGIMNs: "w120100000004",
+            DGIMNs: values.DGIMNs.toString(),
+            // DGIMNs: "w120100000004",
             createUserId: user.User_ID,
-            operationsUserId: values.operationsUserId,
+            // operationsUserId: values.operationsUserId,
             remark: values.remark,
             taskFrom: values.taskFrom
           },
@@ -87,8 +85,6 @@ class TaskRecord extends Component {
 
   // 驳回
   rejectTask = (key) => {
-    console.log('key=', key);
-    // return;
     this.props.dispatch({
       type: "operations/rejectTask",
       payload: {
@@ -115,7 +111,7 @@ class TaskRecord extends Component {
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
-          <SearchWrapper configId={configId}></SearchWrapper>
+          <SearchWrapper configId={configId} />
           <AutoFormTable
             style={{ marginTop: 10 }}
             configId={configId}
@@ -155,6 +151,7 @@ class TaskRecord extends Component {
           title="派单"
           visible={this.state.visible}
           width="560px"
+          destroyOnClose
           loading={loading}
           onOk={this.addTask}
           onCancel={() => {
@@ -172,7 +169,7 @@ class TaskRecord extends Component {
                     },
                   ]
                 })(
-                  <EnterprisePointCascadeMultiSelect rtnValType placeholder="请选择监测点" onChange={(val) => {
+                  <EnterprisePointCascadeMultiSelect rtnValType={"DGIMN"} placeholder="请选择监测点" onChange={(val) => {
                   }} />
                 )}
               </FormItem>
@@ -195,7 +192,7 @@ class TaskRecord extends Component {
                 )}
               </FormItem>
             </Row>
-            <Row>
+            {/* <Row>
               <FormItem {...formLayout} label="运维人" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("operationsUserId", {
                   rules: [
@@ -214,7 +211,7 @@ class TaskRecord extends Component {
                   </Select>
                 )}
               </FormItem>
-            </Row>
+            </Row> */}
             <Row>
               <FormItem {...formLayout} label="描述" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("remark", {

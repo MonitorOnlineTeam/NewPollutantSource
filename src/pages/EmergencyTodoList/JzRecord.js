@@ -25,7 +25,6 @@ class JzRecord extends Component {
 
     //生成面包屑
     renderBreadCrumb = () => {
-        debugger;
         const rtnVal = [];
         let listUrl = this.props.match.params.viewtype;
         let taskID = this.props.match.params.TaskID;

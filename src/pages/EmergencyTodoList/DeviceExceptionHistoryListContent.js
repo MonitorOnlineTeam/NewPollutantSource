@@ -34,7 +34,6 @@ class DeviceExceptionHistoryListContent extends Component {
     }
 
     componentDidMount() {
-        debugger
         const condition = {
             pageIndex: 1,
             pageSize: 10,

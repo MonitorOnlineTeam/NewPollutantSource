@@ -47,7 +47,6 @@ class CommonChart extends Component {
     /**仪表盘的点击事件 */
     dashboardClick = (pollutantCode, pollutantName) => {
         // alert();
-        debugger
         let { historyparams, dispatch } = this.props;
         historyparams.payloadpollutantCode = pollutantCode;
         historyparams.payloadpollutantName = pollutantName;
