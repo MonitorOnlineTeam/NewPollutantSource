@@ -431,7 +431,7 @@ export default Model.extend({
     }, {call, update}) {
         const res = yield call(services.GetProcessFlowChartStatus, payload);
         debugger
-
+        
         if(res && res.Datas) {
             yield update({
                 operationInfo:data.operationInfo,
