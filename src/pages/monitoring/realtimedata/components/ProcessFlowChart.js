@@ -78,6 +78,7 @@ export default class ProcessFlowChart extends Component {
     //图片上的点击事件
     positionClick = (param, status, data) => {
         const { imgClick, paramstatusInfo, stateInfo, paramsInfo } = this.props;
+        console.log('this.props=',this.props)
         const paramlist = param ? param.split(",") : null;
         const statuslist = status ? status.split(",") : null;
         const datalist = data ? data.split(",") : null;
@@ -124,6 +125,7 @@ export default class ProcessFlowChart extends Component {
      */
     getChartType = () => {
         const { dataInfo, DGIMN } = this.props;
+        console.log('this.props112=',this.props)
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
                 case "1":
