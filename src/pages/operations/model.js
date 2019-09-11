@@ -204,7 +204,10 @@ export default Model.extend({
       const result = yield call(services.addVehicleApplication, postData);
       if (result.IsSuccess) {
         yield put({
-          type: "getVehicleApplicationList"
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'VehicleApplication'
+          }
         })
         yield update({
           applicationModalVisible: false
@@ -219,7 +222,10 @@ export default Model.extend({
       const result = yield call(services.cancelApplication, payload);
       if (result.IsSuccess) {
         yield put({
-          type: "getVehicleApplicationList"
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'VehicleApplication'
+          }
         })
         message.success("撤销成功")
       } else {
@@ -235,7 +241,10 @@ export default Model.extend({
         })
         message.success("操作成功");
         yield put({
-          type: "getVehicleApproveList"
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'VehicleApproval'
+          }
         })
       }
     },
@@ -246,7 +255,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("操作成功")
         yield put({
-          type: "getVehicleApproveList"
+          type: "autoForm/getAutoFormData",
+          payload: {
+            configId: 'VehicleApproval'
+          }
         })
       }
     },
