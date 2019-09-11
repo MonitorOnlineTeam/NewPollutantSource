@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Card, Col, Row, Tabs, Badge, Icon, Divider } from 'antd';
+import { Card, Col, Row, Tabs, Badge, Icon, Divider, Tooltip, Spin, Popover, Empty } from 'antd';
 import styles from './ProcessFlowChart.less';
+import { debug } from 'webpack';
 const { TabPane } = Tabs;
 @connect(({ loading, dataquery, realtimeserver }) => ({
     pollutantlist: dataquery.pollutantlist,
@@ -18,6 +19,9 @@ const { TabPane } = Tabs;
 class CommonChart extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            paramsInfo: []
+        }
     }
     componentWillMount() {
         const { dispatch, DGIMN } = this.props;
@@ -29,19 +33,49 @@ class CommonChart extends Component {
         });
     }
 
+    /** dgimn改變時候切換數據源 */
+    componentWillReceiveProps = nextProps => {
+        if (nextProps.paramsInfo !== this.props.paramsInfo) {
+            var paramsInfo = nextProps.paramsInfo
+            paramsInfo.map(item => {
+                var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
+                var state = '0'
+                if (params != null) {
+                    if (item.value > params.value) {
+                        state = '1'  //向上箭头
+                    } else if (item.value == params.value) {
+                        state = '0' //无箭头
+                    } else {
+                        state = '2' //向下箭头
+                    }
+                }
+                item.state = state;
+            })
+            this.setState({ paramsInfo })
+        }
+    }
+
+
     getEchart = () => {
+        debugger
         const { option, dataloading } = this.props;
         if (option) {
             option.backgroundColor = '#fff';
             return <ReactEcharts
-                showLoading={dataloading}
+                // showLoading={dataloading}
                 theme="light"
                 option={option}
                 lazyUpdate
                 notMerge
                 id="rightLine"
-                style={{ width: '98%', height: 'calc(100vh - 500px)',padding:20 }}
+                style={{ width: '98%', height: 'calc(100vh - 500px)', padding: 20 }}
             />
+        } else {
+            return <Empty style={{
+                width: '100%',
+                height: 'calc(100vh - 500px)',
+                marginTop: 260
+            }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
     }
     /**仪表盘的点击事件 */
@@ -49,6 +83,7 @@ class CommonChart extends Component {
         // alert();
         debugger
         let { historyparams, dispatch } = this.props;
+
         historyparams.payloadpollutantCode = pollutantCode;
         historyparams.payloadpollutantName = pollutantName;
         dispatch({
@@ -62,6 +97,27 @@ class CommonChart extends Component {
             payload: {
             }
         })
+    }
+
+    getUpOrDown = (state) => {
+        switch (state) {
+            case '0':
+                return ""
+            case '1':
+                return "arrow-up"
+            case '2':
+                return "arrow-down"
+        }
+    }
+    getColor = (dataparam) => {
+        var color = '#2eff02'
+        if (dataparam != '') {
+            var str = dataparam.split('§')
+            if (str == 'IsOver') {
+                color = '#ff0000'
+            }//IsException
+        }
+        return color
     }
 
     /**污染物参数 */
@@ -82,7 +138,8 @@ class CommonChart extends Component {
 
     /**仪表盘 */
     getLastestData = () => {
-        const { pollutantlist, paramsInfo } = this.props;
+        const { pollutantlist } = this.props;
+        let { paramsInfo } = this.state;
         if (pollutantlist) {
             let res = [];
 
@@ -94,12 +151,13 @@ class CommonChart extends Component {
                     if (pollutantParam) {
                         res.push(<TabPane tab={
                             <Card size="small" className={styles.maincard} bordered={false} >
-                                <p ><span style={{ color: '#00000073', fontSize: '16px' }}>{pollutantParam.pollutantName}</span><Icon style={{ float: 'right' }} type="exclamation-circle" /></p>
-                                <p >浓度：<span className={styles.cardfonttype}>{pollutantParam.value}</span><Icon style={{ marginLeft: 5, color: '#3f8600' }} type="arrow-down" /></p>
+                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={pollutantParam.pollutantName} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
+                                <p >浓度：<span className={styles.cardfonttype}>{pollutantParam.value}</span><Icon style={{ marginLeft: 5, color: this.getColor(pollutantParam.dataparam) }} type={this.getUpOrDown(pollutantParam.state)} /></p>
                                 {
                                     this.getPollutantParam(pollutantParam.pollutantParamInfo)
                                 }
-                                <p style={{ marginTop: 3 }} >单位：<span>{item.Unit}</span></p>
+                                <p>单位：<span>{item.Unit}</span></p>
+                                <p>标准值:{item.StandardValueStr}</p>
                             </Card>} key={key}>
                         </TabPane>)
 
@@ -115,10 +173,10 @@ class CommonChart extends Component {
         </TabPane>)
     }
     render() {
-        const { pollutantlist, paramsInfo,dataloading, option} = this.props;
+        const { pollutantlist, paramsInfo, dataloading, option } = this.props;
         return (
-            <div style={{backgroundColor:'#ffffff'}}>
-                <div className={styles.maintabs} style={{padding:10}}>
+            <div style={{ backgroundColor: '#ffffff' }}>
+                <div className={styles.maintabs} style={{ padding: 10 }}>
                     <Tabs onChange={this.pollutantClick}>
                         {this.getLastestData()}
                     </Tabs>
@@ -131,7 +189,11 @@ class CommonChart extends Component {
                         handleTabChange={this.pollutantClick}
                     /> */}
                 </div>
-                {this.getEchart()}
+                <div>{dataloading ? <Spin style={{
+                    width: '100%',
+                    height: 'calc(100vh - 260px)',
+                    marginTop: 260
+                }} size="large" /> : this.getEchart()}</div>
             </div>
         );
     }

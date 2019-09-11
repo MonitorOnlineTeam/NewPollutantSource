@@ -454,12 +454,12 @@ export default Model.extend({
         switch (obj.MessageType) {
           case 'RealTimeData':
             // // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
-            // dispatch({
-            //   type: 'points/updateRealTimeData',
-            //   payload: {
-            //     array: obj.Message
-            //   },
-            // });
+            dispatch({
+              type: 'realtimeserver/updateRealTimeData',
+              payload: {
+                data: obj.Message
+              },
+            });
             // dispatch({
             //   type: 'workbenchmodel/updateRealTimeData',
             //   payload: {

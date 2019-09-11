@@ -97,7 +97,7 @@ class WasteGasChart extends Component {
                          </div>
 
                          <div style={{ position: 'relative', left: '1000px', 
-                         top: '15px', fontWeight: '700', fontSize: '10px',width:150,height:50 }} 
+                         top: '77px', fontWeight: '700', fontSize: '10px',width:150,height:50 }} 
                          onClick={()=>this.positionClick("","","02,03")} className={styles.divClick}> 
                          </div>
                         </div>

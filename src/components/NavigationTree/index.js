@@ -103,17 +103,8 @@ class NavigationTree extends Component {
                 }
               </>
             )
-            return
           }
         },
-        // {
-        //   title: 'Bell',
-        //   dataIndex: 'key',
-        //   width: '10%',
-        //   render: (text, record) => {
-        //     return !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon  className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>;
-        //   }
-        // },
       ]
     }
   }
@@ -545,8 +536,6 @@ class NavigationTree extends Component {
         }
       })
     }
-
-
   }
   onRadioChange = (e) => {
     if (e.target.value == "tree") {
@@ -560,8 +549,6 @@ class NavigationTree extends Component {
         }
       })
     } else {
-      //
-
       this.setState({
         treeVis: false,
       })
@@ -680,23 +667,13 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
-          {/* <Select
-            mode="multiple"
-            style={{ width: '100%', marginBottom: 10 }}
-            placeholder="请选择污染物类型"
-            // defaultValue={['a10', 'c12']}
-            onChange={this.handleChange}
-          >
-            {children}
-          </Select> */}
+         
           <SelectPollutantType
-            // style={{ marginLeft: 50, float: 'left' }}
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
             onChange={this.handleChange}
           />
           <EnterprisePointCascadeMultiSelect
-            // searchEnterprise={true}
             searchRegion={true}
             onChange={this.regionChange}
             placeholder="请选择区域"
@@ -704,7 +681,6 @@ class NavigationTree extends Component {
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
-            // onChange={console.log("111")}
             style={{ marginTop: 10, width: '67%' }}
           />
           <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer", width: '28%' }} onChange={this.onRadioChange}>
@@ -712,11 +688,6 @@ class NavigationTree extends Component {
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
           <Divider />
-          {/* <Collapse defaultActiveKey={['1']} bordered={false} width="100%">
-            <Panel key='1' header="搜索条件" width="100%">
-
-            </Panel>
-          </Collapse> */}
           <div visible={true} style={{
             position: "absolute",
             top: "30%",
@@ -732,11 +703,7 @@ class NavigationTree extends Component {
             borderRadius: floats == "topmenu" ? "0 4px 4px 0" : "4px 0 0 4px",
             cursor: "pointer",
           }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: "#FFFFFF", marginLeft: "15%" }} type={this.state.right} /></a></div>
-
-
-
           {this.state.treeVis ? <div >
-            {console.log('this.props.EntAndPointLoading=', this.props.EntAndPointLoading)}
             {
               this.props.EntAndPointLoading ? <Spin
                 style={{
@@ -749,7 +716,6 @@ class NavigationTree extends Component {
                 size="large"
               /> : <div>{this.props.EntAndPoint.length ? <Tree
                 checkable={this.props.choice}
-                // onExpand={this.onExpand}
                 defaultExpandAll={true}
                 onCheck={this.onCheck}
                 checkedKeys={this.state.checkedKeys}
@@ -761,9 +727,7 @@ class NavigationTree extends Component {
                 expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
               >
-                {/* {this.renderTreeNodes(this.props.EntAndPoint)} */}
                 {loop(this.props.EntAndPoint)}
-                {/* {loop(gData)} */}
               </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }

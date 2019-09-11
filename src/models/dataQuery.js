@@ -78,7 +78,6 @@ export default Model.extend({
             //     historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
             //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
             // }
-            debugger
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
             if (result.length === 0) {
