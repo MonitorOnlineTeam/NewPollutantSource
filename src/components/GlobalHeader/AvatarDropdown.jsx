@@ -26,7 +26,6 @@ class AvatarDropdown extends React.Component {
     }
 
     if (key === 'changepwd') {
-      debugger;
       //router.push(`/account/ChangePwdView`);
       //return <ChangePwdView  showchangepwd={true}/>
       if (dispatch) {

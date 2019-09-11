@@ -177,7 +177,6 @@ export default Model.extend({
                 }];
                 columns = columns.concat(pollutantcols);
             }
-            debugger
             let option = null;
             if (arr && arr.length > 0) {
                 option = {

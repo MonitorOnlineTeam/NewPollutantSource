@@ -15,7 +15,6 @@ class DeviceExceptionRecordContent extends Component {
     }
 
     componentDidMount() {
-        debugger
         this.props.dispatch({
             type: 'task/GetDeviceExceptionRecord',
             payload: {

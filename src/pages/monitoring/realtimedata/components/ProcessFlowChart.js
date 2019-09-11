@@ -49,8 +49,8 @@ export default class ProcessFlowChart extends Component {
             const nameInfo = paramstatusInfo.find(value => {
                 return value.statename.indexOf(param) > -1;
             })
-            if (nameInfo)
-                return textname + ":" + nameInfo.value + unit;
+            if(nameInfo)
+            return   textname+":"+nameInfo.value+unit;
         }
         return textname + ":暂未上传";
     }
@@ -61,13 +61,16 @@ export default class ProcessFlowChart extends Component {
             const nameInfo = stateInfo.find(value => {
                 return value.name.indexOf(param) > -1;
             })
-            if (nameInfo) {
-                if (nameInfo.statename == "正常") {
-                    return (<span className={styles.normalstatus}><Badge status="processing" text="正常" /></span>)
-                }
-                else {
-                    return (<span className={styles.overstatus}><Badge status="processing" text="故障" /></span>)
-                }
+            if(nameInfo)
+            {
+                 if(nameInfo.statename=="正常")
+                 {
+                    return (<span className={styles.normalstatus}><Badge status="processing"  text="正常" /></span>)
+                 }
+                 else
+                 {
+                    return (<span className={styles.overstatus}><Badge status="processing"  text="故障" /></span>)
+                 }
             }
 
         }

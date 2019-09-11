@@ -60,7 +60,6 @@ class AlarmRecord extends Component {
 
     componentDidMount() {
       const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
-      debugger;
       if (initLoadData) {
       let {
         overdataparams,
@@ -79,7 +78,6 @@ class AlarmRecord extends Component {
     }
 
      componentWillReceiveProps = nextProps => {
-       debugger
        console.log('------------------------------------------000', nextProps.DGIMN);
        console.log('------------------------------------------111', this.props.DGIMN);
           const { DGIMN, lasttime, firsttime } = this.props;
@@ -109,7 +107,6 @@ class AlarmRecord extends Component {
             } else {
                 // 如果传入参数有变化，则重新加载数据
                 if (nextProps.DGIMN !== DGIMN) {
-                  debugger;
                     const { rangeDate } = this.state;
                   let {
                     overdataparams,

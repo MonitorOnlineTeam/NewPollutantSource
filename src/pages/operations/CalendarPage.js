@@ -212,10 +212,6 @@ class CalendarPage extends PureComponent {
                     }, 0)
                   }}
                   onPanelChange={(date, mode) => {
-                    console.log('date=', moment(date).format("YYYY-MM-DD HH:mm:ss"))
-                    console.log('stateDate=', moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"))
-                    console.log('mode=', mode);
-                    console.log('stateMode=', this.state.mode)
                     this.setState({
                       date, mode
                     }, () => {

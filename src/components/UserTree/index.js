@@ -61,7 +61,6 @@ class UserTree extends Component {
 
   /** 初始化加载 */
   componentDidMount() {
-    debugger;
     const dom = document.querySelector(this.props.domId);
     if (dom) {
       floats === 'topmenu' ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
@@ -178,7 +177,6 @@ class UserTree extends Component {
 
   /** 默认选中 */
   generateList=selKeys => {
-    debugger;
    const { UserList } = this.props;
    const node = UserList[0];
    const { UserID } = node;

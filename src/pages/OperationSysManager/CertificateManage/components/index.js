@@ -65,6 +65,22 @@ import {
         }
     }
 
+    /** 逻辑删除 */
+    delete = ID => {
+      const {
+        dispatch,
+        configId,
+      } = this.props;
+      dispatch({
+        type: 'operationsysmanage/DeleteOperationSys',
+        payload: {
+          configId,
+          CertificateInfoID: ID,
+          searchParams: this.state.DataWhere,
+        },
+      });
+    }
+
     reloadPage = () => {
         const { dispatch, configId } = this.props;
         dispatch({
@@ -201,7 +217,6 @@ import {
                                             const keysParams = {
                                               'dbo.T_Bas_CertificateInfo.ID': row['dbo.T_Bas_CertificateInfo.ID'],
                                             };
-                                            debugger;
                                             const arr = row['dbo.T_Bas_CertificateInfo.AttachmentID'] ? row['dbo.T_Bas_CertificateInfo.AttachmentID'].split('|') : [];
 
                                             this.setState({
@@ -221,7 +236,7 @@ import {
                                         title="确认要删除吗?"
                                         onConfirm={() => {
                                         this.delete(
-                                            row['dbo.T_Bas_EquipmentInfo.ID'],
+                                            row['dbo.T_Bas_CertificateInfo.ID'],
                                         );
                                         }}
                                         onCancel={this.cancel}

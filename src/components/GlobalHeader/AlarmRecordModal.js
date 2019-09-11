@@ -16,7 +16,6 @@ class AlarmRecordModal extends Component {
   }
 
   showModal = (firsttime, lasttime, DGIMN, alarmTitle) => {
-    debugger;
     this.setState({
       alarmTitle: alarmTitle,
       visibleAlarmModal: true,

@@ -136,7 +136,6 @@ export default class GlobalHeaderRight extends PureComponent {
         <NoticeIcon
           count={currentUserNoticeCnt.unreadCount}
           onItemClick={(item, tabProps) => {
-            debugger
             this.setState({
               visible: true,
               firsttime: item.firsttime,
