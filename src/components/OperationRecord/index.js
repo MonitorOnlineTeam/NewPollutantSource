@@ -255,8 +255,8 @@ class OperationRecord extends Component {
               >
               </SDLTable>
               :
-              // ((this.state.configName && this.state.RecordType) ? <AutoFormTable
-              (this.state.configName && this.props.RecordType ? <AutoFormTable
+              ((this.state.configName && this.props.RecordType) ? <AutoFormTable
+              // (this.state.configName && this.props.RecordType ? <AutoFormTable
                 configId={this.state.configName}
                 searchParams={searchParams}
                 appendHandleRows={row => {
