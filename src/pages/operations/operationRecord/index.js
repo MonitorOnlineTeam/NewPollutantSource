@@ -30,13 +30,6 @@ class Index extends Component {
                             dgimn: value[0].key,
                             type: value[0].Type
                         })
-                        console.log(' value[0].Type=-', value[0].key)
-                        this.props.dispatch({
-                            type: "operationform/updateState",
-                            payload: {
-                                PollutantTypes: value[0].Type
-                            }
-                        })
                     }
                 }} />
                 <PageHeaderWrapper>

@@ -1,6 +1,6 @@
 import Model from '@/utils/model';
 import {
-    getrecordtypebymn,getjzhistoryinfo
+    getrecordtypebymn, getjzhistoryinfo
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
@@ -14,12 +14,12 @@ export default Model.extend({
 
     state: {
         RecordTypeTree: [],
-        JZDatas:[],
-        RecordType:'',
-        rangDate:[moment(new Date()).add(-3, 'month'), moment(new Date())],
-        PollutantTypes:'',
-        BeginTime:moment(new Date()).add(-3, 'month'),
-        EndTime:moment(new Date())
+        JZDatas: [],
+        RecordType: '',
+        rangDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
+        PollutantTypes: '',
+        BeginTime: moment(new Date()).add(-3, 'month'),
+        EndTime: moment(new Date())
     },
     subscriptions: {
         setup({
@@ -34,7 +34,7 @@ export default Model.extend({
     effects: {
         /*【智能运维】获取污染物系统污染物**/
         * getrecordtypebymn({
-            payload
+            payload, callback
         }, {
             call,
             update,
@@ -42,8 +42,10 @@ export default Model.extend({
             const result = yield call(getrecordtypebymn, { ...payload });
             if (result.IsSuccess) {
                 yield update({
-                    RecordTypeTree: result.Datas
+                    RecordTypeTree: result.Datas,
+                    RecordType: result.Datas && result.Datas[0].key
                 });
+                callback && callback(result)
             }
         },
         /*【智能运维】获取零点量程漂移与校准记录表**/
