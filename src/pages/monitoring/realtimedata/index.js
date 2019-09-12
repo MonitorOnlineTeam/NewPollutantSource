@@ -27,6 +27,7 @@ class Index extends Component {
             <div id="dataquery">
                 <PageHeaderWrapper>
                  <WorkingCondition DGIMN={this.state.dgimn} />
+
                 </PageHeaderWrapper>
                 <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {

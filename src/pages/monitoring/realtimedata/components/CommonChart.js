@@ -34,6 +34,8 @@ class CommonChart extends Component {
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
+        // console.log('nextProps.paramsInfo=',nextProps.paramsInfo)
+        // console.log('props.paramsInfo=',this.props.paramsInfo)
         if (nextProps.paramsInfo !== this.props.paramsInfo) {
             var paramsInfo = nextProps.paramsInfo
             paramsInfo.map(item => {
@@ -128,6 +130,25 @@ class CommonChart extends Component {
             return res;
         }
     }
+    getDeials=(params)=>{
+        var res=[]
+        console.log('params111=',params)
+        if(params)
+        {
+            params.map(item=>{
+                
+                res.push(<p>{item.statename}:{item.value}</p>)
+            })
+            
+        }else
+        {
+            res.push(<Empty style={{
+                width: '100%',
+                height: '100px',
+            }} image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+        }
+        return res;
+    }
 
     pollutantClick = (e) => {
         console.log(e);
@@ -136,11 +157,13 @@ class CommonChart extends Component {
 
     /**仪表盘 */
     getLastestData = () => {
-        const { pollutantlist } = this.props;
-        let { paramsInfo } = this.state;
+        const { pollutantlist,paramsInfo } = this.props;
+        // let { paramsInfo } = this.state;
         if (pollutantlist) {
             let res = [];
-
+            console.log('pollutantList1111=',pollutantlist)
+            console.log('paramsInfo1111=',paramsInfo)
+            //<Icon style={{ marginLeft: 5, color: this.getColor(pollutantParam.dataparam) }} type={this.getUpOrDown(pollutantParam.state)} />
             pollutantlist.map((item, key) => {
                 if (paramsInfo) {
                     var pollutantParam = paramsInfo.find(param => {
@@ -149,11 +172,11 @@ class CommonChart extends Component {
                     if (pollutantParam) {
                         res.push(<TabPane tab={
                             <Card size="small" className={styles.maincard} bordered={false} >
-                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={pollutantParam.pollutantName} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
-                                <p >浓度：<span className={styles.cardfonttype}>{pollutantParam.value}</span><Icon style={{ marginLeft: 5, color: this.getColor(pollutantParam.dataparam) }} type={this.getUpOrDown(pollutantParam.state)} /></p>
-                                {
+                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
+                                <p >浓度：<span className={styles.cardfonttype}>{pollutantParam.value}</span></p>
+                                {/* {
                                     this.getPollutantParam(pollutantParam.pollutantParamInfo)
-                                }
+                                } */}
                                 <p>单位：<span>{item.Unit}</span></p>
                                 <p>标准值:{item.StandardValueStr}</p>
                             </Card>} key={key}>
@@ -172,6 +195,7 @@ class CommonChart extends Component {
     }
     render() {
         const { pollutantlist, paramsInfo, dataloading, option } = this.props;
+        console.log('paramsInfo==',paramsInfo)
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
                 <div className={styles.maintabs} style={{ padding: 10 }}>
