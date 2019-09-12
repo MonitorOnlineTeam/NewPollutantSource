@@ -74,8 +74,6 @@ class CommonChart extends Component {
         } else {
             return <Empty style={{
                 width: '100%',
-                height: 'calc(100vh - 500px)',
-                marginTop: 260
             }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
     }
@@ -213,8 +211,7 @@ class CommonChart extends Component {
                 </div>
                 <div>{dataloading ? <Spin style={{
                     width: '100%',
-                    height: 'calc(100vh - 260px)',
-                    marginTop: 260
+                    marginTop:100
                 }} size="large" /> : this.getEchart()}</div>
             </div>
         );

@@ -25,7 +25,7 @@ export default Model.extend({
           pageIndex: null,
           pageSize: null,
           beginTime: null,
-          endTime: '2019-09-09 11:00:00',
+          endTime: null,
           payloadpollutantCode: null,
           payloadpollutantName: null,
           isAsc: true,

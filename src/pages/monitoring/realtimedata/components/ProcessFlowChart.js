@@ -29,17 +29,17 @@ export default class ProcessFlowChart extends Component {
         };
     }
 
-    /** dgimn改變時候切換數據源 */
-    componentWillReceiveProps = nextProps => {
-        if (nextProps.DGIMN !== this.props.DGIMN) {
-            this.props.dispatch({
-                type: 'realtimeserver/GetProcessFlowChartStatus',
-                payload: {
-                    dgimn: nextProps.DGIMN
-                }
-            });
-        }
-    }
+    // /** dgimn改變時候切換數據源 */
+    // componentWillReceiveProps = nextProps => {
+    //     if (nextProps.DGIMN !== this.props.DGIMN) {
+    //         this.props.dispatch({
+    //             type: 'realtimeserver/GetProcessFlowChartStatus',
+    //             payload: {
+    //                 dgimn: nextProps.DGIMN
+    //             }
+    //         });
+    //     }
+    // }
 
 
     //系统参数
@@ -178,15 +178,14 @@ export default class ProcessFlowChart extends Component {
         const { isloading,
             stateInfo, paramsInfo, paramstatusInfo, dataInfo } = this.props;
         return (
-            <div style={{ height: 'calc(100vh - 260px)' }} >
+            <Card className='contentContainer' >
                 {isloading ? <Spin style={{
                     width: '100%',
-                    height: 'calc(100vh - 260px)',
-                    marginTop: 260
+                    marginTop:100
                 }} size="large" />
                     : this.getChartType()
                 }
-            </div>
+            </Card>
         );
     }
 }
