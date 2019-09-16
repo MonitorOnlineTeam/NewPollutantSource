@@ -217,7 +217,6 @@ import {
                                             const keysParams = {
                                               'dbo.T_Bas_CertificateInfo.ID': row['dbo.T_Bas_CertificateInfo.ID'],
                                             };
-                                            debugger;
                                             const arr = row['dbo.T_Bas_CertificateInfo.AttachmentID'] ? row['dbo.T_Bas_CertificateInfo.AttachmentID'].split('|') : [];
 
                                             this.setState({

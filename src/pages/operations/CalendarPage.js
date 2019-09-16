@@ -112,12 +112,18 @@ class CalendarPage extends PureComponent {
     // if (true) {
     //   return <Badge status={"success"} />
     // }
+    // 无异常显示绿点
+    if(listData.filter(item => item.notAbnormal).length){
+      return <div style={{ marginTop: -22 }}>
+        <Badge status={"success"} />
+      </div>
+    }
     return (
-      <ul className="events">
+      <ul className="events" style={{width: "104%", height: "96%", overflow: "auto"}}>
         {listData.map(item => {
-          if (item.notAbnormal) {  // 无异常
-            return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
-          }
+          // if (item.notAbnormal) {  // 无异常
+          //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
+          // }
           return <li key={item.content} style={{ marginBottom: 2 }}>
             <Tag color={item.color} style={{ cursor: "pointer" }} onClick={(e) => {
               e.stopPropagation()
@@ -212,10 +218,6 @@ class CalendarPage extends PureComponent {
                     }, 0)
                   }}
                   onPanelChange={(date, mode) => {
-                    console.log('date=', moment(date).format("YYYY-MM-DD HH:mm:ss"))
-                    console.log('stateDate=', moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"))
-                    console.log('mode=', mode);
-                    console.log('stateMode=', this.state.mode)
                     this.setState({
                       date, mode
                     }, () => {

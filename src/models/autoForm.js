@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-09 13:53:46
+ * @Last Modified time: 2019-09-11 13:45:01
  */
 import { message } from 'antd';
 import
@@ -98,9 +98,8 @@ export default Model.extend({
         pageSize: searchForm.pageSize || 10,
         ...payload.otherParams,
       };
-
       const searchParams = payload.searchParams || [];
-
+      
       (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
         // group.length? postData.ConditionWhere = JSON.stringify({
         rel: '$and',
@@ -112,7 +111,6 @@ export default Model.extend({
           ],
         }],
       }) : '';
-
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
@@ -213,7 +211,7 @@ export default Model.extend({
           fullFieldName: item.FullFieldName,
           value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
           placeholder: item.DF_TOOLTIP,
-          configId: item.DT_CONFIG_ID,
+          // configId: item.DT_CONFIG_ID,
           where: item.DF_CONDITION,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
@@ -295,6 +293,7 @@ export default Model.extend({
           type: 'getAutoFormData',
           payload: {
             configId: payload.configId,
+            searchParams: payload.searchParams,
           },
         });
       } else {

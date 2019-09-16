@@ -116,7 +116,6 @@ class Index extends Component {
     }
     // 分页页数change
     onTableChange(current, pageSize) {
-        debugger
         this.props.dispatch({
             type: 'originalData/updateState',
             payload: {

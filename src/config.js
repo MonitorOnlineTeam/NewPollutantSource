@@ -3,9 +3,9 @@
  */
 
 // 接口地址
-const apiHost = "http://172.16.9.52:9093/";
+const apiHost = "http://172.16.9.52:8096/";
 // 文件上传地址
-const uploadHost = "http://172.16.9.52:9093/"
+const uploadHost = "http://172.16.12.165:9093/"
 
 module.exports = {
   name: '污染源智能分析平台',

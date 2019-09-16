@@ -32,7 +32,7 @@ class ApproveModal extends PureComponent {
         this.props.dispatch({
           type: "operations/approve",
           payload: {
-            ID: this.props.approveModalData.ID,
+            ID: this.props.approveModalData["dbo.View_VehicleApplication.ID"],
             type: values.type,
             RefuseReason: values.RefuseReason || ""
           }
