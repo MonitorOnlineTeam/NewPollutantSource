@@ -1,10 +1,9 @@
 /**
- * 功  能：收数据导入请求地址services
+ * 功  能：手工数据上传services
  * 创建人：dongxiaoyun
  * 创建时间：2019.08.9
  */
 import { post, get } from '@/utils/request';
-
 
 /**
  * 上传附件
