@@ -11,11 +11,15 @@ const { TextArea } = Input;
     addSelectPollutantData: manualupload.addSelectPollutantData,
     reason: manualupload.reason
 }))
-/*
-页面：编辑手工录入数据页面
-*/
+
 @connect()
-// @Form.create()
+
+/**
+ * 功  能：手工数据上传子组件添加界面
+ * 创建人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 export default class UpdateManualUpload extends Component {
     constructor(props) {
         super(props);

@@ -8,6 +8,13 @@ import moment from "moment";
 @connect(({ manualupload, loading }) => ({
 
 }))
+
+/**
+ * 功  能：手工数据上传父页面
+ * 创建人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -16,8 +23,6 @@ class Index extends Component {
         };
     }
 
-    componentDidMount() {
-    }
     changeDgimn = (DGIMN) => {
         const { dispatch } = this.props;
         this.setState({
@@ -35,6 +40,7 @@ class Index extends Component {
                             BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
                             EndTime: moment().format('YYYY-MM-DD 23:59:59'),
                             PollutantCode: '',
+                            DGIMN
                         }
                     }
                 }

@@ -16,6 +16,14 @@ import RecordEchartTable from '@/components/recordEchartTable'
   notices: global.notices,
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
+
+/**
+ * 功  能：头部右侧报警消息和用户信息页面
+ * 创建人：
+ * 修改人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 export default class GlobalHeaderRight extends PureComponent {
   constructor(props) {
     super(props);
@@ -145,22 +153,26 @@ export default class GlobalHeaderRight extends PureComponent {
             });
             // 报警
             if (item.type === 'alarm') {
-              if (item.sontype === 'warn') {
-                this.setState({
-                  title: '预警消息',
-                  flag: 'over',
-                });
-              } else if (item.sontype === 'over') {
-                this.setState({
-                  title: '超标报警消息',
-                  flag: 'over',
-
-                });
-              } else if (item.sontype === 'exception') {
-                this.setState({
-                  title: '异常报警消息',
-                  flag: 'exception',
-                });
+              //预警的没有连接暂时先连接到报警，待以后修改---------------------------------------------------------------------------------
+              switch (item.sontype) {
+                case 'warn':
+                  this.setState({
+                    title: '预警消息',
+                    flag: 'warn',
+                  });
+                  break;
+                case 'over':
+                  this.setState({
+                    title: '超标报警消息',
+                    flag: 'over',
+                  });
+                  break;
+                case 'exception':
+                  this.setState({
+                    title: '异常报警消息',
+                    flag: 'exception',
+                  });
+                  break;
               }
             }
           }}
@@ -186,22 +198,30 @@ export default class GlobalHeaderRight extends PureComponent {
           onCancel={this.onCancel}
         >
 
-            {
-              this.state.flag === 'over' ?
-                <AlarmRecord
+          {
+            this.state.flag === 'over' ?
+              <AlarmRecord
                 initLoadData
                 style={{ maxHeight: '70vh' }}
+                DGIMN={this.state.DGIMN}
+                firsttime={moment(this.state.firsttime)}
+                lasttime={moment(this.state.lasttime)}
+              />
+              : this.state.flag === 'exception' ?
+                <RecordEchartTable
+                  initLoadData
+                  style={{ maxHeight: '60vh' }}
+                  DGIMN={this.state.DGIMN}
+                />
+                :
+                <AlarmRecord
+                  initLoadData
+                  style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
                   lasttime={moment(this.state.lasttime)}
                 />
-                :
-                <RecordEchartTable
-                initLoadData
-                style={{ maxHeight: '60vh' }}
-                  DGIMN={this.state.DGIMN}
-                />
-            }
+          }
 
         </Modal>
       </div>

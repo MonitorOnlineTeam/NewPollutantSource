@@ -277,14 +277,15 @@ class AlarmRecord extends Component {
 
     /** 保存核实单 */
      handleOk = e => {
-    const { dispatch, form, overdataparams, DGIMN } = this.props;
+    const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
+    debugger;
     form.validateFields((err, values) => {
       if (!err) {
        const formData = handleFormData(values, this.state.uid);
         formData.VerifyPerSon = formData.VerifyPerSon1;
         formData.VerifyTime = formData.VerifyTime1;
         formData.DGIMN = DGIMN;
-        formData.EntCode = '51216eae-8f11-4578-ad63-5127f78f6cca';
+        formData.EntCode = EntCode;
         dispatch({
           type: 'alarmrecord/AddExceptionVerify',
           payload: {

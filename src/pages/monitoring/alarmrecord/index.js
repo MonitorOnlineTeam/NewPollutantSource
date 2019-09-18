@@ -13,12 +13,14 @@ class Index extends Component {
         super(props);
         this.state = {
             dgimn: '',
+            EntCode: '',
         };
     }
 
-    changeDgimn=dgimn => {
+    changeDgimn=(dgimn, EntCode) => {
         this.setState({
             dgimn,
+            EntCode,
         })
     }
 
@@ -26,12 +28,13 @@ class Index extends Component {
         return (
             <div id="alarmrecord">
                 <PageHeaderWrapper>
-                 <AlarmRecord DGIMN={this.state.dgimn} />
+                 <AlarmRecord DGIMN={this.state.dgimn} EntCode={this.state.EntCode}/>
                 </PageHeaderWrapper>
                 <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
                     console.log('111111111111111111111111111111', value);
                             if (value.length > 0 && !value[0].IsEnt) {
-                            this.changeDgimn(value[0].key)
+                                debugger;
+                            this.changeDgimn(value[0].key, value[0].EntCode)
                             }
                         }} />
             </div>
