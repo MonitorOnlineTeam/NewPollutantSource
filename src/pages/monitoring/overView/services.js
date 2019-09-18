@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-16 09:59:32
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:34:33
+ * @Description:数据一览
+ */
 import moment from 'moment';
 import { post, get } from '@/utils/request';
 
@@ -22,7 +29,7 @@ export async function querypollutanttypecode(params) {
   const result = await post(
     '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
     params,
-    null,
+    null,s
   );
   return result === null ? { data: null } : result.Datas;
 }

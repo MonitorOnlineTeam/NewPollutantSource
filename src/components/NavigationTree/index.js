@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-18 10:32:08
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:11:18
+ * @Description: 导航树
+ */
 import React, { Component } from 'react'
 import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin } from 'antd';
 import { connect } from 'dva';
@@ -14,11 +21,6 @@ const { Panel } = Collapse;
 const { Option } = Select;
 const { Search } = Input;
 const { TreeNode } = Tree;
-
-const x = 3;
-const y = 2;
-const z = 1;
-const gData = [];
 const children = [];
 const dataList = [];
 const floats = Setting.layout
@@ -37,7 +39,6 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
-  BellList: navigationtree.BellList,
   noticeList: global.notices
 }))
 @Form.create()
@@ -157,10 +158,12 @@ class NavigationTree extends Component {
     }
 
   }
+  //清除面板数据
   clearData=()=>{
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     dataList.splice(0,dataList.length)
   }
+  //面板数据
   tilingData = (data = this.props.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
@@ -252,23 +255,19 @@ class NavigationTree extends Component {
     }
     return parentKey;
   };
+  //显示抽屉
   showDrawer = () => {
     this.setState({
       visible: true,
     });
   };
-
+//关闭抽屉
   onClose = () => {
     this.setState({
       visible: false,
     });
   };
 
-  onChange = e => {
-    this.setState({
-      placement: e.target.value,
-    });
-  };
   //污染物筛选
   handleChange = (value) => {
     value = value.toString()
@@ -337,15 +336,10 @@ class NavigationTree extends Component {
     }, () => {
       const dom = document.querySelector(domId)
       if (dom) {
-        if (this.state.visible) {
-          dom.style.width = 'calc(100% - 400px)'
-          floats === "topmenu" ? dom.style.marginLeft = '400px' : dom.style.marginRight = '400px'
+        const left = this.state.visible ? "400px" : "0";
+        dom.style.width = 'calc(100% - 400px)'
+          floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
           dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
-        } else {
-          dom.style.width = 'calc(100%)'
-          floats === "topmenu" ? dom.style.marginLeft = '0' : dom.style.marginRight = '0'
-          dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
-        }
       }
     });
   };
@@ -366,6 +360,7 @@ class NavigationTree extends Component {
       }
     })
   }
+  //展开节点
   onExpand = expandedKeys => {
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
     // or, you can remove all expanded children keys.
@@ -574,7 +569,7 @@ class NavigationTree extends Component {
   setRowClassName = (record) => {
     return record.key === this.state.selectedKeys[0] ? global.clickRowStyl : '';
   }
-
+//根据企业类型获取icon
   getEntIcon = (type) => {
     switch (type) {
       case "1":
@@ -587,6 +582,7 @@ class NavigationTree extends Component {
         return <a><SiteIcon /></a>
     }
   }
+  //根绝污染物类型获取icon
   getPollutantIcon = (type,size) => {
     switch (type) {
       case "1":

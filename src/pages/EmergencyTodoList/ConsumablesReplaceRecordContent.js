@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:29:32
+ * @Description: 易耗品更换记录表
+ */
 import React, { Component } from 'react';
 import { Spin } from 'antd';
 import { connect } from 'dva';

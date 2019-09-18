@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-29 02:56:44
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:12:23
+ * @Description: 异常超标记录
+ */
 import Model from '@/utils/model';
 import {
     getexmodellist,getexceptiondata,getovermodellist,getoverdata

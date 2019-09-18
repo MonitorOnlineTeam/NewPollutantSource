@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-08-22 09:36:43
+ * @Description: 标准气体更换记录表
+ */
 import React, { Component } from 'react';
 import { Row, Col, Layout, Table, List, Button, Icon, Spin, Card } from 'antd';
 import { connect } from 'dva';

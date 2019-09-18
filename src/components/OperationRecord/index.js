@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-16 09:48:47
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-17 15:31:10
+ * @Description: 运维记录
+ */
 import React, { Component } from 'react'
 import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card, Tag } from 'antd';
 import { connect } from 'dva';
@@ -69,7 +76,7 @@ class OperationRecord extends Component {
       ]
     }
   }
-
+//表单类型改变事件
   onTreeChange = (value) => {
     this.props.dispatch({
       type: "operationform/updateState",
@@ -128,6 +135,7 @@ class OperationRecord extends Component {
     }
   }
 
+  //根据表单类型获取configid
   getRecordType = () => {
     var configid = ''
     var type = this.props.PollutantType
