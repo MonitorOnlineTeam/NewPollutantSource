@@ -85,7 +85,6 @@ export default Model.extend({
 
     *querypollutanttypecode({ payload }, { call, update, put, take, select }) {
 
-      // debugger;
       let gwidth = 300 + 140 + 70;
       if (!onlyOneEnt) {
         gwidth = gwidth + 300;

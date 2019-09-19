@@ -29,7 +29,7 @@ export async function querypollutanttypecode(params) {
   const result = await post(
     '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
     params,
-    null,s
+    null
   );
   return result === null ? { data: null } : result.Datas;
 }
