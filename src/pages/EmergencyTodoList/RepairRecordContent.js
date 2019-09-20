@@ -112,7 +112,7 @@ class RepairRecordContent extends Component {
     }
 
     render() {
-        const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
+        const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:'calc(100vh-200px)'};
         const Record=this.props.Repair!==null?this.props.Repair.Record:null;
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
@@ -131,7 +131,7 @@ class RepairRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>CEMS维修记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null?Content.EnterpriseName:null}</div>
                 <table key="1" className={styles.FormTable}>

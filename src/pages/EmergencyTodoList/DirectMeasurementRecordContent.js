@@ -159,7 +159,7 @@ class DirectMeasurementRecordContent extends Component {
         let SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
 
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>直接测量法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>

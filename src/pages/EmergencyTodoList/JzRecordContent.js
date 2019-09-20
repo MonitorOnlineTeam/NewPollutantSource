@@ -166,7 +166,7 @@ class JzRecordContent extends Component {
         }
 
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>CEMS零点量程漂移与校准记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：
                     {Content!==null?Content.EnterpriseName:null}

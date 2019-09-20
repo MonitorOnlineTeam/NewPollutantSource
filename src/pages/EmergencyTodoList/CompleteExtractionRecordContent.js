@@ -174,7 +174,7 @@ class CompleteExtractionRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>完全抽取法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>

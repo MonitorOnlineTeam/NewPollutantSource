@@ -10,6 +10,9 @@ import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
 import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmRecord';
 import RecordEchartTable from '@/components/recordEchartTable'
+import RealTimeWarning from '../RealTimeWarning/RealTimeWarning';
+import ExceptionAlarm from '../ExceptionAlarm/ExceptionAlarm';
+import RecordEchartTableOver from '@/components/recordEchartTableOver/Index'
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
@@ -157,19 +160,19 @@ export default class GlobalHeaderRight extends PureComponent {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '预警消息',
+                    title: '实时预警',
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标报警消息',
+                    title: '超标记录',
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警消息',
+                    title: '异常报警',
                     flag: 'exception',
                   });
                   break;
@@ -200,7 +203,7 @@ export default class GlobalHeaderRight extends PureComponent {
 
           {
             this.state.flag === 'over' ?
-              <AlarmRecord
+              <RecordEchartTableOver
                 initLoadData
                 style={{ maxHeight: '70vh' }}
                 DGIMN={this.state.DGIMN}
@@ -208,13 +211,14 @@ export default class GlobalHeaderRight extends PureComponent {
                 lasttime={moment(this.state.lasttime)}
               />
               : this.state.flag === 'exception' ?
-                <RecordEchartTable
-                  initLoadData
-                  style={{ maxHeight: '60vh' }}
-                  DGIMN={this.state.DGIMN}
-                />
+                // <RecordEchartTable
+                //   initLoadData
+                //   style={{ maxHeight: '60vh' }}
+                //   DGIMN={this.state.DGIMN}
+                // />
+                <ExceptionAlarm initLoadData DGIMN={this.state.DGIMN} />
                 :
-                <AlarmRecord
+                <RealTimeWarning
                   initLoadData
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}

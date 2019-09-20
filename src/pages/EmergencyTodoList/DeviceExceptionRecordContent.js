@@ -54,7 +54,7 @@ class DeviceExceptionRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>CEMS设备数据异常记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>
