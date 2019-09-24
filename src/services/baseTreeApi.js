@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-18 14:37:18
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:07:34
+ * @Description: 导航树api
+ */
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';

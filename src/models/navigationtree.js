@@ -1,13 +1,16 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-18 14:36:53
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:11:26
+ * @Description: 导航树接口
+ */
 import Model from '@/utils/model';
 import {
     getentandpoint, getPollutantTypeList
 } from '../services/baseTreeApi';
 import { message } from 'antd';
-/*
-用户管理相关接口
-add by lzp
-modify by
-*/
+
 export default Model.extend({
     namespace: 'navigationtree',
 
@@ -18,7 +21,6 @@ export default Model.extend({
         overallselkeys: [],
         overallexpkeys: [],
         IsTree: true,
-        BellList: ['51052216080302', '60827636000025', '62020131jhdj03']
     },
     subscriptions: {
         setup({

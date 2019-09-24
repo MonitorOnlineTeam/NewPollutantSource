@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:30:15
+ * @Description: 稀释采样法cems日常巡检记录表
+ */
 import React, { Component } from 'react';
 import { Table, Button, Icon, Spin, Card } from 'antd';
 import { connect } from 'dva';
@@ -165,7 +172,7 @@ class DilutionSamplingRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>稀释采样法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>

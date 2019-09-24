@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:30:26
+ * @Description: 直接测量法cems日常巡检记录表
+ */
 import React, { Component } from 'react';
 import { Button, Icon, Spin, Card } from 'antd';
 import { connect } from 'dva';
@@ -152,7 +159,7 @@ class DirectMeasurementRecordContent extends Component {
         let SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
 
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>直接测量法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>

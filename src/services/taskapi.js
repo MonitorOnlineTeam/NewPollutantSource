@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:40:55
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:09:14
+ * @Description: 运维记录表单api
+ */
 import { post,authorpost } from '@/utils/request';
 import { EnumRejectFlag } from '../utils/enum';
 // 污染源运维的相关接口

@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-09-05 10:57:14
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 14:22:33
+ * @Description: hg工艺流程图
+ */
 import React, { Component } from 'react';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './ProcessFlowChart.less';

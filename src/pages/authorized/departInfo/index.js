@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-16 09:42:48
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 10:55:12
+ * @Description: 部门管理
+ */
 import React, { Component, Fragment } from 'react'
 import { connect } from 'dva';
 import {

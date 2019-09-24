@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:39:19
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:12:33
+ * @Description: 任务详情、运维单详情
+ */
 //任务详情、运维单详情
 import { message } from 'antd';
 import {

@@ -22,10 +22,17 @@ const Option = Select.Option;
     uploaddatalist: manualupload.uploaddatalist,
     total: manualupload.total,
     pointName: manualupload.pointName,
-    manualUploadParameters: manualupload.manualUploadParameters,//参数
+    manualUploadParameters: manualupload.manualUploadParameters,
     addSelectPollutantData: manualupload.addSelectPollutantData,
 }))
 @Form.create()
+
+/**
+ * 功  能：手工数据上传子组件
+ * 创建人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 export default class ContentList extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +40,6 @@ export default class ContentList extends Component {
         this.state = {
             fileList: [],
             visible: false,
-            // footer: null,
             uid: cuid(),
             width: 1000,
             uploadLoading: false,
@@ -467,7 +473,6 @@ export default class ContentList extends Component {
                     columns={columns}
                     dataSource={!DGIMN ? null : uploaddata}
                     scroll={{ y: 'calc(100vh - 450px)' }}
-                    // style={{minHeight:'200px'}}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,

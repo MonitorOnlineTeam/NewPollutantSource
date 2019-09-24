@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-08-22 09:36:43
+ * @Description: 标准气体更换记录表
+ */
 import React, { Component } from 'react';
 import { Row, Col, Layout, Table, List, Button, Icon, Spin, Card } from 'antd';
 import { connect } from 'dva';
@@ -135,7 +142,7 @@ class StandardGasRepalceRecord extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>标准气体更换记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
                 <table className={styles.FormTable}>

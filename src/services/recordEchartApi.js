@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-29 03:00:19
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:08:59
+ * @Description: 异常超标记录api
+ */
 import { post } from '@/utils/request';
 /**
  * 【智能监控】获取异常信息汇总
