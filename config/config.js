@@ -77,6 +77,8 @@ export default {
   block: {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
+  base: "/",
+  publicPath: "/",
   hash: true,
   targets: {
     ie: 11,
@@ -118,7 +120,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './monitoring/datalist' },
+            { path: '/', redirect: './monitoring/realtimedata' },
             {
               name: 'test',
               path: '/test',
