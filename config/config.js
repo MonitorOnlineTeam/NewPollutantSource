@@ -91,6 +91,11 @@ export default {
       component: '../layouts/BlankLayout',
       routes: [
         {
+          name: 'home',
+          path: '/home',
+          component: './home',
+        },
+        {
           path: '/user',
           component: '../layouts/UserLayout',
           routes: [
