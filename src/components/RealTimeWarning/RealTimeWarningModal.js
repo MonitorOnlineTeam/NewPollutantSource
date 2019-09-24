@@ -17,6 +17,7 @@ const pageUrl = {
     updateState: 'workbenchmodel/updateState',
     getRealTimeWarningDatas: 'workbenchmodel/getRealTimeWarningDatas',
     getPollutantList: 'dataquery/querypollutantlist',
+    getDataOverWarningData: 'workbenchmodel/getDataOverWarningData',
 };
 const TabPane = Tabs.TabPane;
 @connect(({
@@ -29,20 +30,36 @@ const TabPane = Tabs.TabPane;
     pollutantList: dataquery.pollutantlist,
     loadingRealTimeWarningDatas: loading.effects[pageUrl.getRealTimeWarningDatas],
     loadingPollutantList: loading.effects[pageUrl.getPollutantList],
+    loadinghourDataOverWarningList: loading.effects[pageUrl.getDataOverWarningData]
 }))
 class RealTimeWarningModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visibleModal: false,
+            visibleModal: true,
             clickThisPointName: '',
             SuggestValue: null,
         };
     }
 
     componentDidMount() {
-        this.props.onRef(this);
+        // this.props.onRef(this);
+        const { dispatch, DGIMN, firsttime, lasttime, hourDataOverWarningList } = this.props;
+        dispatch({
+            type: pageUrl.getDataOverWarningData,
+            payload: {
+                DGIMN: DGIMN
+            }
+        })
+    }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.hourDataOverWarningList !== nextProps.hourDataOverWarningList) {
+            var items = nextProps.hourDataOverWarningList.tableDatas[0]
+            console.log('items=', items)
+            var item = items.OverWarnings[0]
+            this.showModal(items.PointName, items.DGIMNs, item.PollutantCode, item.PollutantName, item.SuggestValue)
+        }
     }
 
     /**
@@ -81,7 +98,7 @@ class RealTimeWarningModal extends Component {
  * 智能监控_显示预警详情弹窗口
  */
     showModal = (name, mn, pollutantCode, pollutantName, SuggestValue) => {
-        console.log('this.props1=',this.props)
+        console.log('this.props1=', this.props)
         this.getPollutantList(mn);
         this.updateState({
             SuggestValue: SuggestValue,
@@ -286,7 +303,7 @@ class RealTimeWarningModal extends Component {
     }
 
     //如果是数据列表则没有选择污染物，而是展示全部污染物
-    getPollutantSelect = () => (this.props.loadingPollutantList&&this.props.loadingRealTimeWarningDatas?'':<PollutantSelect
+    getPollutantSelect = () => (this.props.loadingPollutantList && this.props.loadingRealTimeWarningDatas ? '' : <PollutantSelect
         optionDatas={this.props.pollutantList}
         defaultValue={this.props.warningDetailsDatas.selectedPollutantCode}
         style={{ width: 150, marginRight: 10 }}
@@ -313,7 +330,7 @@ class RealTimeWarningModal extends Component {
         let { selectedPollutantCode, selectedPollutantName, chartDatas } = this.props.warningDetailsDatas;
         const { pollutantList } = this.props;
         const selectPllutantInfo = pollutantList.find((value, index, arr) => value.PollutantCode == selectedPollutantCode);
-        console.log('selectPllutantInfo=',selectPllutantInfo)
+        console.log('selectPllutantInfo=', selectPllutantInfo)
         debugger
         const suugestValue = this.state.SuggestValue;
         const columns = [
@@ -321,25 +338,25 @@ class RealTimeWarningModal extends Component {
                 title: '监测时间',
                 dataIndex: 'MonitorTime',
                 width: '20%',
-                key:'MonitorTime',
+                key: 'MonitorTime',
                 render: (text, record) => text && moment(text).format('HH:mm:ss'),
             },
             {
                 title: '污染物',
                 dataIndex: 'none',
-                key:'none',
+                key: 'none',
                 render: (text, record) => `${selectedPollutantName}`,
                 width: '20%'
             },
             {
-                key:selectedPollutantCode,
+                key: selectedPollutantCode,
                 title: '监测值',
                 dataIndex: selectedPollutantCode,
                 width: '20%',
                 align: 'center'
             },
             {
-                key:`${selectedPollutantCode}_StandardValue`,
+                key: `${selectedPollutantCode}_StandardValue`,
                 title: '标准值',
                 dataIndex: `${selectedPollutantCode}_StandardValue`,
                 width: '20%',
@@ -347,7 +364,7 @@ class RealTimeWarningModal extends Component {
                 render: (text, record) => selectPllutantInfo.standardValueStr,
             },
             {
-                key:`${selectedPollutantCode}_SuggestValue`,
+                key: `${selectedPollutantCode}_SuggestValue`,
                 title: '建议浓度',
                 dataIndex: `${selectedPollutantCode}_SuggestValue`,
                 width: '20%',
@@ -391,10 +408,10 @@ class RealTimeWarningModal extends Component {
 
         return (
             <div>
-                <Modal
+                {/* <Modal
                     title={
                         <Row>
-                            <Col span={10}>{this.state.clickThisPointName}</Col>
+                            <Col span={10}>{this.state.clickThisPointName+'1111'}</Col>
                         </Row>
                     }
                     visible={this.state.visibleModal}
@@ -402,7 +419,17 @@ class RealTimeWarningModal extends Component {
                     onCancel={this.handleCancel}
                     width="70%"
                     footer={[]}
-                >
+                > */}
+                {this.props.loadinghourDataOverWarningList ? <Spin
+                    style={{
+                        width: '100%',
+                        height: 'calc(100vh/2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    size="large"
+                /> :
                     <Tabs
                         defaultActiveKey="1"
                         tabPosition="left"
@@ -431,7 +458,9 @@ class RealTimeWarningModal extends Component {
                             </Row>
                         </TabPane>
                     </Tabs>
-                </Modal>
+                }
+
+                {/* </Modal> */}
             </div>
 
 

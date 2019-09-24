@@ -24,7 +24,10 @@ import moment from 'moment';
     overmodellistLoading: loading.effects['recordEchartTable/getovermodellist'],
     overData: recordEchartTable.overData,
     overDataLoading: loading.effects['recordEchartTable/getoverdata'],
-    overfirstData: recordEchartTable.overfirstData
+    overfirstData: recordEchartTable.overfirstData,
+    OverTotal: recordEchartTable.OverTotal,
+    pageSize: recordEchartTable.pageSize,
+    pageIndex: recordEchartTable.pageIndex
 }))
 @Form.create()
 class Index extends Component {
@@ -115,7 +118,7 @@ class Index extends Component {
     //     } = this.props;
     //     console.log("dgmn=",this.props.DGIMN)
 
-    getLoadData=(nextProps)=>{
+    getLoadData = (nextProps) => {
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.props.dispatch({
@@ -175,6 +178,7 @@ class Index extends Component {
             type: 'recordEchartTable/updateState',
             payload: {
                 overData: [],
+                pageIndex: 1
             },
         })
         this.props.dispatch({
@@ -238,6 +242,7 @@ class Index extends Component {
                 type: 'recordEchartTable/updateState',
                 payload: {
                     overData: [],
+                    pageIndex: 1
                 },
             })
             this.props.dispatch({
@@ -261,7 +266,11 @@ class Index extends Component {
             type: 'recordEchartTable/updateState',
             payload: {
                 overfirstData: [],
+                pageIndex: 1
             },
+        })
+        this.setState({
+            Pollutant: name
         })
         this.props.dispatch({
             type: "recordEchartTable/getoverdata",
@@ -274,6 +283,29 @@ class Index extends Component {
             }
         })
         console.log(e)
+    }
+    // 分页
+    onTableChange = (current, pageSize) => {
+        this.props.dispatch({
+            type: "recordEchartTable/updateState",
+            payload: {
+                pageIndex: current,
+                pageSize: pageSize
+            }
+        })
+        setTimeout(() => {
+            // 获取表格数据
+            this.props.dispatch({
+                type: "recordEchartTable/getoverdata",
+                payload: {
+                    beginTime: this.state.beginTime,
+                    endTime: this.state.endTime,
+                    dataType: this.state.dataType,
+                    DGIMN: [this.props.DGIMN],
+                    Pollutant: this.state.Pollutant == "" ? this.props.exmodellist[0].product : this.state.Pollutant,
+                }
+            })
+        }, 0)
     }
     render() {
         const { column } = this.state
@@ -331,7 +363,7 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)',minHeight:'200px' }}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '200px' }}
                                         />
 
                                         {
@@ -348,10 +380,18 @@ class Index extends Component {
                                             //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
                                             <SdlTable
                                                 loading={this.props.overDataLoading}
-                                                scroll={{ y: 300 }}
-                                                style={{  minHeight: "200px" }}
+                                                scroll={{ y: this.props.maxHeight || 300 }}
+                                                // style={{  minHeight: "200px" }}
                                                 columns={column}
                                                 dataSource={this.props.overfirstData}
+                                                pagination={{
+                                                    // showSizeChanger: true,
+                                                    showQuickJumper: true,
+                                                    pageSize: this.props.pageSize,
+                                                    current: this.props.pageIndex,
+                                                    onChange: this.onTableChange,
+                                                    total: this.props.OverTotal
+                                                }}
                                             >
                                             </SdlTable>
                                             // </div>

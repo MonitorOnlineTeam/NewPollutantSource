@@ -12,7 +12,8 @@ import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmReco
 import RecordEchartTable from '@/components/recordEchartTable'
 import RealTimeWarning from '../RealTimeWarning/RealTimeWarning';
 import ExceptionAlarm from '../ExceptionAlarm/ExceptionAlarm';
-import RecordEchartTableOver from '@/components/recordEchartTableOver/Index'
+import RecordEchartTableOver from '@/components/recordEchartTableOver'
+import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningModal';
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
@@ -209,6 +210,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 DGIMN={this.state.DGIMN}
                 firsttime={moment(this.state.firsttime)}
                 lasttime={moment(this.state.lasttime)}
+                maxHeight={200}
               />
               : this.state.flag === 'exception' ?
                 // <RecordEchartTable
@@ -218,13 +220,11 @@ export default class GlobalHeaderRight extends PureComponent {
                 // />
                 <ExceptionAlarm initLoadData DGIMN={this.state.DGIMN} />
                 :
-                <RealTimeWarning
-                  initLoadData
+                <RealTimeWarningModal 
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
-                  lasttime={moment(this.state.lasttime)}
-                />
+                  lasttime={moment(this.state.lasttime)} />
           }
 
         </Modal>
