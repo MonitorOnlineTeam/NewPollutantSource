@@ -1,0 +1,635 @@
+@normal: rgb(14, 218, 173); // 正常
+@abnormal: rgb(255, 204, 68); // 异常
+@offline: rgb(204, 204, 204); // 离线
+@overproof: rgb(253, 108, 108); // 超标
+@NOx: #40ccdd;
+@smoke: #0edaad;
+@SO2: #03b3ff;
+@titleColor: #d5d9e2;
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #021e39;
+/*滚动条颜色*/
+@scrollbar-thumb-color: #305090;
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.homeWrapper {
+  .normal {
+    color: @normal;
+  }
+
+  .abnormal {
+    color: @abnormal;
+  }
+
+  .offline {
+    color: @offline;
+  }
+
+  .overproof {
+    color: @overproof;
+  }
+
+  .overproofWrapper {
+    width: 36%;
+    // height: 200px;
+    // background: red;
+    position: absolute;
+    left: 50%;
+    right: 0;
+    bottom: 10px;
+    transform: translateX(-50%);
+    color: #fff;
+  
+    .title {
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+  
+    .content {
+      text-align: center;
+  
+      ul {
+        display: flex;
+  
+        li {
+          background: #29486d;
+          // width: 100px;
+          line-height: 28px;
+          margin-right: 10px;
+          // flex-wrap
+          flex: 1;
+        }
+      }
+  
+      .colum {
+        margin-bottom: 10px;
+        font-size: 15px;
+        font-weight: 600;
+  
+        li {
+          background: transparent;
+        }
+      }
+  
+    }
+  }
+
+
+.homeHeader {
+  position: relative;
+  text-align: center;
+  color: #fff;
+  font-size: 30px;
+  height: 64px;
+  line-height: 64px;
+  padding: 0;
+  font-weight: 700;
+  background: #00152A;
+  background-image: url(/homeheader.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  // background-position: 3px 6px;
+
+  .backMenu {
+    position: absolute;
+    top: 11px;
+    right: 28px;
+    font-size: 14px;
+  }
+}
+
+  // .NOx {
+  //   color: @NOx;
+  // }
+
+  // .smoke {
+  //   color: @smoke;
+  // }
+
+  // .SO2 {
+  //   color: @SO2;
+  // }
+
+  :global {
+
+    // 单选按钮样式
+    .ant-radio-button-wrapper {
+      background: #163666;
+      border-color: #3b6aaa;
+      color: #fff;
+    }
+
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      background-color: #3b6aaa;
+    }
+
+    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+      background: #2b5288;
+    }
+  }
+
+  .contentTitle {
+    position: relative;
+
+    &>p {
+      padding-left: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      color: @titleColor;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      /* top: 8px; */
+      /* left: 6px; */
+      width: 4px;
+      height: 20px;
+      /* z-index: 7; */
+      /* border-top: 4px solid red; */
+      /* border-left: 10px; */
+      background: #efb314;
+    }
+  }
+
+  .leftWrapper {
+    left: 10px;
+
+    .operationsWrapper {
+      padding: 10px;
+
+      .content {
+        padding: 10px 0;
+
+        .operationsNumber {
+          // color: #adceec;
+          color: #d5d9e2;
+          text-align: center;
+          font-size: 16px;
+          line-height: 46px;
+          margin-bottom: 0;
+          font-weight: 500;
+
+          span {
+            color: rgb(64, 204, 221);
+            font-size: 24px;
+            margin: 0 6px;
+            font-weight: 500;
+          }
+        }
+
+        .progressInfo {
+          font-size: 18px;
+          font-weight: 500;
+          color: #adceec;
+          display: flex;
+          justify-content: space-between;
+          padding: 14px;
+
+          p {
+            font-size: 16px;
+
+            span {
+              font-size: 16px;
+              margin: 0 4px;
+            }
+          }
+
+        }
+
+        .progressContent {
+          display: flex;
+
+          .startIcon {
+            width: 30px;
+            height: 28px;
+            background: url(/zc.png) no-repeat 50%;
+            flex: 1;
+          }
+
+          .progress {
+            flex: 4;
+          }
+
+          .endIcon {
+            width: 30px;
+            height: 28px;
+            background: url(/yq.png) no-repeat 50%;
+            flex: 1;
+          }
+        }
+
+        .statisticContent {
+          font-size: 16px;
+          width: 100%;
+          /* padding: 10px 53px 6px 30px; */
+          color: #fff;
+          padding-left: 10px;
+          font-weight: 500;
+          margin-top: -20px;
+          margin-bottom: 20px;
+
+          &>p {
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: #d5d9e2;
+            text-align: center;
+
+            &>span {
+              color: rgb(64, 204, 221);
+              font-size: 24px;
+              margin: 0 6px;
+            }
+          }
+
+          .statisticInfo {
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+          }
+        }
+
+        .abnormalAlarmContent {
+          margin-top: 20px;
+
+          .content {
+            display: flex;
+
+            &>div {
+              flex: 1;
+            }
+
+            .chartDescription {
+              font-size: 14px;
+              align-self: center;
+
+              &>div {
+                margin-bottom: 10px;
+                position: relative;
+                padding-left: 16px;
+                color: #2cc78e;
+                font-weight: 500;
+                &::before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  top: 4px;
+                  width: 7px;
+                  height: 16px;
+                  background: #2cc78e;
+                }
+              }
+
+              .eightHours {
+                color: #3ccafc;
+
+                &::before {
+                  background: #3ccafc;
+                }
+              }
+
+              .other {
+                color: #eecc2c;
+
+                &::before {
+                  background: #eecc2c;
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  .currentInfoWrapper {
+    position: absolute;
+    width: calc(100vw - 800px);
+    height: 146px;
+    left: 50%;
+    top: 2%;
+    transform: translateX(-50%);
+    // background: red
+    display: flex;
+    z-index: 1;
+    padding: 28px;
+
+    &>div {
+      text-align: center;
+      flex: 1;
+      align-self: center;
+
+      // background: rgba(0, 21, 42, 0.71);
+      // margin: 0 10px;
+      // height: 100%;
+      &>span {
+        line-height: 40px;
+        font-size: 16px;
+        color: #ffcb5b;
+        font-weight: 500;
+      }
+
+      span:last-child {
+        font-weight: 600;
+        font-size: 16px;
+        color: white;
+
+      }
+    }
+  }
+
+  .leftWrapper,
+  .rightWrapper {
+    // flex: 1;
+    position: absolute;
+    // left: 10px;
+    top: 2%;
+    width: 400px;
+    height: 98%;
+    float: left;
+    // background: red;
+    display: flex;
+    flex-direction: column;
+
+    ::-webkit-scrollbar-track-piece {
+      -webkit-border-radius: 0;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+
+      border-radius: 10px;
+      background-color: @scrollbar-track-color;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: @scrollbar-thumb-color;
+      -webkit-border-radius: 4px;
+      outline-offset: -2px;
+      border: 2px solid @scrollbar-thumb-color;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      height: 50px;
+      background-color: @scrollbar-thumb-color;
+      -webkit-border-radius: 4px;
+    }
+
+    &>div {
+      border: 1px solid #274073;
+      margin-bottom: 10px;
+      color: #fff;
+      padding: 10px;
+      overflow: hidden;
+      background: rgba(0, 21, 42, 0.71);
+
+      &>.echartsContent {
+        display: flex;
+        flex-direction: row;
+
+        .echartItem {
+          flex: 1;
+
+          .echartsTitle {
+            text-align: center;
+            color: #a1d9ff;
+            margin-top: -6px;
+          }
+
+          // .echarts{
+          //   height: calc(100% - 40px);
+          //   width: 100%;
+          // }
+        }
+      }
+
+      &>.title {
+        height: 18px;
+        line-height: 18px;
+        font-size: 20px;
+        font-weight: 700;
+        // background: url(/title_bg.png) no-repeat 98px;
+        position: relative;
+        // padding-left: 17px;
+        padding-left: 12px;
+        background: url(/title_bg.png) no-repeat 0 3px;
+
+        // padding-left: 10px;
+        p {
+          // 样式
+          // padding-left: 6px;
+          // margin-left: 10px;
+          // border: 1px solid #053569;
+          // color: #e5e9f3;
+          // font-size: 17px;
+          // display: block;
+          // line-height: 20px;
+          // background: #020814 url(/01.png) no-repeat 98px;
+
+
+          padding-left: 6px;
+          margin-left: 5px;
+          /* border: 1px solid #053569; */
+          color: #e5e9f3;
+          font-size: 16px;
+          display: block;
+          line-height: 20px;
+          background: #020814 url(/01.png) no-repeat 83px 8px;
+        }
+
+        // &::before {
+        //   content: "";
+        //   position: absolute;
+        //   top: 2px;
+        //   /* top: 8px; */
+        //   /* left: 6px; */
+        //   width: 4px;
+        //   height: 20px;
+        //   /* z-index: 7; */
+        //   /* border-top: 4px solid red; */
+        //   /* border-left: 10px; */
+        //   background: #efb314;
+        // }
+      }
+    }
+
+    .effectiveRate {
+      // flex: 1;
+      height: 146px;
+    }
+
+    .operationsWrapper {
+      flex: 4;
+      overflow-y: auto;
+    }
+
+    .excessiveAbnormalWrapper {
+      flex: 2;
+      .marqueeContent {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .centerContainer {
+    // flex: 2;
+  }
+
+  .rightWrapper {
+    // flex: 1;
+    position: absolute;
+    right: 10px;
+    width: 400px;
+    float: right;
+    display: flex;
+
+    // 智能监控
+    .monitoringContent {
+      // flex: 1;
+      height: 146px;
+      display: flex;
+      flex-direction: column;
+
+      .content {
+        padding: 12px 16px 0px 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+
+        &>div.line:first-child {
+          margin-bottom: 10px;
+        }
+
+        &>div.line {
+          flex: 1;
+          background: #334454;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 10px;
+        }
+
+        .circular {
+          width: 104px;
+          height: 104px;
+          border-radius: 50%;
+          background: #40ccdd;
+          // #63a6d3 #40ccdd
+          border: 6px solid #001529;
+          position: absolute;
+          top: 5px;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+
+          &>span {
+            font-size: 30px;
+            font-weight: 600;
+            line-height: 53px;
+            color: #001529;
+          }
+
+          &>span:last-child {
+            line-height: 18px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    // 排放
+    .emissionsContent {
+      flex: 4;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+
+      .NOx {
+
+        .contentTitle::before {
+          background: @NOx;
+        }
+
+        .desc {
+          color: @NOx
+        }
+      }
+
+      .smoke {
+
+        .contentTitle::before {
+          background: @smoke;
+        }
+
+        .desc {
+          color: @smoke
+        }
+      }
+
+      .SO2 {
+
+        .contentTitle::before {
+          background: @SO2;
+        }
+
+        .desc {
+          color: @SO2
+        }
+      }
+
+      &>div {
+        flex: 1;
+        width: 100%;
+        min-height: 168px;
+        display: flex;
+        flex-direction: column;
+
+
+
+        .content {
+          display: flex;
+          flex: 1;
+          padding: 20px 4px;
+
+          // padding-left: 20px;
+          // padding-top: 10px;
+          &>div {
+            flex: 1;
+          }
+
+          .echartBox {
+            border-bottom: 1px solid #277696;
+          }
+
+          .desc {
+            /* padding: 58px 5px 5px; */
+            // font-size: 18px;
+            // color: #40ccdd;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: 20px;
+            margin-top: 6px;
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+
+    // 排污税
+    .effluentFeeContent {
+      flex: 2;
+    }
+  }
+}
