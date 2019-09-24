@@ -54,6 +54,28 @@
   .amap-copyright {
     display: none !important;
   }
+
+  .amap-info .amap_markers_pop_window {
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    top: 6px;
+
+    ::after {
+      display: none
+    }
+
+    ::before {
+      display: none
+    }
+  }
+
+  .amap-info .amap_markers_pop_window::before,
+  .amap-info .amap_markers_pop_window::after {
+    display: none
+  }
 }
 
 .pointInfoWindow {
@@ -78,7 +100,7 @@
     padding: 0 10px;
     cursor: pointer;
   }
- 
+
 }
 
 .echartdiv {
@@ -99,6 +121,7 @@
     z-index: 1;
     text-decoration: none;
   }
+
   :global {
     .ant-layout {
       .ant-pro-basicLayout-content {
@@ -124,7 +147,8 @@
       right: 10px !important;
       font-size: 22px;
     }
-    .ant-tooltip-inner{
+
+    .ant-tooltip-inner {
       background-color: "#fff";
       color: #000000
     }
@@ -133,65 +157,65 @@
 
 @keyframes warn {
   0% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.3);
-      opacity: 0.0;
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.0;
   }
 
   25% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.3);
-      opacity: 0.1;
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
   }
 
   50% {
-      transform: scale(0.5);
-      -webkit-transform: scale(0.5);
-      opacity: 0.3;
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.3;
   }
 
   75% {
-      transform: scale(0.8);
-      -webkit-transform: scale(0.8);
-      opacity: 0.5;
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.5;
   }
 
   100% {
-      transform: scale(1);
-      -webkit-transform: scale(1);
-      opacity: 0.0;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    opacity: 0.0;
   }
 }
 
 @keyframes warn1 {
   0% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.3);
-      opacity: 0.0;
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.0;
   }
 
   25% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.3);
-      opacity: 0.1;
-  } 
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
 
   50% {
-      transform: scale(0.3);
-      -webkit-transform: scale(0.3);
-      opacity: 0.3;
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.3;
   }
 
   75% {
-      transform: scale(0.5);
-      -webkit-transform: scale(0.5);
-      opacity: 0.5;
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.5;
   }
 
   100% {
-      transform: scale(0.8);
-      -webkit-transform: scale(0.8);
-      opacity: 0.0;
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.0;
   }
 }
 
@@ -201,13 +225,14 @@
   height: 20px;
   /*border: 1px solid #000; hovertree.com */
 }
+
 /* 保持大小不变的小圆圈 何问起 */
 .dot {
   position: absolute;
   width: 20px;
   height: 20px;
   left: 14px;
-    top: 14px;
+  top: 14px;
   /* left: 2px; */
   /* top: 2px; */
   -webkit-border-radius: 50%;
@@ -216,6 +241,7 @@
   border-radius: 50%;
   z-index: 2;
 }
+
 /* 产生动画（向外扩散变大）的圆圈  */
 .pulse {
   position: absolute;
@@ -240,10 +266,10 @@
 
 .pulse1 {
   position: absolute;
-  width: 46px;
-  height: 46px;
+  width: 49px;
+  height: 49px;
   left: -13px;
-  top: -12px;
+  top: -13px;
   border: 6px solid red;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
