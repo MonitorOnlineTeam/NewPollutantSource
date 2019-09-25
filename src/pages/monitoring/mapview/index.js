@@ -326,9 +326,11 @@ class MapView extends Component {
           // extData={item}
           style={{
             strokeColor: '#FF33FF',
+            // strokeColor: '#0cffda',
             strokeOpacity: 0.2,
             strokeWeight: 3,
-            fillColor: '#595959',
+            // fillColor: '#595959',
+            fillColor: '#908c8c',
             fillOpacity: 0.35,
           }}
           path={arr[i]}
@@ -619,6 +621,9 @@ class MapView extends Component {
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
+            mapStyle="amap://styles/fresh"
+            // isHotspot={true}
+            // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
           >

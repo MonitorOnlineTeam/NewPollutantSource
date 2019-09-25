@@ -50,16 +50,23 @@ export const Leftdown = () => <IconConfig type="icon-jiantou_zuoxia" style={{ ..
 export const Rightdown = () => <IconConfig type="icon-jiantou_youxia" style={{ ...style }} />
 export const Adaption = () => <IconConfig type="icon-zidong" style={{ ...style }} />
 
+
+const mapStyle = {
+  fontSize: 24,
+  borderRadius: "50%",
+  background: "#fff",
+  boxShadow: "0px 0px 3px 2px #fff"
+}
 // 废水
-export const WaterIcon = props => <IconConfig type="icon-water" style={{ ...style, fontSize: 24 }} {...props} />
-export const WaterNormal = props => <IconConfig type="icon-water-normal" style={{ ...style, fontSize: 24 }} {...props} />
-export const WaterExceed = props => <IconConfig type="icon-water-exceed" style={{ ...style, fontSize: 24 }} {...props} />
-export const WaterAbnormal = props => <IconConfig type="icon-water-abnormal" style={{ ...style, fontSize: 24 }} {...props} />
-export const WaterOffline = props => <IconConfig type="icon-water-offline" style={{ ...style, fontSize: 24 }} {...props} />
+export const WaterIcon = props => <IconConfig type="icon-water" style={{ ...mapStyle }} {...props} />
+export const WaterNormal = props => <IconConfig type="icon-water-normal" style={{ ...mapStyle }} {...props} />
+export const WaterExceed = props => <IconConfig type="icon-water-exceed" style={{ ...mapStyle }} {...props} />
+export const WaterAbnormal = props => <IconConfig type="icon-water-abnormal" style={{ ...mapStyle }} {...props} />
+export const WaterOffline = props => <IconConfig type="icon-water-offline" style={{ ...mapStyle }} {...props} />
 
 // 废气
-export const GasIcon = props => <IconConfig type="icon-gas" style={{ ...style, fontSize: 24 }} {...props} />
-export const GasNormal = props => <IconConfig type="icon-gas-normal" style={{ ...style, fontSize: 24 }} {...props} />
-export const GasExceed = props => <IconConfig type="icon-gas-exceed" style={{ ...style, fontSize: 24 }} {...props} />
-export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" style={{ ...style, fontSize: 24 }} {...props} />
-export const GasOffline = props => <IconConfig type="icon-gas-offline" style={{ ...style, fontSize: 24 }} {...props} />
+export const GasIcon = props => <IconConfig type="icon-gas" style={{ ...mapStyle}} {...props} />
+export const GasNormal = props => <IconConfig type="icon-gas-normal" style={{ ...mapStyle }} {...props} />
+export const GasExceed = props => <IconConfig type="icon-gas-exceed" style={{ ...mapStyle }} {...props} />
+export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" style={{ ...mapStyle }} {...props} />
+export const GasOffline = props => <IconConfig type="icon-gas-offline" style={{ ...mapStyle }} {...props} />
