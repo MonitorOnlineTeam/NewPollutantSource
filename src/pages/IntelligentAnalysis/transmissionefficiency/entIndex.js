@@ -191,7 +191,7 @@ export default class EntTransmissionEfficiency extends Component {
         ];
         return (
             <PageHeaderWrapper title="传输有效率">
-                <Row className={styles.cardTitle}>
+                <div className="contentContainer">
                     <Card
                         bordered={false}
                         extra={
@@ -234,7 +234,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 bordered={false}
                                 onChange={this.handleTableChange}
                                 dataSource={this.props.tableDatas}
-                                scroll={{ y: 'calc(100vh - 390px)' }}
+                                scroll={{ y: 'calc(100vh - 450px)' }}
                                 // scroll={{ y: 550 }}
                                 pagination={{
                                     showSizeChanger: true,
@@ -248,7 +248,7 @@ export default class EntTransmissionEfficiency extends Component {
                             />
                         </Row>
                     </Card>
-                </Row>
+                </div>
             </PageHeaderWrapper>
         );
     }

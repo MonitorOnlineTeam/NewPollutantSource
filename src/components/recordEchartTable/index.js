@@ -24,7 +24,10 @@ import moment from 'moment';
     exmodellistLoading: loading.effects['recordEchartTable/getexmodellist'],
     exceptionData: recordEchartTable.exceptionData,
     exceptionDataLoading: loading.effects['recordEchartTable/getexceptiondata'],
-    exfirstData: recordEchartTable.exfirstData
+    exfirstData: recordEchartTable.exfirstData,
+    ExceptionTotal: recordEchartTable.ExceptionTotal,
+    pageSize: recordEchartTable.pageSize,
+    pageIndex:recordEchartTable.pageIndex
 }))
 @Form.create()
 class Index extends Component {
@@ -81,7 +84,7 @@ class Index extends Component {
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         }, () => {
-            this.props.initLoadData &&  this.getLoadData(this.props);
+            this.props.initLoadData && this.getLoadData(this.props);
         })
 
 
@@ -98,9 +101,9 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-      
+
         if (this.props.DGIMN != nextProps.DGIMN) {
-           this.getLoadData(nextProps);
+            this.getLoadData(nextProps);
         }
 
     }
@@ -111,7 +114,7 @@ class Index extends Component {
     //     } = this.props;
     //     console.log("dgmn=",this.props.DGIMN)
 
-    getLoadData=(nextProps)=>{
+    getLoadData = (nextProps) => {
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.props.dispatch({
@@ -185,6 +188,7 @@ class Index extends Component {
             type: 'recordEchartTable/updateState',
             payload: {
                 exceptionData: [],
+                pageIndex:1
             },
         })
         this.props.dispatch({
@@ -240,11 +244,13 @@ class Index extends Component {
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+               
             });
             this.props.dispatch({
                 type: 'recordEchartTable/updateState',
                 payload: {
                     exceptionData: [],
+                    pageIndex:1
                 },
             })
             this.props.dispatch({
@@ -266,10 +272,15 @@ class Index extends Component {
             type: 'recordEchartTable/updateState',
             payload: {
                 exfirstData: [],
+                pageIndex:1
             },
         })
         var name = e.name
         var seriesName = e.seriesName
+        this.setState({
+            Pollutant: name,
+            ExceptionType: seriesName,
+        })
         this.props.dispatch({
             type: "recordEchartTable/getexceptiondata",
             payload: {
@@ -278,10 +289,36 @@ class Index extends Component {
                 dataType: this.state.dataType,
                 DGIMN: [this.props.DGIMN],
                 Pollutant: e.name,
-                ExceptionType: e.seriesName
+                ExceptionType: e.seriesName,
             }
         })
         console.log(e)
+    }
+
+    // 分页
+    onTableChange = (current, pageSize) => {
+        this.props.dispatch({
+            type: "recordEchartTable/updateState",
+            payload: {
+                pageIndex: current,
+                pageSize: pageSize
+            }
+        })
+        setTimeout(()=>{
+            // 获取表格数据
+            this.props.dispatch({
+                type: "recordEchartTable/getexceptiondata",
+                payload: {
+                    beginTime: this.state.beginTime,
+                    endTime: this.state.endTime,
+                    dataType: this.state.dataType,
+                    DGIMN: [this.props.DGIMN],
+                    Pollutant: this.state.Pollutant == "" ? this.props.exmodellist[0].product : this.state.Pollutant,
+                    ExceptionType: this.state.ExceptionType == "" ? this.props.exlist[1] : this.state.ExceptionType,
+                }
+            })
+        }, 0)
+
     }
     render() {
         const { column } = this.state
@@ -340,7 +377,7 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)',minHeight:'200px' }}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '200px' }}
                                         />
 
                                         {
@@ -358,10 +395,18 @@ class Index extends Component {
                                             <SdlTable
                                                 loading={this.props.exceptionDataLoading}
                                                 // style={{ width: "400px", height: "500px" }}
-                                                scroll={{ y: 300 }}
-                                                style={{minHeight:'200px'}}
+                                                scroll={{ y: this.props.maxHeight || 300 }}
+                                                style={{ minHeight: '200px' }}
                                                 columns={column}
                                                 dataSource={this.props.exfirstData}
+                                                pagination={{
+                                                    // showSizeChanger: true,
+                                                    showQuickJumper: true,
+                                                    pageSize: this.props.pageSize,
+                                                    current: this.props.pageIndex,
+                                                    onChange: this.onTableChange,
+                                                    total: this.props.ExceptionTotal
+                                                }}
                                             >
                                             </SdlTable>
                                             // </div>

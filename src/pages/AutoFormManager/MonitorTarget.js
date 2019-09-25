@@ -106,7 +106,7 @@ export default class MonitorTarget extends Component {
                     { Name: '企业管理', Url: '' }
                 ]
             }>
-                <div className={styles.cardTitle}>
+                <div className="contentContainer">
                     <Card>
 
                         <SearchWrapper

@@ -801,10 +801,10 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
             </Tabs>
           </Modal>

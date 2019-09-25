@@ -51,7 +51,7 @@ export default Model.extend({
         const dataexceptions = exceptions;
         notices = notices.concat(
           dataovers.map((item, index) => {
-            count += item.AlarmCount;
+            count += 1;
             return {
               id: `over_${item.DGIMNs}`,
               pointname: item.PointName,
@@ -100,7 +100,7 @@ export default Model.extend({
         );
         notices = notices.concat(
           dataexceptions.map((item, index) => {
-            count += item.AlarmCount;
+            count +=1;
             return {
               id: `exception_${item.DGIMNs}`,
               pointname: item.PointName,

@@ -76,8 +76,8 @@ class NavigationTree extends Component {
           dataIndex: 'Pollutant',
           width: '10%',
           render: (text, record) => {
-            return <span>{this.getPollutantIcon(record.Pollutant,25)}</span>
-           
+            return <span>{this.getPollutantIcon(record.Pollutant, 25)}</span>
+
           }
         },
         {
@@ -159,16 +159,16 @@ class NavigationTree extends Component {
 
   }
   //清除面板数据
-  clearData=()=>{
+  clearData = () => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    dataList.splice(0,dataList.length)
+    dataList.splice(0, dataList.length)
   }
   //面板数据
   tilingData = (data = this.props.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType,EntCode:node.IsEnt?node.key:node.EntCode });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -227,9 +227,9 @@ class NavigationTree extends Component {
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var pollutantType=dataList.find(m => m.key == nowKey[0].toString()).Type
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType,EntCode:node.EntCode }]
-        console.log('rtnKey=',rtnKey)
+        var pollutantType = dataList.find(m => m.key == nowKey[0].toString()).Type
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode }]
+        console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
       }
@@ -261,7 +261,7 @@ class NavigationTree extends Component {
       visible: true,
     });
   };
-//关闭抽屉
+  //关闭抽屉
   onClose = () => {
     this.setState({
       visible: false,
@@ -337,9 +337,9 @@ class NavigationTree extends Component {
       const dom = document.querySelector(domId)
       if (dom) {
         const left = this.state.visible ? "400px" : "0";
-        dom.style.width = 'calc(100% - 400px)'
-          floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
-          dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
+        dom.style.width =  this.state.visible ? 'calc(100% - 400px)' : "100%"
+        floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
+        dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
       }
     });
   };
@@ -508,15 +508,14 @@ class NavigationTree extends Component {
     const rtnList = [];
     data.map(item => {
       var list = dataList.filter(m => m.key == item)
-      if(list)
-      {
+      if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type ,EntCode:list[0].EntCode})
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode })
       }
     })
     //向外部返回选中的数据
-    console.log('rtnlist=',rtnList)
+    console.log('rtnlist=', rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (this.props.isMap === true && rtnList[0].IsEnt) {
@@ -569,7 +568,7 @@ class NavigationTree extends Component {
   setRowClassName = (record) => {
     return record.key === this.state.selectedKeys[0] ? global.clickRowStyl : '';
   }
-//根据企业类型获取icon
+  //根据企业类型获取icon
   getEntIcon = (type) => {
     switch (type) {
       case "1":
@@ -583,16 +582,16 @@ class NavigationTree extends Component {
     }
   }
   //根绝污染物类型获取icon
-  getPollutantIcon = (type,size) => {
+  getPollutantIcon = (type, size) => {
     switch (type) {
       case "1":
-        return <a><WaterIcon style={{fontSize:size}} /></a>
+        return <a><WaterIcon style={{ fontSize: size }} /></a>
       case "2":
-        return <a><GasIcon style={{fontSize:size}}  /></a>
+        return <a><GasIcon style={{ fontSize: size }} /></a>
       case "10":
-        return <a><VocIcon style={{fontSize:size}}  /></a>
+        return <a><VocIcon style={{ fontSize: size }} /></a>
       case "12":
-        return <a><DustIcon style={{fontSize:size}}  /></a>
+        return <a><DustIcon style={{ fontSize: size }} /></a>
     }
   }
 
@@ -626,7 +625,7 @@ class NavigationTree extends Component {
         }
         return <TreeNode style={{ width: "100%" }} title={
           <div style={{ width: "253px" }}>
-            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType,16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
               <div className={styles.bell}>
                 <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
               </div>
@@ -663,7 +662,7 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
-         
+
           <SelectPollutantType
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
@@ -711,6 +710,7 @@ class NavigationTree extends Component {
                 }}
                 size="large"
               /> : <div>{this.props.EntAndPoint.length ? <Tree
+                defaultExpandAll
                 checkable={this.props.choice}
                 defaultExpandAll={true}
                 onCheck={this.onCheck}
@@ -718,9 +718,8 @@ class NavigationTree extends Component {
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
                 style={{ marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
-
-                onExpand={this.onExpand}
-                expandedKeys={expandedKeys}
+                // onExpand={this.onExpand}
+                // expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
               >
                 {loop(this.props.EntAndPoint)}
