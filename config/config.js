@@ -464,6 +464,36 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 },
+                {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecord',
+                },
+                {
+                  name: 'overrecord',
+                  path: '/monitoring/overrecord',
+                  component: './monitoring/overRecord',
+                },
+                {
+                  name: 'alarmrecord',
+                  path: '/monitoring/alarmrecord',
+                  component: './monitoring/alarmrecord/index',
+                },
+                {
+                  name: 'originaldata',
+                  path: '/monitoring/originaldata',
+                  component: './monitoring/originaldata',
+                },
+                {
+                  name: 'alarmverifyrecord',
+                  path: '/monitoring/alarmverifyrecord',
+                  component: './monitoring/alarmverifyrecord/index',
+                },
               ],
             },
             {
@@ -490,36 +520,36 @@ export default {
               routes: [
                 {
                   path: '/dataquery',
-                  redirect: '/dataquery/dataquery',
+                  redirect: '/monitoring/dataquery',
                 },
                 {
                   name: 'dataquery',
-                  path: '/dataquery/dataquery',
+                  path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
                 {
                   name: 'exceptionrecord',
-                  path: '/dataquery/exceptionrecord',
+                  path: '/monitoring/exceptionrecord',
                   component: './monitoring/exceptionrecord',
                 },
                 {
                   name: 'overrecord',
-                  path: '/dataquery/overrecord',
+                  path: '/monitoring/overrecord',
                   component: './monitoring/overRecord',
                 },
                 {
                   name: 'alarmrecord',
-                  path: '/dataquery/alarmrecord',
+                  path: '/monitoring/alarmrecord',
                   component: './monitoring/alarmrecord/index',
                 },
                 {
                   name: 'originaldata',
-                  path: '/dataquery/originaldata',
+                  path: '/monitoring/originaldata',
                   component: './monitoring/originaldata',
                 },
                 {
                   name: 'alarmverifyrecord',
-                  path: '/dataquery/alarmverifyrecord',
+                  path: '/monitoring/alarmverifyrecord',
                   component: './monitoring/alarmverifyrecord/index',
                 },
               ]

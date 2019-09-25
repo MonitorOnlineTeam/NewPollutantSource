@@ -8,6 +8,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import InfiniteScroll from 'react-infinite-scroller';
 import {
     Table,
     Radio,
@@ -21,6 +22,7 @@ import {
     Divider,
     Popconfirm,
     Input,
+    List
 } from 'antd';
 import moment from 'moment';
 import { routerRedux } from 'dva/router';
@@ -34,8 +36,10 @@ import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
 import style from '../mapview/index.less'
+import reqwest from 'reqwest';
 
 const RadioGroup = Radio.Group;
+const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 @connect(({ loading, overview, global, common }) => ({
     columnsdata: overview.columns,
     data: overview.data,
@@ -52,11 +56,20 @@ const RadioGroup = Radio.Group;
 class dataList extends PureComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            data: [],
+            loading: false,
+            hasMore: true
+        };
     }
     /**页面初始化 */
     componentDidMount() {
         const { dispatch, dataOverview, defaultPollutantCode } = this.props;
-
+        this.fetchData(res => {
+            this.setState({
+                data: res.results,
+            });
+        });
         // // 由于数据一览没有全部，初始化为废气
         // !!!this.props.selectpollutantTypeCode &&
         //     dispatch({
@@ -272,12 +285,80 @@ class dataList extends PureComponent {
         );
     };
 
+    // //瀑布流加载
+    // handleInfiniteOnLoad = () => {
+    //     console.log('666---')
+    //     // let { data } = this.state;
+    //     // this.setState({
+    //     //   loading: true,
+    //     // });
+    //     // if (data.length > 14) {
+    //     //   message.warning('Infinite List loaded all');
+    //     //   this.setState({
+    //     //     hasMore: false,
+    //     //     loading: false,
+    //     //   });
+    //     //   return;
+    //     // }
+    //     // this.fetchData(res => {
+    //     //   data = data.concat(res.results);
+    //     //   this.setState({
+    //     //     data,
+    //     //     loading: false,
+    //     //   });
+    //     // });
+    //   };
+
+    fetchData = callback => {
+        reqwest({
+            url: fakeDataUrl,
+            type: 'json',
+            method: 'get',
+            contentType: 'application/json',
+            success: res => {
+                callback(res);
+            },
+        });
+    };
+
+    handleInfiniteOnLoad = () => {
+        let { data } = this.state;
+        this.setState({
+            loading: true,
+        });
+        if (data.length > 14) {
+            message.warning('Infinite List loaded all');
+            this.setState({
+                hasMore: false,
+                loading: false,
+            });
+            return;
+        }
+        this.fetchData(res => {
+            data = data.concat(res.results);
+            this.setState({
+                data,
+                loading: false,
+            });
+        });
+    };
+
     render() {
         const { selectStatus, terate, time } = this.props.dataOverview;
         let { selectpollutantTypeCode } = this.props;
         // selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
+        console.log('data state=', this.state.data)
+        let columnsState = [{
+            title: "1",
+            dataIndex: "email",
+            key: '1',
+        }, {
+            title: "2",
+            dataIndex: "gender",
+            key: '2',
+        }]
         let fixed = false;
         if (coldata && coldata[0]) {
             fixed = true;
@@ -470,30 +551,46 @@ class dataList extends PureComponent {
                         }
                     >
 
+                        {/* <InfiniteScroll
+                            initialLoad={false}
+                            pageStart={0}
+                            loadMore={this.handleInfiniteOnLoad}
+                            hasMore={!this.state.loading && this.state.hasMore}
+                            useWindow={false}
+                        > */}
 
-                        <Table
-                            rowKey={(record, index) => `complete${index}`}
-                            style={{
-                                marginTop: 20,
-                                paddingBottom: 10
-                            }}
-                            // className={styles.tableCss}
-                            columns={columns}
-                            size="middle"
-                            dataSource={this.props.data}
-                            pagination={false}
-                            loading={this.props.isloading || this.props.timeLoading}
-                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
-                            bordered={true}
-                        // rowClassName={(record, index, indent) => {
-                        //   if (index === 0) {
-                        //     return;
-                        //   }
-                        //   if (index % 2 !== 0) {
-                        //     return 'light';
-                        //   }
-                        // }}
-                        />
+                        {/* <Table
+                                dataSource={this.state.data}
+                                columns={columnsState}
+                                // style={{maxHeight:"150px"}}
+                            ></Table> */}
+
+                        {/* </InfiniteScroll> */}
+                        <div className={styles.demoinfinitecontainer}>
+                            <InfiniteScroll
+                                initialLoad={false}
+                                pageStart={0}
+                                loadMore={this.handleInfiniteOnLoad}
+                                hasMore={!this.state.loading && this.state.hasMore}
+                                useWindow={false}
+                            >
+                                <Table
+                                    rowKey={(record, index) => `complete${index}`}
+                                    style={{
+                                        marginTop: 20,
+                                        paddingBottom: 10
+                                    }}
+                                    // className={styles.tableCss}
+                                    columns={columns}
+                                    size="middle"
+                                    dataSource={this.props.data}
+                                    pagination={false}
+                                    loading={this.props.isloading || this.props.timeLoading}
+                                    scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
+                                    bordered={true}
+                                />
+                            </InfiniteScroll>
+                        </div>
 
                     </Card>
                 </div>

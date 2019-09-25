@@ -33,7 +33,7 @@ class ExceptionAlarm extends PureComponent {
         dispatch({
             type: "workbenchmodel/getExceptionAlarmData",
             payload: {
-                DGIMN: DGIMN
+                // DGIMN: DGIMN
             }
         })
     }
@@ -126,10 +126,10 @@ class ExceptionAlarm extends PureComponent {
     render() {
         const { selectpoint } = this.state;
         return (
-            <div>
+            <div style={{maxHeight:"70vh"}}>
                 <Card
                     // title="异常报警"
-                    style={{ marginBottom: 10 }}
+                    style={{ marginBottom: 10 ,maxHeight:"70vh",overflowY:"auto"}}
                     bordered={false}
                     // extra={<a href="#">更多>></a>}
                     className={styles.exceptionAlarm}

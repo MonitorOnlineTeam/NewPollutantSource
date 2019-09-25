@@ -302,7 +302,7 @@ class Index extends Component {
                     endTime: this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [this.props.DGIMN],
-                    Pollutant: this.state.Pollutant == "" ? this.props.exmodellist[0].product : this.state.Pollutant,
+                    Pollutant: this.state.Pollutant == "" ? this.props.overmodellist[0].product : this.state.Pollutant,
                 }
             })
         }, 0)
