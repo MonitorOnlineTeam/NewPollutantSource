@@ -145,4 +145,35 @@ ol {
     color: #1890FF !important;
     border-bottom: 2px solid #1890FF !important;
   }
+
+  // 地图气泡样式
+  .amap-logo {
+    display: none !important;
+  }
+
+  .amap-copyright {
+    display: none !important;
+  }
+
+  .amap-info .amap_markers_pop_window {
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    top: 6px;
+
+    ::after {
+      display: none
+    }
+
+    ::before {
+      display: none
+    }
+  }
+
+  .amap-info .amap_markers_pop_window::before,
+  .amap-info .amap_markers_pop_window::after {
+    display: none
+  }
 }

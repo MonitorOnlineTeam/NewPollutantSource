@@ -69,6 +69,7 @@ class index extends Component {
       visible: false,
       pointName: null,
       radioDefaultValue: "",
+      infoWindowVisible: false
     };
     this.mapEvents = {
       created(m) {
@@ -262,6 +263,9 @@ class index extends Component {
           currentMarkersList: itemData.position.children,
         }
       })
+    } else {
+      // 点击排口
+      console.log('点击了排口:', itemData)
     }
   }
 
@@ -572,14 +576,14 @@ class index extends Component {
     const { pollutantTypeList } = this.props;
     let res = [];
     if (pollutantTypeList) {
-      res.push(<RadioButton value="" style={{ top: -1 }}>全部</RadioButton>);
+      res.push(<RadioButton key="-1" value="" style={{ top: -1 }}>全部</RadioButton>);
       pollutantTypeList.map((item, key) => {
         let type = "";
         if (item.pollutantTypeCode == 2) { type = "△" }  // 废气
         if (item.pollutantTypeCode == 1) { type = "○" }  // 废水
         if (item.pollutantTypeCode == 10) { type = "☆" }  // 厂界voc
         if (item.pollutantTypeCode == 12) { type = "□" }  // 厂界扬尘
-        res.push(<RadioButton key={key} value={item.pollutantTypeCode}>{item.pollutantTypeName}</RadioButton>)
+        res.push(<RadioButton key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</RadioButton>)
       })
     }
     return res;
@@ -589,14 +593,35 @@ class index extends Component {
    * 渲染点
    */
   renderMarkers = (extData) => {
+    return <div
+      onMouseEnter={() => {
+        if (this.state.infoWindowVisible === false) {
+          this.setState({
+            hoverMapCenter: extData.position,
+            currentTitle: extData.position.title,
+            infoWindowHoverVisible: true,
+          })
+        }
+      }}
+      onMouseLeave={() => {
+        if (this.state.infoWindowVisible === false) {
+          this.setState({
+            infoWindowHoverVisible: false,
+          })
+        }
+      }}>
+      {
+        extData.position.IsEnt === 1 ? <EntIcon style={{ fontSize: 26 }} /> : <GasIcon />
+      }
+    </div>
     // console.log('extData=', extData)
-    if (extData.position.IsEnt === 1) {
-      // 渲染企业
-      return <EntIcon style={{ fontSize: 30 }} />
-    } else {
-      // 渲染排口
-      return <GasIcon />
-    }
+    // if (extData.position.IsEnt === 1) {
+    //   // 渲染企业
+    //   return <EntIcon style={{ fontSize: 26 }} />
+    // } else {
+    //   // 渲染排口
+    //   return
+    // }
   }
   render() {
     const {
@@ -669,6 +694,14 @@ class index extends Component {
           amapkey={amapKey}
           center={mapCenter}
         >
+          <InfoWindow
+            position={this.state.hoverMapCenter}
+            isCustom
+            showShadow
+            autoMove
+            visible={this.state.infoWindowHoverVisible}
+            offset={[4, -35]}
+          >{this.state.currentTitle}</InfoWindow>
           <div className={styles.leftWrapper}>
             {/* 运行分析  || 智能质控*/}
             <div className={styles.effectiveRate}>
@@ -757,11 +790,6 @@ class index extends Component {
                       className="echarts-for-echarts"
                       theme="my_theme"
                     />
-                    {/* <div className={styles.s2}>两小时内响应({aaData.LessThan2Hour})次</div>
-      <div className={styles.s3}>{aaData.LessThan2Hourlink > 0 ? `环比上升${aaData.LessThan2Hourlink}%` : `环比下降${Math.abs(aaData.LessThan2Hourlink)}%`}</div>
-      <div className={styles.s4}>超八小时响应({aaData.GreaterThan8Hour})次</div>
-      <div className={styles.s5}>{aaData.GreaterThan8Hourlink > 0 ? `环比上升${aaData.GreaterThan8Hourlink}%` : `环比下降${Math.abs(aaData.GreaterThan8Hourlink)}%`}</div>
-      <div className={styles.s6}>其它({aaData.OtherTime})次</div> */}
                     <div className={styles.chartDescription}>
                       <div className={styles.twoHours}>两小时内响应({alarmAnalysis.LessThan2Hour})次
                         <br />
@@ -825,9 +853,9 @@ class index extends Component {
             </div>
             {/* 排放量 */}
             <div className={styles.emissionsContent}>
-              {/* <div className={styles.title}>
+              <div className={styles.title} style={{ marginBottom: 10 }}>
                 <p>排放量分析</p>
-              </div> */}
+              </div>
               {/* 氮氧化物排污许可情况 */}
               <div className={`${styles.NOx} ${styles.content}`}>
                 <div className={styles.contentTitle}>

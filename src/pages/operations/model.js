@@ -10,7 +10,7 @@ export default Model.extend({
   state: {
     calendarList: [],
     logForm: {
-      RecordType: "",
+      RecordType: undefined,
       dateTime: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
     },
     abnormalDetailList: [],

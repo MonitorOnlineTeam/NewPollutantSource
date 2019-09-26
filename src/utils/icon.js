@@ -1,11 +1,17 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_kpspwa4lv6.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_83fd7y80vf.js';
 const style = {
   fontSize: 16,
 }
 const styles = {
   fontSize: 17,
+}
+const mapStyle = {
+  fontSize: 24,
+  borderRadius: "50%",
+  background: "#fff",
+  boxShadow: "0px 0px 3px 2px #fff"
 }
 export const EditIcon = () => <Icon type="edit" style={{ ...style }} />
 
@@ -19,7 +25,7 @@ export const IconConfig = Icon.createFromIconfontCN({
 })
 
 export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{ ...style }} />
-export const EntIcon = props => <IconConfig type="icon-qiye1"  {...props} style={{ ...style, ...props.style }} />
+export const EntIcon = props => <IconConfig type="icon-qiye2"  {...props} style={{ ...mapStyle, color: "#4e8cee", ...props.style }} />
 export const MapEntIcon = props => <IconConfig type="icon-qy" style={{ ...style }} {...props} />
 export const StationIcon = props => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props} />
 export const ReachIcon = props => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props} />
@@ -51,12 +57,7 @@ export const Rightdown = () => <IconConfig type="icon-jiantou_youxia" style={{ .
 export const Adaption = () => <IconConfig type="icon-zidong" style={{ ...style }} />
 
 
-const mapStyle = {
-  fontSize: 24,
-  borderRadius: "50%",
-  background: "#fff",
-  boxShadow: "0px 0px 3px 2px #fff"
-}
+
 // 废水
 export const WaterIcon = props => <IconConfig type="icon-water" style={{ ...mapStyle }} {...props} />
 export const WaterNormal = props => <IconConfig type="icon-water-normal" style={{ ...mapStyle }} {...props} />

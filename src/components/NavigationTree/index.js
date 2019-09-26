@@ -572,7 +572,7 @@ class NavigationTree extends Component {
   getEntIcon = (type) => {
     switch (type) {
       case "1":
-        return <a><EntIcon /></a>
+        return <a><EntIcon style={{fontSize: 16}}/></a>
       case "2":
         return <a><StationIcon /></a>
       case "3":

@@ -191,7 +191,7 @@ class LogTimeList extends Component {
   render() {
     const { recordTypeList, timeLineList, timeLineTotal, imageList, style, logForm, loading } = this.props;
     const { dateValues, current, previewVisible, previewImage } = this.state;
-    let defaultValue = logForm.RecordType;
+    let defaultValue = logForm.RecordType || undefined;
     return (
       <>
         <Card
