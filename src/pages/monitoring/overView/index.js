@@ -29,14 +29,13 @@ import { routerRedux } from 'dva/router';
 import styles from './index.less';
 import AListRadio from '@/components/overView/aListRadio';
 import PdButton from '@/components/overView/pdButton';
-import { getPointStatusImg } from '@/utils/getstatusImg';
+import { getPointStatusImg } from '@/utils/getStatusImg';
 import { formatPollutantPopover } from '@/utils/utils';
 import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
 import style from '../mapview/index.less'
-import reqwest from 'reqwest';
 
 const RadioGroup = Radio.Group;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
@@ -65,11 +64,6 @@ class dataList extends PureComponent {
     /**页面初始化 */
     componentDidMount() {
         const { dispatch, dataOverview, defaultPollutantCode } = this.props;
-        this.fetchData(res => {
-            this.setState({
-                data: res.results,
-            });
-        });
         // // 由于数据一览没有全部，初始化为废气
         // !!!this.props.selectpollutantTypeCode &&
         //     dispatch({
@@ -309,39 +303,6 @@ class dataList extends PureComponent {
     //     // });
     //   };
 
-    fetchData = callback => {
-        reqwest({
-            url: fakeDataUrl,
-            type: 'json',
-            method: 'get',
-            contentType: 'application/json',
-            success: res => {
-                callback(res);
-            },
-        });
-    };
-
-    handleInfiniteOnLoad = () => {
-        let { data } = this.state;
-        this.setState({
-            loading: true,
-        });
-        if (data.length > 14) {
-            message.warning('Infinite List loaded all');
-            this.setState({
-                hasMore: false,
-                loading: false,
-            });
-            return;
-        }
-        this.fetchData(res => {
-            data = data.concat(res.results);
-            this.setState({
-                data,
-                loading: false,
-            });
-        });
-    };
 
     render() {
         const { selectStatus, terate, time } = this.props.dataOverview;
@@ -551,47 +512,21 @@ class dataList extends PureComponent {
                         }
                     >
 
-                        {/* <InfiniteScroll
-                            initialLoad={false}
-                            pageStart={0}
-                            loadMore={this.handleInfiniteOnLoad}
-                            hasMore={!this.state.loading && this.state.hasMore}
-                            useWindow={false}
-                        > */}
-
-                        {/* <Table
-                                dataSource={this.state.data}
-                                columns={columnsState}
-                                // style={{maxHeight:"150px"}}
-                            ></Table> */}
-
-                        {/* </InfiniteScroll> */}
-                        <div className={styles.demoinfinitecontainer}>
-                            <InfiniteScroll
-                                initialLoad={false}
-                                pageStart={0}
-                                loadMore={this.handleInfiniteOnLoad}
-                                hasMore={!this.state.loading && this.state.hasMore}
-                                useWindow={false}
-                            >
-                                <Table
-                                    rowKey={(record, index) => `complete${index}`}
-                                    style={{
-                                        marginTop: 20,
-                                        paddingBottom: 10
-                                    }}
-                                    // className={styles.tableCss}
-                                    columns={columns}
-                                    size="middle"
-                                    dataSource={this.props.data}
-                                    pagination={false}
-                                    loading={this.props.isloading || this.props.timeLoading}
-                                    scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
-                                    bordered={true}
-                                />
-                            </InfiniteScroll>
-                        </div>
-
+                        <Table
+                            rowKey={(record, index) => `complete${index}`}
+                            style={{
+                                marginTop: 20,
+                                paddingBottom: 10
+                            }}
+                            // className={styles.tableCss}
+                            columns={columns}
+                            size="middle"
+                            dataSource={this.props.data}
+                            pagination={false}
+                            loading={this.props.isloading || this.props.timeLoading}
+                            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
+                            bordered={true}
+                        />
                     </Card>
                 </div>
             </PageHeaderWrapper>
