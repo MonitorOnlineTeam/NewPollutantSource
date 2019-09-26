@@ -511,7 +511,11 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
                   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
                 },
-
+                {
+                  name: 'emissions',
+                  path: '/Intelligentanalysis/emissions',
+                  component: './Intelligentanalysis/emissions',
+                },
               ],
             },
             {
