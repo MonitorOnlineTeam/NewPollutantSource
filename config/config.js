@@ -125,7 +125,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './monitoring/realtimedata' },
+            { path: '/', redirect: './monitoring/mapview' },
             {
               name: 'test',
               path: '/test',

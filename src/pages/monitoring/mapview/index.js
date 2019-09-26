@@ -38,7 +38,7 @@ class MapView extends Component {
     super(props, context);
     this.state = {
       createMap: false,
-      displayType: 1,
+      displayType: 0,
       currentPointInfo: {},
       loading: true,
       tooltipVisible: false,
@@ -48,6 +48,7 @@ class MapView extends Component {
       markersList: [],
       currentEntInfo: {},
       chartTitle: null,
+      currentKey: 1
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -143,7 +144,8 @@ class MapView extends Component {
           } else {
             // 排口
             newState = {
-              coordinateSet: this.state.currentEntInfo.CoordinateSet,
+              // coordinateSet: this.state.currentEntInfo.CoordinateSet,
+              coordinateSet: extData.position.CoordinateSet,
               displayType: 1,
               overAll: false,
             }
@@ -326,9 +328,11 @@ class MapView extends Component {
           // extData={item}
           style={{
             strokeColor: '#FF33FF',
+            // strokeColor: '#0cffda',
             strokeOpacity: 0.2,
             strokeWeight: 3,
-            fillColor: '#595959',
+            // fillColor: '#595959',
+            fillColor: '#908c8c',
             fillOpacity: 0.35,
           }}
           path={arr[i]}
@@ -354,14 +358,16 @@ class MapView extends Component {
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
       const timer = setInterval(() => {
         if (_thismap && nextProps.defaultMapInfo) {
-          _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          // _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          _thismap.setZoomAndCenter(5, [105.121964, 33.186871])
           this.setState({
-            coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
-            currentEntInfo: nextProps.defaultMapInfo,
+            // coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+            // currentEntInfo: nextProps.defaultMapInfo,
             loading: false,
-            currentKey: nextProps.defaultMapInfo.key,
+            // currentKey: nextProps.defaultMapInfo.key,
           })
-          this.randomMarker(nextProps.defaultMapInfo.children);
+          // this.randomMarker(nextProps.defaultMapInfo.children);
+          this.randomMarker(nextProps.allEntAndPointList);
           clearInterval(timer)
         }
       }, 200);
@@ -619,6 +625,10 @@ class MapView extends Component {
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
+            zoom={this.state.zoom}
+            mapStyle="amap://styles/fresh"
+            // isHotspot={true}
+            // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
           >

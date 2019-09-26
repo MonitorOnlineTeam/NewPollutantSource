@@ -1,5 +1,13 @@
 import { post, get, getNew } from '@/utils/request';
 
+// 获取所有企业及排口信息
+export async function getAllEntAndPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+
 // 获取排污许可情况数据
 export async function GetAllMonthEmissionsByPollutant(params) {
   const result = post('/api/rest/PollutantSourceApi/PHomePage/GetAllMonthEmissionsByPollutant?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', params, null);

@@ -7,6 +7,9 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'home',
   state: {
+    allEntAndPointList: [],
+    currentEntInfo: {},
+    currentMarkersList: [],
     pollutantTypeList: [],
     AllMonthEmissionsByPollutant: {
       beginTime: moment().format('YYYY-01-01 HH:mm:ss'),
@@ -61,6 +64,20 @@ export default Model.extend({
     alarmAnalysis: {}
   },
   effects: {
+    // 获取企业及排口信息
+    *getAllEntAndPoint({ payload }, {
+      call, update
+    }) {
+      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3] });
+      if (result.IsSuccess) {
+        yield update({
+          allEntAndPointList: result.Datas,
+          // currentEntInfo: result.Datas[0],
+          // currentMarkersList: result.Datas[0].children,
+          currentMarkersList: result.Datas,
+        })
+      }
+    },
     // 获取污染物类型
     *getPollutantTypeList({ payload }, {
       update, call
@@ -178,7 +195,7 @@ export default Model.extend({
         beginTime: AllMonthEmissionsByPollutant.beginTime,
         endTime: AllMonthEmissionsByPollutant.endTime,
         pollutantCode: AllMonthEmissionsByPollutant.pollutantCode,
-        // entCode: payload.entCode
+        entCode: payload.entCode
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
       let ycdate = [];
