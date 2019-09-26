@@ -16,6 +16,8 @@ import {
 } from 'dva';
 import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
 import moment from 'moment';
+import PageLoading from '@/components/PageLoading'
+import { GasIcon, EntIcon } from '@/utils/icon';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { onlyOneEnt } from '../../config';
 import config from '../../config';
@@ -29,6 +31,16 @@ const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
 
 @connect(({ loading, home }) => ({
+  allEntAndPointLoading: loading.effects['home/getAllEntAndPoint'],
+  alarmAnalysisLoading: loading.effects['home/getAlarmAnalysis'],
+  allMonthEmissionsByPollutantLoading: loading.effects['home/getAllMonthEmissionsByPollutant'],
+  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
+  statisticsPointStatusLoading: loading.effects['home/getStatisticsPointStatus'],
+  warningInfoLoading: loading.effects['home/getWarningInfo'],
+  taskCountLoading: loading.effects['home/getTaskCount'],
+  exceptionProcessingLoading: loading.effects['home/getExceptionProcessing'],
+
+
   pollutantTypeList: home.pollutantTypeList,
   AllMonthEmissionsByPollutant: home.AllMonthEmissionsByPollutant,
   rateStatisticsByEnt: home.rateStatisticsByEnt,
@@ -37,6 +49,9 @@ let _thismap;
   taskCountData: home.taskCountData,
   operationsWarningData: home.operationsWarningData,
   alarmAnalysis: home.alarmAnalysis,
+  currentEntInfo: home.currentEntInfo,
+  currentMarkersList: home.currentMarkersList,
+  allEntAndPointList: home.allEntAndPointList,
 }))
 class index extends Component {
   constructor(props) {
@@ -48,8 +63,9 @@ class index extends Component {
       position: [
         0, 0
       ],
-      zoom: window.innerWidth > 1600 ? 13 : 12,
-      // zoom: 13,
+      // zoom: window.innerWidth > 1600 ? 13 : 12,
+      zoom: 5,
+      mapCenter: [105.121964, 33.186871],
       visible: false,
       pointName: null,
       radioDefaultValue: "",
@@ -59,7 +75,14 @@ class index extends Component {
         _thismap = m;
       },
       zoomchange: (value) => {
-
+        if (_thismap.getZoom() <= 8) {
+          props.dispatch({
+            type: "home/updateState",
+            payload: {
+              currentMarkersList: this.props.allEntAndPointList
+            }
+          })
+        }
       },
       complete: () => {
         //_thismap.setZoomAndCenter(13, [centerlongitude, centerlatitude]);
@@ -73,69 +96,114 @@ class index extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    // 获取企业及排口信息
+    dispatch({
+      type: "home/getAllEntAndPoint",
+    })
     // 获取污染物类型
     dispatch({
       type: "home/getPollutantTypeList",
       payload: {
       },
     });
+
+    this.setState({
+      did: true,
+    })
+
+    this.getHomeData(null);
+  }
+
+  /**
+   * 获取主页数据
+   * @param {string} entCode
+   */
+  getHomeData = (entCode) => {
+    const { dispatch } = this.props;
     // 获取排污许可情况
     dispatch({
       type: "home/getAllMonthEmissionsByPollutant",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
     // 获取智能质控数据
     dispatch({
       type: "home/getRateStatisticsByEnt",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
     // 智能监控数据
     dispatch({
       type: "home/getStatisticsPointStatus",
       payload: {
-        entCode: null
+        entCode: entCode
       },
     });
     // 获取报警信息
     dispatch({
       type: "home/getWarningInfo",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
     // 获取运维 - 任务数量统计
     dispatch({
       type: "home/getTaskCount",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
     // 获取运维 - 预警统计
     dispatch({
       type: "home/getExceptionProcessing",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
     // 获取运维 - 异常报警及响应情况
     dispatch({
       type: "home/getAlarmAnalysis",
       payload: {
-        entCode: null
+        entCode: entCode
       }
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
+      this.getHomeData(nextProps.currentEntInfo.key);
+      console.log('currentEntInfo=', nextProps.currentEntInfo)
+      this.setState({
+        mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
+        zoom: 13
+      })
+      _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
+    }
+    if (this.props.currentMarkersList !== nextProps.currentMarkersList) {
+      const currentMarkersList = nextProps.currentMarkersList.map(item => {
+        return {
+          position: {
+            ...item,
+            longitude: item.Longitude,
+            latitude: item.Latitude,
+          }
+        }
+      })
+      this.setState({
+        currentMarkersList
+      })
+    }
   }
 
   /**地图 */
   getpolygon = (polygonChange) => {
     let res = [];
     // if (polygonChange) {
-    if (true) {
-      let arr = [[[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]], [[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]], [[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]]];
+    if (this.props.currentEntInfo.CoordinateSet) {
+      // let arr = [[[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]], [[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]], [[[118.475539, 38.972743], [118.556735, 39.013169], [118.567378, 39.001297], [118.592612, 38.968339], [118.519485, 38.918138], [118.510043, 38.918138], [118.487384, 38.938036], [118.496997, 38.944979], [118.475711, 38.971275], [118.474853, 38.971142]]]];
+      let arr = eval(this.props.currentEntInfo.CoordinateSet);
       for (let i = 0; i < arr.length; i++) {
         res.push(<Polygon
           key={
@@ -159,27 +227,47 @@ class index extends Component {
     return res;
   }
 
-  mapEvents = {
-    created(m) {
-      _thismap = m;
-    },
-    zoomchange: (value) => { },
-    complete: () => {
-    }
-  };
+  // mapEvents = {
+  //   created(m) {
+  //     _thismap = m;
+  //   },
+  //   zoomchange: (value) => {
+  //     console.log('zoom=',_thismap.getZoom())
+  //   },
+  //   complete: () => {
+  //   }
+  // };
 
   //地图点位点击
   markersEvents = {
     click: (MapsOption, marker) => {
-      const itemdata = marker.F ? marker.F.extData : marker.B.extData;
-      this.treeCilck(itemdata);
+      // console.log('MapsOption=', MapsOption)
+      // console.log('marker=', marker)
+      const itemData = marker.F ? marker.F.extData : marker.B.extData;
+      this.markersCilck(itemData);
     }
   };
+
+  // 点位点击事件
+  markersCilck = (itemData) => {
+    this.setState({
+      did: false,
+    })
+    if (itemData.position.IsEnt === 1) {
+      // 企业
+      this.props.dispatch({
+        type: "home/updateState",
+        payload: {
+          currentEntInfo: itemData.position,
+          currentMarkersList: itemData.position.children,
+        }
+      })
+    }
+  }
 
   // 智能质控
   getOption = (type) => {
     const { rateData } = this.props.rateStatisticsByEnt;
-    console.log('rateData-', rateData)
     let networkeRate = rateData.NetworkeRate === undefined ? 0 : (parseFloat(rateData.NetworkeRate) * 100).toFixed(0);
     let runningRate = rateData.RunningRate === undefined ? 0 : (parseFloat(rateData.RunningRate) * 100).toFixed(0);
     let transmissionEffectiveRate = rateData.TransmissionEffectiveRate === undefined ? 0 : (parseFloat(rateData.TransmissionEffectiveRate) * 100).toFixed(0);
@@ -491,34 +579,82 @@ class index extends Component {
         if (item.pollutantTypeCode == 1) { type = "○" }  // 废水
         if (item.pollutantTypeCode == 10) { type = "☆" }  // 厂界voc
         if (item.pollutantTypeCode == 12) { type = "□" }  // 厂界扬尘
-        res.push(<RadioButton key={key} value={item.pollutantTypeCode}>{item.pollutantTypeName} <span style={{ fontSize: 16 }} >{type}</span></RadioButton>)
+        res.push(<RadioButton key={key} value={item.pollutantTypeCode}>{item.pollutantTypeName}</RadioButton>)
       })
     }
     return res;
   }
 
+  /**
+   * 渲染点
+   */
+  renderMarkers = (extData) => {
+    // console.log('extData=', extData)
+    if (extData.position.IsEnt === 1) {
+      // 渲染企业
+      return <EntIcon style={{ fontSize: 30 }} />
+    } else {
+      // 渲染排口
+      return <GasIcon />
+    }
+  }
   render() {
     const {
       pointName,
       position,
       visible,
-      currentMonth
+      currentMonth,
+      currentMarkersList,
+      mapCenter,
+      did
     } = this.state;
-    const { pointData, warningInfoList, taskCountData, operationsWarningData, alarmAnalysis } = this.props;
+    const {
+      pointData,
+      warningInfoList,
+      taskCountData,
+      operationsWarningData,
+      alarmAnalysis,
+      currentEntInfo,
+      allEntAndPointLoading,
+      alarmAnalysisLoading,
+      allMonthEmissionsByPollutantLoading,
+      rateStatisticsByEntLoading,
+      statisticsPointStatusLoading,
+      warningInfoLoading,
+      taskCountLoading,
+      exceptionProcessingLoading
+    } = this.props;
     let pointposition = position;
     let pointvisible = visible;
     let polygonChange;
-    let mapCenter = [118.525284, 38.971049];
     const ele = document.querySelector(".antd-pro-pages-home-index-excessiveAbnormalWrapper");
     let height = 0;
     if (ele) {
       height = ele.offsetHeight - 30;
     }
-    console.log('height=', height)
-    console.log('taskCountData=', taskCountData)
-
+    const isLoading = allEntAndPointLoading || alarmAnalysisLoading || allMonthEmissionsByPollutantLoading || rateStatisticsByEntLoading || statisticsPointStatusLoading || warningInfoLoading || taskCountLoading || exceptionProcessingLoading
+    if (did && isLoading) {
+      return <PageLoading />
+    }
     return (
-      <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh - 64px)' }}>
+      <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
+        {
+          isLoading && <Spin
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              top: 0,
+              left: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0, 0, 0, 0.4)",
+              zIndex: 999,
+            }}
+            size="large"
+          />
+        }
         <header className={styles.homeHeader}>
           <p><span>SDL</span> 污染源智能分析系统</p>
           <a className={styles.backMenu} href="" onClick={() => {
@@ -534,10 +670,10 @@ class index extends Component {
           center={mapCenter}
         >
           <div className={styles.leftWrapper}>
-            {/* 传输有效率  || 智能质控*/}
+            {/* 运行分析  || 智能质控*/}
             <div className={styles.effectiveRate}>
               <div className={styles.title}>
-                <p>智能质控</p>
+                <p>运行分析</p>
               </div>
               <div className={styles.echartsContent}>
                 <div className={styles.echartItem}>
@@ -549,7 +685,7 @@ class index extends Component {
                   />
                   <div className={styles.echartsTitle}>实时联网率</div>
                 </div>
-                <div className={styles.echartItem}>
+                {/* <div className={styles.echartItem}>
                   <ReactEcharts
                     loadingOption={this.props.loadingRateStatistics}
                     option={this.getOption(2)}
@@ -557,7 +693,7 @@ class index extends Component {
                     theme="my_theme"
                   />
                   <div className={styles.echartsTitle}>{currentMonth}月设备运转率</div>
-                </div>
+                </div> */}
                 <div className={styles.echartItem}>
                   <ReactEcharts
                     loadingOption={this.props.loadingRateStatistics}
@@ -670,7 +806,7 @@ class index extends Component {
             {/* 智能监控 */}
             <div className={styles.monitoringContent}>
               <div className={styles.title}>
-                <p>智能监控</p>
+                <p>监控现状</p>
               </div>
               <div className={styles.content}>
                 <div className={styles.line}>
@@ -689,8 +825,11 @@ class index extends Component {
             </div>
             {/* 排放量 */}
             <div className={styles.emissionsContent}>
+              {/* <div className={styles.title}>
+                <p>排放量分析</p>
+              </div> */}
               {/* 氮氧化物排污许可情况 */}
-              <div className={styles.NOx}>
+              <div className={`${styles.NOx} ${styles.content}`}>
                 <div className={styles.contentTitle}>
                   <p>氮氧化物排污许可情况</p>
                 </div>
@@ -711,7 +850,7 @@ class index extends Component {
                 </div>
               </div>
               {/* 烟尘物排污许可情况 */}
-              <div className={styles.smoke}>
+              <div className={`${styles.smoke} ${styles.content}`}>
                 <div className={styles.contentTitle}>
                   <p>烟尘物排污许可情况</p>
                 </div>
@@ -733,7 +872,7 @@ class index extends Component {
 
               </div>
               {/* 二氧化硫排污许可情况 */}
-              <div className={styles.SO2}>
+              <div className={`${styles.SO2} ${styles.content}`}>
                 <div className={styles.contentTitle}>
                   <p>二氧化硫排污许可情况</p>
                 </div>
@@ -762,10 +901,13 @@ class index extends Component {
             </div>
           </div>
           <div className={styles.currentInfoWrapper}>
-            <div>
-              <span>企业</span> <br />
-              <span>中日唐山企业</span>
-            </div>
+            {
+              currentEntInfo.title && <div>
+                <span>企业</span> <br />
+                <span>{currentEntInfo.title}</span>
+              </div>
+            }
+
             <div>
               <span>当前时间</span> <br />
               <span><Time /></span>
@@ -815,12 +957,10 @@ class index extends Component {
             </div>
           </div>
           <Markers
-            markers={this.props.datalist}
+            markers={currentMarkersList}
             events={this.markersEvents}
             className={this.state.special}
-            render={(extData) => {
-              return getPointStatusImg(extData.status, extData.stop, extData.pollutantTypeCode, 20, "home");
-            }}
+            render={this.renderMarkers}
           />
           {
             this.getpolygon(polygonChange)

@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_y1e4k1ick7o.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_kpspwa4lv6.js';
 const style = {
   fontSize: 16,
 }
@@ -19,7 +19,7 @@ export const IconConfig = Icon.createFromIconfontCN({
 })
 
 export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{ ...style }} />
-export const EntIcon = props => <IconConfig type="icon-qiye1" style={{ ...style }} {...props} />
+export const EntIcon = props => <IconConfig type="icon-qiye1"  {...props} style={{ ...style, ...props.style }} />
 export const MapEntIcon = props => <IconConfig type="icon-qy" style={{ ...style }} {...props} />
 export const StationIcon = props => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props} />
 export const ReachIcon = props => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props} />

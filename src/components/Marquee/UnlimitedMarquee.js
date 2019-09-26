@@ -70,8 +70,8 @@ class UnlimitedMarquee extends Component {
 
 UnlimitedMarquee.propTypes = {
   data: PropTypes.array.isRequired,
-  height: PropTypes.string.isRequired,
-  width: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
   gap: PropTypes.number,
   speed: PropTypes.number,
 }

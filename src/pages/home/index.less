@@ -15,6 +15,13 @@
 @scrollbar-width: 9px;
 
 .homeWrapper {
+  font-size: 14px;
+  position: relative;
+
+  &>div:last-child {
+    height: calc(100vh - 64px) !important;
+  }
+
   .normal {
     color: @normal;
   }
@@ -41,19 +48,20 @@
     bottom: 10px;
     transform: translateX(-50%);
     color: #fff;
-  
+
     .title {
       font-weight: 600;
       margin-bottom: 20px;
       font-size: 16px;
     }
-  
+
     .content {
       text-align: center;
-  
+
       ul {
         display: flex;
-  
+        margin-bottom: 10px;
+
         li {
           background: #29486d;
           // width: 100px;
@@ -63,43 +71,43 @@
           flex: 1;
         }
       }
-  
+
       .colum {
         margin-bottom: 10px;
         font-size: 15px;
         font-weight: 600;
-  
+
         li {
           background: transparent;
         }
       }
-  
+
     }
   }
 
 
-.homeHeader {
-  position: relative;
-  text-align: center;
-  color: #fff;
-  font-size: 30px;
-  height: 64px;
-  line-height: 64px;
-  padding: 0;
-  font-weight: 700;
-  background: #00152A;
-  background-image: url(/homeheader.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  // background-position: 3px 6px;
+  .homeHeader {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    height: 64px;
+    line-height: 64px;
+    padding: 0;
+    font-weight: 700;
+    background: #00152A;
+    background-image: url(/homeheader.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    // background-position: 3px 6px;
 
-  .backMenu {
-    position: absolute;
-    top: 11px;
-    right: 28px;
-    font-size: 14px;
+    .backMenu {
+      position: absolute;
+      top: 11px;
+      right: 28px;
+      font-size: 14px;
+    }
   }
-}
 
   // .NOx {
   //   color: @NOx;
@@ -230,7 +238,7 @@
           color: #fff;
           padding-left: 10px;
           font-weight: 500;
-          margin-top: -20px;
+          margin-top: -16px;
           margin-bottom: 20px;
 
           &>p {
@@ -273,6 +281,7 @@
                 padding-left: 16px;
                 color: #2cc78e;
                 font-weight: 500;
+
                 &::before {
                   content: "";
                   position: absolute;
@@ -475,6 +484,7 @@
 
     .excessiveAbnormalWrapper {
       flex: 2;
+
       .marqueeContent {
         font-size: 14px;
       }
@@ -589,7 +599,7 @@
         }
       }
 
-      &>div {
+      &>div.content {
         flex: 1;
         width: 100%;
         min-height: 168px;

@@ -227,7 +227,7 @@ class NavigationTree extends Component {
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var pollutantType = dataList.find(m => m.key == nowKey[0].toString()).Type
+        var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
         var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode }]
         console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)

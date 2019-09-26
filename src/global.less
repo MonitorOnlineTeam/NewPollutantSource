@@ -127,3 +127,22 @@ ol {
   width: calc(100% -400px);
   // margin-left: 400px;
 }
+
+:global {
+  // 菜单选中样式
+  .ant-menu-dark .ant-menu-item:hover,
+  .ant-menu-dark .ant-menu-item-active,
+  .ant-menu-dark .ant-menu-submenu-active,
+  .ant-menu-dark .ant-menu-submenu-open,
+  .ant-menu-dark .ant-menu-submenu-title:hover {
+    font-weight: 900;
+    // border-bottom: 2px solid #1890FF;
+  }
+  .ant-menu-dark .ant-menu-submenu-selected {
+    background-color: transparent;
+    /* background-color: white; */
+    font-weight: 900;
+    color: #1890FF !important;
+    border-bottom: 2px solid #1890FF !important;
+  }
+}
