@@ -76,7 +76,7 @@ class OperationRecord extends Component {
       ]
     }
   }
-//表单类型改变事件
+  //表单类型改变事件
   onTreeChange = (value) => {
     this.props.dispatch({
       type: "operationform/updateState",
@@ -130,13 +130,22 @@ class OperationRecord extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.DGIMN != nextProps.DGIMN) {
+    if (this.props.PollutantType != nextProps.PollutantType) {
       this.getOperationrecordData(nextProps)
+    }
+    if (this.props.DGIMN !== nextProps.DGIMN && this.props.PollutantType === nextProps.PollutantType) {
+      // 获取table数据
+      this.props.dispatch({
+        type: 'autoForm/getPageConfig',
+        payload: {
+          configId: this.getRecordType(nextProps.DGIMN)
+        }
+      })
     }
   }
 
   //根据表单类型获取configid
-  getRecordType = () => {
+  getRecordType = (DGIMN) => {
     var configid = ''
     var type = this.props.PollutantType
     if (type == "2") {
@@ -179,7 +188,7 @@ class OperationRecord extends Component {
     this.setState({
       configName: configid,
       searchParams: [
-        { "Key": "dbo__T_Bas_Task__DGIMN", "Value": this.props.DGIMN, "Where": "$=" },
+        { "Key": "dbo__T_Bas_Task__DGIMN", "Value": DGIMN || this.props.DGIMN, "Where": "$=" },
         { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
         { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.BeginTime, "Where": "$gte" },
         { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.EndTime, "Where": "$lte" }]
@@ -264,7 +273,7 @@ class OperationRecord extends Component {
               </SDLTable>
               :
               ((this.state.configName && this.props.RecordType) ? <AutoFormTable
-              // (this.state.configName && this.props.RecordType ? <AutoFormTable
+                // (this.state.configName && this.props.RecordType ? <AutoFormTable
                 configId={this.state.configName}
                 searchParams={searchParams}
                 appendHandleRows={row => {
