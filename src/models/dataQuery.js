@@ -152,7 +152,7 @@ export default Model.extend({
                   title: '时间',
                   dataIndex: 'MonitorTime',
                   key: 'MonitorTime',
-                  width: 50,
+                  width: 150,
                   fixed: 'left',
                   align: '  center',
                 }];
