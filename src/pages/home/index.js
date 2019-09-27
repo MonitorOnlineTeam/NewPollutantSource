@@ -17,7 +17,7 @@ import {
 import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
-import { GasIcon, EntIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { onlyOneEnt } from '../../config';
 import config from '../../config';
@@ -69,7 +69,8 @@ class index extends Component {
       visible: false,
       pointName: null,
       radioDefaultValue: "",
-      infoWindowVisible: false
+      infoWindowVisible: false,
+      showType: "ent"
     };
     this.mapEvents = {
       created(m) {
@@ -83,6 +84,9 @@ class index extends Component {
               currentMarkersList: this.props.allEntAndPointList
             }
           })
+          this.setState({ showType: "ent" })
+        } else {
+          this.setState({ showType: "point" })
         }
       },
       complete: () => {
@@ -122,12 +126,12 @@ class index extends Component {
   getHomeData = (entCode) => {
     const { dispatch } = this.props;
     // 获取排污许可情况
-    dispatch({
-      type: "home/getAllMonthEmissionsByPollutant",
-      payload: {
-        entCode: entCode
-      }
-    })
+    // dispatch({
+    //   type: "home/getAllMonthEmissionsByPollutant",
+    //   payload: {
+    //     entCode: entCode
+    //   }
+    // })
     // 获取智能质控数据
     dispatch({
       type: "home/getRateStatisticsByEnt",
@@ -194,6 +198,20 @@ class index extends Component {
       })
       this.setState({
         currentMarkersList
+      })
+    }
+  }
+
+  // 污染物选择
+  onRadioChange = (e) => {
+    if (this.props.currentEntInfo.children && this.state.showType === "point") {
+      const val = e.target.value;
+      const filterData = val ? this.props.currentEntInfo.children.filter(item => item.PollutantType == e.target.value) : this.props.currentEntInfo.children;
+      this.props.dispatch({
+        type: "home/updateState",
+        payload: {
+          currentMarkersList: filterData
+        }
       })
     }
   }
@@ -611,7 +629,7 @@ class index extends Component {
         }
       }}>
       {
-        extData.position.IsEnt === 1 ? <EntIcon style={{ fontSize: 26 }} /> : <GasIcon />
+        extData.position.IsEnt === 1 ? <EntIcon style={{ fontSize: 26 }} /> : this.getImgIcon(extData.position.PollutantType, extData.position.Status)
       }
     </div>
     // console.log('extData=', extData)
@@ -623,6 +641,45 @@ class index extends Component {
     //   return
     // }
   }
+
+  getImgIcon = (pollutantType, status) => {
+    let icon = "";
+    if (pollutantType == 1) {
+      // 废水
+      switch (status) {
+        case 0:// 离线
+          icon = <WaterOffline />
+          break;
+        case 1:// 正常
+          icon = <WaterNormal />
+          break;
+        case 2:// 超标
+          icon = <WaterExceed />
+          break;
+        case 3:// 异常
+          icon = <WaterAbnormal />
+          break;
+      }
+    }
+    if (pollutantType == 2) {
+      // 气
+      switch (status) {
+        case 0:// 离线
+          icon = <GasOffline />
+          break;
+        case 1:// 正常
+          icon = <GasNormal />
+          break;
+        case 2:// 超标
+          icon = <GasExceed />
+          break;
+        case 3:// 异常
+          icon = <GasAbnormal />
+          break;
+      }
+    }
+    return icon;
+  }
   render() {
     const {
       pointName,
@@ -631,7 +688,8 @@ class index extends Component {
       currentMonth,
       currentMarkersList,
       mapCenter,
-      did
+      did,
+      showType
     } = this.state;
     const {
       pointData,
@@ -946,19 +1004,20 @@ class index extends Component {
             </div>
           </div>
           {/**中间污染物类型*/}
-          <div
-            style={{
-              position: 'absolute',
-              top: '2%',
-              left: 430,
-              zIndex: 100
-            }}
-          >
-            <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>
-              {this.renderPollutantTypelist()}
-            </Radio.Group>
-          </div>
-
+          {
+            currentEntInfo.children && showType === "point" && <div
+              style={{
+                position: 'absolute',
+                top: '2%',
+                left: 430,
+                zIndex: 100
+              }}
+            >
+              <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>
+                {this.renderPollutantTypelist()}
+              </Radio.Group>
+            </div>
+          }
           <div className={styles.overproofWrapper}>
             <div className={styles.title}>{currentMonth}月超标汇总</div>
             <div className={styles.content}>
