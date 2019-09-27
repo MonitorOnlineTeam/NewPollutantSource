@@ -201,6 +201,11 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
+                  name: 'maintainbase',
+                  path: '/platformconfig/maintain/:configId/',
+                  component: './platformManager/maintain',
+                },
+                {
                   name: 'monitortarget',
                   path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
                   component: './platformManager/monitortarget',
