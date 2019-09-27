@@ -59,6 +59,7 @@ class AlarmRecord extends Component {
     }
 
     componentDidMount() {
+      debugger;
       const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
       if (initLoadData) {
       let {
@@ -86,6 +87,7 @@ class AlarmRecord extends Component {
                  if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('yyyy-MM-dd HH:mm:ss') !==
                    moment(lasttime).format('yyyy-MM-dd HH:mm:ss') ||
                    moment(nextProps.firsttime).format('yyyy-MM-dd HH:mm:ss') !== moment(firsttime).format('yyyy-MM-dd HH:mm:ss')) {
+                     debugger
                    let {
                      overdataparams,
                    } = this.props;

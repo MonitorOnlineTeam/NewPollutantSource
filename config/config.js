@@ -202,7 +202,7 @@ export default {
                 {
                   name: 'hkshowvideo',
                   path: '/platformconfig/hkshowvideo/:pointcode/',
-                  component: './platformManager/hkvideo/HkShowVideo',
+                  component: './platformManager/hkvideo/index',
                 },
                 {
                   name: 'manualupload',

@@ -10,56 +10,7 @@ export async function hkvideourl(params) {
     data: null,
   } : result;
 }
-/**
- * 获取排口下的污染物
- * @params {
-          "DGIMNs": "31011500000002"
-    }
- */
-export async function querypollutantlist(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn',
-    params,
-    null,
-  );
-  return result === null
-    ? {
-        data: null,
-      }
-    : result.Datas;
-}
-/**
- * 获取历史视频的数据
- * @params {
-          "DGIMNs": "31011500000002"
-    }
- */
-export async function queryhistorydatalistbyrealtime(params) {
-  const result = await post('/api/rest/PollutantSourceApi/PRealTime/GetRealTimeData', params, null);
-  return result === null
-    ? {
-        data: null,
-      }
-    : result;
-}
-/**
- * 获取实时视频的数据
- * @params {
-          "DGIMNs": "31011500000002"
-    }
- */
-export async function queryhistorydatalist(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList',
-    params,
-    null,
-  );
-  return result === null
-    ? {
-        data: null,
-      }
-    : result;
-}
+
 // 删除视频信息
 export async function deleteVideoInfo(params) {
   const body = {
@@ -67,7 +18,7 @@ export async function deleteVideoInfo(params) {
     VedioDevice_ID: params.VedioDevice_ID,
     CameraMonitorID: params.CameraMonitorID,
   };
-  const result = post('/api/rest/PollutantSourceApi/Video/DeleteVideoInfo', body, null);
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/DeleteVideoInfo', body, null);
   return result === null ? {
     data: null,
   } : result;
@@ -91,7 +42,7 @@ export async function addVideoInfo(params) {
     Latitude: params.Latitude,
     DGIMN: params.DGIMN,
   };
-  const result = post('/api/rest/PollutantSourceApi/Video/AddVideoInfo', body, null);
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/AddVideoInfo', body, null);
   return result === null ? {
     data: null,
   } : result;
@@ -117,7 +68,7 @@ export async function updateVideoInfos(params) {
     CameraMonitorID: params.CameraMonitorID,
     VedioCamera_ID: params.VedioCamera_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/Video/UpdateVideoInfo', body, null);
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/UpdateVideoInfo', body, null);
   return result === null ? {
     data: null,
   } : result;

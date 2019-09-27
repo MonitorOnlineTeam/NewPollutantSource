@@ -10,7 +10,6 @@ import InfoList from './components/VideoInfoList';
 import styles from './video.less';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
-const { confirm } = Modal;
 @connect(({ loading, hkvideo }) => ({
     ...loading,
     videoListParameters: hkvideo.videoListParameters,
@@ -76,7 +75,7 @@ const { confirm } = Modal;
                 VedioDevice_ID: record.VedioDevice_ID,
                 CameraMonitorID: record.CameraMonitorID,
                 callback: result => {
-                    if (result === '1') {
+                    if (result) {
                          this.props.dispatch({
                            type: 'hkvideo/hkvideourl',
                            payload: {

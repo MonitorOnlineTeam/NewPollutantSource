@@ -10,24 +10,31 @@ import {
   DatePicker,
   message,
   Icon,
+  Empty,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import {
-  PageHeaderWrapper,
-} from '@ant-design/pro-layout';
-import styles from './video.less';
+import styles from './index.less';
 import config from '@/config';
-import HkRealVideoData from './components/HkRealVideoData';
-import HkHisVideoData from './components/HkHisVideoData';
+import HkRealVideoData from './HkRealVideoData';
+import HkHisVideoData from './HkHisVideoData';
 import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
+import { InitVideo, clickLogin, clickStartRealPlay, mouseDownPTZControl, mouseUpPTZControl,
+    PTZZoomIn, PTZZoomOut, PTZZoomStop,
+    PTZFocusIn, PTZFocusOut, PTZFocusStop,
+    PTZIrisIn, PTZIrisOut, PTZIrisStop } from '@/utils/video';
 
 const { TabPane } = Tabs;
-
+/**
+ * 海康视频
+ * xpy
+ * 2019-09-16
+ */
 @connect(({
-      hkvideo,
+      videodata, loading,
     }) => ({
-    realtimevideofullurl: hkvideo.videoListParameters.realtimevideofullurl,
+        IsLoading: loading.effects['videodata/hkvideourl'],
+    hkvideoListParameters: videodata.hkvideoListParameters,
 }))
 class HkShowVideo extends Component {
     constructor(props) {
@@ -40,40 +47,69 @@ class HkShowVideo extends Component {
             endOpen: false,
             startValue: null,
             endValue: null,
+            dgimn: '',
+            IsIE: false,
+            tabsKey: 1,
+
         };
     }
 
-   componentWillMount = () => {
-       window.addEventListener('message', this.receiveMessage, false);
-       this.getVideoIp(1);
-   }
+    /** 初始化加载 */
+    componentDidMount() {
+      this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
+    }
 
-   componentWillUnmount() {
-     window.removeEventListener('message', this.receiveMessage);
-     clearInterval(this.timerID);
-   }
+    /** 改变排口后加载 */
+    componentWillReceiveProps = nextProps => {
+    if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.setState({
+        dgimn: nextProps.DGIMN,
+      })
+      this.changeDgimn(nextProps.DGIMN);
+    }
+  }
 
-   receiveMessage = event => {
-       if (event !== undefined) {
-            if (event.data.key === '0' && event.data.flag === false) {
-                message.error(event.data.value);
-            }
-            if (event.data.key === '1' && event.data.flag === true) {
-              message.success(event.data.value);
-            }
-       }
-   }
+  /** 根据排口信息初始化视频 */
+  changeDgimn = dgimn => {
+      this.setState({
+        dgimn,
+      })
+      this.props.dispatch({
+        type: 'videodata/hkvideourl',
+        payload: {
+          DGIMN: dgimn,
+        },
+      }).then(() => {
+        this.initV(this.props.hkvideoListParameters[0])
+      })
+    }
 
-   getVideoIp=type => {
-       const { match, dispatch } = this.props;
-       dispatch({
-           type: 'hkvideo/hkvideourl',
-           payload: {
-               DGIMN: match.params.pointcode,
-               type,
-            },
-       });
-   }
+   /** 视频登陆初始化 */
+      initV=loginPara => {
+       const divPlugin = document.getElementById('divPlugin');
+       if (loginPara != null && divPlugin !== undefined && divPlugin != null) {
+        const msg = InitVideo();
+        if (msg.flag) {
+            this.setState({ IsIE: true });
+            message.info(msg.message);
+            const msg2 = clickLogin(loginPara);
+                if (msg2 != null && msg2 != undefined && msg2.flag) {
+                  message.success(msg2.message);
+                  // 实时视频立即播放
+                  if (this.state.tabsKey === 1) {
+                    const para = loginPara;
+                    setTimeout(() => {
+                        clickStartRealPlay(para);
+                    }, 1000);
+                }
+                } else {
+                 message.error('登录失败');
+                }
+        } else {
+          message.warning(msg.message, 100000)
+        }
+    }
+   };
 
     /** 历史视频 */
     onRef1 = ref => {
@@ -116,11 +152,51 @@ class HkShowVideo extends Component {
     }
 
    /** 实时视频操作 */
-   btnClick=opt => {
-       let obj = { opt };
-       obj = { opt };
-       const frame = document.getElementById('ifm').contentWindow;
-       frame.postMessage(obj, config.realtimevideourl);
+   btnClick = opt => {
+     this.initV(this.props.hkvideoListParameters[0]);
+     if (this.state.IE) {
+       mouseDownPTZControl(opt);
+       mouseUpPTZControl();
+     }
+   }
+
+   /** 调焦 */
+   btnZoomClick = opt => {
+     if (this.state.IE) {
+       if (opt === 11) {
+         PTZZoomIn();
+         PTZZoomStop();
+       } else {
+         PTZZoomOut();
+         PTZZoomStop();
+       }
+     }
+   }
+
+   /** 聚焦 */
+   btnFocusClick = opt => {
+     if (this.state.IE) {
+       if (opt === 15) {
+         PTZFocusIn();
+         PTZFocusStop();
+       } else {
+         PTZFocusOut();
+         PTZFocusStop();
+       }
+     }
+   }
+
+   /** 光圈 */
+   btnIrisClick = opt => {
+     if (this.state.IE) {
+       if (opt === 19) {
+         PTZIrisIn();
+         PTZIrisStop();
+       } else {
+         PTZIrisOut();
+         PTZIrisStop();
+       }
+     }
    }
 
    /** tabs切换 */
@@ -189,9 +265,19 @@ class HkShowVideo extends Component {
   }
 
    render() {
-       const { realtimevideofullurl } = this.props;
-       const { endOpen } = this.state;
-       if (!realtimevideofullurl) {
+       const { hkvideoListParameters, IsLoading } = this.props;
+       const { endOpen, IsIE } = this.state;
+       if (!IsIE) {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
+        {
+          textAlign: 'center',
+        }
+      } > <Empty image = {
+        Empty.PRESENTED_IMAGE_SIMPLE
+      } description="请在IE11浏览器中打开网站并观看视频"
+      /></div ></Card>);
+    }
+       if (IsLoading) {
            return (<Spin
                style={{ width: '100%',
                    height: 'calc(100vh - 225px)',
@@ -201,25 +287,21 @@ class HkShowVideo extends Component {
                size="large"
            />);
        }
-       if (realtimevideofullurl === 'nodata') {
-           return (
-               <table align="center" style={{ height: 'calc(100vh - 225px)', width: '100%' }}>
-                   <tbody>
-                       <tr>
-                           <td align="center">
-                            暂无视频配置
-                           </td>
-                       </tr>
-                   </tbody>
-               </table>
-           );
-       }
+       if (hkvideoListParameters.length === 0) {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
+        {
+          textAlign: 'center',
+        }
+      } > <Empty image = {
+        Empty.PRESENTED_IMAGE_SIMPLE
+      } description="暂无视频数据"
+      /></div ></Card>);
+    }
        return (
-           <PageHeaderWrapper>
            <div style={{ height: 'calc(100vh - 245px)', width: '100%' }}>
                <Row gutter={24} style={{ height: '100%' }}>
                    <Col xl={18} lg={24} md={24} sm={24} xs={24} style={{ height: '100%' }}>
-                       <iframe title="实时视频" id="ifm" src={realtimevideofullurl} width="100%" height="100%" scrolling="no"/>
+                       <div id="divPlugin" style={{ width: '100%', margin: '0', height: '100%' }} />
                    </Col>
                    <Col xl={6} lg={24} md={24} sm={24} xs={24}>
                    <Card className={styles.card} extra={<span><Button
@@ -332,7 +414,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-in"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 11)}
+                                                            onClick={this.btnZoomClick.bind(this, 11)}
                                                             />
                                                         </Col>
                                                         <Col className={styles.gutterleft} span={8}>变倍</Col>
@@ -342,7 +424,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-out"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 12)}
+                                                            onClick={this.btnZoomClick.bind(this, 12)}
                                                             />
                                                         </Col>
                                                     </div>
@@ -357,7 +439,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-in"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 15)}
+                                                            onClick={this.btnFocusClick.bind(this, 15)}
                                                             />
                                                         </Col>
                                                         <Col className={styles.gutterleft} span={8}>变焦</Col>
@@ -367,7 +449,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-out"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 16)}
+                                                            onClick={this.btnFocusClick.bind(this, 16)}
                                                             />
                                                         </Col>
                                                     </div>
@@ -382,7 +464,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-in"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 19)}
+                                                            onClick={this.btnIrisClick.bind(this, 19)}
                                                             />
                                                         </Col>
                                                         <Col className={styles.gutterleft} span={8}>光圈</Col>
@@ -392,7 +474,7 @@ class HkShowVideo extends Component {
                                                             icon="zoom-out"
                                                             size="Small"
                                                             style={{ width: '25px', height: '25px' }}
-                                                            onClick={this.btnClick.bind(this, 20)}
+                                                            onClick={this.btnIrisClick.bind(this, 20)}
                                                             />
                                                         </Col>
                                                     </div>
@@ -404,7 +486,7 @@ class HkShowVideo extends Component {
                                    <Divider type="horizontal" />
                                     <Row gutter={48}>
                                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                                        {this.state.displayR && <HkRealVideoData {...this.props} />}
+                                        {this.state.displayR && <HkRealVideoData dgimn={this.state.dgimn} />}
                                     </Col>
                                     </Row>
                                 </Card>
@@ -490,6 +572,7 @@ class HkShowVideo extends Component {
                                             <HkHisVideoData
                                                 onRef={this.onRef1}
                                                 {...this.props}
+                                                dgimn={this.state.dgimn}
                                                 beginDate={moment(this.state.beginDate, 'YYYY-MM-DD HH:mm:ss')}
                                                 endDate={moment(this.state.endDate, 'YYYY-MM-DD HH:mm:ss')}
                                             />
@@ -503,7 +586,6 @@ class HkShowVideo extends Component {
                    </Col>
                </Row>
            </div>
-           </PageHeaderWrapper>
        );
    }
 }

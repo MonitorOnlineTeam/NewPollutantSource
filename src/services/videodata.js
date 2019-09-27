@@ -18,3 +18,13 @@ export async function getvideolist(params) {
   const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoList', body, null);
   return result;
 }
+/** 海康获取视频连接 */
+export async function hkvideourl(params) {
+  const body = {
+    DGIMN: params.DGIMN,
+  };
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoInfoByDgimn', body, null);
+  return result === null ? {
+    data: null,
+  } : result;
+}
