@@ -1,11 +1,17 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_hgzutux1bpm.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_83fd7y80vf.js';
 const style = {
   fontSize: 16,
 }
 const styles = {
   fontSize: 17,
+}
+const mapStyle = {
+  fontSize: 24,
+  borderRadius: "50%",
+  background: "#fff",
+  boxShadow: "0px 0px 3px 2px #fff"
 }
 export const EditIcon = () => <Icon type="edit" style={{ ...style }} />
 
@@ -19,22 +25,23 @@ export const IconConfig = Icon.createFromIconfontCN({
 })
 
 export const PointIcon = () => <IconConfig type="icon-jiancedianguanli" style={{ ...style }} />
-export const EntIcon = props => <IconConfig type="icon-qiye1" style={{ ...style }} {...props}/>
-export const StationIcon = props => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props}/>
-export const ReachIcon = props => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props}/>
-export const SiteIcon = props => <IconConfig type="icon-tadiaogongdijianshe" style={{ ...style }} {...props}/>
-export const WaterIcon = props => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} {...props} />
-export const GasIcon = props => <IconConfig type="icon-wuranyuan" style={{ ...style }} {...props} />
-export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style } />
-export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style } />
+export const EntIcon = props => <IconConfig type="icon-qiye2"  {...props} style={{ ...mapStyle, color: "#4e8cee", ...props.style }} />
+export const MapEntIcon = props => <IconConfig type="icon-qy" style={{ ...style }} {...props} />
+export const StationIcon = props => <IconConfig type="icon-huanbaojiancezhan" style={{ ...style }} {...props} />
+export const ReachIcon = props => <IconConfig type="icon-hechangzhiheduan" style={{ ...style }} {...props} />
+export const SiteIcon = props => <IconConfig type="icon-tadiaogongdijianshe" style={{ ...style }} {...props} />
+// export const WaterIcon = props => <IconConfig type="icon-ruhehupaiwukou" style={{ ...style }} {...props} />
+// export const GasIcon = props => <IconConfig type="icon-wuranyuan" style={{ ...style }} {...props} />
+export const PanelWaterIcon = val => <IconConfig type="icon-ruhehupaiwukou" style={val.style} />
+export const PanelGasIcon = val => <IconConfig type="icon-wuranyuan" style={val.style} />
 export const LegendIcon = val => <IconConfig type="icon-yuandianzhong" style={val.style} />
-export const DustIcon = (props) => <IconConfig type="icon-yangchen" style={{ ...style }} {...props} />
-export const VocIcon = (props) => <IconConfig type="icon-ziyuan" style={{ ...style }} {...props}/>
+export const DustIcon = (props) => <IconConfig type="icon-fenchen" style={{ ...style }} {...props} />
+export const VocIcon = (props) => <IconConfig type="icon-ziyuan" style={{ ...style }} {...props} />
 export const TreeIcon = () => <IconConfig type="icon-jiedian" style={{ ...style }} />
 export const PanelIcon = () => <IconConfig type="icon-jiedian1" style={{ ...styles }} />
 export const BellIcon = props => <IconConfig type="icon-lingdang" style={{ ...styles }} {...props} />
-export const ManIcon = val => <IconConfig type="icon-nan" style={ val.style } />
-export const WomanIcon = val => <IconConfig type="icon-nv" style={ val.style } />
+export const ManIcon = val => <IconConfig type="icon-nan" style={val.style} />
+export const WomanIcon = val => <IconConfig type="icon-nv" style={val.style} />
 export const FormIcon = () => <IconConfig type="icon-danzi" style={{ ...style }} />
 // 审批图标
 export const ShenpiIcon = () => <IconConfig type="icon-shenpi" style={{ ...style }} />
@@ -49,3 +56,18 @@ export const Leftdown = () => <IconConfig type="icon-jiantou_zuoxia" style={{ ..
 export const Rightdown = () => <IconConfig type="icon-jiantou_youxia" style={{ ...style }} />
 export const Adaption = () => <IconConfig type="icon-zidong" style={{ ...style }} />
 
+
+
+// 废水
+export const WaterIcon = props => <IconConfig type="icon-water" style={{ ...mapStyle }} {...props} />
+export const WaterNormal = props => <IconConfig type="icon-water-normal" style={{ ...mapStyle }} {...props} />
+export const WaterExceed = props => <IconConfig type="icon-water-exceed" style={{ ...mapStyle }} {...props} />
+export const WaterAbnormal = props => <IconConfig type="icon-water-abnormal" style={{ ...mapStyle }} {...props} />
+export const WaterOffline = props => <IconConfig type="icon-water-offline" style={{ ...mapStyle }} {...props} />
+
+// 废气
+export const GasIcon = props => <IconConfig type="icon-gas" style={{ ...mapStyle}} {...props} />
+export const GasNormal = props => <IconConfig type="icon-gas-normal" style={{ ...mapStyle }} {...props} />
+export const GasExceed = props => <IconConfig type="icon-gas-exceed" style={{ ...mapStyle }} {...props} />
+export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" style={{ ...mapStyle }} {...props} />
+export const GasOffline = props => <IconConfig type="icon-gas-offline" style={{ ...mapStyle }} {...props} />

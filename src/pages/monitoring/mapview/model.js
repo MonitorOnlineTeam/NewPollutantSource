@@ -26,10 +26,26 @@ export default Model.extend({
     monitorTime: null
   },
   effects: {
-    *getAllEntAndPoint({ payload }, {
-      call, update
+    *getAllEntAndPoint({ payload = {} }, {
+      call, update, select, take
     }) {
-      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3] });
+      if (!payload.PollutantTypes) {
+        let global = yield select(state => state.global);
+        if (!global.configInfo) {
+          yield take('global/getSystemConfigInfo/@@end');
+          global = yield select(state => state.global);
+          payload = {
+            ...payload,
+            PollutantTypes: global.configInfo.SystemPollutantType
+          }
+        } else {
+          payload = {
+            ...payload,
+            PollutantTypes: global.configInfo.SystemPollutantType
+          }
+        }
+      }
+      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
         yield update({
           allEntAndPointList: result.Datas,

@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 11:04:46
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:32:19
+ * @Description: 运维记录单详情
+ */
 import React, { Component } from 'react';
 import {
     Table, Divider,Icon

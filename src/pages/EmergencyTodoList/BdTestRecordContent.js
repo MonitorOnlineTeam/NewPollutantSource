@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-22 09:36:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:30:59
+ * @Description: cems校验测试记录
+ */
 import React, { Component } from 'react';
 import { Spin,Checkbox } from 'antd';
 import { connect } from 'dva';
@@ -291,7 +298,7 @@ class BdTestRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={SCREEN_HEIGHT}>
+            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
                 <div className={styles.FormName}>CEMS校验测试记录</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null?Content.EnterpriseName:null}</div>
                 <table className={styles.FormTable}>

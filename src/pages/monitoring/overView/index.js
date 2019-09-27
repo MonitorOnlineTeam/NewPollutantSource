@@ -1,6 +1,14 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-16 09:58:36
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-07-16 09:58:36
+ * @Description: 数据一览
+ */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import InfiniteScroll from 'react-infinite-scroller';
 import {
     Table,
     Radio,
@@ -14,13 +22,14 @@ import {
     Divider,
     Popconfirm,
     Input,
+    List
 } from 'antd';
 import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import styles from './index.less';
 import AListRadio from '@/components/overView/aListRadio';
 import PdButton from '@/components/overView/pdButton';
-import { getPointStatusImg } from '@/utils/getstatusImg';
+import { getPointStatusImg } from '@/utils/getStatusImg';
 import { formatPollutantPopover } from '@/utils/utils';
 import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
@@ -29,6 +38,7 @@ import { LegendIcon } from '@/utils/icon';
 import style from '../mapview/index.less'
 
 const RadioGroup = Radio.Group;
+const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 @connect(({ loading, overview, global, common }) => ({
     columnsdata: overview.columns,
     data: overview.data,
@@ -45,11 +55,15 @@ const RadioGroup = Radio.Group;
 class dataList extends PureComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            data: [],
+            loading: false,
+            hasMore: true
+        };
     }
     /**页面初始化 */
     componentDidMount() {
         const { dispatch, dataOverview, defaultPollutantCode } = this.props;
-
         // // 由于数据一览没有全部，初始化为废气
         // !!!this.props.selectpollutantTypeCode &&
         //     dispatch({
@@ -265,12 +279,47 @@ class dataList extends PureComponent {
         );
     };
 
+    // //瀑布流加载
+    // handleInfiniteOnLoad = () => {
+    //     console.log('666---')
+    //     // let { data } = this.state;
+    //     // this.setState({
+    //     //   loading: true,
+    //     // });
+    //     // if (data.length > 14) {
+    //     //   message.warning('Infinite List loaded all');
+    //     //   this.setState({
+    //     //     hasMore: false,
+    //     //     loading: false,
+    //     //   });
+    //     //   return;
+    //     // }
+    //     // this.fetchData(res => {
+    //     //   data = data.concat(res.results);
+    //     //   this.setState({
+    //     //     data,
+    //     //     loading: false,
+    //     //   });
+    //     // });
+    //   };
+
+
     render() {
         const { selectStatus, terate, time } = this.props.dataOverview;
         let { selectpollutantTypeCode } = this.props;
         // selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
+        console.log('data state=', this.state.data)
+        let columnsState = [{
+            title: "1",
+            dataIndex: "email",
+            key: '1',
+        }, {
+            title: "2",
+            dataIndex: "gender",
+            key: '2',
+        }]
         let fixed = false;
         if (coldata && coldata[0]) {
             fixed = true;
@@ -463,7 +512,6 @@ class dataList extends PureComponent {
                         }
                     >
 
-
                         <Table
                             rowKey={(record, index) => `complete${index}`}
                             style={{
@@ -478,16 +526,7 @@ class dataList extends PureComponent {
                             loading={this.props.isloading || this.props.timeLoading}
                             scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
                             bordered={true}
-                        // rowClassName={(record, index, indent) => {
-                        //   if (index === 0) {
-                        //     return;
-                        //   }
-                        //   if (index % 2 !== 0) {
-                        //     return 'light';
-                        //   }
-                        // }}
                         />
-
                     </Card>
                 </div>
             </PageHeaderWrapper>

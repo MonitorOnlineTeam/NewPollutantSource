@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-25 16:26:11
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:33:07
+ * @Description: 异常记录
+ */
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import {

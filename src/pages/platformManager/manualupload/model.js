@@ -1,5 +1,5 @@
 /**
- * 功  能：收数据导入请求地址model
+ * 功  能：手工数据上传model
  * 创建人：dongxiaoyun
  * 创建时间：2019.08.9
  */
@@ -31,9 +31,7 @@ export default Model.extend({
         total: 0,
         selectdata: [],
         uploaddatalist: [],
-        // pollutantTypesItem: null,
         addSelectPollutantData: [],
-        // unit: null,
         DGIMN: null,
         pointName: null,
         //手工数据上传参数
@@ -104,6 +102,7 @@ export default Model.extend({
             update,
             select,
         }) {
+            debugger
             const { manualUploadParameters } = yield select(a => a.manualupload);
             const result = yield call(GetManualSupplementList, { ...manualUploadParameters });
             if (result.IsSuccess) {

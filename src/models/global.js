@@ -8,6 +8,13 @@ import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
 
+/**
+ * 功  能：报警消息和推送相关model
+ * 创建人：
+ * 修改人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 export default Model.extend({
   namespace: 'global',
   state: {
@@ -29,17 +36,11 @@ export default Model.extend({
   },
   effects: {
     *fetchNotices({ payload }, { call, select, update }) {
-      // debugger
-      // yield put({
-      //   type: 'changeNoticeLoading',
-      //   payload: true,
-      // });
       yield update({
         fetchingNotices: true,
       })
       // 报警消息
       const { getAlarmNoticesParameters } = yield select(a => a.global);
-      // debugger
       const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
       let notices = [];
       let count = 0;
@@ -50,7 +51,7 @@ export default Model.extend({
         const dataexceptions = exceptions;
         notices = notices.concat(
           dataovers.map((item, index) => {
-            count += item.AlarmCount;
+            count += 1;
             return {
               id: `over_${item.DGIMNs}`,
               pointname: item.PointName,
@@ -99,7 +100,7 @@ export default Model.extend({
         );
         notices = notices.concat(
           dataexceptions.map((item, index) => {
-            count += item.AlarmCount;
+            count +=1;
             return {
               id: `exception_${item.DGIMNs}`,
               pointname: item.PointName,
@@ -175,26 +176,19 @@ export default Model.extend({
     },
     // 获取按钮权限
     *getBtnAuthority({ payload }, { call, put, select }) {
-      // const menuCode = yield select(state => state.menu.menuCode);
       const result = yield call(getBtnAuthority, payload);
-      // debugger;
       if (result.IsSuccess) {
         const btnsAuthority = result.Datas.map(item => item.Code);
-        // console.log('btnsAuthority=', btnsAuthority);
         yield put({
           type: 'updateState',
           payload: {
             btnsAuthority,
           },
         });
-        // yield update({
-        //   btnsAuthority
-        // })
       }
     },
     // 获取按钮权限
     *changePwdModal({ payload }, { call, put, select }) {
-      // const menuCode = yield select(state => state.menu.menuCode);
       yield put({
         type: 'updateState',
         payload: {
@@ -215,8 +209,6 @@ export default Model.extend({
           payload: response.Datas,
         });
       }
-      // const { configInfo } = yield select(m => m.login);
-      // console.log("setConfigInfo=", configInfo);
     },
   },
   reducers: {
@@ -229,23 +221,6 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
-    // saveNotices(state, { payload }) {
-    //   return {
-    //     ...state,
-    //     notices: payload.notices,
-    //     currentUserNoticeCnt: {
-    //       notifyCount: payload.notifyCount,
-    //       unreadCount: payload.unreadCount,
-    //     },
-    //     fetchingNotices: false,
-    //   };
-    // },
-    // changeNoticeLoading(state, { payload }) {
-    //   return {
-    //     ...state,
-    //     fetchingNotices: payload,
-    //   };
-    // },
     changeNotices(state, { payload }) {
       const { message } = payload;
       const { Message: data } = message;
@@ -308,7 +283,7 @@ export default Model.extend({
         const minOrderby = Math.min(
           ...notices.filter(t => t.sontype === 'exception').map(o => o.orderby),
         );
-        count += data.AlarmCount; // 董晓云添加
+        count += data.AlarmCount; // add by dongxiaoyun
         newnotices.push({
           id: `exception_${data.DGIMN}`,
           pointname: data.PointName,
@@ -411,7 +386,6 @@ export default Model.extend({
         title: `${item.Title}`,
         description: `${item.Message}`,
       });
-      // debugger;
       return {
         ...state,
         notices: newnotices,

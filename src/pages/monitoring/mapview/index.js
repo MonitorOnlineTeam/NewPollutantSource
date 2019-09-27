@@ -7,7 +7,7 @@ import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import styles from './index.less'
 import { isEqual } from 'lodash';
-import { EntIcon, GasIcon, WaterIcon, VocIcon, DustIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import ReactEcharts from 'echarts-for-react';
@@ -38,7 +38,7 @@ class MapView extends Component {
     super(props, context);
     this.state = {
       createMap: false,
-      displayType: 1,
+      displayType: 0,
       currentPointInfo: {},
       loading: true,
       tooltipVisible: false,
@@ -48,6 +48,7 @@ class MapView extends Component {
       markersList: [],
       currentEntInfo: {},
       chartTitle: null,
+      currentKey: 1
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -143,7 +144,8 @@ class MapView extends Component {
           } else {
             // 排口
             newState = {
-              coordinateSet: this.state.currentEntInfo.CoordinateSet,
+              // coordinateSet: this.state.currentEntInfo.CoordinateSet,
+              coordinateSet: extData.position.CoordinateSet,
               displayType: 1,
               overAll: false,
             }
@@ -196,7 +198,7 @@ class MapView extends Component {
     if (extData.position) {
       if (this.state.displayType === 0) {
         // 企业
-        pointEl = <EntIcon style={{ fontSize: 40 }} />
+        pointEl = <EntIcon style={{ fontSize: 28 }} />
       } else {
         // 排口
         pointEl = <div className={styles.container}>
@@ -221,12 +223,13 @@ class MapView extends Component {
   }
 
   getPollutantIcon = (extData) => {
-    const style = { fontSize: 20, color: this.getColor(extData.position.Status) }
+    const style = { fontSize: 24, color: this.getColor(extData.position.Status) }
     switch (extData.position.PollutantType) {
       case "1":
-        return <WaterIcon style={style} />
+        // return <WaterIcon style={style} />
+        return this.getWaterIcon(extData.position.Status)
       case "2":
-        return <GasIcon style={style} />
+        return this.getGasIcon(extData.position.Status)
       case "10":
         return <VocIcon style={style} />
       case "12":
@@ -325,9 +328,11 @@ class MapView extends Component {
           // extData={item}
           style={{
             strokeColor: '#FF33FF',
+            // strokeColor: '#0cffda',
             strokeOpacity: 0.2,
             strokeWeight: 3,
-            fillColor: '#595959',
+            // fillColor: '#595959',
+            fillColor: '#908c8c',
             fillOpacity: 0.35,
           }}
           path={arr[i]}
@@ -353,14 +358,16 @@ class MapView extends Component {
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
       const timer = setInterval(() => {
         if (_thismap && nextProps.defaultMapInfo) {
-          _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          // _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
+          _thismap.setZoomAndCenter(5, [105.121964, 33.186871])
           this.setState({
-            coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
-            currentEntInfo: nextProps.defaultMapInfo,
+            // coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
+            // currentEntInfo: nextProps.defaultMapInfo,
             loading: false,
-            currentKey: nextProps.defaultMapInfo.key,
+            // currentKey: nextProps.defaultMapInfo.key,
           })
-          this.randomMarker(nextProps.defaultMapInfo.children);
+          // this.randomMarker(nextProps.defaultMapInfo.children);
+          this.randomMarker(nextProps.allEntAndPointList);
           clearInterval(timer)
         }
       }, 200);
@@ -396,6 +403,46 @@ class MapView extends Component {
     }
     return color
   }
+
+  getWaterIcon = status => {
+    let icon = ''
+    switch (status) {
+      case 0:// 离线
+        icon = <WaterOffline />
+        break;
+      case 1:// 正常
+        icon = <WaterNormal />
+        break;
+      case 2:// 超标
+        icon = <WaterExceed />
+        break;
+      case 3:// 异常
+        icon = <WaterAbnormal />
+        break;
+    }
+    return icon
+  }
+
+
+  getGasIcon = status => {
+    let icon = ''
+    switch (status) {
+      case 0:// 离线
+        icon = <GasOffline />
+        break;
+      case 1:// 正常
+        icon = <GasNormal />
+        break;
+      case 2:// 超标
+        icon = <GasExceed />
+        break;
+      case 3:// 异常
+        icon = <GasAbnormal />
+        break;
+    }
+    return icon
+  }
+
 
   render() {
     const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData } = this.props;
@@ -578,6 +625,10 @@ class MapView extends Component {
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
+            zoom={this.state.zoom}
+            mapStyle="amap://styles/fresh"
+            // isHotspot={true}
+            // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
           >
@@ -586,6 +637,8 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.hoverMapCenter}
               isCustom
+              showShadow
+              autoMove
               visible={this.state.infoWindowHoverVisible}
               offset={[4, -35]}
             >{this.state.currentTitle}</InfoWindow>
@@ -593,7 +646,7 @@ class MapView extends Component {
               position={this.state.mapCenter}
               autoMove
               // size={{ width: 430, height: }}
-              // closeWhenClickMap={true}
+              closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
               events={this.windowEvents}
@@ -666,9 +719,9 @@ class MapView extends Component {
                         </Descriptions>
                         {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
                         {
-                          // !this.props.chartLoading && (!this.props.chartData.seriesData.length ?
-                          !this.props.chartData.seriesData.length ?
-                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"  />
+                          (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
+                            // !this.props.chartData.seriesData.length ?
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
                             // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                             : <ReactEcharts
                               className={styles.echartdiv}
@@ -753,10 +806,10 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
               </TabPane>
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
             </Tabs>
           </Modal>

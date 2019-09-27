@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-09-05 10:57:14
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-05 10:57:14
+ * @Description: 
+ */
 import moment from 'moment';
 import * as services from './service';
 import Model from '@/utils/model';
@@ -512,7 +519,6 @@ export default Model.extend({
                     });
                 }
                 else {
-                    debugger
                     var info = res.Datas.paramsInfo
                     if (payload.dgimn == '42102320160824') {
                         info = params

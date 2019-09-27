@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-16 10:42:43
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:08:39
+ * @Description: 运维记录接口
+ */
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';

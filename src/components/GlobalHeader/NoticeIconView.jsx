@@ -10,12 +10,24 @@ import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
 import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmRecord';
 import RecordEchartTable from '@/components/recordEchartTable'
+import RealTimeWarning from '../RealTimeWarning/RealTimeWarning';
+import ExceptionAlarm from '../ExceptionAlarm/ExceptionAlarm';
+import RecordEchartTableOver from '@/components/recordEchartTableOver'
+import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningModal';
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices,
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
+
+/**
+ * 功  能：头部右侧报警消息和用户信息页面
+ * 创建人：
+ * 修改人：dongxiaoyun
+ * 创建时间：2019.08.9
+ */
+
 export default class GlobalHeaderRight extends PureComponent {
   constructor(props) {
     super(props);
@@ -145,22 +157,26 @@ export default class GlobalHeaderRight extends PureComponent {
             });
             // 报警
             if (item.type === 'alarm') {
-              if (item.sontype === 'warn') {
-                this.setState({
-                  title: '预警消息',
-                  flag: 'over',
-                });
-              } else if (item.sontype === 'over') {
-                this.setState({
-                  title: '超标报警消息',
-                  flag: 'over',
-
-                });
-              } else if (item.sontype === 'exception') {
-                this.setState({
-                  title: '异常报警消息',
-                  flag: 'exception',
-                });
+              //预警的没有连接暂时先连接到报警，待以后修改---------------------------------------------------------------------------------
+              switch (item.sontype) {
+                case 'warn':
+                  this.setState({
+                    title: '实时预警',
+                    flag: 'warn',
+                  });
+                  break;
+                case 'over':
+                  this.setState({
+                    title: '超标记录',
+                    flag: 'over',
+                  });
+                  break;
+                case 'exception':
+                  this.setState({
+                    title: '异常报警',
+                    flag: 'exception',
+                  });
+                  break;
               }
             }
           }}
@@ -186,22 +202,30 @@ export default class GlobalHeaderRight extends PureComponent {
           onCancel={this.onCancel}
         >
 
-            {
-              this.state.flag === 'over' ?
-                <AlarmRecord
+          {
+            this.state.flag === 'over' ?
+              <RecordEchartTableOver
                 initLoadData
                 style={{ maxHeight: '70vh' }}
+                DGIMN={this.state.DGIMN}
+                firsttime={moment(this.state.firsttime)}
+                lasttime={moment(this.state.lasttime)}
+                maxHeight={200}
+              />
+              : this.state.flag === 'exception' ?
+                // <RecordEchartTable
+                //   initLoadData
+                //   style={{ maxHeight: '60vh' }}
+                //   DGIMN={this.state.DGIMN}
+                // />
+                <ExceptionAlarm initLoadData DGIMN={this.state.DGIMN} />
+                :
+                <RealTimeWarningModal 
+                  style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
-                  lasttime={moment(this.state.lasttime)}
-                />
-                :
-                <RecordEchartTable
-                initLoadData
-                style={{ maxHeight: '60vh' }}
-                  DGIMN={this.state.DGIMN}
-                />
-            }
+                  lasttime={moment(this.state.lasttime)} />
+          }
 
         </Modal>
       </div>

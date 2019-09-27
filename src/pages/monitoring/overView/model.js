@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-16 09:59:25
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-07-16 09:59:25
+ * @Description: 数据一览
+ */
 import React from 'react';
 import moment from 'moment';
 // import { message } from 'antd';
@@ -78,7 +85,6 @@ export default Model.extend({
 
     *querypollutanttypecode({ payload }, { call, update, put, take, select }) {
 
-      // debugger;
       let gwidth = 300 + 140 + 70;
       if (!onlyOneEnt) {
         gwidth = gwidth + 300;

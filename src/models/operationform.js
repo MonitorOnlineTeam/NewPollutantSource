@@ -1,14 +1,17 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-08-16 10:41:55
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:11:59
+ * @Description: 运维记录相关接口
+ */
 import Model from '@/utils/model';
 import {
     getrecordtypebymn, getjzhistoryinfo
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
-/*
-运维记录相关接口
-add by lzp
-modify by
-*/
+
 export default Model.extend({
     namespace: 'operationform',
 

@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-16 09:42:48
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 10:55:44
+ * @Description: 菜单权限
+ */
 import React, { Component } from 'react';
 import {
     Tabs,

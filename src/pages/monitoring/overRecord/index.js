@@ -1,3 +1,10 @@
+/*
+ * @Author: lzp
+ * @Date: 2019-07-25 16:26:18
+ * @LastEditors: lzp
+ * @LastEditTime: 2019-09-18 11:33:00
+ * @Description: 超标记录
+ */
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';

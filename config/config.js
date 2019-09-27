@@ -77,6 +77,8 @@ export default {
   block: {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
+  base: "/",
+  publicPath: "/",
   hash: true,
   targets: {
     ie: 11,
@@ -88,6 +90,11 @@ export default {
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
+        {
+          name: 'home',
+          path: '/home',
+          component: './home',
+        },
         {
           path: '/user',
           component: '../layouts/UserLayout',
@@ -118,7 +125,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './monitoring/datalist' },
+            { path: '/', redirect: './monitoring/mapview' },
             {
               name: 'test',
               path: '/test',
@@ -148,6 +155,34 @@ export default {
                 {
                   name: 'view',
                   path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                  component: './AutoFormManager/AutoFormView',
+                },
+              ],
+            },
+            {
+              path: '/:parentcode/:parentcode/autoformmanager/:configId',
+              name: 'AutoFormManager',
+              routes: [
+                // { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
+                {
+                  name: 'index',
+                  path: '/:parentcode/:parentcode/autoformmanager/:configId',
+                  component: './AutoFormManager',
+                },
+                {
+                  name: 'add',
+                  path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformadd',
+                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
+                },
+                {
+                  name: 'edit',
+                  path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                  component: './AutoFormManager/AutoFormEdit',
+                },
+                {
+                  name: 'view',
+                  path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
@@ -230,16 +265,8 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-                {
-                  name: 'vehiclemanage',
-                  path: '/platformconfig/vehiclemanage/:configId',
-                  component: './OperationSysManager/VehicleManage/',
-                },
-                {
-                  name: 'equipmentinfomanage',
-                  path: '/platformconfig/equipmentinfomanage/:configId',
-                  component: './OperationSysManager/EquipmentInfoManage/',
-                },
+               
+               
                 {
                   name: 'certificatemanage',
                   path: '/platformconfig/certificatemanage/:configId',
@@ -297,20 +324,81 @@ export default {
                   ]
                 },
                 {
+                  name: 'equipmentinfomanage',
+                  path: '/operations/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                },
+                {
                   path: '/operations/log',
                   name: "log",
                   component: "./operations/LogPage"
                 },
                 {
-                  path: "/operations/vehicleApplication",
-                  name: "vehicleApplication",
-                  component: "./operations/VehicleApplication"
+                  name: 'materielmanager',
+                  path: '/operations/materielmanager',
+                  routes: [
+                    {
+                      path: '/operations/materielmanager',
+                      redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
+                    },
+                    {
+                      name: 'sparepartmanage',
+                      path: '/operations/materielmanager/sparepartmanage/:configId',
+                      component: './OperationSysManager/SparepartManage/',
+                    },
+                    {
+                      name: 'standardgasmanage',
+                      path: '/operations/materielmanager/standardgasmanage/:configId',
+                      component: './OperationSysManager/StandardGasManage/',
+                    },
+                    {
+                      name: 'handhelddevicesmanage',
+                      path: '/operations/materielmanager/handhelddevicesmanage/:configId',
+                      component: './OperationSysManager/HandheldDevicesManage/',
+                    },
+                  ]
                 },
                 {
-                  path: "/operations/vehicleApprove",
-                  name: "vehicleApprove",
-                  component: "./operations/VehicleApprove"
+                  name: 'usermanager',
+                  path: '/operations/usermanager',
+                  routes: [
+                    {
+                      path: '/operations/usermanager',
+                      redirect: '/operations/usermanager/certificatemanage/CertificateManage',
+                    },
+                    {
+                      name: 'certificatemanage',
+                      path: '/operations/usermanager/certificatemanage/:configId',
+                      component: './OperationSysManager/CertificateManage/',
+                    },
+                  ]
                 },
+                {
+                  name: 'carmanager',
+                  path: '/operations/carmanager',
+                  routes: [
+                    {
+                      path: '/operations/carmanager',
+                      redirect: '/operations/carmanager/vehicleApplication',
+                    },
+                    {
+                      path: "/operations/carmanager/vehicleApplication",
+                      name: "vehicleApplication",
+                      component: "./operations/VehicleApplication"
+                    },
+                    {
+                      path: "/operations/carmanager/vehicleApprove",
+                      name: "vehicleApprove",
+                      component: "./operations/VehicleApprove"
+                    },
+                    {
+                      name: 'vehiclemanage',
+                      path: '/operations/carmanager/vehiclemanage/:configId',
+                      component: './OperationSysManager/VehicleManage/',
+                    },
+                  ]
+                },
+               
                 {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
@@ -457,6 +545,69 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 },
+                {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecord',
+                },
+                {
+                  name: 'overrecord',
+                  path: '/monitoring/overrecord',
+                  component: './monitoring/overRecord',
+                },
+                {
+                  name: 'alarmmanager',
+                  path: '/monitoring/alarmmanager',
+                  routes: [
+                    {
+                      path: '/monitoring/alarmmanager',
+                      redirect: '/monitoring/alarmmanager/alarmrecord',
+                    },
+                    {
+                      name: 'alarmrecord',
+                      path: '/monitoring/alarmmanager/alarmrecord',
+                      component: './monitoring/alarmrecord/index',
+                    },
+                    {
+                      name: 'alarmverifyrecord',
+                      path: '/monitoring/alarmmanager/alarmverifyrecord',
+                      component: './monitoring/alarmverifyrecord/index',
+                    },
+                  ]
+                },
+                
+                {
+                  name: 'dataquerymanager',
+                  path: '/monitoring/dataquerymanager',
+                  routes: [
+                    {
+                      path: '/monitoring/dataquerymanager',
+                      redirect: '/monitoring/dataquerymanager/exceptionrecord',
+                    },
+                    {
+                      name: 'exceptionrecord',
+                      path: '/monitoring/dataquerymanager/exceptionrecord',
+                      component: './monitoring/exceptionrecord',
+                    },
+                    {
+                      name: 'overrecord',
+                      path: '/monitoring/dataquerymanager/overrecord',
+                      component: './monitoring/overRecord',
+                    },
+                    {
+                      name: 'originaldata',
+                      path: '/monitoring/dataquerymanager/originaldata',
+                      component: './monitoring/originaldata',
+                    },
+                  ]
+                },
+                
+               
               ],
             },
             {
@@ -474,7 +625,11 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
                   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
                 },
-
+                {
+                  name: 'emissions',
+                  path: '/Intelligentanalysis/emissions',
+                  component: './Intelligentanalysis/emissions',
+                },
               ],
             },
             {
@@ -483,36 +638,28 @@ export default {
               routes: [
                 {
                   path: '/dataquery',
-                  redirect: '/dataquery/dataquery',
+                  redirect: '/monitoring/dataquery',
                 },
                 {
                   name: 'dataquery',
-                  path: '/dataquery/dataquery',
+                  path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                {
-                  name: 'exceptionrecord',
-                  path: '/dataquery/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
-                },
-                {
-                  name: 'overrecord',
-                  path: '/dataquery/overrecord',
-                  component: './monitoring/overRecord',
-                },
+                
+              
                 {
                   name: 'alarmrecord',
-                  path: '/dataquery/alarmrecord',
+                  path: '/monitoring/alarmrecord',
                   component: './monitoring/alarmrecord/index',
                 },
                 {
                   name: 'originaldata',
-                  path: '/dataquery/originaldata',
+                  path: '/monitoring/originaldata',
                   component: './monitoring/originaldata',
                 },
                 {
                   name: 'alarmverifyrecord',
-                  path: '/dataquery/alarmverifyrecord',
+                  path: '/monitoring/alarmverifyrecord',
                   component: './monitoring/alarmverifyrecord/index',
                 },
               ]
