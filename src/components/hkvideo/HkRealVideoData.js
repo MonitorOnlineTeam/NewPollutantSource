@@ -7,13 +7,13 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from './tree.less';
+import styles from './index.less';
 
-@connect(({ hkvideo, loading }) => ({
-  isloadingC: loading.effects['hkvideo/querypollutantlist'],
-  isloadingp: loading.effects['hkvideo/queryhistorydatalist'],
-  realdata: hkvideo.realdata,
-  columns: hkvideo.columns,
+@connect(({ videodata, loading }) => ({
+  isloadingC: loading.effects['videodata/querypollutantlist'],
+  isloadingp: loading.effects['videodata/queryhistorydatalist'],
+  realdata: videodata.realdata,
+  columns: videodata.columns,
 }))
 class HkRealVideoData extends Component {
   constructor(props) {
@@ -28,10 +28,12 @@ class HkRealVideoData extends Component {
   };
 
   getPollutantTitle = () => {
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'hkvideo/querypollutantlist',
-      payload: { dgimn: match.params.pointcode },
+      type: 'videodata/querypollutantlist',
+      payload: {
+        dgimn,
+      },
     });
   };
 
@@ -42,11 +44,11 @@ class HkRealVideoData extends Component {
         .format('YYYY-MM-DD HH:mm:ss'),
       moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     ];
-    const { match, dispatch } = this.props;
+    const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'hkvideo/queryhistorydatalist',
+      type: 'videodata/queryhistorydatalist',
       payload: {
-        DGIMNs: match.params.pointcode,
+        DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: 1,
         pageSize: 20,

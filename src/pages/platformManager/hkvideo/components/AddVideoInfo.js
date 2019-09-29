@@ -45,7 +45,7 @@ class AddVideoInfo extends Component {
                         Latitude: values.Latitude,
                         DGIMN: values.DGIMN,
                         callback: result => {
-                          if (result.requstresult === '1') {
+                          if (result) {
                             this.props.onCancels();
                             message.success('添加成功');
                           } else {

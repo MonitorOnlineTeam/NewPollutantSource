@@ -3,6 +3,7 @@ import Model from '@/utils/model';
 import {
   getysyList,
   getvideolist,
+  hkvideourl,
 } from '../services/videodata';
 import {
   querypollutantlist,
@@ -18,6 +19,7 @@ export default Model.extend({
   namespace: 'videodata',
   state: {
     videoList: [],
+    hkvideoListParameters: [],
     ysyvideoListParameters: {
       DGIMN: null,
       realtimevideofullurl: null,
@@ -79,7 +81,7 @@ export default Model.extend({
       }
     },
 
-    /** 获取摄像头列表 */
+    /** 萤石云获取摄像头列表 */
     *getvideolist({ payload }, { call, update }) {
       const body = {
         DGIMN: payload.dgimn,
@@ -202,6 +204,27 @@ export default Model.extend({
           },
         },
       });
+    },
+    /** 海康云视频链接 */
+    * hkvideourl({
+      payload,
+    }, {
+      call,
+      update,
+    }) {
+      const body = {
+        DGIMN: payload.DGIMN,
+      }
+      const result = yield call(hkvideourl, body);
+      if (result.IsSuccess && result.Datas.length > 0) {
+        yield update({
+              hkvideoListParameters: result.Datas,
+        });
+      } else {
+        yield update({
+         hkvideoListParameters: [],
+        });
+      }
     },
   },
 });
