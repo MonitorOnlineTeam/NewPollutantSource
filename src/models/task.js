@@ -13,7 +13,7 @@ import {
     GetStandardGasReplaceRecord, GetPatrolRecord,
     GetDeviceExceptionRecord,GetStopCemsRecord,
     GetBdTestRecord,RevokeTask,
-    GetPatrolType,GetRepairRecord
+    GetPatrolType,GetRepairRecord,MaintainRecordDetail,GetSparePartReplaceRecord
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -31,6 +31,8 @@ export default Model.extend({
         BdRecord: null,//比对监测记录
         ConsumablesReplaceRecord:null,//易耗品更换记录
         StandardGasRepalceRecord:null,//标气更换记录
+        MaintainRecordDetailRecord:null,//保养项更换记录
+        SparePartReplaceRecord:null,//备品更换记录
         RecordTypes: [],//运维表单类型
         AlarmResponseList:[]
     },
@@ -116,6 +118,27 @@ export default Model.extend({
             }
         },
 
+        // 备品更换记录
+        * GetSparePartReplaceRecord({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const DataInfo = yield call(GetSparePartReplaceRecord, payload);
+            if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    SparePartReplaceRecord: DataInfo.Datas,
+                });
+            } else {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    SparePartReplaceRecord: null,
+                });
+            }
+        },
+
         // 标气更换记录
         * GetStandardGasReplaceRecord({
             payload
@@ -133,6 +156,27 @@ export default Model.extend({
                 yield update({
                     requstresult: DataInfo.IsSuccess,
                     StandardGasRepalceRecord: null,
+                });
+            }
+        },
+
+        // 标气更换记录
+        * MaintainRecordDetail({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const DataInfo = yield call(MaintainRecordDetail, payload);
+            if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    MaintainRecordDetailRecord: DataInfo.Datas,
+                });
+            } else {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    MaintainRecordDetailRecord: null,
                 });
             }
         },

@@ -2,35 +2,34 @@
  * @Author: lzp
  * @Date: 2019-08-22 09:36:43
  * @LastEditors: lzp
- * @LastEditTime: 2019-08-22 09:36:43
- * @Description: 标准气体更换记录表
+ * @LastEditTime: 2019-09-18 11:29:32
+ * @Description: 易耗品更换记录表
  */
 import React, { Component } from 'react';
-import { Row, Col, Layout, Table, List, Button, Icon, Spin, Card } from 'antd';
+import { Spin } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import styles from "./StandardGasRepalceRecordContent.less";
+import styles from "./SparePartReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
 
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/GetStandardGasReplaceRecord'],
-    StandardGasRepalceRecord: task.StandardGasRepalceRecord
+    isloading: loading.effects['task/GetSparePartReplaceRecord'],
+    SparePartReplaceRecord: task.SparePartReplaceRecord
 }))
-
 /*
-页面：标准气体更换记录表
+页面：易耗品更换记录表
 */
-
-class StandardGasRepalceRecord extends Component {
+class ConsumablesReplaceRecord extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isloading:this.props.isloading
         };
     }
 
     componentDidMount() {
         this.props.dispatch({
-            type: 'task/GetStandardGasReplaceRecord',
+            type: 'task/GetSparePartReplaceRecord',
             payload: {
                 TaskID: this.props.TaskID
             },
@@ -53,10 +52,10 @@ class StandardGasRepalceRecord extends Component {
                             {item.ReplaceDate}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.StandardGasName}
+                            {item.ConsumablesName}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.GasStrength}
+                            {item.Model}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                             {item.Unit}
@@ -65,13 +64,10 @@ class StandardGasRepalceRecord extends Component {
                             {item.Num}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.Supplier}
+                            {item.Remark}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.PeriodOfValidity}
-                        </td>
-                        <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.StandardGasBottleCode}
+                            {item.AnotherTimeOfChange}
                         </td>
                     </tr>
                 );
@@ -83,56 +79,11 @@ class StandardGasRepalceRecord extends Component {
 
     render() {
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
-        const Record=this.props.StandardGasRepalceRecord!==null?this.props.StandardGasRepalceRecord.Record:null;
+        const Record=this.props.SparePartReplaceRecord!==null?this.props.SparePartReplaceRecord.Record:null;
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
-        const columns = [{
-            title: '序号',
-            dataIndex: 'name',
-            width: '9%',
-            align: 'center',
-            render(text, record, index) {
-                return (
-                    <span>{index + 1}</span>
-                );
-            }
-        }, {
-            title: '更换日期',
-            dataIndex: 'ReplaceDate',
-            width: '17%',
-            align: 'center',
-        }, {
-            title: '标准物质名称',
-            dataIndex: 'StandardGasName',
-            width: '12%',
-            align: 'center',
-        }, {
-            title: '气体浓度',
-            dataIndex: 'GasStrength',
-            width: '12%',
-            align: 'center',
-        }, {
-            title: '单位',
-            dataIndex: 'Unit',
-            width: '11%',
-            align: 'center',
-        }, {
-            title: '数量',
-            dataIndex: 'Num',
-            width: '11%',
-            align: 'center',
-        }, {
-            title: '供应商',
-            dataIndex: 'Supplier',
-            width: '11%',
-            align: 'center',
-        }, {
-            title: '有效期',
-            dataIndex: 'PeriodOfValidity',
-            width: '17%',
-            align: 'center',
-        }];
-        if (this.props.isloading) {
+        const DeviceName = 'CEMS'; //设备名称
+        if (this.state.isloading) {
             return (<Spin
                 style={{
                     width: '100%',
@@ -146,51 +97,70 @@ class StandardGasRepalceRecord extends Component {
         }
         return (
             <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
-                <div className={styles.FormName}>标准气体更换记录表</div>
+                <div className={styles.FormName}>备件更换记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
-                <table className={styles.FormTable}>
+                <table
+                    className={styles.FormTable}
+                >
                     <tbody>
                         <tr>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        维护管理单位
+                            <td style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        设备名称
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.MaintenanceManagementUnit:null}
+                            <td style={{ width: '16%',minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                                {DeviceName}
                             </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        安装地点
+                            <td style={{ width: '13%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        规格型号
                             </td>
-                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.PointPosition:null}
+                            <td style={{ width: '13%',minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                                {Content !== null ? Content.Code:null}
+                            </td>
+                            <td style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        设备编号
+                            </td>
+                            <td colSpan="3" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
+                                {Content !== null ?Content.EquipmentCode:null}
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ width: '5%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td colSpan="2" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        维护管理单位
+                            </td>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                                {Content !== null ?Content.MaintenanceManagementUnit:null}
+                            </td>
+                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                        安装地点
+                            </td>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                {Content !== null ?Content.PointPosition:null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ width: '9%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         序号
                             </td>
-                            <td style={{ width: '16%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         更换日期
                             </td>
-                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        标准物质名称
+                            <td style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        备品名称
                             </td>
                             <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        气体浓度
+                                        规格型号
                             </td>
-                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         单位
                             </td>
-                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         数量
                             </td>
-                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        供应商
+                            <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        更换原因说明（备注）
                             </td>
-                            <td style={{ width: '17%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        失效日期
-                            </td>
-                            <td style={{ width: '25%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        标气瓶编号
+                            <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        下次更换日期
                             </td>
                         </tr>
                         {
@@ -206,13 +176,13 @@ class StandardGasRepalceRecord extends Component {
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         时间
                             </td>
-                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="9" style={{ width: '18%', height: '50px', fontSize: '14px', paddingLeft: 15 }}>
-                                        注：更换标准气体时应及时记录，每半年汇总存档。
+                            <td colSpan="8" style={{ width: '18%', height: '50px', fontSize: '14px', paddingLeft: 15 }}>
+                                        注：更换备品时应及时记录，每半年汇总存档。
                             </td>
                         </tr>
                     </tbody>
@@ -220,7 +190,7 @@ class StandardGasRepalceRecord extends Component {
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>
-                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>负责人签名：</td>
+                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold',minWidth: 750 }}>负责人签名：</td>
                             <td style={{ width: '13%', height: '50px', border: '0' }}>
                                 {
                                     SignContent === null ? null : <img style={{ width: '80%', height: '110%' }} src={SignContent} />
@@ -228,8 +198,8 @@ class StandardGasRepalceRecord extends Component {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>签名时间：</td>
-                            <td style={{ width: '13%', height: '50px', border: '0' }}>{Record !== null ?Record.SignTime:null}</td>
+                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold',minWidth: 750 }}>签名时间：</td>
+                            <td style={{ width: '13%', height: '50px', border: '0',minWidth: 150 }}>{Record !== null ?Record.SignTime:null}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -238,4 +208,4 @@ class StandardGasRepalceRecord extends Component {
     }
 }
 
-export default StandardGasRepalceRecord;
+export default ConsumablesReplaceRecord;

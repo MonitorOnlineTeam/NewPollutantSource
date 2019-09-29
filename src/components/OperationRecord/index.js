@@ -180,6 +180,12 @@ class OperationRecord extends Component {
         case 10://CEMS设备数据异常记录表
           configid = 'FormMainInfoDeviceExce'
           break;
+        case 27://保养项记录表
+          configid = 'FormMainInfoMain'
+          break;
+        case 28://备品备件记录表
+          configid = 'FormMainInfoSpare'
+          break;
       }
     }
     else {

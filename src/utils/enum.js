@@ -147,6 +147,8 @@ export const EnumPsOperationForm={
   CheckRecord:8, //CEMS零点量程漂移与校准记录表
   TestRecord:9, //CEMS校验测试记录
   DataException:10, //CEMS设备数据异常记录表
+  Maintain:27, //保养记录表
+  SparePartReplace:28, //备品备件更换记录表
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

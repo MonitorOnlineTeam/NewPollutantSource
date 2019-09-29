@@ -73,6 +73,19 @@ export async function GetConsumablesReplaceRecord(params) {
         Datas: null
     } : result;
 }
+// 根据任务id和类型id获取备品列表
+export async function GetSparePartReplaceRecord(params) {
+    const body = {
+        TaskID: params.TaskID,
+        TypeID: params.TypeIDs
+    };
+    const result =await post('/api/rest/PollutantSourceApi/TaskFormApi/GetSparePartReplaceRecordList?', body, null);
+    return result === null ? {
+        Datas: null
+    } : result;
+}
+
+
 // 获取易耗品历史记录列表
 export async function GetConsumablesReplaceHistoryList(params) {
     const body = {
@@ -98,6 +111,18 @@ export async function GetStandardGasReplaceRecord(params) {
         Datas: null
     } : result;
 }
+// 根据任务id和类型id获取保养项表单
+export async function MaintainRecordDetail(params) {
+    const body = {
+        TaskID: params.TaskID
+    };
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/MaintainRecordDetail?', body, null);
+    return result === null ? {
+        Datas: null
+    } : result;
+}
+
+
 // 获取标气历史记录列表
 export async function GetStandardGasRepalceHistoryList(params) {
     const body = {
