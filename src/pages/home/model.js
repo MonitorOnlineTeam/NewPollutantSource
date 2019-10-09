@@ -90,7 +90,7 @@ export default Model.extend({
       }
     },
 
-    // 获取智能质控数据
+    // 获取智能质控数据 - 运行分析
     *getRateStatisticsByEnt({ payload }, { call, select, update }) {
       const rateStatisticsData = yield select(state => state.home.rateStatisticsByEnt);
       const postData = {
@@ -98,11 +98,11 @@ export default Model.extend({
         ...payload
       }
       const result = yield call(services.getRateStatisticsByEnt, postData);
-      if (result.requstresult) {
+      if (result.IsSuccess) {
         yield update({
           rateStatisticsByEnt: {
             ...rateStatisticsData,
-            rateData: result.data
+            rateData: result.Datas && result.Datas[0]
           }
         })
       }
@@ -144,9 +144,9 @@ export default Model.extend({
         ...payload
       }
       const result = yield call(services.getTaskCount, postData);
-      if (result.requstresult) {
+      if (result.IsSuccess) {
         yield update({
-          taskCountData: result.data
+          taskCountData: result.Datas && result.Datas[0]
         })
       }
     },
@@ -159,9 +159,9 @@ export default Model.extend({
         ...payload
       }
       const result = yield call(services.getExceptionProcessing, postData);
-      if (result.requstresult) {
+      if (result.IsSuccess) {
         yield update({
-          operationsWarningData: result.data
+          operationsWarningData: result.Datas && result.Datas[0]
         })
       }
     },
@@ -174,9 +174,9 @@ export default Model.extend({
         ...payload
       }
       const result = yield call(services.getAlarmAnalysis, postData);
-      if (result.requstresult) {
+      if (result.IsSuccess) {
         yield update({
-          alarmAnalysis: result.data
+          alarmAnalysis: result.Datas && result.Datas[0]
         })
       }
     },
@@ -200,19 +200,19 @@ export default Model.extend({
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
       let ycdate = [];
       let ycdata = [];
-      response.data[0].monthList.map((ele) => {
+      response.Datas[0].monthList.map((ele) => {
         ycdate.push(`${ele.DataDate.split('-')[1]}月`);
         ycdata.push(ele.Emissions.toFixed(2));
       });
       let eyhldate = [];
       let eyhldata = [];
-      response.data[1].monthList.map((ele) => {
+      response.Datas[1].monthList.map((ele) => {
         eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
         eyhldata.push(ele.Emissions.toFixed(2));
       });
       let dyhwdate = [];
       let dyhwdata = [];
-      response.data[2].monthList.map((ele) => {
+      response.Datas[2].monthList.map((ele) => {
         dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
         dyhwdata.push(ele.Emissions.toFixed(2));
       });
@@ -222,13 +222,13 @@ export default Model.extend({
           ...{
             ycdate: ycdate,
             ycdata: ycdata,
-            ycAnalData: response.data[0],
+            ycAnalData: response.Datas[0],
             eyhldate: eyhldate,
             eyhldata: eyhldata,
-            eyhlAnalData: response.data[1],
+            eyhlAnalData: response.Datas[1],
             dyhwdate: dyhwdate,
             dyhwdata: dyhwdata,
-            dyhwAnalData: response.data[2],
+            dyhwAnalData: response.Datas[2],
           }
         }
       });

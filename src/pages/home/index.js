@@ -52,6 +52,7 @@ let _thismap;
   currentEntInfo: home.currentEntInfo,
   currentMarkersList: home.currentMarkersList,
   allEntAndPointList: home.allEntAndPointList,
+  noticeList: global.notices
 }))
 class index extends Component {
   constructor(props) {
@@ -123,23 +124,25 @@ class index extends Component {
    * 获取主页数据
    * @param {string} entCode
    */
-  getHomeData = (entCode) => {
+  getHomeData = (entCode, DGIMN) => {
     const { dispatch } = this.props;
     // 获取排污许可情况
-    // dispatch({
-    //   type: "home/getAllMonthEmissionsByPollutant",
-    //   payload: {
-    //     entCode: entCode
-    //   }
-    // })
+    dispatch({
+      type: "home/getAllMonthEmissionsByPollutant",
+      payload: {
+        entCode: entCode,
+        pollutantCode: DGIMN
+      }
+    })
     // 获取智能质控数据
     dispatch({
       type: "home/getRateStatisticsByEnt",
       payload: {
-        entCode: entCode
+        entCode: entCode,
+        DGIMN
       }
     })
-    // 智能监控数据
+    // 监控现状
     dispatch({
       type: "home/getStatisticsPointStatus",
       payload: {
@@ -157,21 +160,24 @@ class index extends Component {
     dispatch({
       type: "home/getTaskCount",
       payload: {
-        entCode: entCode
+        entCode,
+        DGIMN
       }
     })
     // 获取运维 - 预警统计
     dispatch({
       type: "home/getExceptionProcessing",
       payload: {
-        entCode: entCode
+        entCode,
+        DGIMN
       }
     })
     // 获取运维 - 异常报警及响应情况
     dispatch({
       type: "home/getAlarmAnalysis",
       payload: {
-        entCode: entCode
+        entCode,
+        DGIMN
       }
     })
   }
@@ -283,7 +289,8 @@ class index extends Component {
       })
     } else {
       // 点击排口
-      console.log('点击了排口:', itemData)
+      // console.log('点击了排口:', itemData)
+      this.getHomeData(undefined, itemData.position.key)
     }
   }
 
@@ -629,7 +636,14 @@ class index extends Component {
         }
       }}>
       {
-        extData.position.IsEnt === 1 ? <EntIcon style={{ fontSize: 26 }} /> : this.getImgIcon(extData.position.PollutantType, extData.position.Status)
+        extData.position.IsEnt === 1 ? <EntIcon style={{ fontSize: 26 }} /> : this.getPollutantIcon(extData.position.PollutantType, extData.position.Status)
+        // <div className={styles.container}>
+        //   {/* 图标 */}
+        //   {this.getPollutantIcon(extData.position.PollutantType, extData.position.Status)}
+        //   {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
+        //     <div className={styles.pulse1}></div>
+        //   }
+        // </div>
       }
     </div>
     // console.log('extData=', extData)
@@ -642,7 +656,7 @@ class index extends Component {
     // }
   }
 
-  getImgIcon = (pollutantType, status) => {
+  getPollutantIcon = (pollutantType, status) => {
     let icon = "";
     if (pollutantType == 1) {
       // 废水
@@ -700,6 +714,7 @@ class index extends Component {
       currentEntInfo,
       allEntAndPointLoading,
       alarmAnalysisLoading,
+      AllMonthEmissionsByPollutant,
       allMonthEmissionsByPollutantLoading,
       rateStatisticsByEntLoading,
       statisticsPointStatusLoading,
@@ -707,6 +722,27 @@ class index extends Component {
       taskCountLoading,
       exceptionProcessingLoading
     } = this.props;
+
+    const {
+      ycAnalData,
+      eyhlAnalData,
+      dyhwAnalData,
+    } = AllMonthEmissionsByPollutant;
+    // 计算排污许可情况
+    let ycLink;
+    if (ycAnalData && ycAnalData.length !== 0) {
+      ycLink = `${Math.abs(ycAnalData.linkFlag.toFixed(2))}%(${ycAnalData.monthSum.toFixed(2)}/${ycAnalData.flag.toFixed(2)})`;
+    }
+    let dyhwLink;
+    if (dyhwAnalData && dyhwAnalData.length !== 0) {
+      dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
+    }
+    let eyhlLink;
+    if (eyhlAnalData && eyhlAnalData.length !== 0) {
+      eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
+    }
+
+
     let pointposition = position;
     let pointvisible = visible;
     let polygonChange;
@@ -716,19 +752,38 @@ class index extends Component {
       height = ele.offsetHeight - 30;
     }
     const isLoading = allEntAndPointLoading || alarmAnalysisLoading || allMonthEmissionsByPollutantLoading || rateStatisticsByEntLoading || statisticsPointStatusLoading || warningInfoLoading || taskCountLoading || exceptionProcessingLoading
+    const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
+    const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
     if (did && isLoading) {
       return <PageLoading />
     }
     return (
       <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
         {
-          isLoading && <Spin
+          isLeftLoading && <Spin
             style={{
               position: "absolute",
-              width: "100%",
+              width: "410px",
               height: "100%",
               top: 0,
               left: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0, 0, 0, 0.4)",
+              zIndex: 999,
+            }}
+            size="large"
+          />
+        }
+        {
+          isRightLoading && <Spin
+            style={{
+              position: "absolute",
+              width: "410px",
+              height: "100%",
+              top: 0,
+              right: 0,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -762,7 +817,7 @@ class index extends Component {
           >{this.state.currentTitle}</InfoWindow>
           <div className={styles.leftWrapper}>
             {/* 运行分析  || 智能质控*/}
-            <div className={styles.effectiveRate}>
+            <div className={styles.effectiveRate}> 
               <div className={styles.title}>
                 <p>运行分析</p>
               </div>
@@ -931,7 +986,7 @@ class index extends Component {
                   </div>
                   <div className={styles.desc}>
                     本年度累计排放量占比 <br />
-                    151%(0.30/0.20)
+                    {dyhwLink}
                   </div>
                 </div>
               </div>
@@ -952,7 +1007,7 @@ class index extends Component {
                   </div>
                   <div className={styles.desc}>
                     本年度累计排放量占比<br />
-                    85.5%(0.17/0.20)
+                    {ycLink}
                   </div>
                 </div>
 
@@ -974,7 +1029,7 @@ class index extends Component {
                   </div>
                   <div className={styles.desc}>
                     本年度累计排放量占比<br />
-                    58%(0.58/1.00)
+                    {eyhlLink}
                   </div>
                 </div>
               </div>
@@ -993,15 +1048,14 @@ class index extends Component {
                 <span>{currentEntInfo.title}</span>
               </div>
             }
-
             <div>
               <span>当前时间</span> <br />
               <span><Time /></span>
             </div>
-            <div>
+            {/* <div>
               <span>统计时间</span> <br />
               <span>{moment(new Date()).format("YYYY-MM-DD HH:mm:ss")}</span>
-            </div>
+            </div> */}
           </div>
           {/**中间污染物类型*/}
           {

@@ -202,6 +202,7 @@
           p {
             font-size: 16px;
             margin-bottom: 1em;
+
             span {
               font-size: 16px;
               margin: 0 4px;
@@ -643,4 +644,33 @@
       flex: 2;
     }
   }
+
+  .container {
+    position: relative;
+    width: 20px;
+    height: 20px;
+
+    /*border: 1px solid #000; hovertree.com */
+    .pulse1 {
+      position: absolute;
+      width: 49px;
+      height: 49px;
+      left: -13px;
+      top: -13px;
+      border: 6px solid red;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      z-index: 1;
+      opacity: 0;
+      -webkit-animation: warn1 2s ease-out;
+      -moz-animation: warn1 2s ease-out;
+      animation: warn1 2s ease-out;
+      -webkit-animation-iteration-count: infinite;
+      -moz-animation-iteration-count: infinite;
+      animation-iteration-count: infinite;
+      box-shadow: 1px 1px 30px red;
+    }
+  }
+
 }
