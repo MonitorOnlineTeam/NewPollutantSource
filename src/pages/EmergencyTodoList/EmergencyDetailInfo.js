@@ -136,6 +136,12 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.DataException:
                             this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID);
                             break;
+                        case EnumPsOperationForm.Maintain:
+                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.SparePartReplace:
+                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
+                            break;
                         default:
                             break;
                     }
@@ -313,18 +319,18 @@ class EmergencyDetailInfo extends Component {
         );
     }
 
-    showImagList=id => {
+    showImagList = id => {
         this.setState({
             ImgListvisible: true,
             FileUuid: id,
         })
     }
 
-      modalHandleCancel = e => {
+    modalHandleCancel = e => {
         this.setState({
-          ImgListvisible: false,
+            ImgListvisible: false,
         });
-      };
+    };
 
     getUserIcon = data => {
         const iconList = []
@@ -352,11 +358,11 @@ class EmergencyDetailInfo extends Component {
                     if (data[i].IsExpire == false) {
                         gasUrl = '/水灰.png'
                         iconList.push(<Tooltip title="证书已过期"><img onClick={() => {
-                          this.showImagList(ID);
+                            this.showImagList(ID);
                         }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img></Tooltip>)
                     } else {
                         iconList.push(<img onClick={() => {
-                           this.showImagList(ID);
+                            this.showImagList(ID);
                         }} style={{ marginLeft: 5, width: 35 }} src={gasUrl}></img>)
                     }
                 }
@@ -671,17 +677,17 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
                 {this.state.visibleImg && <ViewImagesModal />}
                 <Modal
-                destroyOnClose = "true"
-                title = "证书详细"
-                visible = {
-                  this.state.ImgListvisible
-                }
-                footer = ""
-                onCancel = {
-                    this.modalHandleCancel
-                  } >
-                  <ViewImagesListModal FileUuid={this.state.FileUuid}/>
-                  </Modal>
+                    destroyOnClose="true"
+                    title="证书详细"
+                    visible={
+                        this.state.ImgListvisible
+                    }
+                    footer=""
+                    onCancel={
+                        this.modalHandleCancel
+                    } >
+                    <ViewImagesListModal FileUuid={this.state.FileUuid} />
+                </Modal>
             </div>
         );
     }

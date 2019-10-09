@@ -66,6 +66,9 @@ class ConsumablesReplaceRecord extends Component {
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                             {item.Remark}
                         </td>
+                        <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {item.AnotherTimeOfChange}
+                        </td>
                     </tr>
                 );
             });
@@ -116,7 +119,7 @@ class ConsumablesReplaceRecord extends Component {
                             <td style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         设备编号
                             </td>
-                            <td colSpan="2" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
+                            <td colSpan="3" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
                                 {Content !== null ?Content.EquipmentCode:null}
                             </td>
                         </tr>
@@ -130,7 +133,7 @@ class ConsumablesReplaceRecord extends Component {
                             <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         安装地点
                             </td>
-                            <td style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                 {Content !== null ?Content.PointPosition:null}
                             </td>
                         </tr>
@@ -156,6 +159,9 @@ class ConsumablesReplaceRecord extends Component {
                             <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         更换原因说明（备注）
                             </td>
+                            <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        下次更换日期
+                            </td>
                         </tr>
                         {
                             this.renderItem(Record !== null ?Record.RecordList:null)
@@ -170,12 +176,12 @@ class ConsumablesReplaceRecord extends Component {
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         时间
                             </td>
-                            <td style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="7" style={{ width: '18%', height: '50px', fontSize: '14px', paddingLeft: 15 }}>
+                            <td colSpan="8" style={{ width: '18%', height: '50px', fontSize: '14px', paddingLeft: 15 }}>
                                         注：更换易耗品时应及时记录，每半年汇总存档。
                             </td>
                         </tr>

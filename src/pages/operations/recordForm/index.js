@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import {
-    Table, Divider,Icon
+    Table, Divider, Icon
 } from 'antd';
 import { PointIcon, Right } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
@@ -23,8 +23,10 @@ import RepairRecordContent from '@/pages/EmergencyTodoList/RepairRecordContent'
 import StandardGasRepalceRecordContent from '@/pages/EmergencyTodoList/StandardGasRepalceRecordContent'
 import StopCemsRecordContent from '@/pages/EmergencyTodoList/StopCemsRecordContent'
 import JzRecordContent from '@/pages/EmergencyTodoList/JzRecordContent'
+import MaintainRepalceRecord from '@/pages/EmergencyTodoList/MaintainRepalceRecord'
+import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRecordContent'
 import Button from 'antd/es/button/button';
-import {FormIcon } from '@/utils/icon';
+import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
 
 
@@ -75,6 +77,12 @@ class Index extends Component {
             case "10"://CEMS设备数据异常记录表
                 form = <DeviceExceptionRecordContent TaskID={this.props.match.params.taskID} />
                 break;
+            case "27"://保养项更换记录表
+                form = <MaintainRepalceRecord TaskID={this.props.match.params.taskID} />
+                break;
+            case "28"://备品更换记录表
+                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} />
+                break;
         }
         return form
     }
@@ -82,8 +90,8 @@ class Index extends Component {
         return (
             <PageHeaderWrapper breadcrumb={[]} title="记录单详情">
                 <div width="70%" style={{ backgroundColor: '#fff' }}>
-                    <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={()=>{
-                       router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
+                    <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={() => {
+                        router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
                     }}><FormIcon />任务单</Button>
                     <Button style={{ marginTop: 5, marginLeft: 10 }} onClick={() => {
                         history.go(-1)

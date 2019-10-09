@@ -53,7 +53,7 @@ class UpdateVideoInfo extends Component {
                         CameraMonitorID: values.CameraMonitorID,
                         DGIMN: this.props.dgimn,
                         callback: result => {
-                            if (result.requstresult === '1') {
+                            if (result) {
                                 this.props.onCancels();
                                 message.success('修改成功');
                             } else {
