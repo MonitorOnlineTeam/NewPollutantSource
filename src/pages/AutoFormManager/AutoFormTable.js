@@ -148,6 +148,7 @@ class AutoFormTable extends PureComponent {
   //批量删除
   batchDel() {
     const postData = this.state.delPostData;
+    const { dispatch, configId } = this.props;
     confirm({
       title: '是否删除?',
       content: '确认是否删除',
