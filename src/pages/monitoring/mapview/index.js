@@ -703,7 +703,8 @@ class MapView extends Component {
                           size="small"
                           bordered>
                           {
-                            this.props.tableList.map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                            // 只显示前六个
+                            this.props.tableList.filter((itm,index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
                               this.setState({
                                 chartTitle: item.title
                               })
