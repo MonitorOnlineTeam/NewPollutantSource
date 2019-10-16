@@ -270,8 +270,8 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-               
-               
+
+
                 {
                   name: 'certificatemanage',
                   path: '/platformconfig/certificatemanage/:configId',
@@ -403,7 +403,7 @@ export default {
                     },
                   ]
                 },
-               
+
                 {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
@@ -585,7 +585,7 @@ export default {
                     },
                   ]
                 },
-                
+
                 {
                   name: 'dataquerymanager',
                   path: '/monitoring/dataquerymanager',
@@ -611,8 +611,8 @@ export default {
                     },
                   ]
                 },
-                
-               
+
+
               ],
             },
             {
@@ -635,6 +635,11 @@ export default {
                   path: '/Intelligentanalysis/emissions',
                   component: './Intelligentanalysis/emissions',
                 },
+                {
+                  name: 'effluentFee',
+                  path: '/Intelligentanalysis/effluentFee',
+                  component: './Intelligentanalysis/effluentFee',
+                },
               ],
             },
             {
@@ -650,8 +655,8 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                
-              
+
+
                 {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',
