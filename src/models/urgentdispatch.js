@@ -89,7 +89,7 @@ export default Model.extend({
             };
             const res = yield call(addtaskinfo, body);
             if (res == 1) {
-                message.success('派单成功!');debugger
+                message.success('派单成功!');
 
                 if(payload.reloadData)
                 {

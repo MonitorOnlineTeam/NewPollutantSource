@@ -78,7 +78,6 @@ class Index extends Component {
         //     ...historyparams,
         //    DGIMN:this.props.DGIMNs
         // }
-        // debugger
         // this.props.dispatch({
         //     type: 'recordEchartTable/updateState',
         //     payload: {

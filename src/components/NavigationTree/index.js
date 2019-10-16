@@ -309,7 +309,6 @@ class NavigationTree extends Component {
   onChangeSearch = e => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.tilingData()
-    // debugger
     const { value } = e.target;
     const expandedKeys = dataList
       .map(item => {

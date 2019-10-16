@@ -12,7 +12,6 @@ const FormItem = Form.Item;
 class UrgentDispatch extends Component {
     componentWillMount(){
         const {DGIMN,dispatch}=this.props;
-        debugger
         dispatch({
             type:'urgentdispatch/queryoperationInfo',
             payload:{

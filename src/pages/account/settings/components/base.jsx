@@ -370,7 +370,6 @@ class BaseView extends Component {
       user = JSON.parse(userCookie);
     }
     this.props.form.validateFieldsAndScroll((err, values) => {
-      // debugger
       if (!err) {
         that.props.dispatch({
           type: 'user/editpersonaluser',
@@ -418,7 +417,6 @@ class BaseView extends Component {
       SendPush,
       AlarmTime,
     } = !editUser ? {} : editUser;
-    // debugger
     return (
       <div>
         <Card bordered={false} style={{ height: 'calc(100vh - 160px)' }} loading={this.props.userinfoloading}>

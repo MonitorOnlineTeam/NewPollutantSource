@@ -134,7 +134,6 @@ export default class MonitorPoint extends Component {
       sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
-    // debugger;
     switch (type) {
       case 1:
         // 废水
@@ -181,7 +180,6 @@ export default class MonitorPoint extends Component {
 
   editMonitorInfo = () => {
     const { key, row } = this.state;
-    // debugger;
     if (!row || row.length === 0 || row.length > 1) {
       sdlMessage('请选择一行进行操作', 'warning');
       return false;

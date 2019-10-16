@@ -84,7 +84,6 @@ export default Model.extend({
       const result = yield call(getpollutantbydgimn, {
         ...payload,
       });
-      // debugger
       if (result.IsSuccess) {
         yield update({
           requstresult: result.requstresult,

@@ -101,11 +101,9 @@ export default Model.extend({
     },
     /*个人设置编辑信息**/
     *editpersonaluser({ payload }, { call, update }) {
-      //debugger
       const result = yield call(editpersonaluser, {
         ...payload,
       });
-      // debugger;
       yield update({
         requstresult: result.requstresult,
         reason: result.reason,
