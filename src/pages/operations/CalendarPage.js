@@ -1,5 +1,12 @@
+/*
+ * @Author: Jiaqi
+ * @Date: 2019-10-15 14:35:27
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-10-15 17:00:55
+ * @desc: 运维日历页面
+ */
 import React, { PureComponent } from 'react';
-import { Calendar, Badge, Card, Divider, Tag, Empty, message, List } from 'antd';
+import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
@@ -12,6 +19,9 @@ import styles from './index.less'
   calendarList: operations.calendarList,
   abnormalDetailList: operations.abnormalDetailList,
   abnormalForm: operations.abnormalForm,
+  futureDetailList: operations.futureDetailList,
+  modalTableDataSource: operations.modalTableDataSource,
+  modalTableTotal: operations.modalTableTotal,
   loading: loading.effects["operations/getAbnormalDetailList"]
 }))
 class CalendarPage extends PureComponent {
@@ -23,6 +33,10 @@ class CalendarPage extends PureComponent {
       dateFormat: "YYYY年MM月DD日",
       currentCellInfo: {},
       listData: [],
+      visible: false,
+      columns: [],
+      modalTableCurrent: 1,
+      currentClickTagParams: {}
       // pageInfo: {
       //   pageIndex: 1,
       //   pageSize: 10
@@ -32,7 +46,7 @@ class CalendarPage extends PureComponent {
 
   componentDidMount() {
     this.getCalendarInfo();
-    this.abnormalItemClick({ date: moment(), type: "", text: "运维记录" });
+    this.abnormalItemClick({ date: moment(), type: 0, text: "运维记录" });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,6 +78,217 @@ class CalendarPage extends PureComponent {
         listData: listData
       })
     }
+    // 未来
+    if (this.props.futureDetailList !== nextProps.futureDetailList) {
+      const futureListData = nextProps.futureDetailList.map(item => {
+        return {
+          href: "",
+          title: <div>
+            <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
+            {item.SparePart ? <Tag color="#f50" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 1) }}>备件更换{item.SparePart}个</Tag> : null}
+            {item.Consumables ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 2) }}>易耗品更换{item.Consumables}个</Tag> : null}
+            {item.StandardGas ? <Tag color="#108ee9" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 3) }}>标气更换{item.StandardGas}个</Tag> : null}
+            {item.Maintain ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>保养更换{item.Maintain}个</Tag> : null}
+          </div>,
+          description: <div style={{ color: "#333" }}>
+            {item.PointName}
+            {
+              item.TaskType === 2 && <Tag color="#ff5506" style={{ position: "relative", top: '-10px', marginLeft: 4 }} >应急</Tag>
+            }
+          </div>,
+          content:
+            <div>运维人：{item.OperationName} <Tag color={item.TaskStatus === 3 ? "green" : "volcano"}>{item.TaskStatusText}</Tag></div>
+        }
+      })
+      this.setState({
+        listData: futureListData
+      })
+    }
+  }
+
+  // tag点击事件
+  onTagClick = (e, item, type) => {
+    e.stopPropagation();
+    console.log('item=', item)
+    // 根据统计周期，计算开始及结束时间
+    let scope = this.state.mode === "month" ? "day" : "month";
+    let date = this.state.currentCellInfo.date;
+    let beginTime = moment(date).startOf(scope).format("YYYY-MM-DD HH:mm:ss");
+    let endTime = moment(date).endOf(scope).format("YYYY-MM-DD HH:mm:ss");
+
+    const payload = {
+      TaskID: item.TaskID,
+      Type: type,
+      beginTime: beginTime,
+      endTime: endTime
+    }
+
+    this.setState({
+      currentClickTagParams: payload,
+      modalTableCurrent: 1,
+    }, () => {
+      this.onModalTableData()
+    })
+
+    let columns = [];
+    switch (type) {
+      case 1:
+        // 备件更换
+        columns = [
+          {
+            title: '序号',
+            dataIndex: 'index',
+            key: 'index',
+            width: 60,
+            render: (text, record, index) => {
+              return index + 1;
+            }
+          }, {
+            title: '上次更换日期',
+            dataIndex: 'ReplaceDate',
+            key: 'ReplaceDate',
+          }, {
+            title: '部件名称',
+            dataIndex: 'ConsumablesName',
+            key: 'ConsumablesName',
+          }, {
+            title: '规格型号',
+            dataIndex: 'Model',
+            key: 'Model',
+          }, {
+            title: '单位',
+            dataIndex: 'Unit',
+            key: 'Unit',
+          }, {
+            title: '数量',
+            dataIndex: 'Num',
+            key: 'Num',
+          }, {
+            title: '更换原因',
+            dataIndex: 'Remark',
+            key: 'Remark',
+          },
+        ]
+        break;
+      case 2:
+        // 易耗品
+        columns = [
+          {
+            title: '序号',
+            dataIndex: 'index',
+            key: 'index',
+            width: 60,
+            render: (text, record, index) => {
+              return index + 1;
+            }
+          }, {
+            title: '上次更换日期',
+            dataIndex: 'ReplaceDate',
+            key: 'ReplaceDate',
+          }, {
+            title: '易耗品名称',
+            dataIndex: 'ConsumablesName',
+            key: 'ConsumablesName',
+          }, {
+            title: '规格型号',
+            dataIndex: 'Model',
+            key: 'Model',
+          }, {
+            title: '单位',
+            dataIndex: 'Unit',
+            key: 'Unit',
+          }, {
+            title: '数量',
+            dataIndex: 'Num',
+            key: 'Num',
+          }, {
+            title: '更换原因',
+            dataIndex: 'Remark',
+            key: 'Remark',
+          },
+        ]
+        break;
+      case 3:
+        // 标气更换
+        columns = [
+          {
+            title: '序号',
+            dataIndex: 'index',
+            key: 'index',
+            width: 60,
+            render: (text, record, index) => {
+              return index + 1;
+            }
+          }, {
+            title: '上次更换日期',
+            dataIndex: 'ReplaceDate',
+            key: 'ReplaceDate',
+          }, {
+            title: '标准物质名称',
+            dataIndex: 'StandardGasName',
+            key: 'StandardGasName',
+          }, {
+            title: '气体浓度',
+            dataIndex: 'GasStrength',
+            key: 'GasStrength',
+          }, {
+            title: '单位',
+            dataIndex: 'Unit',
+            key: 'Unit',
+          }, {
+            title: '数量',
+            dataIndex: 'Num',
+            key: 'Num',
+          }, {
+            title: '供应商',
+            dataIndex: 'Supplier',
+            key: 'Supplier',
+          },
+        ]
+        break;
+      case 4:
+        // 保养更换
+        columns = [
+          {
+            title: '序号',
+            dataIndex: 'index',
+            key: 'index',
+            width: 60,
+            render: (text, record, index) => {
+              return index + 1;
+            }
+          }, {
+            title: '上次更换日期',
+            dataIndex: 'DateOfChange',
+            key: 'DateOfChange',
+          }, {
+            title: '保养内容',
+            dataIndex: 'ConsumablesName',
+            key: 'ConsumablesName',
+          }, {
+            title: '备注',
+            dataIndex: 'Remark',
+            key: 'Remark',
+          }
+        ]
+        break;
+    }
+    this.setState({
+      visible: true,
+      columns: columns
+    })
+  }
+
+  onModalTableData = () => {
+    // 获取弹窗表格数据
+    this.props.dispatch({
+      type: "operations/getOperationReplacePageList",
+      payload: {
+        ...this.state.currentClickTagParams,
+        pageIndex: this.state.modalTableCurrent,
+        pageSize: 10
+      }
+    })
   }
 
   // 获取日历数据
@@ -82,23 +307,50 @@ class CalendarPage extends PureComponent {
   getListData = (value) => {
     let listData = [];
     this.props.calendarList.map(item => {
+      // 今天以前
       if (item.ExcetionDate === value) {
-        // 报警响应异常
-        if (item.AlarmResponseCount) {
-          listData.push({ color: '#f50', content: `报警响应异常${item.AlarmResponseCount}次`, type: 2, date: item.ExcetionDate, text: "报警响应异常" })
+        // 异常任务  0全部类型  4异常任务（全部）1 待执行 2 进行中 3 已完成
+        if (item.ExceptionTaskNum) {
+          listData.push({ color: '#f50', content: `异常任务${item.ExceptionTaskNum}个`, type: 4, date: item.ExcetionDate, text: "异常任务" })
         }
-        // 工作超时
-        if (item.OvertimeWorkCount) {
-          listData.push({ color: '#2db7f5', content: `工作超时${item.OvertimeWorkCount}次`, type: 3, date: item.ExcetionDate, text: "工作超时" })
+        // 完成任务
+        if (item.CompleteTaskNum) {
+          listData.push({ color: '#87d068', content: `完成任务${item.CompleteTaskNum}个`, type: 3, date: item.ExcetionDate, text: "完成任务" })
         }
-        // 打卡异常
-        if (item.SignInCount) {
-          listData.push({ color: '#108ee9', content: `打卡异常${item.SignInCount}次`, type: 1, date: item.ExcetionDate, text: "打卡异常" })
+        // 待执行任务
+        if (item.ExecutedTaskNum) {
+          listData.push({ color: '#108ee9', content: `待执行任务${item.ExecutedTaskNum}个`, type: 1, date: item.ExcetionDate, text: "待执行任务" })
         }
-
+        // 执行中任务
+        if (item.HaveInHandTaskNum) {
+          listData.push({ color: '#2db7f5', content: `进行中任务${item.HaveInHandTaskNum}个`, type: 2, date: item.ExcetionDate, text: "进行中任务" })
+        }
         // 无异常
-        if (!item.AlarmResponseCount && !item.OvertimeWorkCount && !item.SignInCount) {
-          listData.push({ notAbnormal: true, date: item.ExcetionDate, type: "" })
+        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum) {
+          listData.push({ notAbnormal: true, date: item.ExcetionDate, type: 0 })
+        }
+      }
+      // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
+      if (item.FutureDate === value) {
+        // 需备件更换点位数
+        if (item.SparePartTotal) {
+          listData.push({ color: '#f50', content: `需备件更换${item.SparePartTotal}个`, type: 1, date: item.FutureDate, text: "需备件更换点位数", future: true })
+        }
+        // 需易耗品更换点位数
+        if (item.ConsumablesTotal) {
+          listData.push({ color: '#2db7f5', content: `需易耗品更换${item.ConsumablesTotal}个`, type: 2, date: item.FutureDate, text: "需易耗品更换点位数", future: true })
+        }
+        // 需标气更换点位数
+        if (item.StandardGasTotal) {
+          listData.push({ color: '#108ee9', content: `需标气更换${item.StandardGasTotal}个`, type: 3, date: item.FutureDate, text: "需标气更换点位数", future: true })
+        }
+        // 需清理点位数
+        if (item.Maintain) {
+          listData.push({ color: '#87d068', content: `需清理${item.Maintain}个`, type: 4, date: item.FutureDate, text: "需清理点位数", future: true })
+        }
+        // 无异常
+        if (!item.SparePartTotal && !item.ConsumablesTotal && !item.StandardGasTotal && !item.Maintain) {
+          listData.push({ notAbnormal: true, date: item.FutureDate, type: 0, future: true })
         }
       }
     })
@@ -113,19 +365,19 @@ class CalendarPage extends PureComponent {
     //   return <Badge status={"success"} />
     // }
     // 无异常显示绿点
-    if(listData.filter(item => item.notAbnormal).length){
+    if (listData.filter(item => item.notAbnormal).length) {
       return <div style={{ marginTop: -22 }}>
         <Badge status={"success"} />
       </div>
     }
     return (
-      <ul className="events" style={{width: "104%", height: "96%", overflow: "auto"}}>
+      <ul className="events" style={{ width: "104%", height: "96%", overflow: "auto" }}>
         {listData.map(item => {
           // if (item.notAbnormal) {  // 无异常
           //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
           // }
           return <li key={item.content} style={{ marginBottom: 2 }}>
-            <Tag color={item.color} style={{ cursor: "pointer" }} onClick={(e) => {
+            <Tag color={item.color} style={{ cursor: "pointer", lineHeight: "19px", height: 20 }} onClick={(e) => {
               e.stopPropagation()
               this.updateState({ current: 1 });
               setTimeout(() => {
@@ -145,22 +397,33 @@ class CalendarPage extends PureComponent {
       dateFormat: this.state.mode === "month" ? "YYYY年MM月DD日" : "YYYY年MM月"
     })
     const { abnormalForm } = this.props;
-    const { type, date } = data;
+    const { type, date, future } = data;
     // 根据统计周期，计算开始及结束时间
     let scope = this.state.mode === "month" ? "day" : "month";
     let beginTime = moment(date).startOf(scope).format("YYYY-MM-DD HH:mm:ss");
     let endTime = moment(date).endOf(scope).format("YYYY-MM-DD HH:mm:ss");
 
+    // 判断传参
+    let payload = future ? {
+      exceptionType: undefined,
+      FutureType: type
+    } : {
+        exceptionType: type,
+        FutureType: undefined
+      }
+
+
     this.props.dispatch({
       type: "operations/getAbnormalDetailList",
       payload: {
-        excptionType: type,
+        // exceptionType: type,
         beginTime: beginTime,
         endTime: endTime,
         pageIndex: abnormalForm.current,
         pageSize: abnormalForm.pageSize,
         IsQueryAllUser: true,
-        IsPaging: true
+        IsPaging: true,
+        ...payload
       }
     })
 
@@ -190,11 +453,23 @@ class CalendarPage extends PureComponent {
     }, 0);
   }
 
+  onModalTableChange = (current, pageSize) => {
+    this.setState({
+      modalTableCurrent: current
+    }, () => {
+      // 获取表格数据
+      this.onModalTableData()
+    })
+    // setTimeout(() => {
+
+    // }, 0);
+  }
+
 
 
   render() {
-    const { abnormalDetailList, abnormalForm, loading } = this.props;
-    const { currentCellInfo, dateFormat, listData } = this.state;
+    const { abnormalDetailList, abnormalForm, loading, modalTableDataSource, modalTableTotal } = this.props;
+    const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
       <PageHeaderWrapper title="运维日历">
@@ -206,6 +481,7 @@ class CalendarPage extends PureComponent {
                   dateCellRender={this.cellRender}
                   monthCellRender={this.cellRender}
                   onSelect={(date) => {
+                    const isAfter = moment().isBefore(moment(date));
                     // this.setState({
                     //   currentAbnormalData: {
                     //     ...currentAbnormalData,
@@ -214,7 +490,7 @@ class CalendarPage extends PureComponent {
                     // })
                     this.updateState({ current: 1 });
                     setTimeout(() => {
-                      this.abnormalItemClick({ date: date, type: "", text: "运维记录" })
+                      this.abnormalItemClick({ date: date, type: 0, text: "运维记录", future: isAfter })
                     }, 0)
                   }}
                   onPanelChange={(date, mode) => {
@@ -248,9 +524,11 @@ class CalendarPage extends PureComponent {
                       key={item.title}
                     >
                       <List.Item.Meta
-                        title={<a onClick={() => {
-                          router.push(item.href);
-                        }}>{item.title}</a>}
+                        title={
+                          item.href ?
+                            <a onClick={() => { router.push(item.href); }}>{item.title}</a> :
+                            <span>{item.title}</span>
+                        }
                         description={item.description}
                       />
                       {item.content}
@@ -276,7 +554,26 @@ class CalendarPage extends PureComponent {
               }}
             />
           </Card> */}
-
+          <Modal
+            title="Basic Modal"
+            width={"70%"}
+            visible={this.state.visible}
+            footer={null}
+            onCancel={() => { this.setState({ visible: false }) }}
+          >
+            <SdlTable
+              dataSource={modalTableDataSource}
+              columns={columns}
+              pagination={{
+                // showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize: 10,
+                current: modalTableCurrent,
+                onChange: this.onModalTableChange,
+                total: modalTableTotal
+              }}
+            />
+          </Modal>
         </div>
       </PageHeaderWrapper>
     );

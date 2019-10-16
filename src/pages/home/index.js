@@ -1253,10 +1253,10 @@ class index extends Component {
                 <span>{currentEntInfo.title}</span>
               </div>
             }
-            <div>
+            {/* <div>
               <span>当前时间</span> <br />
               <span><Time /></span>
-            </div>
+            </div> */}
             {
               currentPoint && currentPoint.title && <div>
                 <span>排口</span> <br />
