@@ -36,7 +36,6 @@ export default Model.extend({
             }) {
             const { dgimn, beginTime, endTime, packageType, pageIndex, pageSize } = yield select(state => state.originalData);
             console.log("dgimn=",dgimn);
-            // debugger;
             const body = {
                 dgimn: dgimn,
                 beginTime: beginTime,

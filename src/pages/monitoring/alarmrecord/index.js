@@ -31,9 +31,7 @@ class Index extends Component {
                  <AlarmRecord DGIMN={this.state.dgimn} EntCode={this.state.EntCode}/>
                 </PageHeaderWrapper>
                 <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
-                    console.log('111111111111111111111111111111', value);
                             if (value.length > 0 && !value[0].IsEnt) {
-                                debugger;
                             this.changeDgimn(value[0].key, value[0].EntCode)
                             }
                         }} />

@@ -99,7 +99,6 @@ class UseStandardLibrary extends Component {
         DGIMN: this.state.DGIMN,
         StandardLibraryID: StandardLibraryID,
         callback: (res) => {
-          // debugger;
           this.setState({
             standardlibraryModal: false,
           });

@@ -118,7 +118,6 @@ export default class effluentfeeIndex extends Component {
 
 
     handlePanelChange = (value, mode) => {
-        debugger
 
         this.updateState({
             begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
@@ -132,7 +131,6 @@ export default class effluentfeeIndex extends Component {
     };
 
     handleChange = value => {
-        debugger
         if (value.length > 0) {
             this.updateState({
                 begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
@@ -144,7 +142,6 @@ export default class effluentfeeIndex extends Component {
     };
 
     queryPointData = (record) => {
-        debugger
         const { dataFlag } = this.state;
         const { point, dispatch } = this.props;
         this.setState({

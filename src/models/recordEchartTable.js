@@ -31,7 +31,6 @@ export default Model.extend({
         //获取异常记录汇总
         * getexmodellist({ payload,
         }, { call, update, put, take }) {
-            debugger
             const result = yield call(getexmodellist, payload);
             if (result.IsSuccess) {
                 yield update({
@@ -66,7 +65,6 @@ export default Model.extend({
             }
             const result = yield call(getexceptiondata, body);
             if (result.IsSuccess) {
-                //  debugger
                 yield update({
                     exfirstData: result.Datas,
                     ExceptionTotal: result.Total
@@ -109,7 +107,6 @@ export default Model.extend({
             }
             const result = yield call(getoverdata, body);
             if (result.IsSuccess) {
-                //  debugger
                 yield update({
                     overfirstData: result.Datas,
                     OverTotal: result.Total
