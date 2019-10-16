@@ -198,7 +198,16 @@ class MapView extends Component {
     if (extData.position) {
       if (this.state.displayType === 0) {
         // 企业
-        pointEl = <EntIcon style={{ fontSize: 28 }} />
+        let isShow = "none";
+        extData.position.children.map(item => {
+          if (!!this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
+            isShow = "block";
+          }
+        })
+        pointEl = <>
+          <EntIcon style={{ fontSize: 28 }} />
+          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>}
+        </>
       } else {
         // 排口
         pointEl = <div className={styles.container}>
@@ -704,7 +713,7 @@ class MapView extends Component {
                           bordered>
                           {
                             // 只显示前六个
-                            this.props.tableList.filter((itm,index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                            this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
                               this.setState({
                                 chartTitle: item.title
                               })

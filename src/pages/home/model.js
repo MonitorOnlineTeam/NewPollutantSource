@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-11 14:17:16
+ * @Last Modified time: 2019-10-16 10:52:57
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -299,7 +299,7 @@ export default Model.extend({
       const result = yield call(services.getAllTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas
+          taxInfo: result.Datas || {}
         })
       }
     },
@@ -308,7 +308,7 @@ export default Model.extend({
       const result = yield call(services.getEntTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas
+          taxInfo: result.Datas || {}
         })
       }
     },
@@ -317,7 +317,7 @@ export default Model.extend({
       const result = yield call(services.getPointTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas
+          taxInfo: result.Datas || {}
         })
       }
     },

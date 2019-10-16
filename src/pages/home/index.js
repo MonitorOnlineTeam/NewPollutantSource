@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-10-10 10:27:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-11 15:38:08
+ * @Last Modified time: 2019-10-16 14:00:51
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -497,7 +497,8 @@ class index extends Component {
     let i = 1;
     if (type === 1) {
       let outed = 0;
-      SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
         title = `余${SurplusDisplacement}(t)`;
@@ -507,7 +508,8 @@ class index extends Component {
       ycdata.map((ele) => {
 
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -517,7 +519,8 @@ class index extends Component {
       color = ['#0edaad'];
     } else if (type === 2) {
       let outed = 0;
-      SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
         //  title = `余${SurplusDisplacement}(t)`;
@@ -527,7 +530,8 @@ class index extends Component {
       }
       eyhldata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -537,7 +541,8 @@ class index extends Component {
       color = ['#03b3ff'];
 
     } else {
-      SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder : 0;
       let outed = 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
@@ -547,7 +552,8 @@ class index extends Component {
       }
       dyhwdata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -823,11 +829,9 @@ class index extends Component {
     let polygonChange;
     const ele = document.querySelector(".antd-pro-pages-home-index-excessiveAbnormalWrapper");
     let height = 0;
-    console.log('ele=', ele)
     if (ele) {
       height = ele.offsetHeight - 30;
     }
-    console.log('height=', height)
     const isLoading = allEntAndPointLoading || alarmAnalysisLoading || allMonthEmissionsByPollutantLoading || rateStatisticsByEntLoading || statisticsPointStatusLoading || warningInfoLoading || taskCountLoading || exceptionProcessingLoading
     const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;

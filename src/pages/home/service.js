@@ -82,23 +82,17 @@ export async function getMounthOverData(params) {
 // 排污税 - 所有企业
 export async function getAllTax(params) {
   const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForAllTargetTotal', params, null);
-  return result === null ? {
-      data: null
-  } : result;
+  return result;
 }
 
 // 排污税 - 单个企业
 export async function getEntTax(params) {
   const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForSingleTargetTotal', params, null);
-  return result === null ? {
-      data: null
-  } : result;
+  return result;
 }
 
 // 排污税 - 单个排口
 export async function getPointTax(params) {
   const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForSinglePointTotal', params, null);
-  return result === null ? {
-      data: null
-  } : result;
+  return result;
 }
