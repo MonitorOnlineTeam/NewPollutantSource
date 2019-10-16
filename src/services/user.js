@@ -36,30 +36,30 @@ export async function getUserInfo(params) {
   const result = post('/api/rest/PollutantSourceApi/PUserInfo/GetUserInfo', body, null);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 
-//  个人设置编辑用户
-export async function editpersonaluser(params) {
-  const body = {
-    User_ID: params.UserId,
-    User_Name: params.UserName,
-    User_Sex: params.UserSex,
-    Email: params.Email,
-    Phone: params.Phone,
-    SendPush: params.SendPush,
-    AlarmType: params.AlarmType,
-    AlarmTime: params.AlarmTime,
-  };
-  const result = post('/api/rest/PollutantSourceApi/PUserInfo/EditUser', body, null);
-  return result === null
-    ? {
-        data: null,
-      }
-    : result;
-}
+// //  个人设置编辑用户
+// export async function editpersonaluser(params) {
+//   const body = {
+//     User_ID: params.UserId,
+//     User_Name: params.UserName,
+//     User_Sex: params.UserSex,
+//     Email: params.Email,
+//     Phone: params.Phone,
+//     SendPush: params.SendPush,
+//     AlarmType: params.AlarmType,
+//     AlarmTime: params.AlarmTime,
+//   };
+//   const result = post('/api/rest/PollutantSourceApi/PUserInfo/EditUser', body, null);
+//   return result === null
+//     ? {
+//       data: null,
+//     }
+//     : result;
+// }
 
 // 获取登陆配置信息
 export async function getSystemConfigInfo() {
@@ -71,7 +71,22 @@ export async function getSystemConfigInfo() {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
+
+//验证旧密码是否一致
+export async function vertifyOldPwd(params) {
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/VertifyOldPwd', params);
+
+  return result;
+}
+
+//修改密码
+export async function changePwd(params) {
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', params);
+
+  return result;
+}
+
