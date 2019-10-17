@@ -249,7 +249,6 @@ class PdButton extends Component {
     const { operationUserInfo, dgimn, viewType, paloading, pointName } = this.props;
     //组件传值的话优先采用传入的值
     let { id, name, tel, pname, DGIMN } = this.props;
-    //  debugger;
     if (!id && operationUserInfo) {
       id = operationUserInfo.operationUserID;
       name = operationUserInfo.operationUserName;

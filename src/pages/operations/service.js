@@ -91,3 +91,8 @@ export async function getOperationsUserList(params) {
   return result;
 }
 
+// 获取运维更换记录
+export async function getOperationReplacePageList(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationReplacePageList`, params, null);
+  return result;
+}

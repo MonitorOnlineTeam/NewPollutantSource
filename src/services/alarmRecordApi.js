@@ -34,3 +34,10 @@ export async function GetAlarmRecordDetails(params) {
   const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/GetAlarmRecordDetails', params, null);
   return result;
 }
+
+
+export async function AlarmVerifyAdd(params)
+{
+  const result = await post('/api/rest/PollutantSourceApi/MonitorAlarmApi/AlarmVerifyAdd', params, null);
+  return result;
+}

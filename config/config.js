@@ -663,6 +663,11 @@ export default {
                   path: '/Intelligentanalysis/emissions',
                   component: './Intelligentanalysis/emissions',
                 },
+                {
+                  name: 'effluentFee',
+                  path: '/Intelligentanalysis/effluentFee',
+                  component: './Intelligentanalysis/effluentFee',
+                },
               ],
             },
             {

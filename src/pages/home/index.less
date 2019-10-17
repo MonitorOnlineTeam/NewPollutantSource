@@ -63,7 +63,8 @@
         margin-bottom: 10px;
 
         li {
-          background: #29486d;
+          // background: #29486d;
+          background: rgba(75, 126, 187, 0.8);
           // width: 100px;
           line-height: 28px;
           margin-right: 10px;
@@ -489,6 +490,19 @@
 
       .marqueeContent {
         font-size: 14px;
+        height: calc(100% - 30px);
+
+        &>div{
+          height: 100%;
+        }
+        .notData {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
+          flex-direction: column;
+        }
       }
     }
   }
@@ -601,6 +615,15 @@
         }
       }
 
+      &.pointEmissionsContent>div {
+        .content {
+          &>div:first-child {
+            width: 200px;
+            flex: none;
+          }
+        }
+      }
+
       &>div.content {
         flex: 1;
         width: 100%;
@@ -642,6 +665,25 @@
     // 排污税
     .effluentFeeContent {
       flex: 2;
+
+      .content {
+        padding: 10px;
+      }
+
+      .yjTax {
+        font-size: 19px;
+        text-align: left;
+        margin-top: 4%;
+        margin-bottom: 2%;
+      }
+
+      .quarterTax {
+        margin-top: 6%;
+
+        &>div {
+          display: inline-block;
+        }
+      }
     }
   }
 

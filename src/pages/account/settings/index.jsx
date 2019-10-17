@@ -7,6 +7,7 @@ import BaseView from './components/base';
 import BindingView from './components/binding';
 import NotificationView from './components/notification';
 import SecurityView from './components/security';
+import ChangePwdView from './components/ChangePwdView';
 import styles from './style.less';
 const { Item } = Menu;
 
@@ -22,6 +23,7 @@ class Settings extends Component {
       base: (
         <FormattedMessage id="account-settings.menuMap.basic" defaultMessage="Basic Settings" />
       ),
+      changePwd: ("修改密码"),
       // security: (
       //   <FormattedMessage
       //     id="account-settings.menuMap.security"
@@ -112,7 +114,8 @@ class Settings extends Component {
 
       case 'notification':
         return <NotificationView />;
-
+      case 'changePwd':
+        return <ChangePwdView />;
       default:
         break;
     }

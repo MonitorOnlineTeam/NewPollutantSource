@@ -55,13 +55,11 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    // debugger;
     const { match } = this.props;
     this.reloadPage(match.params.configId);
   }
 
   componentWillReceiveProps(nextProps) {
-    // debugger;
     if (nextProps.location.pathname != this.props.location.pathname) {
       if (nextProps.match.params.configId !== this.props.routerConfig) {this.reloadPage(nextProps.match.params.configId);}
     }

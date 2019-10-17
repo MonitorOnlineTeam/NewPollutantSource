@@ -325,7 +325,7 @@ export default class EntPollutantEmissions extends Component {
 
         if (currFlag === 2) {
             cardTitle = <span>
-                2019年排放量统计
+                {moment(beginTime).get('year')}年排放量统计
                 <Button
                     style={{ marginLeft: 10 }}
                     onClick={() => {
