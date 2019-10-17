@@ -206,7 +206,7 @@ class MapView extends Component {
         })
         pointEl = <>
           <EntIcon style={{ fontSize: 28 }} />
-          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>}
+          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>
         </>
       } else {
         // 排口
