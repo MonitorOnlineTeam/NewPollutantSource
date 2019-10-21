@@ -398,11 +398,11 @@ export default class MonitorPoint extends Component {
           this.onMenu.bind()(e.key, id, name, code);
         }}
       >
-        <Menu.Item key="1">
+        {/* <Menu.Item key="1">
           <Icon type="bars" />
           监测标准
         </Menu.Item>
-       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item>
+       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item> */}
         {/* <Menu.Item key="3">
           <Icon type="youtube" />
           视频管理
@@ -498,7 +498,7 @@ export default class MonitorPoint extends Component {
                       }}><DelIcon />    </a>
 
                     </Tooltip>
-                    <Divider type="vertical" />
+                    {/* <Divider type="vertical" />
                     <Dropdown
                       overlay={menu(
                         row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -507,7 +507,7 @@ export default class MonitorPoint extends Component {
                       )}
                     >
                       <a><Icon type="down" /></a>
-                    </Dropdown>
+                    </Dropdown> */}
                   </Fragment>
                 )}
               />
