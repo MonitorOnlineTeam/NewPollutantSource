@@ -206,7 +206,7 @@ class MapView extends Component {
         })
         pointEl = <>
           <EntIcon style={{ fontSize: 28 }} />
-          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>}
+          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>
         </>
       } else {
         // 排口
@@ -819,7 +819,7 @@ class MapView extends Component {
                 <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
               <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
+                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} noticeState={1} />
               </TabPane>
             </Tabs>
           </Modal>

@@ -305,7 +305,7 @@ class Index extends Component {
                 }
             }} />
             <PageHeaderWrapper>
-                <RecordEchartTableOver  DGIMN={this.state.dgimn}  />
+                <RecordEchartTableOver  DGIMN={this.state.dgimn} noticeState={1}  />
             </PageHeaderWrapper>
 
         </div>

@@ -34,13 +34,13 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-            format: 'YYYY-MM-DD HH:mm:ss',
+            rangeDate:this.props.noticeState==0?[this.props.firsttime,this.props.lasttime]: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
+            format: this.props.noticeState==0?'YYYY-MM-DD HH':'YYYY-MM-DD HH:mm:ss',
             bar: [],
-            dataType: 'RealTimeData',
+            dataType: this.props.noticeState==0?'HourData':'RealTimeData',
             DGIMN: [],
-            beginTime: "",
-            endTime: "",
+            beginTime:this.props.noticeState==0? this.props.firsttime: "",
+            endTime:this.props.noticeState==0? this.props.lasttime: "",
             Pollutant: "",
             ExceptionType: "",
             column: [
@@ -86,12 +86,18 @@ class Index extends Component {
         // })
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
-        this.setState({
-            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-        }, () => {
-            this.props.initLoadData && this.getLoadData(this.props);
-        })
+        if(this.props.noticeState==0)
+        {
+            this.getLoadData(this.props)
+        }else
+        {
+            this.setState({
+                beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+                endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+            }, () => {
+                this.props.initLoadData && this.getLoadData(this.props);
+            })
+        }
     }
     componentWillReceiveProps(nextProps) {
         // if (this.props.overcount != nextProps.overcount) {
@@ -109,6 +115,24 @@ class Index extends Component {
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }
+        // if (this.props.firsttime != nextProps.firsttime) {
+        //     console.log('firsttime=',nextProps)
+        //     this.setState({
+        //         beginTime: nextProps.firsttime,
+        //         endTime: nextProps.lasttime,
+        //         rangeDate: [nextProps.firsttime, nextProps.lasttime],
+        //     })
+        // }
+        // if (this.props.noticeState != nextProps.noticeState) {
+        //     console.log('notice=',nextProps)
+        //     if(nextProps.noticeState==0)
+        //     {
+        //         this.setState({
+        //             formats: 'YYYY-MM-DD HH',
+        //             dataType: "HourData",
+        //         })
+        //     }
+        // }
     }
     // /** 后台请求数据 */
     // reloaddatalist = () => {
@@ -336,7 +360,7 @@ class Index extends Component {
                     extra={
                         <div>
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
-                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            {this.props.noticeState==0? <Button key={3} value="hour">小时</Button>:<ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >
