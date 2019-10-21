@@ -403,10 +403,10 @@ export default class MonitorPoint extends Component {
           监测标准
         </Menu.Item>
        <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item>
-        <Menu.Item key="3">
+        {/* <Menu.Item key="3">
           <Icon type="youtube" />
           视频管理
-        </Menu.Item>
+        </Menu.Item> */}
         {/* <Menu.Item key="4"><Icon type="home" />进入排口</Menu.Item> */}
       </Menu>
     );
