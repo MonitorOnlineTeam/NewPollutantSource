@@ -1,4 +1,9 @@
-
+/**
+ * 功  能：运维周期
+ * 创建人：wjw
+ * 修改人：-
+ * 创建时间：2019.10.21
+ */
 import Model from '@/utils/model';
 import {
   GetMaintenanceReminder, AddOrUpdateMaintenanceReminder, DeleteMaintenanceReminder,
@@ -7,10 +12,10 @@ import {
 export default Model.extend({
   namespace: 'maintenances',
   state: {
-maintenancereminderdata: [],
+    maintenancereminderdata: [],
   },
   effects: {
-/** 获取运维周期 */
+    /** 获取运维周期 */
     * GetMaintenanceReminder({
       payload,
     }, {
