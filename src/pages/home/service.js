@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-10-10 09:39:12 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-10-10 10:02:49
+ * @desc: 主页接口api
+ */
 import { post, get, getNew } from '@/utils/request';
 
 // 获取所有企业及排口信息
@@ -34,7 +41,7 @@ export async function getStatisticsPointStatus(params) {
 
 // 报警信息
 export async function getWarningInfo(params) {
-  const result = post("/api/rest/PollutantSourceApi/PWorkbench/GetDataOverAlarmPageList?authorCode=48f3889c-af8d-401f-ada2-c383031af92d", params, null);
+  const result = post("/api/rest/PollutantSourceApi/HomePageApi/GetOverAndWarningData", params, null);
   return result === null ? {
     data: null
   } : result;
@@ -62,4 +69,30 @@ export async function getAlarmAnalysis(params) {
   return result === null ? {
       data: null
   } : result;
+}
+
+// 超标汇总
+export async function getMounthOverData(params) {
+  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetMounthOverData', params, null);
+  return result === null ? {
+      data: null
+  } : result;
+}
+
+// 排污税 - 所有企业
+export async function getAllTax(params) {
+  const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForAllTargetTotal', params, null);
+  return result;
+}
+
+// 排污税 - 单个企业
+export async function getEntTax(params) {
+  const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForSingleTargetTotal', params, null);
+  return result;
+}
+
+// 排污税 - 单个排口
+export async function getPointTax(params) {
+  const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForSinglePointTotal', params, null);
+  return result;
 }

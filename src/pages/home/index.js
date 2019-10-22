@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi
+ * @Date: 2019-10-10 10:27:00
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-10-22 11:21:18
+ * @desc: 首页
+ */
 import React, { Component } from 'react';
 import {
   Row,
@@ -8,6 +15,8 @@ import {
   Button,
   Statistic,
   Icon,
+  Divider,
+  Empty,
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { routerRedux } from 'dva/router';
@@ -52,6 +61,8 @@ let _thismap;
   currentEntInfo: home.currentEntInfo,
   currentMarkersList: home.currentMarkersList,
   allEntAndPointList: home.allEntAndPointList,
+  mounthOverData: home.mounthOverData,
+  taxInfo: home.taxInfo,
   noticeList: global.notices
 }))
 class index extends Component {
@@ -82,9 +93,22 @@ class index extends Component {
           props.dispatch({
             type: "home/updateState",
             payload: {
+              // currentEntInfo: {},
               currentMarkersList: this.props.allEntAndPointList
             }
           })
+          if (this.state.showType === "point") {
+            props.dispatch({
+              type: "home/updateState",
+              payload: {
+                currentEntInfo: {},
+              }
+            })
+            // this.getHomeData(null)
+            this.setState({
+              currentPoint: undefined
+            })
+          }
           this.setState({ showType: "ent" })
         } else {
           this.setState({ showType: "point" })
@@ -130,8 +154,9 @@ class index extends Component {
     dispatch({
       type: "home/getAllMonthEmissionsByPollutant",
       payload: {
-        entCode: entCode,
-        pollutantCode: DGIMN
+        EntCode: entCode || undefined,
+        DGIMN
+        // pollutantCode: DGIMN
       }
     })
     // 获取智能质控数据
@@ -180,17 +205,54 @@ class index extends Component {
         DGIMN
       }
     })
+
+    // 获取超标汇总
+    dispatch({
+      type: "home/getMounthOverData",
+      payload: {
+        entCode,
+        DGIMN
+      }
+    })
+
+    // 获取所有企业排污税
+    if (!entCode && !DGIMN) {
+      dispatch({
+        type: "home/getAllTax",
+      })
+    }
+
+    // 获取单个企业排污税
+    if (entCode && !DGIMN) {
+      dispatch({
+        type: "home/getEntTax",
+        payload: {
+          targetId: entCode
+        }
+      })
+    }
+
+    // 获取单个排口排污税
+    if (!entCode && DGIMN) {
+      dispatch({
+        type: "home/getPointTax",
+        payload: {
+          DGIMN
+        }
+      })
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
       this.getHomeData(nextProps.currentEntInfo.key);
-      console.log('currentEntInfo=', nextProps.currentEntInfo)
-      this.setState({
-        mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
-        zoom: 13
-      })
-      _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
+      if (nextProps.currentEntInfo.Longitude && nextProps.currentEntInfo.Latitude) {
+        this.setState({
+          mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
+          zoom: 13
+        })
+        _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
+      }
     }
     if (this.props.currentMarkersList !== nextProps.currentMarkersList) {
       const currentMarkersList = nextProps.currentMarkersList.map(item => {
@@ -289,8 +351,11 @@ class index extends Component {
       })
     } else {
       // 点击排口
-      // console.log('点击了排口:', itemData)
+      console.log('点击了排口:', itemData)
       this.getHomeData(undefined, itemData.position.key)
+      this.setState({
+        currentPoint: itemData.position
+      })
     }
   }
 
@@ -431,7 +496,8 @@ class index extends Component {
     let i = 1;
     if (type === 1) {
       let outed = 0;
-      SurplusDisplacement = ycAnalData.length !== 0 ? ycAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
         title = `余${SurplusDisplacement}(t)`;
@@ -441,7 +507,8 @@ class index extends Component {
       ycdata.map((ele) => {
 
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -451,7 +518,8 @@ class index extends Component {
       color = ['#0edaad'];
     } else if (type === 2) {
       let outed = 0;
-      SurplusDisplacement = eyhlAnalData.length !== 0 ? eyhlAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
         //  title = `余${SurplusDisplacement}(t)`;
@@ -461,7 +529,8 @@ class index extends Component {
       }
       eyhldata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -471,7 +540,8 @@ class index extends Component {
       color = ['#03b3ff'];
 
     } else {
-      SurplusDisplacement = dyhwAnalData.length !== 0 ? dyhwAnalData.Remainder.toFixed(2) : 0;
+      // SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder : 0;
       let outed = 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
@@ -481,7 +551,8 @@ class index extends Component {
       }
       dyhwdata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
-          seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -493,7 +564,7 @@ class index extends Component {
     }
     let option = {
       title: {
-        text: title,
+        text: this.state.currentPoint ? '' : title,
         x: 'center',
         textStyle: {
           fontSize: 16,
@@ -694,6 +765,7 @@ class index extends Component {
     }
     return icon;
   }
+
   render() {
     const {
       pointName,
@@ -703,7 +775,8 @@ class index extends Component {
       currentMarkersList,
       mapCenter,
       did,
-      showType
+      showType,
+      currentPoint
     } = this.state;
     const {
       pointData,
@@ -720,7 +793,9 @@ class index extends Component {
       statisticsPointStatusLoading,
       warningInfoLoading,
       taskCountLoading,
-      exceptionProcessingLoading
+      exceptionProcessingLoading,
+      mounthOverData,
+      taxInfo,
     } = this.props;
 
     const {
@@ -730,18 +805,23 @@ class index extends Component {
     } = AllMonthEmissionsByPollutant;
     // 计算排污许可情况
     let ycLink;
-    if (ycAnalData && ycAnalData.length !== 0) {
+    if (ycAnalData && ycAnalData.linkFlag && ycAnalData.length !== 0) {
       ycLink = `${Math.abs(ycAnalData.linkFlag.toFixed(2))}%(${ycAnalData.monthSum.toFixed(2)}/${ycAnalData.flag.toFixed(2)})`;
     }
     let dyhwLink;
-    if (dyhwAnalData && dyhwAnalData.length !== 0) {
+    if (dyhwAnalData && dyhwAnalData.linkFlag && dyhwAnalData.length !== 0) {
       dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
     }
     let eyhlLink;
-    if (eyhlAnalData && eyhlAnalData.length !== 0) {
+    if (eyhlAnalData && dyhwAnalData.linkFlag && eyhlAnalData.length !== 0) {
       eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
     }
 
+    if (currentPoint) {
+      ycLink = ycAnalData.monthSum;
+      dyhwLink = dyhwAnalData.monthSum;
+      eyhlLink = eyhlAnalData.monthSum;
+    }
 
     let pointposition = position;
     let pointvisible = visible;
@@ -757,6 +837,22 @@ class index extends Component {
     if (did && isLoading) {
       return <PageLoading />
     }
+
+
+    const lineOption = {
+      xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line'
+      }]
+    };
+
     return (
       <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
         {
@@ -817,7 +913,7 @@ class index extends Component {
           >{this.state.currentTitle}</InfoWindow>
           <div className={styles.leftWrapper}>
             {/* 运行分析  || 智能质控*/}
-            <div className={styles.effectiveRate}> 
+            <div className={styles.effectiveRate}>
               <div className={styles.title}>
                 <p>运行分析</p>
               </div>
@@ -931,13 +1027,18 @@ class index extends Component {
               {/* <div className={styles.excessiveAbnormalContent}> */}
               <div className={styles.marqueeContent}>
                 {
-                  height ? <Marquee
-                    data={warningInfoList}
-                    speed={30}
-                    gap={700}
-                    height={height}
-                    width={400}
-                  /> : ""
+                  warningInfoList.length ? (
+                    <Marquee
+                      data={warningInfoList}
+                      speed={30}
+                      gap={700}
+                      height={"100%"}
+                      width={380}
+                    />
+                  ) : <div className={styles.notData}>
+                      <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                      <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                    </div>
                 }
               </div>
               {/* </div> */}
@@ -964,80 +1065,187 @@ class index extends Component {
                 </div>
               </div>
             </div>
-            {/* 排放量 */}
-            <div className={styles.emissionsContent}>
-              <div className={styles.title} style={{ marginBottom: 10 }}>
-                <p>排放量分析</p>
-              </div>
-              {/* 氮氧化物排污许可情况 */}
-              <div className={`${styles.NOx} ${styles.content}`}>
-                <div className={styles.contentTitle}>
-                  <p>氮氧化物排污许可情况</p>
+            {/* 企业排放量 */}
+            {
+              !(currentPoint) && <div className={styles.emissionsContent}>
+                <div className={styles.title} style={{ marginBottom: 10 }}>
+                  <p>排放量分析</p>
                 </div>
-                <div className={styles.content}>
-                  <div className={styles.echartBox}>
-                    <ReactEcharts
-                      loadingOption={this.props.loadingRateStatistics}
-                      option={this.getlicense(3)}
-                      style={{ height: '100%' }}
-                      className="echarts-for-echarts"
-                      theme="my_theme"
-                    />
+                {/* 氮氧化物排污许可情况 */}
+                <div className={`${styles.NOx} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>氮氧化物排污许可情况</p>
                   </div>
-                  <div className={styles.desc}>
-                    本年度累计排放量占比 <br />
-                    {dyhwLink}
-                  </div>
-                </div>
-              </div>
-              {/* 烟尘物排污许可情况 */}
-              <div className={`${styles.smoke} ${styles.content}`}>
-                <div className={styles.contentTitle}>
-                  <p>烟尘物排污许可情况</p>
-                </div>
-                <div className={styles.content}>
-                  <div className={styles.echartBox}>
-                    <ReactEcharts
-                      loadingOption={this.props.loadingRateStatistics}
-                      option={this.getlicense(1)}
-                      style={{ height: '100%' }}
-                      className="echarts-for-echarts"
-                      theme="my_theme"
-                    />
-                  </div>
-                  <div className={styles.desc}>
-                    本年度累计排放量占比<br />
-                    {ycLink}
+                  <div className={styles.content}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(3)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量占比 <br />
+                      {dyhwLink}
+                    </div>
                   </div>
                 </div>
+                {/* 烟尘物排污许可情况 */}
+                <div className={`${styles.smoke} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>烟尘物排污许可情况</p>
+                  </div>
+                  <div className={styles.content}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(1)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量占比<br />
+                      {ycLink}
+                    </div>
+                  </div>
 
-              </div>
-              {/* 二氧化硫排污许可情况 */}
-              <div className={`${styles.SO2} ${styles.content}`}>
-                <div className={styles.contentTitle}>
-                  <p>二氧化硫排污许可情况</p>
                 </div>
-                <div className={styles.content} style={{ paddingBottom: 0 }}>
-                  <div className={styles.echartBox}>
-                    <ReactEcharts
-                      loadingOption={this.props.loadingRateStatistics}
-                      option={this.getlicense(2)}
-                      style={{ height: '100%' }}
-                      className="echarts-for-echarts"
-                      theme="my_theme"
-                    />
+                {/* 二氧化硫排污许可情况 */}
+                <div className={`${styles.SO2} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>二氧化硫排污许可情况</p>
                   </div>
-                  <div className={styles.desc}>
-                    本年度累计排放量占比<br />
-                    {eyhlLink}
+                  <div className={styles.content} style={{ paddingBottom: 0 }}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(2)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量占比<br />
+                      {eyhlLink}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
+
+            {/* 排口 - 排放量 */}
+            {
+              (currentPoint) && <div className={`${styles.emissionsContent} ${styles.pointEmissionsContent}`}>
+                <div className={styles.title} style={{ marginBottom: 10 }}>
+                  <p>排放量分析</p>
+                </div>
+                {/* 氮氧化物排污许可情况 */}
+                <div className={`${styles.NOx} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>氮氧化物排污情况</p>
+                  </div>
+                  <div className={styles.content}>
+                    <div className={styles.echartBox} style={{ width: 200 }}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(3)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量 <br />
+                      {dyhwLink}
+                    </div>
+                  </div>
+                </div>
+                {/* 烟尘物排污许可情况 */}
+                <div className={`${styles.smoke} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>烟尘物排污情况</p>
+                  </div>
+                  <div className={styles.content}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(1)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量<br />
+                      {ycLink}
+                    </div>
+                  </div>
+
+                </div>
+                {/* 二氧化硫排污许可情况 */}
+                <div className={`${styles.SO2} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>二氧化硫排污情况</p>
+                  </div>
+                  <div className={styles.content} style={{ paddingBottom: 0 }}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        loadingOption={this.props.loadingRateStatistics}
+                        option={this.getlicense(2)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      本年度累计排放量<br />
+                      {eyhlLink}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
             {/* 排污税 */}
             <div className={styles.effluentFeeContent}>
               <div className={styles.title}>
                 <p>排污税</p>
+              </div>
+              <div className={styles.content}>
+                <p className={styles.yjTax}><span style={{ textAlign: "left", fontSize: "16px", fontWeight: 600, color: "#d5d9e2" }}>{moment(taxInfo.Date).format('MM') * 1}月应交环保税：</span><Statistic valueStyle={{ color: '#fff', textAlign: 'center', fontSize: 22 }} value={taxInfo.LastQuarter} prefix="￥" /></p>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Statistic title={<span style={{ color: "#d5d9e2" }}>环保税：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.EffluentFeeValue} prefix="￥" />
+                  </Col>
+                  <Col span={12} style={{ textAlign: 'right' }}>
+                    <Statistic title={<span style={{ color: "#d5d9e2" }}>超级排放奖励：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.UltralowEmissionIncentives} prefix="￥" />
+                  </Col>
+                </Row>
+                <Divider style={{ background: "#1c324c" }} />
+                <div className={styles.quarterTax}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: "#d5d9e2" }}>本季度应缴环保税：</div>
+                  {
+                    (taxInfo.ThisQuarter > taxInfo.LastQuarter) ?
+                      <Statistic
+                        valueStyle={{ color: '#fff', fontSize: 22, color: "#FF4E4E" }}
+                        value={taxInfo.ThisQuarter}
+                        prefix={
+                          <><Icon style={{ color: "#FF4E4E", fontSize: "18px" }} type="caret-up" /> ￥ </>
+                        }
+                      />
+                      : <Statistic
+                        valueStyle={{ color: '#fff', fontSize: 22, color: "rgb(91, 242, 135)" }}
+                        value={taxInfo.ThisQuarter}
+                        prefix={
+                          <><Icon style={{ color: "rgb(91, 242, 135)", fontSize: "18px" }} type="caret-down" /> ￥ </>
+                        }
+                      />
+                  }
+                </div>
               </div>
             </div>
           </div>
@@ -1048,14 +1256,16 @@ class index extends Component {
                 <span>{currentEntInfo.title}</span>
               </div>
             }
-            <div>
+            {/* <div>
               <span>当前时间</span> <br />
               <span><Time /></span>
-            </div>
-            {/* <div>
-              <span>统计时间</span> <br />
-              <span>{moment(new Date()).format("YYYY-MM-DD HH:mm:ss")}</span>
             </div> */}
+            {
+              currentPoint && currentPoint.title && <div>
+                <span>排口</span> <br />
+                <span>{currentPoint.title}</span>
+              </div>
+            }
           </div>
           {/**中间污染物类型*/}
           {
@@ -1072,31 +1282,30 @@ class index extends Component {
               </Radio.Group>
             </div>
           }
-          <div className={styles.overproofWrapper}>
-            <div className={styles.title}>{currentMonth}月超标汇总</div>
-            <div className={styles.content}>
-              <ul className={styles.colum}>
-                <li>污染物</li>
-                <li>超标次数</li>
-                <li>超标倍数</li>
-              </ul>
-              <ul>
-                <li>烟尘</li>
-                <li>5次</li>
-                <li>0.2-0.5</li>
-              </ul>
-              <ul>
-                <li>二氧化硫</li>
-                <li>3次</li>
-                <li>0.1-0.3</li>
-              </ul>
-              <ul>
-                <li>氮氧化物</li>
-                <li>6次</li>
-                <li>0.6-0.9</li>
-              </ul>
-            </div>
-          </div>
+          {
+            mounthOverData.length ? <div className={styles.overproofWrapper}>
+              <div className={styles.title}>{currentMonth}月超标汇总</div>
+              <div className={styles.content}>
+                <ul className={styles.colum}>
+                  <li>污染物</li>
+                  <li>超标次数</li>
+                  <li>超标倍数</li>
+                </ul>
+                {
+                  mounthOverData.map(item => {
+                    if (item) {
+                      return <ul>
+                        <li>{item.pollutantName}</li>
+                        <li>{item.OverCount}</li>
+                        <li>{item.OverMultiple}</li>
+                      </ul>
+                    }
+                  })
+                }
+              </div>
+            </div> : null
+          }
+
           <Markers
             markers={currentMarkersList}
             events={this.markersEvents}

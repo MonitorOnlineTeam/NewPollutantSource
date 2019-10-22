@@ -102,7 +102,6 @@ export default Model.extend({
             update,
             select,
         }) {
-            debugger
             const { manualUploadParameters } = yield select(a => a.manualupload);
             const result = yield call(GetManualSupplementList, { ...manualUploadParameters });
             if (result.IsSuccess) {

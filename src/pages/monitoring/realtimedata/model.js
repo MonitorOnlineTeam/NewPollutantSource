@@ -489,7 +489,6 @@ export default Model.extend({
     reducers: {
         updateRealTimeData(state, action) {
             let realtimedata = action.payload.data;
-            debugger
             let pollutantval = [{ pollutantName: 'co', value: 21.1 }, { pollutantName: 'nox', value: 21.1 }]
             realtimedata.map((item, key) => {
                 pollutantval.where(() => { });

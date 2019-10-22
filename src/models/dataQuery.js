@@ -65,7 +65,6 @@ export default Model.extend({
             payload,
         }, { select, call, update }) {
             const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-            // debugger;
             if (!pollutantlist[0] || !historyparams.payloadpollutantCode) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;

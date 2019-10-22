@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi
+ * @Date: 2019-10-10 10:04:51
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-10-16 10:52:57
+ * @desc: 主页model
+ */
 import moment from 'moment';
 import * as services from './service';
 import * as commonApi from '@/services/commonApi'
@@ -61,7 +68,17 @@ export default Model.extend({
       endTime: moment().add(1, 'months').format('YYYY-MM-01 HH:mm:ss'),
       aaData: []
     },
-    alarmAnalysis: {}
+    alarmAnalysis: {},
+    // 超标汇总
+    mounthOverDataParams: {
+      beginTime: moment().format("YYYY-MM-01 00:00:00"),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      EntCode: null,
+      DGIMN: null,
+    },
+    mounthOverData: [],
+    // 排污税
+    taxInfo: {},
   },
   effects: {
     // 获取企业及排口信息
@@ -126,10 +143,10 @@ export default Model.extend({
         ...payload
       }
       const result = yield call(services.getWarningInfo, postData);
-      if (result.requstresult) {
-        let data = result.data.map(item => {
-          return { "desc": `${item.PointName}：${item.PollutantNames}从${item.FirstTime}发生了${item.AlarmCount}次报警。`, url: "" }
-        })
+      if (result.IsSuccess) {
+        let data = result.Datas ? result.Datas[0].map(item => {
+          return { "desc": `${item.PointName}：${item.PollutantName}从${item.FirstTime}发生了${item.AlarmCount}次报警。`, url: "" }
+        }) : [];
         yield update({
           warningInfoList: data
         })
@@ -195,43 +212,114 @@ export default Model.extend({
         beginTime: AllMonthEmissionsByPollutant.beginTime,
         endTime: AllMonthEmissionsByPollutant.endTime,
         pollutantCode: AllMonthEmissionsByPollutant.pollutantCode,
-        entCode: payload.entCode
+        EntCode: payload.entCode,
+        ...payload
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
-      let ycdate = [];
-      let ycdata = [];
-      response.Datas[0].monthList.map((ele) => {
-        ycdate.push(`${ele.DataDate.split('-')[1]}月`);
-        ycdata.push(ele.Emissions.toFixed(2));
-      });
-      let eyhldate = [];
-      let eyhldata = [];
-      response.Datas[1].monthList.map((ele) => {
-        eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
-        eyhldata.push(ele.Emissions.toFixed(2));
-      });
-      let dyhwdate = [];
-      let dyhwdata = [];
-      response.Datas[2].monthList.map((ele) => {
-        dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
-        dyhwdata.push(ele.Emissions.toFixed(2));
-      });
-      yield update({
-        AllMonthEmissionsByPollutant: {
-          ...AllMonthEmissionsByPollutant,
-          ...{
-            ycdate: ycdate,
-            ycdata: ycdata,
-            ycAnalData: response.Datas[0],
-            eyhldate: eyhldate,
-            eyhldata: eyhldata,
-            eyhlAnalData: response.Datas[1],
-            dyhwdate: dyhwdate,
-            dyhwdata: dyhwdata,
-            dyhwAnalData: response.Datas[2],
+      if (response.IsSuccess) {
+
+        let ycdate = [];
+        let ycdata = [];
+        response.Datas[0].monthList.map((ele) => {
+          ycdate.push(`${ele.DataDate.split('-')[1]}月`);
+          ycdata.push(ele.Emissions.toFixed(2));
+        });
+        let eyhldate = [];
+        let eyhldata = [];
+        response.Datas[1].monthList.map((ele) => {
+          eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
+          eyhldata.push(ele.Emissions.toFixed(2));
+        });
+        let dyhwdate = [];
+        let dyhwdata = [];
+        response.Datas[2].monthList.map((ele) => {
+          dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
+          dyhwdata.push(ele.Emissions.toFixed(2));
+        });
+        yield update({
+          AllMonthEmissionsByPollutant: {
+            ...AllMonthEmissionsByPollutant,
+            ...{
+              ycdate: ycdate,
+              ycdata: ycdata,
+              ycAnalData: response.Datas[0],
+              eyhldate: eyhldate,
+              eyhldata: eyhldata,
+              eyhlAnalData: response.Datas[1],
+              dyhwdate: dyhwdate,
+              dyhwdata: dyhwdata,
+              dyhwAnalData: response.Datas[2],
+            }
           }
-        }
-      });
+        });
+      }
+    },
+    // 获取超标汇总
+    *getMounthOverData({ payload }, { call, update, select }) {
+      const mounthOverDataParams = yield select(state => state.home.mounthOverDataParams);
+      const postData = {
+        ...mounthOverDataParams,
+        ...payload
+      }
+      const result = yield call(services.getMounthOverData, postData);
+      if (result.IsSuccess) {
+        const mounthOverData = [];
+        result.Datas[0].rtnVal.map(item => {
+          switch (item.PollutantCode) {
+            case '01':
+              mounthOverData.push({
+                ...item,
+                pollutantName: "烟尘"
+              })
+              break;
+            case '02':
+              mounthOverData.push({
+                ...item,
+                pollutantName: "二氧化硫"
+              })
+              break;
+            case '03':
+              mounthOverData.push({
+                ...item,
+                pollutantName: "氮氧化物"
+              })
+              break;
+            default: break;
+          }
+        })
+        console.log('mounthOverData=', mounthOverData)
+        yield update({
+          mounthOverData
+        })
+      }
+    },
+
+    // 排污税 - 所有企业
+    *getAllTax({ payload }, { call, update, select }) {
+      const result = yield call(services.getAllTax, payload);
+      if (result.IsSuccess) {
+        yield update({
+          taxInfo: result.Datas || {}
+        })
+      }
+    },
+    // 排污税 - 单个企业
+    *getEntTax({ payload }, { call, update, select }) {
+      const result = yield call(services.getEntTax, payload);
+      if (result.IsSuccess) {
+        yield update({
+          taxInfo: result.Datas || {}
+        })
+      }
+    },
+    // 排污税 - 单个排口
+    *getPointTax({ payload }, { call, update, select }) {
+      const result = yield call(services.getPointTax, payload);
+      if (result.IsSuccess) {
+        yield update({
+          taxInfo: result.Datas || {}
+        })
+      }
     },
   }
 })

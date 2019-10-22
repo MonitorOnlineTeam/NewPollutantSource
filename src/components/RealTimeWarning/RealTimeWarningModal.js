@@ -331,7 +331,6 @@ class RealTimeWarningModal extends Component {
         const { pollutantList } = this.props;
         const selectPllutantInfo = pollutantList.find((value, index, arr) => value.PollutantCode == selectedPollutantCode);
         console.log('selectPllutantInfo=', selectPllutantInfo)
-        debugger
         const suugestValue = this.state.SuggestValue;
         const columns = [
             {

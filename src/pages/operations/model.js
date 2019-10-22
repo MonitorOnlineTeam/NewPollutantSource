@@ -14,6 +14,7 @@ export default Model.extend({
       dateTime: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
     },
     abnormalDetailList: [],
+    futureDetailList: [],
     abnormalForm: {
       current: 1,
       pageSize: 6,
@@ -46,6 +47,7 @@ export default Model.extend({
     approveModalData: {},
     applicantList: [],
     operationsUserList: [],
+    modalTableDataSource: []
   },
   effects: {
     // 获取日历信息
@@ -53,7 +55,10 @@ export default Model.extend({
       const result = yield call(services.getCalendarInfo, payload);
       if (result.IsSuccess) {
         yield update({
-          calendarList: result.Datas
+          calendarList: [
+            ...result.Datas.excetionTotal,
+            ...result.Datas.FutureTotal
+          ]
         })
       }
     },
@@ -63,12 +68,24 @@ export default Model.extend({
       const abnormalForm = yield select(state => state.operations.abnormalForm)
       const result = yield call(services.getAbnormalDetailList, payload);
       if (result.IsSuccess) {
+        let newState = {};
+        if (payload.FutureType !== undefined) {
+          // 之后
+          newState = {
+            futureDetailList: result.Datas || [],
+          }
+        } else {
+          // 之前
+          newState = {
+            abnormalDetailList: result.Datas || [],
+          }
+        }
         yield update({
-          abnormalDetailList: result.Datas || [],
           abnormalForm: {
             ...abnormalForm,
             total: result.Total
-          }
+          },
+          ...newState
         })
       }
     },
@@ -307,6 +324,16 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           operationsUserList: result.Datas
+        })
+      }
+    },
+    // 获取运维更换记录
+    *getOperationReplacePageList({ payload }, { call, put, update }) {
+      const result = yield call(services.getOperationReplacePageList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          modalTableDataSource: result.Datas,
+          modalTableTotal: result.Total
         })
       }
     },

@@ -134,7 +134,6 @@ export default class MonitorPoint extends Component {
       sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
-    // debugger;
     switch (type) {
       case 1:
         // 废水
@@ -181,7 +180,6 @@ export default class MonitorPoint extends Component {
 
   editMonitorInfo = () => {
     const { key, row } = this.state;
-    // debugger;
     if (!row || row.length === 0 || row.length > 1) {
       sdlMessage('请选择一行进行操作', 'warning');
       return false;
@@ -400,15 +398,15 @@ export default class MonitorPoint extends Component {
           this.onMenu.bind()(e.key, id, name, code);
         }}
       >
-        <Menu.Item key="1">
+        {/* <Menu.Item key="1">
           <Icon type="bars" />
           监测标准
         </Menu.Item>
-       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item>
-        <Menu.Item key="3">
+       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item> */}
+        {/* <Menu.Item key="3">
           <Icon type="youtube" />
           视频管理
-        </Menu.Item>
+        </Menu.Item> */}
         {/* <Menu.Item key="4"><Icon type="home" />进入排口</Menu.Item> */}
       </Menu>
     );
@@ -500,7 +498,7 @@ export default class MonitorPoint extends Component {
                       }}><DelIcon />    </a>
 
                     </Tooltip>
-                    <Divider type="vertical" />
+                    {/* <Divider type="vertical" />
                     <Dropdown
                       overlay={menu(
                         row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -509,7 +507,7 @@ export default class MonitorPoint extends Component {
                       )}
                     >
                       <a><Icon type="down" /></a>
-                    </Dropdown>
+                    </Dropdown> */}
                   </Fragment>
                 )}
               />

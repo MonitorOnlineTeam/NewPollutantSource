@@ -42,7 +42,6 @@ export default class MonitorTarget extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //debugger;
         if (nextProps.location.pathname != this.props.location.pathname) {
             if (nextProps.match.params.configId !== this.props.routerConfig)
                 this.reloadPage(nextProps.match.params.configId);

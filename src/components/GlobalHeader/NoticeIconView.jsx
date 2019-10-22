@@ -161,23 +161,24 @@ export default class GlobalHeaderRight extends PureComponent {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '实时预警',
+                    title: '实时预警-'+item.pointname,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标记录',
+                    title: '超标记录-'+item.pointname,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警',
+                    title: '异常报警-'+item.pointname,
                     flag: 'exception',
                   });
                   break;
               }
+              console.log('name=',item)
             }
           }}
           loading={fetchingNotices}
@@ -210,6 +211,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 DGIMN={this.state.DGIMN}
                 firsttime={moment(this.state.firsttime)}
                 lasttime={moment(this.state.lasttime)}
+                noticeState={0}
                 maxHeight={200}
               />
               : this.state.flag === 'exception' ?

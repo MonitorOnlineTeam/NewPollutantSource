@@ -78,8 +78,8 @@ export default Model.extend({
             total: 0,
         },
         hourDataOverWarningList: {
-            beginTime: moment().minute() < 30 ? moment().add(-1, 'hour').format("YYYY-MM-DD HH:00:00") : moment().add(-1, 'hour').format("YYYY-MM-DD HH:00:00"),
-            endTime: moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
+            beginTime: moment().minute() < 30 ? moment().add(-1, 'hour').format("YYYY-MM-DD HH:00:00") : moment().format("YYYY-MM-DD HH:00:00"),
+            endTime: moment().minute() < 30 ?moment().format('YYYY-MM-DD HH:00:00'): moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
             tableDatas: [],
             pageIndex: 1,
             pageSize: 3,
@@ -392,7 +392,6 @@ export default Model.extend({
         //         DGIMNs: OperationCalendar.DGIMNs,
         //         IsQueryAllUser: OperationCalendar.IsQueryAllUser,
         //     };
-        //     debugger
         //     const response = yield call(getOperationHistoryRecordPageList, body);
         //     if (response.data !== null) {
         //         yield update({

@@ -38,7 +38,7 @@ class UseStandardLibrary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      DGIMN: this.props.match.params.DGIMN,
+      DGIMN: this.props.DGIMN,
       Fvisible: false,
       Pvisible: false,
       title: '',
@@ -99,7 +99,6 @@ class UseStandardLibrary extends Component {
         DGIMN: this.state.DGIMN,
         StandardLibraryID: StandardLibraryID,
         callback: (res) => {
-          // debugger;
           this.setState({
             standardlibraryModal: false,
           });
@@ -125,26 +124,6 @@ class UseStandardLibrary extends Component {
     });
   };
 
-  renderPollutantItem = pollutantList => {
-    const rtnVal = [];
-    pollutantList.map((item, key) => {
-      rtnVal.push(
-        <div key={`${key}1`} className={styles.pollutant}>
-          {
-            <Col key={`${key}2`} span={12}>
-              <span className={styles.pollutantName}>{item.PollutantName}:</span>
-            </Col>
-          }{' '}
-          <Col key={`${key}3`} span={12}>
-            <span className={styles.UpperLimit}>
-              {item.UpperLimit}-{item.LowerLimit}
-            </span>
-          </Col>
-        </div>,
-      );
-    });
-    return rtnVal;
-  };
 
   render() {
     const columns = [
@@ -333,11 +312,12 @@ class UseStandardLibrary extends Component {
       searchForm,
       tableInfo,
       match: {
-        params: { targetName, configId, targetId, pollutantType },
+        params: { targetName, configId, targetId },
       },
       dispatch,
       pointDataWhere,
       isEdit,
+      pollutantType,
       PollutantListByDGIMN
     } = this.props;
     return (
@@ -345,22 +325,22 @@ class UseStandardLibrary extends Component {
 
         <Card
           bordered={false}
-          title={
-            <span>
-              {targetName + '-' + this.props.match.params.PointName}
-              <Button
-                style={{ marginLeft: 10 }}
-                onClick={() => {
-                  history.go(-1);
-                }}
-                type="link"
-                size="small"
-              >
-                <Icon type="rollback" />
-                返回上级
-              </Button>
-            </span>
-          }
+          // title={
+          //   <span>
+          //     {targetName + '-' + this.props.match.params.PointName}
+          //     <Button
+          //       style={{ marginLeft: 10 }}
+          //       onClick={() => {
+          //         history.go(-1);
+          //       }}
+          //       type="link"
+          //       size="small"
+          //     >
+          //       <Icon type="rollback" />
+          //       返回上级
+          //     </Button>
+          //   </span>
+          // }
           style={{ width: '100%' }}
           extra={
             <Button

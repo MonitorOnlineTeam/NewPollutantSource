@@ -15,13 +15,18 @@ class AvatarDropdown extends React.Component {
     const { dispatch } = this.props;
     if (key === 'logout') {
       if (dispatch) {
-        Cookie.set(configToken.cookieName,null);
+        Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',
         });
       }
 
+      return;
+    }
+
+    if (key === 'center') {
+      router.push(`/account/settings`);
       return;
     }
 
@@ -63,6 +68,10 @@ class AvatarDropdown extends React.Component {
           修改密码
         </Menu.Item>
         <Menu.Divider /> */}
+        <Menu.Item key="center">
+          <Icon type="user" />
+          <FormattedMessage id="menu.account.center" defaultMessage="account center" />
+        </Menu.Item>
         <Menu.Item key="logout">
           <Icon type="logout" />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
@@ -84,14 +93,14 @@ class AvatarDropdown extends React.Component {
         </span>
       </HeaderDropdown>
     ) : (
-      <Spin
-        size="small"
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    );
+        <Spin
+          size="small"
+          style={{
+            marginLeft: 8,
+            marginRight: 8,
+          }}
+        />
+      );
   }
 }
 

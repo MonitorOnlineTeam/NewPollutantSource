@@ -15,9 +15,7 @@ const LoginModel = {
   },
   effects: {
     *logout(_, { put }) {
-      // debugger;
       const { redirect } = getPageQuery(); // redirect
-      // debugger;
       if (window.location.pathname !== '/user/login' && !redirect) {
         yield put(
           routerRedux.replace({

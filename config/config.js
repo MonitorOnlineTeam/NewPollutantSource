@@ -95,6 +95,33 @@ export default {
           path: '/home',
           component: './home',
         },
+         // appoperation
+         {
+          path: '/appoperation',
+          component: '../layouts/BlankLayout',
+          routes: [
+            /* 维修记录 */
+            { path: '/appoperation/apprepairrecord/:TaskID/:TypeID', component: './AppOperation/AppRepairRecord' },
+            /* 停机记录 */
+            { path: '/appoperation/appstopcemsrecord/:TaskID/:TypeID', component: './AppOperation/AppStopCemsRecord' },
+            /* 易耗品更换记录 */
+            { path: '/appoperation/appconsumablesreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppConsumablesReplaceRecord' },
+            /* 标气更换记录 */
+            { path: '/appoperation/appstandardgasrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppStandardGasRepalceRecord' },
+            /* 完全抽取法CEMS巡检记录表 */
+            { path: '/appoperation/appcompleteextractionrecord/:TaskID/:TypeID', component: './AppOperation/AppCompleteExtractionRecord' },
+            /* 稀释采样法CEMS巡检记录表 */
+            { path: '/appoperation/appdilutionsamplingrecord/:TaskID/:TypeID', component: './AppOperation/AppDilutionSamplingRecord' },
+            /* 直接测量法CEMS巡检记录表 */
+            { path: '/appoperation/appdirectmeasurementrecord/:TaskID/:TypeID', component: './AppOperation/AppDirectMeasurementRecord' },
+            /* CEMS零点量程漂移与校准记录表记录表 */
+            { path: '/appoperation/appjzrecord/:TaskID/:TypeID', component: './AppOperation/AppJzRecord' },
+            /* CEMS校验测试记录 */
+            { path: '/appoperation/appbdtestrecord/:TaskID/:TypeID', component: './AppOperation/AppBdTestRecord' },
+            /* CEMS设备异常记录表 */
+            { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
+          ],
+        },
         {
           path: '/user',
           component: '../layouts/UserLayout',
@@ -187,6 +214,7 @@ export default {
                 },
               ],
             },
+           
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -275,13 +303,31 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-               
-               
+
+
                 {
                   name: 'certificatemanage',
                   path: '/platformconfig/certificatemanage/:configId',
                   component: './OperationSysManager/CertificateManage/',
                 },
+                {
+                  //监测标准
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitoringstandard',
+                  component: './platformManager/monitoringstandard',
+                },
+                {
+                  //视频管理
+                  name: 'videomanager',
+                  path: '/platformconfig/videomanager',
+                  component: './platformManager/videomanager',
+                },
+                {
+                  //运维周期
+                  name: 'maintenancecycle',
+                  path: '/platformconfig/maintenancecycle',
+                  component: './platformManager/maintenancecycle',
+                }
               ],
             },
             {
@@ -408,7 +454,7 @@ export default {
                     },
                   ]
                 },
-               
+
                 {
                   path: '/operations/operationRecord',
                   name: "operationRecord",
@@ -590,7 +636,7 @@ export default {
                     },
                   ]
                 },
-                
+
                 {
                   name: 'dataquerymanager',
                   path: '/monitoring/dataquerymanager',
@@ -616,8 +662,8 @@ export default {
                     },
                   ]
                 },
-                
-               
+
+
               ],
             },
             {
@@ -640,6 +686,11 @@ export default {
                   path: '/Intelligentanalysis/emissions',
                   component: './Intelligentanalysis/emissions',
                 },
+                {
+                  name: 'effluentFee',
+                  path: '/Intelligentanalysis/effluentFee',
+                  component: './Intelligentanalysis/effluentFee',
+                },
               ],
             },
             {
@@ -655,8 +706,8 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                
-              
+
+
                 {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',

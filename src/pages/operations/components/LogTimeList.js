@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message, Spin } from 'antd'
+import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message, Spin, Radio } from 'antd'
 import { connect } from 'dva';
 import moment from 'moment';
 import { router } from 'umi';
@@ -249,6 +249,14 @@ class LogTimeList extends Component {
                 }}
                 allowClear={false}
               />
+              <Radio.Group defaultValue="log" buttonStyle="solid" onChange={(e) => {
+                if(e.target.value === "operationrecord") {
+                  router.push(`/operations/operationrecord`)
+                }
+              }}>
+                <Radio.Button value="log">运维日志</Radio.Button>
+                <Radio.Button value="operationrecord">运维记录</Radio.Button>
+              </Radio.Group>
             </div>
           }>
           {/* <div style={{overflowY: "auto", height: "calc(100vh - 282px)"}}> */}
