@@ -201,6 +201,11 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
+                  name: 'dischargepermit',
+                  path: '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                  component: './platformManager/dischargepermit',
+                },
+                {
                   name: 'maintainbase',
                   path: '/platformconfig/maintain/:configId/',
                   component: './platformManager/maintain',
