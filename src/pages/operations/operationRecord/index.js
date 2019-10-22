@@ -39,7 +39,7 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper>
+                <PageHeaderWrapper title="运维记录">
                     {this.state.dgimn && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} />}
                 </PageHeaderWrapper>
 

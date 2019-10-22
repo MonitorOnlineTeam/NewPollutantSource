@@ -242,25 +242,35 @@ class OperationRecord extends Component {
       <div >
         <Card
           extra={
-            <Select
-              style={{ width: 270 }}
-              onChange={this.onTreeChange}
-              // onSearch={this.onTreeSearch}
-              value={this.props.RecordType}
-              placeholder="请选择表单类型"
-              loading={this.props.RecordTypeTreeLoading}
-            >
-              {
-                RecordTypeTree.map(option => {
-                  return RecordTypeTree.length ?
-                    <Option key={option.key} value={option.key}>{option.value}</Option> :
-                    ""
-                })
-              }
-            </Select>
+            <>
+              <Select
+                style={{ width: 270, marginRight: 10 }}
+                onChange={this.onTreeChange}
+                // onSearch={this.onTreeSearch}
+                value={this.props.RecordType}
+                placeholder="请选择表单类型"
+                loading={this.props.RecordTypeTreeLoading}
+              >
+                {
+                  RecordTypeTree.map(option => {
+                    return RecordTypeTree.length ?
+                      <Option key={option.key} value={option.key}>{option.value}</Option> :
+                      ""
+                  })
+                }
+              </Select>
+              <Radio.Group defaultValue="operationrecord" buttonStyle="solid" onChange={(e) => {
+                if (e.target.value === "log") {
+                  router.push(`/operations/log`)
+                }
+              }}>
+                <Radio.Button value="log">运维日志</Radio.Button>
+                <Radio.Button value="operationrecord">运维记录</Radio.Button>
+              </Radio.Group>
+            </>
           }
           title={
-            <Row gutter={7}>
+            <Row>
               <Col span={2}>
                 <span style={{ display: 'block', marginTop: 7, fontSize: 14 }}>记录时间：</span>
               </Col>
