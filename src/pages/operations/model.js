@@ -3,6 +3,7 @@ import * as services from './service';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import { router } from 'umi';
 import config from '@/config'
 
 export default Model.extend({
@@ -47,7 +48,12 @@ export default Model.extend({
     approveModalData: {},
     applicantList: [],
     operationsUserList: [],
-    modalTableDataSource: []
+    modalTableDataSource: [],
+    // 车辆轨迹
+    longlatList: [],
+    speedList: [],
+    recordingTimeList: [],
+    railData: null,
   },
   effects: {
     // 获取日历信息
@@ -335,6 +341,35 @@ export default Model.extend({
           modalTableDataSource: result.Datas,
           modalTableTotal: result.Total
         })
+      }
+    },
+    // 获取车辆轨迹数据
+    *getVehicleTrajectory({ payload }, { call, put, update }) {
+      const result = yield call(services.getVehicleTrajectory, payload);
+      if (result.IsSuccess) {
+        // 经纬度集合
+        let longlatList = [];
+        // 时间集合
+        let speedList = [];
+        // 时间集合
+        let recordingTimeList = [];
+        result.Datas.VehicleInfo.map(item => {
+          longlatList.push([item.Longitude, item.Latitude]);
+          speedList.push(item.Speed);
+          recordingTimeList.push(item.RecordingTime);
+        })
+        if (!result.Datas.VehicleInfo.length) {
+          message.error("暂无车辆轨迹信息");
+        } else {
+          router.push(`/operations/carmanager/vehicleApplication/trajectory/${payload.ApplicantID}`);
+        }
+        yield update({
+          longlatList,
+          speedList,
+          recordingTimeList,
+          railData: result.Datas.Enclosure
+        })
+
       }
     },
   },

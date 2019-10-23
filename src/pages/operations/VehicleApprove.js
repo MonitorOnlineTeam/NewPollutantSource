@@ -70,9 +70,10 @@ class VehicleApprove extends Component {
             appendHandleRows={(row, key) => {
               const ApprovalStatus = row["dbo.View_VehicleApplication.ApprovalStatus"];
               const IsReturn = row["dbo.View_VehicleApplication.IsReturn"]
+              const ele = null;
               // 待审批时显示审批
               if (ApprovalStatus === 0) {
-                return <>
+                ele = <>
                   <Divider type="vertical" />
                   <Tooltip title="审批">
                     <a onClick={() => {
@@ -88,7 +89,7 @@ class VehicleApprove extends Component {
                 </>
                 // 审批通过并且是否归还状态为0
               } else if (ApprovalStatus === 1 && IsReturn == 0) {
-                return <>
+                ele = <>
                   <Divider type="vertical" />
                   <Tooltip title="归还">
                     <Popconfirm
@@ -110,6 +111,21 @@ class VehicleApprove extends Component {
                   </Tooltip>
                 </>
               }
+              return <>
+                {ele}
+                <Divider type="vertical" />
+                <Tooltip title="车辆轨迹">
+                  <a onClick={() => {
+                    this.props.dispatch({
+                      type: "operations/getVehicleTrajectory",
+                      payload: {
+                        // ApplicantID: "0eaa322b-268c-49d8-8b1a-a452b5affe1b"
+                        ApplicantID: key
+                      }
+                    })
+                  }}><Icon type="car" /></a>
+                </Tooltip>
+              </>
             }}
           />
         </Card>
