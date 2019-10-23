@@ -15,7 +15,7 @@ import {
     Form,
     Spin,
     Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
+    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber,
 } from 'antd';
 import styles from './style.less';
 import { PointIcon, DelIcon } from '@/utils/icon'
@@ -26,15 +26,16 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
+
 const { confirm } = Modal;
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
-    autoForm: autoForm,
+    autoForm,
     searchConfigItems: autoForm.searchConfigItems,
     tableInfo: autoForm.tableInfo,
     searchForm: autoForm.searchForm,
-    routerConfig: autoForm.routerConfig
+    routerConfig: autoForm.routerConfig,
 }))
 
 export default class MonitorTarget extends Component {
@@ -50,74 +51,82 @@ export default class MonitorTarget extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.location.pathname != this.props.location.pathname) {
-            if (nextProps.match.params.configId !== this.props.routerConfig)
-                this.reloadPage(nextProps.match.params.configId);
+            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
         }
     }
 
-    reloadPage = (configId) => {
+    reloadPage = configId => {
         const { dispatch } = this.props;
         dispatch({
             type: 'autoForm/updateState',
             payload: {
-                routerConfig: configId
-            }
+                routerConfig: configId,
+            },
         });
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
-                configId: configId
-            }
+                configId,
+            },
         })
     }
 
     editMonitorInfo = (key, row) => {
         const { match: { params: { targetType, configId, pollutantTypes } } } = this.props;
-        //const configId = match.params.configId;
+        // const configId = match.params.configId;
 
-        var target = this.getTargetIds(row);
-        let targetId = target.targetId;
-        let targetName = target.targetName;
+        const target = this.getTargetIds(row);
+        const { targetId } = target;
+        const { targetName } = target;
 
         this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`))
     }
 
-    getTargetIds = (row) => {
+      adddischargepermit = (key, row) => {
+        const { match: { params: { targetType } } } = this.props;
+        const target = this.getTargetIds(row);
+        const { targetId } = target;
+        const { targetName } = target;
+        const configId = 'PDPermit';
+        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/AEnterpriseTest/${targetType}/dischargepermit/${configId}/${targetId}/${targetName}`))
+    }
+
+    getTargetIds = row => {
         const { match: { params: { targetType } } } = this.props;
         let targetId = '';
         let targetName = '';
 
         switch ((+targetType)) {
-            case 1://企业
+            case 1:// 企业
                 targetId = row['dbo.T_Bas_Enterprise.EntCode'];
                 targetName = row['dbo.T_Bas_Enterprise.EntName'];
-                //targetType = 1;
+                // targetType = 1;
                 break;
-            case 2://监测站
+            case 2:// 监测站
                 targetId = row['dbo.T_Bas_Station.StationCode'];
                 targetName = row['dbo.T_Bas_Station.StationName'];
-                //targetType = 2;
+                // targetType = 2;
                 break;
-            case 3://河段
+            case 3:// 河段
                 targetId = row['dbo.T_Bas_Reach.ReachCode'];
                 targetName = row['dbo.T_Bas_Reach.ReachName'];
-                //targetType = 3;
+                // targetType = 3;
                 break;
-            case 4://工地
+            case 4:// 工地
                 targetId = row['dbo.T_Bas_BuildingSite.BuildingSiteCode'];
                 targetName = row['dbo.T_Bas_BuildingSite.BuildingSiteName'];
-                //targetType = 4;
+                // targetType = 4;
                 break;
             default: break;
         }
 
-        return { targetId: targetId, targetName: targetName };
+        return { targetId, targetName };
     }
 
-    showDeleteConfirm = (row) => {
-        let that = this;
+    showDeleteConfirm = row => {
+        const that = this;
         const { dispatch } = this.props;
-        //console.log("row=", row);
+        // console.log("row=", row);
         confirm({
             title: '确定要删除该条数据吗？',
             content: '删除后不可恢复',
@@ -125,21 +134,20 @@ export default class MonitorTarget extends Component {
             okType: 'danger',
             cancelText: '取消',
             onOk() {
-
-                let target = that.getTargetIds(row);
-                let where = [];
+                const target = that.getTargetIds(row);
+                const where = [];
                 where.push(target.targetId);
 
                 dispatch({
                     type: 'monitorTarget/queryPointForTarget',
                     payload: {
                         where,
-                        callback: (res) => {
+                        callback: res => {
                             if (res.IsSuccess) {
                                 that.child.delRowData(row);
                             }
-                        }
-                    }
+                        },
+                    },
                 })
             },
             onCancel() {
@@ -147,14 +155,16 @@ export default class MonitorTarget extends Component {
             },
         });
     }
+
     onRef1 = ref => {
         this.child = ref;
     };
+
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-        //console.log("this.props=", this.props);
+        // console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
-        const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
+        const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -162,7 +172,7 @@ export default class MonitorTarget extends Component {
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}
                 size="large"
             />);
@@ -173,19 +183,19 @@ export default class MonitorTarget extends Component {
                     <Card>
 
                         <SearchWrapper
-                            onSubmitForm={(form) => this.loadReportList(form)}
+                            onSubmitForm={form => this.loadReportList(form)}
                             configId={configId}
                         ></SearchWrapper>
                         <AutoFormTable
                             onRef={this.onRef1}
                             style={{ marginTop: 10 }}
                             // columns={columns}
-                            scroll={{y: 600}}
+                            scroll={{ y: 600 }}
                             configId={configId}
                             rowChange={(key, row) => {
-                                console.log("key=", key);
+                                console.log('key=', key);
                                 this.setState({
-                                    key, row
+                                    key, row,
                                 })
                             }}
                             // onAdd={()=>{
@@ -207,8 +217,7 @@ export default class MonitorTarget extends Component {
                             //       </Button>
                             //     </Fragment>
                             // )}
-                            appendHandleRows={row => {
-                                return <Fragment>
+                            appendHandleRows={row => <Fragment>
                                     <Divider type="vertical" />
                                     <Tooltip title="删除">
                                         <a onClick={() => {
@@ -221,9 +230,14 @@ export default class MonitorTarget extends Component {
                                             this.editMonitorInfo('', row);
                                         }}><PointIcon />    </a>
                                     </Tooltip>
-                                </Fragment>
-                            }}
-                            parentcode='platformconfig'
+                                    <Divider type="vertical" />
+                                    <Tooltip title="排污许可证">
+                                        <a onClick={() => {
+                                            this.adddischargepermit('', row);
+                                        }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
+                                    </Tooltip>
+                                </Fragment>}
+                            parentcode="platformconfig"
                             {...this.props}
                         >
                         </AutoFormTable>
