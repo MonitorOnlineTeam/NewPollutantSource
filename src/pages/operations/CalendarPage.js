@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-15 14:35:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-15 17:00:55
+ * @Last Modified time: 2019-10-22 10:47:21
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
@@ -555,7 +555,7 @@ class CalendarPage extends PureComponent {
             />
           </Card> */}
           <Modal
-            title="Basic Modal"
+            title="详情"
             width={"70%"}
             visible={this.state.visible}
             footer={null}

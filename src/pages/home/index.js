@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-10-10 10:27:00 
+ * @Author: Jiaqi
+ * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-16 14:00:51
+ * @Last Modified time: 2019-10-22 11:21:18
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -104,7 +104,7 @@ class index extends Component {
                 currentEntInfo: {},
               }
             })
-            this.getHomeData(null)
+            // this.getHomeData(null)
             this.setState({
               currentPoint: undefined
             })
@@ -246,7 +246,6 @@ class index extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
       this.getHomeData(nextProps.currentEntInfo.key);
-      console.log('currentEntInfo=', nextProps.currentEntInfo)
       if (nextProps.currentEntInfo.Longitude && nextProps.currentEntInfo.Latitude) {
         this.setState({
           mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],

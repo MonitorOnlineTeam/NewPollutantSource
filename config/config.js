@@ -229,6 +229,11 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
+                  name: 'dischargepermit',
+                  path: '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                  component: './platformManager/dischargepermit',
+                },
+                {
                   name: 'maintainbase',
                   path: '/platformconfig/maintain/:configId/',
                   component: './platformManager/maintain',
@@ -305,6 +310,24 @@ export default {
                   path: '/platformconfig/certificatemanage/:configId',
                   component: './OperationSysManager/CertificateManage/',
                 },
+                {
+                  //监测标准
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitoringstandard',
+                  component: './platformManager/monitoringstandard',
+                },
+                {
+                  //视频管理
+                  name: 'videomanager',
+                  path: '/platformconfig/videomanager',
+                  component: './platformManager/videomanager',
+                },
+                {
+                  //运维周期
+                  name: 'maintenancecycle',
+                  path: '/platformconfig/maintenancecycle',
+                  component: './platformManager/maintenancecycle',
+                }
               ],
             },
             {

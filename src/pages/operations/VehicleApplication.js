@@ -94,8 +94,9 @@ class VehicleApplication extends Component {
               Where: "$="
             }]}
             appendHandleRows={(row, key) => {
+              let ele = null;
               if (row["dbo.View_VehicleApplication.ApprovalStatus"] == 0) {
-                return <>
+                ele = <>
                   <Divider type="vertical" />
                   <Tooltip title="撤销申请">
                     <Popconfirm
@@ -116,9 +117,24 @@ class VehicleApplication extends Component {
                     </Popconfirm>
                   </Tooltip>
                 </>
-              } else {
-                // return "-"
               }
+              return <>
+                {ele}
+                <>
+                  <Divider type="vertical" />
+                  <Tooltip title="车辆轨迹">
+                    <a onClick={() => {
+                      this.props.dispatch({
+                        type: "operations/getVehicleTrajectory",
+                        payload: {
+                          // ApplicantID: "0eaa322b-268c-49d8-8b1a-a452b5affe1b"
+                          ApplicantID: key
+                        }
+                      })
+                    }}><Icon type="car" /></a>
+                  </Tooltip>
+                </>
+              </>;
             }}
             appendHandleButtons={(keys, rows) => {
               return <Button type="primary" onClick={() => {

@@ -17,6 +17,7 @@ import { routerRedux } from 'dva/router';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import AttachmentView from '@/components/AttachmentView'
 import { getAttachmentDataSource } from './utils'
+import config from '@/config'
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -467,7 +468,7 @@ class AutoFormTable extends PureComponent {
     const props = {
       name: 'file',
       multiple: true,
-      action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
+      action: config.uploadHost + 'rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
       data: {
         ConfigID: configId,
       },

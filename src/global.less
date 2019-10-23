@@ -129,6 +129,7 @@ ol {
 }
 
 :global {
+
   // 菜单选中样式
   .ant-menu-dark .ant-menu-item:hover,
   .ant-menu-dark .ant-menu-item-active,
@@ -138,6 +139,7 @@ ol {
     font-weight: 900;
     // border-bottom: 2px solid #1890FF;
   }
+
   .ant-menu-dark .ant-menu-submenu-selected {
     background-color: transparent;
     /* background-color: white; */
@@ -176,4 +178,18 @@ ol {
   .amap-info .amap_markers_pop_window::after {
     display: none
   }
+}
+
+// 车辆轨迹样式
+.markerContent {
+  background: #fff;
+  position: absolute;
+  top: -100px;
+  left: -20px;
+  border-radius: 5px;
+  padding: 8px;
+  width: 180px;
+  height: 90px;
+  border: 1px solid #8c8c8c;
+  color: rgba(0, 0, 0, 0.8);
 }
