@@ -7,6 +7,7 @@ import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
+import { array } from 'prop-types';
 
 /**
  * 功  能：报警消息和推送相关model
@@ -23,7 +24,6 @@ export default Model.extend({
     btnsAuthority: [],
     changePwdVisible: false,
     configInfo: null,
-    fetchingNotices: false,
     currentUserNoticeCnt: {
       notifyCount: 0,
       unreadCount: 0,
@@ -36,88 +36,29 @@ export default Model.extend({
   },
   effects: {
     *fetchNotices({ payload }, { call, select, update }) {
-      yield update({
-        fetchingNotices: true,
-      })
       // 报警消息
       const { getAlarmNoticesParameters } = yield select(a => a.global);
       const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
+      //返回数据
       let notices = [];
-      let count = 0;
       if (result.IsSuccess) {
-        const { overs, warns, exceptions } = result.Datas;
-        const dataovers = overs;
-        const datawarns = warns;
-        const dataexceptions = exceptions;
         notices = notices.concat(
-          dataovers.map((item, index) => {
-            count += 1;
+          result.Datas.map((item, index) => {
             return {
-              id: `over_${item.DGIMNs}`,
+              id: item.ID,
+              key: item.ID,
               pointname: item.PointName,
-              DGIMN: `${item.DGIMNs}`,
-              pollutantnames: item.PollutantNames,
-              firsttime: item.FirstTime,
-              lasttime: item.LastTime,
-              alarmcount: item.AlarmCount,
-              sontype: 'over',
-              // 组件里根据这个分组
-              type: 'alarm',
-              // 排序从0到2999
-              orderby: 1000 + index,
-              key: `over_${item.DGIMNs}`,
-              title: `${item.PointName}报警${item.AlarmCount}次`,
-              description: `${item.PollutantNames}从${item.FirstTime}发生了${item.AlarmCount}次超标报警`,
-            };
-          }),
-        );
-        notices = notices.concat(
-          datawarns.map((item, index) => {
-            let discription = '';
-            discription = discription.concat(
-              item.OverWarnings.map(
-                sonitem =>
-                  `${sonitem.PollutantName}${sonitem.AlarmOverTime}发生预警，建议浓度降到${sonitem.SuggestValue}以下;`,
-              ),
-            );
-            count += 1;
-            return {
-              id: `warn_${item.DGIMNs}`,
-              pointname: item.PointName,
-              DGIMN: `${item.DGIMNs}`,
-              discription,
-              overwarnings: item.OverWarnings,
-              sontype: 'warn',
-              // 组件里根据这个分组
-              type: 'alarm',
-              // 排序从3000到4999
-              orderby: 4000 + index,
-              key: `warn_${item.DGIMNs}`,
-              title: `${item.PointName}发生了预警`,
-              description: `${discription}`,
-            };
-          }),
-        );
-        notices = notices.concat(
-          dataexceptions.map((item, index) => {
-            count +=1;
-            return {
-              id: `exception_${item.DGIMNs}`,
-              pointname: item.PointName,
-              DGIMN: `${item.DGIMNs}`,
-              exceptiontypes: item.ExceptionTypes,
+              DGIMN: item.DGIMN,
+              pollutantnames: item.PollutantNames, //超标显示时用到此字段
               firsttime: item.FirstAlarmTime,
               lasttime: item.LastAlarmTime,
               alarmcount: item.AlarmCount,
-              sontype: 'exception',
-              // 组件里根据这个分组
+              sontype: item.PushType, //推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
               type: 'alarm',
-              // 排序从5000到9999
-              orderby: 6000 + index,
-              key: `exception_${item.DGIMNs}`,
-              title: `${item.PointName}报警${item.AlarmCount}次`,
-              description: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
-              descriptionbak: `从${item.FirstAlarmTime}至${item.LastAlarmTime}发生了${item.AlarmCount}次异常报警`,
+              title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
+              description: item.Description,
+              exceptiontypes: item.AlarmTypeDescription,//右侧标签用到，可多个
+              orderby: item.PushType === "over" ? 1 : item.PushType === "exception" ? 2 : 3 //排序
             };
           }),
         );
@@ -125,55 +66,12 @@ export default Model.extend({
       yield update({
         notices,
         currentUserNoticeCnt: {
-          notifyCount: count,
-          unreadCount: count,
+          notifyCount: result.Datas.length,
+          unreadCount: result.Datas.length,
         },
-        fetchingNotices: false,
       })
     },
 
-    *clearNotices({ payload }, { put, select }) {
-      yield put({
-        type: 'saveClearedNotices',
-        payload,
-      });
-      const count = yield select(state => state.global.notices.length);
-      const unreadCount = yield select(
-        state => state.global.notices.filter(item => !item.read).length,
-      );
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: {
-          totalCount: count,
-          unreadCount,
-        },
-      });
-    },
-
-    *changeNoticeReadState({ payload }, { put, select }) {
-      const notices = yield select(state =>
-        state.global.notices.map(item => {
-          const notice = { ...item };
-
-          if (notice.id === payload) {
-            notice.read = true;
-          }
-
-          return notice;
-        }),
-      );
-      yield put({
-        type: 'saveNotices',
-        payload: notices,
-      });
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: {
-          totalCount: notices.length,
-          unreadCount: notices.filter(item => !item.read).length,
-        },
-      });
-    },
     // 获取按钮权限
     *getBtnAuthority({ payload }, { call, put, select }) {
       const result = yield call(getBtnAuthority, payload);
@@ -221,132 +119,145 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
+    //消息推送更改内存
     changeNotices(state, { payload }) {
+      //不要用超级管理员测试，否则会出问题
       const { message } = payload;
       const { Message: data } = message;
       const { notices } = state;
       let count = state.currentUserNoticeCnt.unreadCount;
       let { key, newnotices } = { key: '', newnotices: [] };
       data.AlarmType = parseInt(data.AlarmType);
-      if (
-        !notices.find(t => t.id.includes(`over_${data.DGIMN}`)) &&
-        data.AlarmType === EnumPropellingAlarmSourceType.DataOver
-      ) {
+      let over = [
+        EnumPropellingAlarmSourceType.DataOver
+      ];
+      let exception = [
+        EnumPropellingAlarmSourceType.DataException,
+        EnumPropellingAlarmSourceType.DYPARAMETER,
+        EnumPropellingAlarmSourceType.DataLogicErr,
+        EnumPropellingAlarmSourceType.DYSTATEALARM
+      ];
+      let warnover = [
+        EnumPropellingAlarmSourceType.DataOverWarning
+      ];
+      let getAlarmExceptions = [
+        {
+          id: 0,
+          description: "数据异常"
+        },
+        {
+          id: 1,
+          description: "参数异常"
+        },
+        {
+          id: 2,
+          description: "数据超标"
+        },
+        {
+          id: 3,
+          description: "逻辑异常"
+        },
+        {
+          id: 4,
+          description: "状态异常"
+        },
+        {
+          id: 5,
+          description: "超标预警"
+        },
+      ];
+      //如果推送是超标并且之前没有数据
+      if (!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) &&
+        over.includes(data.AlarmType)) {
         newnotices = notices;
-        const minOrderby = Math.min(...notices.filter(t => t.sontype === 'over').map(o => o.orderby));
-        count += data.AlarmCount; // 董晓云添加
+        count += 1;
         newnotices.push({
           id: `over_${data.DGIMN}`,
+          key: `over_${data.DGIMN}`,
           pointname: data.PointName,
           pollutantnames: data.PollutantName,
           firsttime: data.FirstOverTime,
           lasttime: data.AlarmTime,
           alarmcount: data.AlarmCount,
           sontype: 'over',
-          // 组件里根据这个分组
           type: 'alarm',
-          // 排序从0到2999
-          orderby: minOrderby - 1,
-          key: `over_${data.DGIMN}`,
-          title: `${data.PointName}报警${data.AlarmCount}次`,
+          orderby: 1,
+          title: <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
           description: `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警`,
+          exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
         });
       } else if (
         !notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) &&
-        data.AlarmType === EnumPropellingAlarmSourceType.DataOverWarning
+        warnover.includes(data.AlarmType)
       ) {
         newnotices = notices;
-        const minOrderby = Math.min(...notices.filter(t => t.sontype === 'warn').map(o => o.orderby));
-        count += 1; // 董晓云添加
+        count += 1;
         newnotices.push({
           id: `warn_${data.DGIMN}`,
-          pointname: data.PointName,
-          discription: '',
-          overwarnings: '',
-          sontype: 'warn',
-          // 组件里根据这个分组
-          type: 'alarm',
-          // 排序从3000到4999
-          orderby: minOrderby - 1,
           key: `warn_${data.DGIMN}`,
-          title: `${data.PointName}发生了预警`,
-          description: '',
+          pointname: data.PointName,
+          pollutantnames: data.PollutantName,
+          firsttime: data.FirstOverTime,
+          lasttime: data.AlarmTime,
+          alarmcount: data.AlarmCount,
+          sontype: 'warn',
+          type: 'alarm',
+          orderby: 3,
+          title: <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
+          description: `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue}以下;`,
+          exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
         });
       } else if (
         !notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) &&
-        (data.AlarmType === EnumPropellingAlarmSourceType.DataException ||
-          data.AlarmType === EnumPropellingAlarmSourceType.DYPARAMETER ||
-          data.AlarmType === EnumPropellingAlarmSourceType.DataLogicErr ||
-          data.AlarmType === EnumPropellingAlarmSourceType.DYSTATEALARM)
+        exception.includes(data.AlarmType)
       ) {
         newnotices = notices;
         const minOrderby = Math.min(
           ...notices.filter(t => t.sontype === 'exception').map(o => o.orderby),
         );
-        count += data.AlarmCount; // add by dongxiaoyun
+        count += 1;
         newnotices.push({
           id: `exception_${data.DGIMN}`,
+          key: `exception_${data.DGIMN}`,
           pointname: data.PointName,
           pollutantnames: data.PollutantName,
           firsttime: data.FirstOverTime,
           lasttime: data.AlarmTime,
           alarmcount: data.AlarmCount,
           sontype: 'exception',
-          // 组件里根据这个分组
           type: 'alarm',
-          // 排序从5000到9999
-          orderby: minOrderby - 1,
-          key: `exception_${data.DGIMN}`,
-          title: `${data.PointName}报警${data.AlarmCount}次`,
+          orderby: 2,
+          title: <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
           description: `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警`,
+          exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
         });
       } else {
         // 证明之前有数据，在之前的数据上叠加
         newnotices = notices.map(notice => {
-          // let newnotice = { ...notice };
-          if (data.AlarmType === EnumPropellingAlarmSourceType.DataOver) {
+          if (over.includes(data.AlarmType)) {
             key = `over_${data.DGIMN}`;
             if (notice.id === key) {
               notice.lasttime = data.AlarmTime;
               notice.alarmcount += 1;
-              count += 1;
-              notice.title = `${notice.pointname}报警${notice.alarmcount}次`;
-              notice.description = `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警`;
+              notice.title = <span>{`${data.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> ,
+                notice.description = `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警`;
             }
-          } else if (data.AlarmType === EnumPropellingAlarmSourceType.DataOverWarning) {
+          } else if (warnover.includes(data.AlarmType)) {
             key = `warn_${data.DGIMN}`;
             if (notice.id === key) {
-              notice.OverWarnings = [];
-              notice.OverWarnings.push({
-                PollutantName: data.PollutantName,
-                PollutantCode: data.PollutantCode,
-                AlarmOverTime: data.FirstOverTime,
-                AlarmValue: data.AlarmValue,
-                SuggestValue: data.SuggestValue,
-              });
-              let discription = '';
-              discription = discription.concat(
-                notice.OverWarnings.map(
-                  sonitem =>
-                    `${sonitem.PollutantName}${sonitem.AlarmOverTime}发生预警，建议浓度降到${sonitem.SuggestValue}以下;`,
-                ),
-              );
-              notice.discription = discription;
-              count += 1;
+              notice.alarmcount += 1;
+              notice.title = <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> ,
+                notice.description = `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue}以下;`;
             }
-          } else if (
-            data.AlarmType === EnumPropellingAlarmSourceType.DataException ||
-            data.AlarmType === EnumPropellingAlarmSourceType.DYPARAMETER ||
-            data.AlarmType === EnumPropellingAlarmSourceType.DataLogicErr ||
-            data.AlarmType === EnumPropellingAlarmSourceType.DYSTATEALARM
-          ) {
+          }
+          else if (exception.includes(data.AlarmType)) {
+            debugger
             key = `exception_${data.DGIMN}`;
             if (notice.id === key) {
               notice.lasttime = data.AlarmTime;
               notice.alarmcount += 1;
-              count += 1;
-              notice.title = `${notice.pointname}报警${notice.alarmcount}次`;
-              notice.description = `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警`;
+              notice.title = <span>{`${data.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> ,
+                notice.description = `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警`;
             }
           }
           return notice;
@@ -434,45 +345,16 @@ export default Model.extend({
                 data: obj.Message
               },
             });
-            // dispatch({
-            //   type: 'workbenchmodel/updateRealTimeData',
-            //   payload: {
-            //     array: obj.Message
-            //   },
-            // });
-            // dispatch({
-            //   type: 'videolist/changeRealTimeData',
-            //   payload: {
-            //     array: obj.Message
-            //   },
-            // });
             break;
           case 'MinuteData':
-            // dispatch({
-            //     type: 'welcome'
-            // });
             break;
           case 'HourData':
-            // dispatch({
-            //     type: 'welcome'
-            // });
             break;
           case 'DynamicControlParam':
-            // dispatch({
-            //   type: 'points/updateDynamicControlParam',
-            //   payload: {
-            //     array: obj.Message
-            //   },
-            // });
             break;
           case 'DynamicControlState':
-            // dispatch({
-            //   type: 'points/updateDynamicControlState',
-            //   payload: {
-            //     array: obj.Message
-            //   },
-            // });
             break;
+          //推送报警数据
           case 'Alarm':
             dispatch({
               type: 'changeNotices',

@@ -1,7 +1,7 @@
 import { post, get } from '@/utils/request';
 import { async } from 'q';
 export async function getAlarmNotices(params) {
-  const result = await get('/api/rest/PollutantSourceApi/AlarmDataApi/GetAlarmNotices', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/AlarmDataApi/GetAlarmNotices', params, null);
   return result;
 }
 export async function getSystemConfigInfo() {
