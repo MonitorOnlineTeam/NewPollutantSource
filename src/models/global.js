@@ -121,7 +121,6 @@ export default Model.extend({
     },
     //消息推送更改内存
     changeNotices(state, { payload }) {
-      debugger
       //不要用超级管理员测试，否则会出问题**********************
       const { message } = payload;
       const { Message: data } = message;
