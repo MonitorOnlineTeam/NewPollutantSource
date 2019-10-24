@@ -38,7 +38,7 @@ import EquipmentInfoManage from './components/index'
         return (
             <div id="EquipmentInfoManage">
                 <PageHeaderWrapper>
-                 <EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />
+                 {this.state.dgimn&&<EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />}
                 </PageHeaderWrapper>
                 <NavigationTree domId="#EquipmentInfoManage" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {

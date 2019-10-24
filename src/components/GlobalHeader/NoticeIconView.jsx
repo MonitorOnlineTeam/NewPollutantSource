@@ -47,6 +47,8 @@ export default class GlobalHeaderRight extends PureComponent {
 
   getNoticeData() {
     const { notices = [] } = this.props;
+    console.log('notices=',notices)
+
     if (notices.length === 0) {
       return {};
     }
@@ -155,6 +157,7 @@ export default class GlobalHeaderRight extends PureComponent {
               DGIMN: item.DGIMN,
               pointname: item.pointname,
             });
+            console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
               //预警的没有连接暂时先连接到报警，待以后修改---------------------------------------------------------------------------------
