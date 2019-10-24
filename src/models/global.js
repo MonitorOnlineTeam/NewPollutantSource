@@ -121,7 +121,8 @@ export default Model.extend({
     },
     //消息推送更改内存
     changeNotices(state, { payload }) {
-      //不要用超级管理员测试，否则会出问题
+      debugger
+      //不要用超级管理员测试，否则会出问题**********************
       const { message } = payload;
       const { Message: data } = message;
       const { notices } = state;
@@ -336,7 +337,6 @@ export default Model.extend({
       return mywebsocket.listen(data => {
         // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
         const obj = JSON.parse(data);
-        console.log('websoketData=',obj)
         switch (obj.MessageType) {
           case 'RealTimeData':
             // // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
@@ -361,6 +361,8 @@ export default Model.extend({
               type: 'changeNotices',
               payload: { message: obj.Message },
             });
+            //异常推送消息 例： {"message":{"ID":null,"ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"9d89f0fb-0fab-4e3f-b4a1-33298eebf748","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":2,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":"0","AlarmMessage":"[广东瑞明电力-废水出口]在2019/10/24 9:00:00 pH值发生[超限异常]:。异常次数：2。首次异常时间：2019/10/24 9:00:00","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T09:36:37","Cate":"Alarm","State":null,"Dgimn":null}}
+            //超标推送消息 例： {"message":{"ID":null,"ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"898e996a-0cc4-459b-9d30-3fbb6eec68be","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":2,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":"0","AlarmMessage":"[广东瑞明电力-废水出口]在2019/10/24 9:00:00 pH值发生[连续值异常]:。异常次数：2。首次异常时间：2019/10/24 9:00:00","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T09:49:43","Cate":"Alarm","State":null,"Dgimn":null}}
             break;
           case 'Notice':
             dispatch({

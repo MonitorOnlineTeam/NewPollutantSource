@@ -6,7 +6,7 @@ import config from '../config';
 try {
 window.ws = ws;
 } catch(e) {
-  console.log(e);
+  // console.log(e);
 }
 
 export function listen(callback) {
@@ -17,17 +17,17 @@ export function listen(callback) {
         const user = JSON.parse(response);
         if (user) {
           ws.send(user.UserAccount);
-          console.log(`onopen:${user.UserAccount}`);
+          // console.log(`onopen:${user.UserAccount}`);
         }
       }
     };
   
     ws.onclose = event => {
-      console.log('disconnected');
+      // console.log('disconnected');
     };
   
     ws.onerror = event => {
-      console.log(event.data);
+      // console.log(event.data);
     };
   
     ws.onmessage = event => {
@@ -45,6 +45,6 @@ export function listen(callback) {
       callback(event.data);
     };
     } catch(e) {
-      console.log(e);
+      // console.log(e);
     }
 }

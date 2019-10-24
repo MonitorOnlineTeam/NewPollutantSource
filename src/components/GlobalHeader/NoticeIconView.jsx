@@ -198,14 +198,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 maxHeight={200}
               />
               : this.state.flag === 'exception' ?
-                // <RecordEchartTable
-                //   initLoadData
-                //   style={{ maxHeight: '60vh' }}
-                //   DGIMN={this.state.DGIMN}
-                // />
                 <ExceptionAlarm
-                  firsttime={moment(this.state.firsttime)}
-                  lasttime={moment(this.state.lasttime)}
                   initLoadData DGIMN={this.state.DGIMN} />
                 :
                 <RealTimeWarningModal
