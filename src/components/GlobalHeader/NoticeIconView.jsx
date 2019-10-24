@@ -17,7 +17,7 @@ import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningMo
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
-  notices: global.notices,
+  notices: global.notices,//数据要用固定格式
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 
@@ -45,31 +45,30 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   }
 
+  //格式化添加标签和标识icon
   getNoticeData() {
     const { notices = [] } = this.props;
-    console.log('notices=',notices)
-
-    if (notices.length === 0) {
-      return {};
-    }
-    const noticesAsc = notices.sort(asc);
-    const newNotices = noticesAsc.map(notice => {
-      const newNotice = { ...notice };
-      if (newNotice.exceptiontypes) {
-        const exceptiontypes = newNotice.exceptiontypes.split(',');
-        const color = {
-          warn: 'blue',
-          over: 'red',
-          exception: 'gold',
-        }[newNotice.sontype];
-        newNotice.extra = exceptiontypes.map(item => (
-          <Tag key={`${newNotice.key}${item}`} color={color} style={{ marginRight: 0 }}>
-            {item}
-          </Tag>
-        ));
-      }
-      if (!newNotice.avatar) {
-        if (newNotice.type === 'alarm') {
+    if (notices.length !== 0) {
+      //排序
+      const noticesAsc = notices.sort(asc);
+      const newNotices = noticesAsc.map(notice => {
+        const newNotice = { ...notice };
+        //消息右侧异常类型
+        if (newNotice.exceptiontypes) {
+          const exceptiontypes = newNotice.exceptiontypes.split(',');
+          const color = {
+            warn: 'blue',
+            over: 'red',
+            exception: 'gold',
+          }[newNotice.sontype];
+          newNotice.extra = exceptiontypes.map(item => (
+            <Tag key={`${newNotice.key}${item}`} color={color} style={{ marginRight: 0 }}>
+              {item}
+            </Tag>
+          ));
+        }
+        //左侧图标
+        if (!newNotice.avatar) {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
               <Avatar style={{ verticalAlign: 'middle' }} src="/over.png">
@@ -88,12 +87,17 @@ export default class GlobalHeaderRight extends PureComponent {
             );
           }
         }
-      }
-      return newNotice;
-    });
-    return groupBy(newNotices, 'type');
+        return newNotice;
+      });
+      return groupBy(newNotices, 'type');
+    }
+    else
+    {
+      return {};
+    }
   }
 
+  //报警总次数
   getUnreadData = advisesData => {
     const unreadMsg = {};
     Object.entries(advisesData).forEach(([key, value]) => {
@@ -101,28 +105,16 @@ export default class GlobalHeaderRight extends PureComponent {
         unreadMsg[key] = 0;
       }
       if (Array.isArray(value)) {
-        if (key === 'advise') unreadMsg[key] = value.filter(item => !item.isview).length;
-        else {
-          const arr = value;
-          let result = 0;
-          arr.forEach(element => {
-            if (element.alarmcount) result += element.alarmcount;
-            else result += 1;
-          });
-          unreadMsg[key] = result;
-        }
+        const arr = value;
+        let result = 0;
+        arr.forEach(element => {
+          if (element.alarmcount) result += element.alarmcount;
+          else result += 1;
+        });
+        unreadMsg[key] = result;
       }
     });
     return unreadMsg;
-  };
-
-  changeReadState = clickedItem => {
-    const { id } = clickedItem;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'global/changeNoticeReadState',
-      payload: id,
-    });
   };
 
   // 取消Model
@@ -133,18 +125,11 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   render() {
-    const {
-      fetchingNotices,
-      currentUserNoticeCnt,
-      theme,
-      dispatch,
-    } = this.props;
+    const { fetchingNotices, currentUserNoticeCnt, dispatch, } = this.props;
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
     let className = styles.right;
-    if (theme === 'dark') {
-      className = `${styles.right}  ${styles.dark}`;
-    }
+
     return (
       <div className={`${styles.action} ${styles.account}`}>
         <NoticeIcon
@@ -152,47 +137,44 @@ export default class GlobalHeaderRight extends PureComponent {
           onItemClick={(item, tabProps) => {
             this.setState({
               visible: true,
-              firsttime: item.firsttime,
-              lasttime: item.lasttime,
+              firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')) ,
+              lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')) ,
               DGIMN: item.DGIMN,
               pointname: item.pointname,
             });
             console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
-              //预警的没有连接暂时先连接到报警，待以后修改---------------------------------------------------------------------------------
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '实时预警-'+item.pointname,
+                    title: '实时预警-' + item.pointname,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标记录-'+item.pointname,
+                    title: '超标记录-' + item.pointname,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警-'+item.pointname,
+                    title: '异常报警-' + item.pointname,
                     flag: 'exception',
                   });
                   break;
               }
-              console.log('name=',item)
             }
           }}
           loading={fetchingNotices}
-          onViewMore={() => message.info('Click on view more')}
         >
           <NoticeIcon.Tab
             count={unreadMsg.alarm}
             list={noticeData.alarm}
             title={formatMessage({ id: 'component.globalHeader.notification' })}
             name="alarm"
-            emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
+            // emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
         </NoticeIcon>
@@ -205,7 +187,6 @@ export default class GlobalHeaderRight extends PureComponent {
           footer={null}
           onCancel={this.onCancel}
         >
-
           {
             this.state.flag === 'over' ?
               <RecordEchartTableOver
@@ -218,20 +199,15 @@ export default class GlobalHeaderRight extends PureComponent {
                 maxHeight={200}
               />
               : this.state.flag === 'exception' ?
-                // <RecordEchartTable
-                //   initLoadData
-                //   style={{ maxHeight: '60vh' }}
-                //   DGIMN={this.state.DGIMN}
-                // />
-                <ExceptionAlarm initLoadData DGIMN={this.state.DGIMN} />
+                <ExceptionAlarm
+                  initLoadData DGIMN={this.state.DGIMN} />
                 :
-                <RealTimeWarningModal 
+                <RealTimeWarningModal
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(this.state.firsttime)}
                   lasttime={moment(this.state.lasttime)} />
           }
-
         </Modal>
       </div>
     );

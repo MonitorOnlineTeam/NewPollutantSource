@@ -96,3 +96,9 @@ export async function getOperationReplacePageList(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationReplacePageList`, params, null);
   return result;
 }
+
+// 获取排污许可情况数据
+export async function getVehicleTrajectory(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetVehicleTrajectoryByAppID', params, null);
+  return result;
+}
