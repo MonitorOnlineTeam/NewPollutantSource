@@ -3,7 +3,7 @@
  */
 
 // 接口地址
-const apiHost = 'http://localhost:52198/';
+const apiHost = 'http://172.16.12.165:9090/';
 // 文件上传地址
 const uploadHost = 'http://172.16.12.165:9093/'
 
