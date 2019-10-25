@@ -54,11 +54,22 @@ class RealTimeWarningModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if(this.props.DGIMN!==nextProps.DGIMN)
+        {
+            this.props.dispatch({
+                type: pageUrl.getDataOverWarningData,
+                payload: {
+                    DGIMN: nextProps.DGIMN
+                }
+            })
+        }
         if (this.props.hourDataOverWarningList !== nextProps.hourDataOverWarningList) {
             var items = nextProps.hourDataOverWarningList.tableDatas[0]
-            console.log('items=', items)
-            var item = items.OverWarnings[0]
-            this.showModal(items.PointName, items.DGIMNs, item.PollutantCode, item.PollutantName, item.SuggestValue)
+            if (items) {
+                console.log('items=', items)
+                var item = items.OverWarnings[0]
+                this.showModal(items.PointName, items.DGIMNs, item.PollutantCode, item.PollutantName, item.SuggestValue)
+            }
         }
     }
 
@@ -99,6 +110,7 @@ class RealTimeWarningModal extends Component {
  */
     showModal = (name, mn, pollutantCode, pollutantName, SuggestValue) => {
         console.log('this.props1=', this.props)
+        debugger
         this.getPollutantList(mn);
         this.updateState({
             SuggestValue: SuggestValue,

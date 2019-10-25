@@ -118,7 +118,7 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
-    //接收消息推送更改Model
+    //接收消息推送更改Model内存
     changeNotices(state, { payload }) {
       try {
         //不要用超级管理员测试，否则会出问题**********************
