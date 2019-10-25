@@ -39,8 +39,8 @@ class Index extends Component {
             bar: [],
             dataType: this.props.noticeState==0?'HourData':'RealTimeData',
             DGIMN: [],
-            beginTime:this.props.noticeState==0? this.props.firsttime: "",
-            endTime:this.props.noticeState==0? this.props.lasttime: "",
+            beginTime:this.props.noticeState==0? this.props.firsttime.format('YYYY-MM-DD HH:mm:ss'): "",
+            endTime:this.props.noticeState==0? this.props.lasttime.format('YYYY-MM-DD HH:mm:ss'): "",
             Pollutant: "",
             ExceptionType: "",
             column: [
@@ -84,6 +84,7 @@ class Index extends Component {
         //         historyparams,
         //     },
         // })
+        debugger
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         if(this.props.noticeState==0)
@@ -111,7 +112,7 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-
+debugger
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }

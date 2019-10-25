@@ -490,9 +490,10 @@ export default Model.extend({
         updateRealTimeData(state, action) {
             let realtimedata = action.payload.data;
             let pollutantval = [{ pollutantName: 'co', value: 21.1 }, { pollutantName: 'nox', value: 21.1 }]
-            realtimedata.map((item, key) => {
-                pollutantval.where(() => { });
-            });
+            // realtimedata.map((item, key) => {
+            //     pollutantval.where(() => { });
+            // });
+            console.log('realtimedata=',realtimedata)
             return {
                 ...state,
                 ...action.payload,

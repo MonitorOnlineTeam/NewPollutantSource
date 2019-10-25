@@ -118,7 +118,7 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
-    //接收消息推送更改Model
+    //接收消息推送更改Model内存
     changeNotices(state, { payload }) {
       try {
         //不要用超级管理员测试，否则会出问题**********************
@@ -215,7 +215,7 @@ export default Model.extend({
                 `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警` :
                 flagAlarm === 'exception' ?
                   `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警` :
-                  `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue}以下;`,
+                  `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`,
             exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
           });
         }
@@ -240,7 +240,7 @@ export default Model.extend({
                     `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
                     flagAlarm === 'exception' ?
                       `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
-                      `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue}以下;`
+                      `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
               }
             }
             return notice;

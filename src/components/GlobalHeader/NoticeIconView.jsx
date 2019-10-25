@@ -91,8 +91,7 @@ export default class GlobalHeaderRight extends PureComponent {
       });
       return groupBy(newNotices, 'type');
     }
-    else
-    {
+    else {
       return {};
     }
   }
@@ -137,11 +136,12 @@ export default class GlobalHeaderRight extends PureComponent {
           onItemClick={(item, tabProps) => {
             this.setState({
               visible: true,
-              firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')) ,
-              lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')) ,
+              // firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')),
+              // lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')),
               DGIMN: item.DGIMN,
               pointname: item.pointname,
             });
+            console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
               switch (item.sontype) {
@@ -177,7 +177,6 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
         </NoticeIcon>
-
         <Modal
           destroyOnClose="true"
           visible={this.state.visible}
@@ -192,8 +191,8 @@ export default class GlobalHeaderRight extends PureComponent {
                 initLoadData
                 style={{ maxHeight: '70vh' }}
                 DGIMN={this.state.DGIMN}
-                firsttime={moment(this.state.firsttime)}
-                lasttime={moment(this.state.lasttime)}
+                firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+                lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
                 noticeState={0}
                 maxHeight={200}
               />
@@ -204,8 +203,9 @@ export default class GlobalHeaderRight extends PureComponent {
                 <RealTimeWarningModal
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
-                  firsttime={moment(this.state.firsttime)}
-                  lasttime={moment(this.state.lasttime)} />
+                  firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+                  lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+                />
           }
         </Modal>
       </div>

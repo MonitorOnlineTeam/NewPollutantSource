@@ -38,7 +38,7 @@ import CertificateManage from './components/index'
         return (
             <div id = "CertificateManage" >
                 <PageHeaderWrapper>
-                 <CertificateManage UserID={this.state.UserId} configId={configId} {...this.props} />
+                 {this.state.UserId&&<CertificateManage UserID={this.state.UserId} configId={configId} {...this.props} />}
                 </PageHeaderWrapper>
                 <UserTree domId="#CertificateManage" onItemClick={value => {
                             if (value.length > 0) {
