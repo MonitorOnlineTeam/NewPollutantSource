@@ -82,6 +82,9 @@ class MonitoringStandard extends Component {
     }
 
     getpollutantbydgimn(DGIMN) {
+        this.setState({
+            DGIMN: DGIMN
+        });
         // if (DGIMN)
         this.props.dispatch({
             type: 'standardLibrary/getpollutantbydgimn',
