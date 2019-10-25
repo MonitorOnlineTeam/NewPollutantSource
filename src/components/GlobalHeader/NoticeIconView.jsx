@@ -141,6 +141,7 @@ export default class GlobalHeaderRight extends PureComponent {
               DGIMN: item.DGIMN,
               pointname: item.pointname,
             });
+            console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
               switch (item.sontype) {
