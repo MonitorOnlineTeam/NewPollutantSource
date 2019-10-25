@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-16 10:52:57
+ * @Last Modified time: 2019-10-23 15:59:07
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -145,7 +145,7 @@ export default Model.extend({
       const result = yield call(services.getWarningInfo, postData);
       if (result.IsSuccess) {
         let data = result.Datas ? result.Datas[0].map(item => {
-          return { "desc": `${item.PointName}：${item.PollutantName}从${item.FirstTime}发生了${item.AlarmCount}次报警。`, url: "" }
+          return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
         }) : [];
         yield update({
           warningInfoList: data

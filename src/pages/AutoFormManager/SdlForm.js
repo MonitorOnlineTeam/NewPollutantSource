@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-05 17:42:16
+ * @Last Modified time: 2019-10-24 16:20:08
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -22,6 +22,7 @@ import {
   DatePicker,
   message,
   Modal,
+  Carousel
 } from 'antd';
 import moment from 'moment';
 import cuid from 'cuid';
@@ -340,7 +341,7 @@ class SdlForm extends PureComponent {
           if (item.type === '上传') {
             let uploadElement = null;
             const props = {
-              action: `${config.proxy['/upload'].target}/rest/PollutantSourceApi/UploadApi/PostFiles`,
+              action: `${config.proxy['/upload'].target}rest/PollutantSourceApi/UploadApi/PostFiles`,
               onChange(info) {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid })

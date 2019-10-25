@@ -8,17 +8,17 @@ const apiHost = 'http://172.16.12.165:9090/';
 const uploadHost = 'http://172.16.12.165:9093/'
 
 module.exports = {
-  name: '污染源智能分析平台',
-  logindesc: 'SDL 您身边的环境污染分析专家',
+  // name: '污染源智能分析平台',
+  // logindesc: 'SDL 您身边的环境污染分析专家',
   prefix: 'monitorEnterprise',
-  footerText: '污染源智能分析平台   2018 sdl',
+  // footerText: '污染源智能分析平台   2018 sdl',
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
   apiHost,
   uploadHost,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
-  logo: '/logo.png',
+  logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,

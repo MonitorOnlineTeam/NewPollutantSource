@@ -12,7 +12,8 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { isAntDesignPro } from '@/utils/utils';
-import logo from '../../public/sdlicon.png';
+// import logo from '../../public/sdlicon.png';
+import config from '@/config';
 import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
@@ -123,9 +124,9 @@ const BasicLayout = props => {
   const logoRender = Item => {
     if (configInfo && configInfo.IsShowLogo === "true") {
       return settings.layout === 'topmenu' ? (
-        <img style={{ height: 60 }} src={logo} alt="logo" />
+        <img style={{ height: 60 }} src={`${config.uploadHost}${configInfo.Logo}`} alt="logo" />
       ) : (
-          <img src={logo} alt="logo" />
+          <img src={`${config.uploadHost}${configInfo.Logo}`} alt="logo" />
         );
     }
 

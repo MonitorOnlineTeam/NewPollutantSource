@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-11 13:45:01
+ * @Last Modified time: 2019-10-24 16:13:23
  */
 import { message } from 'antd';
 import
@@ -99,7 +99,7 @@ export default Model.extend({
         ...payload.otherParams,
       };
       const searchParams = payload.searchParams || [];
-      
+
       (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
         // group.length? postData.ConditionWhere = JSON.stringify({
         rel: '$and',
@@ -296,10 +296,10 @@ export default Model.extend({
             searchParams: payload.searchParams,
           },
         });
+        payload.callback && payload.callback(result);
       } else {
         message.error(result.Message);
       }
-      payload.callback(result);
     },
 
     * saveEdit({ payload }, { call, update, put }) {

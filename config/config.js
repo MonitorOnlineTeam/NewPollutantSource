@@ -90,13 +90,14 @@ export default {
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
+
         {
           name: 'home',
           path: '/home',
           component: './home',
         },
-         // appoperation
-         {
+        // appoperation
+        {
           path: '/appoperation',
           component: '../layouts/BlankLayout',
           routes: [
@@ -159,6 +160,11 @@ export default {
               component: './Test/Test',
             },
             {
+              name: 'test1',
+              path: '/test1',
+              component: './Test/Test1',
+            },
+            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
@@ -214,7 +220,7 @@ export default {
                 },
               ],
             },
-           
+
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -222,6 +228,18 @@ export default {
                 {
                   path: '/platformconfig',
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest',
+                },
+                {
+                  // 设备管理
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentManage',
+                  component: './platformManager/equipmentManage',
+                },
+                {
+                  // 设备管理 - 添加、编辑
+                  name: 'addEditEquipment',
+                  path: '/platformconfig/equipmentManage/:DGIMN/:id',
+                  component: './platformManager/equipmentManage/AddEditEquipmentPage',
                 },
                 {
                   name: 'monitortarget',
@@ -440,7 +458,12 @@ export default {
                     {
                       path: "/operations/carmanager/vehicleApplication",
                       name: "vehicleApplication",
-                      component: "./operations/VehicleApplication"
+                      component: "./operations/VehicleApplication",
+                    },
+                    {
+                      path: "/operations/carmanager/:parentName/trajectory/:ApplicantID",
+                      name: "trajectory",
+                      component: "./operations/vehicleTrajectory"
                     },
                     {
                       path: "/operations/carmanager/vehicleApprove",
