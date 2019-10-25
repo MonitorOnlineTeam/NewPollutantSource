@@ -60,10 +60,12 @@ export default Model.extend({
     * getCalendarInfo({ payload }, { call, put, update }) {
       const result = yield call(services.getCalendarInfo, payload);
       if (result.IsSuccess) {
+        const excetionTotal = result.Datas.excetionTotal || [];
+        const FutureTotal = result.Datas.FutureTotal || [];
         yield update({
           calendarList: [
-            ...result.Datas.excetionTotal,
-            ...result.Datas.FutureTotal
+            ...excetionTotal,
+            ...FutureTotal
           ]
         })
       }

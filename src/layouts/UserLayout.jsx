@@ -6,7 +6,7 @@ import { connect } from 'dva';
 import { Icon } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
-// import logo from '../../public/sdlicon.png';
+import logo from '../../public/sdlicon.png';
 import config from '@/config'
 import styles from './UserLayout.less';
 
@@ -56,7 +56,7 @@ const UserLayout = props => {
               <Link to="/">
 
                 {
-                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={`${config.uploadHost}${configInfo.Logo}`} />
+                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `${config.uploadHost}${configInfo.Logo}` : logo} />
                 }
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}
