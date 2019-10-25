@@ -28,7 +28,7 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { sdlMessage } from '@/utils/utils';
+import { sdlMessage, handleFormData } from '@/utils/utils';
 import PollutantType from '@/pages/AutoFormManager/PollutantType';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
@@ -221,13 +221,13 @@ export default class MonitorPoint extends Component {
 
   /** 设置运维周期 */
   showMaintenancereminder = PointCode => {
-  this.setState({
-    Mvisible: true,
-    PointCode,
-  })
+    this.setState({
+      Mvisible: true,
+      PointCode,
+    })
   }
 
-  handleMCancel=() => {
+  handleMCancel = () => {
     this.setState({
       Mvisible: false,
     });
@@ -271,15 +271,18 @@ export default class MonitorPoint extends Component {
 
     form.validateFields((err, values) => {
       if (!err) {
-        const FormData = {};
-        for (const key in values) {
-          if (values[key] && values[key].fileList) {
-            FormData[key] = uid;
-          } else {
-            FormData[key] = values[key] && values[key].toString();
-          }
-        }
+        // const FormData = {};
+        // for (const key in values) {
+        //   if (values[key] && values[key].fileList) {
+        //     FormData[key] = uid;
+        //   } else {
+        //     FormData[key] = values[key] && values[key].toString();
+        //   }
+        // }
         // FormData.PollutantType = match.params.targetType;
+        const FormData = handleFormData(values);
+        FormData.PollutantType = match.params.targetType;
+        console.log("FormData=", FormData)
         if (!Object.keys(FormData).length) {
           sdlMessage('数据为空', 'error');
           return false;
@@ -546,7 +549,7 @@ export default class MonitorPoint extends Component {
             destroyOnClose
             footer={false}
           >
-          < Maintenancereminder PointCode={this.state.PointCode}/ >
+            < Maintenancereminder PointCode={this.state.PointCode} />
           </Modal>
         </div>
         {/* </MonitorContent> */}

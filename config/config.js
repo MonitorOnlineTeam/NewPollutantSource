@@ -160,11 +160,6 @@ export default {
               component: './Test/Test',
             },
             {
-              name: 'test1',
-              path: '/test1',
-              component: './Test/Test1',
-            },
-            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
