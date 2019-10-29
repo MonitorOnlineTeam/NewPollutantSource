@@ -8,7 +8,7 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'report',
   state: {
-    dateReportForm:{
+    dateReportForm: {
       PollutantSourceType: 1,
       current: 1,
       pageSize: 27,
@@ -61,7 +61,7 @@ export default Model.extend({
         ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
         Regions: dateReportForm.Regions && dateReportForm.Regions.value.toString(),
         EntCode: dateReportForm.EntCode && dateReportForm.EntCode.value,
-        PageIndex:dateReportForm.current && dateReportForm.current,
+        PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
         ...payload
       }
@@ -89,6 +89,8 @@ export default Model.extend({
             total: result.Total
           }
         })
+      } else {
+        message.error(result.Message)
       }
     },
 

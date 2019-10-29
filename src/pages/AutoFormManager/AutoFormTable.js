@@ -17,6 +17,7 @@ import { routerRedux } from 'dva/router';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import AttachmentView from '@/components/AttachmentView'
 import { getAttachmentDataSource } from './utils'
+import { getRowCuid } from '@/utils/utils';
 import config from '@/config'
 import styles from './index.less';
 
@@ -375,18 +376,14 @@ class AutoFormTable extends PureComponent {
                     <Fragment key={item.type}>
                       <Tooltip title="编辑">
                         <a onClick={() => {
-                          const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
-                          const key = filterList.dataIndex;
-                          const fileInfo = record[key] && record[key].split(';')[0];
-                          const list = fileInfo ? fileInfo.split('|') : [];
-                          const uid = list[list.length - 2] || null;
+                          const cuid = getRowCuid(columns, record)
                           const postData = {};
                           keys[configId].map(item => {
                             if (record[item]) {
                               postData[item] = record[item]
                             }
                           })
-                          this.props.onEdit ? this.props.onEdit(record) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                          this.props.onEdit ? this.props.onEdit(record) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
                           // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>

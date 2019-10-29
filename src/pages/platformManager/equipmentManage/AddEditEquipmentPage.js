@@ -46,7 +46,8 @@ class AddEditEquipmentPage extends PureComponent {
 
   componentDidMount() {
     const { type, routerParams } = this._SELF_;
-    type === "add" ?
+    if (type === "add") {
+      this.props.form.resetFields();
       this.props.dispatch({
         type: "equipment/getEquipmentWhere",
         payload: {
@@ -54,13 +55,21 @@ class AddEditEquipmentPage extends PureComponent {
           EquipmentModel: "",
           Manufacturer: ""
         }
-      }) :
+      })
+      this.props.dispatch({
+        type: "equipment/updateState",
+        payload: {
+          equipmentData: []
+        }
+      })
+    } else {
       this.props.dispatch({
         type: "equipment/getEquipmentByID",
         payload: {
           id: routerParams.id
         }
       })
+    }
   }
 
   changeWhere = payload => {
@@ -229,8 +238,8 @@ class AddEditEquipmentPage extends PureComponent {
                   })(
                     <InputNumber
                       style={{ width: '100%' }}
-                      formatter={value => `${value} 年`}
-                      parser={value => value.replace(' 年', '')}
+                      formatter={value => `${value}年`}
+                      parser={value => value.replace('年', '')}
                     />
                   )}
                 </Form.Item>
