@@ -23,5 +23,12 @@ export async function getjzhistoryinfo(params) {
         data: null
     } : result;
 }
+// 获取运维日志信息
+export async function getOperationLogList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationPageList', params, null);
+    return result === null ? {
+      data: null
+    } : result;
+  }
 
 

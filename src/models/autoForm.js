@@ -5,9 +5,8 @@
  * @Last Modified time: 2019-10-24 16:13:23
  */
 import { message } from 'antd';
-import
-Model from '@/utils/model';
-
+import Model from '@/utils/model';
+import config from '@/config';
 import moment from 'moment'
 import * as services from '@/services/autoformapi';
 
@@ -377,7 +376,7 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: item.Url,
+            url: `${config.uploadHost}${item.Url}`,
           }))
           yield update({
             fileList,
