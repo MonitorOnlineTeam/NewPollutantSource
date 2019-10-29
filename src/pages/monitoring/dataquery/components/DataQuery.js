@@ -94,7 +94,7 @@ class DataQuery extends Component {
                     message.info('日数据时间间隔不能超过1年个月');
                     return;
                 }
-                 date[1].add(-12, 'month')
+                date[1].add(-12, 'month')
                 break;
             default:
                 return;
@@ -164,13 +164,13 @@ class DataQuery extends Component {
     /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
     getpollutantSelect = () => {
         const {
-          displayType,
-          selectP,
+            displayType,
+            selectP,
         } = this.state;
         const { pollutantlist } = this.props;
         if (displayType === 'chart') {
             return (<PollutantSelect
-                mode = "multiple"
+                mode="multiple"
                 optionDatas={pollutantlist}
                 defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
                 style={{ width: 300, marginRight: 10 }}
@@ -189,14 +189,14 @@ class DataQuery extends Component {
         const res = [];
         let { historyparams } = this.props;
         if (selectedOptions.length > 0) {
-        selectedOptions.map((item, key) => {
+            selectedOptions.map((item, key) => {
                 res.push(item.props.children);
             })
         }
-            historyparams = {
-              ...historyparams,
-              payloadpollutantCode: value.length > 0 ? value.toString() : '',
-              payloadpollutantName: res.length > 0 ? res.toString() : '',
+        historyparams = {
+            ...historyparams,
+            payloadpollutantCode: value.length > 0 ? value.toString() : '',
+            payloadpollutantName: res.length > 0 ? res.toString() : '',
 
         }
         this.setState({
@@ -261,7 +261,7 @@ class DataQuery extends Component {
     }
 
     /** 分页 */
-     onShowSizeChange = (pageIndex, pageSize) => {
+    onShowSizeChange = (pageIndex, pageSize) => {
         let { historyparams } = this.props;
         historyparams = {
             ...historyparams,
@@ -307,7 +307,7 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '100%', height: 'calc(100vh - 500px)' }}
+                    style={{ width: '98%', height: 'calc(100vh - 330px)', padding: 20 }}
                 />);
             }
 
@@ -318,19 +318,19 @@ class DataQuery extends Component {
             dataSource={datatable}
             columns={columns}
             scroll={{ y: 'calc(100vh - 550px)' }}
-            pagination = {
-               {
-                 size: 'small',
-                 showSizeChanger: true,
-                 showQuickJumper: true,
-                 total: this.props.total,
-                 pageSize: this.props.historyparams.pageSize,
-                 current: this.props.historyparams.pageIndex,
-                 onChange: this.onChange,
-                 onShowSizeChange: this.onShowSizeChange,
-                 pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-               }
-             }
+            pagination={
+                {
+                    size: 'small',
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    total: this.props.total,
+                    pageSize: this.props.historyparams.pageSize,
+                    current: this.props.historyparams.pageIndex,
+                    onChange: this.onChange,
+                    onShowSizeChange: this.onShowSizeChange,
+                    pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
+                }
+            }
         />);
     }
 
@@ -338,23 +338,24 @@ class DataQuery extends Component {
         return (
             <div>
                 <Card
+                    className='contentContainer'
                     extra={
                         <div>
                             {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
                             <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
                             <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
-                             this.displayChange(e.target.value)
+                                this.displayChange(e.target.value)
                             }}>
-                            <Radio.Button value="chart">图表</Radio.Button>
-                            <Radio.Button value="data">数据</Radio.Button>
+                                <Radio.Button value="chart">图表</Radio.Button>
+                                <Radio.Button value="data">数据</Radio.Button>
                             </Radio.Group>
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', ...this.props.style }}>
-                        {this.loaddata()}
-                    </Card.Grid>
+                    <div>
+                    {this.loaddata()}
+                    </div>
                 </Card>
             </div>
         );
