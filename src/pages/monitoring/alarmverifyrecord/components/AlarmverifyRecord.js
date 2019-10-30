@@ -4,8 +4,9 @@ import {
     Spin,
     Tooltip, Modal, Divider, Icon,
 } from 'antd';
-import { PointIcon,
-  DetailIcon,
+import {
+    PointIcon,
+    DetailIcon,
 } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -23,7 +24,7 @@ import AlarmRecordDetails from './AlarmRecordDetails';
     routerConfig: autoForm.routerConfig,
 }))
 
- class AlarmverifyRecord extends Component {
+class AlarmverifyRecord extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -68,51 +69,53 @@ import AlarmRecordDetails from './AlarmRecordDetails';
             />);
         }
         return (
-                <div>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <AutoFormTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            appendHandleRows={row => (
-                                <Fragment>
+            <div>
+                <Card>
+                    <SearchWrapper
+                        onSubmitForm={form => this.loadReportList(form)}
+                        configId={configId}
+                    ></SearchWrapper>
+                    <AutoFormTable
+                        style={{ marginTop: 10 }}
+                        configId={configId}
+                        parentcode="null"
+                        {...this.props}
+                        appendHandleRows={row => (
+                            <Fragment>
                                 <Divider type="vertical"></Divider>
                                 <Tooltip title="报警记录详情">
-                                <a
-                                    onClick={() => {
-                                        console.log('row', row);
-                                    this.setState({
-                                        visible: true,
-                                        ID: `${row['dbo.T_Cod_ExceptionVerify.ID']}`,
-                                    })
-                                    }}
-                                >
-                                    <Icon type="snippets" theme="twoTone" />
-                                </a>
+                                    <a
+                                        onClick={() => {
+                                            console.log('row', row);
+                                            this.setState({
+                                                visible: true,
+                                                ID: `${row['dbo.T_Cod_ExceptionVerify.ID']}`,
+                                            })
+                                        }}
+                                    >
+                                        <Icon type="snippets" theme="twoTone" />
+                                    </a>
                                 </Tooltip>
-                                </Fragment>
-                                )}
-                        >
-                        </AutoFormTable>
-                        <Modal
-                              title="报警记录详细"
-                              visible={this.state.visible}
-                              destroyOnClose // 清除上次数据
-                              onCancel={() => {
-                                this.setState({
-                                  visible: false,
-                                });
-                              }}
-                              footer={false}
-                              width="90%"
-                            >
-                              <AlarmRecordDetails ID={this.state.ID}/>
-                        </Modal>
-                    </Card>
-                </div>
+                            </Fragment>
+                        )}
+                    >
+                    </AutoFormTable>
+                    <Modal
+                        title="报警记录详细"
+                        visible={this.state.visible}
+                        destroyOnClose // 清除上次数据
+                        onCancel={() => {
+                            this.setState({
+                                visible: false,
+                            });
+                        }}
+                        footer={false}
+                        width="90%"
+                    >
+                        <AlarmRecordDetails ID={this.state.ID} />
+                    </Modal>
+                </Card>
+            </div>
         );
     }
 }

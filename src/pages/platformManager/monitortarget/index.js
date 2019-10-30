@@ -82,7 +82,7 @@ export default class MonitorTarget extends Component {
         this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`))
     }
 
-      adddischargepermit = (key, row) => {
+    adddischargepermit = (key, row) => {
         const { match: { params: { targetType } } } = this.props;
         const target = this.getTargetIds(row);
         const { targetId } = target;
@@ -180,7 +180,7 @@ export default class MonitorTarget extends Component {
         return (
             <PageHeaderWrapper>
                 <div className="contentContainer">
-                    <Card>
+                    <Card className={styles.contentContainer}>
 
                         <SearchWrapper
                             onSubmitForm={form => this.loadReportList(form)}
@@ -218,25 +218,25 @@ export default class MonitorTarget extends Component {
                             //     </Fragment>
                             // )}
                             appendHandleRows={row => <Fragment>
-                                    <Divider type="vertical" />
-                                    <Tooltip title="删除">
-                                        <a onClick={() => {
-                                            this.showDeleteConfirm(row);
-                                        }}><DelIcon />    </a>
-                                    </Tooltip>
-                                    <Divider type="vertical" />
-                                    <Tooltip title="维护点信息">
-                                        <a onClick={() => {
-                                            this.editMonitorInfo('', row);
-                                        }}><PointIcon />    </a>
-                                    </Tooltip>
-                                    <Divider type="vertical" />
-                                    <Tooltip title="排污许可证">
-                                        <a onClick={() => {
-                                            this.adddischargepermit('', row);
-                                        }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
-                                    </Tooltip>
-                                </Fragment>}
+                                <Divider type="vertical" />
+                                <Tooltip title="删除">
+                                    <a onClick={() => {
+                                        this.showDeleteConfirm(row);
+                                    }}><DelIcon />    </a>
+                                </Tooltip>
+                                <Divider type="vertical" />
+                                <Tooltip title="维护点信息">
+                                    <a onClick={() => {
+                                        this.editMonitorInfo('', row);
+                                    }}><PointIcon />    </a>
+                                </Tooltip>
+                                <Divider type="vertical" />
+                                <Tooltip title="排污许可证">
+                                    <a onClick={() => {
+                                        this.adddischargepermit('', row);
+                                    }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
+                                </Tooltip>
+                            </Fragment>}
                             parentcode="platformconfig"
                             {...this.props}
                         >

@@ -139,25 +139,28 @@ class MaintenanceCycle extends Component {
         const { dispatch, PointCode } = this.props;
         const { DGIMN } = this.state;
         debugger
-        dispatch({
-            type: 'maintenances/GetMaintenanceReminder',
-            payload: {
-                PointCode: DGIMN,
-                Type: type,
-                callback: Maintenancereminderdata => {
-                    if (Maintenancereminderdata !== undefined) {
-                        this.setState({
-                            ID: Maintenancereminderdata.ID,
-                        });
+        if (DGIMN) {
+            dispatch({
+                type: 'maintenances/GetMaintenanceReminder',
+                payload: {
+                    PointCode: DGIMN,
+                    Type: type,
+                    callback: Maintenancereminderdata => {
+                        if (Maintenancereminderdata !== undefined) {
+                            this.setState({
+                                ID: Maintenancereminderdata.ID,
+                            });
 
-                    } else {
-                        this.setState({
-                            ID: '',
-                        });
-                    }
+                        } else {
+                            this.setState({
+                                ID: '',
+                            });
+                        }
+                    },
                 },
-            },
-        });
+            });
+        }
+
     }
 
     /** 组装form */

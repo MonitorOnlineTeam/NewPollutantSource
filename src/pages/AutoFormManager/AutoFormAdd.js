@@ -75,7 +75,7 @@ class AutoFormAdd extends Component {
         },
         callback: (res) => {
           if (res.IsSuccess) {
-            successCallback ? successCallback(res) : dispatch(routerRedux.push(`/sysmanage/autoformmanager/${configId}`));
+            successCallback ? successCallback(res) : history.go(-1); //dispatch(routerRedux.push(`/sysmanage/autoformmanager/${configId}`));
           }
         }
       }

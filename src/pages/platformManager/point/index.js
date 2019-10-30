@@ -131,7 +131,7 @@ export default class MonitorPoint extends Component {
         }
       }
     } catch (e) {
-      sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
+      //sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
     switch (type) {
@@ -281,7 +281,7 @@ export default class MonitorPoint extends Component {
         // }
         // FormData.PollutantType = match.params.targetType;
         const FormData = handleFormData(values);
-        FormData.PollutantType = match.params.targetType;
+        //FormData.PollutantType = match.params.targetType;
         console.log("FormData=", FormData)
         if (!Object.keys(FormData).length) {
           sdlMessage('数据为空', 'error');

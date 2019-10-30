@@ -178,7 +178,8 @@ class AutoFormTable extends PureComponent {
             icon="plus"
             type="primary"
             onClick={() => {
-              this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
+              //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
+              this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
             }}
           >添加
                   </Button>;

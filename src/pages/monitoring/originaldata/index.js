@@ -48,20 +48,20 @@ class Index extends Component {
 
     /** 初始化加载 */
     componentDidMount() {
-        const {
-            dispatch,
-        } = this.props;
+        // const {
+        //     dispatch,
+        // } = this.props;
 
-        dispatch({
-            type: 'originalData/updateState',
-            payload: {
-                dgimn: "51052216080301",
-            },
-        })
-        dispatch({
-            type: 'originalData/getOriginalData',
-            payload: {},
-        });
+        // dispatch({
+        //     type: 'originalData/updateState',
+        //     payload: {
+        //         dgimn: "51052216080301",
+        //     },
+        // })
+        // dispatch({
+        //     type: 'originalData/getOriginalData',
+        //     payload: {},
+        // });
     }
 
     /** 切换时间 */

@@ -10,7 +10,7 @@ import moment from 'moment';
 // import { message } from 'antd';
 import { Popover, Badge, Icon, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
-import { querypolluntantentinfolist, getPollutantTypeList } from '@/services/baseapi';
+import { getPollutantTypeList } from '@/services/baseapi';
 import {
   querypollutanttypecode,
   querydatalist,
@@ -507,23 +507,7 @@ export default Model.extend({
         });
       }
     },
-    //获取企业信息
-    *queryentdetail({ payload }, { call, update, put, take }) {
-      const body = { parentIDs: enterpriceid };
-      const entbaseinfo = yield call(querypolluntantentinfolist, body);
-      if (entbaseinfo) {
-        yield update({ entbaseinfo: entbaseinfo[0] });
-      } else {
-        yield update({ entbaseinfo: null });
-      }
-      yield put({
-        type: 'getPollutantTypeList',
-        payload: {
-          ...payload,
-        },
-      });
-      yield take('getPollutantTypeList/@@end');
-    },
+
     *querygetentdatalist({ payload }, { call, update, put, take }) {
       const body = { entName: payload.entName };
       const entlist = yield call(querygetentdatalist, body);

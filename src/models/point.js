@@ -7,7 +7,7 @@
 import { message } from 'antd';
 import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
-import { getPollutantTypeList,deletePoints } from '@/services/baseapi';
+import { getPollutantTypeList, deletePoints } from '@/services/baseapi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -21,7 +21,7 @@ export default Model.extend({
     effects: {
         // 获取监测点数据集合
         *getPointList({ payload }, { call, put, update, select, take }) {
-           
+
             const dd1 = yield select(state => state.common);
             yield take('common/getPollutantTypeList/@@end');
             const dd = yield select(state => state.common);
@@ -29,11 +29,13 @@ export default Model.extend({
         },
         *addPoint({ payload }, { call, put, update, select }) {
             // ;
-
+            console.log("payload=", payload);
+            //return;
             let result = yield call(services.postAutoFromDataAdd, {
                 ...payload,
                 FormData: JSON.stringify(payload.FormData),
             });
+
             if (result.IsSuccess && result.Datas) {
                 console.log('pointRes=', result);
                 let monitorRelFormData = {
@@ -75,16 +77,14 @@ export default Model.extend({
         },
         *delPoint({ payload }, { call, put, update, select }) {
 
-            let result=yield call(deletePoints,[payload.DGIMN]);
-            if(result.IsSuccess)
-            {
+            let result = yield call(deletePoints, [payload.DGIMN]);
+            if (result.IsSuccess) {
                 sdlMessage('操作成功！', 'success');
                 payload.callback(result);
-            }else
-            {
+            } else {
                 sdlMessage('操作失败！', 'error');
             }
-            
+
             // let pointParam = {
             //     'dbo.T_Bas_CommonPoint.PointCode': payload.PointCode,
             // };
