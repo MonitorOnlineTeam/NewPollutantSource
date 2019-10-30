@@ -153,7 +153,7 @@ export default Model.extend({
                   key: 'MonitorTime',
                   width: 150,
                   fixed: 'left',
-                  align: '  center',
+                  align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
             } else {
@@ -171,7 +171,7 @@ export default Model.extend({
                   title: '时间',
                   dataIndex: 'MonitorTime',
                   key: 'MonitorTime',
-                  width: 50,
+                  width: 150,
                   align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);

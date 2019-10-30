@@ -28,6 +28,9 @@ const { Option } = Select;
   RecordType: operationform.RecordType,
   BeginTime: operationform.BeginTime,
   EndTime: operationform.EndTime,
+  currentRecordType: operationform.currentRecordType,
+  recordTypeList: operationform.recordTypeList,
+  currentDate: operationform.currentDate,
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -84,6 +87,12 @@ class OperationRecord extends Component {
         RecordType: value
       }
     })
+    this.props.dispatch({
+      type: "operationform/updateState",
+      payload: {
+        currentRecordType: value
+      }
+    })
     setTimeout(() => {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',
@@ -113,9 +122,10 @@ class OperationRecord extends Component {
   // 获取数据
   getOperationrecordData = (props) => {
     this.props.dispatch({
-      type: 'operationform/getrecordtypebymn',
+      type: 'operationform/getOperationLogList',
       payload: {
-        DGIMN: props.DGIMN
+        DGIMN: props.DGIMN,
+        // RecordType: this.props.currentRecordType
       },
       callback: () => {
         // 获取table数据
@@ -148,8 +158,10 @@ class OperationRecord extends Component {
   getRecordType = (DGIMN) => {
     var configid = ''
     var type = this.props.PollutantType
+    // const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
+    const currentRecordType = this.props.currentRecordType || 1;
     if (type == "2") {
-      switch (this.props.RecordType) {
+      switch (currentRecordType) {
         case 1://维修记录表
           configid = 'FormMainInfoRepair'
           break;
@@ -195,9 +207,9 @@ class OperationRecord extends Component {
       configName: configid,
       searchParams: [
         { "Key": "dbo__T_Bas_Task__DGIMN", "Value": DGIMN || this.props.DGIMN, "Where": "$=" },
-        { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": this.props.RecordType, "Where": "$=" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.BeginTime, "Where": "$gte" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.EndTime, "Where": "$lte" }]
+        { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": currentRecordType, "Where": "$=" },
+        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[0], "Where": "$gte" },
+        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[1], "Where": "$lte" }]
     })
     return configid
   }
@@ -213,6 +225,7 @@ class OperationRecord extends Component {
         rangDate: date,
         BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
         EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        currentDate: [date[0], date[1]]
       }
     })
     setTimeout(() => {
@@ -223,7 +236,7 @@ class OperationRecord extends Component {
         }
       })
     }, 0)
-    if (this.props.RecordType == '8') {
+    if (this.props.currentRecordType == '8') {
       this.props.dispatch({
         type: 'operationform/getjzhistoryinfo',
         payload: {
@@ -236,29 +249,42 @@ class OperationRecord extends Component {
   };
 
   render() {
-    const { RecordTypeTree } = this.props
+    const { RecordTypeTree, recordTypeList, currentRecordType } = this.props
     const { columns, searchParams } = this.state
+    const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
+    const currentType = currentRecordType || 1;
+    const currentDate = this.props.currentDate;
     return (
       <div >
         <Card
           extra={
             <>
               <Select
-                style={{ width: 270, marginRight: 10 }}
+                style={{ width: 220 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
-                value={this.props.RecordType}
+                value={defaultValue}
                 placeholder="请选择表单类型"
                 loading={this.props.RecordTypeTreeLoading}
               >
                 {
-                  RecordTypeTree.map(option => {
-                    return RecordTypeTree.length ?
-                      <Option key={option.key} value={option.key}>{option.value}</Option> :
-                      ""
+                  // recordTypeList.map(option => {
+                  //   return RecordTypeTree.length ?
+                  //     <Option key={option.key} value={option.key}>{option.value}</Option> :
+                  //     ""
+                  // })
+                  recordTypeList.map(item => {
+                    return <Option value={item.TypeId} key={item.TypeId}>{item.Abbreviation}</Option>
                   })
                 }
               </Select>
+              <RangePicker_
+                style={{ width: 350, textAlign: 'left', marginRight: 10, }}
+                dateValue={currentDate}
+                allowClear={false}
+                format={this.state.formats}
+                onChange={this._handleDateChange}
+              />
               <Radio.Group defaultValue="operationrecord" buttonStyle="solid" onChange={(e) => {
                 if (e.target.value === "log") {
                   router.push(`/operations/log`)
@@ -269,26 +295,16 @@ class OperationRecord extends Component {
               </Radio.Group>
             </>
           }
-          title={
-            <Row>
-              <Col span={2}>
-                <span style={{ display: 'block', marginTop: 7, fontSize: 14 }}>记录时间：</span>
-              </Col>
-              <Col span={2}>
-                <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, }} dateValue={this.props.rangDate} allowClear={false} format={this.state.formats} onChange={this._handleDateChange} />
-              </Col>
-            </Row>
-          }
         >
           <Card.Grid style={{ width: '100%', height: 'calc(100vh - 270px)', overflow: "auto", ...this.props.style, }}>
-            {this.props.RecordType == '8' ?
+            {this.props.currentRecordType == '8' ?
               <SDLTable
                 dataSource={this.props.JZDatas}
                 columns={columns}
               >
               </SDLTable>
               :
-              ((this.state.configName && this.props.RecordType) ? <AutoFormTable
+              ((this.state.configName && currentType) ? <AutoFormTable
                 // (this.state.configName && this.props.RecordType ? <AutoFormTable
                 configId={this.state.configName}
                 searchParams={searchParams}
@@ -296,7 +312,7 @@ class OperationRecord extends Component {
                   return <Tooltip title="详情">
                     <a onClick={() => {
                       if (this.props.PollutantType == "2") {
-                        router.push('/operations/recordForm/' + this.props.RecordType + '/' + row['dbo.T_Bas_Task.ID'])
+                        router.push('/operations/recordForm/' + currentType + '/' + row['dbo.T_Bas_Task.ID'])
                       } else {
                         // 获取详情图片
                         this.props.dispatch({

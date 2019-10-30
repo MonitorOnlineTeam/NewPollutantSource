@@ -60,10 +60,12 @@ export default Model.extend({
     * getCalendarInfo({ payload }, { call, put, update }) {
       const result = yield call(services.getCalendarInfo, payload);
       if (result.IsSuccess) {
+        const excetionTotal = result.Datas.excetionTotal || [];
+        const FutureTotal = result.Datas.FutureTotal || [];
         yield update({
           calendarList: [
-            ...result.Datas.excetionTotal,
-            ...result.Datas.FutureTotal
+            ...excetionTotal,
+            ...FutureTotal
           ]
         })
       }
@@ -99,11 +101,12 @@ export default Model.extend({
     // 获取运维日志信息
     * getOperationLogList({ payload }, { call, put, update, select }) {
       const logForm = yield select(state => state.operations.logForm);
+      const time = yield select(state => state.operationform.currentDate);
       const recordTypeList = yield select(state => state.operations.recordTypeList);
       const postData = {
         RecordType: logForm.RecordType,
-        "beginTime": logForm.dateTime[0].format('YYYY-MM-DD 00:00:00'),
-        "endTime": logForm.dateTime[1].format('YYYY-MM-DD 23:59:59'),
+        "beginTime": time[0].format('YYYY-MM-DD 00:00:00'),
+        "endTime": time[1].format('YYYY-MM-DD 23:59:59'),
         ...payload
       }
       const result = yield call(services.getOperationLogList, postData);

@@ -77,7 +77,7 @@ class CommonChart extends Component {
                 lazyUpdate
                 notMerge
                 id="rightLine"
-                style={{ width: '98%', height: 'calc(100vh - 500px)', padding: 20 }}
+                style={{ width: '98%', height: 'calc(100vh - 450px)', padding: 20 }}
             />
         } else {
             return <Empty style={{

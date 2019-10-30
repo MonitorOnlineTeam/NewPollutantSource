@@ -1,5 +1,13 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-8-29 15:30:25 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-10-29 15:30:51
+ * @desc: 查看附件组件
+ */
 import React, { PureComponent } from 'react';
 import { Popover, Table, Divider } from "antd"
+import { uploadHost } from '@/config'
 
 class index extends PureComponent {
   constructor(props) {
@@ -19,10 +27,10 @@ class index extends PureComponent {
               <>
                 <a target="_blank" onClick={(e) => {
                   e.stopPropagation()
-                  window.open(text)
+                  window.open(`${uploadHost}${text}`)
                 }}>预览</a>
                 <Divider type="vertical" />
-                <a href={text} download onClick={(e) => {
+                <a href={`${uploadHost}${text}`} download onClick={(e) => {
                   e.stopPropagation()
                 }}>下载</a>
               </>

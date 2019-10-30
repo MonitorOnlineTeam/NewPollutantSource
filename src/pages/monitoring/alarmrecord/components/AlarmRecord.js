@@ -326,37 +326,34 @@ class AlarmRecord extends Component {
               title: '报警时间',
               dataIndex: 'FirstTime',
               // fixed: 'left',
-               width: 50,
+               width: 150,
               key: 'FirstTime',
           },
            {
              title: '报警类型',
              dataIndex: 'AlarmTypeName',
-             width: 50,
              key: 'AlarmTypeName',
            },
           {
               title: '污染物',
               dataIndex: 'PollutantName',
-              width: 50,
               key: 'PollutantName',
           },
           {
               title: '报警信息',
               dataIndex: 'AlarmMsg',
-              // width,
+              width: 350,
               key: 'AlarmMsg',
+
           },
           {
               title: '报警次数',
               dataIndex: 'AlarmCount',
-              width: 50,
               key: 'AlarmCount',
           },
           {
             title: '核实状态',
             dataIndex: 'State',
-            width: 50,
             key: 'State',
              render: (text, record) => {
                 if (text === '0') {
