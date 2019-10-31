@@ -7,7 +7,8 @@
 import { message } from 'antd';
 import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
-import { getPollutantTypeList, deletePoints } from '@/services/baseapi';
+import { getPollutantTypeList } from '@/services/baseapi';
+import { deletePoints, addPoint, updatePoint } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -30,31 +31,15 @@ export default Model.extend({
         *addPoint({ payload }, { call, put, update, select }) {
             // ;
             console.log("payload=", payload);
-            //return;
-            let result = yield call(services.postAutoFromDataAdd, {
-                ...payload,
-                FormData: JSON.stringify(payload.FormData),
-            });
 
-            if (result.IsSuccess && result.Datas) {
-                console.log('pointRes=', result);
-                let monitorRelFormData = {
-                    DGIMN: payload.FormData.DGIMN,
-                    BaseCode: payload.targetId,
-                    BaseType: payload.targetType,
-                    PointCode: result.Datas,
-                };
+            // let result = yield call(services.postAutoFromDataAdd, {
+            //     ...payload,
+            //     FormData: JSON.stringify(payload.FormData),
+            // });
+            let result = yield call(addPoint, payload.FormData);
 
-                result = yield call(services.postAutoFromDataAdd, {
-                    configId: 'monitorpoint',
-                    FormData: JSON.stringify(monitorRelFormData),
-                });
-                console.log('monitorRelFormData=', result);
-                if (result.IsSuccess) {
-                    sdlMessage('操作成功！', 'success');
-                } else {
-                    sdlMessage(result.Message, 'error');
-                }
+            if (result.IsSuccess) {
+                sdlMessage('操作成功！', 'success');
             } else {
                 sdlMessage(result.Message, 'error');
             }
@@ -62,17 +47,18 @@ export default Model.extend({
         },
         *editPoint({ payload }, { call, put, update, select }) {
             // ;
-            let result = yield call(services.postAutoFromDataUpdate, {
-                ...payload,
-                FormData: JSON.stringify(payload.FormData),
-            });
+            // let result = yield call(services.postAutoFromDataUpdate, {
+            //     ...payload,
+            //     FormData: JSON.stringify(payload.FormData),
+            // });
+
+            let result = yield call(updatePoint, payload.FormData);
 
             if (result.IsSuccess) {
                 sdlMessage('操作成功！', 'success');
             } else {
                 sdlMessage(result.Message, 'error');
             }
-
             payload.callback(result);
         },
         *delPoint({ payload }, { call, put, update, select }) {
