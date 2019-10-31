@@ -15,6 +15,7 @@ export async function systemLogin(params) {
     RememberMe: true,
     UserAccount: params.userName,
     UserPwd: params.password,
+    MenuId:'99dbc722-033f-481a-932a-3c6436e17245'//子系统ID 固定  污染源在线监控
   };
   const body = Object.assign(defaults);
   const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);

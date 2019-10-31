@@ -21,6 +21,7 @@ const Model = {
 
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
+        delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
         try {
           const { ws } = window;

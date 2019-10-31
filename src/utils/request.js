@@ -75,6 +75,7 @@ async function requestMy(url, options) {
     .then(data => ({ data }))
     .catch(e => {
       const status = e.name;
+
       if (status === 401) {
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
