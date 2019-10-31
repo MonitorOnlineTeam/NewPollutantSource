@@ -106,10 +106,20 @@ export default class TransmissionEfficiency extends Component {
     render() {
         const columns = [
             {
+                title: (<span style={{ fontWeight: 'bold' }}>污染物名称</span>),
+                dataIndex: 'PollutantTypeName',
+                key: 'PollutantTypeName',
+                width: '12%',
+                align: 'left',
+                render: (text, record) => {
+                    return text;
+                }
+            },
+            {
                 title: (<span style={{ fontWeight: 'bold' }}>排口名称</span>),
                 dataIndex: 'PointName',
                 key: 'PointName',
-                width: '20%',
+                width: '12%',
                 align: 'left',
                 render: (text, record) => {
                     return text;
@@ -151,7 +161,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效个数</span>),
                 dataIndex: 'EffectiveNumber',
                 key: 'EffectiveNumber',
-                width: '13.3%',
+                width: '11.3%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.AvgEffectiveNumber <= text) {
@@ -167,7 +177,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
                 dataIndex: 'TransmissionRate',
                 key: 'TransmissionRate',
-                width: '13.3%',
+                width: '12.3%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.AvgTransmissionRate <= text) {
@@ -183,7 +193,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
                 dataIndex: 'EffectiveRate',
                 key: 'EffectiveRate',
-                width: '13.3%',
+                width: '12.3%',
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {

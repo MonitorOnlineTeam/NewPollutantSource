@@ -9,7 +9,7 @@ import moment from 'moment';
 import * as services from './service';
 import Model from '@/utils/model';
 import { message } from 'antd';
-
+import { ExceptionTypeOnline } from '@/utils/enum';
 const data = {
     operationInfo: {},
     stateInfo: [{
@@ -484,21 +484,8 @@ export default Model.extend({
         dataInfo: null,
         stateNameInfo: null,
         paramNameInfo: null,
-        paramstatusInfo: null
-    },
-    reducers: {
-        updateRealTimeData(state, action) {
-            let realtimedata = action.payload.data;
-            let pollutantval = [{ pollutantName: 'co', value: 21.1 }, { pollutantName: 'nox', value: 21.1 }]
-            // realtimedata.map((item, key) => {
-            //     pollutantval.where(() => { });
-            // });
-            console.log('realtimedata=',realtimedata)
-            return {
-                ...state,
-                ...action.payload,
-            };
-        },
+        paramstatusInfo: null,
+        DGIMN: "",
     },
     effects: {
         * GetProcessFlowChartStatus({
@@ -507,7 +494,7 @@ export default Model.extend({
             const res = yield call(services.GetProcessFlowChartStatus, payload);
             if (res && res.Datas) {
                 console.log('dgimn=', payload.dgimn)
-                if (payload.dgimn == '101'||payload.dgimn=='45011020152890055') {
+                if (payload.dgimn == '101' || payload.dgimn == '45011020152890055') {
                     yield update({
                         operationInfo: data.operationInfo,
                         stateInfo: data.stateInfo,
@@ -523,7 +510,6 @@ export default Model.extend({
                     if (payload.dgimn == '42102320160824') {
                         info = params
                     }
-                    console.log('info=',info)
                     yield update({
                         operationInfo: res.Datas.operationInfo,
                         stateInfo: res.Datas.stateInfo,
@@ -531,7 +517,8 @@ export default Model.extend({
                         dataInfo: res.Datas.dataInfo,
                         stateNameInfo: res.Datas.stateNameInfo,
                         paramNameInfo: res.Datas.paramNameInfo,
-                        paramstatusInfo: res.Datas.paramstatusInfo
+                        paramstatusInfo: res.Datas.paramstatusInfo,
+                        DGIMN: payload.dgimn,
                     });
                 }
             }
@@ -543,9 +530,83 @@ export default Model.extend({
                     dataInfo: null,
                     stateNameInfo: null,
                     paramNameInfo: null,
-                    paramstatusInfo: null
+                    paramstatusInfo: null,
+                    DGIMN: payload.dgimn,
                 });
             }
         }
+    },
+    reducers: {
+        updateRealTimeDatas(state, action) {
+            //最新推送数据
+            let realtimedata = action.payload.data;
+            //原始数据
+            let paramsInfo = state.paramsInfo;
+            let newInfo = [];
+            //异常类型大类，从数据库中对应
+            let ExceptionTypeOnline = [
+                {
+                    id: 1,
+                    description: "0值异常"
+                },
+                {
+                    id: 2,
+                    description: "超限异常"
+                },
+                {
+                    id: 3,
+                    description: "连续值异常"
+                },
+                {
+                    id: 4,
+                    description: "设备参数异常"
+                },
+                {
+                    id: 5,
+                    description: "人工挑选异常"
+                },
+                {
+                    id: 6,
+                    description: "设备状态异常"
+                },
+            ];
+            //如果原生数据和推送数据都不为空并且MN号一致则更新
+            if (realtimedata && paramsInfo) {
+                if (realtimedata[0].DGIMN === state.DGIMN) {
+                    paramsInfo.map((item, index) => {
+                        let firstOrDefault = realtimedata.find(n => n.PollutantCode == item.pollutantCode);
+                        if (firstOrDefault) {
+                            let paratmeter = '';
+                            //先判断是否异常(如果异常重新给参数赋标准等参数)
+                            if (parseInt(firstOrDefault.IsException) > 0) {
+                                paratmeter = "1" + "§" + firstOrDefault.IsException + "§" + ExceptionTypeOnline.find(n => n.id === parseInt(firstOrDefault.IsException)).description;
+                            }
+                            //在判断是否超标（如果超标更改参数）
+                            else if (parseInt(firstOrDefault.IsOver) > 0) {
+                                paratmeter = "0" + "§" + firstOrDefault.StandardColor + "§" + firstOrDefault.StandardValue + "§" + firstOrDefault.OverStandValue;
+                            }
+                            newInfo.push({
+                                value: firstOrDefault.MonitorValue,
+                                dataparam: paratmeter,
+                                pollutantCode: item.pollutantCode,
+                                pollutantName: item.pollutantName,
+                                DGIMN: state.DGIMN,
+                                pollutantParamInfo: item.pollutantParamInfo,
+                            }
+                            )
+                        }
+                    })
+                    if (newInfo.length !== 0) {
+                        return {
+                            ...state,
+                            paramsInfo: newInfo,
+                        };
+                    }
+                }
+            }
+            return {
+                ...state,
+            };
+        },
     }
 })

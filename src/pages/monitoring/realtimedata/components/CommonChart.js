@@ -10,6 +10,8 @@ import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Card, Col, Row, Tabs, Badge, Icon, Divider, Tooltip, Spin, Popover, Empty } from 'antd';
+import { Xiangshang, Xiangxia } from '@/utils/icon';
+
 import styles from './ProcessFlowChart.less';
 const { TabPane } = Tabs;
 @connect(({ loading, dataquery, realtimeserver }) => ({
@@ -26,7 +28,7 @@ class CommonChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            paramsInfo: []
+            paramsInfo: [],
         }
     }
     componentWillMount() {
@@ -41,37 +43,44 @@ class CommonChart extends Component {
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
-        // console.log('nextProps.paramsInfo=',nextProps.paramsInfo)
-        // console.log('props.paramsInfo=',this.props.paramsInfo)
-        if (nextProps.paramsInfo !== this.props.paramsInfo) {
-            var paramsInfo = nextProps.paramsInfo
-            paramsInfo.map(item => {
-                var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
-                var state = '0'
-                if (params != null) {
-                    if (item.value > params.value) {
-                        state = '1'  //向上箭头
-                    } else if (item.value == params.value) {
-                        state = '0' //无箭头
-                    } else {
-                        state = '2' //向下箭头
-                    }
+        if (nextProps.paramsInfo) {
+            if (nextProps.paramsInfo !== this.props.paramsInfo) {
+                var paramsInfo = nextProps.paramsInfo
+                if (paramsInfo) {
+                    paramsInfo.map(item => {
+                        var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
+                        var state = '0'
+                        if (params != null) {
+                            if (item.value > params.value) {
+                                state = '1'  //向上箭头
+                            } else if (item.value == params.value) {
+                                state = '0' //无箭头
+                            } else {
+                                state = '2' //向下箭头
+                            }
+                        }
+                        item.state = state;
+                    })
                 }
-                item.state = state;
-            })
-            this.setState({ paramsInfo })
+                this.setState({ paramsInfo })
+            }
+        }
+        //推送数据改变曲线图
+        if (this.props.option !== nextProps.option) {
+            if (this.echartsReact && nextProps.option) {
+                console.log("nextProps.option=", nextProps.option)
+                this.echartsReact.getEchartsInstance().setOption(nextProps.option);
+            }
         }
     }
 
-
+    //加载曲线图
     getEchart = () => {
-        console.log(' this.props=', this.props)
-        console.log(' this.state=', this.state)
         const { option, dataloading } = this.props;
         if (option) {
             option.backgroundColor = '#fff';
             return <ReactEcharts
-                // showLoading={dataloading}
+                ref={(reactEcharts) => { this.echartsReact = reactEcharts; }}
                 theme="light"
                 option={option}
                 lazyUpdate
@@ -86,12 +95,12 @@ class CommonChart extends Component {
         }
     }
     /**仪表盘的点击事件 */
-    dashboardClick = (pollutantCode, pollutantName) => {
-        // alert();
+    dashboardClick = (pollutantCode, pollutantName,Unit) => {
         let { historyparams, dispatch } = this.props;
 
         historyparams.payloadpollutantCode = pollutantCode;
         historyparams.payloadpollutantName = pollutantName;
+        historyparams.unit=Unit;
         dispatch({
             type: 'dataquery/updateState',
             payload: {
@@ -103,27 +112,6 @@ class CommonChart extends Component {
             payload: {
             }
         })
-    }
-
-    getUpOrDown = (state) => {
-        switch (state) {
-            case '0':
-                return ""
-            case '1':
-                return "arrow-up"
-            case '2':
-                return "arrow-down"
-        }
-    }
-    getColor = (dataparam) => {
-        var color = '#2eff02'
-        if (dataparam != '') {
-            var str = dataparam.split('§')
-            if (str == 'IsOver') {
-                color = '#ff0000'
-            }//IsException
-        }
-        return color
     }
 
     /**污染物参数 */
@@ -138,7 +126,6 @@ class CommonChart extends Component {
     }
     getDeials = (params) => {
         var res = []
-        console.log('params111=', params)
         if (params) {
             params.map(item => {
 
@@ -154,33 +141,38 @@ class CommonChart extends Component {
         return res;
     }
 
+    //污染物选项卡改变事件
     pollutantClick = (e) => {
-        console.log(e);
-        this.dashboardClick(this.props.pollutantlist[e].PollutantCode, this.props.pollutantlist[e].PollutantName);
+        this.dashboardClick(this.props.pollutantlist[e].PollutantCode, this.props.pollutantlist[e].PollutantName,this.props.pollutantlist[e].Unit);
     }
 
     /**仪表盘 */
     getLastestData = () => {
         const { pollutantlist, paramsInfo } = this.props;
-        // let { paramsInfo } = this.state;
         if (pollutantlist) {
             let res = [];
-            console.log('pollutantList1111=', pollutantlist)
-            console.log('paramsInfo1111=', paramsInfo)
-            //<Icon style={{ marginLeft: 5, color: this.getColor(pollutantParam.dataparam) }} type={this.getUpOrDown(pollutantParam.state)} />
             pollutantlist.map((item, key) => {
                 if (paramsInfo) {
                     var pollutantParam = paramsInfo.find(param => {
                         return param.pollutantCode == item.PollutantCode;
                     })
                     if (pollutantParam) {
+                        //定义超标异常标识
+                        var flag = 2;
+                        if (pollutantParam.dataparam) {
+                            flag = pollutantParam.dataparam.split('§')[0];
+                        }
                         res.push(<TabPane tab={
                             <Card size="small" className={styles.maincard} bordered={false} >
                                 <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
-                                <p >浓度：<span className={styles.cardfonttype}>{pollutantParam.value}</span></p>
-                                {/* {
-                                    this.getPollutantParam(pollutantParam.pollutantParamInfo)
-                                } */}
+                                <p >浓度：<span style={{ color: flag === "0" ? "red" : flag === "1" ? "#ffbe00e3" : "" }} className={styles.cardfonttype}>{pollutantParam.value}</span>
+                                    {
+                                        pollutantParam.state ? pollutantParam.state === '1' ?
+                                            <span><Xiangshang /></span> :
+                                            pollutantParam.state === '2' ?
+                                                <Xiangxia /> : "" : ""
+                                    }
+                                </p>
                                 <p>单位：<span>{item.Unit}</span></p>
                                 <p>标准值:{item.StandardValueStr}</p>
                             </Card>} key={key}>
@@ -199,7 +191,7 @@ class CommonChart extends Component {
     }
     render() {
         const { pollutantlist, paramsInfo, dataloading, isloading, option } = this.props;
-        console.log('paramsInfo==', dataloading)
+
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
                 <div className={styles.maintabs} style={{ padding: 10 }}>

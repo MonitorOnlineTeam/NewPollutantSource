@@ -1,11 +1,11 @@
 import Model from '@/utils/model';
 import {
-  queryhistorydatalist,
+    queryhistorydatalist,
 } from '../services/monitordata';
 import {
-  querypollutantlist,
+    querypollutantlist,
 }
-from '../services/baseapi';
+    from '../services/baseapi';
 import { formatPollutantPopover } from '@/utils/utils';
 
 export default Model.extend({
@@ -19,16 +19,19 @@ export default Model.extend({
         datatable: [],
         total: 0,
         tablewidth: 0,
+
         historyparams: {
-          datatype: 'realtime',
-          DGIMNs: null,
-          pageIndex: null,
-          pageSize: null,
-          beginTime: null,
-          endTime: null,
-          payloadpollutantCode: null,
-          payloadpollutantName: null,
-          isAsc: true,
+            datatype: 'realtime',
+            DGIMNs: null,
+            pageIndex: null,
+            pageSize: null,
+            beginTime: null,
+            endTime: null,
+            payloadpollutantCode: null,
+            payloadpollutantName: null,
+            unit: null,
+            isAsc: true,
+            DGIMN: "",
         },
     },
     effects: {
@@ -43,22 +46,24 @@ export default Model.extend({
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
-                  historyparams = {
-                      ...historyparams,
-                      payloadpollutantCode: result[0].PollutantCode,
-                      payloadpollutantName: result[0].PollutantName,
-                  }
-                  yield update({
-                    historyparams,
-                  });
-                yield put({
-                  type: 'queryhistorydatalist',
-                  payload,
-                });
-                yield take('queryhistorydatalist/@@end');
-            }
+                    historyparams = {
+                        ...historyparams,
+                        payloadpollutantCode: result[0].PollutantCode,
+                        payloadpollutantName: result[0].PollutantName,
+                        unit: result[0].Unit,
+                        DGIMN: payload.dgimn
+                    }
+                    yield update({
+                        historyparams,
+                    });
+                    yield put({
+                        type: 'queryhistorydatalist',
+                        payload,
+                    });
+                    yield take('queryhistorydatalist/@@end');
+                }
             } else {
-                yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
+                yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0, DGIMN: payload.dgimn });
             }
         },
         * queryhistorydatalist({
@@ -91,93 +96,101 @@ export default Model.extend({
             historyparams.payloadpollutantCode.split(',').map((item, key) => {
                 let seriesdata = [];
                 let series = {
-                  type: 'line',
-                  name: '',
-                  data: [],
-                  markLine: [],
+                    type: 'line',
+                    name: '',
+                    data: [],
+                    markLine: [],
                 };
                 let markLine = {};
                 const polluntinfo = pollutantlist.find((value, index, arr) =>
-                  value.PollutantCode === item);
-                   if (polluntinfo.StandardValue) {
-                     markLine = {
-                       symbol: 'none', // 去掉警戒线最后面的箭头
-                       data: [{
-                         lineStyle: {
-                           type: 'dash',
-                           color: polluntinfo.color,
-                         },
-                         yAxis: polluntinfo.StandardValue,
-                       }],
-                     };
-                   }
+                    value.PollutantCode === item);
+                if (polluntinfo.StandardValue) {
+                    markLine = {
+                        symbol: 'none', // 去掉警戒线最后面的箭头
+                        data: [{
+                            // lineStyle: {
+                            //     type: 'dash',
+                            //     // color: polluntinfo.Color,
+                            // },
+                            yAxis: polluntinfo.UpperValue,
+                        }],
+                    };
+                }
                 result.map((item1, key) => {
                     seriesdata = seriesdata.concat(item1[item]);
                 });
-                 series = {
-                   ...series,
-                   name: arrname[i],
-                   data: seriesdata,
-                   markLine,
-                 }
+                series = {
+                    ...series,
+                    name: arrname[i],
+                    data: seriesdata,
+                    markLine,
+                }
 
                 arr.push(series);
                 i++;
             })
-             result.map((item1, key) => {
-               xAxis = xAxis.concat(item1.MonitorTime);
-             });
+            result.map((item1, key) => {
+                xAxis = xAxis.concat(item1.MonitorTime);
+            });
             let pollutantcols = [];
             let tablewidth = 0;
             let width = 100;
-             let columns = [];
+            let columns = [];
             if (pollutantlist.length > 6) {
-                 width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
+                width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
                 if (width < 200) {
-                  width = 200;
+                    width = 200;
                 }
                 tablewidth = width * pollutantlist.length + 200;
                 pollutantlist.map((item, key) => {
-                  pollutantcols = pollutantcols.concat({
-                    title: `${item.PollutantName}(${item.Unit})`,
-                    dataIndex: item.PollutantCode,
-                    key: item.PollutantCode,
-                    align: 'center',
-                    width,
-                    render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
-                  });
+                    pollutantcols = pollutantcols.concat({
+                        title: `${item.PollutantName}(${item.Unit})`,
+                        dataIndex: item.PollutantCode,
+                        key: item.PollutantCode,
+                        align: 'center',
+                        width,
+                        render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
+                    });
                 });
-                 columns = [{
-                  title: '时间',
-                  dataIndex: 'MonitorTime',
-                  key: 'MonitorTime',
-                  width: 150,
-                  fixed: 'left',
-                  align: 'center',
+                columns = [{
+                    title: '时间',
+                    dataIndex: 'MonitorTime',
+                    key: 'MonitorTime',
+                    width: 80,
+                    fixed: 'left',
+                    align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
             } else {
                 pollutantlist.map((item, key) => {
-                  pollutantcols = pollutantcols.concat({
-                    title: `${item.PollutantName}(${item.Unit})`,
-                    dataIndex: item.PollutantCode,
-                    key: item.PollutantCode,
-                    align: 'center',
-                    width,
-                    render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
-                  });
+                    let unit = item.Unit ? "(" + item.Unit + ")" : ""
+                    pollutantcols = pollutantcols.concat({
+                        title: item.PollutantName + unit,
+                        dataIndex: item.PollutantCode,
+                        key: item.PollutantCode,
+                        align: 'center',
+                        width,
+                        render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
+                    });
                 });
                 columns = [{
-                  title: '时间',
-                  dataIndex: 'MonitorTime',
-                  key: 'MonitorTime',
-                  width: 150,
-                  align: 'center',
+                    title: '时间',
+                    dataIndex: 'MonitorTime',
+                    key: 'MonitorTime',
+                    width: 80,
+                    align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
             }
             let option = null;
             if (arr && arr.length > 0) {
+                if (xAxis.length > 20) {
+                    xAxis = xAxis.splice(xAxis.length - 20, 20);
+                }
+                if (arr[0].data.length > 20) {
+                    arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
+                }
+                let unit = historyparams.unit ? `(${historyparams.unit})` : "";
                 option = {
                     title: {
                         // text: '2018-05-17~2018-05-18'
@@ -185,9 +198,9 @@ export default Model.extend({
                     tooltip: {
                         trigger: 'axis',
                     },
-                     legend: {
-                       data: historyparams.payloadpollutantName.split(','),
-                     },
+                    legend: {
+                        data: historyparams.payloadpollutantName.split(','),
+                    },
                     toolbox: {
                         show: true,
                         feature: {
@@ -202,7 +215,7 @@ export default Model.extend({
                     },
                     yAxis: {
                         type: 'value',
-                        name: '浓度值',
+                        name: "浓度值" + unit,
                         axisLabel: {
                             formatter: '{value}',
                         },
@@ -219,4 +232,104 @@ export default Model.extend({
             yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.total });
         },
     },
+    reducers: {
+        updateRealTimeCharts(state, action) {
+            //最新推送数据
+            let realtimedata = action.payload.data;
+            //原始数据
+            let chartdata = state.chartdata;
+            //根据污染物查询出最新数据
+            let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
+            //纵坐标显示单位
+            let unit = state.historyparams.unit ? `(${state.historyparams.unit})` : "";
+            //MN号相同的代表是选中的进行数据更新
+            if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN) {
+                let newChartInfo = new Object();
+                let legendData = [], xAxisdata = [], seriesData = [];
+                //如果原始数据初始不为空将固定数据反填到定义对象并进行更新
+                if (chartdata) {
+                    legendData = chartdata.legend.data;
+                    xAxisdata = chartdata.xAxis.data;
+                    seriesData = chartdata.series;
+                }
+                //原始数据为空的话标准先去推送数据中的标准
+                else {
+                    legendData = state.historyparams.payloadpollutantName.split(',');
+                    let markLineData = [];
+                    if (parseInt(newDataByPollutant[0].IsOver) > 0) {
+                        markLineData = {
+                            symbol: 'none', // 去掉警戒线最后面的箭头
+                            data: [{
+                                lineStyle: {
+                                    type: 'dash',
+                                    color: newDataByPollutant[0].StandardColor,
+                                },
+                                yAxis: newDataByPollutant[0].Upperpollutant,
+                            }],
+                        }
+                    }
+                    let series = {
+                        type: 'line',
+                        name: legendData,
+                        data: [],
+                        markLine: markLineData,
+                    }
+                    //将小数组添加到大数组中
+                    seriesData.push(series);
+                }
+                //默认展示十条数据
+                if (xAxisdata && xAxisdata.length === 20) {
+                    xAxisdata = xAxisdata.splice(1, 19);
+                }
+                xAxisdata.push(realtimedata[0].MonitorTime);
+                if (seriesData && seriesData[0] && seriesData[0].data.length === 20) {
+                    seriesData[0].data = seriesData[0].data.splice(1, 19);
+                }
+                seriesData[0].data.push(newDataByPollutant ? newDataByPollutant[0].MonitorValue : 0)
+                newChartInfo.title = {};
+                newChartInfo.tooltip = {
+                    trigger: 'axis',
+                };
+                newChartInfo.legend = {
+                    data: legendData,
+                };
+                newChartInfo.toolbox = {
+                    show: true,
+                    feature: {
+                        saveAsImage: {},
+                    },
+                };
+                newChartInfo.xAxis = {
+                    type: 'category',
+                    name: '时间',
+                    boundaryGap: false,
+                    data: xAxisdata,
+                };
+                newChartInfo.yAxis = {
+                    type: 'value',
+                    name: '浓度值' + unit,
+                    axisLabel: {
+                        formatter: '{value}',
+                    },
+                };
+                newChartInfo.grid = {
+                    x: 60,
+                    y: 45,
+                    x2: 45,
+                    y2: 20,
+                };
+                newChartInfo.series = seriesData;
+                return {
+                    ...state,
+                    chartdata: newChartInfo,
+                };
+            }
+            else {
+                return {
+                    ...state,
+                };
+            }
+
+        },
+    }
 });
