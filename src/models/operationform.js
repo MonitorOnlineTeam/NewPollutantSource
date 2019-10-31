@@ -7,7 +7,7 @@
  */
 import Model from '@/utils/model';
 import {
-    getrecordtypebymn, getjzhistoryinfo
+    getrecordtypebymn, getjzhistoryinfo, getOperationLogList
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
@@ -22,7 +22,10 @@ export default Model.extend({
         rangDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
         PollutantTypes: '',
         BeginTime: moment(new Date()).add(-3, 'month'),
-        EndTime: moment(new Date())
+        EndTime: moment(new Date()),
+        currentRecordType: null,
+        recordTypeList: [],
+        currentDate: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
     },
     subscriptions: {
         setup({
@@ -63,6 +66,22 @@ export default Model.extend({
                 yield update({
                     JZDatas: result.Datas
                 });
+            }
+        },
+        // 获取运维日志信息
+        * getOperationLogList({ payload, callback }, { call, put, update, select }) {
+            const postData = {
+                "RecordType": "",
+                "beginTime": moment().format('YYYY-MM-DD 00:00:00'),
+                "endTime": moment().format('YYYY-MM-DD 23:59:59'),
+                ...payload
+            }
+            const result = yield call(getOperationLogList, postData);
+            if (result.IsSuccess) {
+                yield update({
+                    recordTypeList: result.Datas.RecordType,
+                })
+                callback && callback();
             }
         },
     },

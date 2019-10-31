@@ -1,5 +1,5 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
-import { Icon, Badge, Popover,message } from 'antd';
+import { Icon, Badge, Popover, message } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -141,34 +141,47 @@ export function handleFormData(values) {
 
   return formData;
 }
+
+/**
+ * 获取autoForm cuid
+ * @param {array} record 行数据
+ * @param {object} key key
+ */
+export function getRowCuid(record, key) {
+  const fileInfo = record[key] && record[key].split(';')[0];
+  const list = fileInfo ? fileInfo.split('|') : [];
+  const cuid = list[list.length - 2] || null;
+  return cuid;
+}
+
 //文件下载
 export function downloadFile(sUrl) {
   //iOS devices do not support downloading. We have to inform user about this.
   if (/(iP)/g.test(navigator.userAgent)) {
-      alert('Your device does not support files downloading. Please try again in desktop browser.');
-      return false;
+    alert('Your device does not support files downloading. Please try again in desktop browser.');
+    return false;
   }
   //If in Chrome or Safari - download via virtual link click
   if (true) {
-      //Creating new link node.
-      var link = document.createElement('a');
-      link.href = sUrl;
-      if (link.download !== undefined) {
-          //Set HTML5 download attribute. This will prevent file from opening if supported.
-          var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
-          link.download = fileName;
-      }
-      //Dispatching click event.
-      if (document.createEvent) {
-          var e = document.createEvent('MouseEvents');
-          e.initEvent('click', true, true);
-          link.dispatchEvent(e);
-          return true;
-      }
+    //Creating new link node.
+    var link = document.createElement('a');
+    link.href = sUrl;
+    if (link.download !== undefined) {
+      //Set HTML5 download attribute. This will prevent file from opening if supported.
+      var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+      link.download = fileName;
+    }
+    //Dispatching click event.
+    if (document.createEvent) {
+      var e = document.createEvent('MouseEvents');
+      e.initEvent('click', true, true);
+      link.dispatchEvent(e);
+      return true;
+    }
   }
   // Force file download (whether supported by server).
   if (sUrl.indexOf('?') === -1) {
-      sUrl += '?download';
+    sUrl += '?download';
   }
   window.open(sUrl, '_self');
   return true;

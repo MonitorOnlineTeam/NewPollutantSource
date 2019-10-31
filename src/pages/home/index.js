@@ -995,7 +995,7 @@ class index extends Component {
                     <ReactEcharts
                       loadingOption={this.props.loadingRateStatistics}
                       option={this.getOperationOptions()}
-                      style={{ height: '200px' }}
+                      style={{ height: '180px' }}
                       className="echarts-for-echarts"
                       theme="my_theme"
                     />

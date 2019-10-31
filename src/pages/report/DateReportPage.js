@@ -17,6 +17,7 @@ const { Option } = Select;
   loading: loading.effects["report/getDateReportData"],
   exportLoading: loading.effects["report/reportExport"],
   entLoading: loading.effects["report/getEnterpriseList"],
+  entAndPointLoading: loading.effects["common/getEnterpriseAndPoint"],
   pollutantList: report.pollutantList,
   dateReportData: report.dateReportData,
   pollutantTypeList: report.pollutantTypeList,
@@ -96,7 +97,7 @@ class SiteDailyPage extends PureComponent {
             this.props.dispatch({
               type: 'report/getEnterpriseList',
               payload: {
-                RegionCode: RegionCode,
+                regionCode: RegionCode,
                 callback: (res) => {
                   res.Datas.length && this.setState({
                     currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
@@ -253,7 +254,7 @@ class SiteDailyPage extends PureComponent {
         // }
         this.setState({
           currentDate: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
-          currentEntName: this.props.enterpriseList.filter(item => item["dbo.T_Bas_Enterprise.EntCode"] == values.EntCode)[0]["dbo.T_Bas_Enterprise.EntName"]
+          currentEntName: this.props.enterpriseList.filter(item => item["ParentCode"] == values.EntCode)[0]["ParentName"]
         })
         // 获取污染物类型 = 表头
         this.props.dispatch({
@@ -322,7 +323,7 @@ class SiteDailyPage extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator }, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading } = this.props;
+    const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
     if (exportLoading) {
@@ -385,7 +386,7 @@ class SiteDailyPage extends PureComponent {
                         dispatch({
                           type: 'report/getEnterpriseList',
                           payload: {
-                            RegionCode: val.toString()
+                            regionCode: val.toString()
                           }
                         })
                       }}
@@ -396,7 +397,7 @@ class SiteDailyPage extends PureComponent {
               <Col md={5} sm={24}>
                 <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                   {getFieldDecorator("EntCode", {
-                    initialValue: enterpriseList.length ? enterpriseList[0]["dbo.T_Bas_Enterprise.EntCode"] : undefined,
+                    initialValue: enterpriseList.length ? enterpriseList[0]["ParentCode"] : undefined,
                     rules: [{
                       required: true,
                       message: '请选择监控目标',
@@ -407,7 +408,7 @@ class SiteDailyPage extends PureComponent {
                       placeholder="请选择监控目标">
                       {
                         enterpriseList.map(item =>
-                          <Option value={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>)
+                          <Option value={item["ParentCode"]}>{item["ParentName"]}</Option>)
                       }
                     </Select>
 

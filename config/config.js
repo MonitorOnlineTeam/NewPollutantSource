@@ -601,7 +601,7 @@ export default {
                 },
                 {
                   name: 'datalist',
-                  path: '/monitoring/datalist',
+                  path: '/monitoring/mapview/datalist',
                   component: './monitoring/overView',
                 },
                 {

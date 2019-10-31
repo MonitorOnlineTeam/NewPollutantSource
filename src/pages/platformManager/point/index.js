@@ -28,7 +28,8 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { sdlMessage, handleFormData } from '@/utils/utils';
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
+import { sdlMessage, handleFormData, getRowCuid } from '@/utils/utils';
 import PollutantType from '@/pages/AutoFormManager/PollutantType';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
@@ -83,18 +84,6 @@ export default class MonitorPoint extends Component {
         },
       },
     });
-
-    // dispatch({
-    //   type: 'monitorTarget/getPollutantTypeList',
-    //   payload: {
-    //     callback: result => {
-    //       this.setState({
-    //         pollutantType: result,
-    //       });
-    //       this.getPageConfig(result);
-    //     },
-    //   },
-    // });
   }
 
 
@@ -131,7 +120,7 @@ export default class MonitorPoint extends Component {
         }
       }
     } catch (e) {
-      sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
+      //sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
     switch (type) {
@@ -176,47 +165,6 @@ export default class MonitorPoint extends Component {
         configId: pointConfigIdEdit,
       },
     });
-  };
-
-  editMonitorInfo = () => {
-    const { key, row } = this.state;
-    if (!row || row.length === 0 || row.length > 1) {
-      sdlMessage('请选择一行进行操作', 'warning');
-      return false;
-    }
-  };
-
-  onMenu = (key, id, name, code) => {
-    const {
-      match: {
-        params: { configId, targetId, targetName, targetType },
-      },
-    } = this.props;
-    // match.params
-    switch (key) {
-      case '1':
-        this.props.dispatch(
-          routerRedux.push(
-            `/platformconfig/monitortarget/${configId}/3/null/usestandardlibrary/${id}/${name}/${targetId}/${targetName}/${this.state.pollutantType}`,
-          ),
-        );
-        break;
-      case '2':
-        this.showMaintenancereminder(code);
-        break;
-      case '3':
-        this.props.dispatch(
-          routerRedux.push(
-            `${config.VideoServer === 0 ? `/platformconfig/hkcameramanager/${name}/${code}/${id}/${targetId}/${targetName}` : `/platformconfig/ysycameramanager/${name}/${code}/${id}/${targetId}/${targetName}`}`,
-          ),
-        );
-        break;
-      case '4':
-        this.props.dispatch(routerRedux.push(`/pointdetail/${id}/pointinfo`));
-        break;
-      default:
-        break;
-    }
   };
 
   /** 设置运维周期 */
@@ -271,18 +219,7 @@ export default class MonitorPoint extends Component {
 
     form.validateFields((err, values) => {
       if (!err) {
-        // const FormData = {};
-        // for (const key in values) {
-        //   if (values[key] && values[key].fileList) {
-        //     FormData[key] = uid;
-        //   } else {
-        //     FormData[key] = values[key] && values[key].toString();
-        //   }
-        // }
-        // FormData.PollutantType = match.params.targetType;
         const FormData = handleFormData(values);
-        FormData.PollutantType = match.params.targetType;
-        console.log("FormData=", FormData)
         if (!Object.keys(FormData).length) {
           sdlMessage('数据为空', 'error');
           return false;
@@ -290,13 +227,19 @@ export default class MonitorPoint extends Component {
         if (this.state.isEdit) {
           FormData.PointCode = this.state.selectedPointCode;
         }
+
+        let payload = {
+          BaseType: match.params.targetType,
+          TargetId: match.params.targetId,
+          Point: FormData
+        };
+
+        //console.log("payload=", payload);
+
         dispatch({
           type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
           payload: {
-            configId: pointConfigIdEdit,
-            targetId: match.params.targetId,
-            targetType: match.params.targetType,
-            FormData,
+            FormData: { ...payload },
             callback: result => {
               if (result.IsSuccess) {
                 this.setState({
@@ -367,6 +310,10 @@ export default class MonitorPoint extends Component {
     });
   }
 
+  loadReportList = (re) => {
+    console.log("res=", re)
+  }
+
   render() {
     const {
       searchConfigItems,
@@ -395,33 +342,8 @@ export default class MonitorPoint extends Component {
         />
       );
     }
-    const menu = (id, name, code) => (
-      <Menu
-        onClick={e => {
-          this.onMenu.bind()(e.key, id, name, code);
-        }}
-      >
-        {/* <Menu.Item key="1">
-          <Icon type="bars" />
-          监测标准
-        </Menu.Item>
-       <Menu.Item key="2"><Icon type="dashboard" />运维周期</Menu.Item> */}
-        {/* <Menu.Item key="3">
-          <Icon type="youtube" />
-          视频管理
-        </Menu.Item> */}
-        {/* <Menu.Item key="4"><Icon type="home" />进入排口</Menu.Item> */}
-      </Menu>
-    );
+
     return (
-      // <MonitorContent
-      //   breadCrumbList={[
-      //     { Name: '首页', Url: '/' },
-      //     { Name: '平台配置', Url: '' },
-      //     { Name: '企业管理', Url: '/platformconfig/monitortarget/' + configId },
-      //     { Name: '维护点信息', Url: '' },
-      //   ]}
-      // >
       <PageHeaderWrapper title="监测点维护">
         <div className={styles.cardTitle}>
           <Card
@@ -452,7 +374,18 @@ export default class MonitorPoint extends Component {
           >
 
             {
-              pointConfigId && <AutoFormTable
+              pointConfigId && <SearchWrapper
+                // onSubmitForm={form => this.loadReportList(form)}
+                searchParams={pointDataWhere}
+                configId={pointConfigIdEdit}
+                resultConfigId={pointConfigId}
+              ></SearchWrapper>
+            }
+            {
+
+
+
+              pointConfigId && (<AutoFormTable
                 style={{ marginTop: 10 }}
                 // columns={columns}
                 configId={pointConfigId}
@@ -464,6 +397,9 @@ export default class MonitorPoint extends Component {
                 }}
                 onAdd={() => {
                   this.showModal();
+                  // this.setState({
+                  //   cuid: getRowCuid(columns, row)
+                  // })
                 }}
                 searchParams={pointDataWhere}
                 appendHandleRows={row => (
@@ -472,6 +408,9 @@ export default class MonitorPoint extends Component {
                       <a
                         onClick={() => {
                           this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                          this.setState({
+                            cuid: getRowCuid(row, "dbo.T_Bas_CommonPoint.Photo")
+                          })
                         }}
                       >
                         <EditIcon />
@@ -494,26 +433,15 @@ export default class MonitorPoint extends Component {
                     </Tooltip>
                     <Divider type="vertical" />
                     <Tooltip title="删除">
-
                       <a onClick={() => {
                         this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
-
                     </Tooltip>
-                    {/* <Divider type="vertical" />
-                    <Dropdown
-                      overlay={menu(
-                        row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        row['dbo.T_Bas_CommonPoint.PointName'],
-                        row['dbo.T_Bas_CommonPoint.PointCode'],
-                      )}
-                    >
-                      <a><Icon type="down" /></a>
-                    </Dropdown> */}
                   </Fragment>
                 )}
               />
+              )
             }
           </Card>
           <Modal
@@ -531,6 +459,7 @@ export default class MonitorPoint extends Component {
                 form={this.props.form}
                 noLoad
                 hideBtns
+                uid={this.state.cuid}
                 isEdit={this.state.isEdit}
                 keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
               />

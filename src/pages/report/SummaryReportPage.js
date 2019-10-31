@@ -224,6 +224,7 @@ class DailySummaryPage extends PureComponent {
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
+    const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
@@ -299,7 +300,7 @@ class DailySummaryPage extends PureComponent {
             size="small"
             columns={this.state.columns}
             dataSource={dailySummaryDataList}
-            defaultWidth={80}
+            defaultWidth={pollutantSourceType == "2" ? 200 : 100}
             rowClassName={
               (record, index, indent) => {
                 if (index === 0 || record.time === "0时") {

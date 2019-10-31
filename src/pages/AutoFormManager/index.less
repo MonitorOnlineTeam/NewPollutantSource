@@ -77,8 +77,26 @@
 //}
 //
 .buttonWrapper {
- margin: 10px 0;
- button {
-   margin-right: 10px;
- }
+  margin: 10px 0;
+
+  button {
+    margin-right: 10px;
+  }
+}
+
+.controller {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  // height: 100%;
+  align-items: center;
+  z-index: 1;
+  font-size: 28px;
+  color: #d9d9d9;
+  font-weight: 600;
+}
+
+.controller > span:hover{
+  color: #fff;
 }

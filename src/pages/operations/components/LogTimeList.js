@@ -20,21 +20,23 @@ function getBase64(file) {
   });
 }
 
-@connect(({ operations, loading, common }) => ({
+@connect(({ operations, loading, common, operationform }) => ({
   recordTypeList: operations.recordTypeList,
   timeLineList: operations.timeLineList,
   timeLineTotal: operations.timeLineTotal,
   imageList: common.imageList,
   imageListVisible: common.imageListVisible,
   logForm: operations.logForm,
-  loading: loading.effects["operations/getOperationLogList"]
+  loading: loading.effects["operations/getOperationLogList"],
+  currentRecordType: operationform.currentRecordType,
+  currentDate: operationform.currentDate,
 }))
 class LogTimeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentRecordType: "",
-      dateValues: props.logForm.dateTime,
+      dateValues: props.currentDate,
       current: 1,
       pageIndex: 10,
       previewVisible: false,
@@ -164,7 +166,8 @@ class LogTimeList extends Component {
         "DGIMN": DGIMN,
         // "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
         // "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
-        "RecordType": flag ? "" : this.props.logForm.RecordType
+        // "RecordType": flag ? "" : this.props.logForm.RecordType
+        "RecordType": flag ? "" : this.props.currentRecordType
       }
     })
   }
@@ -189,9 +192,10 @@ class LogTimeList extends Component {
   }
 
   render() {
-    const { recordTypeList, timeLineList, timeLineTotal, imageList, style, logForm, loading } = this.props;
+    const { recordTypeList, timeLineList, timeLineTotal, imageList, style, logForm, loading, currentRecordType } = this.props;
     const { dateValues, current, previewVisible, previewImage } = this.state;
-    let defaultValue = logForm.RecordType || undefined;
+    // let defaultValue = logForm.RecordType || undefined;
+    let defaultValue = currentRecordType || undefined;
     return (
       <>
         <Card
@@ -213,6 +217,12 @@ class LogTimeList extends Component {
                       }
                     }
                   })
+                  this.props.dispatch({
+                    type: 'operationform/updateState',
+                    payload: {
+                      currentRecordType: value
+                    }
+                  })
                   this.setState({
                     currentRecordType: value,
                     current: 1
@@ -230,6 +240,7 @@ class LogTimeList extends Component {
               <RangePicker_
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
                 dateValue={dateValues}
+                format={"YYYY-MM-DD"}
                 onChange={(date) => {
                   this.props.dispatch({
                     type: "operations/updateState",
@@ -238,6 +249,12 @@ class LogTimeList extends Component {
                         ...logForm,
                         dateTime: date
                       }
+                    }
+                  })
+                  this.props.dispatch({
+                    type: "operationform/updateState",
+                    payload: {
+                      currentDate: date
                     }
                   })
                   this.setState({

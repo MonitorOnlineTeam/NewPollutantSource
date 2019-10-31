@@ -129,7 +129,7 @@ const rightTableColumns = [
     },
 ];
 
-@connect(({ departinfo, loading, global }) => ({
+@connect(({ departinfo, loading, global, common }) => ({
     GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
     GetRegionByDepID: loading.effects['departinfo/getregionbydepid'],
     GetUserByDepID: loading.effects['departinfo/getuserbydepid'],
@@ -147,6 +147,7 @@ const rightTableColumns = [
     EntAndPoint: departinfo.EntAndPoint,
     CheckPoint: departinfo.CheckPoint,
     ConfigInfo: global.configInfo,
+    pollutantType: common.defaultPollutantCode
 }))
 @Form.create()
 
@@ -328,8 +329,8 @@ class DepartIndex extends Component {
         this.setState({ checkedKey });
     };
     onChecks = checkedKeys => {
-        console.log('select=',checkedKeys)
-        console.log('this.state.leafTreeDatas=',this.state.leafTreeDatas)
+        console.log('select=', checkedKeys)
+        console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas)
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
@@ -381,7 +382,7 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getdeparttreeandobj',
             payload: {
-                Type:'1'
+                Type: '1'
             }
         })
         this.setState({
@@ -466,17 +467,19 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
+                PollutantType: this.state.pollutantType,
+                RegionCode: this.state.DataTreeValue.toString(),
             }
         })
         this.props.dispatch({
             type: 'departinfo/getpointbydepid',
             payload: {
                 UserGroup_ID: keys.toString(),
-                // PollutantType:this.state.pollutantType
+                PollutantType: this.state.pollutantType
             }
         })
 
-        console.log("regioncode=", this.props.RegionByDepID);
+        console.log("pollutantType=", this.state.pollutantType);
 
     }
 
@@ -586,7 +589,17 @@ class DepartIndex extends Component {
         })
     };
     handleSizeChange = e => {
+        var keys = this.state.selectedRowKeys.key
+
+
         this.setState({ pollutantType: e.target.value });
+        this.props.dispatch({
+            type: 'departinfo/getpointbydepid',
+            payload: {
+                UserGroup_ID: keys.toString(),
+                PollutantType: e.target.value
+            }
+        })
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
@@ -594,6 +607,8 @@ class DepartIndex extends Component {
                 PollutantType: e.target.value,
             }
         })
+
+
     };
     onChangeTree = value => {
         console.log('onChange ', value);
@@ -940,54 +955,65 @@ class DepartIndex extends Component {
                             >
                                 {
                                     // (this.props.GetRegionInfoByTree && this.props.CheckPointLoading) ? <Spin
-                                    this.props.CheckPointLoading ? <Spin
-                                        style={{
-                                            width: '100%',
-                                            height: 'calc(100vh/2)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                        size="large"
-                                    /> :
-                                        <div style={{ height: "600px", overflow: "auto" }}>
-                                            <Row style={{ position: "fixed", background: "#fff", paddingBottom: 10, zIndex: 1 }}>
-                                                {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
+                                    // this.props.CheckPointLoading ? <Spin
+                                    //     style={{
+                                    //         width: '100%',
+                                    //         height: 'calc(100vh/2)',
+                                    //         display: 'flex',
+                                    //         alignItems: 'center',
+                                    //         justifyContent: 'center'
+                                    //     }}
+                                    //     size="large"
+                                    // /> :
+                                    <div style={{ height: "600px", overflow: "auto" }}>
+                                        <Row style={{ position: "fixed", background: "#fff", paddingBottom: 10, zIndex: 1 }}>
+                                            {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
                                                     <Radio.Button value="1">废水</Radio.Button>
                                                     <Radio.Button value="2">废气</Radio.Button>
                                                 </Radio.Group> */}
-                                                <SelectPollutantType
-                                                    // style={{ marginLeft: 50, float: 'left' }}
-                                                    showType="radio"
-                                                    // defaultPollutantCode={this.state.pollutantType}
-                                                    mode="multiple"
-                                                    onChange={this.handleSizeChange}
-                                                />
-                                                <TreeSelect {...tProps} />
-                                            </Row>{
-                                                this.props.EntAndPoint.length ? <Tree
-                                                    key="key"
-                                                    style={{ marginTop: 47 }}
-                                                    checkable
-                                                    // checkStrictly={false}
-                                                    onExpand={this.onExpands}
-                                                    treeData={this.props.EntAndPoint}
-                                                    // expandedKeys={this.state.expandedKey}
-                                                    // autoExpandParent={this.state.autoExpandParent}
-                                                    onCheck={this.onChecks}
-                                                    checkedKeys={this.state.checkedKeys}
-                                                    onSelect={this.onSelectData}
-                                                    selectedKeys={this.state.selectedKeys}
-                                                    defaultExpandAll={true}
-                                                // autoExpandParent={true}
-                                                // defaultExpandAll
-                                                >
+                                            <SelectPollutantType
+                                                // style={{ marginLeft: 50, float: 'left' }}
+                                                showType="radio"
+                                                // defaultPollutantCode={this.state.pollutantType}
+                                                mode="multiple"
+                                                onChange={this.handleSizeChange}
+                                            />
+                                            <TreeSelect {...tProps} />
+                                        </Row>{
+                                            this.props.CheckPointLoading ? <Spin
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'calc(100vh/2)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}
+                                                size="large"
+                                            /> : (this.props.EntAndPoint.length > 0 ? <Tree
+                                                key="key"
+                                                style={{ marginTop: 47 }}
+                                                checkable
+                                                // checkStrictly={false}
+                                                onExpand={this.onExpands}
+                                                treeData={this.props.EntAndPoint}
+                                                // expandedKeys={this.state.expandedKey}
+                                                // autoExpandParent={this.state.autoExpandParent}
+                                                onCheck={this.onChecks}
+                                                checkedKeys={this.state.checkedKeys}
+                                                onSelect={this.onSelectData}
+                                                selectedKeys={this.state.selectedKeys}
+                                                defaultExpandAll={true}
+                                            // autoExpandParent={true}
+                                            // defaultExpandAll
+                                            >
 
-                                                    {this.renderDataTreeNodes(this.props.EntAndPoint)}
-                                                </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                                            }
+                                                {this.renderDataTreeNodes(this.props.EntAndPoint)}
+                                            </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />)
 
-                                        </div>
+
+                                        }
+
+                                    </div>
                                 }
 
 

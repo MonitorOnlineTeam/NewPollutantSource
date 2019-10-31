@@ -42,6 +42,7 @@ const { RangePicker, MonthPicker } = DatePicker;
 @connect(({ loading, autoForm }) => ({
   searchForm: autoForm.searchForm,
   searchConfigItems: autoForm.searchConfigItems,
+  whereList: autoForm.whereList
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -108,13 +109,37 @@ class SearchWrapper extends Component {
   }
 
   onSubmitForm() {
-    this.props.dispatch({
-      type: 'autoForm/getAutoFormData',
-      payload: {
-        configId: this.props.configId,
-        searchParams: this.props.searchParams
-      }
-    });
+    console.log(":resultConfigId=",this.props.resultConfigId)
+    const {resultConfigId, configId, searchForm, whereList, dispatch, searchParams} = this.props;
+    // TODO 主要用于 关联表业务  查询条件configId 与 列表configId不一样的问题  参考 维护监测点页面需求
+    if(resultConfigId){
+      dispatch({
+        type: "autoForm/updateState",
+        payload:{
+          searchForm:{
+            ...searchForm,
+            [resultConfigId]:{
+              ...searchForm[configId]
+            }
+          },
+          whereList:{
+            ...whereList,
+            [resultConfigId]:{
+              ...whereList[configId]
+            }
+          }
+        }
+      })
+    }
+    setTimeout(()=>{
+      dispatch({
+        type: 'autoForm/getAutoFormData',
+        payload: {
+          configId: resultConfigId || configId,
+          searchParams: searchParams
+        }
+      });
+    }, 0)
   }
 
   // 重置表单
@@ -357,6 +382,8 @@ SearchWrapper.propTypes = {
   onSubmitForm: PropTypes.func,
   // formLayout布局
   formLayout: PropTypes.object,
+  // 
+  resultConfigId: PropTypes.string,
 };
 
 export default SearchWrapper;
