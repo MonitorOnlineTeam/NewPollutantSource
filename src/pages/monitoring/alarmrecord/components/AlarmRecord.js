@@ -416,7 +416,7 @@ class AlarmRecord extends Component {
                               dataSource={this.props.data}
                               rowKey = "ID"
                               rowSelection={rowSelection}
-                              scroll={{ y: 'calc(100vh - 550px)' }}
+                              scroll={{ y: 'calc(100vh - 430px)' }}
                              pagination = {
                                 {
                                   size: 'small',

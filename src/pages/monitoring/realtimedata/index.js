@@ -46,11 +46,20 @@ class Index extends Component {
     }
 
     changeDgimn = dgimn => {
+        const { dispatch } = this.props;
         this.setState({
             dgimn,
             showSider: false
         })
-        this.props.dispatch({
+        //同時更新此Model中的DGIMN
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                DGIMN: dgimn
+            }
+        });
+        //同時更新此Model中的DGIMN
+        dispatch({
             type: 'realtimeserver/GetProcessFlowChartStatus',
             payload: {
                 dgimn: dgimn

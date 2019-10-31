@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_83fd7y80vf.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_bgyrxaw9s9.js';
 const style = {
   fontSize: 16,
 }
@@ -71,3 +71,7 @@ export const GasNormal = props => <IconConfig type="icon-gas-normal" style={{ ..
 export const GasExceed = props => <IconConfig type="icon-gas-exceed" style={{ ...mapStyle }} {...props} />
 export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" style={{ ...mapStyle }} {...props} />
 export const GasOffline = props => <IconConfig type="icon-gas-offline" style={{ ...mapStyle }} {...props} />
+
+//向上、向下箭头
+export const Xiangshang = props => <IconConfig type="icon-jiantou_xiangshang1" style={{ ...mapStyle }} {...props} />
+export const Xiangxia = props => <IconConfig type="icon-jiantou_xiangxia1" style={{ ...mapStyle }} {...props} />

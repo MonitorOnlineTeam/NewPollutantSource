@@ -29,7 +29,7 @@ import { connect } from 'dva';
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import { sdlMessage, handleFormData } from '@/utils/utils';
+import { sdlMessage, handleFormData, getRowCuid } from '@/utils/utils';
 import PollutantType from '@/pages/AutoFormManager/PollutantType';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
@@ -397,6 +397,9 @@ export default class MonitorPoint extends Component {
                 }}
                 onAdd={() => {
                   this.showModal();
+                  // this.setState({
+                  //   cuid: getRowCuid(columns, row)
+                  // })
                 }}
                 searchParams={pointDataWhere}
                 appendHandleRows={row => (
@@ -405,6 +408,9 @@ export default class MonitorPoint extends Component {
                       <a
                         onClick={() => {
                           this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
+                          this.setState({
+                            cuid: getRowCuid(row, "dbo.T_Bas_CommonPoint.Photo")
+                          })
                         }}
                       >
                         <EditIcon />
@@ -427,12 +433,10 @@ export default class MonitorPoint extends Component {
                     </Tooltip>
                     <Divider type="vertical" />
                     <Tooltip title="删除">
-
                       <a onClick={() => {
                         this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
-
                     </Tooltip>
                   </Fragment>
                 )}
@@ -455,6 +459,7 @@ export default class MonitorPoint extends Component {
                 form={this.props.form}
                 noLoad
                 hideBtns
+                uid={this.state.cuid}
                 isEdit={this.state.isEdit}
                 keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
               />

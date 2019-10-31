@@ -377,7 +377,9 @@ class AutoFormTable extends PureComponent {
                     <Fragment key={item.type}>
                       <Tooltip title="编辑">
                         <a onClick={() => {
-                          const cuid = getRowCuid(columns, record)
+                          const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
+                          const key = filterList.dataIndex;
+                          const cuid = getRowCuid(record, key)
                           const postData = {};
                           keys[configId].map(item => {
                             if (record[item]) {
