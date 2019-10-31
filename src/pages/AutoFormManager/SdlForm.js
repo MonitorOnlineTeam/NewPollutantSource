@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-28 11:17:36
+ * @Last Modified time: 2019-10-30 14:49:50
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -142,7 +142,7 @@ class SdlForm extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
-        defaultFileList: nextProps.fileList,
+        fileList: nextProps.fileList,
       })
     }
   }
@@ -344,12 +344,15 @@ class SdlForm extends PureComponent {
             let uploadElement = null;
             const props = {
               action: `${config.uploadHost}rest/PollutantSourceApi/UploadApi/PostFiles`,
-              onChange(info) {
+              onChange: (info) => {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid })
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
                 }
+                this.setState({
+                  fileList: info.fileList
+                })
               },
               onRemove(file) {
                 dispatch({
@@ -367,23 +370,23 @@ class SdlForm extends PureComponent {
                 FileActualType: '1',
               },
             };
-            if (isEdit) {
-              if (this.props.fileList && !fileLoading) {
-                element = <Upload {...props} defaultFileList={this.props.fileList}>
-                  <div>
-                    <Icon type="plus" />
-                    <div className="ant-upload-text">文件上传</div>
-                  </div>
-                </Upload>
-              }
-            } else {
-              element = <Upload {...props}>
+            // if (isEdit) {
+            //   if (this.props.fileList && !fileLoading) {
+            //     element = <Upload {...props} fileList={this.state.fileList}>
+            //       <div>
+            //         <Icon type="plus" />
+            //         <div className="ant-upload-text">文件上传</div>
+            //       </div>
+            //     </Upload>
+            //   }
+            // } else {
+              element = <Upload {...props} fileList={this.state.fileList}>
                 <div>
                   <Icon type="plus" />
                   <div className="ant-upload-text">文件上传</div>
                 </div>
               </Upload>
-            }
+            // }
             // element =  {uploadElement}
           }
           break;
@@ -484,7 +487,7 @@ class SdlForm extends PureComponent {
           <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
-                initialValue,
+                initialValue: initialValue || undefined,
                 rules: [
                   {
                     required,

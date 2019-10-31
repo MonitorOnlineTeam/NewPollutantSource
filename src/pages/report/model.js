@@ -111,29 +111,14 @@ export default Model.extend({
     * getEnterpriseList({
       payload
     }, { call, update, select }) {
-      const postData = {
-        ConditionWhere: JSON.stringify({
-          "rel": "$and",
-          "group": [{
-            "rel": "$and",
-            group: [
-              {
-                Key: "dbo__T_Bas_Enterprise__RegionCode",
-                Value: payload.RegionCode,
-                Where: "$like"
-              }
-            ]
-          }]
-        })
-      }
-      const result = yield call(services.getEnterpriseList, { configId: "AEnterpriseTest", ...postData });
+      const result = yield call(services.getEnterpriseList, { regionCode: payload.regionCode });
       if (result.IsSuccess) {
         const dateReportForm = yield select(state => state.report.dateReportForm);
         yield update({
-          enterpriseList: result.Datas.DataSource,
+          enterpriseList: result.Datas,
           dateReportForm: {
             ...dateReportForm,
-            EntCode: result.Datas.DataSource.length && result.Datas.DataSource[0]["dbo.T_Bas_Enterprise.EntCode"]
+            EntCode: result.Datas.length && result.Datas[0]["ParentName"]
           }
         })
         payload.callback && payload.callback(result)

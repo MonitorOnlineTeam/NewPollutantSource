@@ -144,12 +144,10 @@ export function handleFormData(values) {
 
 /**
  * 获取autoForm cuid
- * @param {array} columns 表格列
- * @param {object} record 行数据
+ * @param {array} record 行数据
+ * @param {object} key key
  */
-export function getRowCuid(columns, record) {
-  const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
-  const key = filterList.dataIndex;
+export function getRowCuid(record, key) {
   const fileInfo = record[key] && record[key].split(';')[0];
   const list = fileInfo ? fileInfo.split('|') : [];
   const cuid = list[list.length - 2] || null;
