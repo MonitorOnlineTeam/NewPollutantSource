@@ -153,7 +153,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: './monitoring/mapview' },
+            // { path: '/', redirect: './monitoring/mapview' },
             {
               name: 'test',
               path: '/test',
@@ -594,10 +594,13 @@ export default {
               name: 'monitoring',
               routes: [
                 {
+                  path: '/monitoring',
+                  redirect: '/monitoring/mapview',
+                },
+                {
                   name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
-
                 },
                 {
                   name: 'datalist',

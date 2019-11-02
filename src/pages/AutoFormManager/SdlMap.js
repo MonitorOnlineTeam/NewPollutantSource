@@ -8,6 +8,7 @@ const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
 
 
 let AMap = null;
+let thisMap = null;
 let marker = null;
 class SdlMap extends PureComponent {
   constructor(props) {
@@ -143,7 +144,8 @@ class SdlMap extends PureComponent {
       const marker = {
         ...position,
         address: address,
-        polygon: polygon
+        polygon: polygon,
+        zoom: thisMap.getZoom()
       }
       this.props.onOk(marker)
     }
@@ -243,7 +245,7 @@ class SdlMap extends PureComponent {
 
   renderMapContent() {
     const events = {
-      created: (ins) => { console.log(ins) },
+      created: (ins) => { thisMap = ins },
       click: (e) => {
         if (this.state.isChangePos) {
           let position = {
@@ -432,8 +434,8 @@ class SdlMap extends PureComponent {
 }
 
 SdlMap.propTypes = {
-  latitude: PropTypes.number,
-  longitude: PropTypes.number,
+  // latitude: PropTypes.number,
+  // longitude: PropTypes.number,
   onOk: PropTypes.func,
   // 是否可以设置经纬度
   handleMarker: PropTypes.bool,

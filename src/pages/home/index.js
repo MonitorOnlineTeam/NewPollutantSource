@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-22 11:21:18
+ * @Last Modified time: 2019-11-01 09:53:28
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -31,6 +31,7 @@ import { getPointStatusImg } from '@/utils/getStatusImg';
 import { onlyOneEnt } from '../../config';
 import config from '../../config';
 import styles from './index.less';
+import { router } from 'umi';
 import Link from 'umi/link';
 import Time from '@/components/Time';
 import Marquee from '@/components/Marquee'
@@ -891,8 +892,9 @@ class index extends Component {
         }
         <header className={styles.homeHeader}>
           <p><span>SDL</span> 污染源智能分析系统</p>
-          <a className={styles.backMenu} href="" onClick={() => {
-            this.props.dispatch(routerRedux.push("/"))
+          <a className={styles.backMenu} onClick={() => {
+            // router.push(Cookie.get("defaultNavigateUrl"))
+            router.push("/")
           }}>返回菜单</a>
         </header>
         <Map

@@ -21,21 +21,25 @@ const Model = {
 
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
+        const defaultNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+        delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
+        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
         try {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
         } catch (error) {
 
         }
-        router.push('/');
+        // router.push('/');
+        router.push(defaultNavigateUrl);
       }
     },
 
     *getSystemLoginConfigInfo({ payload }, { call, put }) {
 
       const response = yield call(getSystemLoginConfigInfo);
-     
+
       if (response.IsSuccess) {
         yield put({
           type: 'setConfigInfo',
