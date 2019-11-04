@@ -75,6 +75,9 @@ export default Model.extend({
         // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
+          if(window.location.pathname === "/"){
+            router.push(Cookie.get('defaultNavigateUrl'))
+          }
           yield put({
             type: 'saveCurrentUser',
             payload: {

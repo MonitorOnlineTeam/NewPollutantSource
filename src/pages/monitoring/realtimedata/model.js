@@ -493,7 +493,6 @@ export default Model.extend({
         }, { call, update }) {
             const res = yield call(services.GetProcessFlowChartStatus, payload);
             if (res && res.Datas) {
-                console.log('dgimn=', payload.dgimn)
                 if (payload.dgimn == '101' || payload.dgimn == '45011020152890055') {
                     yield update({
                         operationInfo: data.operationInfo,
@@ -537,6 +536,7 @@ export default Model.extend({
         }
     },
     reducers: {
+        //更新最新一条数据
         updateRealTimeDatas(state, action) {
             //最新推送数据
             let realtimedata = action.payload.data;
@@ -608,5 +608,95 @@ export default Model.extend({
                 ...state,
             };
         },
+
+        //更新动态管控参数数据
+        updateDynamicControl(state, action) {
+            //类型（状态，参数）
+            let messageType = action.payload.data.MessageType;
+            //最新推送数据
+            let newChilddata = action.payload.data.Message;
+            //原始参数信息
+            let paramsInfo = state.paramsInfo;
+            //原始状态信息
+            let stateInfo = state.stateInfo;
+            //原始状态参数信息
+            let paramstatusInfo = state.paramstatusInfo;
+            let newparamsInfo = [];
+            let newstateInfo = [];
+            let newparamstatusInfo = [];
+            //MN号相等才能更新数据
+            if (newChilddata[0].DGIMN === state.DGIMN) {
+                //动态管控参数
+                if (messageType === "DynamicControlParam") {
+                    //这里只更新点数据，不更新点位污染物状态（再次说明）**********
+                    //如果是系统的，更新paramstatusInfo参数状态信息
+                    if (newChilddata[0].PollutantCode === "cems") {
+                        paramstatusInfo.map((item, key) => {
+                            if (item.statecode === newChilddata[0].StateCode) {
+                                item.value = newChilddata[0].NewStateValue;
+                            }
+                            newparamstatusInfo.push(item);
+                        })
+                    }
+                    //证明不是系统的，是污染物的，更新paramsInfo参数信息
+                    else {
+                        paramsInfo.map((item, key) => {
+                            if (item.pollutantCode === newChilddata[0].PollutantCode) {
+                                //再此只考虑了状态（截距、斜率、量程）要么全有要么全部没有的情况，里面参数个数要么是3要么是0，个数为1或2的情况没有考虑（可以问一下宏宾）
+                                if (item.pollutantParamInfo) {
+                                    item.pollutantParamInfo.map((itemChild, keyChild) => {
+                                        if (itemChild.stateCode === newChilddata[0].StateCode) {
+                                            itemChild.value = newChilddata[0].NewStateValue;
+                                        }
+                                    })
+                                }
+                            }
+                            newparamsInfo.push(item);
+                        })
+                    }
+                }
+                //动态管控状态
+                else if (messageType === "DynamicControlState") {
+                    if (newChilddata[0].Code === "i12109") {
+                        //有可能设备发的code在数据库里面没有，在此不考虑**********
+                        //根据MN号和Code查询并替换其它信息
+                        stateInfo.map((item, key) => {
+                            if (item.code === newChilddata[0].Code) {
+                                item.state = newChilddata[0].State;
+                                item.statename = newChilddata[0].StateName;
+                                item.name = newChilddata[0].Name;
+                                item.code = newChilddata[0].Code;
+                            }
+                            newstateInfo.push(item)
+                        })
+                    }
+                }
+                //不能写在一起*********
+                //更新参数
+                if (newparamsInfo.length !== 0) {
+                    return {
+                        ...state,
+                        paramsInfo: newparamsInfo,
+                    };
+                }
+                //更新参数状态
+                else if (newstateInfo.length !== 0) {
+                    return {
+                        ...state,
+                        stateInfo: newstateInfo,
+                    };
+                }
+                //更新系统状态参数
+                else if (newparamstatusInfo.length !== 0) {
+                    return {
+                        ...state,
+                        paramstatusInfo: newparamstatusInfo,
+                    };
+                }
+            }
+            return {
+                ...state,
+            };
+        }
     }
 })
