@@ -132,8 +132,11 @@ class AutoFormTable extends PureComponent {
   //行删除
   delRowData(record) {
     const { keys, dispatch, configId } = this.props;
-    const postData = {
-    };
+    if (this.props.onDelete) {
+      this.props.onDelete(record, record(keys[configId][0]));
+      return;
+    }
+    const postData = {};
     keys[configId].map(item => {
       if (record[item]) {
         postData[item] = record[item]
@@ -386,7 +389,7 @@ class AutoFormTable extends PureComponent {
                               postData[item] = record[item]
                             }
                           })
-                          this.props.onEdit ? this.props.onEdit(record) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
+                          this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
                           // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>

@@ -340,6 +340,24 @@ export default {
                   name: 'maintenancecycle',
                   path: '/platformconfig/maintenancecycle',
                   component: './platformManager/maintenancecycle',
+                },
+                // 标准库管理
+                {
+                  name: 'StandardLibrary',
+                  path: '/platformconfig/StandardLibrary',
+                  component: './platformManager/standardLibrary',
+                },
+                // 添加标准库
+                {
+                  name: 'addLibrary',
+                  path: '/platformconfig/StandardLibrary/addLibrary',
+                  component: './platformManager/standardLibrary/AddLibrary',
+                },
+                // 编辑标准库
+                {
+                  name: 'editLibrary',
+                  path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
+                  component: './platformManager/standardLibrary/AddLibrary',
                 }
               ],
             },
