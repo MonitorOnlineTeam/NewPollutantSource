@@ -41,11 +41,9 @@ export default Model.extend({
                 DGIMNs: payload.dgimn,
             }
             const result = yield call(querypollutantlist, body);
-            debugger
             let { historyparams } = yield select(_ => _.dataquery);
             let { pollutantlist } = yield select(_ => _.dataquery);
             if (result && result[0]) {
-                debugger
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
                     historyparams = {
@@ -85,9 +83,7 @@ export default Model.extend({
             //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
             // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
-    
             const result = resultlist.Datas;
-            debugger
             if (result.length === 0) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
@@ -140,7 +136,6 @@ export default Model.extend({
             let tablewidth = 0;
             let width = 100;
             let columns = [];
-            debugger
             if (pollutantlist.length > 6) {
                 width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
                 if (width < 200) {
@@ -282,7 +277,6 @@ export default Model.extend({
                     //将小数组添加到大数组中
                     seriesData.push(series);
                 }
-                debugger
                 //默认展示十条数据
                 if (xAxisdata && xAxisdata.length === 20) {
                     xAxisdata = xAxisdata.splice(1, 19);
