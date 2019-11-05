@@ -49,10 +49,8 @@ class Index extends Component {
     componentWillReceiveProps = nextProps => {
         const { stateInfo, paramsInfo, paramstatusInfo, DGIMN } = this.props;
         const { param, status, data, dgimn } = this.state;
-        debugger
         //推送要渲染点击事件，当MN号不同时不渲染并把右侧布局清空，这个只是针对MN号相同时推送相关问题
         if (dgimn === DGIMN) {
-            debugger
             if (nextProps.stateInfo !== stateInfo || nextProps.paramsInfo !== paramsInfo || nextProps.paramstatusInfo !== paramstatusInfo) {
                 this.positionClick(param, status, data)
             }
@@ -209,7 +207,6 @@ class Index extends Component {
         let paramInfolist = [];
         let stateInfolist = [];
         let dataInfolist = [];
-        debugger
         if (paramlist && paramstatusInfo) {
             paramlist.map(item => {
                 const params = paramstatusInfo.find(value => {
@@ -299,7 +296,6 @@ class Index extends Component {
     //图片点击事件
     imgClick = (paramInfolist, stateInfolist, dataInfolist) => {
         let res = [];
-        debugger
         if (stateInfolist && stateInfolist.length > 0) {
 
             stateInfolist.map(item => {
