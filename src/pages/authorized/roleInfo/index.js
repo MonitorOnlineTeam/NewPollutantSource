@@ -24,15 +24,17 @@ import {
     Divider,
     Popconfirm,
     Tooltip,
-    Transfer, Switch, Tag, Select
+    Transfer, Switch, Tag, Select, Pagination,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
+import { Right } from '@/utils/icon';
+import AlarmPushRel from '@/components/AlarmPushRel';
 
-
+const { Search } = Input;
 const TreeNode = TreeSelect.TreeNode;
 // Customize Table Transfer
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
@@ -142,7 +144,7 @@ const rightTableColumns = [
     MenuTreeLoading: loading.effects['roleinfo/getrolemenutree'],
     SelectMenu: roleinfo.SelectMenu,
     CheckMenu: roleinfo.CheckMenu,
-    CheckMenuLoading: loading.effects['roleinfo/getmenubyroleid'],
+    CheckMenuLoading: loading.effects['roleinfo/getmenubyroleid']
 }))
 @Form.create()
 
@@ -150,6 +152,7 @@ class RoleIndex extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visibleAlarm: false,
             visible: false,
             visibleUser: false,
             value: undefined,
@@ -256,69 +259,81 @@ class RoleIndex extends Component {
                     render: (text, record) =>
                         <span>
                             <Tooltip title="编辑">
-                            <a href="javascript:;" onClick={() => {
-                                console.log(record.Roles_ID)
-                                this.props.dispatch({
-                                    type: 'roleinfo/getroleinfobyid',
-                                    payload: {
-                                        Roles_ID: record.Roles_ID
-                                    }
-                                })
-                                this.showModalEdit()
-                            }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                                <a href="javascript:;" onClick={() => {
+                                    console.log(record.Roles_ID)
+                                    this.props.dispatch({
+                                        type: 'roleinfo/getroleinfobyid',
+                                        payload: {
+                                            Roles_ID: record.Roles_ID
+                                        }
+                                    })
+                                    this.showModalEdit()
+                                }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="删除">
-                            <Popconfirm
-                                title="确认要删除吗?"
-                                onConfirm={() => {
-                                    this.props.dispatch({
-                                        type: 'roleinfo/delroleinfo',
-                                        payload: {
-                                            Roles_ID: record.Roles_ID,
-                                            callback: (res) => {
-                                                if (res.IsSuccess) {
-                                                    message.success("删除成功");
-                                                    this.props.dispatch({
-                                                        type: "roleinfo/getroleinfobytree",
-                                                        payload: {
-                                                        }
-                                                    })
+                                <Popconfirm
+                                    title="确认要删除吗?"
+                                    onConfirm={() => {
+                                        this.props.dispatch({
+                                            type: 'roleinfo/delroleinfo',
+                                            payload: {
+                                                Roles_ID: record.Roles_ID,
+                                                callback: (res) => {
+                                                    if (res.IsSuccess) {
+                                                        message.success("删除成功");
+                                                        this.props.dispatch({
+                                                            type: "roleinfo/getroleinfobytree",
+                                                            payload: {
+                                                            }
+                                                        })
+                                                    }
                                                 }
                                             }
-                                        }
-                                    })
-                                }}
-                                onCancel={this.cancel}
-                                okText="是"
-                                cancelText="否"
-                            >
-                                <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
-                            </Popconfirm>
+                                        })
+                                    }}
+                                    onCancel={this.cancel}
+                                    okText="是"
+                                    cancelText="否"
+                                >
+                                    <a href="#"  style={{ cursor: 'pointer' }} ><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                                </Popconfirm>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="分配用户">
-                            <a href="javascript:;" onClick={() => {
-                                console.log(record.Roles_ID)
-                                this.setState({
-                                    selectedRowKeys: record
-                                }, () => {
-                                    this.showUserModal()
-                                })
+                                <a href="javascript:;" style={{ cursor: 'pointer' }}  onClick={() => {
+                                    console.log(record.Roles_ID)
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showUserModal()
+                                    })
 
-                            }}><Icon type="user-add" /></a>
+                                }}><Icon type="user-add"  style={{ fontSize: 16 }}/></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="菜单权限">
-                            <a href="javascript:;" onClick={() => {
-                                console.log(record.Roles_ID)
-                                this.setState({
-                                    selectedRowKeys: record
-                                }, () => {
-                                    this.showMenuModal()
-                                })
+                                <a href="javascript:;" style={{ cursor: 'pointer' }}  onClick={() => {
+                                    console.log(record.Roles_ID)
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showMenuModal()
+                                    })
 
-                            }}><Icon type="menu-unfold" /></a>
+                                }}><Icon type="menu-unfold" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
+                            <Divider type="vertical" />
+                            <Tooltip title="报警关联">
+                                <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
+                                    console.log(record.Roles_ID)
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showAlarmModal(record)
+                                    })
+
+                                }}><Icon type="bell" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                         </span>
                 },
@@ -374,6 +389,8 @@ class RoleIndex extends Component {
             }
         })
 
+
+
         // this.props.dispatch({
         //     type: 'roleinfo/getrolestreeandobj',
         //     payload: {}
@@ -392,7 +409,7 @@ class RoleIndex extends Component {
         this.props.dispatch({
             type: 'roleinfo/getrolestreeandobj',
             payload: {
-                Type:'1'
+                Type: '1'
             }
         })
         this.setState({
@@ -572,7 +589,18 @@ class RoleIndex extends Component {
             }
         });
     };
+    cancelAlarmModal = () => {
+        this.setState({
+            visibleAlarm: false
+        });
+    }
 
+    showAlarmModal = (e) => {
+
+        this.setState({
+            visibleAlarm: true
+        });
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { targetKeys, disabled, showSearch } = this.state;
@@ -608,7 +636,7 @@ class RoleIndex extends Component {
                 name: record.name,
             }),
         };
-       
+
         return (
             <Fragment>
                 {
@@ -659,7 +687,7 @@ class RoleIndex extends Component {
                                         size="small"
                                         style={{ marginTop: "20px" }}
                                         //rowSelection={rowRadioSelection}
-                                        defaultExpandAllRows={true} columns={this.state.columns}  dataSource={this.props.RoleInfoTree} />
+                                        defaultExpandAllRows={true} columns={this.state.columns} dataSource={this.props.RoleInfoTree} />
                             }
                         </Card>
                         <div>
@@ -834,8 +862,20 @@ class RoleIndex extends Component {
 
                                 </div>
                             </Modal>
+
+                            <Modal
+                                title='报警关联'
+                                visible={this.state.visibleAlarm}
+                                footer={null}
+                                onCancel={this.cancelAlarmModal}
+                                destroyOnClose={true}
+                                width='70%'
+                            >
+
+                                <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType='Role' cancelModal={this.cancelAlarmModal} />
+                            </Modal>
                         </div>
-                    {/* </MonitorContent> */}
+                        {/* </MonitorContent> */}
                     </PageHeaderWrapper>
                 }
             </Fragment>

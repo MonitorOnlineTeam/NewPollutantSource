@@ -90,3 +90,18 @@ export async function changePwd(params) {
   return result;
 }
 
+//获取角色或部门报警权限数据
+export async function getAlarmPushAuthor(params) {
+  const result = await get('/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushAuthor', params);
+
+  return result;
+}
+
+//获取角色或部门报警权限数据
+export async function insertAlarmPushAuthor(params) {
+  debugger
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmPushAuthor', params);
+
+  return result;
+}
+
