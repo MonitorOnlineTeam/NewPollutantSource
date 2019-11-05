@@ -7,7 +7,8 @@ import {
   editpersonaluser,
   getSystemConfigInfo,
   vertifyOldPwd,
-  changePwd
+  changePwd,
+  getAlarmPushAuthor, insertAlarmPushAuthor
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
@@ -46,6 +47,15 @@ export default Model.extend({
     changepwdRes: '',
     currentMenu: [],
     editUser: null,
+    alarmPushParam: {
+      pageIndex: 1,
+      pageSize: 12,
+      total: 0,
+      authorId: "",
+      flagType: "",
+      searchContent: ""
+    },
+    alarmPushData: []
   },
 
   effects: {
@@ -141,6 +151,57 @@ export default Model.extend({
         sdlMessage(result.Message, "success");
       } else {
         sdlMessage(result.Message, "error");
+      }
+    },
+    *getAlarmPushAuthor({ payload }, { put, call, update, select }) {
+
+      const { alarmPushParam } = yield select(state => state.user);
+      // let body = {
+      //   pageIndex: alarmPushParam.pageIndex,
+      //   pageSize: alarmPushParam.pageSize,
+      //   authorId: alarmPushParam.authorId,
+      //   flagType: alarmPushParam.flagType,
+      //   searchContent: alarmPushParam.searchContent
+      // };
+
+      const result = yield call(getAlarmPushAuthor, alarmPushParam);
+      console.log("getAlarmPushAuthor=", result);
+      if (result.IsSuccess) {
+        yield update({
+          alarmPushData: result.Datas,
+          alarmPushParam: {
+            ...alarmPushParam,
+            total: result.Total
+          }
+        });
+      } else {
+        yield update({
+          alarmPushData: [],
+          alarmPushParam: {
+            ...alarmPushParam,
+            total: 0
+          }
+        });
+      }
+    },
+    *insertAlarmPushAuthor({ payload }, { put, call, update, select }) {
+
+      // let body = {
+      //   pageIndex: alarmPushParam.pageIndex,
+      //   pageSize: alarmPushParam.pageSize,
+      //   authorId: alarmPushParam.authorId,
+      //   flagType: alarmPushParam.flagType,
+      //   searchContent: alarmPushParam.searchContent
+      // };
+      let body = {
+        Datas: payload
+      };
+      const result = yield call(insertAlarmPushAuthor, body);
+      console.log("insertAlarmPushAuthor=", result);
+      if (result.IsSuccess) {
+        sdlMessage('操作成功', 'success');
+      } else {
+        sdlMessage('操作失败', 'error');
       }
     },
   },

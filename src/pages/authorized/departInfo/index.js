@@ -30,7 +30,8 @@ import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
-import SelectPollutantType from '@/components/SelectPollutantType'
+import SelectPollutantType from '@/components/SelectPollutantType';
+import AlarmPushRel from '@/components/AlarmPushRel';
 
 
 const TreeNode = TreeSelect.TreeNode;
@@ -155,6 +156,7 @@ class DepartIndex extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visibleAlarm: false,
             visible: false,
             visibleUser: false,
             value: undefined,
@@ -283,7 +285,19 @@ class DepartIndex extends Component {
                                     }, () => {
                                         this.showDataModal()
                                     })
-                                }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
+                                }}><Icon type="database" style={{ fontSize: 16 }} /></a>
+                            </Tooltip>
+                            <Divider type="vertical" />
+                            <Tooltip title="报警关联">
+                                <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
+                                    console.log(record.Roles_ID)
+                                    this.setState({
+                                        selectedRowKeys: record
+                                    }, () => {
+                                        this.showAlarmModal(record)
+                                    })
+
+                                }}><Icon type="bell" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                         </span>
                 },
@@ -688,6 +702,19 @@ class DepartIndex extends Component {
             }
             return <TreeNode {...item} />;
         });
+
+    cancelAlarmModal = () => {
+        this.setState({
+            visibleAlarm: false
+        });
+    }
+
+    showAlarmModal = (e) => {
+
+        this.setState({
+            visibleAlarm: true
+        });
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { targetKeys, disabled, showSearch } = this.state;
@@ -1017,6 +1044,17 @@ class DepartIndex extends Component {
                                 }
 
 
+                            </Modal>
+                            <Modal
+                                title='报警关联'
+                                visible={this.state.visibleAlarm}
+                                footer={null}
+                                onCancel={this.cancelAlarmModal}
+                                destroyOnClose={true}
+                                width='70%'
+                            >
+
+                                <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType='Dept' cancelModal={this.cancelAlarmModal} />
                             </Modal>
                         </div>
                         {/* </MonitorContent> */}
