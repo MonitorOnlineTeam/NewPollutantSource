@@ -358,7 +358,13 @@ export default {
                   name: 'editLibrary',
                   path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
                   component: './platformManager/standardLibrary/AddLibrary',
-                }
+                },
+                // 编辑标准库
+                {
+                  name: 'viewLibrary',
+                  path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
+                  component: './platformManager/standardLibrary/ViewLibrary',
+                },
               ],
             },
             {
