@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:49 
- * @Last Modified by:   Jiaqi 
- * @Last Modified time: 2019-11-05 17:18:49 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-11-05 17:37:14
  * @desc: 上传组件
  */
 
@@ -130,7 +130,7 @@ class SdlUpload extends Component {
               >
                 {
                   this.props.fileList && this.props.fileList.map(item => {
-                    return <div>
+                    return <div key={item.Guid}>
                       <img alt="example" style={{ width: '100%' }} src={item.url} />
                     </div>
                   })

@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:32 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-05 17:24:09
+ * @Last Modified time: 2019-11-05 17:34:18
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
@@ -380,7 +380,7 @@ class AddLibrary extends Component {
               <Col span={12}>
                 <Form.Item label="启用状态">
                   {getFieldDecorator('IsUsed', {
-                    initialValue: libraryEditData.IsUsed,
+                    initialValue: !!libraryEditData.IsUsed,
                     valuePropName: 'checked',
                   })(
                     <Switch />
@@ -415,7 +415,7 @@ class AddLibrary extends Component {
                 添加
             </Button>
               <SdlTable
-                rowKey={record => record.index}
+                rowKey={record => record.index || record.Guid}
                 bordered
                 dataSource={dataSource}
                 columns={columns}
