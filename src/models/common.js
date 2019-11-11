@@ -13,6 +13,7 @@ export default Model.extend({
     level: null,
     imageListVisible: false,
     imageList: [],
+    pollutantCode: []
   },
 
   effects: {
@@ -95,5 +96,18 @@ export default Model.extend({
         })
       }
     },
+
+    // 根据污染物类型获取污染物
+    * getAllPollutantCode({ payload, callback }, { call, update }) {
+      const result = yield call(services.getPollutantTypeCode, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pollutantCode: result.Datas
+        })
+        callback && callback(result)
+      } else {
+        message.error(result.Message)
+      }
+    }
   },
 });

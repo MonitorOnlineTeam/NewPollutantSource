@@ -146,6 +146,11 @@ const BasicLayout = props => {
   if (loading) {
     return (<PageLoading />);
   }
+
+  let userCookie = Cookie.get('currentUser');
+  if (!userCookie) {
+    router.push("/user/login");
+  }
   return (
     <>
       <ProLayout
@@ -159,7 +164,7 @@ const BasicLayout = props => {
           // console.log("menuItemProps=", menuItemProps)
           // console.log("defaultDom=", defaultDom)
 
-          let userCookie = Cookie.get('currentUser');
+          // let userCookie = Cookie.get('currentUser');
           if (menuItemProps.replace && userCookie !== "null") {
             dispatch({
               type: 'global/getBtnAuthority',

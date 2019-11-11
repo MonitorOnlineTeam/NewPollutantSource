@@ -193,32 +193,32 @@ class SiteDailyPage extends PureComponent {
         title: '点名称',
         // width: 150,
         dataIndex: 'pointName',
-        render: (text, row, index) => {
-          // if (index === 0) {
-          //   return {
-          //     children: <a href="javascript:;">{text}</a>,
-          //     props: {
-          //       rowSpan: row.rowSpan,
-          //     },
-          //   };
-          //   // } else if (row.time === "0时") {
-          // } else if (text !== nextProps.dateReportData[index - 1].pointName) {
-          //   return {
-          //     children: <a href="javascript:;">{text}</a>,
-          //     props: {
-          //       rowSpan: row.rowSpan,
-          //     },
-          //   };
-          // } else {
-          //   return {
-          //     children: <a href="javascript:;">{text}</a>,
-          //     props: {
-          //       rowSpan: 0,
-          //     },
-          //   };
-          // }
-          return text;
-        }
+        // render: (text, row, index) => {
+        //   // if (index === 0) {
+        //   //   return {
+        //   //     children: <a href="javascript:;">{text}</a>,
+        //   //     props: {
+        //   //       rowSpan: row.rowSpan,
+        //   //     },
+        //   //   };
+        //   //   // } else if (row.time === "0时") {
+        //   // } else if (text !== nextProps.dateReportData[index - 1].pointName) {
+        //   //   return {
+        //   //     children: <a href="javascript:;">{text}</a>,
+        //   //     props: {
+        //   //       rowSpan: row.rowSpan,
+        //   //     },
+        //   //   };
+        //   // } else {
+        //   //   return {
+        //   //     children: <a href="javascript:;">{text}</a>,
+        //   //     props: {
+        //   //       rowSpan: 0,
+        //   //     },
+        //   //   };
+        //   // }
+        //   return text;
+        // }
       })
       this.setState({
         columns
@@ -453,11 +453,11 @@ class SiteDailyPage extends PureComponent {
           }
           <SdlTable
             loading={loading}
-            style={{ minHeight: 80 }}
+            // style={{ minHeight: 80 }}
             size="small"
             columns={this.state.columns}
             dataSource={dateReportData}
-            defaultWidth={80}
+            // defaultWidth={80}
             scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
             rowClassName={
               (record, index, indent) => {

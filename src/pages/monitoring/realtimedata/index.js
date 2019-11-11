@@ -29,7 +29,8 @@ const { Header, Footer, Sider, Content } = Layout;
     paramstatusInfo: realtimeserver.paramstatusInfo,
     stateNameInfo: realtimeserver.stateNameInfo,
     paramNameInfo: realtimeserver.paramNameInfo,
-    paramdivInfo: realtimeserver.paramdivInfo
+    paramdivInfo: realtimeserver.paramdivInfo,
+    DGIMN: realtimeserver.DGIMN,
 }))
 class Index extends Component {
     constructor(props) {
@@ -45,24 +46,37 @@ class Index extends Component {
         };
     }
 
+    componentWillReceiveProps = nextProps => {
+        const { stateInfo, paramsInfo, paramstatusInfo, DGIMN } = this.props;
+        const { param, status, data, dgimn } = this.state;
+        //推送要渲染点击事件，当MN号不同时不渲染并把右侧布局清空，这个只是针对MN号相同时推送相关问题
+        if (dgimn === DGIMN) {
+            if (nextProps.stateInfo !== stateInfo || nextProps.paramsInfo !== paramsInfo || nextProps.paramstatusInfo !== paramstatusInfo) {
+                this.positionClick(param, status, data)
+            }
+        }
+    }
+
     changeDgimn = dgimn => {
         const { dispatch } = this.props;
         this.setState({
             dgimn,
-            showSider: false
+            showSider: false,
+            paramInfo: [],
+            collapsed: true,
         })
-        //同時更新此Model中的DGIMN
-        dispatch({
-            type: 'dataquery/updateState',
-            payload: {
-                DGIMN: dgimn
-            }
-        });
         //同時更新此Model中的DGIMN
         dispatch({
             type: 'realtimeserver/GetProcessFlowChartStatus',
             payload: {
                 dgimn: dgimn
+            }
+        });
+        //同時更新此Model中的DGIMN
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                DGIMN: dgimn
             }
         });
     }
@@ -180,6 +194,12 @@ class Index extends Component {
     }
     //图片上的点击事件
     positionClick = (param, status, data) => {
+        //推送过来要调用参数，再此存储参数值
+        this.setState({
+            param: param,
+            status: status,
+            data: data,
+        })
         const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
         const paramlist = param ? param.split(",") : null;
         const statuslist = status ? status.split(",") : null;
@@ -276,7 +296,6 @@ class Index extends Component {
     //图片点击事件
     imgClick = (paramInfolist, stateInfolist, dataInfolist) => {
         let res = [];
-
         if (stateInfolist && stateInfolist.length > 0) {
 
             stateInfolist.map(item => {

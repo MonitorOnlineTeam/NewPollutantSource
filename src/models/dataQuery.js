@@ -42,7 +42,7 @@ export default Model.extend({
             }
             const result = yield call(querypollutantlist, body);
             let { historyparams } = yield select(_ => _.dataquery);
-            const { pollutantlist } = yield select(_ => _.dataquery);
+            let { pollutantlist } = yield select(_ => _.dataquery);
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {

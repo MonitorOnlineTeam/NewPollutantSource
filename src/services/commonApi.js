@@ -26,3 +26,9 @@ export async function getOperationImageList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
   return result;
 }
+
+// 根据污染物类型获取污染物
+export async function getPollutantTypeCode(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
+  return result;
+}

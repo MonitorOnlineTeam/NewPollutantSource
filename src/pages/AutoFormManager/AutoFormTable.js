@@ -60,6 +60,14 @@ class AutoFormTable extends PureComponent {
 
   componentDidMount() {
     this.loadDataSource();
+    if (this.props.getPageConfig) {
+      this.props.dispatch({
+        type: 'autoForm/getPageConfig',
+        payload: {
+          configId: this.props.configId,
+        }
+      });
+    }
   }
 
   loadDataSource(params) {
@@ -132,8 +140,11 @@ class AutoFormTable extends PureComponent {
   //行删除
   delRowData(record) {
     const { keys, dispatch, configId } = this.props;
-    const postData = {
-    };
+    if (this.props.onDelete) {
+      this.props.onDelete(record, record(keys[configId][0]));
+      return;
+    }
+    const postData = {};
     keys[configId].map(item => {
       if (record[item]) {
         postData[item] = record[item]
@@ -386,7 +397,7 @@ class AutoFormTable extends PureComponent {
                               postData[item] = record[item]
                             }
                           })
-                          this.props.onEdit ? this.props.onEdit(record) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
+                          this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
                           // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>
@@ -407,7 +418,7 @@ class AutoFormTable extends PureComponent {
                             postData[item] = record[item]
                           }
                         })
-                        dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
+                        this.props.onView ? this.props.onView(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
                       }}><DetailIcon /></a>
 
                     </Tooltip>
@@ -455,7 +466,8 @@ class AutoFormTable extends PureComponent {
       });
     }
 
-
+    
+    const scroll={ x: (this.props.scroll && this.props.scroll.x) || scrollXWidth, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
     const rowSelection = checkboxOrRadio ? {
       type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,
@@ -526,7 +538,6 @@ class AutoFormTable extends PureComponent {
           loading={this.props.loading}
           // className={styles.dataTable}
           dataSource={dataSource}
-          scroll={{ x: scrollXWidth, y: 'calc(100vh - 390px)' }}
           rowClassName={
             (record, index, indent) => {
               if (index === 0) {
@@ -569,6 +580,8 @@ class AutoFormTable extends PureComponent {
             total,
           }}
           {...this.props}
+          // scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll.y || 'calc(100vh - 390px)' }}
+          scroll={scroll}
           columns={_columns}
         />
         <Modal

@@ -344,9 +344,16 @@ export default Model.extend({
             break;
           case 'HourData':
             break;
+
+          //工艺流程图动态参数数据
           case 'DynamicControlParam':
-            break;
           case 'DynamicControlState':
+            dispatch({
+              type: 'realtimeserver/updateDynamicControl',
+              payload: {
+                data: obj
+              },
+            });
             break;
           //推送报警数据
           case 'Alarm':

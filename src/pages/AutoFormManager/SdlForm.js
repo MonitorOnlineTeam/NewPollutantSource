@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-30 14:49:50
+ * @Last Modified time: 2019-11-05 17:24:59
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -98,7 +98,6 @@ class SdlForm extends PureComponent {
       configId: props.configId,
       isEdit: props.isEdit,
     };
-    console.log('uid=', this._SELF_.uid)
     this.renderFormItem = this.renderFormItem.bind(this);
     this.renderContent = this.renderContent.bind(this);
   }
@@ -341,7 +340,7 @@ class SdlForm extends PureComponent {
         //   break;
         default:
           if (item.type === '上传') {
-            let uploadElement = null;
+            // let uploadElement = null;
             const props = {
               action: `${config.uploadHost}rest/PollutantSourceApi/UploadApi/PostFiles`,
               onChange: (info) => {
@@ -370,24 +369,16 @@ class SdlForm extends PureComponent {
                 FileActualType: '1',
               },
             };
-            // if (isEdit) {
-            //   if (this.props.fileList && !fileLoading) {
-            //     element = <Upload {...props} fileList={this.state.fileList}>
-            //       <div>
-            //         <Icon type="plus" />
-            //         <div className="ant-upload-text">文件上传</div>
-            //       </div>
-            //     </Upload>
-            //   }
-            // } else {
-              element = <Upload {...props} fileList={this.state.fileList}>
-                <div>
-                  <Icon type="plus" />
-                  <div className="ant-upload-text">文件上传</div>
-                </div>
-              </Upload>
+            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid)=>{
+              setFieldsValue({ cuid: cuid })
+            }} />
+            // element = <Upload {...props} fileList={this.state.fileList}>
+            //   <div>
+            //     <Icon type="plus" />
+            //     <div className="ant-upload-text">文件上传</div>
+            //   </div>
+            // </Upload>
             // }
-            // element =  {uploadElement}
           }
           break;
       }
