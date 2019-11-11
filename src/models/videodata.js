@@ -3,7 +3,7 @@ import Model from '@/utils/model';
 import {
   getysyList,
   getvideolist,
-  hkvideourl,
+  hkvideourl, getqcaysyList
 } from '../services/videodata';
 import {
   querypollutantlist,
@@ -46,7 +46,7 @@ export default Model.extend({
       const body = {
         VedioCameraID: payload.VedioCameraID,
       };
-      const result = yield call(getysyList, body);
+      const result = yield call(getqcaysyList, body);
       let temprealurl = 'nodata';
       if (result.IsSuccess) {
         const obj = result.Datas[0];
@@ -81,6 +81,28 @@ export default Model.extend({
       }
     },
 
+    /** 质控仪萤石云视频链接 */
+    *qcaysyvideourl({ payload }, { call, update, select }) {
+      const body = {
+        VedioCameraID: payload.VedioCameraID,
+      };
+      const result = yield call(getysyList, body);
+      let temprealurl = 'nodata';
+      if (result.IsSuccess) {
+        const obj = result.Datas[0];
+        if (obj) {
+          if (payload.type === 1) {
+            temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=1`;
+          } else {
+            temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=2`;
+          }
+        }
+
+      } else {
+        message.error(result.Message)
+      }
+    },
+
     /** 萤石云获取摄像头列表 */
     *getvideolist({ payload }, { call, update }) {
       const body = {
@@ -88,13 +110,13 @@ export default Model.extend({
       };
       const res = yield call(getvideolist, body);
       if (res.IsSuccess && res.Datas.length > 0) {
-         yield update({
-        videoList: res.Datas,
-      });
-    } else {
-         yield update({
-           videoList: [],
-         });
+        yield update({
+          videoList: res.Datas,
+        });
+      } else {
+        yield update({
+          videoList: [],
+        });
       }
       payload.callback(res.Datas);
     },
@@ -218,11 +240,11 @@ export default Model.extend({
       const result = yield call(hkvideourl, body);
       if (result.IsSuccess && result.Datas.length > 0) {
         yield update({
-              hkvideoListParameters: result.Datas,
+          hkvideoListParameters: result.Datas,
         });
       } else {
         yield update({
-         hkvideoListParameters: [],
+          hkvideoListParameters: [],
         });
       }
     },

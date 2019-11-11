@@ -3,7 +3,7 @@
  */
 
 // 接口地址
-const apiHost = 'http://172.16.12.165:9090/';
+const apiHost = 'http://172.16.9.52:8096/';
 // 文件上传地址
 const uploadHost = 'http://172.16.12.165:9090/'
 
@@ -23,12 +23,13 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
-  cookieName: 'ssToken9002',
+  cookieName: 'ssToken9001',
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,
   apiPrefix: '/mock',
-  webSocketPushURL: '127.0.0.1:40005',
+  ///'172.16.12.165:40005',
+  webSocketPushURL: '172.16.9.52:8008',
   imgaddress: 'http://172.16.9.41:7001/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
