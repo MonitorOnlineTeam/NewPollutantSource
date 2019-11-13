@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:32 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-05 17:34:18
+ * @Last Modified time: 2019-11-08 11:26:10
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
@@ -73,7 +73,7 @@ class AddLibrary extends Component {
               <Select value={text || record.PollutantCode} onChange={(value) => { this.changeDataSource(value, index, "PollutantName") }} >
                 {
                   this.props.pollutantCode.map(item => {
-                    return <Option key={item.field} disabled={this.state.dataSource.find(itm => itm.PollutantName == item.field)}>{item.name}</Option>
+                    return <Option key={item.field} disabled={this.state.dataSource.find(itm => itm.PollutantName == item.field || itm.PollutantCode == item.field)}>{item.name}</Option>
                   })
                 }
               </Select>
@@ -84,7 +84,7 @@ class AddLibrary extends Component {
         },
         {
           title: '污染物类型',
-          dataIndex: 'Type',
+          dataIndex: 'PollutantType',
           render: (text, record, index) => {
             if (text) {
               // this.props.pollutantTypelist.map(item => {
@@ -322,7 +322,7 @@ class AddLibrary extends Component {
 
     return (
       <PageHeaderWrapper title={title}>
-        <Card title="标准库维护">
+        <Card title="标准库维护" className="contentContainer">
           <Form {...formItemLayout}>
             <Row>
               <Col span={12}>
@@ -406,7 +406,7 @@ class AddLibrary extends Component {
               </Col>
             </Row>
             <Card
-              style={{ marginTop: 16 }}
+              // style={{ marginTop: 16 }}
               type="inner"
               title="污染物维护"
               bordered={false}
@@ -420,6 +420,8 @@ class AddLibrary extends Component {
                 dataSource={dataSource}
                 columns={columns}
                 refresh={this.state.id}
+                scroll={{ y: "calc(100vh - 790px)" }}
+                pagination={false}
               />
             </Card>
             <Row>

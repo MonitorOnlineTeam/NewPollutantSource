@@ -555,6 +555,7 @@ class MapView extends Component {
       />);
     }
     return (
+      //QCAUse="1" 
       <div className={styles.mapWrapper}>
         <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {

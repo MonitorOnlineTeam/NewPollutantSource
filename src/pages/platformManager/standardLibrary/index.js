@@ -54,6 +54,9 @@ class index extends Component {
               const cuid = getRowCuid(record, "dbo.T_Base_StandardLibrary.AttachmentID")
               router.push(`/platformconfig/StandardLibrary/editLibrary/${key}/${cuid}`)
             }}
+            onView={(record, key) => {
+              router.push(`/platformconfig/StandardLibrary/viewLibrary/${key}`)
+            }}
           />
         </Card>
       </PageHeaderWrapper>

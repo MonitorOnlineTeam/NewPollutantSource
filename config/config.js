@@ -1,12 +1,12 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
-
+import Cookie from 'js-cookie';
 import slash from 'slash2';
 import webpackPlugin from './plugin.config';
 import config from '@/config';
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-
+const defaultNavigateUrl = Cookie.get("defaultNavigateUrl");
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
 const plugins = [
@@ -153,7 +153,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            // { path: '/', redirect: './monitoring/mapview' },
+            { path: '/', redirect: defaultNavigateUrl },
             {
               name: 'test',
               path: '/test',
@@ -358,7 +358,13 @@ export default {
                   name: 'editLibrary',
                   path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
                   component: './platformManager/standardLibrary/AddLibrary',
-                }
+                },
+                // 编辑标准库
+                {
+                  name: 'viewLibrary',
+                  path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
+                  component: './platformManager/standardLibrary/ViewLibrary',
+                },
               ],
             },
             {
@@ -779,6 +785,43 @@ export default {
                   component: '../components/GlobalHeader/ChangePwdView',
                 },
               ],
+            },
+            // 智能质控
+            {
+              path: '/qualityControl',
+              name: 'qualityControl',
+              routes: [
+                // 质控仪管理
+                {
+                  name: 'instrumentManage',
+                  path: '/qualityControl/instrumentManage',
+                  component: './qualityControl/instrumentManage',
+                },
+                // 质控仪 - 添加
+                {
+                  name: 'instrumentAdd',
+                  path: '/qualityControl/instrumentManage/add',
+                  component: './qualityControl/instrumentManage/AddInstrument',
+                },
+                // 质控仪 - 编辑
+                {
+                  name: 'instrumentEdit',
+                  path: '/qualityControl/instrumentManage/edit/:id',
+                  component: './qualityControl/instrumentManage/AddInstrument',
+                },
+                // 质控仪 - 详情
+                {
+                  name: 'instrumentView',
+                  path: '/qualityControl/instrumentManage/view/:id',
+                  component: './qualityControl/instrumentManage/ViewInstrument',
+                },
+                //质控仪视频
+                {
+                  name: 'qcavideopreview',
+                  path: '/qualityControl/qcavideopreview',
+                  component: './qualityControl/qcavideopreview',
+                },
+              ]
             },
             /* 任务详情 */
             { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },

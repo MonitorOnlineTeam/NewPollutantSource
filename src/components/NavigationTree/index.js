@@ -10,7 +10,7 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
 import styles from './index.less'
@@ -66,6 +66,7 @@ class NavigationTree extends Component {
       screenList: [0, 1, 2, 3],
       treeVis: this.props.IsTree,
       panelVis: "none",
+      QCAUse: "",
       panelData: [],
       panelDataList: [],
       RunState: "",
@@ -119,13 +120,17 @@ class NavigationTree extends Component {
     const { dispatch, EntAndPoint } = this.props;
     const { panelDataList, screenList } = this.state;
     var state = this.props.runState == undefined ? "" : this.props.runState
+    var QCAUse = this.props.QCAUse == undefined ? "" : this.props.QCAUse
     this.setState({
-      RunState: state
+      RunState: state,
+      QCAUse: QCAUse
     })
+    console.log('qca=', QCAUse)
     dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Status: screenList,
+        QCAUse: QCAUse,
         RunState: state
       }
     })
@@ -168,9 +173,9 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode,QCAType:node.Type  });
       if (node.IsEnt == 0) {
-        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
+        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType,QCAType:node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
         // if(panelDataList.filter(item=>item.key==key).length==0)
         // {
@@ -199,7 +204,13 @@ class NavigationTree extends Component {
       //   // }
       // }
       // console.log('entandpoint=', data)
-      if (this.defaultKey == 0 && node.IsEnt == 0) {
+      let where;
+      if(this.props.QCAUse){
+        where = this.defaultKey == 0 && node.IsEnt == 0 &&node.Type=="2";
+      }else{
+        where = this.defaultKey == 0 && node.IsEnt == 0;
+      }
+      if (where) {
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
@@ -228,7 +239,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode,QCAType:node.Type,VideoNo:node.VideoNo}]
         console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -285,6 +296,7 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         Name: this.state.Name,
         Status: this.state.screenList,
+        QCAUse: this.state.QCAUse,
         RunState: this.state.RunState
       }
     })
@@ -300,6 +312,7 @@ class NavigationTree extends Component {
         Name: value,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
+        QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState
       }
@@ -336,7 +349,7 @@ class NavigationTree extends Component {
       const dom = document.querySelector(domId)
       if (dom) {
         const left = this.state.visible ? "400px" : "0";
-        dom.style.width =  this.state.visible ? 'calc(100% - 400px)' : "100%"
+        dom.style.width = this.state.visible ? 'calc(100% - 400px)' : "100%"
         floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
         dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
       }
@@ -354,6 +367,7 @@ class NavigationTree extends Component {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: value,
+        QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState
       }
@@ -433,6 +447,7 @@ class NavigationTree extends Component {
         PollutantTypes: this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: typeList,
+        QCAUse: this.state.QCAUse,
         RunState: this.state.RunState
       }
     })
@@ -510,7 +525,7 @@ class NavigationTree extends Component {
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode })
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode ,QCAType:list[0].QCAType,VideoNo:list[0].VideoNo})
       }
     })
     //向外部返回选中的数据
@@ -571,7 +586,7 @@ class NavigationTree extends Component {
   getEntIcon = (type) => {
     switch (type) {
       case "1":
-        return <a><EntIcon style={{fontSize: 16}}/></a>
+        return <a><EntIcon style={{ fontSize: 16 }} /></a>
       case "2":
         return <a><StationIcon /></a>
       case "3":
@@ -612,7 +627,7 @@ class NavigationTree extends Component {
           ) : (
               <span style={{ marginLeft: 3 }}>{item.title}</span>
             );
-        if (item.children) {
+        if (item.Type == "0") {
           return (
             <TreeNode style={{ width: "100%" }} title={
               <div style={{ width: "271px" }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
@@ -621,18 +636,29 @@ class NavigationTree extends Component {
             </TreeNode>
           );
 
+        } else if (item.Type == "1") {
+          return <TreeNode style={{ width: "100%" }} title={
+            <div style={{ width: "253px" }}>
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+                <div className={styles.bell}>
+                  <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
+                </div>
+                : ""}
+            </div>
+          } key={item.key} dataRef={item}>
+            {item.children==null?"":loop(item.children)}
+          </TreeNode>
+        } else {
+          return <TreeNode style={{ width: "100%" }} title={
+            <div style={{ width: "235px" }}>
+              <div className={styles.titleStyle} title={item.title}><a><QCAIcon style={{ fontSize: 16 }}></QCAIcon></a>{title}</div><LegendIcon style={{ color: this.getColor(item.Status), marginLeft: -15 }} />
+
+            </div>
+          } key={item.key} dataRef={item}>
+          </TreeNode>
         }
-        return <TreeNode style={{ width: "100%" }} title={
-          <div style={{ width: "253px" }}>
-            <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
-              <div className={styles.bell}>
-                <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
-              </div>
-              : ""}
-          </div>
-        }
-          key={item.key} dataRef={item}>
-        </TreeNode>
+
+
       });
     return (
       <div >
