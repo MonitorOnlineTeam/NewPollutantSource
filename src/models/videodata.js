@@ -38,6 +38,7 @@ export default Model.extend({
     columns: [],
     realdata: [],
     hiscolumns: [],
+    qcaurl:"",
   },
   effects: {
     /** 萤石云视频链接 */
@@ -46,7 +47,7 @@ export default Model.extend({
       const body = {
         VedioCameraID: payload.VedioCameraID,
       };
-      const result = yield call(getqcaysyList, body);
+      const result = yield call(getysyList, body);
       let temprealurl = 'nodata';
       if (result.IsSuccess) {
         const obj = result.Datas[0];
@@ -86,7 +87,7 @@ export default Model.extend({
       const body = {
         VedioCameraID: payload.VedioCameraID,
       };
-      const result = yield call(getysyList, body);
+      const result = yield call(getqcaysyList, body);
       let temprealurl = 'nodata';
       if (result.IsSuccess) {
         const obj = result.Datas[0];
@@ -97,9 +98,14 @@ export default Model.extend({
             temprealurl = `${config.ysyvideourl}?AppKey=${obj.AppKey}&Secret=${obj.Secret}&SerialNumber=${obj.SerialNumber}&type=2`;
           }
         }
-
+        yield update({
+          qcaurl:temprealurl
+        });
       } else {
         message.error(result.Message)
+        yield update({
+          qcaurl:temprealurl
+        });
       }
     },
 

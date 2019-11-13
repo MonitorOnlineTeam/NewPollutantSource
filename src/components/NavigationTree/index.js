@@ -173,9 +173,9 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode,QCAType:node.Type  });
       if (node.IsEnt == 0) {
-        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType };
+        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType,QCAType:node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
         // if(panelDataList.filter(item=>item.key==key).length==0)
         // {
@@ -204,7 +204,13 @@ class NavigationTree extends Component {
       //   // }
       // }
       // console.log('entandpoint=', data)
-      if (this.defaultKey == 0 && node.IsEnt == 0) {
+      let where;
+      if(this.props.QCAUse){
+        where = this.defaultKey == 0 && node.IsEnt == 0 &&node.Type=="2";
+      }else{
+        where = this.defaultKey == 0 && node.IsEnt == 0;
+      }
+      if (where) {
         this.defaultKey = 1;
         var nowKey = [key]
         var nowExpandKey = [node.EntCode]
@@ -233,7 +239,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode }]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode,QCAType:node.Type}]
         console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -519,7 +525,7 @@ class NavigationTree extends Component {
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode })
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode ,QCAType:list[0].QCAType})
       }
     })
     //向外部返回选中的数据

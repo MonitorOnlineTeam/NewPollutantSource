@@ -15,7 +15,6 @@ import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
 import config from '@/config';
-import VideoSelect from '../VideoSelect'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -28,7 +27,7 @@ add by lzp
 @connect(({ videodata, loading }) => ({
   vIsLoading: loading.effects['videodata/getvideolist'],
   videoList: videodata.videoList,
-  ysyrealtimevideofullurl: videodata.ysyvideoListParameters.realtimevideofullurl,
+  ysyrealtimevideofullurl: videodata.qcaurl,
 }))
 class QCAYsyShowVideo extends Component {
   constructor(props) {
@@ -67,6 +66,8 @@ class QCAYsyShowVideo extends Component {
 
   componentDidMount() {
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
+    this.getVideoIp(this.state.tabsKey,this.props.VideoNo)
+
   }
 
   componentWillReceiveProps = nextProps => {
@@ -75,6 +76,7 @@ class QCAYsyShowVideo extends Component {
         VideoNo: nextProps.VideoNo,
       })
       this.tabsChange('1');
+      console.log('video=',nextProps.VideoNo)
       this.getVideoIp(this.state.tabsKey,nextProps.VideoNo)
     }
   }
@@ -149,7 +151,7 @@ class QCAYsyShowVideo extends Component {
     dispatch({
       type: 'videodata/qcaysyvideourl',
       payload: {
-        VedioCameraID: id,
+        VedioCameraID: 1107,//id
         type,
       },
     });
@@ -288,7 +290,7 @@ class QCAYsyShowVideo extends Component {
 
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
-    if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
+    if ( ysyrealtimevideofullurl === '') {
       return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
         {
           textAlign: 'center',
@@ -397,17 +399,17 @@ class QCAYsyShowVideo extends Component {
                     </Col>
                   </Row>
                   <Divider type="dashed" />
-                  <Row gutter={48} style={{ display: this.state.displayR }}>
+                  {/* <Row gutter={48} style={{ display: this.state.displayR }}>
                     <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
                       {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                     </Col>
-                  </Row>
+                  </Row> */}
                   <Divider type="dashed" />
-                  <Row gutter={48} style={{ display: this.state.displayR }}>
+                  {/* <Row gutter={48} style={{ display: this.state.displayR }}>
                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                       {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
                     </Col>
-                  </Row>
+                  </Row> */}
                 </TabPane>
                 <TabPane tab="历史" key="2">
                   <Row>
@@ -495,7 +497,7 @@ class QCAYsyShowVideo extends Component {
                     </Col>
                   </Row>
                   <Divider type="horizontal" />
-                  <Row gutter={48} style={{ display: this.state.displayH }}>
+                  {/* <Row gutter={48} style={{ display: this.state.displayH }}>
                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                       {this.state.displayR && (
                         <HistoryVideo
@@ -507,7 +509,7 @@ class QCAYsyShowVideo extends Component {
                         />
                       )}
                     </Col>
-                  </Row>
+                  </Row> */}
                 </TabPane>
               </Tabs>
             </Card>
@@ -517,4 +519,4 @@ class QCAYsyShowVideo extends Component {
     );
   }
 }
-export default YsyShowVideo;
+export default QCAYsyShowVideo;

@@ -815,6 +815,12 @@ export default {
                   path: '/qualityControl/instrumentManage/view/:id',
                   component: './qualityControl/instrumentManage/ViewInstrument',
                 },
+                //质控仪视频
+                {
+                  name: 'qcavideopreview',
+                  path: '/qualityControl/qcavideopreview',
+                  component: './qualityControl/qcavideopreview',
+                },
               ]
             },
             /* 任务详情 */
