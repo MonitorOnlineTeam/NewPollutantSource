@@ -1,4 +1,4 @@
-import { Icon, Tooltip } from 'antd';
+import { Icon, Tooltip, Popover, } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -6,6 +6,7 @@ import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
+import config from '@/config';
 import NoticeIconView from './NoticeIconView';
 
 const GlobalHeaderRight = props => {
@@ -56,6 +57,18 @@ const GlobalHeaderRight = props => {
           <Icon type="question-circle-o" />
         </a>
       </Tooltip> */}
+      <Popover content={<div><img
+        width={272}
+        alt="logo"
+        src={`${config.uploadHost}/phoneQRCode.png`}
+      /></div>} title="手机端下载" trigger="hover">
+        <a
+          rel="noopener noreferrer"
+          className={styles.action}
+        >
+          <Icon type="qrcode" />
+        </a>
+      </Popover>
       <NoticeIconView />
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
