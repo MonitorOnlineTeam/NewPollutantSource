@@ -3,9 +3,22 @@
  */
 
 // 接口地址
+//外网：61.50.135.114  
+//内网：172.16.12.165
+
+//域名服务器
+// const apiHost = 'http://api.chsdl.net/NewWryApi/';
+// // 文件上传地址
+// const uploadHost = 'http://api.chsdl.net/NewWryApi/upload/';
+
+//测试服务器
+// const apiHost = 'http://172.16.12.165:9090/';
+// // 文件上传地址
+// const uploadHost = 'http://172.16.12.165:9090/upload/';
+
 const apiHost = 'http://172.16.12.165:9090/';
 // 文件上传地址
-const uploadHost = 'http://172.16.12.165:9090/'
+const uploadHost = 'http://172.16.12.165:9090/upload/';
 
 module.exports = {
   // name: '污染源智能分析平台',
@@ -23,12 +36,12 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
-  cookieName: 'ssToken9002',
+  cookieName: 'ssToken9001',
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,
   apiPrefix: '/mock',
-  webSocketPushURL: '127.0.0.1:40005',
+  webSocketPushURL: '172.16.12.165:50080',
   imgaddress: 'http://172.16.9.41:7001/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',

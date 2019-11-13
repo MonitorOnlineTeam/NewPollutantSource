@@ -3,11 +3,11 @@ import DocumentTitle from 'react-document-title';
 import Link from 'umi/link';
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'dva';
-import { Icon } from 'antd';
+import { Icon, Modal, Popover, } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
 import logo from '../../public/sdlicon.png';
-import config from '@/config'
+import config from '@/config';
 import styles from './UserLayout.less';
 
 const UserLayout = props => {
@@ -69,6 +69,22 @@ const UserLayout = props => {
           {children}
         </div>
         {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
+        {
+          <Popover
+            content={
+              <div>
+                <img
+                  width={272}
+                  alt="logo"
+                  src={`${config.uploadHost}/phoneQRCode.png`}
+                />
+              </div>
+            }
+            title="手机端下载" trigger="hover">
+            <p style={{ fontSize: 14, textAlign: 'center', color: '#1890ff', marginBottom: -40, position: 'relative', cursor: 'pointer' }}>手机端下载</p>
+          </Popover>
+
+        }
         {
           configInfo && configInfo.IsShowFooterMessages === "true" && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
         }

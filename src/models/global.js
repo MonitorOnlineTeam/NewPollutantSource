@@ -257,6 +257,9 @@ export default Model.extend({
       }
       catch (e) {
         console.log(e)
+        return {
+          ...state,
+        };
       }
     },
     changeAdvises(state, { payload }) {
