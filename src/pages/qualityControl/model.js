@@ -2,7 +2,7 @@
  * @Create: Jiaqi 
  * @Date: 2019-11-07 10:53:38 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-08 14:34:33
+ * @Last Modified time: 2019-11-13 16:00:29
  * @desc: 智能质控model
  */
 
@@ -21,6 +21,8 @@ export default Model.extend({
     standardGasList: [],
     qualityControlFormData: {},
     qualityControlTableData: [],
+    CEMSList: [],
+    autoQCAInfo: [],
   },
 
   effects: {
@@ -44,6 +46,8 @@ export default Model.extend({
         yield update({
           entAndPointList: result.Datas
         })
+      } else {
+        message.error(result.Message)
       }
     },
     // 获取标气
@@ -93,6 +97,61 @@ export default Model.extend({
         yield update({
           qualityControlFormData: result.Datas.Info,
           qualityControlTableData: qualityControlTableData,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取CEMS列表
+    *getCEMSList({ payload }, { call, put, update }) {
+      const result = yield call(services.getCEMSList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          CEMSList: [
+            ...result.Datas,
+            // {
+            //   DGIMN: "test1",
+            //   PointName: "test1",
+            //   MNHall: "test1",
+            // }, {
+            //   DGIMN: "test2",
+            //   PointName: "test2",
+            //   MNHall: "test2",
+            // },
+          ]
+        })
+      }
+    },
+    // 发送质控命令 
+    * SendQCACmd({ payload }, { call, put, update }) {
+      const result = yield call(services.SendQCACmd, payload);
+      if (result.IsSuccess) {
+        message.success("操作成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取自动质控信息 
+    * getAutoQCAInfo({ payload }, { call, put, update }) {
+      const result = yield call(services.getAutoQCAInfo, payload);
+      if (result.IsSuccess) {
+        yield update({
+          autoQCAInfo: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 取消自动质控计划 
+    * cancelPlan({ payload }, { call, put, update }) {
+      const result = yield call(services.cancelPlan, payload);
+      if (result.IsSuccess) {
+        message.success("取消成功");
+        yield put({
+          type: "qualityControl/getAutoQCAInfo",
+          payload: {
+            qcamn: payload.QCAMN
+          }
         })
       } else {
         message.error(result.Message)

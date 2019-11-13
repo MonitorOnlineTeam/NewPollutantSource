@@ -821,6 +821,12 @@ export default {
                   path: '/qualityControl/qcavideopreview',
                   component: './qualityControl/qcavideopreview',
                 },
+                // 远程质控
+                {
+                  name: 'remoteControl',
+                  path: '/qualityControl/remoteControl',
+                  component: './qualityControl/remoteControl',
+                },
               ]
             },
             /* 任务详情 */

@@ -1,8 +1,16 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-11-08 17:17:39 
+ * @Last Modified by:   Jiaqi 
+ * @Last Modified time: 2019-11-08 17:17:39 
+ * @desc: 质控仪详情
+ */
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Form, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon } from 'antd';
 import { connect } from 'dva';
 import PageLoading from '@/components/PageLoading'
+import moment from "moment"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -71,6 +79,15 @@ class ViewInstrument extends Component {
       }
     })
   }
+  
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: "qualityControl/updateState",
+      payload: {
+        qualityControlFormData: {}
+      }
+    })
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.qualityControlTableData !== nextProps.qualityControlTableData) {
@@ -86,29 +103,49 @@ class ViewInstrument extends Component {
     const columns = [
       {
         title: '标气',
-        dataIndex: 'StandardGas',
+        dataIndex: 'StandardGasName',
         width: 300,
-        render: (text, record, idx) => {
-          return this.props.standardGasList.find(item => item.PollutantCode == text).PollutantName
-        }
+        // render: (text, record, idx) => {
+        //   return this.props.standardGasList.find(item => item.PollutantCode == text).PollutantName
+        // }
       },
       {
         title: '标准值',
         dataIndex: 'StandardValue',
       },
       {
-        title: '偏移范围',
-        dataIndex: 'OffsetValue',
-        width: 300,
+        title: '满量程值',
+        dataIndex: 'Range',
+      },
+      {
+        title: '稳定时间',
+        dataIndex: 'StabilizationTime',
         render: (text, record, idx) => {
-          return text ? text.join("-") : undefined;
+          return text ? text + "分钟" : undefined;
         }
       },
       {
-        title: '校验周期',
+        title: '质控周期',
         dataIndex: 'Cycle',
         render: (text, record, idx) => {
-          return text ? text + "天" : undefined;
+          let type = "天";
+          if (record.DateType == "1") {
+            type = "小时";
+            return `周期：${text}${type}，时间：${record.Minutes}秒`
+          } else {
+            return `周期：${text}${type}，时间：${record.Hour}:${record.Minutes}`
+          }
+        }
+      },
+      {
+        title: '气瓶浓度',
+        dataIndex: 'Concentration',
+      },
+      {
+        title: '过期时间',
+        dataIndex: 'ExpirationDate',
+        render: (text, record, idx) => {
+          return text ? moment(text).format("YYYY-MM-DD") : undefined;
         }
       },
     ];
@@ -140,6 +177,11 @@ class ViewInstrument extends Component {
                 </Form.Item>
               </Col>
               <Col span={12}>
+                <Form.Item  {...formItemLayout} label="质控仪名称">
+                  <p>{qualityControlFormData.QCAName}</p>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
                 <Form.Item {...formItemLayout} label="生产厂家">
                   {qualityControlFormData.Productor}
                 </Form.Item>
@@ -154,7 +196,7 @@ class ViewInstrument extends Component {
                   {qualityControlFormData.CameraNO}
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              {/* <Col span={12}>
                 <Form.Item {...formItemLayout} label="摄像头AppId">
                   {qualityControlFormData.CameraAppId}
                 </Form.Item>
@@ -163,7 +205,7 @@ class ViewInstrument extends Component {
                 <Form.Item {...formItemLayout} label="摄像头Secret">
                   {qualityControlFormData.CameraSecret}
                 </Form.Item>
-              </Col>
+              </Col> */}
             </Row>
             <Card
               style={{ marginTop: 16 }}
