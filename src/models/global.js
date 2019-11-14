@@ -36,7 +36,7 @@ export default Model.extend({
   },
   effects: {
     // 首次加载获取当天报警消息
-    *fetchNotices({ payload }, { call, select, update }) {
+    *fetchNotices({ payload }, { call, update, select }) {
       const { getAlarmNoticesParameters } = yield select(a => a.global);
       const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
       let notices = [];
@@ -65,8 +65,8 @@ export default Model.extend({
       yield update({
         notices,
         currentUserNoticeCnt: {
-          notifyCount: result.Datas.length,
-          unreadCount: result.Datas.length,
+          notifyCount: result.Datas ? result.Datas.length : 0,
+          unreadCount: result.Datas ? result.Datas.length : 0,
         },
       })
     },
@@ -326,7 +326,7 @@ export default Model.extend({
       return mywebsocket.listen(data => {
         // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
         const obj = JSON.parse(data);
-        console.log('real=',obj)
+        console.log('real=', obj)
         switch (obj.MessageType) {
           case 'RealTimeData':
             // // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
