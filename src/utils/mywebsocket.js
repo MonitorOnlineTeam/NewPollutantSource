@@ -12,7 +12,6 @@ window.ws = ws;
 export function listen(callback) {
   try {
     ws.onopen = event => {
-      debugger
       const response = Cookie.get('currentUser');
       if (response) {
         const user = JSON.parse(response);
