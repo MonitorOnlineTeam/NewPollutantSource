@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-11-15 15:15:09 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-11-15 15:16:16
+ * @desc: 质控比对页面
+ */
 import React, { Component } from 'react';
 import { Card, Alert, Row, Col, Select, Button, message } from 'antd'
 import { connect } from 'dva'
@@ -51,7 +58,7 @@ class ResultContrastPage extends Component {
       this.setState({
         DGIMN: nextProps.DGIMN,
         PollutantCode: nextProps.PollutantCode ? nextProps.PollutantCode : this.state.PollutantCode,
-        dateValue: nextProps.dateValue.length ? nextProps.dateValue : this.state.dateValue
+        dateValue: (nextProps.dateValue && nextProps.dateValue.length) ? nextProps.dateValue : this.state.dateValue
       }, () => {
         this.getPageData();
       })
@@ -126,15 +133,12 @@ class ResultContrastPage extends Component {
           type: 'cross',
           label: {
             backgroundColor: '#6a7985',
-            // formatter: "{a}{b}{c}"
-            // formatter: '{b0}: {c0}<br />{b1}: {c1}'
           }
         }
       },
       xAxis: {
         type: 'category',
         data: resultContrastData.timeList
-        // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       },
       yAxis: {
         type: 'value'
@@ -142,20 +146,17 @@ class ResultContrastPage extends Component {
       series: [{
         name: '浓度',
         data: resultContrastData.valueList,
-        // data: [820, 932, 901, 934, 1290, 1330, 1320],
         type: 'line',
         label: {
           normal: {
             show: true,
-            //   position: 'inside',
-            // formatter: "{a}"
           }
         },
         markLine: {
           silent: true,
           lineStyle: {
             normal: {
-              color: '#56f485'                   // 这儿设置安全基线颜色
+              color: '#56f485' // 基线颜色
             }
           },
           data: [{
@@ -163,7 +164,7 @@ class ResultContrastPage extends Component {
           }],
           label: {
             normal: {
-              formatter: '标准值'           // 这儿设置安全基线
+              formatter: '标准值' // 基线名称
             }
           },
         },

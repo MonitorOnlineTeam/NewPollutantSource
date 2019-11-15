@@ -1,9 +1,18 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-11-15 15:46:20 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-11-15 15:46:41
+ * @desc: 远程质控根页面
+ */
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Input, Select, InputNumber, Tabs, Form, Row, Col, Divider } from 'antd';
+import { Card, Button, Input, Select, InputNumber, Tabs, Form, Row, Col, Divider, Result } from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
 import RemoteControlPage from './RemoteControlPage'
+import PageLoading from '@/components/PageLoading'
+import { router } from "umi"
 
 
 const FormItem = Form.Item;
@@ -13,6 +22,7 @@ const { TabPane } = Tabs;
 @Form.create()
 @connect(({ loading, qualityControl }) => ({
   standardGasList: qualityControl.standardGasList,
+  loading: loading.effects["navigationtree/getentandpoint"],
 }))
 class index extends Component {
   constructor(props) {
@@ -35,10 +45,12 @@ class index extends Component {
   }
 
   render() {
-
     return (
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
+          this.setState({
+            initLoadSuccess: true
+          })
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
             console.log("123123=", value[0])
             this.setState({
@@ -48,7 +60,32 @@ class index extends Component {
         }} />
         <div id="contentWrapper">
           <PageHeaderWrapper>
-            {this.state.QCAMN && <RemoteControlPage QCAMN={this.state.QCAMN} />}
+            {
+              // 有质控仪
+              (this.state.initLoadSuccess && this.state.QCAMN) &&
+              <RemoteControlPage QCAMN={this.state.QCAMN} />
+            }
+            {
+              // 无质控仪
+              (this.state.initLoadSuccess && !this.state.QCAMN) &&
+              <Result
+                status="404"
+                title="暂无数据"
+                subTitle="请先去添加质控仪！"
+                extra={
+                  <Button type="primary" onClick={() => router.push('/qualityControl/instrumentManage/add')}>
+                    添加质控仪
+                  </Button>
+                }
+              ></Result>
+            }
+            {
+              // 防止右侧内容空白，显示loading
+              !this.state.initLoadSuccess &&
+              <Card className="contentContainer">
+                <PageLoading />
+              </Card>
+            }
           </PageHeaderWrapper>
         </div>
       </>
