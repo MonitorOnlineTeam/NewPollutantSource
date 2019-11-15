@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-24 16:13:23
+ * @Last Modified time: 2019-11-14 15:02:39
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -165,6 +165,7 @@ export default Model.extend({
           sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
           fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
           formatType: item.DF_ISFormat,
+          otherConfig: item.DF_OtherOptions,
           type: item.DF_CONTROL_TYPE,
         }),
         );

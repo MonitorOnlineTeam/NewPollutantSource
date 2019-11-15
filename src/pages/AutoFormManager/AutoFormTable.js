@@ -12,6 +12,7 @@ import {
   Tooltip,
   Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Upload,
 } from 'antd';
+import { router } from "umi";
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
@@ -344,10 +345,22 @@ class AutoFormTable extends PureComponent {
               return <Tag>{item}</Tag>
             })
           }
-          return text && <div>
-            {type === '超链接' &&
-              <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
+          if (type === "超链接") {
+            let porps = {}
+            if (col.otherConfig) {
+              debugger
+              porps = {
+                onClick: () => {
+                  router.push(`${col.otherConfig}/${text}`)
+                }
+              }
             }
+            return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
+          }
+          return text && <div>
+            {/* {type === '超链接' &&
+              <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
+            } */}
             {type == '小圆点' && <Badge status="warning" text={text} />}
             {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
@@ -466,8 +479,8 @@ class AutoFormTable extends PureComponent {
       });
     }
 
-    
-    const scroll={ x: (this.props.scroll && this.props.scroll.x) || scrollXWidth, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
+
+    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
     const rowSelection = checkboxOrRadio ? {
       type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,

@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-13 17:38:30
+ * @Last Modified time: 2019-11-15 11:12:20
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -120,6 +120,7 @@ class RemoteControlPage extends Component {
         DGIMN: stopDGIMN.toString(),
         MNHall: stopMNHall.toString(),
         QCAMN: QCAMN,
+        StopTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         // StandardPollutantCode: stopStandardPollutantCode,
         // StandardPollutantName: stopStandardPollutantName
       })
@@ -163,10 +164,18 @@ class RemoteControlPage extends Component {
           <TabPane tab="手动质控" key="1">
             <div>
               <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
-                this.SendQCACmd({
-                  QCType: 3,
-                  QCAMN: QCAMN,
-                })
+                Modal.confirm({
+                  title: '重启',
+                  content: '确认是否重启',
+                  okText: '确定',
+                  cancelText: '取消',
+                  onOk: () => {
+                    this.SendQCACmd({
+                      QCType: 3,
+                      QCAMN: QCAMN,
+                    })
+                  }
+                });
               }}>质控仪重启</Button>
               <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
@@ -318,7 +327,7 @@ class RemoteControlPage extends Component {
 
                 </Divider> */}
                 <Row>
-                  <Button type="primary" style={{float: "right"}} onClick={this.onSubmitForm}>开始质控</Button>
+                  <Button type="primary" style={{ float: "right" }} onClick={this.onSubmitForm}>开始质控</Button>
                 </Row>
               </Form>
             </Card>
@@ -345,7 +354,7 @@ class RemoteControlPage extends Component {
                   </Select>
                 </Col>
                 <Col>
-                  <Button type="primary" style={{float: "right"}} onClick={() => {
+                  <Button type="primary" style={{ float: "right" }} onClick={() => {
                     this.onStop()
                   }}>停止质控</Button>
                 </Col>

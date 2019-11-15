@@ -48,6 +48,28 @@ export async function cancelPlan(params) {
   return result;
 }
 
+// 获取企业达标率
+export async function QCAResultStatic(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/QualityControlApi/QCAResultStatic`, params, null);
+  return result;
+}
+
+// 获取单个企业统计数据
+export async function QCAResultStaticByEntCode(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/QualityControlApi/QCAResultStaticByEntCode`, params, null);
+  return result;
+}
+
+// 获取质控结果比对数据
+export async function QCAResultCheckByDGIMN(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/QualityControlApi/QCAResultCheckByDGIMN`, params, null);
+  return result;
+}
+
+
+
+
+
 
 
 

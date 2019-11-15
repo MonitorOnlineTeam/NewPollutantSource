@@ -2,7 +2,7 @@
  * @Create: Jiaqi 
  * @Date: 2019-11-07 10:53:38 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-13 16:00:29
+ * @Last Modified time: 2019-11-15 14:57:59
  * @desc: 智能质控model
  */
 
@@ -23,6 +23,20 @@ export default Model.extend({
     qualityControlTableData: [],
     CEMSList: [],
     autoQCAInfo: [],
+    entRate: {
+      allResult: 0,
+      noAllResult: 0,
+      entName: [],
+      entResult: [],
+    },
+    entStaticDataList: [],
+    resultContrastData: {
+      valueList: [],
+      timeList: [],
+      tableData: [],
+      standValue: 0,
+      errorStr: undefined,
+    }
   },
 
   effects: {
@@ -157,5 +171,50 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取企业达标率 
+    * QCAResultStatic({ payload }, { call, put, update }) {
+      const result = yield call(services.QCAResultStatic, payload);
+      if (result.IsSuccess) {
+        let entResult = result.Datas.entResult;
+        entResult.map((item, index) => {
+          entResult[index] = item * 100;
+        })
+        yield update({
+          entRate: {
+            ...result.Datas,
+            entResult: entResult
+          }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取单个企业统计数据 
+    * QCAResultStaticByEntCode({ payload }, { call, put, update }) {
+      const result = yield call(services.QCAResultStaticByEntCode, payload);
+      if (result.IsSuccess) {
+        yield update({
+          // entRate: result.Datas
+          entStaticDataList: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取结果比对数据 
+    * QCAResultCheckByDGIMN({ payload, otherParams }, { call, put, update }) {
+      const result = yield call(services.QCAResultCheckByDGIMN, payload);
+      if (result.IsSuccess) {
+        if(otherParams.isSearch){
+          message.success("结果比对完成！")
+        }
+        yield update({
+          resultContrastData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    
   },
 });

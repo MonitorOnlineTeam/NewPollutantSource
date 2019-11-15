@@ -827,6 +827,24 @@ export default {
                   path: '/qualityControl/remoteControl',
                   component: './qualityControl/remoteControl',
                 },
+                // 质控结果统计
+                {
+                  name: 'resultStatistics',
+                  path: '/qualityControl/resultStatistics',
+                  component: './qualityControl/resultStatistics',
+                },
+                // 质控结果比对
+                {
+                  name: 'resultContrast',
+                  path: '/qualityControl/resultContrast',
+                  component: './qualityControl/resultContrast',
+                },
+                // 质控仪操作记录
+                {
+                  name: 'operationRecords',
+                  path: '/qualityControl/operationRecords',
+                  component: './qualityControl/operationRecords',
+                },
               ]
             },
             /* 任务详情 */
