@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-15 11:37:27 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 15:05:53
+ * @Last Modified time: 2019-11-15 16:21:53
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
@@ -50,7 +50,7 @@ class index extends Component {
                       DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
                       PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"]
                     })
-                  }}><Icon type="swap" /></a>
+                  }}><Icon type="vertical-align-middle" /></a>
                 </Tooltip>
               } else {
                 return '-'
