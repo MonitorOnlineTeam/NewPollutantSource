@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 10:21:23
+ * @Last Modified time: 2019-11-18 16:10:10
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -120,7 +120,7 @@ class RemoteControlPage extends Component {
         DGIMN: stopDGIMN.toString(),
         MNHall: stopMNHall.toString(),
         QCAMN: QCAMN,
-        StopTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         // StandardPollutantCode: stopStandardPollutantCode,
         // StandardPollutantName: stopStandardPollutantName
       })
