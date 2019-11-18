@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 16:10:10
+ * @Last Modified time: 2019-11-18 17:37:28
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -173,6 +173,7 @@ class RemoteControlPage extends Component {
                     this.SendQCACmd({
                       QCType: 3,
                       QCAMN: QCAMN,
+                      QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                     })
                   }
                 });
@@ -181,12 +182,14 @@ class RemoteControlPage extends Component {
                 this.SendQCACmd({
                   QCType: 4,
                   QCAMN: QCAMN,
+                  QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                 })
               }}>质控仪吹扫</Button>
               <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
                   QCType: 5,
                   QCAMN: QCAMN,
+                  QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                 })
               }}>质控仪开门</Button>
             </div>
