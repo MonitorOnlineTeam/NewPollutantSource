@@ -151,7 +151,7 @@ class QCAYsyShowVideo extends Component {
     dispatch({
       type: 'videodata/qcaysyvideourl',
       payload: {
-        VedioCameraID: 1107,//id
+        VedioCameraID: id,//id
         type,
       },
     });

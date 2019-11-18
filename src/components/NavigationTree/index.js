@@ -173,7 +173,7 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode,QCAType:node.Type  });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode,QCAType:node.Type,VideoNo:node.VideoNo  });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType,QCAType:node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -520,6 +520,7 @@ class NavigationTree extends Component {
   returnData = (data) => {
     //处理选中的数据格式
     const rtnList = [];
+    console.log('dataaaa',data)
     data.map(item => {
       var list = dataList.filter(m => m.key == item)
       if (list) {
