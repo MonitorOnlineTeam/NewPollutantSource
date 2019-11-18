@@ -27,14 +27,13 @@ class Index extends Component {
             <div id="ysyvideo">
                  <NavigationTree QCAUse="1"  domId="#ysyvideo" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt&&value[0].QCAType=="2") {
-                                debugger
                             this.changeDgimn(value[0].VideoNo)
                             }
                         }} />
                 <PageHeaderWrapper>
-                {this.state.VideoNo&&<YsyShowVideo VideoNo={this.state.VideoNo} />} 
+                {this.state.VideoNo&&<YsyShowVideo VideoNo={this.state.VideoNo} />}
                 </PageHeaderWrapper>
-               
+
             </div>
         );
     }

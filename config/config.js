@@ -845,6 +845,12 @@ export default {
                   path: '/qualityControl/operationRecords',
                   component: './qualityControl/operationRecords',
                 },
+                // 质控仪维护记录
+                {
+                  name: 'maintainRecord',
+                  path: '/qualityControl/maintainRecord',
+                  component: './qualityControl/maintainRecord',
+                },
               ]
             },
             /* 任务详情 */

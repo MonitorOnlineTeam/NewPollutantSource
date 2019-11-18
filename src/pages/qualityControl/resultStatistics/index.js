@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-14 11:39:35 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 10:09:06
+ * @Last Modified time: 2019-11-18 10:02:33
  * @desc: 结果统计页面
  */
 import React, { Component } from 'react';
@@ -22,17 +22,17 @@ const columns = [
     key: 'PointName',
   },
   {
-    title: '达标数量',
+    title: '合格数量',
     dataIndex: 'SuccessResult',
     key: 'SuccessResult',
   },
   {
-    title: '总操作次数',
+    title: '质控次数',
     dataIndex: 'SumCount',
     key: 'SumCount',
   },
   {
-    title: '达标率',
+    title: '合格率',
     dataIndex: 'QCResult',
     key: 'QCResult',
     render: (text, record) => {
@@ -107,7 +107,7 @@ class index extends Component {
       ],
       series: [
         {
-          name: '达标率',
+          name: '合格率',
           type: 'bar',
           barWidth: '40%',
           label: {
@@ -123,7 +123,7 @@ class index extends Component {
     };
   }
 
-  // 企业达标率总览 - 饼图
+  // 企业合格率总览 - 饼图
   pieOption = () => {
     const { entRate } = this.props;
     return {
@@ -141,17 +141,17 @@ class index extends Component {
       legend: {
         orient: 'vertical',
         left: 'left',
-        data: ['已达标', '未达标']
+        data: ['已合格', '未合格']
       },
       series: [
         {
-          name: '达标率',
+          name: '合格率',
           type: 'pie',
           radius: '55%',
           center: ['50%', '60%'],
           data: [
-            { value: entRate.allResult * 100, name: '已达标' },
-            { value: entRate.noAllResult * 100, name: '未达标' },
+            { value: entRate.allResult * 100, name: '已合格' },
+            { value: entRate.noAllResult * 100, name: '未合格' },
           ],
           itemStyle: {
             emphasis: {
@@ -229,7 +229,7 @@ class index extends Component {
               </Card>
             </Col>
             <Col span={6}>
-              <Card title="达标率总览">
+              <Card title="合格率总览">
                 <ReactEcharts
                   theme="pie"
                   option={this.pieOption()}

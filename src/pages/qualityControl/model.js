@@ -2,7 +2,7 @@
  * @Create: Jiaqi 
  * @Date: 2019-11-07 10:53:38 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 14:57:59
+ * @Last Modified time: 2019-11-18 11:51:31
  * @desc: 智能质控model
  */
 
@@ -36,7 +36,8 @@ export default Model.extend({
       tableData: [],
       standValue: 0,
       errorStr: undefined,
-    }
+    },
+    resultContrastTimeList: [],
   },
 
   effects: {
@@ -215,6 +216,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    
+    // 获取结果比对时间下拉列表 
+    * QCAResultCheckSelectList({ payload, otherParams }, { call, put, update }) {
+      const result = yield call(services.QCAResultCheckSelectList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          resultContrastTimeList: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 });

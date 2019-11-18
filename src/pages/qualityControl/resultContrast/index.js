@@ -27,7 +27,7 @@ class index extends Component {
         }} />
         <div id="contentWrapper">
           <PageHeaderWrapper>
-            {this.state.DGIMN && <ResultContrastPage DGIMN={this.state.DGIMN} />}
+            {this.state.DGIMN && <ResultContrastPage DGIMN={this.state.DGIMN} flag={true}/>}
           </PageHeaderWrapper>
         </div>
       </>

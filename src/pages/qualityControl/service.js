@@ -66,6 +66,14 @@ export async function QCAResultCheckByDGIMN(params) {
   return result;
 }
 
+// 获取质控结果比对时间选择列表
+export async function QCAResultCheckSelectList(params) {
+  const result = await get(`/api/rest/PollutantSourceApi/QualityControlApi/QCAResultCheckSelectList`, params, null);
+  return result;
+}
+
+
+
 
 
 

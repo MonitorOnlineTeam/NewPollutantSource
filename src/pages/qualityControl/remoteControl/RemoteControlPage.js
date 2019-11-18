@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 11:12:20
+ * @Last Modified time: 2019-11-18 10:21:23
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -183,7 +183,12 @@ class RemoteControlPage extends Component {
                   QCAMN: QCAMN,
                 })
               }}>质控仪吹扫</Button>
-
+              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                this.SendQCACmd({
+                  QCType: 5,
+                  QCAMN: QCAMN,
+                })
+              }}>质控仪开门</Button>
             </div>
             {/* <Divider /> */}
             <Card
@@ -292,6 +297,7 @@ class RemoteControlPage extends Component {
                           required: true,
                           message: '请选择稀释气组分名称!',
                         },],
+                        initialValue: "0"
                       })(
                         <Select placeholder="请选择稀释气组分名称">
                           <Option key="0">N2</Option>

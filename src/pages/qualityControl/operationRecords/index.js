@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-15 11:37:27 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 16:21:53
+ * @Last Modified time: 2019-11-18 11:34:09
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
@@ -46,7 +46,8 @@ class index extends Component {
                   <a onClick={() => {
                     this.setState({
                       visible: true,
-                      dateValue: [startTime, endTime],
+                      // dateValue: [startTime, endTime],
+                      dateValue: row["dbo.T_Bas_QCAnalyzerControlCommand.ID"],
                       DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
                       PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"]
                     })
@@ -61,6 +62,7 @@ class index extends Component {
         <Modal
           width={"70%"}
           title="质控结果比对"
+          destroyOnClose
           visible={this.state.visible}
           footer={[]}
           onOk={this.handleOk}
