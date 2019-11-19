@@ -791,6 +791,10 @@ export default {
               path: '/qualityControl',
               name: 'qualityControl',
               routes: [
+                {
+                  path: '/qualityControl',
+                  redirect: '/qualityControl/remoteControl',
+                },
                 // 质控仪管理
                 {
                   name: 'instrumentManage',
