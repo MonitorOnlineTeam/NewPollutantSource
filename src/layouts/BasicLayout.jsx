@@ -116,9 +116,18 @@ const BasicLayout = props => {
     });
 
   const menuDataRender = list => {
-    // console.log("user.currentMenu=", currentMenu);
-
-    return currentMenu;
+    let menuList = currentMenu;
+    // 如果只有一个，平铺展示子菜单
+    if(currentMenu && currentMenu.length === 1){
+      menuList = currentMenu[0].children.map(item => {
+        return {
+          ...item,
+          NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`
+        }
+      })
+    }
+    // console.log("menuList=", menuList);
+    return menuList;
   };
 
   const logoRender = Item => {
