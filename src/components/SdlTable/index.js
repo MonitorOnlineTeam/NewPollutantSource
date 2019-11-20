@@ -31,8 +31,8 @@ class SdlTable extends PureComponent {
     return (
       <Table
         rowKey={record => record.id || record.ID}
-        size="middle"
-        className={styles.dataTable}
+        size="small"
+        // className={styles.dataTable}
         rowClassName={
           (record, index, indent) => {
             if (index === 0) {

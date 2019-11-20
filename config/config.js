@@ -855,6 +855,12 @@ export default {
                   path: '/qualityControl/maintainRecord',
                   component: './qualityControl/maintainRecord',
                 },
+                // 质控仪参数记录
+                {
+                  name: 'paramsRecord',
+                  path: '/qualityControl/paramsRecord',
+                  component: './qualityControl/paramsRecord',
+                },
               ]
             },
             /* 任务详情 */

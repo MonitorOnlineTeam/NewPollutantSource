@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 17:37:28
+ * @Last Modified time: 2019-11-19 14:36:14
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -154,7 +154,7 @@ class RemoteControlPage extends Component {
   render() {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
-    const { form: { getFieldDecorator, setFieldsValue }, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
+    const { form: { getFieldDecorator, setFieldsValue }, form, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
     if (loading) {
       <PageLoading />
     }
@@ -214,6 +214,11 @@ class RemoteControlPage extends Component {
                           this.setState({
                             StandardPollutantName: option.props.children
                           })
+                          if (value == "02" || value == "03") {
+                            form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
+                          } else {
+                            form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
+                          }
                         }}>
                           {
                             standardGasList.map(item => {
@@ -259,8 +264,8 @@ class RemoteControlPage extends Component {
                         initialValue: "0"
                       })(
                         <Select placeholder="请选择原标气浓度值单位">
-                          <Option key="0">mg/m3</Option>
-                          <Option key="1">%</Option>
+                          <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
+                          <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
                         </Select>
                       )}
                     </Form.Item>
@@ -287,8 +292,8 @@ class RemoteControlPage extends Component {
                         initialValue: "0"
                       })(
                         <Select placeholder="请选择配比标气浓度单位">
-                          <Option key="0">mg/m3</Option>
-                          <Option key="1">%</Option>
+                          <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
+                          <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
                         </Select>
                       )}
                     </Form.Item>
@@ -317,11 +322,14 @@ class RemoteControlPage extends Component {
                         },],
                         initialValue: CEMSList.length ? CEMSList[0].DGIMN : undefined
                       })(
-                        <Select placeholder="请选择排口" mode="multiple" onChange={(value, option) => {
-                          this.setState({
-                            MNHall: option.map(item => item.props.MNHall)
-                          })
-                        }}>
+                        <Select
+                          placeholder="请选择排口"
+                          // mode="multiple"
+                          onChange={(value, option) => {
+                            this.setState({
+                              MNHall: option.map(item => item.props.MNHall)
+                            })
+                          }}>
                           {
                             CEMSList.map(item => {
                               return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
@@ -340,7 +348,7 @@ class RemoteControlPage extends Component {
                 </Row>
               </Form>
             </Card>
-            <Card
+            {/* <Card
               style={{ marginTop: 16 }}
               type="inner"
               border={false}
@@ -368,7 +376,7 @@ class RemoteControlPage extends Component {
                   }}>停止质控</Button>
                 </Col>
               </Row>
-            </Card>
+            </Card> */}
           </TabPane>
           <TabPane tab="自动质控" key="2">
             <Collapse bordered={false} defaultActiveKey={['0', '1', '2', '3']}>

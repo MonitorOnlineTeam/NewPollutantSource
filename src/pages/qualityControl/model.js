@@ -2,7 +2,7 @@
  * @Create: Jiaqi 
  * @Date: 2019-11-07 10:53:38 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 11:51:31
+ * @Last Modified time: 2019-11-19 14:47:36
  * @desc: 智能质控model
  */
 
@@ -38,6 +38,11 @@ export default Model.extend({
       errorStr: undefined,
     },
     resultContrastTimeList: [],
+    paramsRecordForm: {
+      current: 1,
+      pageSize: 10,
+      total: 0
+    }
   },
 
   effects: {
@@ -70,7 +75,14 @@ export default Model.extend({
       const result = yield call(services.getStandardGas, payload);
       if (result.IsSuccess) {
         yield update({
-          standardGasList: result.Datas
+          // standardGasList: result.Datas
+          standardGasList: [
+            ...result.Datas,
+            {
+              PollutantCode: "n2",
+              PollutantName: "氮气"
+            }
+          ]
         })
       }
     },
@@ -206,7 +218,7 @@ export default Model.extend({
     * QCAResultCheckByDGIMN({ payload, otherParams }, { call, put, update }) {
       const result = yield call(services.QCAResultCheckByDGIMN, payload);
       if (result.IsSuccess) {
-        if(otherParams.isSearch){
+        if (otherParams.isSearch) {
           message.success("结果比对完成！")
         }
         yield update({
