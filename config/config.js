@@ -92,8 +92,8 @@ export default {
       routes: [
 
         {
-          name: 'home',
-          path: '/home',
+          name: 'homepage',
+          path: '/homepage',
           component: './home',
         },
         // appoperation

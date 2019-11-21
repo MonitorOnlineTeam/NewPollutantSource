@@ -60,7 +60,7 @@ const GlobalHeaderRight = props => {
       <Popover content={<div><img
         width={272}
         alt="logo"
-        src={`${config.uploadHost}/phoneQRCode.png`}
+        src={`/api/upload/phoneQRCode.png`}
       /></div>} title="手机端下载" trigger="hover">
         <a
           rel="noopener noreferrer"

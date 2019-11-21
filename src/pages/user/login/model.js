@@ -21,7 +21,15 @@ const Model = {
 
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
-        const defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
+        let defaultNavigateUrl = '/user/login';
+
+        if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
+          defaultNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+          //response.Datas.MenuDatas[0].NavigateUrl
+        } else {
+          defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
+        }
+
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
         Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
