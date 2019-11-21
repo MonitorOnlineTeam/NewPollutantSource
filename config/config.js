@@ -861,6 +861,12 @@ export default {
                   path: '/qualityControl/paramsRecord',
                   component: './qualityControl/paramsRecord',
                 },
+                //质控仪状态记录
+                {
+                  name: 'statusRecord',
+                  path: '/qualityControl/statusRecord',
+                  component: './qualityControl/statusRecord',
+                },
               ]
             },
             /* 任务详情 */

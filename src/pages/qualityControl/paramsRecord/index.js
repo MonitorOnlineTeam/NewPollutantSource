@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-18 16:11:36 
+ * @Author: Jiaqi
+ * @Date: 2019-11-18 16:11:36
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-19 13:48:10
  * @desc: 质控参数记录页面
@@ -10,10 +10,10 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '@/components/NavigationTree'
 import { Form, Card, DatePicker, Row, Col, Select, Button } from 'antd'
 import SdlTable from '@/components/SdlTable'
-import { connect } from "dva"
+import { connect } from 'dva'
 
 const FormItem = Form.Item;
-const Option = Select.Option;
+const {Option} = Select;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const dataSource = [
   {
@@ -50,7 +50,7 @@ const columns = [
 
 
 @connect(({ loading, qualityControl }) => ({
-  paramsRecordForm: qualityControl.paramsRecordForm
+  paramsRecordForm: qualityControl.paramsRecordForm,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -66,9 +66,9 @@ const columns = [
       payload: {
         paramsRecordForm: {
           ...props.paramsRecordForm,
-          ...fields
-        }
-      }
+          ...fields,
+        },
+      },
     })
   },
 })
@@ -84,7 +84,7 @@ class index extends Component {
         wrapperCol: {
           span: 16,
         },
-      }
+      },
     }
   }
 
@@ -96,8 +96,8 @@ class index extends Component {
         paramsRecordForm: {
           ...this.props.paramsRecordForm,
           current,
-        }
-      }
+        },
+      },
     });
     setTimeout(() => {
       // 获取表格数据
@@ -111,12 +111,12 @@ class index extends Component {
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
           this.setState({
-            initLoadSuccess: true
+            initLoadSuccess: true,
           })
-          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
-            console.log("123123=", value[0])
+          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
+            console.log('123123=', value[0])
             this.setState({
-              QCAMN: value[0].key
+              QCAMN: value[0].key,
             })
           }
         }} />
@@ -128,7 +128,7 @@ class index extends Component {
                   <Col span={8}>
                     <Form.Item label="时间">
                       {getFieldDecorator('time')(
-                        <RangePicker />
+                        <RangePicker />,
                       )}
                     </Form.Item>
                   </Col>
@@ -137,7 +137,7 @@ class index extends Component {
                       {getFieldDecorator('param')(
                         <Select placeholder="请选择参数">
                           <Option key="1"></Option>
-                        </Select>
+                        </Select>,
                       )}
                     </Form.Item>
                   </Col>
@@ -147,7 +147,7 @@ class index extends Component {
                         <Select placeholder="请选择状态">
                           <Option key="1">正常</Option>
                           <Option key="0">异常</Option>
-                        </Select>
+                        </Select>,
                       )}
                     </Form.Item>
                   </Col>
@@ -166,7 +166,7 @@ class index extends Component {
                   pageSize: paramsRecordForm.pageSize,
                   current: paramsRecordForm.current,
                   onChange: this.onTableChange,
-                  total: paramsRecordForm.total
+                  total: paramsRecordForm.total,
                 }}
               />
             </Card>

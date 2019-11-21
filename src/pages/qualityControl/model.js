@@ -1,17 +1,17 @@
 /*
- * @Create: Jiaqi 
- * @Date: 2019-11-07 10:53:38 
+ * @Create: Jiaqi
+ * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-19 14:47:36
  * @desc: 智能质控model
  */
 
 import moment from 'moment';
-import * as services from './service';
-import { getentandpoint } from "@/services/baseTreeApi";
+import { getentandpoint } from '@/services/baseTreeApi';
 import Model from '@/utils/model';
 import { router } from 'umi'
 import { message } from 'antd';
+import * as services from './service';
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -41,16 +41,18 @@ export default Model.extend({
     paramsRecordForm: {
       current: 1,
       pageSize: 10,
-      total: 0
-    }
+      total: 0,
+    },
+    QCAStatusList: [],
+    QCAStatusNameList: [],
   },
 
   effects: {
     // 获取企业及排口
     *getEntAndPointList({ payload }, { call, update, select }) {
-      let postData = {
-        RunState: "",
-        Status: [0, 1, 2, 3]
+      const postData = {
+        RunState: '',
+        Status: [0, 1, 2, 3],
       }
       let global = yield select(state => state.global);
       if (!global.configInfo) {
@@ -64,7 +66,7 @@ export default Model.extend({
       const result = yield call(getentandpoint, postData);
       if (result.IsSuccess) {
         yield update({
-          entAndPointList: result.Datas
+          entAndPointList: result.Datas,
         })
       } else {
         message.error(result.Message)
@@ -79,10 +81,10 @@ export default Model.extend({
           standardGasList: [
             ...result.Datas,
             {
-              PollutantCode: "n2",
-              PollutantName: "氮气"
-            }
-          ]
+              PollutantCode: 'n2',
+              PollutantName: '氮气',
+            },
+          ],
         })
       }
     },
@@ -90,8 +92,8 @@ export default Model.extend({
     *addQualityControl({ payload }, { call, put }) {
       const result = yield call(services.addQualityControl, payload);
       if (result.IsSuccess) {
-        router.push("/qualityControl/instrumentManage")
-        message.success("添加成功！")
+        router.push('/qualityControl/instrumentManage')
+        message.success('添加成功！')
       } else {
         message.error(result.Message)
       }
@@ -104,26 +106,24 @@ export default Model.extend({
         if (result.Datas.Relation) {
           qualityControlTableData = result.Datas.Relation.map((item, index) => {
             let Component = [];
-            Component = item.Component.map((itm, idx) => {
-              return {
+            Component = item.Component.map((itm, idx) => ({
                 ...itm,
-                key: `${index}${idx}`
-              }
-            })
+                key: `${index}${idx}`,
+              }))
             return {
               ...item,
-              DGIMNArr: item.DGIMN.split("/"),
+              DGIMNArr: item.DGIMN.split('/'),
               key: index,
               Component: [
-                ...Component
-              ]
+                ...Component,
+              ],
             }
           })
         }
-        console.log("qualityControlTableData=", qualityControlTableData)
+        console.log('qualityControlTableData=', qualityControlTableData)
         yield update({
           qualityControlFormData: result.Datas.Info,
-          qualityControlTableData: qualityControlTableData,
+          qualityControlTableData,
         })
       } else {
         message.error(result.Message)
@@ -145,99 +145,137 @@ export default Model.extend({
             //   PointName: "test2",
             //   MNHall: "test2",
             // },
-          ]
+          ],
         })
       }
     },
-    // 发送质控命令 
+    // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
-        message.success("操作成功")
+        message.success('操作成功')
       } else {
         message.error(result.Message)
       }
     },
-    // 获取自动质控信息 
+    // 获取自动质控信息
     * getAutoQCAInfo({ payload }, { call, put, update }) {
       const result = yield call(services.getAutoQCAInfo, payload);
       if (result.IsSuccess) {
         yield update({
-          autoQCAInfo: result.Datas
+          autoQCAInfo: result.Datas,
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 取消自动质控计划 
+    // 取消自动质控计划
     * cancelPlan({ payload }, { call, put, update }) {
       const result = yield call(services.cancelPlan, payload);
       if (result.IsSuccess) {
-        message.success("取消成功");
+        message.success('取消成功');
         yield put({
-          type: "qualityControl/getAutoQCAInfo",
+          type: 'qualityControl/getAutoQCAInfo',
           payload: {
-            qcamn: payload.QCAMN
-          }
+            qcamn: payload.QCAMN,
+          },
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 获取企业达标率 
+    // 获取企业达标率
     * QCAResultStatic({ payload }, { call, put, update }) {
       const result = yield call(services.QCAResultStatic, payload);
       if (result.IsSuccess) {
-        let entResult = result.Datas.entResult;
+        const { entResult } = result.Datas;
         entResult.map((item, index) => {
           entResult[index] = item * 100;
         })
         yield update({
           entRate: {
             ...result.Datas,
-            entResult: entResult
-          }
+            entResult,
+          },
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 获取单个企业统计数据 
+    // 获取单个企业统计数据
     * QCAResultStaticByEntCode({ payload }, { call, put, update }) {
       const result = yield call(services.QCAResultStaticByEntCode, payload);
       if (result.IsSuccess) {
         yield update({
           // entRate: result.Datas
-          entStaticDataList: result.Datas
+          entStaticDataList: result.Datas,
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 获取结果比对数据 
+    // 获取结果比对数据
     * QCAResultCheckByDGIMN({ payload, otherParams }, { call, put, update }) {
       const result = yield call(services.QCAResultCheckByDGIMN, payload);
       if (result.IsSuccess) {
         if (otherParams.isSearch) {
-          message.success("结果比对完成！")
+          message.success('结果比对完成！')
         }
         yield update({
-          resultContrastData: result.Datas
+          resultContrastData: result.Datas,
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 获取结果比对时间下拉列表 
+    // 获取结果比对时间下拉列表
     * QCAResultCheckSelectList({ payload, otherParams }, { call, put, update }) {
       const result = yield call(services.QCAResultCheckSelectList, payload);
       if (result.IsSuccess) {
         yield update({
-          resultContrastTimeList: result.Datas
+          resultContrastTimeList: result.Datas,
         })
       } else {
         message.error(result.Message)
       }
     },
+    /**
+     * xpy
+     * 获取质控仪状态列表
+     */
+    * QCAStatusByDGIMN({
+        payload,
+      }, {
+        call,
+        update,
+      }) {
+      const result = yield call(services.QCAStatusByDGIMN, payload);
+      if (result.IsSuccess) {
+        yield update({
+          QCAStatusList: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    /**
+     * xpy
+     * 获取质控仪状态名称列表
+    */
+   * QCAStatusName({
+     payload,
+   }, {
+     call,
+     update,
+   }) {
+     const result = yield call(services.QCAStatusName, payload);
+     if (result.IsSuccess) {
+       yield update({
+         QCAStatusNameList: result.Datas,
+       })
+     } else {
+       message.error(result.Message)
+     }
+   },
   },
 });
