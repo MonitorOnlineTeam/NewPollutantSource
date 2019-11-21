@@ -8,149 +8,253 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '@/components/NavigationTree'
-import { Form, Card, DatePicker, Row, Col, Select, Button, Badge } from 'antd'
+import { Form, Card, DatePicker, Row, Col, Select, Button, Radio, Popover, Icon } from 'antd'
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
+import { LegendIcon } from '@/utils/icon';
+import ReactEcharts from 'echarts-for-react';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const dataSource = [
-  {
-    key: '1',
-    status: 1,
-    time: '2019-08-01 02:00',
-    name: 'PLC-锁芯状态',
-    value: 0,
-    address: '0为锁芯弹出，1为锁芯收回',
-  },
-  {
-    key: '2',
-    status: 0,
-    time: '2019-08-01 02:00',
-    name: 'PLC-锁芯状态',
-    value: 0,
-    address: '0为锁芯弹出，1为锁芯收回',
-  },
-];
 
 const columns = [
   {
     title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (text, record) => {
-      if (text === 0) {
-        return <span><Badge status="error" /></span>;
+    dataIndex: 'flag',
+    key: 'flag',
+    width: 70,
+    align: 'center',
+    filters: [
+      {
+        text: <span><LegendIcon style={{ color: '#34c066' }} />正常</span>,
+        value: 1,
+      },
+      {
+        text: <span><LegendIcon style={{ color: '#e94' }} />异常</span>,
+        value: 0,
+      },
+    ],
+    onFilter: (value, record) => record.flag === value,
+    render: (value, record, index) => {
+      if (value) {
+        return <img style={{ width: 14 }} src="/gisnormal.png" />
       }
-      return <span><Badge status="success" /> </span>;
+      return <img style={{ width: 14 }} src="/gisexception.png" />
     },
-    },
+  },
   {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
+    title: '监控时间',
+    dataIndex: 'MonitorTime',
+    key: 'MonitorTime',
   },
   {
     title: '指标名称',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'Name',
+    key: 'Name',
   },
   {
-    title: '指标值',
-    dataIndex: 'value',
-    key: 'value',
-  },
-  {
-    title: '指标说明',
-    dataIndex: 'address',
-    key: 'address',
+    title: '指标指标状态',
+    dataIndex: 'Value',
+    key: 'Value',
   },
 ];
 
 
-@connect(({
-  loading,
-  qualityControl,
-}) => ({
-  QCAStatusList: qualityControl.QCAStatusList,
-  isloading: loading.effects['qualityControl/QCAStatusByDGIMN'],
-  dataloading: loading.effects['qualityControl/QCAStatusName'],
+@connect(({ loading, qualityControl }) => ({
+  statusRecordForm: qualityControl.statusRecordForm,
   QCAStatusNameList: qualityControl.QCAStatusNameList,
+  QCAStatusList: qualityControl.QCAStatusList,
+  loading: loading.effects['qualityControl/QCAStatusByDGIMN'],
 }))
-@Form.create()
+@Form.create({
+  mapPropsToFields(props) {
+    return {
+      time: Form.createFormField(props.statusRecordForm.time),
+      DataTempletCode: Form.createFormField(props.statusRecordForm.DataTempletCode),
+      status: Form.createFormField(props.statusRecordForm.status),
+    };
+  },
+  onFieldsChange(props, fields) {
+    props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        statusRecordForm: {
+          ...props.statusRecordForm,
+          ...fields,
+        },
+      },
+    })
+  },
+})
 class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        QCAMN: '',
+        DGIMN: '',
     };
+    this._SELF_ = {
+      formItemLayout: {
+        labelCol: {
+          span: 6,
+        },
+        wrapperCol: {
+          span: 16,
+        },
+      },
+    }
   }
 
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'qualityControl/QCAStatusName',
+    })
+  }
 
-  render() {
-      const { formItemLayout } = {
-        formItemLayout: {
-          labelCol: {
-            span: 6,
-          },
-          wrapperCol: {
-            span: 16,
+  // 分页
+  onTableChange = (current, pageSize) => {
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
+          current,
+        },
+      },
+    });
+    setTimeout(() => {
+      // 获取表格数据
+      this.getTableData();
+    }, 0);
+  }
+
+  // 查询
+  onSearch = () => {
+      // 查询表格数据
+      this.props.dispatch({
+        type: 'qualityControl/updateState',
+        payload: {
+          paramsRecordForm: {
+            ...this.props.paramsRecordForm,
+            current: 1,
           },
         },
-      }
-     const { form: { getFieldDecorator } } = this.props;
+      })
+      setTimeout(() => {
+        this.getTableData();
+      }, 0);
+    }
+
+  // 获取表格数据
+  getTableData = () => {
+    const { DGIMN } = this.state;
+    if (DGIMN) {
+    this.props.dispatch({
+            type: 'qualityControl/QCAStatusByDGIMN',
+            payload: {
+            DGIMN,
+            },
+        })
+    }
+  }
+
+  /** 时间控件 */
+  RPOnChange=(date, dateString) => {
+      console.log(dateString);
+  }
+
+  RPOnOk=() => {
+      console.log('21edafadsfafasdf');
+  }
+
+  render() {
+    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList } = this.props;
+    const { formItemLayout } = this._SELF_;
+    const { showType } = this.state;
     return (
-        <>
-        <NavigationTree QCAUse="1" onItemClick={value => {
-          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
-            console.log('123123=', value)
+      <>
+        <NavigationTree onItemClick={value => {
+          if (value.length > 0 && !value[0].IsEnt && value[0].key) {
             this.setState({
-              QCAMN: value[0].key,
+              DGIMN: value[0].key,
+            }, () => {
+              this.onSearch()
             })
           }
         }} />
-        < div id = "contentWrapper" >
+        <div id="contentWrapper">
           <PageHeaderWrapper>
-            <Card className="contentContainer">
-              <Form {...formItemLayout}>
-                <Row>
-                  <Col span={8}>
-                    <Form.Item label="时间">
-                      {getFieldDecorator('time')(
-                        <RangePicker />,
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col span={6}>
-                    <Form.Item label="指标名称">
-                      {getFieldDecorator('param')(
-                        <Select placeholder="请选择指标名称">
-                          <Option key="1"></Option>
-                        </Select>,
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col span={6}>
-                    <Form.Item label="状态">
-                      {getFieldDecorator('status')(
-                        <Select placeholder="请选择状态">
-                          <Option key="1">正常</Option>
-                          <Option key="0">异常</Option>
-                        </Select>,
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col span={4} style={{ marginTop: 4 }}>
-                    <Button type="primary" style={{ marginRight: 10 }}>查询</Button>
-                    <Button>重置</Button>
-                  </Col>
-                </Row>
-              </Form>
-              <SdlTable
-                dataSource={dataSource}
-                columns={columns}
-              />
+            <Card className="contentContainer"
+              title={
+                <Form>
+                  <Row gutter={16}>
+                    <Col span={4}></Col>
+                    <Col span={7}>
+                      <Form.Item style={{ width: '100%', marginBottom: 0 }}>
+                        {getFieldDecorator('time')(
+                           <RangePicker
+                            showTime={{
+                                hideDisabledOptions: true,
+                                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                            }}
+                            allowClear={false}
+                            defaultValue={[moment().format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD HH:mm:ss')]}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            showToday
+                            onChange={this.RPOnChange}
+                            onOk={this.RPOnOk}
+                            />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={7}>
+                      <Form.Item style={{ width: '100%', marginBottom: 0 }}>
+                        {getFieldDecorator('DataTempletCode')(
+                          <Select mode="multiple" allowClear placeholder="请选择参数">
+                            {
+                              QCAStatusNameList.map(item => <Option key={item.Code}>{item.Name}</Option>)
+                            }
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={5}>
+                      <Form.Item style={{ width: '100%', marginBottom: 0 }}>
+                        {getFieldDecorator('status')(
+                          <Select allowClear placeholder="请选择状态">
+                            <Option key="1">正常</Option>
+                            <Option key="0">异常</Option>
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              }
+            >
+              {
+                showType === 'data' && <SdlTable
+                  dataSource={QCAStatusList}
+                  columns={columns}
+                  loading={loading}
+                />
+              }
+              {
+                showType === 'chart' && <ReactEcharts
+                  theme="light"
+                  // option={() => { this.lightOption() }}
+                  option={this.lightOption()}
+                  lazyUpdate
+                  notMerge
+                  id="rightLine"
+                  onEvents={{
+                    click: this.onChartClick,
+                  }}
+                  style={{ width: '100%', height: 'calc(100vh - 340px)', minHeight: '200px' }}
+                />
+              }
+
             </Card>
           </PageHeaderWrapper>
         </div>

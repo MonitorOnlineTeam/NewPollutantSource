@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_nx6qcq0skoj.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_weo7upayqrg.js';
 const style = {
   fontSize: 16,
 }
@@ -67,7 +67,7 @@ export const WaterAbnormal = props => <IconConfig type="icon-water-abnormal" sty
 export const WaterOffline = props => <IconConfig type="icon-water-offline" style={{ ...mapStyle }} {...props} />
 
 // 废气
-export const GasIcon = props => <IconConfig type="icon-gas" style={{ ...mapStyle}} {...props} />
+export const GasIcon = props => <IconConfig type="icon-gas" style={{ ...mapStyle }} {...props} />
 export const GasNormal = props => <IconConfig type="icon-gas-normal" style={{ ...mapStyle }} {...props} />
 export const GasExceed = props => <IconConfig type="icon-gas-exceed" style={{ ...mapStyle }} {...props} />
 export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" style={{ ...mapStyle }} {...props} />
@@ -76,3 +76,5 @@ export const GasOffline = props => <IconConfig type="icon-gas-offline" style={{ 
 //向上、向下箭头
 export const Xiangshang = props => <IconConfig type="icon-jiantou_xiangshang1" style={{ ...mapStyle }} {...props} />
 export const Xiangxia = props => <IconConfig type="icon-jiantou_xiangxia1" style={{ ...mapStyle }} {...props} />
+// 电量
+export const DianliangIcon = (props) => <IconConfig type="icon-dianliang" {...props} />

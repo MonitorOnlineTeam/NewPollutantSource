@@ -76,7 +76,7 @@ export async function QCAResultCheckSelectList(params) {
  * 获取质控仪状态列表
 */
 export async function QCAStatusByDGIMN(params) {
-  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/QCAStatusByDGIMN', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/QCAStatusByDGIMN', params, null);
   return result;
 }
 /**
@@ -84,6 +84,25 @@ export async function QCAStatusByDGIMN(params) {
  * 获取质控仪状态名称列表
  */
 export async function QCAStatusName(params) {
-  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/QCAStatusName', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/QCAStatusName', params, null);
+  return result;
+}
+
+// 获取参数记录 - 表格数据
+export async function getParamsTableData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/QCADynamicControlDataList', params, null);
+  return result;
+}
+
+// 获取参数记录 - 图表数据
+export async function getParamsChartData(params) {
+  // TODO (WJQ) : 替换接口地址
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/QCADynamicControlDataList', params, null);
+  return result;
+}
+
+// 获取参数记录 - 参数列表
+export async function getDataTempletList(params) {
+  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/GetDataTempletList', params, null);
   return result;
 }
