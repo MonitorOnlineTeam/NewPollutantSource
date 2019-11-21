@@ -16,9 +16,9 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.9.13:5012/';
+const apiHost = 'http://172.16.9.13:5011/';
 // 文件上传地址
-const uploadHost = 'http://172.16.9.13:5012/upload/';
+const uploadHost = 'http://172.16.9.13:5011/upload/';
 
 module.exports = {
   // name: '污染源智能分析平台',
