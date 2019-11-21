@@ -1,9 +1,9 @@
 /*
- * @Author: Jiaqi
- * @Date: 2019-11-18 16:11:36
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:14:30
- * @desc: 质控参数记录页面
+ * @Author: xpy
+ * @Date: 2019-11-20 16:11:36
+ * @Last Modified by: xpy
+ * @Last Modified time: 2019-11-20 13:48:10
+ * @desc: 质控状态记录页面
  */
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -13,10 +13,11 @@ import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
 import { LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+const { RangePicker } = DatePicker;
 
 const columns = [
   {
@@ -49,12 +50,12 @@ const columns = [
     key: 'MonitorTime',
   },
   {
-    title: '参数名称',
+    title: '指标名称',
     dataIndex: 'Name',
     key: 'Name',
   },
   {
-    title: '参数值',
+    title: '指标指标状态',
     dataIndex: 'Value',
     key: 'Value',
   },
@@ -62,37 +63,36 @@ const columns = [
 
 
 @connect(({ loading, qualityControl }) => ({
-  paramsRecordForm: qualityControl.paramsRecordForm,
-  paramsTableData: qualityControl.paramsTableData,
-  paramsChartData: qualityControl.paramsChartData,
-  paramsList: qualityControl.paramsList,
-  loading: loading.effects['qualityControl/getParamsTableData'],
+  statusRecordForm: qualityControl.statusRecordForm,
+  QCAStatusNameList: qualityControl.QCAStatusNameList,
+  QCAStatusList: qualityControl.QCAStatusList,
+  loading: loading.effects['qualityControl/QCAStatusByDGIMN'],
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
-      time: Form.createFormField(props.paramsRecordForm.time),
-      DataTempletCode: Form.createFormField(props.paramsRecordForm.DataTempletCode),
-      // status: Form.createFormField(props.paramsRecordForm.status),
+      time: Form.createFormField(props.statusRecordForm.time),
+      DataTempletCode: Form.createFormField(props.statusRecordForm.DataTempletCode),
+      status: Form.createFormField(props.statusRecordForm.status),
     };
   },
   onFieldsChange(props, fields) {
     props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
-        paramsRecordForm: {
-          ...props.paramsRecordForm,
+        statusRecordForm: {
+          ...props.statusRecordForm,
           ...fields,
         },
       },
     })
   },
 })
-class index extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showType: 'data',
+        DGIMN: '',
     };
     this._SELF_ = {
       formItemLayout: {
@@ -107,9 +107,8 @@ class index extends Component {
   }
 
   componentDidMount() {
-    // this.getTableData()
     this.props.dispatch({
-      type: 'qualityControl/getParamsList',
+      type: 'qualityControl/QCAStatusName',
     })
   }
 
@@ -118,8 +117,8 @@ class index extends Component {
     this.props.dispatch({
       type: 'report/updateState',
       payload: {
-        paramsRecordForm: {
-          ...this.props.paramsRecordForm,
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
           current,
         },
       },
@@ -132,8 +131,6 @@ class index extends Component {
 
   // 查询
   onSearch = () => {
-    const { showType } = this.state;
-    if (showType === 'data') {
       // 查询表格数据
       this.props.dispatch({
         type: 'qualityControl/updateState',
@@ -145,76 +142,34 @@ class index extends Component {
         },
       })
       setTimeout(() => {
-        // 获取表格数据
         this.getTableData();
       }, 0);
-    } else {
-      // 查询图表数据
-      this.getChartData()
     }
-  }
 
   // 获取表格数据
   getTableData = () => {
     const { DGIMN } = this.state;
-    if (DGIMN) {this.props.dispatch({
-        type: "qualityControl/getParamsTableData",
-        payload: {
-          DGIMN: DGIMN
-        }
-      })}
+    if (DGIMN) {
+    this.props.dispatch({
+            type: 'qualityControl/QCAStatusByDGIMN',
+            payload: {
+            DGIMN,
+            },
+        })
+    }
   }
 
-  // 获取图表数据
-  getChartData = () => {
-    const { DGIMN } = this.state;
-    if (DGIMN) {this.props.dispatch({
-        type: "qualityControl/getParamsChartData",
-        payload: {
-          DGIMN: DGIMN
-        }
-      })}
+  /** 时间控件 */
+  RPOnChange=(date, dateString) => {
+      console.log(dateString);
   }
 
-  // 图表配置项
-  lightOption = () => {
-    const { paramsChartData } = this.props;
-    console.log('paramsChartData=', paramsChartData)
-    return {
-      // title: {
-      //   text: '折线图堆叠'
-      // },
-      tooltip: {
-        trigger: 'axis',
-      },
-      legend: {
-        data: paramsChartData.legendList,
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true,
-      },
-      // toolbox: {
-      //   feature: {
-      //     saveAsImage: {}
-      //   }
-      // },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: paramsChartData.TimeList,
-      },
-      yAxis: {
-        type: 'value',
-      },
-      series: paramsChartData.DataList,
-    };
+  RPOnOk=() => {
+      console.log('21edafadsfafasdf');
   }
 
   render() {
-    const { form: { getFieldDecorator }, paramsRecordForm, paramsTableData, loading, paramsList } = this.props;
+    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList } = this.props;
     const { formItemLayout } = this._SELF_;
     const { showType } = this.state;
     return (
@@ -238,7 +193,18 @@ class index extends Component {
                     <Col span={7}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
                         {getFieldDecorator('time')(
-                          <RangePicker />,
+                           <RangePicker
+                            showTime={{
+                                hideDisabledOptions: true,
+                                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                            }}
+                            allowClear={false}
+                            defaultValue={[moment().format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD HH:mm:ss')]}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            showToday
+                            onChange={this.RPOnChange}
+                            onOk={this.RPOnOk}
+                            />,
                         )}
                       </Form.Item>
                     </Col>
@@ -247,33 +213,21 @@ class index extends Component {
                         {getFieldDecorator('DataTempletCode')(
                           <Select mode="multiple" allowClear placeholder="请选择参数">
                             {
-                              paramsList.map(item => <Option key={item.Code}>{item.Name}</Option>)
+                              QCAStatusNameList.map(item => <Option key={item.Code}>{item.Name}</Option>)
                             }
                           </Select>,
                         )}
                       </Form.Item>
                     </Col>
-                    {/* <Col span={5}>
+                    <Col span={5}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
                         {getFieldDecorator('status')(
                           <Select allowClear placeholder="请选择状态">
                             <Option key="1">正常</Option>
                             <Option key="0">异常</Option>
-                          </Select>
+                          </Select>,
                         )}
                       </Form.Item>
-                    </Col> */}
-                    <Col span={6} style={{ marginTop: 4 }}>
-                      <Button type="primary" style={{ marginRight: 10 }} onClick={this.onSearch}>查询</Button>
-                      <Radio.Group value={showType} onChange={e => {
-                        this.setState({
-                          showType: e.target.value,
-                        })
-                        e.target.value === 'data' ? this.onSearch() : this.getChartData()
-                      }}>
-                        <Radio.Button value="data" key="data">数据</Radio.Button>
-                        <Radio.Button value="chart" key="chart">图表</Radio.Button>
-                      </Radio.Group>
                     </Col>
                   </Row>
                 </Form>
@@ -281,17 +235,9 @@ class index extends Component {
             >
               {
                 showType === 'data' && <SdlTable
-                  dataSource={paramsTableData}
+                  dataSource={QCAStatusList}
                   columns={columns}
                   loading={loading}
-                  pagination={{
-                    // showSizeChanger: true,
-                    showQuickJumper: true,
-                    pageSize: paramsRecordForm.pageSize,
-                    current: paramsRecordForm.current,
-                    onChange: this.onTableChange,
-                    total: paramsRecordForm.total,
-                  }}
                 />
               }
               {
@@ -317,4 +263,4 @@ class index extends Component {
   }
 }
 
-export default index;
+export default Index;
