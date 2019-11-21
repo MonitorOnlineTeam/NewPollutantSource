@@ -21,10 +21,10 @@ const Model = {
 
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
-        const defaultNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+        const defaultNavigateUrl = '/platformconfig/autoformmanager/config_project'; //response.Datas.MenuDatas[1].NavigateUrl;
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
-        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
+        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);///platformconfig/autoformmanager/config_project
         try {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
