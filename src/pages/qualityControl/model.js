@@ -44,15 +44,27 @@ export default Model.extend({
       total: 0,
     },
     statusRecordForm: {
-        current: 1,
-        pageSize: 10,
-        total: 0,
+      current: 1,
+      pageSize: 10,
+      total: 0,
     },
     QCAStatusList: [],
     QCAStatusNameList: [],
-      total: 0,
+    total: 0,
     paramsList: [],
     paramsTableData: [],
+    qCAAlarmMsgData: [],
+    AlarmTypeList: [],
+    //质控报警记录
+    paramsQCAAlarmMsgList: {
+      QCAMN: "",
+      AlarmType: "",
+      BeginTime: moment().format('YYYY-11-10 00:00:00'),
+      EndTime: moment().format('YYYY-12-01 23:59:59'),
+      PageIndex: 1,
+      PageSize: 10,
+      total: 0,
+    },
     /*
      TODO (WJQ) : 换完图表接口地址后，将下面替换成
      paramsChartData: {
@@ -152,9 +164,9 @@ export default Model.extend({
           qualityControlTableData = result.Datas.Relation.map((item, index) => {
             let Component = [];
             Component = item.Component.map((itm, idx) => ({
-                ...itm,
-                key: `${index}${idx}`,
-              }))
+              ...itm,
+              key: `${index}${idx}`,
+            }))
             return {
               ...item,
               DGIMNArr: item.DGIMN.split('/'),
@@ -289,12 +301,12 @@ export default Model.extend({
      * 获取质控仪状态列表
      */
     * QCAStatusByDGIMN({
-        payload,
-      }, {
-        call,
-        update,
-        select,
-      }) {
+      payload,
+    }, {
+      call,
+      update,
+      select,
+    }) {
       const statusRecordForm = yield select(state => state.qualityControl.statusRecordForm);
       const postData = {
         pageIndex: statusRecordForm.current,
@@ -322,21 +334,21 @@ export default Model.extend({
      * xpy
      * 获取质控仪状态名称列表
     */
-   * QCAStatusName({
-     payload,
-   }, {
-     call,
-     update,
-   }) {
-     const result = yield call(services.QCAStatusName, payload);
-     if (result.IsSuccess) {
-       yield update({
-         QCAStatusNameList: result.Datas,
-       })
-     } else {
-       message.error(result.Message)
-     }
-   },
+    * QCAStatusName({
+      payload,
+    }, {
+      call,
+      update,
+    }) {
+      const result = yield call(services.QCAStatusName, payload);
+      if (result.IsSuccess) {
+        yield update({
+          QCAStatusNameList: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取结果比对时间下拉列表
     * QCAResultCheckSelectList({ payload, otherParams }, { call, put, update }) {
       const result = yield call(services.QCAResultCheckSelectList, payload);
@@ -421,5 +433,38 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+
+    //  获取质控报警列表
+    * GetQCAAlarmMsgList({ payload, otherParams }, { call, put, update, select }) {
+      const paramsQCAAlarmMsgList = yield select(state => state.qualityControl.paramsQCAAlarmMsgList);
+      debugger
+      const result = yield call(services.GetQCAAlarmMsgList, paramsQCAAlarmMsgList);
+      if (result.IsSuccess) {
+        yield update({
+          qCAAlarmMsgData: result.Datas,
+          paramsQCAAlarmMsgList: {
+            ...paramsQCAAlarmMsgList,
+            total: result.Total
+          },
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    //  获取质控报警类型列表
+    * getAlarmType({ payload, otherParams }, { call, put, update, select }) {
+      const result = yield call(services.getAlarmType, {});
+      debugger
+      if (result.IsSuccess) {
+        yield update({
+          AlarmTypeList: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+
   },
 });

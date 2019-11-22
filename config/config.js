@@ -867,6 +867,12 @@ export default {
                   path: '/qualityControl/statusRecord',
                   component: './qualityControl/statusRecord',
                 },
+                // 质控报警记录
+                {
+                  name: 'alarmMessage',
+                  path: '/qualityControl/alarmMessage',
+                  component: './qualityControl/alarmMessage',
+                },
               ]
             },
             /* 任务详情 */
