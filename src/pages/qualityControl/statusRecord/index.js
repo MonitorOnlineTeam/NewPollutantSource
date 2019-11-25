@@ -36,7 +36,7 @@ const columns = [
         value: 0,
       },
     ],
-    onFilter: (value, record) => record.flag === value,
+    onFilter: (value, record) => record.Flag === value,
     render: (value, record, index) => {
       if (value) {
         return <img style={{ width: 14 }} src="/gisnormal.png" />
@@ -223,13 +223,13 @@ class Index extends Component {
             <Card className="contentContainer"
               title={
                 <Form>
-                  <Row gutter={48}>
+                  <Row gutter={16}>
+                  <Col span={4}></Col>
                     <Col span={7}>
-                      <Form.Item style={{ width: '100%', marginBottom: 0 }}>
-                        {getFieldDecorator('time', {
-                          initialValue: [moment().startOf('day'), moment()],
-                        })(
+                      <Form.Item>
+                        {getFieldDecorator('time')(
                           <RangePicker
+                             style={{ width: '100%', marginBottom: 0 }}
                             showTime={{
                               hideDisabledOptions: true,
                               defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
@@ -254,17 +254,7 @@ class Index extends Component {
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={5}>
-                      <Form.Item style={{ width: '100%', marginBottom: 0 }}>
-                        {getFieldDecorator('status')(
-                          <Select allowClear placeholder="请选择状态">
-                            <Option key="1"><span><LegendIcon style={{ color: '#34c066' }} />正常</span></Option>
-                            <Option key="0"><span><LegendIcon style={{ color: '#e94' }} />异常</span></Option>
-                          </Select>,
-                        )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={3}>
+                    <Col span={6} style={{ marginTop: 4 }}>
                       <Button type="primary" style={{ marginRight: 10 }} onClick={this.onSearch}>查询</Button>
                     </Col>
                   </Row>
