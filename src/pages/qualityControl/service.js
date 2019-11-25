@@ -106,3 +106,16 @@ export async function getDataTempletList(params) {
   const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/GetDataTempletList', params, null);
   return result;
 }
+
+// 质控报警消息
+export async function GetQCAAlarmMsgList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAAlarmMsgList', params, null);
+  return result;
+}
+
+// 质控报警类型列表
+export async function getAlarmType(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/getAlarmType', params, null);
+  return result;
+}
+

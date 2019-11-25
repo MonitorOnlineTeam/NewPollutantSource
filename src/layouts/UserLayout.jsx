@@ -56,7 +56,7 @@ const UserLayout = props => {
               <Link to="/">
 
                 {
-                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `${config.uploadHost}${configInfo.Logo}` : logo} />
+                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/api/upload/${configInfo.Logo}` : logo} />
                 }
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}
@@ -76,7 +76,7 @@ const UserLayout = props => {
                 <img
                   width={272}
                   alt="logo"
-                  src={`${config.uploadHost}/phoneQRCode.png`}
+                  src={`/api/upload/phoneQRCode.png`}
                 />
               </div>
             }

@@ -1,8 +1,8 @@
 /*
  * @Author: xpy
  * @Date: 2019-11-20 16:11:36
- * @Last Modified by: xpy
- * @Last Modified time: 2019-11-20 13:48:10
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-11-25 11:39:54
  * @desc: 质控状态记录页面
  */
 import React, { Component } from 'react';
@@ -164,41 +164,41 @@ class Index extends Component {
 
   // 查询
   onSearch = () => {
-      // 查询表格数据
-      this.props.dispatch({
-        type: 'qualityControl/updateState',
-        payload: {
-          paramsRecordForm: {
-            ...this.props.paramsRecordForm,
-            current: 1,
-          },
+    // 查询表格数据
+    this.props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        paramsRecordForm: {
+          ...this.props.paramsRecordForm,
+          current: 1,
         },
-      })
-      setTimeout(() => {
-        this.getTableData();
-      }, 0);
-    }
+      },
+    })
+    setTimeout(() => {
+      this.getTableData();
+    }, 0);
+  }
 
   // 获取表格数据
   getTableData = () => {
     const { DGIMN } = this.state;
     if (DGIMN) {
-    this.props.dispatch({
-            type: 'qualityControl/QCAStatusByDGIMN',
-            payload: {
-            DGIMN,
-            },
-        })
+      this.props.dispatch({
+        type: 'qualityControl/QCAStatusByDGIMN',
+        payload: {
+          DGIMN,
+        },
+      })
     }
   }
 
   /** 时间控件 */
-  RPOnChange=(date, dateString) => {
-      console.log(dateString);
+  RPOnChange = (date, dateString) => {
+    console.log(dateString);
   }
 
-  RPOnOk=() => {
-      console.log('21edafadsfafasdf');
+  RPOnOk = () => {
+    console.log('21edafadsfafasdf');
   }
 
   render() {
@@ -226,19 +226,20 @@ class Index extends Component {
                   <Row gutter={48}>
                     <Col span={7}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
-                        {
-                          getFieldDecorator('time')(
-                           <RangePicker
+                        {getFieldDecorator('time', {
+                          initialValue: [moment().startOf('day'), moment()],
+                        })(
+                          <RangePicker
                             showTime={{
-                                hideDisabledOptions: true,
-                                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                              hideDisabledOptions: true,
+                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
                             }}
                             allowClear={false}
                             format="YYYY-MM-DD HH:mm:ss"
                             showToday
                             onChange={this.RPOnChange}
                             onOk={this.RPOnOk}
-                            />,
+                          />,
                         )}
                       </Form.Item>
                     </Col>

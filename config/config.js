@@ -92,8 +92,8 @@ export default {
       routes: [
 
         {
-          name: 'home',
-          path: '/home',
+          name: 'homepage',
+          path: '/homepage',
           component: './home',
         },
         // appoperation
@@ -855,7 +855,7 @@ export default {
                   path: '/qualityControl/maintainRecord',
                   component: './qualityControl/maintainRecord',
                 },
-                // 质控仪参数记录
+                // 质控仪参数记录s
                 {
                   name: 'paramsRecord',
                   path: '/qualityControl/paramsRecord',
@@ -866,6 +866,12 @@ export default {
                   name: 'statusRecord',
                   path: '/qualityControl/statusRecord',
                   component: './qualityControl/statusRecord',
+                },
+                // 质控报警记录
+                {
+                  name: 'alarmMessage',
+                  path: '/qualityControl/alarmMessage',
+                  component: './qualityControl/alarmMessage',
                 },
               ]
             },
