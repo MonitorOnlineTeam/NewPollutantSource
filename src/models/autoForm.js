@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-14 15:02:39
+ * @Last Modified time: 2019-11-25 16:20:41
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -161,7 +161,7 @@ export default Model.extend({
           dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
           align: item.DF_ALIGN,
-          width: item.DF_WIDTH,
+          width: item.DF_WIDTH ? item.DF_WIDTH * 1 : item.DF_WIDTH,
           sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
           fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
           formatType: item.DF_ISFormat,

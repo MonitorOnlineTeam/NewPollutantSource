@@ -17,6 +17,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import AttachmentView from '@/components/AttachmentView'
+import TableText from '@/components/TableText'
 import { getAttachmentDataSource } from './utils'
 import { getRowCuid } from '@/utils/utils';
 import config from '@/config'
@@ -348,13 +349,13 @@ class AutoFormTable extends PureComponent {
           if (type === "超链接") {
             let porps = {}
             if (col.otherConfig) {
-              debugger
               porps = {
                 onClick: () => {
                   router.push(`${col.otherConfig}/${text}`)
                 }
               }
             }
+            return <TableText content={text} {...porps}/>
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
           return text && <div>
@@ -368,8 +369,8 @@ class AutoFormTable extends PureComponent {
               {text}
             </div>}
           </div>
-          
-          
+
+
         },
       }
       // return col.width ? { width: DEFAULT_WIDTH, ...col } : { ...col, width: DEFAULT_WIDTH }
