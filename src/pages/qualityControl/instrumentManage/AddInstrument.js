@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:19:46
+ * @Last Modified time: 2019-11-25 12:35:31
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -342,16 +342,14 @@ class AddInstrument extends Component {
               ],
               initialValue: text || undefined,
             })(
-              <>
-                <InputNumber
-                  // formatter={value => `${value}${record.unit}`}
-                  // parser={value => value.replace(`${record.unit}`, '')}
-                  min={0}
-                  onChange={value => { this.changeStandardGasData(index, 'StandardValue', value, idx) }}
-                />
-                &nbsp;{record.unit}
-              </>,
+              <InputNumber
+                // formatter={value => `${value}${record.unit}`}
+                // parser={value => value.replace(`${record.unit}`, '')}
+                min={0}
+                onChange={value => { this.changeStandardGasData(index, 'StandardValue', value, idx) }}
+              />,
             )}
+            &nbsp;{record.unit}
           </FormItem>
         },
       },
@@ -504,76 +502,78 @@ class AddInstrument extends Component {
           </FormItem>
         },
       },
-      {
-        title: '气瓶标气浓度',
-        dataIndex: 'Concentration',
-        width: 180,
-        render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code) {
-            return '-'
-          }
-          return <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`Concentration${record.key}`, {
-              rules: [
-                { required: true, message: '请填写气瓶标气浓度' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <>
-                <InputNumber
-                  // formatter={value => `${value}${record.unit}`}
-                  // parser={value => value.replace(`${record.unit}`, '')}
-                  min={0}
-                  onChange={value => { this.changeStandardGasData(index, 'Concentration', value, idx) }}
-                />
-                &nbsp;{record.unit}
-              </>,
-            )}
-          </FormItem>
-        },
-      },
-      {
-        title: '标气初始压力',
-        dataIndex: 'GasInitPower',
-        width: 140,
-        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`GasInitPower${record.key}`, {
-              rules: [
-                { required: true, message: '请填写标气初始压力' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <>
-                <InputNumber
-                  // formatter={value => `${value}mpa`}
-                  // parser={value => value.replace("mpa", '')}
-                  min={0}
-                  onChange={value => { this.changeStandardGasData(index, 'GasInitPower', value, idx) }}
-                />
-                &nbsp;mpa
-              </>,
-            )}
-          </FormItem>,
-      },
-      {
-        title: '过期时间',
-        dataIndex: 'ExpirationDate',
-        width: 140,
-        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`ExpirationDate${record.key}`, {
-              rules: [
-                { required: true, message: '请选择过期时间' },
-              ],
-              initialValue: text ? moment(text) : undefined,
-            })(
-              <DatePicker format="YYYY-MM-DD" onChange={(date, dataString) => {
-                if (date && dataString) {
-                  this.changeStandardGasData(index, 'ExpirationDate', `${dataString} 00:00:00`, idx)
-                }
-              }} />,
-            )}
-          </FormItem>,
-      },
+      // {
+      //   title: '气瓶标气浓度',
+      //   dataIndex: 'Concentration',
+      //   width: 180,
+      //   render: (text, record, idx) => {
+      //     if (record.StandardGasCode === n2Code) {
+      //       return "-"
+      //     }
+      //     return <FormItem style={{ marginBottom: '0' }}>
+      //       {this.props.form.getFieldDecorator('Concentration' + record.key, {
+      //         rules: [
+      //           { required: true, message: '请填写气瓶标气浓度' },
+      //         ],
+      //         initialValue: text ? text : undefined
+      //       })(
+      //         <InputNumber
+      //           // formatter={value => `${value}${record.unit}`}
+      //           // parser={value => value.replace(`${record.unit}`, '')}
+      //           min={0}
+      //           onChange={(value) => { this.changeStandardGasData(index, "Concentration", value, idx) }}
+      //         />
+      //       )}
+      //       &nbsp;{record.unit}
+      //     </FormItem>
+      //   }
+      // },
+      // {
+      //   title: '标气初始压力',
+      //   dataIndex: 'GasInitPower',
+      //   width: 140,
+      //   render: (text, record, idx) => {
+      //     return <FormItem style={{ marginBottom: '0' }}>
+      //       {this.props.form.getFieldDecorator('GasInitPower' + record.key, {
+      //         rules: [
+      //           { required: true, message: '请填写标气初始压力' },
+      //         ],
+      //         initialValue: text ? text : undefined
+      //       })(
+      //         <>
+      //           <InputNumber
+      //             // formatter={value => `${value}mpa`}
+      //             // parser={value => value.replace("mpa", '')}
+      //             min={0}
+      //             onChange={(value) => { this.changeStandardGasData(index, "GasInitPower", value, idx) }}
+      //           />
+      //           &nbsp;mpa
+      //         </>
+      //       )}
+      //     </FormItem>
+      //   }
+      // },
+      // {
+      //   title: '过期时间',
+      //   dataIndex: 'ExpirationDate',
+      //   width: 140,
+      //   render: (text, record, idx) => {
+      //     return <FormItem style={{ marginBottom: '0' }}>
+      //       {this.props.form.getFieldDecorator('ExpirationDate' + record.key, {
+      //         rules: [
+      //           { required: true, message: '请选择过期时间' },
+      //         ],
+      //         initialValue: text ? moment(text) : undefined
+      //       })(
+      //         <DatePicker format={'YYYY-MM-DD'} onChange={(date, dataString) => {
+      //           if (date && dataString) {
+      //             this.changeStandardGasData(index, "ExpirationDate", `${dataString} 00:00:00`, idx)
+      //           }
+      //         }} />
+      //       )}
+      //     </FormItem>
+      //   }
+      // },
 
     ];
     const data = [];
@@ -633,10 +633,10 @@ class AddInstrument extends Component {
       Hour: undefined, // 小时
       Minutes: undefined, // 分钟
       StabilizationTime: '3', // 稳定时间
-      ExpirationDate: undefined, // 过期时间
-      Concentration: undefined, // 气瓶浓度
+      // ExpirationDate: undefined, // 过期时间
+      // Concentration: undefined, // 气瓶浓度
       unit: 'mg/m3',
-      GasInitPower: undefined, // 标气初始压力
+      // GasInitPower: undefined, // 标气初始压力
     })
     this.setState({ dataSource })
   }

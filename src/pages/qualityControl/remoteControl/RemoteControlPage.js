@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-13 15:15:00 
+ * @Author: Jiaqi
+ * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:27:04
+ * @Last Modified time: 2019-11-25 13:02:26
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -27,6 +27,9 @@ const { Panel } = Collapse;
   standardGasList: qualityControl.standardGasList,
   CEMSList: qualityControl.CEMSList,
   autoQCAInfo: qualityControl.autoQCAInfo,
+  sendQCACmd3Loading: qualityControl.sendQCACmd3Loading,
+  sendQCACmd4Loading: qualityControl.sendQCACmd4Loading,
+  sendQCACmd5Loading: qualityControl.sendQCACmd5Loading,
   loading: loading.effects["qualityControl/SendQCACmd"]
 }))
 class RemoteControlPage extends Component {
@@ -169,7 +172,11 @@ class RemoteControlPage extends Component {
   render() {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
-    const { form: { getFieldDecorator, setFieldsValue }, form, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
+    const {
+      form: { getFieldDecorator, setFieldsValue },
+      form, standardGasList, CEMSList, loading, autoQCAInfo,
+      sendQCACmd3Loading, sendQCACmd4Loading, sendQCACmd5Loading
+    } = this.props;
     if (loading) {
       <PageLoading />
     }
@@ -178,7 +185,7 @@ class RemoteControlPage extends Component {
         <Tabs defaultActiveKey="1">
           <TabPane tab="手动质控" key="1">
             <div>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd3Loading} style={{ marginRight: 10 }} onClick={() => {
                 Modal.confirm({
                   title: '重启',
                   content: '确认是否重启',
@@ -193,14 +200,14 @@ class RemoteControlPage extends Component {
                   }
                 });
               }}>质控仪重启</Button>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd4Loading} style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
                   QCType: 4,
                   QCAMN: QCAMN,
                   QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                 })
               }}>质控仪吹扫</Button>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd5Loading} style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
                   QCType: 5,
                   QCAMN: QCAMN,
@@ -225,32 +232,26 @@ class RemoteControlPage extends Component {
                           message: '请选择标气组分!',
                         },],
                       })(
-                        <>
-                          <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
-                            this.setState({
-                              StandardPollutantName: option.props.children
+                        <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
+                          this.setState({
+                            StandardPollutantName: option.props.children
+                          })
+                          if (value == "02" || value == "03") {
+                            form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
+                          } else {
+                            form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
+                          }
+                        }}>
+                          {
+                            standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
+                              return <Option key={item.PollutantCode} value={item.PollutantCode}>
+                                {item.PollutantName}
+                                {/* TODO (WJQ) : 将20替换成余量值 */}
+                                {this.getResidueIcon(40)}
+                              </Option>
                             })
-                            if (value == "02" || value == "03") {
-                              form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
-                            } else {
-                              form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
-                            }
-                          }}>
-                            {
-                              standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
-                                return <Option key={item.PollutantCode} value={item.PollutantCode}>
-                                  {item.PollutantName}
-                                  {/* TODO (WJQ) : 将20替换成余量值 */}
-                                  {this.getResidueIcon(40)}
-                                </Option>
-                              })
-                            }
-                          </Select>
-                          {/* <div style={{ position: "absolute", bottom: 6, fontSize: 12, right: 0 }}>
-                            <CustomIcon type="icon-dianliang" style={{ fontSize: 20, position: "absolute" }} />
-                            <span>余量剩余：12.13</span>
-                          </div> */}
-                        </>
+                          }
+                        </Select>
                       )}
                     </Form.Item>
 
@@ -336,7 +337,7 @@ class RemoteControlPage extends Component {
                         <Select placeholder="请选择稀释气组分名称">
                           <Option key="0">
                             N2
-                            {/*  TODO (WJQ) :  
+                            {/*  TODO (WJQ) :
                             替换成
                             {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
                             */}
