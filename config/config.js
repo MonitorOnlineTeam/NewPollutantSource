@@ -855,7 +855,7 @@ export default {
                   path: '/qualityControl/maintainRecord',
                   component: './qualityControl/maintainRecord',
                 },
-                // 质控仪参数记录
+                // 质控仪参数记录s
                 {
                   name: 'paramsRecord',
                   path: '/qualityControl/paramsRecord',

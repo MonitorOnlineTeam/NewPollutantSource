@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:17:44
+ * @Last Modified time: 2019-11-25 13:09:55
  * @desc: 智能质控model
  */
 
@@ -74,40 +74,40 @@ export default Model.extend({
      }
     */
     paramsChartData: {
-      TimeList: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+      TimeList: ['2019-11-21 13:08:16', '2019-11-22 08:28:45', '2019-11-23 11:08:41', '2019-11-23 13:09:00', '2019-11-24 09:19:34', '2019-11-24 11:09:28', '2019-11-25 13:09:53'],
       DataList: [
         {
-          name: '邮件营销',
+          name: '标气流量读取值',
           type: 'line',
           // stack: '总量',
           data: [120, 132, 101, 134, 90, 230, 210],
         },
         {
-          name: '联盟广告',
+          name: '稀释气流量读取值',
           type: 'line',
           // stack: '总量',
           data: [220, 182, 191, 234, 290, 330, 310],
         },
         {
-          name: '视频广告',
+          name: 'N2气瓶压力',
           type: 'line',
           // stack: '总量',
           data: [150, 232, 201, 154, 190, 330, 410],
         },
         {
-          name: '直接访问',
+          name: '标准气瓶压力',
           type: 'line',
           // stack: '总量',
           data: [320, 332, 301, 334, 390, 330, 320],
         },
         {
-          name: '搜索引擎',
+          name: '总流量读取值',
           type: 'line',
           // stack: '总量',
           data: [820, 932, 901, 934, 1290, 1330, 1320],
         },
       ],
-      legendList: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'],
+      // legendList: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'],
     },
   },
 
@@ -208,9 +208,29 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
+      if(payload.QCType === "3"){
+        yield update({
+          sendQCACmd3Loading: true
+        })
+      }
+      if(payload.QCType === "4"){
+        yield update({
+          sendQCACmd4Loading: true
+        })
+      }
+      if(payload.QCType === "5"){
+        yield update({
+          sendQCACmd5Loading: true
+        })
+      }
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
         message.success('操作成功')
+        yield update({
+          sendQCACmd3Loading: false,
+          sendQCACmd4Loading: false,
+          sendQCACmd5Loading: false
+        })
       } else {
         message.error(result.Message)
       }
@@ -312,8 +332,8 @@ export default Model.extend({
         pageIndex: statusRecordForm.current,
         pageSize: statusRecordForm.pageSize,
         Code: statusRecordForm.DataTempletCode && statusRecordForm.DataTempletCode.value.toString(),
-        BeginTime: statusRecordForm.time && statusRecordForm.time.value[0] && moment(statusRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: statusRecordForm.time && statusRecordForm.time.value[1] && moment(statusRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: statusRecordForm.time && statusRecordForm.time.value[0] && moment(statusRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: statusRecordForm.time && statusRecordForm.time.value[1] && moment(statusRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         Status: statusRecordForm.status && statusRecordForm.status.value,
         ...payload,
       }
