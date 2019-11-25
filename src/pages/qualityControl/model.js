@@ -300,8 +300,8 @@ export default Model.extend({
         pageIndex: statusRecordForm.current,
         pageSize: statusRecordForm.pageSize,
         Code: statusRecordForm.DataTempletCode && statusRecordForm.DataTempletCode.value.toString(),
-        BeginTime: statusRecordForm.time && statusRecordForm.time.value[0] && moment(statusRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: statusRecordForm.time && statusRecordForm.time.value[1] && moment(statusRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: statusRecordForm.time && statusRecordForm.time.value[0] && moment(statusRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: statusRecordForm.time && statusRecordForm.time.value[1] && moment(statusRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         Status: statusRecordForm.status && statusRecordForm.status.value,
         ...payload,
       }
