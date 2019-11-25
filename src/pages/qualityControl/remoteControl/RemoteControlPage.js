@@ -151,12 +151,15 @@ class RemoteControlPage extends Component {
   }
 
   // 余量Icon
-  getResidueIcon = (value) => {
-    debugger
+  getResidueIcon = (VolumeValue, GasInitPower) => {
+    if (VolumeValue === 0 && GasInitPower === 0) {
+      return;
+    }
     let icon = null;
+    let value = parseInt((VolumeValue / GasInitPower) * 100)
     if (value <= 25) {
       icon = <CustomIcon type="icon-dianliang" style={{ fontSize: 20, margin: "0 10px", color: "red" }} />
-    } else if (value > 25 && value <= 50) {
+    } else if (VolumeValue > 25 && value <= 50) {
       icon = <CustomIcon type="icon-dianliang1" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
     } else if (value > 50 && value <= 75) {
       icon = <CustomIcon type="icon-dianliang2" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
@@ -178,7 +181,13 @@ class RemoteControlPage extends Component {
       form, standardGasList, CEMSList, loading, autoQCAInfo,
       sendQCACmd3Loading, sendQCACmd4Loading, sendQCACmd5Loading
     } = this.props;
+    let VolumeValue = 0;
+    let GasInitPower = 0;
     let danqi = standardGasList.filter(itm => itm.PollutantCode === "065");
+    if (danqi.length !== 0) {
+      VolumeValue = danqi[0].VolumeValue;
+      GasInitPower = danqi[0].GasInitPower;
+    }
     if (loading) {
       <PageLoading />
     }
@@ -249,7 +258,7 @@ class RemoteControlPage extends Component {
                               return <Option key={item.PollutantCode} value={item.PollutantCode}>
                                 {item.PollutantName}
                                 {/* TODO (WJQ) : 将20替换成余量值 */}
-                                {this.getResidueIcon(item.VolumeValue)}
+                                {this.getResidueIcon(item.VolumeValue, item.GasInitPower)}
                               </Option>
                             })
                           }
@@ -343,7 +352,7 @@ class RemoteControlPage extends Component {
                             替换成
                             {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
                             */}
-                            {this.getResidueIcon(danqi.length !== 0 ? danqi[0].VolumeValue : 0)}
+                            {this.getResidueIcon(VolumeValue, GasInitPower)}
                           </Option>
                         </Select>
                       )}
