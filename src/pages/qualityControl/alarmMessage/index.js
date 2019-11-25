@@ -25,6 +25,11 @@ const columns = [
     key: 'PointName',
   },
   {
+    title: '污染物名称',
+    dataIndex: 'PollutantName',
+    key: 'PollutantName',
+  },
+  {
     title: '报警时间',
     dataIndex: 'AlarmTime',
     key: 'AlarmTime',
