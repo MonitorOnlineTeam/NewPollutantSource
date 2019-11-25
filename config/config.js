@@ -92,8 +92,8 @@ export default {
       routes: [
 
         {
-          name: 'home',
-          path: '/home',
+          name: 'homepage',
+          path: '/homepage',
           component: './home',
         },
         // appoperation
@@ -791,6 +791,10 @@ export default {
               path: '/qualityControl',
               name: 'qualityControl',
               routes: [
+                {
+                  path: '/qualityControl',
+                  redirect: '/qualityControl/remoteControl',
+                },
                 // 质控仪管理
                 {
                   name: 'instrumentManage',
@@ -845,12 +849,30 @@ export default {
                   path: '/qualityControl/operationRecords',
                   component: './qualityControl/operationRecords',
                 },
-                // // 质控仪维护记录
-                // {
-                //   name: 'maintainRecord',
-                //   path: '/qualityControl/maintainRecord',
-                //   component: './qualityControl/maintainRecord',
-                // },
+                // 质控仪维护记录
+                {
+                  name: 'maintainRecord',
+                  path: '/qualityControl/maintainRecord',
+                  component: './qualityControl/maintainRecord',
+                },
+                // 质控仪参数记录s
+                {
+                  name: 'paramsRecord',
+                  path: '/qualityControl/paramsRecord',
+                  component: './qualityControl/paramsRecord',
+                },
+                //质控仪状态记录
+                {
+                  name: 'statusRecord',
+                  path: '/qualityControl/statusRecord',
+                  component: './qualityControl/statusRecord',
+                },
+                // 质控报警记录
+                {
+                  name: 'alarmMessage',
+                  path: '/qualityControl/alarmMessage',
+                  component: './qualityControl/alarmMessage',
+                },
               ]
             },
             /* 任务详情 */

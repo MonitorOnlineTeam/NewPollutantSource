@@ -116,17 +116,26 @@ const BasicLayout = props => {
     });
 
   const menuDataRender = list => {
-    // console.log("user.currentMenu=", currentMenu);
-
-    return currentMenu;
+    let menuList = currentMenu;
+    // 如果只有一个，平铺展示子菜单
+    if(currentMenu && currentMenu.length === 1){
+      menuList = currentMenu[0].children.map(item => {
+        return {
+          ...item,
+          NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`
+        }
+      })
+    }
+    // console.log("menuList=", menuList);
+    return menuList;
   };
 
   const logoRender = Item => {
     if (configInfo && configInfo.IsShowLogo === "true") {
       return settings.layout === 'topmenu' ? (
-        <img style={{ height: 60 }} src={configInfo.Logo ? `${config.uploadHost}${configInfo.Logo}` : logo} alt="logo" />
+        <img style={{ height: 60 }} src={configInfo.Logo ? `/api/upload/${configInfo.Logo}` : logo} alt="logo" />
       ) : (
-          <img src={`${config.uploadHost}${configInfo.Logo}`} alt="logo" />
+          <img src={`/api/upload/${configInfo.Logo}`} alt="logo" />
         );
     }
 

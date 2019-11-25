@@ -2,16 +2,18 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-13 15:15:00 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 17:37:28
+ * @Last Modified time: 2019-11-20 17:27:04
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
-import { Card, Button, Input, Select, InputNumber, Tabs, Form, Row, Col, Divider, Modal, message, List, Statistic, Collapse } from 'antd';
+import { Card, Button, Input, Select, InputNumber, Tabs, Form, Row, Col, Divider, Modal, message, List, Statistic, Collapse, Icon } from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import styles from './index.less'
+import { DianliangIcon } from '@/utils/icon'
+import CustomIcon from '@/components/CustomIcon'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -19,11 +21,6 @@ const { TabPane } = Tabs;
 const { Countdown } = Statistic;
 const { Panel } = Collapse;
 
-const data = [
-  { countDown: Date.now() + 1000 * 60 * 60, time: "2019-11-13 13:59:28" },
-  { countDown: Date.now() + 60 * 60, time: "2019-11-13 14:37:40" },
-  { countDown: Date.now() + 6000 * 60 * 60, time: "2019-11-13 14:38:00" },
-];
 
 @Form.create()
 @connect(({ loading, qualityControl }) => ({
@@ -150,11 +147,29 @@ class RemoteControlPage extends Component {
     })
   }
 
+  // 余量Icon
+  getResidueIcon = (value) => {
+    let icon = null;
+    if (value <= 25) {
+      icon = <CustomIcon type="icon-dianliang" style={{ fontSize: 20, margin: "0 10px", color: "red" }} />
+    } else if (value > 25 && value <= 50) {
+      icon = <CustomIcon type="icon-dianliang1" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
+    } else if (value > 50 && value <= 75) {
+      icon = <CustomIcon type="icon-dianliang2" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
+    } else if (value > 75 && value <= 100) {
+      icon = <CustomIcon type="icon-dianliang3" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
+    }
+    return <>
+      {icon}
+      <span style={{ fontSize: 12, color: "#7d7d7d" }}>余：{value}</span>
+    </>
+  }
+
 
   render() {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
-    const { form: { getFieldDecorator, setFieldsValue }, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
+    const { form: { getFieldDecorator, setFieldsValue }, form, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
     if (loading) {
       <PageLoading />
     }
@@ -203,26 +218,42 @@ class RemoteControlPage extends Component {
               <Form {...formItemLayout}>
                 <Row>
                   <Col span={12}>
-                    <Form.Item label="标气组分">
+                    <Form.Item label="标气组分" style={{ width: '100%' }}>
                       {getFieldDecorator('StandardPollutantCode', {
                         rules: [{
                           required: true,
                           message: '请选择标气组分!',
                         },],
                       })(
-                        <Select placeholder="请选择标气组分" onChange={(value, option) => {
-                          this.setState({
-                            StandardPollutantName: option.props.children
-                          })
-                        }}>
-                          {
-                            standardGasList.map(item => {
-                              return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+                        <>
+                          <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
+                            this.setState({
+                              StandardPollutantName: option.props.children
                             })
-                          }
-                        </Select>
+                            if (value == "02" || value == "03") {
+                              form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
+                            } else {
+                              form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
+                            }
+                          }}>
+                            {
+                              standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
+                                return <Option key={item.PollutantCode} value={item.PollutantCode}>
+                                  {item.PollutantName}
+                                  {/* TODO (WJQ) : 将20替换成余量值 */}
+                                  {this.getResidueIcon(40)}
+                                </Option>
+                              })
+                            }
+                          </Select>
+                          {/* <div style={{ position: "absolute", bottom: 6, fontSize: 12, right: 0 }}>
+                            <CustomIcon type="icon-dianliang" style={{ fontSize: 20, position: "absolute" }} />
+                            <span>余量剩余：12.13</span>
+                          </div> */}
+                        </>
                       )}
                     </Form.Item>
+
                   </Col>
                   <Col span={12}>
                     <Form.Item label="总流量设定值">
@@ -259,8 +290,8 @@ class RemoteControlPage extends Component {
                         initialValue: "0"
                       })(
                         <Select placeholder="请选择原标气浓度值单位">
-                          <Option key="0">mg/m3</Option>
-                          <Option key="1">%</Option>
+                          <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
+                          <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
                         </Select>
                       )}
                     </Form.Item>
@@ -287,8 +318,8 @@ class RemoteControlPage extends Component {
                         initialValue: "0"
                       })(
                         <Select placeholder="请选择配比标气浓度单位">
-                          <Option key="0">mg/m3</Option>
-                          <Option key="1">%</Option>
+                          <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
+                          <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
                         </Select>
                       )}
                     </Form.Item>
@@ -303,12 +334,19 @@ class RemoteControlPage extends Component {
                         initialValue: "0"
                       })(
                         <Select placeholder="请选择稀释气组分名称">
-                          <Option key="0">N2</Option>
+                          <Option key="0">
+                            N2
+                            {/*  TODO (WJQ) :  
+                            替换成
+                            {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
+                            */}
+                            {this.getResidueIcon(20)}
+                          </Option>
                         </Select>
                       )}
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={12} style={{ display: 'none' }}>
                     <Form.Item label="排口">
                       {getFieldDecorator('DGIMN', {
                         rules: [{
@@ -317,11 +355,14 @@ class RemoteControlPage extends Component {
                         },],
                         initialValue: CEMSList.length ? CEMSList[0].DGIMN : undefined
                       })(
-                        <Select placeholder="请选择排口" mode="multiple" onChange={(value, option) => {
-                          this.setState({
-                            MNHall: option.map(item => item.props.MNHall)
-                          })
-                        }}>
+                        <Select
+                          placeholder="请选择排口"
+                          // mode="multiple"
+                          onChange={(value, option) => {
+                            this.setState({
+                              MNHall: option.map(item => item.props.MNHall)
+                            })
+                          }}>
                           {
                             CEMSList.map(item => {
                               return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
@@ -332,6 +373,12 @@ class RemoteControlPage extends Component {
                     </Form.Item>
                   </Col>
                 </Row>
+                {/* <Row>
+                  <div>
+                    <CustomIcon type="icon-dianliang" />
+                    <span>余量剩余：12.13, 预计可用至2019-11-20 14:23:15</span>
+                  </div>
+                </Row> */}
                 {/* <Divider orientation="right">
 
                 </Divider> */}
@@ -340,7 +387,7 @@ class RemoteControlPage extends Component {
                 </Row>
               </Form>
             </Card>
-            <Card
+            {/* <Card
               style={{ marginTop: 16 }}
               type="inner"
               border={false}
@@ -368,7 +415,7 @@ class RemoteControlPage extends Component {
                   }}>停止质控</Button>
                 </Col>
               </Row>
-            </Card>
+            </Card> */}
           </TabPane>
           <TabPane tab="自动质控" key="2">
             <Collapse bordered={false} defaultActiveKey={['0', '1', '2', '3']}>

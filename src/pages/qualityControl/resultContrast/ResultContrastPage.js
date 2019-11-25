@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 14:37:43
+ * @Last Modified time: 2019-11-19 14:12:20
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -280,7 +280,7 @@ class ResultContrastPage extends Component {
   render() {
     const { resultContrastData, resultContrastTimeList, standardGasLoading, QCAResultCheckByDGIMNLoading, QCAResultCheckSelectListLoading } = this.props;
     const { dateValue } = this.state;
-    if (standardGasLoading && QCAResultCheckByDGIMNLoading && QCAResultCheckSelectListLoading) {
+    if (standardGasLoading || QCAResultCheckByDGIMNLoading || QCAResultCheckSelectListLoading) {
       return <PageLoading />
     }
     return (

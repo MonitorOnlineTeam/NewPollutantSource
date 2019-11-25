@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-15 15:46:20 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-15 15:46:41
+ * @Last Modified time: 2019-11-18 16:12:29
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-08 14:37:45
+ * @Last Modified time: 2019-11-20 17:19:46
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -34,6 +34,7 @@ class AddInstrument extends Component {
     this.state = {
       dataSource: [],
       expandedRowKeys: [],
+      unit: "mg/m3",
       columns: [
         {
           title: '排口',
@@ -102,6 +103,7 @@ class AddInstrument extends Component {
       id: props.match.params.id,
       MNHallList: [1, 2, 3, 4], // 排口通道
       title: props.match.params.id ? "编辑质控仪" : "添加质控仪",
+      n2Code: "065", // 氮气code
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -193,8 +195,21 @@ class AddInstrument extends Component {
         if (item.DGIMN.indexOf("/") > 0) {
           item.DGIMN = item.DGIMNArr[1];
         }
-      })
+        // 处理氮气
+        item.Component = item.Component.map(itm => {
+          if (itm.StandardGasCode === "065") {
+            return {
+              GasInitPower: itm.GasInitPower,
+              ExpirationDate: itm.ExpirationDate
+            }
+          } else {
+            return itm
+          }
+        })
 
+      })
+      console.log("dataSource777=", dataSource)
+      // return;
       if (!isErr) {
         let postData = {
           "Info": {
@@ -255,35 +270,59 @@ class AddInstrument extends Component {
     // console.log('expanded=', expanded)
 
     let dataSource = this.state.dataSource;
+    const { n2Code } = this._SELF_;
     const columns = [
       {
-        title: '标气',
+        title: '操作',
+        // fixed: 'left',
+        width: 80,
+        render: (text, record, idx) => {
+          return <a onClick={() => {
+            let tempDataSource = this.state.dataSource;
+            tempDataSource[index]["Component"].splice(idx, 1);
+            this.setState({
+              dataSource: [...tempDataSource]
+            })
+          }}>删除</a>
+        }
+      },
+      {
+        title: '标气名称',
         dataIndex: 'StandardGasCode',
         width: 200,
         render: (text, record, idx) => {
           return <FormItem style={{ marginBottom: '0', width: '100%' }}>
             {this.props.form.getFieldDecorator('StandardGasCode' + record.key, {
               rules: [
-                { required: true, message: '请输入排口通道' },
+                { required: true, message: '请选择标气名称' },
               ],
               initialValue: text ? text : undefined
             })(
               <Select style={{ width: '100%' }} onChange={(value) => {
                 this.changeStandardGasData(index, "StandardGasCode", value, idx);
                 let defaultValue = undefined;
+                let unit = undefined;
                 switch (value) {
                   case "02":
                     defaultValue = "100";
+                    record.unit = "mg/m3"
                     break;
                   case "03":
                     defaultValue = "200";
+                    record.unit = "mg/m3"
                     break;
                   default:
                     defaultValue = undefined;
+                    record.unit = "%"
                     break;
                 }
-                const StandardGasName = this.props.standardGasList.find(item => item.PollutantCode = value)["PollutantName"];
+                // this.setState({
+                //   unit: unit
+                // })
+                const StandardGasName = this.props.standardGasList.find(item => item.PollutantCode == value)["PollutantName"];
+                // 设置满量程值
                 this.changeStandardGasData(index, "Range", defaultValue, idx);
+                // 设置标气名称
                 this.changeStandardGasData(index, "StandardGasName", StandardGasName, idx);
               }}>
                 {
@@ -297,18 +336,29 @@ class AddInstrument extends Component {
         }
       },
       {
-        title: '标准值',
+        title: '配比气浓度',
         dataIndex: 'StandardValue',
-        width: 100,
+        width: 180,
         render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return "-"
+          }
           return <FormItem style={{ marginBottom: '0' }}>
             {this.props.form.getFieldDecorator('StandardValue' + record.key, {
               rules: [
-                { required: true, message: '请输入标准值' },
+                { required: true, message: '请输入配比气浓度' },
               ],
               initialValue: text ? text : undefined
             })(
-              <InputNumber min={0} onChange={(value) => { this.changeStandardGasData(index, "StandardValue", value, idx) }} />
+              <>
+                <InputNumber
+                  // formatter={value => `${value}${record.unit}`}
+                  // parser={value => value.replace(`${record.unit}`, '')}
+                  min={0}
+                  onChange={(value) => { this.changeStandardGasData(index, "StandardValue", value, idx) }}
+                />
+                &nbsp;{record.unit}
+              </>
             )}
           </FormItem>
         }
@@ -343,6 +393,9 @@ class AddInstrument extends Component {
         dataIndex: 'Range',
         width: 140,
         render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return "-"
+          }
           return text ? <FormItem style={{ marginBottom: '0' }}>
             {this.props.form.getFieldDecorator('Range' + record.key, {
               rules: [
@@ -361,6 +414,9 @@ class AddInstrument extends Component {
         dataIndex: 'StabilizationTime',
         width: 100,
         render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return "-"
+          }
           var i = 0;
           let timeList = [];
           while (i < 60) {
@@ -392,6 +448,9 @@ class AddInstrument extends Component {
         dataIndex: 'Cycle',
         width: 360,
         render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return "-"
+          }
           const { DateType, Cycle, Hour, Minutes } = this.state.dataSource[index]["Component"][idx];
           return <FormItem style={{ marginBottom: '6px' }}>
             {this.props.form.getFieldDecorator('Cycle' + record.key, {
@@ -456,18 +515,54 @@ class AddInstrument extends Component {
         }
       },
       {
-        title: '气瓶浓度',
+        title: '气瓶标气浓度',
         dataIndex: 'Concentration',
-        width: 140,
+        width: 180,
         render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return "-"
+          }
           return <FormItem style={{ marginBottom: '0' }}>
             {this.props.form.getFieldDecorator('Concentration' + record.key, {
               rules: [
-                { required: true, message: '请填写气瓶浓度' },
+                { required: true, message: '请填写气瓶标气浓度' },
               ],
               initialValue: text ? text : undefined
             })(
-              <InputNumber min={0} onChange={(value) => { this.changeStandardGasData(index, "Concentration", value, idx) }} />
+              <>
+                <InputNumber
+                  // formatter={value => `${value}${record.unit}`}
+                  // parser={value => value.replace(`${record.unit}`, '')}
+                  min={0}
+                  onChange={(value) => { this.changeStandardGasData(index, "Concentration", value, idx) }}
+                />
+                &nbsp;{record.unit}
+              </>
+            )}
+          </FormItem>
+        }
+      },
+      {
+        title: '标气初始压力',
+        dataIndex: 'GasInitPower',
+        width: 140,
+        render: (text, record, idx) => {
+          return <FormItem style={{ marginBottom: '0' }}>
+            {this.props.form.getFieldDecorator('GasInitPower' + record.key, {
+              rules: [
+                { required: true, message: '请填写标气初始压力' },
+              ],
+              initialValue: text ? text : undefined
+            })(
+              <>
+                <InputNumber
+                  // formatter={value => `${value}mpa`}
+                  // parser={value => value.replace("mpa", '')}
+                  min={0}
+                  onChange={(value) => { this.changeStandardGasData(index, "GasInitPower", value, idx) }}
+                />
+                &nbsp;mpa
+              </>
             )}
           </FormItem>
         }
@@ -493,18 +588,7 @@ class AddInstrument extends Component {
           </FormItem>
         }
       },
-      {
-        title: '操作',
-        render: (text, record, idx) => {
-          return <a onClick={() => {
-            let tempDataSource = this.state.dataSource;
-            tempDataSource[index]["Component"].splice(idx, 1);
-            this.setState({
-              dataSource: [...tempDataSource]
-            })
-          }}>删除</a>
-        }
-      },
+
     ];
     const data = [];
     // for (let i = 0; i < 3; ++i) {
@@ -535,11 +619,15 @@ class AddInstrument extends Component {
     }
     console.log("index==========", index)
     console.log("dataSource------", dataSource)
+    const scrollXWidth = columns.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
+    this._SELF_.scrollXWidth = scrollXWidth;
+    console.log("scrollXWidth=", scrollXWidth)
     return <Table
       {...props}
       rowKey={record => record.key}
       columns={columns}
       dataSource={dataSource[index]["Component"]}
+      scroll={{ x: scrollXWidth }}
       pagination={false}
       bordered={false}
       size="middle"
@@ -551,7 +639,8 @@ class AddInstrument extends Component {
     let dataSource = this.state.dataSource;
     let key = dataSource[index]["Component"].length + 1;
     dataSource[index]["Component"].push({
-      key: `${index}${key}`,
+      // key: `${index}${key}`,
+      key: Math.floor(Math.random() * 65535),
       StandardGasCode: undefined, // 标气code
       Range: undefined, // 满量程值
       StandardValue: undefined, // 标准值
@@ -562,13 +651,15 @@ class AddInstrument extends Component {
       StabilizationTime: "3", // 稳定时间
       ExpirationDate: undefined, // 过期时间
       Concentration: undefined, // 气瓶浓度
+      unit: "mg/m3",
+      GasInitPower: undefined, // 标气初始压力
     })
     this.setState({ dataSource })
   }
 
   render() {
     const { columns, dataSource, expandedRowKeys } = this.state;
-    const { formItemLayout, id, title } = this._SELF_;
+    const { formItemLayout, id, title, scrollXWidth } = this._SELF_;
     const { form: { getFieldDecorator }, qualityControlFormData, loading } = this.props;
     if (loading) {
       return <PageLoading />
@@ -685,6 +776,7 @@ class AddInstrument extends Component {
                 defaultExpandAllRows={id ? true : false}
                 columns={columns}
                 dataSource={dataSource}
+                scroll={{ x: 300 }}
                 expandedRowRender={this.expandedRowRender}
                 onExpand={(expanded, record) => {
                   if (expanded) {

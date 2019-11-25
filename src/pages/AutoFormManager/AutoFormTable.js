@@ -364,10 +364,12 @@ class AutoFormTable extends PureComponent {
             {type == '小圆点' && <Badge status="warning" text={text} />}
             {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
-            {!type && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            {!type && <div className={styles.ellipsisText}>
               {text}
             </div>}
           </div>
+          
+          
         },
       }
       // return col.width ? { width: DEFAULT_WIDTH, ...col } : { ...col, width: DEFAULT_WIDTH }
