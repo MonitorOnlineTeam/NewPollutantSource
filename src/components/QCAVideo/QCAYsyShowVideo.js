@@ -35,8 +35,8 @@ class QCAYsyShowVideo extends Component {
     this.state = {
       defaultActiveKey: props.defaultActiveKey || "1",
       endOpen: false,
-      startdateString: props.startTime || "",
-      enddateString: props.endTime || "",
+      startdateString: props.startTime || undefined,
+      enddateString: props.endTime || undefined,
       startValue: null,
       endValue: null,
       displayR: 'block',

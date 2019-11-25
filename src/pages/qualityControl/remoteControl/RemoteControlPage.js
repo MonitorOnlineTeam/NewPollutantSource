@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-13 15:15:00 
+ * @Author: Jiaqi
+ * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:27:04
+ * @Last Modified time: 2019-11-25 12:41:25
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -225,32 +225,26 @@ class RemoteControlPage extends Component {
                           message: '请选择标气组分!',
                         },],
                       })(
-                        <>
-                          <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
-                            this.setState({
-                              StandardPollutantName: option.props.children
+                        <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
+                          this.setState({
+                            StandardPollutantName: option.props.children
+                          })
+                          if (value == "02" || value == "03") {
+                            form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
+                          } else {
+                            form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
+                          }
+                        }}>
+                          {
+                            standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
+                              return <Option key={item.PollutantCode} value={item.PollutantCode}>
+                                {item.PollutantName}
+                                {/* TODO (WJQ) : 将20替换成余量值 */}
+                                {this.getResidueIcon(40)}
+                              </Option>
                             })
-                            if (value == "02" || value == "03") {
-                              form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
-                            } else {
-                              form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
-                            }
-                          }}>
-                            {
-                              standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
-                                return <Option key={item.PollutantCode} value={item.PollutantCode}>
-                                  {item.PollutantName}
-                                  {/* TODO (WJQ) : 将20替换成余量值 */}
-                                  {this.getResidueIcon(40)}
-                                </Option>
-                              })
-                            }
-                          </Select>
-                          {/* <div style={{ position: "absolute", bottom: 6, fontSize: 12, right: 0 }}>
-                            <CustomIcon type="icon-dianliang" style={{ fontSize: 20, position: "absolute" }} />
-                            <span>余量剩余：12.13</span>
-                          </div> */}
-                        </>
+                          }
+                        </Select>
                       )}
                     </Form.Item>
 
@@ -336,7 +330,7 @@ class RemoteControlPage extends Component {
                         <Select placeholder="请选择稀释气组分名称">
                           <Option key="0">
                             N2
-                            {/*  TODO (WJQ) :  
+                            {/*  TODO (WJQ) :
                             替换成
                             {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
                             */}
