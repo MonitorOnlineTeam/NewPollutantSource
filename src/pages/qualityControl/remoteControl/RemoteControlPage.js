@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 12:41:25
+ * @Last Modified time: 2019-11-25 13:02:26
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -27,6 +27,9 @@ const { Panel } = Collapse;
   standardGasList: qualityControl.standardGasList,
   CEMSList: qualityControl.CEMSList,
   autoQCAInfo: qualityControl.autoQCAInfo,
+  sendQCACmd3Loading: qualityControl.sendQCACmd3Loading,
+  sendQCACmd4Loading: qualityControl.sendQCACmd4Loading,
+  sendQCACmd5Loading: qualityControl.sendQCACmd5Loading,
   loading: loading.effects["qualityControl/SendQCACmd"]
 }))
 class RemoteControlPage extends Component {
@@ -169,7 +172,11 @@ class RemoteControlPage extends Component {
   render() {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
-    const { form: { getFieldDecorator, setFieldsValue }, form, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
+    const {
+      form: { getFieldDecorator, setFieldsValue },
+      form, standardGasList, CEMSList, loading, autoQCAInfo,
+      sendQCACmd3Loading, sendQCACmd4Loading, sendQCACmd5Loading
+    } = this.props;
     if (loading) {
       <PageLoading />
     }
@@ -178,7 +185,7 @@ class RemoteControlPage extends Component {
         <Tabs defaultActiveKey="1">
           <TabPane tab="手动质控" key="1">
             <div>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd3Loading} style={{ marginRight: 10 }} onClick={() => {
                 Modal.confirm({
                   title: '重启',
                   content: '确认是否重启',
@@ -193,14 +200,14 @@ class RemoteControlPage extends Component {
                   }
                 });
               }}>质控仪重启</Button>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd4Loading} style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
                   QCType: 4,
                   QCAMN: QCAMN,
                   QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                 })
               }}>质控仪吹扫</Button>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+              <Button type="primary" loading={sendQCACmd5Loading} style={{ marginRight: 10 }} onClick={() => {
                 this.SendQCACmd({
                   QCType: 5,
                   QCAMN: QCAMN,
