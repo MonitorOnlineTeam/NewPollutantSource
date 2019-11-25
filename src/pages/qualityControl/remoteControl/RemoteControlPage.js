@@ -56,7 +56,7 @@ class RemoteControlPage extends Component {
 
   componentDidMount() {
     // 获取标气列表
-    this.props.dispatch({ type: "qualityControl/getStandardGas" });
+    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: this.state.QCAMN } });
     // 获取质控仪CEMS
     this.props.dispatch({ type: "qualityControl/getCEMSList", payload: { QCAMN: this.state.QCAMN } });
     // 获取自动质控信息
@@ -149,6 +149,7 @@ class RemoteControlPage extends Component {
 
   // 余量Icon
   getResidueIcon = (value) => {
+    debugger
     let icon = null;
     if (value <= 25) {
       icon = <CustomIcon type="icon-dianliang" style={{ fontSize: 20, margin: "0 10px", color: "red" }} />
@@ -170,6 +171,8 @@ class RemoteControlPage extends Component {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
     const { form: { getFieldDecorator, setFieldsValue }, form, standardGasList, CEMSList, loading, autoQCAInfo } = this.props;
+    let danqi = standardGasList.filter(itm => itm.PollutantCode === "065");
+    debugger
     if (loading) {
       <PageLoading />
     }
@@ -241,7 +244,7 @@ class RemoteControlPage extends Component {
                                 return <Option key={item.PollutantCode} value={item.PollutantCode}>
                                   {item.PollutantName}
                                   {/* TODO (WJQ) : 将20替换成余量值 */}
-                                  {this.getResidueIcon(40)}
+                                  {this.getResidueIcon(item.VolumeValue)}
                                 </Option>
                               })
                             }
@@ -340,7 +343,7 @@ class RemoteControlPage extends Component {
                             替换成
                             {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
                             */}
-                            {this.getResidueIcon(20)}
+                            {this.getResidueIcon(danqi.length !== 0 ? danqi[0].VolumeValue : 0)}
                           </Option>
                         </Select>
                       )}

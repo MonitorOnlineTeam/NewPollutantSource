@@ -61,6 +61,13 @@ const columns = [
     width: 50,
     align: 'right',
   },
+  {
+    title: '单位',
+    dataIndex: 'Unit',
+    key: 'Unit',
+    width: 50,
+  },
+  
 ];
 
 @connect(({ loading, qualityControl }) => ({

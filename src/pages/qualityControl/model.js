@@ -59,8 +59,8 @@ export default Model.extend({
     paramsQCAAlarmMsgList: {
       QCAMN: "",
       AlarmType: "",
-      BeginTime: moment().format('YYYY-11-10 00:00:00'),
-      EndTime: moment().format('YYYY-12-01 23:59:59'),
+      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
       PageSize: 10,
       total: 0,
