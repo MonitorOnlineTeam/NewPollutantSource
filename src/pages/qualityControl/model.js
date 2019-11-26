@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 13:09:55
+ * @Last Modified time: 2019-11-26 14:46:19
  * @desc: 智能质控model
  */
 
@@ -110,7 +110,6 @@ export default Model.extend({
       // legendList: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'],
     },
   },
-
   effects: {
     // 获取企业及排口
     *getEntAndPointList({ payload }, { call, update, select }) {
@@ -142,6 +141,11 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           standardGasList: result.Datas,
+          // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+        })
+        yield put({
+          type: "qualityControlModel/changeCurrentPollutantCode",
+          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined
         })
       }
     },
@@ -208,17 +212,17 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
-      if(payload.QCType === "3"){
+      if (payload.QCType === "3") {
         yield update({
           sendQCACmd3Loading: true
         })
       }
-      if(payload.QCType === "4"){
+      if (payload.QCType === "4") {
         yield update({
           sendQCACmd4Loading: true
         })
       }
-      if(payload.QCType === "5"){
+      if (payload.QCType === "5") {
         yield update({
           sendQCACmd5Loading: true
         })
@@ -471,11 +475,9 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
     //  获取质控报警类型列表
     * getAlarmType({ payload, otherParams }, { call, put, update, select }) {
       const result = yield call(services.getAlarmType, {});
-      debugger
       if (result.IsSuccess) {
         yield update({
           AlarmTypeList: result.Datas,
@@ -484,7 +486,5 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-
   },
 });

@@ -374,6 +374,12 @@ export default Model.extend({
               payload: { message: obj.Message },
             });
             break;
+          case 'QCARealTimeData':
+            dispatch({
+              type: 'qualityControlModel/changeRealTimeThanData',
+              payload: { message: obj.Message },
+            });
+            break;
           default:
             break;
         }

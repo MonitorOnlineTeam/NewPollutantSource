@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 13:02:26
+ * @Last Modified time: 2019-11-26 09:46:39
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -152,14 +152,14 @@ class RemoteControlPage extends Component {
 
   // 余量Icon
   getResidueIcon = (VolumeValue, GasInitPower) => {
-    if (VolumeValue === 0 && GasInitPower === 0) {
+    if (!VolumeValue || !GasInitPower) {
       return;
     }
     let icon = null;
     let value = parseInt((VolumeValue / GasInitPower) * 100)
     if (value <= 25) {
       icon = <CustomIcon type="icon-dianliang" style={{ fontSize: 20, margin: "0 10px", color: "red" }} />
-    } else if (VolumeValue > 25 && value <= 50) {
+    } else if (value > 25 && value <= 50) {
       icon = <CustomIcon type="icon-dianliang1" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
     } else if (value > 50 && value <= 75) {
       icon = <CustomIcon type="icon-dianliang2" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
@@ -168,7 +168,7 @@ class RemoteControlPage extends Component {
     }
     return <>
       {icon}
-      <span style={{ fontSize: 12, color: "#7d7d7d" }}>余：{value}</span>
+      <span style={{ fontSize: 12, color: "#7d7d7d" }}>余：{VolumeValue}</span>
     </>
   }
 
@@ -288,7 +288,8 @@ class RemoteControlPage extends Component {
                           message: '请输入原标气浓度!',
                         },],
                       })(
-                        <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={500} max={5000} precision={1} />
+                        // min={500} max={5000}
+                        <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
                       )}
                     </Form.Item>
                   </Col>
@@ -316,7 +317,8 @@ class RemoteControlPage extends Component {
                           message: '请输入配比标气浓度设定值!',
                         },],
                       })(
-                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={50} max={5000} precision={1} />
+                        // min={50} max={5000}
+                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} precision={1} />
                       )}
                     </Form.Item>
                   </Col>

@@ -843,6 +843,12 @@ export default {
                   path: '/qualityControl/resultContrast',
                   component: './qualityControl/resultContrast',
                 },
+                // 质控结果实时比对
+                {
+                  name: 'realTimeContrast',
+                  path: '/qualityControl/realTimeContrast',
+                  component: './qualityControl/realTimeContrast',
+                },
                 // 质控仪操作记录
                 {
                   name: 'operationRecords',
