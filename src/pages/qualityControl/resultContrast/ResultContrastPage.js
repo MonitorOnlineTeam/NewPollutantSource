@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-19 14:12:20
+ * @Last Modified time: 2019-11-26 10:09:24
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -54,7 +54,7 @@ class ResultContrastPage extends Component {
 
   componentDidMount() {
     // 获取污染物
-    this.props.dispatch({ type: "qualityControl/getStandardGas" });
+    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
     // 获取时间列表
     this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: this.state.DGIMN } });
     this.getPageData();

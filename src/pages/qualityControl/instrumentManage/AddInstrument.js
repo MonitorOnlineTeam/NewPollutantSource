@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 12:35:31
+ * @Last Modified time: 2019-11-26 09:58:37
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -114,7 +114,7 @@ class AddInstrument extends Component {
     // 获取企业及排口
     this.props.dispatch({ type: 'qualityControl/getEntAndPointList' })
     // 获取标气列表
-    this.props.dispatch({ type: 'qualityControl/getStandardGas' });
+    this.props.dispatch({ type: 'qualityControl/getStandardGas', payload: { QCAMN:  null} });
     // 获取编辑数据
     if (this._SELF_.id) {
       this.props.dispatch({
