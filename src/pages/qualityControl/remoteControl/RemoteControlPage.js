@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-26 09:46:39
+ * @Last Modified time: 2019-11-27 11:02:58
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -75,7 +75,7 @@ class RemoteControlPage extends Component {
     }
     if (this.props.CEMSList !== nextProps.CEMSList) {
       this.setState({
-        MNHall: nextProps.CEMSList[0].MNHall
+        MNHall: nextProps.CEMSList.length && nextProps.CEMSList[0].MNHall
       })
     }
   }
@@ -152,7 +152,7 @@ class RemoteControlPage extends Component {
 
   // 余量Icon
   getResidueIcon = (VolumeValue, GasInitPower) => {
-    if (!VolumeValue || !GasInitPower) {
+    if (!GasInitPower) {
       return;
     }
     let icon = null;
@@ -163,7 +163,7 @@ class RemoteControlPage extends Component {
       icon = <CustomIcon type="icon-dianliang1" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
     } else if (value > 50 && value <= 75) {
       icon = <CustomIcon type="icon-dianliang2" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
-    } else if (value > 75 && value <= 100) {
+    } else if (value > 75) {
       icon = <CustomIcon type="icon-dianliang3" style={{ fontSize: 20, margin: "0 10px", color: "#32c066" }} />
     }
     return <>
@@ -177,7 +177,7 @@ class RemoteControlPage extends Component {
     const { formItemLayout } = this._SELF_;
     const { QCAMN } = this.state;
     const {
-      form: { getFieldDecorator, setFieldsValue },
+      form: { getFieldDecorator, setFieldsValue, getFieldValue },
       form, standardGasList, CEMSList, loading, autoQCAInfo,
       sendQCACmd3Loading, sendQCACmd4Loading, sendQCACmd5Loading
     } = this.props;
@@ -216,6 +216,7 @@ class RemoteControlPage extends Component {
                   QCType: 4,
                   QCAMN: QCAMN,
                   QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+                  DGIMN: getFieldValue("DGIMN")
                 })
               }}>质控仪吹扫</Button>
               <Button type="primary" loading={sendQCACmd5Loading} style={{ marginRight: 10 }} onClick={() => {
@@ -257,7 +258,6 @@ class RemoteControlPage extends Component {
                             standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
                               return <Option key={item.PollutantCode} value={item.PollutantCode}>
                                 {item.PollutantName}
-                                {/* TODO (WJQ) : 将20替换成余量值 */}
                                 {this.getResidueIcon(item.VolumeValue, item.GasInitPower)}
                               </Option>
                             })

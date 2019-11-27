@@ -7,6 +7,7 @@ const PageLoading = () => (
     style={{
       paddingTop: 100,
       textAlign: 'center',
+      overflow: 'hidden'
     }}
   >
     <Spin size="large" />

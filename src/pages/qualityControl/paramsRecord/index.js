@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-18 16:11:36
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-20 17:14:30
+ * @Last Modified time: 2019-11-27 10:24:37
  * @desc: 质控参数记录页面
  */
 import React, { Component } from 'react';
@@ -116,7 +116,7 @@ class index extends Component {
   // 分页
   onTableChange = (current, pageSize) => {
     this.props.dispatch({
-      type: 'report/updateState',
+      type: 'qualityControl/updateState',
       payload: {
         paramsRecordForm: {
           ...this.props.paramsRecordForm,
@@ -157,23 +157,27 @@ class index extends Component {
   // 获取表格数据
   getTableData = () => {
     const { DGIMN } = this.state;
-    if (DGIMN) {this.props.dispatch({
+    if (DGIMN) {
+      this.props.dispatch({
         type: "qualityControl/getParamsTableData",
         payload: {
           DGIMN: DGIMN
         }
-      })}
+      })
+    }
   }
 
   // 获取图表数据
   getChartData = () => {
     const { DGIMN } = this.state;
-    if (DGIMN) {this.props.dispatch({
+    if (DGIMN) {
+      this.props.dispatch({
         type: "qualityControl/getParamsChartData",
         payload: {
           DGIMN: DGIMN
         }
-      })}
+      })
+    }
   }
 
   // 图表配置项
