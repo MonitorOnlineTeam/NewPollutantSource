@@ -123,7 +123,7 @@ class AddInstrument extends Component {
           QCAMN: '',
          },
          callback: standardGasList => {
-           if (this._SELF_.id) {
+           if (!this._SELF_.id) {
            const dataSourceR = [];
            standardGasList.map(item => {
              dataSourceR.push({
@@ -802,8 +802,6 @@ class AddInstrument extends Component {
               initialValue: text || undefined,
             })(
                 <InputNumber
-                  // formatter={value => `${value}${record.unit}`}
-                  // parser={value => value.replace(`${record.unit}`, '')}
                   min={0}
                   onChange={value => { this.changeStandardGasDataR('Concentration', value, idx) }}
                 />,

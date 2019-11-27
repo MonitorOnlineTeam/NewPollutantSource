@@ -127,6 +127,7 @@ export default Model.extend({
       const result = yield call(services.getQualityControlData, payload);
       if (result.IsSuccess) {
         let qualityControlTableData = [];
+        let QCAGasRelation = [];
         if (result.Datas.Relation) {
           qualityControlTableData = result.Datas.Relation.map((item, index) => {
             let Component = [];
@@ -144,11 +145,18 @@ export default Model.extend({
             }
           })
         }
+        if (result.Datas.QCAGasRelation) {
+          QCAGasRelation = result.Datas.QCAGasRelation.map((itm, idx) => ({
+            ...itm,
+            key: `${itm.ID}${idx}`,
+            unit: 'mg/m3',
+          }))
+        }
         console.log('qualityControlTableData=', qualityControlTableData)
         yield update({
           qualityControlFormData: result.Datas.Info,
           qualityControlTableData,
-          QCAGasRelation: result.Datas.QCAGasRelation,
+          QCAGasRelation,
         })
       } else {
         message.error(result.Message)
