@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 11:35:57
+ * @Last Modified time: 2019-11-27 14:30:47
  * @desc: 智能质控model
  */
 
@@ -232,7 +232,7 @@ export default Model.extend({
       }
     },
     // 获取企业达标率
-    * QCAResultStatic({ payload }, { call, put, update }) {
+    * QCAResultStatic({ payload, callback, searchType }, { call, put, update }) {
       const result = yield call(services.QCAResultStatic, payload);
       if (result.IsSuccess) {
         const { entResult } = result.Datas;
@@ -245,6 +245,10 @@ export default Model.extend({
             entResult,
           },
         })
+        if (!searchType) {
+          message.success("操作成功")
+        }
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message)
       }
