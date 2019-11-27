@@ -21,6 +21,7 @@ export default Model.extend({
     standardGasList: [],
     qualityControlFormData: {},
     qualityControlTableData: [],
+    QCAGasRelation: [],
     CEMSList: [],
     autoQCAInfo: [],
     entRate: {
@@ -55,10 +56,10 @@ export default Model.extend({
     paramsTableData: [],
     qCAAlarmMsgData: [],
     AlarmTypeList: [],
-    //质控报警记录
+    // 质控报警记录
     paramsQCAAlarmMsgList: {
-      QCAMN: "",
-      AlarmType: "",
+      QCAMN: '',
+      AlarmType: '',
       BeginTime: moment().format('YYYY-11-10 00:00:00'),
       EndTime: moment().format('YYYY-12-01 23:59:59'),
       PageIndex: 1,
@@ -137,12 +138,13 @@ export default Model.extend({
       }
     },
     // 获取标气
-    *getStandardGas({ payload }, { call, put, update }) {
+    *getStandardGas({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getStandardGas, payload);
       if (result.IsSuccess) {
         yield update({
           standardGasList: result.Datas,
         })
+        callback && callback(result.Datas);
       }
     },
     // 添加质控仪
@@ -181,6 +183,7 @@ export default Model.extend({
         yield update({
           qualityControlFormData: result.Datas.Info,
           qualityControlTableData,
+          QCAGasRelation: result.Datas.QCAGasRelation,
         })
       } else {
         message.error(result.Message)
@@ -208,19 +211,19 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
-      if(payload.QCType === "3"){
+      if (payload.QCType === '3') {
         yield update({
-          sendQCACmd3Loading: true
+          sendQCACmd3Loading: true,
         })
       }
-      if(payload.QCType === "4"){
+      if (payload.QCType === '4') {
         yield update({
-          sendQCACmd4Loading: true
+          sendQCACmd4Loading: true,
         })
       }
-      if(payload.QCType === "5"){
+      if (payload.QCType === '5') {
         yield update({
-          sendQCACmd5Loading: true
+          sendQCACmd5Loading: true,
         })
       }
       const result = yield call(services.SendQCACmd, payload);
@@ -229,7 +232,7 @@ export default Model.extend({
         yield update({
           sendQCACmd3Loading: false,
           sendQCACmd4Loading: false,
-          sendQCACmd5Loading: false
+          sendQCACmd5Loading: false,
         })
       } else {
         message.error(result.Message)
@@ -464,7 +467,7 @@ export default Model.extend({
           qCAAlarmMsgData: result.Datas,
           paramsQCAAlarmMsgList: {
             ...paramsQCAAlarmMsgList,
-            total: result.Total
+            total: result.Total,
           },
         })
       } else {
