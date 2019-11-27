@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 13:09:55
+ * @Last Modified time: 2019-11-27 14:30:47
  * @desc: 智能质控model
  */
 
@@ -60,58 +60,18 @@ export default Model.extend({
     paramsQCAAlarmMsgList: {
       QCAMN: '',
       AlarmType: '',
-      BeginTime: moment().format('YYYY-11-10 00:00:00'),
-      EndTime: moment().format('YYYY-12-01 23:59:59'),
+      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
       PageSize: 10,
       total: 0,
     },
-    /*
-     TODO (WJQ) : 换完图表接口地址后，将下面替换成
-     paramsChartData: {
-      TimeList:[],
-      DataList:[],
-      legendList:[]
-     }
-    */
     paramsChartData: {
-      TimeList: ['2019-11-21 13:08:16', '2019-11-22 08:28:45', '2019-11-23 11:08:41', '2019-11-23 13:09:00', '2019-11-24 09:19:34', '2019-11-24 11:09:28', '2019-11-25 13:09:53'],
-      DataList: [
-        {
-          name: '标气流量读取值',
-          type: 'line',
-          // stack: '总量',
-          data: [120, 132, 101, 134, 90, 230, 210],
-        },
-        {
-          name: '稀释气流量读取值',
-          type: 'line',
-          // stack: '总量',
-          data: [220, 182, 191, 234, 290, 330, 310],
-        },
-        {
-          name: 'N2气瓶压力',
-          type: 'line',
-          // stack: '总量',
-          data: [150, 232, 201, 154, 190, 330, 410],
-        },
-        {
-          name: '标准气瓶压力',
-          type: 'line',
-          // stack: '总量',
-          data: [320, 332, 301, 334, 390, 330, 320],
-        },
-        {
-          name: '总流量读取值',
-          type: 'line',
-          // stack: '总量',
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-        },
-      ],
-      // legendList: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'],
+      TimeList: [],
+      DataList: [],
+      legendList: [],
     },
   },
-
   effects: {
     // 获取企业及排口
     *getEntAndPointList({ payload }, { call, update, select }) {
@@ -143,6 +103,11 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           standardGasList: result.Datas,
+          // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+        })
+        yield put({
+          type: 'qualityControlModel/changeCurrentPollutantCode',
+          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
         })
         callback && callback(result.Datas);
       }
@@ -211,31 +176,36 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
-      if (payload.QCType === '3') {
-        yield update({
-          sendQCACmd3Loading: true,
-        })
-      }
-      if (payload.QCType === '4') {
-        yield update({
-          sendQCACmd4Loading: true,
-        })
-      }
-      if (payload.QCType === '5') {
-        yield update({
-          sendQCACmd5Loading: true,
-        })
-      }
+      // if (payload.QCType == "3") {
+      //   yield update({
+      //     sendQCACmd3Loading: true
+      //   })
+      // }
+      // if (payload.QCType == "4") {
+      //   yield update({
+      //     sendQCACmd4Loading: true
+      //   })
+      // }
+      // if (payload.QCType == "5") {
+      //   yield update({
+      //     sendQCACmd5Loading: true
+      //   })
+      // }
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
         message.success('操作成功')
-        yield update({
-          sendQCACmd3Loading: false,
-          sendQCACmd4Loading: false,
-          sendQCACmd5Loading: false,
-        })
+        // yield update({
+        //   sendQCACmd3Loading: false,
+        //   sendQCACmd4Loading: false,
+        //   sendQCACmd5Loading: false
+        // })
       } else {
         message.error(result.Message)
+        // yield update({
+        //   sendQCACmd3Loading: false,
+        //   sendQCACmd4Loading: false,
+        //   sendQCACmd5Loading: false
+        // })
       }
     },
     // 获取自动质控信息
@@ -265,7 +235,7 @@ export default Model.extend({
       }
     },
     // 获取企业达标率
-    * QCAResultStatic({ payload }, { call, put, update }) {
+    * QCAResultStatic({ payload, callback, searchType }, { call, put, update }) {
       const result = yield call(services.QCAResultStatic, payload);
       if (result.IsSuccess) {
         const { entResult } = result.Datas;
@@ -278,6 +248,10 @@ export default Model.extend({
             entResult,
           },
         })
+        if (!searchType) {
+          message.success('操作成功')
+        }
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -398,9 +372,10 @@ export default Model.extend({
     * getParamsTableData({ payload, otherParams }, { call, put, update, select }) {
       const paramsRecordForm = yield select(state => state.qualityControl.paramsRecordForm);
       const postData = {
+        State: 1,
         pageIndex: paramsRecordForm.current,
         pageSize: paramsRecordForm.pageSize,
-        DataTempletCode: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
+        Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
         BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
         EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
         status: paramsRecordForm.status && paramsRecordForm.status.value,
@@ -411,13 +386,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           paramsTableData: [
-            ...result.Datas,
-            {
-              MonitorTime: '2019-11-20',
-              Name: '二氧化硫',
-              Value: '12',
-              flag: 1,
-            },
+            ...result.Datas.rtnVal,
           ],
           paramsRecordForm: {
             ...paramsRecordForm,
@@ -432,9 +401,10 @@ export default Model.extend({
     * getParamsChartData({ payload, otherParams }, { call, put, update, select }) {
       const paramsRecordForm = yield select(state => state.qualityControl.paramsRecordForm);
       const postData = {
+        State: 0,
         BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
         EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
-        DataTempletCode: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
+        Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
         ...payload,
       }
       // console.log("postData123213=", postData)
@@ -443,12 +413,14 @@ export default Model.extend({
       if (result.IsSuccess) {
         // 处理图例
         const legendList = [];
-        result.Datas.DataList.map(item => {
+        result.Datas.dataList.map(item => {
           legendList.push(item.name)
         })
         yield update({
           paramsChartData: {
-            ...result.Datas,
+            // ...result.Datas,
+            TimeList: result.Datas.timeList,
+            DataList: result.Datas.dataList,
             legendList,
           },
         })
@@ -474,11 +446,9 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
     //  获取质控报警类型列表
     * getAlarmType({ payload, otherParams }, { call, put, update, select }) {
       const result = yield call(services.getAlarmType, {});
-      debugger
       if (result.IsSuccess) {
         yield update({
           AlarmTypeList: result.Datas,
@@ -487,7 +457,5 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-
   },
 });

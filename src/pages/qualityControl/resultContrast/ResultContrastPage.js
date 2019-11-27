@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-19 14:12:20
+ * @Last Modified time: 2019-11-27 10:58:44
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -54,7 +54,7 @@ class ResultContrastPage extends Component {
 
   componentDidMount() {
     // 获取污染物
-    this.props.dispatch({ type: "qualityControl/getStandardGas" });
+    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
     // 获取时间列表
     this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: this.state.DGIMN } });
     this.getPageData();
@@ -105,7 +105,6 @@ class ResultContrastPage extends Component {
     }
     if (this.props.flag) {
       if ((this.props.DGIMN !== nextProps.DGIMN) || (this.props.standardGasList !== nextProps.standardGasList) || (this.props.resultContrastTimeList !== nextProps.resultContrastTimeList)) {
-        console.log("1111111=",nextProps.resultContrastTimeList)
         this.setState({
           DGIMN: nextProps.DGIMN,
           PollutantCode: nextProps.standardGasList.length && nextProps.standardGasList[0].PollutantCode,
@@ -208,6 +207,10 @@ class ResultContrastPage extends Component {
   lineOption = () => {
     const { resultContrastData } = this.props;
     return {
+      color: ["#c23531", "#56f485"],
+      legend: {
+        data: ["浓度", "标准值"],
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -256,23 +259,19 @@ class ResultContrastPage extends Component {
             show: true,
           }
         },
-        markLine: {
-          silent: true,
-          lineStyle: {
-            normal: {
-              color: '#56f485' // 基线颜色
-            }
-          },
-          data: [{
-            yAxis: resultContrastData.standValue
-          }],
-          label: {
-            normal: {
-              formatter: '标准值' // 基线名称
-            }
-          },
+      },
+      {
+        name: '标准值',
+        data: resultContrastData.standValue,
+        type: 'line',
+        lineStyle: {
+          color: "#56f485"
         },
-
+        label: {
+          normal: {
+            show: true,
+          }
+        },
       }]
     };
   }

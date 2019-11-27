@@ -70,7 +70,7 @@ class ViewInstrument extends Component {
     // 获取企业及排口
     this.props.dispatch({ type: "qualityControl/getEntAndPointList" })
     // 获取标气列表
-    this.props.dispatch({ type: "qualityControl/getStandardGas" });
+    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN:  null} });
     // 获取编辑数据
     this.props.dispatch({
       type: "qualityControl/getQualityControlData",

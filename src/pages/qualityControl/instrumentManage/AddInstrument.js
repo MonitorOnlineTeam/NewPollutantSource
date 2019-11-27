@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 12:35:31
+ * @Last Modified time: 2019-11-26 09:58:37
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -311,7 +311,7 @@ class AddInstrument extends Component {
           type: 'qualityControl/addQualityControl',
           payload: postData,
         })
-      }else {
+      } else {
         message.error('请添加标气');
       }
     })

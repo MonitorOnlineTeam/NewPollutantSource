@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-14 11:39:35 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 10:02:33
+ * @Last Modified time: 2019-11-27 14:28:58
  * @desc: 结果统计页面
  */
 import React, { Component } from 'react';
@@ -57,17 +57,24 @@ class index extends Component {
   }
 
   componentDidMount() {
-    this.getResultStaticData();
+    this.getResultStaticData('did');
   }
 
   // 获取图表统计数据
-  getResultStaticData = () => {
+  getResultStaticData = (type) => {
     const { currentDate } = this.state;
     this.props.dispatch({
       type: "qualityControl/QCAResultStatic",
       payload: {
         BeginTime: currentDate.length ? currentDate[0] : undefined,
         EndTime: currentDate.length ? currentDate[1] : undefined,
+      },
+      searchType: type,
+      callback: (res) => {
+        if (type === "did") {
+          if (res.entName.length && res.entCode.length)
+            this.onChartClick({ name: res.entName[0], dataIndex: 0 })
+        }
       }
     })
   }
