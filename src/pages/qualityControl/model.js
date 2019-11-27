@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 10:40:55
+ * @Last Modified time: 2019-11-27 11:35:57
  * @desc: 智能质控model
  */
 
@@ -173,31 +173,36 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload }, { call, put, update }) {
-      if (payload.QCType === "3") {
-        yield update({
-          sendQCACmd3Loading: true
-        })
-      }
-      if (payload.QCType === "4") {
-        yield update({
-          sendQCACmd4Loading: true
-        })
-      }
-      if (payload.QCType === "5") {
-        yield update({
-          sendQCACmd5Loading: true
-        })
-      }
+      // if (payload.QCType == "3") {
+      //   yield update({
+      //     sendQCACmd3Loading: true
+      //   })
+      // }
+      // if (payload.QCType == "4") {
+      //   yield update({
+      //     sendQCACmd4Loading: true
+      //   })
+      // }
+      // if (payload.QCType == "5") {
+      //   yield update({
+      //     sendQCACmd5Loading: true
+      //   })
+      // }
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
         message.success('操作成功')
-        yield update({
-          sendQCACmd3Loading: false,
-          sendQCACmd4Loading: false,
-          sendQCACmd5Loading: false
-        })
+        // yield update({
+        //   sendQCACmd3Loading: false,
+        //   sendQCACmd4Loading: false,
+        //   sendQCACmd5Loading: false
+        // })
       } else {
         message.error(result.Message)
+        // yield update({
+        //   sendQCACmd3Loading: false,
+        //   sendQCACmd4Loading: false,
+        //   sendQCACmd5Loading: false
+        // })
       }
     },
     // 获取自动质控信息
