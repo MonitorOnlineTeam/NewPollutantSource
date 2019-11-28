@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-25 16:20:41
+ * @Last Modified time: 2019-11-27 15:16:53
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -173,7 +173,7 @@ export default Model.extend({
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};
-        const searchConditions = result.Datas.CfgField.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
+        const searchConditions = result.Datas.ColumnFields.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
           index === 0 ? whereList[configId] = {} : '';
           whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
           return {

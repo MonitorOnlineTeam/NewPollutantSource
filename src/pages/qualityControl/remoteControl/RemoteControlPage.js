@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 11:35:14
+ * @Last Modified time: 2019-11-28 09:44:58
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -69,8 +69,12 @@ class RemoteControlPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({ QCAMN: nextProps.QCAMN }, () => {
+        // 获取标气列表
+        this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: this.state.QCAMN } });
         // 获取质控仪CEMS
         this.props.dispatch({ type: "qualityControl/getCEMSList", payload: { QCAMN: this.state.QCAMN } });
+        // 获取自动质控信息
+        this.props.dispatch({ type: "qualityControl/getAutoQCAInfo", payload: { qcamn: this.state.QCAMN } });
       });
     }
     if (this.props.CEMSList !== nextProps.CEMSList) {
@@ -89,6 +93,8 @@ class RemoteControlPage extends Component {
       const { StandardPollutantName } = this.state;
       let postData = {
         ...fieldsValue,
+        OldStandardUnit: fieldsValue.OldStandardUnit === "mg/m3" ? 0 : 1,
+        MatchStandardUnit: fieldsValue.MatchStandardUnit === "mg/m3" ? 0 : 1,
         DGIMN: fieldsValue.DGIMN.toString(),
         DeliPollutantName: "N2",
         StandardPollutantName: StandardPollutantName,
@@ -168,7 +174,7 @@ class RemoteControlPage extends Component {
     }
     return <>
       {icon}
-      <span style={{ fontSize: 12, color: "#7d7d7d" }}>余：{VolumeValue}</span>
+      <span style={{ fontSize: 12, color: "#7d7d7d" }}>余：{VolumeValue}（L）</span>
     </>
   }
 
@@ -249,9 +255,9 @@ class RemoteControlPage extends Component {
                               StandardPollutantName: option.props.children ? option.props.children[0] : undefined
                             })
                             if (value == "02" || value == "03") {
-                              form.setFieldsValue({ "OldStandardUnit": "0", "MatchStandardUnit": "0" })
+                              form.setFieldsValue({ "OldStandardUnit": "mg/m3", "MatchStandardUnit": "mg/m3" })
                             } else {
-                              form.setFieldsValue({ "OldStandardUnit": "1", "MatchStandardUnit": "1" })
+                              form.setFieldsValue({ "OldStandardUnit": "%", "MatchStandardUnit": "%" })
                             }
                           }}>
                             {
@@ -293,19 +299,21 @@ class RemoteControlPage extends Component {
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} style={{display: "none"}}>
                       <Form.Item label="原标气浓度值单位">
                         {getFieldDecorator('OldStandardUnit', {
-                          rules: [{
-                            required: true,
-                            message: '请选择原标气浓度值单位!',
-                          },],
-                          initialValue: "0"
+                          // rules: [{
+                          //   required: true,
+                          //   message: '请选择原标气浓度值单位!',
+                          // },],
+                          initialValue: "mg/m3"
                         })(
-                          <Select placeholder="请选择原标气浓度值单位">
-                            <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
-                            <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
-                          </Select>
+                          <p>{form.getFieldValue("OldStandardUnit")}</p>
+                          // <Input disabled/>
+                          // <Select placeholder="请选择原标气浓度值单位">
+                          //   <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
+                          //   <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
+                          // </Select>
                         )}
                       </Form.Item>
                     </Col>
@@ -322,19 +330,21 @@ class RemoteControlPage extends Component {
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={12} style={{display: "none"}}>
                       <Form.Item label="配比标气浓度单位">
                         {getFieldDecorator('MatchStandardUnit', {
-                          rules: [{
-                            required: true,
-                            message: '请选择配比标气浓度单位!',
-                          },],
-                          initialValue: "0"
+                          // rules: [{
+                          //   required: true,
+                          //   message: '请选择配比标气浓度单位!',
+                          // },],
+                          initialValue: "mg/m3"
                         })(
-                          <Select placeholder="请选择配比标气浓度单位">
-                            <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
-                            <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
-                          </Select>
+                          <p>{form.getFieldValue("MatchStandardUnit")}</p>
+                          // <Input disabled/>
+                          // <Select placeholder="请选择配比标气浓度单位">
+                          //   <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
+                          //   <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
+                          // </Select>
                         )}
                       </Form.Item>
                     </Col>

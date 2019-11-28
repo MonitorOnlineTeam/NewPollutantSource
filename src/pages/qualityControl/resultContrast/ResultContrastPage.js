@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 10:58:44
+ * @Last Modified time: 2019-11-27 16:16:20
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -28,7 +28,7 @@ const columns = [
     key: 'Value',
   },
   {
-    title: '标准值',
+    title: '配比标气浓度',
     dataIndex: 'StandValue',
     key: 'StandValue',
   },
@@ -209,7 +209,7 @@ class ResultContrastPage extends Component {
     return {
       color: ["#c23531", "#56f485"],
       legend: {
-        data: ["浓度", "标准值"],
+        data: ["测量浓度", "配比标气浓度"],
       },
       tooltip: {
         trigger: 'axis',
@@ -251,8 +251,9 @@ class ResultContrastPage extends Component {
         type: 'value'
       },
       series: [{
-        name: '浓度',
+        name: '测量浓度',
         data: resultContrastData.valueList,
+        smooth: true,
         type: 'line',
         label: {
           normal: {
@@ -261,8 +262,9 @@ class ResultContrastPage extends Component {
         },
       },
       {
-        name: '标准值',
+        name: '配比标气浓度',
         data: resultContrastData.standValue,
+        smooth: true,
         type: 'line',
         lineStyle: {
           color: "#56f485"
