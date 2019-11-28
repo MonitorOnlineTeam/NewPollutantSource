@@ -21,6 +21,7 @@ export default Model.extend({
     standardGasList: [],
     qualityControlFormData: {},
     qualityControlTableData: [],
+    QCAGasRelation: [],
     CEMSList: [],
     autoQCAInfo: [],
     entRate: {
@@ -55,10 +56,10 @@ export default Model.extend({
     paramsTableData: [],
     qCAAlarmMsgData: [],
     AlarmTypeList: [],
-    //质控报警记录
+    // 质控报警记录
     paramsQCAAlarmMsgList: {
-      QCAMN: "",
-      AlarmType: "",
+      QCAMN: '',
+      AlarmType: '',
       BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
@@ -68,8 +69,8 @@ export default Model.extend({
     paramsChartData: {
       TimeList: [],
       DataList: [],
-      legendList: []
-    }
+      legendList: [],
+    },
   },
   effects: {
     // 获取企业及排口
@@ -97,7 +98,7 @@ export default Model.extend({
       }
     },
     // 获取标气
-    *getStandardGas({ payload }, { call, put, update }) {
+    *getStandardGas({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getStandardGas, payload);
       if (result.IsSuccess) {
         yield update({
@@ -105,9 +106,10 @@ export default Model.extend({
           // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
         })
         yield put({
-          type: "qualityControlModel/changeCurrentPollutantCode",
-          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+          type: 'qualityControlModel/changeCurrentPollutantCode',
+          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
         })
+        callback && callback(result.Datas);
       }
     },
     // 添加质控仪
@@ -125,6 +127,7 @@ export default Model.extend({
       const result = yield call(services.getQualityControlData, payload);
       if (result.IsSuccess) {
         let qualityControlTableData = [];
+        let QCAGasRelation = [];
         if (result.Datas.Relation) {
           qualityControlTableData = result.Datas.Relation.map((item, index) => {
             let Component = [];
@@ -142,10 +145,18 @@ export default Model.extend({
             }
           })
         }
+        if (result.Datas.QCAGasRelation) {
+          QCAGasRelation = result.Datas.QCAGasRelation.map((itm, idx) => ({
+            ...itm,
+            key: `${itm.ID}${idx}`,
+            unit: 'mg/m3',
+          }))
+        }
         console.log('qualityControlTableData=', qualityControlTableData)
         yield update({
           qualityControlFormData: result.Datas.Info,
           qualityControlTableData,
+          QCAGasRelation,
         })
       } else {
         message.error(result.Message)
@@ -246,7 +257,7 @@ export default Model.extend({
           },
         })
         if (!searchType) {
-          message.success("操作成功")
+          message.success('操作成功')
         }
         callback && callback(result.Datas)
       } else {
@@ -436,7 +447,7 @@ export default Model.extend({
           qCAAlarmMsgData: result.Datas,
           paramsQCAAlarmMsgList: {
             ...paramsQCAAlarmMsgList,
-            total: result.Total
+            total: result.Total,
           },
         })
       } else {

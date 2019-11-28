@@ -26,6 +26,8 @@ const InputGroup = Input.Group;
   standardGasList: qualityControl.standardGasList,
   qualityControlFormData: qualityControl.qualityControlFormData,
   qualityControlTableData: qualityControl.qualityControlTableData,
+  QCAGasRelation: qualityControl.QCAGasRelation,
+  Sloading: loading.effects['qualityControl/getStandardGas'],
   loading: loading.effects['qualityControl/getQualityControlData'],
 }))
 class AddInstrument extends Component {
@@ -111,10 +113,35 @@ class AddInstrument extends Component {
   }
 
   componentDidMount() {
+    const { n2Code } = this._SELF_;
     // 获取企业及排口
     this.props.dispatch({ type: 'qualityControl/getEntAndPointList' })
     // 获取标气列表
-    this.props.dispatch({ type: 'qualityControl/getStandardGas', payload: { QCAMN:  null} });
+    this.props.dispatch({
+      type: 'qualityControl/getStandardGas',
+       payload: {
+          QCAMN: '',
+         },
+         callback: standardGasList => {
+           if (!this._SELF_.id) {
+           const dataSourceR = [];
+           standardGasList.map(item => {
+             dataSourceR.push({
+               // key: `${index}${key}`,
+               key: Math.floor(Math.random() * 655321),
+               StandardGasCode: item.PollutantCode,
+               ExpirationDate: undefined,
+               Concentration: undefined,
+               unit: 'mg/m3',
+               GasInitPower: undefined,
+             })
+           })
+           this.setState({
+             dataSourceR,
+           })
+          }
+         },
+        });
     // 获取编辑数据
     if (this._SELF_.id) {
       this.props.dispatch({
@@ -123,6 +150,22 @@ class AddInstrument extends Component {
           ID: this._SELF_.id,
         },
       })
+    } else {
+      const { dataSourceR } = this.state;
+       this.props.standardGasList.map(item => {
+         dataSourceR.push({
+           // key: `${index}${key}`,
+           key: Math.floor(Math.random() * 655321),
+           StandardGasCode: item.PollutantCode, // 标气code
+           ExpirationDate: undefined, // 过期时间
+           Concentration: undefined, // 气瓶浓度
+           unit: 'mg/m3',
+           GasInitPower: undefined, // 标气初始压力
+         })
+       })
+       this.setState({
+         dataSourceR,
+       })
     }
   }
 
@@ -139,6 +182,11 @@ class AddInstrument extends Component {
     if (this.props.qualityControlTableData !== nextProps.qualityControlTableData) {
       this.setState({
         dataSource: nextProps.qualityControlTableData,
+      })
+    }
+    if (this.props.QCAGasRelation !== nextProps.QCAGasRelation) {
+      this.setState({
+        dataSourceR: nextProps.QCAGasRelation,
       })
     }
   }
@@ -182,7 +230,10 @@ class AddInstrument extends Component {
         return;
       }
 
-      const { dataSource } = this.state;
+      const {
+        dataSource,
+        dataSourceR,
+      } = this.state;
       let isErr = false;
       dataSource.map(item => {
         if (!item.Component.length) {
@@ -208,7 +259,35 @@ class AddInstrument extends Component {
             return itm
         })
       })
-      console.log('dataSource777=', dataSource)
+      const QCAGasVolume = [];
+      const QCAGasRelation = [];
+      debugger;
+      if (dataSourceR.length > 0) {
+         isErr = false;
+
+         const { QCAMN } = fieldsValue;
+         dataSourceR.map(item => {
+           const arr = {
+             QCAMN,
+             StandardGasCode: item.StandardGasCode,
+             VolumeValue: (item.GasInitPower * 8 * 10).toFixed(4),
+           }
+           const arr1 = {
+             QCAMN,
+             StandardGasCode: item.StandardGasCode,
+             ExpirationDate: item.ExpirationDate,
+             Concentration: item.Concentration,
+             GasInitPower: item.GasInitPower,
+           }
+           QCAGasVolume.push(arr);
+           QCAGasRelation.push(arr1);
+         })
+      } else {
+        isErr = true;
+      }
+      console.log('QCAGasVolume=', QCAGasVolume);
+      console.log('QCAGasRelation=', QCAGasRelation);
+      console.log('isErr', isErr);
       // return;
       if (!isErr) {
         const postData = {
@@ -223,6 +302,8 @@ class AddInstrument extends Component {
             // "CameraSecret": fieldsValue.CameraSecret,
           },
           Relation: dataSource,
+          QCAGasVolume,
+          QCAGasRelation,
         }
         console.log('postData=', postData)
         // return;
@@ -646,7 +727,7 @@ class AddInstrument extends Component {
     const { dataSourceR } = this.state;
     dataSourceR.push({
       // key: `${index}${key}`,
-      key: Math.floor(Math.random() * 65535),
+      key: Math.floor(Math.random() * 655321),
       StandardGasCode: undefined, // 标气code
       ExpirationDate: undefined, // 过期时间
       Concentration: undefined, // 气瓶浓度
@@ -720,16 +801,11 @@ class AddInstrument extends Component {
               ],
               initialValue: text || undefined,
             })(
-              <>
                 <InputNumber
-                  // formatter={value => `${value}${record.unit}`}
-                  // parser={value => value.replace(`${record.unit}`, '')}
                   min={0}
                   onChange={value => { this.changeStandardGasDataR('Concentration', value, idx) }}
-                />
-                &nbsp;{record.unit}
-              </>,
-            )}
+                />,
+            )} &nbsp;{record.unit}
           </FormItem>
         },
       },
@@ -744,16 +820,13 @@ class AddInstrument extends Component {
               ],
               initialValue: text || undefined,
             })(
-              <>
                 <InputNumber
                   // formatter={value => `${value}mpa`}
                   // parser={value => value.replace("mpa", '')}
                   min={0}
                   onChange={value => { this.changeStandardGasDataR('GasInitPower', value, idx) }}
-                />
-                &nbsp;mpa
-              </>,
-            )}
+                />,
+            )}&nbsp;mpa
           </FormItem>,
       },
       {
