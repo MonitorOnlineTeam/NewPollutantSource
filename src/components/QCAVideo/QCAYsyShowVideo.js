@@ -35,8 +35,8 @@ class QCAYsyShowVideo extends Component {
     this.state = {
       defaultActiveKey: props.defaultActiveKey || "1",
       endOpen: false,
-      startdateString: props.startTime || undefined,
-      enddateString: props.endTime || undefined,
+      startdateString: props.startTime || "",
+      enddateString: props.endTime || "",
       startValue: null,
       endValue: null,
       displayR: 'block',
@@ -418,7 +418,7 @@ class QCAYsyShowVideo extends Component {
                   <Row>
                     <Col className={styles.gutterleft} span={24}>
                       <RangePicker
-                        defaultValue={[moment(this.state.startdateString), moment(this.state.enddateString)]}
+                        defaultValue={this.state.startdateString ? [moment(this.state.startdateString), moment(this.state.enddateString)] : undefined}
                         style={{ width: '350px' }}
                         showTime={{ format: 'HH:mm:ss' }}
                         format="YYYY-MM-DD HH:mm:ss"
