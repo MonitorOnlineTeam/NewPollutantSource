@@ -19,16 +19,16 @@ const { Option } = Select;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 const columns = [
-  {
-    title: '点名称',
-    dataIndex: 'PointName',
-    key: 'PointName',
-  },
-  {
-    title: '污染物名称',
-    dataIndex: 'PollutantName',
-    key: 'PollutantName',
-  },
+  // {
+  //   title: '点名称',
+  //   dataIndex: 'PointName',
+  //   key: 'PointName',
+  // },
+  // {
+  //   title: '污染物名称',
+  //   dataIndex: 'PollutantName',
+  //   key: 'PollutantName',
+  // },
   {
     title: '报警时间',
     dataIndex: 'AlarmTime',
@@ -45,28 +45,28 @@ const columns = [
     title: '报警描述',
     dataIndex: 'AlarmMsg',
     key: 'AlarmMsg',
-    width: 350,
+    width: 450,
   },
-  {
-    title: '标准',
-    dataIndex: 'StandardValue',
-    key: 'StandardValue',
-    width: 50,
-    align: 'right',
-  },
-  {
-    title: '标准值',
-    dataIndex: 'AlarmValue',
-    key: 'AlarmValue',
-    width: 50,
-    align: 'right',
-  },
-  {
-    title: '单位',
-    dataIndex: 'Unit',
-    key: 'Unit',
-    width: 50,
-  },
+  // {
+  //   title: '标准',
+  //   dataIndex: 'StandardValue',
+  //   key: 'StandardValue',
+  //   width: 50,
+  //   align: 'right',
+  // },
+  // {
+  //   title: '标准值',
+  //   dataIndex: 'AlarmValue',
+  //   key: 'AlarmValue',
+  //   width: 50,
+  //   align: 'right',
+  // },
+  // {
+  //   title: '单位',
+  //   dataIndex: 'Unit',
+  //   key: 'Unit',
+  //   width: 50,
+  // },
   
 ];
 
