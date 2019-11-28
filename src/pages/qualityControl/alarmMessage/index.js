@@ -67,7 +67,7 @@ const columns = [
   //   key: 'Unit',
   //   width: 50,
   // },
-  
+
 ];
 
 @connect(({ loading, qualityControl }) => ({
@@ -146,7 +146,7 @@ class index extends Component {
     let BeginTime = moment().format('YYYY-11-10 00:00:00');
     let EndTime = moment().format('YYYY-12-01 23:59:59');
     let AlarmType = "";
-    if (alarmMessageForm.time) {
+    if (alarmMessageForm.time && alarmMessageForm.time.length !== 0) {
       BeginTime = alarmMessageForm.time[0];
       EndTime = alarmMessageForm.time[1];
 
@@ -204,7 +204,9 @@ class index extends Component {
                       </Select>,
                     )}
                   </Form.Item>
-                  <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
+                  <Form.Item>
+                    <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
+                  </Form.Item>
                 </Form>
               }
             >
