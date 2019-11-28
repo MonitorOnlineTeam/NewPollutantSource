@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-14 11:39:35 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 14:28:58
+ * @Last Modified time: 2019-11-28 09:54:49
  * @desc: 结果统计页面
  */
 import React, { Component } from 'react';
@@ -50,9 +50,9 @@ class index extends Component {
     super(props);
     this.state = {
       currentEntName: null,
-      dateValue: null,
+      dateValue: [moment(new Date()).subtract(1, 'months'), moment()],
       entIndex: null,
-      currentDate: [],
+      currentDate: [moment(new Date()).subtract(1, 'months').format("YYYY-MM-DD HH:mm:ss"), moment().format("YYYY-MM-DD HH:mm:ss")],
     };
   }
 
@@ -204,7 +204,7 @@ class index extends Component {
       <PageHeaderWrapper>
         <div className="contentContainer" style={{ overflowX: "hidden" }}>
           <Card className={styles.cardShowTitle} style={{ marginBottom: 10 }} title={
-            <RangePicker_ dateValue={dateValue} onChange={(date, dateString) => {
+            <RangePicker_ dateValue={dateValue} style={{ width: 400 }} onChange={(date, dateString) => {
               console.log('date=', date)
               console.log('dateString=', dateString)
               this.setState({

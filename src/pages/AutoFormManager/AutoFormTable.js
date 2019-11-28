@@ -30,6 +30,7 @@ const DEFAULT_WIDTH = 180;
 
 @connect(({ loading, autoForm, global }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
+  getConfigLoading: loading.effects['autoForm/getPageConfig'],
   searchForm: autoForm.searchForm,
   tableInfo: autoForm.tableInfo,
   opreationButtons: autoForm.opreationButtons,
@@ -355,7 +356,7 @@ class AutoFormTable extends PureComponent {
                 }
               }
             }
-            return <TableText content={text} {...porps}/>
+            return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
           return text && <div>
@@ -387,7 +388,7 @@ class AutoFormTable extends PureComponent {
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       const isFixed = scrollXWidth > (window.innerWidth - 64 - 48) ? 'right' : ''
-      _columns.push({
+      !this.props.loading && !this.props.getConfigLoading && _columns.push({
         align: 'center',
         title: '操作',
         width: 180,
@@ -547,7 +548,8 @@ class AutoFormTable extends PureComponent {
         <Table
           rowKey={(record, index) => {
             if (keys[configId]) {
-              return record[keys[configId][0]]
+              // return record[keys[configId][0]]
+              return record.rn
             }
           }}
           size="small"

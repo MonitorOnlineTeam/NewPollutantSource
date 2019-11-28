@@ -19,16 +19,16 @@ const { Option } = Select;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 const columns = [
-  {
-    title: '点名称',
-    dataIndex: 'PointName',
-    key: 'PointName',
-  },
-  {
-    title: '污染物名称',
-    dataIndex: 'PollutantName',
-    key: 'PollutantName',
-  },
+  // {
+  //   title: '点名称',
+  //   dataIndex: 'PointName',
+  //   key: 'PointName',
+  // },
+  // {
+  //   title: '污染物名称',
+  //   dataIndex: 'PollutantName',
+  //   key: 'PollutantName',
+  // },
   {
     title: '报警时间',
     dataIndex: 'AlarmTime',
@@ -45,29 +45,29 @@ const columns = [
     title: '报警描述',
     dataIndex: 'AlarmMsg',
     key: 'AlarmMsg',
-    width: 350,
+    width: 450,
   },
-  {
-    title: '标准',
-    dataIndex: 'StandardValue',
-    key: 'StandardValue',
-    width: 50,
-    align: 'right',
-  },
-  {
-    title: '标准值',
-    dataIndex: 'AlarmValue',
-    key: 'AlarmValue',
-    width: 50,
-    align: 'right',
-  },
-  {
-    title: '单位',
-    dataIndex: 'Unit',
-    key: 'Unit',
-    width: 50,
-  },
-  
+  // {
+  //   title: '标准',
+  //   dataIndex: 'StandardValue',
+  //   key: 'StandardValue',
+  //   width: 50,
+  //   align: 'right',
+  // },
+  // {
+  //   title: '标准值',
+  //   dataIndex: 'AlarmValue',
+  //   key: 'AlarmValue',
+  //   width: 50,
+  //   align: 'right',
+  // },
+  // {
+  //   title: '单位',
+  //   dataIndex: 'Unit',
+  //   key: 'Unit',
+  //   width: 50,
+  // },
+
 ];
 
 @connect(({ loading, qualityControl }) => ({
@@ -146,7 +146,7 @@ class index extends Component {
     let BeginTime = moment().format('YYYY-11-10 00:00:00');
     let EndTime = moment().format('YYYY-12-01 23:59:59');
     let AlarmType = "";
-    if (alarmMessageForm.time) {
+    if (alarmMessageForm.time && alarmMessageForm.time.length !== 0) {
       BeginTime = alarmMessageForm.time[0];
       EndTime = alarmMessageForm.time[1];
 
@@ -204,7 +204,9 @@ class index extends Component {
                       </Select>,
                     )}
                   </Form.Item>
-                  <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
+                  <Form.Item>
+                    <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
+                  </Form.Item>
                 </Form>
               }
             >
