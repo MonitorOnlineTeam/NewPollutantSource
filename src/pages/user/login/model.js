@@ -30,6 +30,7 @@ const Model = {
           defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
         }
 
+
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
         Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
@@ -38,6 +39,12 @@ const Model = {
           ws.send(response.Datas.UserAccount);
         } catch (error) {
 
+        }
+        //大屏
+        if (payload.redirctUrl) {
+          router.push('/homepage');
+          return;
+          //defaultNavigateUrl = payload.redirctUrl;
         }
         // router.push('/');
         router.push(defaultNavigateUrl);
