@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 15:16:53
+ * @Last Modified time: 2019-11-29 17:13:06
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -156,7 +156,7 @@ export default Model.extend({
       const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
-        const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '').map((item, index) => ({
+        const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0').map((item, index) => ({
           title: item.DF_NAME_CN,
           dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
@@ -169,7 +169,6 @@ export default Model.extend({
           type: item.DF_CONTROL_TYPE,
         }),
         );
-
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};
