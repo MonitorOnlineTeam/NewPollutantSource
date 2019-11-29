@@ -835,10 +835,11 @@ class index extends Component {
     const isLoading = allEntAndPointLoading || alarmAnalysisLoading || allMonthEmissionsByPollutantLoading || rateStatisticsByEntLoading || statisticsPointStatusLoading || warningInfoLoading || taskCountLoading || exceptionProcessingLoading
     const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
-    if (did && isLoading) {
-      return <PageLoading />
-    }
-
+    // if (did && isLoading) {
+    //   return <PageLoading />
+    // }
+    // if (allEntAndPointLoading)
+    //   return <PageLoading />
 
     const lineOption = {
       xAxis: {
@@ -885,6 +886,23 @@ class index extends Component {
               alignItems: "center",
               justifyContent: "center",
               background: "rgba(0, 0, 0, 0.4)",
+              zIndex: 999,
+            }}
+            size="large"
+          />
+        }
+        {
+          allEntAndPointLoading && <Spin
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              top: 0,
+              
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0, 0, 0, 0)",
               zIndex: 999,
             }}
             size="large"

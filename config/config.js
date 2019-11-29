@@ -87,6 +87,15 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
+      path: '/hrefLogin',
+      component: '../layouts/BlankLayout',
+      routes: [
+        { path: '/hrefLogin', component: './user/login/hrefLogin' },
+      ]
+    },
+    {
+
+
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
@@ -890,6 +899,7 @@ export default {
           ],
         },
       ],
+
     },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
