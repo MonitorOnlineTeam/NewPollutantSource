@@ -21,6 +21,11 @@ class index extends Component {
       dateValue: [],
       DGIMN: null,
       PollutantCode: null,
+      QCType: null,
+      QCExecuType: null,
+      QCTime: null,
+      StopTime: null,
+      StandardPollutantName: null,
     };
     this._SELF_ = {
       configId: "QCAnalyzerControlCommand"
@@ -28,7 +33,7 @@ class index extends Component {
   }
   render() {
     const { configId } = this._SELF_;
-    const { dateValue, DGIMN, PollutantCode } = this.state;
+    const { dateValue, DGIMN, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName } = this.state;
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
@@ -49,7 +54,12 @@ class index extends Component {
                       // dateValue: [startTime, endTime],
                       dateValue: row["dbo.T_Bas_QCAnalyzerControlCommand.ID"],
                       DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
-                      PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"]
+                      PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"],
+                      QCType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"],
+                      QCExecuType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCExecuType"],
+                      QCTime: row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"],
+                      StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"],
+                      StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"],
                     })
                   }}><Icon type="profile" /></a>
                 </Tooltip>
@@ -71,7 +81,9 @@ class index extends Component {
           }}
         >
           {
-            (dateValue.length && DGIMN && PollutantCode) && <ResultContrastPage dateValue={dateValue} DGIMN={DGIMN} PollutantCode={PollutantCode} />
+            (dateValue.length && DGIMN && PollutantCode && QCType && QCExecuType && QCTime && StopTime && StandardPollutantName) &&
+            <ResultContrastPage dateValue={dateValue} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
+              QCExecuType={QCExecuType} QCTime={QCTime} StopTime={StopTime} StandardPollutantName={StandardPollutantName} />
           }
         </Modal>
       </PageHeaderWrapper>

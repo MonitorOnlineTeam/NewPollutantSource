@@ -6,14 +6,14 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Input, Form } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
-
+import styles from './ResultContrastPage.less';
 const Option = Select.Option;
 
 const columns = [
@@ -33,11 +33,12 @@ const columns = [
     key: 'StandValue',
   },
 ];
+@Form.create()
 
 @connect(({ loading, qualityControl }) => ({
-  standardGasList: qualityControl.standardGasList,
+  // standardGasList: qualityControl.standardGasList,
   resultContrastData: qualityControl.resultContrastData,
-  resultContrastTimeList: qualityControl.resultContrastTimeList,
+  // resultContrastTimeList: qualityControl.resultContrastTimeList,
   standardGasLoading: loading.effects["qualityControl/getStandardGas"],
   QCAResultCheckByDGIMNLoading: loading.effects["qualityControl/QCAResultCheckByDGIMN"],
   QCAResultCheckSelectListLoading: loading.effects["qualityControl/QCAResultCheckSelectList"],
@@ -50,13 +51,25 @@ class ResultContrastPage extends Component {
       DGIMN: props.DGIMN,
       PollutantCode: props.PollutantCode,
     };
+    this._SELF_ = {
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
+        },
+      },
+    }
   }
 
   componentDidMount() {
-    // 获取污染物
-    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
-    // 获取时间列表
-    this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: this.state.DGIMN } });
+    // // 获取污染物
+    // this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
+    // // 获取时间列表
+    // this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: this.state.DGIMN } });
     this.getPageData();
   }
 
@@ -64,7 +77,7 @@ class ResultContrastPage extends Component {
     this.props.dispatch({
       type: "qualityControl/updateState",
       payload: {
-        standardGasList: [],
+        // standardGasList: [],
         resultContrastTimeList: [],
         resultContrastData: {
           valueList: [],
@@ -77,46 +90,46 @@ class ResultContrastPage extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.DGIMN !== nextProps.DGIMN) {
-      // 获取时间列表
-      this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: nextProps.DGIMN } });
-      this.props.dispatch({
-        type: "qualityControl/updateState",
-        payload: {
-          resultContrastData: {
-            ...nextProps.resultContrastData,
-            errorStr: undefined,
-          }
-        }
-      })
-    }
-    if (!this.props.flag) {
-      if ((this.props.DGIMN !== nextProps.DGIMN) || (this.props.PollutantCode !== nextProps.PollutantCode) || (this.props.dateValue !== nextProps.dateValue)) {
-        this.setState({
-          DGIMN: nextProps.DGIMN,
-          PollutantCode: nextProps.PollutantCode ? nextProps.PollutantCode : this.state.PollutantCode,
-          // dateValue: (nextProps.dateValue && nextProps.dateValue.length) ? nextProps.dateValue : this.state.dateValue
-          dateValue: nextProps.dateValue
-        }, () => {
-          this.getPageData();
-        })
-      }
-    }
-    if (this.props.flag) {
-      if ((this.props.DGIMN !== nextProps.DGIMN) || (this.props.standardGasList !== nextProps.standardGasList) || (this.props.resultContrastTimeList !== nextProps.resultContrastTimeList)) {
-        this.setState({
-          DGIMN: nextProps.DGIMN,
-          PollutantCode: nextProps.standardGasList.length && nextProps.standardGasList[0].PollutantCode,
-          // dateValue: (nextProps.dateValue && nextProps.dateValue.length) ? nextProps.dateValue : this.state.dateValue
-          dateValue: nextProps.resultContrastTimeList.length ? nextProps.resultContrastTimeList[0].key : undefined
-        }, () => {
-          this.getPageData();
-        })
-      }
+  // componentWillReceiveProps(nextProps) {
+  //   if (this.props.DGIMN !== nextProps.DGIMN) {
+  //     // // 获取时间列表
+  //     // this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: nextProps.DGIMN } });
+  //     this.props.dispatch({
+  //       type: "qualityControl/updateState",
+  //       payload: {
+  //         resultContrastData: {
+  //           ...nextProps.resultContrastData,
+  //           errorStr: undefined,
+  //         }
+  //       }
+  //     })
+  //   }
+  //   if (!this.props.flag) {
+  //     if ((this.props.DGIMN !== nextProps.DGIMN) || (this.props.PollutantCode !== nextProps.PollutantCode) || (this.props.dateValue !== nextProps.dateValue)) {
+  //       this.setState({
+  //         DGIMN: nextProps.DGIMN,
+  //         PollutantCode: nextProps.PollutantCode ? nextProps.PollutantCode : this.state.PollutantCode,
+  //         // dateValue: (nextProps.dateValue && nextProps.dateValue.length) ? nextProps.dateValue : this.state.dateValue
+  //         dateValue: nextProps.dateValue
+  //       }, () => {
+  //         this.getPageData();
+  //       })
+  //     }
+  //   }
+  //   if (this.props.flag) {
+  //     if ((this.props.DGIMN !== nextProps.DGIMN) || (this.props.standardGasList !== nextProps.standardGasList) || (this.props.resultContrastTimeList !== nextProps.resultContrastTimeList)) {
+  //       this.setState({
+  //         DGIMN: nextProps.DGIMN,
+  //         PollutantCode: nextProps.standardGasList.length && nextProps.standardGasList[0].PollutantCode,
+  //         // dateValue: (nextProps.dateValue && nextProps.dateValue.length) ? nextProps.dateValue : this.state.dateValue
+  //         dateValue: nextProps.resultContrastTimeList.length ? nextProps.resultContrastTimeList[0].key : undefined
+  //       }, () => {
+  //         this.getPageData();
+  //       })
+  //     }
 
-    }
-  }
+  //   }
+  // }
 
   // 获取页面数据
   getPageData = (isSearch) => {
@@ -150,44 +163,108 @@ class ResultContrastPage extends Component {
 
   // 顶部查询条件
   searchWhere = () => {
-    const { dateValue, PollutantCode } = this.state;
-    const { standardGasList, resultContrastTimeList } = this.props;
+    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType } = this.props;
+    const { formItemLayout } = this._SELF_;
+    //质控类型
+    let getQCTypes = [
+      {
+        id: 1,
+        description: "配气开始质控"
+      },
+      {
+        id: 2,
+        description: "配气结束质控"
+      },
+      {
+        id: 3,
+        description: "质控仪重启"
+      },
+      {
+        id: 4,
+        description: "质控仪吹扫"
+      },
+      {
+        id: 5,
+        description: "质控仪开锁"
+      },
+    ];
+    //质控执行类型
+    let getQCExecuTypes = [
+      {
+        id: 1,
+        description: "手动"
+      },
+      {
+        id: 2,
+        description: "定时"
+      },
+      {
+        id: 3,
+        description: "周期"
+      },
+    ];
     return (
-      <Row>
-        {/* <RangePicker_ style={{ width: 340 }} showTime dateValue={dateValue} placeholder="请选择时间" onChange={(date, dateString) => {
-          this.setState({
-            dateValue: date
-          })
-        }} /> */}
-        <Select placeholder="请选择时间" value={dateValue} style={{ width: 340, marginRight: 10 }} onChange={(value) => {
-          // this.setState({
-          //   PollutantCode: value
-          // })
-          this.setState({
-            dateValue: value
-          })
-        }}>
-          {
-            resultContrastTimeList.map(item => {
-              return <Option key={item.key} value={item.key}>{item.value}</Option>
-            })
-          }
-        </Select>
-        <Select placeholder="请选择污染物" value={PollutantCode} style={{ width: 200 }} onChange={(value) => {
-          this.setState({
-            PollutantCode: value
-          })
-        }}>
-          {
-            standardGasList.map(item => {
-              return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
-            })
-          }
-        </Select>
-        <Button style={{ margin: 5 }} type="primary" onClick={() => {
-          this.getPageData(true)
-        }}>查询</Button>
-      </Row>
+      // <Row>
+      //   <RangePicker_ style={{ width: 340 }} showTime dateValue={dateValue} placeholder="请选择时间" onChange={(date, dateString) => {
+      //     this.setState({
+      //       dateValue: date
+      //     })
+      //   }} />
+      //   <Select placeholder="请选择时间" value={dateValue} style={{ width: 340, marginRight: 10 }} onChange={(value) => {
+      //     // this.setState({
+      //     //   PollutantCode: value
+      //     // })
+      //     this.setState({
+      //       dateValue: value
+      //     })
+      //   }}>
+      //     {
+      //       resultContrastTimeList.map(item => {
+      //         return <Option key={item.key} value={item.key}>{item.value}</Option>
+      //       })
+      //     }
+      //   </Select>
+      //   <Select placeholder="请选择污染物" value={PollutantCode} style={{ width: 200 }} onChange={(value) => {
+      //     this.setState({
+      //       PollutantCode: value
+      //     })
+      //   }}>
+      //     {
+      //       standardGasList.map(item => {
+      //         return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+      //       })
+      //     }
+      //   </Select>
+      //   <Button style={{ margin: 5 }} type="primary" onClick={() => {
+      //     this.getPageData(true)
+      //   }}>查询</Button>
+      // </Row>
+      <Form>
+        <Row>
+          <Col span={12}>
+            <Form.Item {...formItemLayout} label="时间">
+              <Input style={{ width: 300 }} defaultValue={QCTime + " - " + StopTime} readOnly={true} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item {...formItemLayout} label="污染物名称">
+              <Input defaultValue={StandardPollutantName} readOnly={true} />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item {...formItemLayout} label="质控类型">
+              <Input defaultValue={getQCTypes.find(n => n.id === QCType).description} readOnly={true} />
+            </Form.Item >
+          </Col>
+          <Col span={12}>
+            <Form.Item {...formItemLayout} label="质控执行类型">
+              <Input defaultValue={getQCExecuTypes.find(n => n.id === QCExecuType).description} readOnly={true} />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
     )
   }
 
