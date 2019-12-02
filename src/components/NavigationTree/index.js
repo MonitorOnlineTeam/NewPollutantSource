@@ -680,25 +680,26 @@ class NavigationTree extends Component {
           <div style={{ marginBottom: 15 }}>
             <Row style={{ textAlign: "center" }}>
               <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
-              <Col span={1}></Col>
+              <Col span={this.props.QCAUse==undefined?1:4}></Col>
               <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
-              <Col span={1}></Col>
-              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col>
-              <Col span={1}></Col>
+              {this.props.QCAUse==undefined?<div><Col span={1}></Col>
+              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col></div>:""}
+              <Col span={this.props.QCAUse==undefined?1:4}></Col>
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
 
-          <SelectPollutantType
+          {this.props.QCAUse==undefined?<SelectPollutantType
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
             onChange={this.handleChange}
           />
-          <EnterprisePointCascadeMultiSelect
+          :""}
+          {this.props.QCAUse==undefined?<EnterprisePointCascadeMultiSelect
             searchRegion={true}
             onChange={this.regionChange}
             placeholder="请选择区域"
-          />
+          />:""}
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
@@ -743,7 +744,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={{ marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" }}
+                style={this.props.QCAUse==undefined?{ marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" }:{ marginTop: "5%", maxHeight: 'calc(100vh - 240px)', overflow: 'auto', width: "100%" }}
                 // onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
