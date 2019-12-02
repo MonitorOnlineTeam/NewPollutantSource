@@ -35,9 +35,9 @@ const columns = [
         value: 0,
       },
     ],
-    onFilter: (value, record) => record.flag === value,
+    onFilter: (value, record) => record.Flag === value,
     render: (value, record, index) => {
-      if (value) {
+      if (record.Flag==1) {
         return <img style={{ width: 14 }} src="/gisnormal.png" />
       }
       return <img style={{ width: 14 }} src="/gisexception.png" />
@@ -223,7 +223,7 @@ class index extends Component {
     const { showType } = this.state;
     return (
       <>
-        <NavigationTree onItemClick={value => {
+        <NavigationTree QCAUse="1" onItemClick={value => {
           if (value.length > 0 && !value[0].IsEnt && value[0].key) {
             this.setState({
               DGIMN: value[0].key,
