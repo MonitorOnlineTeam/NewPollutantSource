@@ -22,8 +22,8 @@ const { RangePicker } = DatePicker;
 const columns = [
   {
     title: '状态',
-    dataIndex: 'flag',
-    key: 'flag',
+    dataIndex: 'Flag',
+    key: 'Flag',
     width: 70,
     align: 'center',
     filters: [
@@ -73,7 +73,7 @@ const columns = [
     return {
       time: Form.createFormField(props.statusRecordForm.time),
       DataTempletCode: Form.createFormField(props.statusRecordForm.DataTempletCode),
-      status: Form.createFormField(props.statusRecordForm.status),
+      // status: Form.createFormField(props.statusRecordForm.status),
     };
   },
   onFieldsChange(props, fields) {
@@ -94,8 +94,8 @@ class Index extends Component {
     const firsttime = moment(new Date()).format('YYYY-MM-DD 00:00:00');
     const lasttime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
     this.state = {
-        DGIMN: '',
-        rangeDate: [firsttime, lasttime],
+      QCAMN: '',
+      rangeDate: [firsttime, lasttime],
     };
     this._SELF_ = {
       formItemLayout: {
@@ -115,35 +115,35 @@ class Index extends Component {
     })
   }
 
-  componentWillReceiveProps = nextProps => {
-    const { DGIMN } = this.props;
-    if (nextProps.DGIMN !== DGIMN) {
-      this.changeDgimn(DGIMN);
-    }
-  }
+  // componentWillReceiveProps = nextProps => {
+  //   const { QCAMN } = this.props;
+  //   if (nextProps.QCAMN !== QCAMN) {
+  //     this.changeDgimn(QCAMN);
+  //   }
+  // }
 
   /** 切换排口 */
-    changeDgimn=dgimn => {
-        this.setState({
-            DGIMN: dgimn,
-        })
-         const {
-        dispatch,
-      } = this.props;
-       dispatch({
-         type: 'report/updateState',
-         payload: {
-           statusRecordForm: {
-             ...this.props.statusRecordForm,
-             DGIMN: dgimn,
-           },
-         },
-       });
-       setTimeout(() => {
-         // 获取表格数据
-         this.getTableData();
-       }, 0);
-    }
+  changeDgimn = dgimn => {
+    this.setState({
+      QCAMN: dgimn,
+    })
+    const {
+      dispatch,
+    } = this.props;
+    dispatch({
+      type: 'report/updateState',
+      payload: {
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
+          QCAMN: dgimn,
+        },
+      },
+    });
+    setTimeout(() => {
+      // 获取表格数据
+      this.getTableData();
+    }, 0);
+  }
 
   // 分页
   onTableChange = (current, pageSize) => {
@@ -181,15 +181,31 @@ class Index extends Component {
 
   // 获取表格数据
   getTableData = () => {
-    const { DGIMN } = this.state;
-    if (DGIMN) {
+    const { QCAMN } = this.state;
+    if (QCAMN) {
       this.props.dispatch({
         type: 'qualityControl/QCAStatusByDGIMN',
         payload: {
-          DGIMN,
+          QCAMN,
         },
       })
     }
+  }
+
+  // 分页
+  onTableChange = (pageIndex, pageSize) => {
+    this.props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
+          current: pageIndex,
+          pageSize: pageSize,
+        },
+      },
+    });
+    // 获取表格数据
+    this.getTableData();
   }
 
   /** 时间控件 */
@@ -202,8 +218,7 @@ class Index extends Component {
   }
 
   render() {
-    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList } = this.props;
-    const { formItemLayout } = this._SELF_;
+    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList, statusRecordForm } = this.props;
     return (
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
@@ -212,9 +227,9 @@ class Index extends Component {
           })
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
             this.setState({
-              DGIMN: value[0].key,
+              QCAMN: value[0].key,
             }, () => {
-             this.changeDgimn(value[0].key);
+              this.changeDgimn(value[0].key);
             })
           }
         }} />
@@ -224,15 +239,15 @@ class Index extends Component {
               title={
                 <Form>
                   <Row gutter={16}>
-                  <Col span={4}></Col>
+                    <Col span={4}></Col>
                     <Col span={7}>
                       <Form.Item>
                         {getFieldDecorator('time')(
                           <RangePicker
-                             style={{ width: '100%', marginBottom: 0 }}
+                            style={{ width: '100%', marginBottom: 0 }}
                             showTime={{
                               hideDisabledOptions: true,
-                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
                             }}
                             allowClear={false}
                             format="YYYY-MM-DD HH:mm:ss"
@@ -261,11 +276,22 @@ class Index extends Component {
                 </Form>
               }
             >
-            <SdlTable
-                  dataSource={QCAStatusList}
-                  columns={columns}
-                  loading={loading}
-                />
+              <SdlTable
+                dataSource={QCAStatusList}
+                columns={columns}
+                loading={loading}
+                scroll={{ y: 'calc(100vh - 450px)' }} 
+                pagination={{
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  pageSizeOptions:['10','20','30','40','50'],
+                  pageSize: statusRecordForm.pageSize,
+                  current: statusRecordForm.current,
+                  onChange: this.onTableChange,
+                  onShowSizeChange: this.onTableChange,
+                  total: statusRecordForm.total,
+                }}
+              />
             </Card>
           </PageHeaderWrapper>
         </div>

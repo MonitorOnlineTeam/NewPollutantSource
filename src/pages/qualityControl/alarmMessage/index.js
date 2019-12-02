@@ -101,7 +101,6 @@ class index extends Component {
 
   // 分页
   onTableChange = (pageIndex, pageSize) => {
-    debugger
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
@@ -119,8 +118,8 @@ class index extends Component {
   // 点击左侧树查询
   onSearch = () => {
     const { DGIMN } = this.state;
-    let BeginTime = moment().format('YYYY-11-10 00:00:00');
-    let EndTime = moment().format('YYYY-12-01 23:59:59');
+    let BeginTime = moment().format('YYYY-MM-DD 00:00:00');
+    let EndTime = moment().format('YYYY-MM-DD 23:59:59');
     // 查询表格数据
     this.props.dispatch({
       type: 'qualityControl/updateState',
@@ -140,15 +139,14 @@ class index extends Component {
   }
   // 点击查询
   onClickSearch = () => {
-    debugger
     const { DGIMN } = this.state;
     let alarmMessageForm = this.props.form.getFieldsValue();
-    let BeginTime = moment().format('YYYY-11-10 00:00:00');
-    let EndTime = moment().format('YYYY-12-01 23:59:59');
+    let BeginTime = moment().format('YYYY-MM-DD 00:00:00');
+    let EndTime = moment().format('YYYY-MM-DD 23:59:59');
     let AlarmType = "";
     if (alarmMessageForm.time && alarmMessageForm.time.length !== 0) {
-      BeginTime = alarmMessageForm.time[0];
-      EndTime = alarmMessageForm.time[1];
+      BeginTime = alarmMessageForm.time[0].format('YYYY-MM-DD 00:00:00');
+      EndTime = alarmMessageForm.time[1].format('YYYY-MM-DD 23:59:59');
 
     }
     if (alarmMessageForm.AlarmType) {
@@ -174,9 +172,9 @@ class index extends Component {
   render() {
     const { form: { getFieldDecorator }, qCAAlarmMsgData, loading, AlarmTypeList, paramsQCAAlarmMsgList } = this.props;
     return (
-      <>
-        <NavigationTree onItemClick={value => {
-          if (value.length > 0 && !value[0].IsEnt && value[0].key) {
+      <div id="alarmMessage">
+        <NavigationTree QCAUse="1" domId="#alarmMessage" choice={false} onItemClick={value => {
+          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
             this.setState({
               DGIMN: value[0].key,
             }, () => {
@@ -184,7 +182,6 @@ class index extends Component {
             })
           }
         }} />
-        <div id="contentWrapper">
           <PageHeaderWrapper>
             <Card className="contentContainer"
               title={
@@ -215,18 +212,19 @@ class index extends Component {
                 columns={columns}
                 loading={loading}
                 pagination={{
-                  // showSizeChanger: true,
+                  showSizeChanger: true,
                   showQuickJumper: true,
                   pageSize: paramsQCAAlarmMsgList.PageSize,
                   current: paramsQCAAlarmMsgList.PageIndex,
                   onChange: this.onTableChange,
+                  onShowSizeChange: this.onTableChange,
                   total: paramsQCAAlarmMsgList.total,
+                  pageSizeOptions:['10','20','30','40','50'],
                 }}
               />
             </Card>
           </PageHeaderWrapper>
-        </div>
-      </>
+      </div>
     );
   }
 }
