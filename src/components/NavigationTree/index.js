@@ -10,11 +10,12 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
-import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon } from '@/utils/icon';
+import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
+import CustomIcon from '@/components/CustomIcon'
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -77,7 +78,7 @@ class NavigationTree extends Component {
           dataIndex: 'Pollutant',
           width: '10%',
           render: (text, record) => {
-            return <span>{this.getPollutantIcon(record.Pollutant, 25)}</span>
+            return <span>{this.props.QCAUse == undefined ? this.getPollutantIcon(record.Pollutant, 25) : <a><QCAIcon style={{ fontSize: 25 }}></QCAIcon></a>}</span>
 
           }
         },
@@ -173,9 +174,9 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode,QCAType:node.Type,VideoNo:node.VideoNo  });
+      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
       if (node.IsEnt == 0) {
-        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType,QCAType:node.Type };
+        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
         // if(panelDataList.filter(item=>item.key==key).length==0)
         // {
@@ -205,9 +206,9 @@ class NavigationTree extends Component {
       // }
       // console.log('entandpoint=', data)
       let where;
-      if(this.props.QCAUse){
-        where = this.defaultKey == 0 && node.IsEnt == 0 &&node.Type=="2";
-      }else{
+      if (this.props.QCAUse) {
+        where = this.defaultKey == 0 && node.IsEnt == 0 && node.Type == "2";
+      } else {
         where = this.defaultKey == 0 && node.IsEnt == 0;
       }
       if (where) {
@@ -239,7 +240,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode,QCAType:node.Type,VideoNo:node.VideoNo}]
+        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
         console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -409,6 +410,12 @@ class NavigationTree extends Component {
       case 3://异常
         color = "#e94"
         break;
+      case 4://质控中
+        color = "#1E90FF"
+        break;
+      case 5://吹扫中
+        color = "#FFC1C1"
+        break;
     }
     return color
   }
@@ -520,13 +527,13 @@ class NavigationTree extends Component {
   returnData = (data) => {
     //处理选中的数据格式
     const rtnList = [];
-    console.log('dataaaa',data)
+    console.log('dataaaa', data)
     data.map(item => {
       var list = dataList.filter(m => m.key == item)
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode ,QCAType:list[0].QCAType,VideoNo:list[0].VideoNo})
+        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode, QCAType: list[0].QCAType, VideoNo: list[0].VideoNo })
       }
     })
     //向外部返回选中的数据
@@ -607,6 +614,8 @@ class NavigationTree extends Component {
         return <a><VocIcon style={{ fontSize: size }} /></a>
       case "12":
         return <a><DustIcon style={{ fontSize: size }} /></a>
+      case "5":
+        return <a><CustomIcon type='icon-fangwumiaoshu-copy' style={{ fontSize: 16 }} /></a>
     }
   }
 
@@ -647,7 +656,7 @@ class NavigationTree extends Component {
                 : ""}
             </div>
           } key={item.key} dataRef={item}>
-            {item.children==null?"":loop(item.children)}
+            {item.children == null ? "" : loop(item.children)}
           </TreeNode>
         } else {
           return <TreeNode style={{ width: "100%" }} title={
@@ -680,26 +689,26 @@ class NavigationTree extends Component {
           <div style={{ marginBottom: 15 }}>
             <Row style={{ textAlign: "center" }}>
               <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
-              <Col span={this.props.QCAUse==undefined?1:4}></Col>
+              <Col span={this.props.QCAUse == undefined ? 1 : 4}></Col>
               <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
-              {this.props.QCAUse==undefined?<div><Col span={1}></Col>
-              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col></div>:""}
-              <Col span={this.props.QCAUse==undefined?1:4}></Col>
+              {this.props.QCAUse == undefined ? <div><Col span={1}></Col>
+                <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col></div> : ""}
+              <Col span={this.props.QCAUse == undefined ? 1 : 4}></Col>
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row>
           </div>
 
-          {this.props.QCAUse==undefined?<SelectPollutantType
+          {this.props.QCAUse == undefined ? <SelectPollutantType
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
             onChange={this.handleChange}
           />
-          :""}
-          {this.props.QCAUse==undefined?<EnterprisePointCascadeMultiSelect
+            : ""}
+          {this.props.QCAUse == undefined ? <EnterprisePointCascadeMultiSelect
             searchRegion={true}
             onChange={this.regionChange}
             placeholder="请选择区域"
-          />:""}
+          /> : ""}
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
@@ -744,7 +753,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={this.props.QCAUse==undefined?{ marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" }:{ marginTop: "5%", maxHeight: 'calc(100vh - 240px)', overflow: 'auto', width: "100%" }}
+                style={this.props.QCAUse == undefined ? { marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" } : { marginTop: "5%", maxHeight: 'calc(100vh - 240px)', overflow: 'auto', width: "100%" }}
                 // onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}

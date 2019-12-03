@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_weo7upayqrg.js';
+const scriptUrl = '//at.alicdn.com/t/font_1298443_apk5nbu88vo.js';
 const style = {
   fontSize: 16,
 }
