@@ -22,8 +22,8 @@ const { RangePicker } = DatePicker;
 const columns = [
   {
     title: '状态',
-    dataIndex: 'flag',
-    key: 'flag',
+    dataIndex: 'Flag',
+    key: 'Flag',
     width: 70,
     align: 'center',
     filters: [
@@ -68,34 +68,11 @@ const columns = [
   QCAStatusList: qualityControl.QCAStatusList,
   loading: loading.effects['qualityControl/QCAStatusByDGIMN'],
 }))
-@Form.create({
-  mapPropsToFields(props) {
-    return {
-      time: Form.createFormField(props.statusRecordForm.time),
-      DataTempletCode: Form.createFormField(props.statusRecordForm.DataTempletCode),
-      status: Form.createFormField(props.statusRecordForm.status),
-    };
-  },
-  onFieldsChange(props, fields) {
-    props.dispatch({
-      type: 'qualityControl/updateState',
-      payload: {
-        statusRecordForm: {
-          ...props.statusRecordForm,
-          ...fields,
-        },
-      },
-    })
-  },
-})
+@Form.create()
 class Index extends Component {
   constructor(props) {
     super(props);
-    const firsttime = moment(new Date()).format('YYYY-MM-DD 00:00:00');
-    const lasttime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
     this.state = {
-        DGIMN: '',
-        rangeDate: [firsttime, lasttime],
     };
     this._SELF_ = {
       formItemLayout: {
@@ -115,44 +92,17 @@ class Index extends Component {
     })
   }
 
-  componentWillReceiveProps = nextProps => {
-    const { DGIMN } = this.props;
-    if (nextProps.DGIMN !== DGIMN) {
-      this.changeDgimn(DGIMN);
-    }
-  }
-
   /** 切换排口 */
-    changeDgimn=dgimn => {
-        this.setState({
-            DGIMN: dgimn,
-        })
-         const {
-        dispatch,
-      } = this.props;
-       dispatch({
-         type: 'report/updateState',
-         payload: {
-           statusRecordForm: {
-             ...this.props.statusRecordForm,
-             DGIMN: dgimn,
-           },
-         },
-       });
-       setTimeout(() => {
-         // 获取表格数据
-         this.getTableData();
-       }, 0);
-    }
-
-  // 分页
-  onTableChange = (current, pageSize) => {
-    this.props.dispatch({
-      type: 'report/updateState',
+  changeDgimn = QCAMN => {
+    const {
+      dispatch,
+    } = this.props;
+    dispatch({
+      type: 'qualityControl/updateState',
       payload: {
         statusRecordForm: {
           ...this.props.statusRecordForm,
-          current,
+          QCAMN: QCAMN,
         },
       },
     });
@@ -162,60 +112,79 @@ class Index extends Component {
     }, 0);
   }
 
-  // 查询
-  onSearch = () => {
-    // 查询表格数据
+  // 获取表格数据
+  getTableData = () => {
+      this.props.dispatch({
+        type: 'qualityControl/QCAStatusByDGIMN',
+
+      })
+  }
+
+  // 分页
+  onTableChange = (pageIndex, pageSize) => {
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
-        paramsRecordForm: {
-          ...this.props.paramsRecordForm,
-          current: 1,
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
+          current: pageIndex,
+          pageSize: pageSize,
         },
       },
-    })
-    setTimeout(() => {
-      this.getTableData();
-    }, 0);
+    });
+    // 获取表格数据
+    this.getTableData();
   }
 
-  // 获取表格数据
-  getTableData = () => {
-    const { DGIMN } = this.state;
-    if (DGIMN) {
+  //日期改变事件
+  dateChange = (dataMoment, dateString) => {
+    if (dateString.length === 2) {
       this.props.dispatch({
-        type: 'qualityControl/QCAStatusByDGIMN',
+        type: 'qualityControl/updateState',
         payload: {
-          DGIMN,
+          statusRecordForm: {
+            ...this.props.statusRecordForm,
+            BeginTime: dateString[0],
+            EndTime: dateString[1],
+          },
         },
-      })
+      });
     }
   }
 
-  /** 时间控件 */
-  RPOnChange = (date, dateString) => {
-    console.log(dateString);
-  }
-
-  RPOnOk = () => {
-    console.log('21edafadsfafasdf');
+  //参数改变事件
+  selectChange = (values) => {
+    if (values) {
+      let DataTempletCode = [];
+      values.map((item) => {
+        DataTempletCode.push(item)
+      })
+      this.props.dispatch({
+        type: 'qualityControl/updateState',
+        payload: {
+          statusRecordForm: {
+            ...this.props.statusRecordForm,
+            DataTempletCode
+          },
+        },
+      });
+    }
   }
 
   render() {
-    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList } = this.props;
-    const { formItemLayout } = this._SELF_;
+    const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList, statusRecordForm } = this.props;
+    let defaultValue = [moment(statusRecordForm.BeginTime), moment(statusRecordForm.EndTime)];
+    let selectValues = [];
+    if (statusRecordForm.DataTempletCode) {
+      statusRecordForm.DataTempletCode.map((item) => {
+        selectValues.push(item)
+      })
+    }
     return (
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
-          this.setState({
-            initLoadSuccess: true,
-          })
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
-            this.setState({
-              DGIMN: value[0].key,
-            }, () => {
-             this.changeDgimn(value[0].key);
-            })
+              this.changeDgimn(value[0].key);
           }
         }} />
         <div id="contentWrapper">
@@ -224,29 +193,27 @@ class Index extends Component {
               title={
                 <Form>
                   <Row gutter={16}>
-                  <Col span={4}></Col>
+                    <Col span={4}></Col>
                     <Col span={7}>
                       <Form.Item>
-                        {getFieldDecorator('time')(
+                        {getFieldDecorator('time', {
+                          initialValue: defaultValue
+                        })(
                           <RangePicker
-                             style={{ width: '100%', marginBottom: 0 }}
-                            showTime={{
-                              hideDisabledOptions: true,
-                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-                            }}
+                            style={{ width: '100%', marginBottom: 0 }}
                             allowClear={false}
                             format="YYYY-MM-DD HH:mm:ss"
-                            showToday
-                            onChange={this.RPOnChange}
-                            onOk={this.RPOnOk}
+                            onChange={this.dateChange}
                           />,
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={7}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
-                        {getFieldDecorator('DataTempletCode')(
-                          <Select mode="multiple" maxTagTextLength={10} maxTagCount={2} maxTagPlaceholder="..." allowClear placeholder="请选择指标名称">
+                        {getFieldDecorator('DataTempletCode', {
+                          initialValue: selectValues
+                        })(
+                          <Select mode="multiple" maxTagTextLength={10} maxTagCount={2} maxTagPlaceholder="..." allowClear placeholder="请选择指标名称" onChange={this.selectChange}>
                             {
                               QCAStatusNameList.map(item => <Option key={item.Code}>{item.Name}</Option>)
                             }
@@ -255,17 +222,28 @@ class Index extends Component {
                       </Form.Item>
                     </Col>
                     <Col span={6} style={{ marginTop: 4 }}>
-                      <Button type="primary" style={{ marginRight: 10 }} onClick={this.onSearch}>查询</Button>
+                      <Button type="primary" style={{ marginRight: 10 }} onClick={this.getTableData}>查询</Button>
                     </Col>
                   </Row>
                 </Form>
               }
             >
-            <SdlTable
-                  dataSource={QCAStatusList}
-                  columns={columns}
-                  loading={loading}
-                />
+              <SdlTable
+                dataSource={QCAStatusList}
+                columns={columns}
+                loading={loading}
+                scroll={{ y: 'calc(100vh - 450px)' }}
+                pagination={{
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  pageSizeOptions: ['10', '20', '30', '40', '50'],
+                  pageSize: statusRecordForm.pageSize,
+                  current: statusRecordForm.current,
+                  onChange: this.onTableChange,
+                  onShowSizeChange: this.onTableChange,
+                  total: statusRecordForm.total,
+                }}
+              />
             </Card>
           </PageHeaderWrapper>
         </div>

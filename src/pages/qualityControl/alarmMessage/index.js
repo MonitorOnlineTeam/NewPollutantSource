@@ -80,11 +80,13 @@ const columns = [
 class index extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      formats: 'YYYY-MM-DD HH:mm:ss',
+    };
   }
 
   componentDidMount() {
     this.getAlarmType();
-
   }
 
   GetQCAAlarmMsgList = () => {
@@ -101,7 +103,6 @@ class index extends Component {
 
   // 分页
   onTableChange = (pageIndex, pageSize) => {
-    debugger
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
@@ -118,52 +119,57 @@ class index extends Component {
 
   // 点击左侧树查询
   onSearch = () => {
-    const { DGIMN } = this.state;
-    let BeginTime = moment().format('YYYY-11-10 00:00:00');
-    let EndTime = moment().format('YYYY-12-01 23:59:59');
+    const { QCAMN } = this.state;
     // 查询表格数据
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
         paramsQCAAlarmMsgList: {
           ...this.props.paramsQCAAlarmMsgList,
-          QCAMN: DGIMN,
-          BeginTime,
-          EndTime,
-          AlarmType: "",
-          PageIndex: 1,
-          PageSize: 10,
+          QCAMN: QCAMN,
         },
       },
     })
     this.GetQCAAlarmMsgList();
   }
+  //日期改变事件
+  dateChange = (dataMoment, dateString) => {
+    if (dateString.length === 2) {
+      this.props.dispatch({
+        type: 'qualityControl/updateState',
+        payload: {
+          paramsQCAAlarmMsgList: {
+            ...this.props.paramsQCAAlarmMsgList,
+            BeginTime: dateString[0],
+            EndTime: dateString[1],
+          },
+        },
+      });
+    }
+  }
+  //下拉框改变事件
+  selectChange = (values) => {
+    debugger
+    this.props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        paramsQCAAlarmMsgList: {
+          ...this.props.paramsQCAAlarmMsgList,
+          AlarmType: values
+        },
+      },
+    });
+  }
   // 点击查询
   onClickSearch = () => {
-    debugger
-    const { DGIMN } = this.state;
-    let alarmMessageForm = this.props.form.getFieldsValue();
-    let BeginTime = moment().format('YYYY-11-10 00:00:00');
-    let EndTime = moment().format('YYYY-12-01 23:59:59');
-    let AlarmType = "";
-    if (alarmMessageForm.time && alarmMessageForm.time.length !== 0) {
-      BeginTime = alarmMessageForm.time[0];
-      EndTime = alarmMessageForm.time[1];
-
-    }
-    if (alarmMessageForm.AlarmType) {
-      AlarmType = alarmMessageForm.AlarmType;
-    }
+    const { QCAMN } = this.state;
     // 查询表格数据
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {
         paramsQCAAlarmMsgList: {
           ...this.props.paramsQCAAlarmMsgList,
-          QCAMN: DGIMN,
-          BeginTime,
-          EndTime,
-          AlarmType,
+          QCAMN: QCAMN,
         },
       },
     })
@@ -173,60 +179,65 @@ class index extends Component {
 
   render() {
     const { form: { getFieldDecorator }, qCAAlarmMsgData, loading, AlarmTypeList, paramsQCAAlarmMsgList } = this.props;
+    let defaultValue = [moment(paramsQCAAlarmMsgList.BeginTime), moment(paramsQCAAlarmMsgList.EndTime)];
+     
     return (
-      <>
-        <NavigationTree onItemClick={value => {
-          if (value.length > 0 && !value[0].IsEnt && value[0].key) {
+      <div id="alarmMessage">
+        <NavigationTree QCAUse="1" domId="#alarmMessage" choice={false} onItemClick={value => {
+          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
             this.setState({
-              DGIMN: value[0].key,
+              QCAMN: value[0].key,
             }, () => {
               this.onSearch()
             })
           }
         }} />
-        <div id="contentWrapper">
-          <PageHeaderWrapper>
-            <Card className="contentContainer"
-              title={
-                <Form layout="inline">
-                  <Form.Item>
-                    {getFieldDecorator('time')(
-                      <RangePicker />,
-                    )}
-                  </Form.Item>
-
-                  <Form.Item>
-                    {getFieldDecorator('AlarmType')(
-                      <Select style={{ width: "250px" }} allowClear placeholder="请选择报警类型">
-                        {
-                          AlarmTypeList.map(item => <Option key={item.BaseCode}>{item.BaseCnName}</Option>)
-                        }
-                      </Select>,
-                    )}
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
-                  </Form.Item>
-                </Form>
-              }
-            >
-              <SdlTable
-                dataSource={qCAAlarmMsgData}
-                columns={columns}
-                loading={loading}
-                pagination={{
-                  // showSizeChanger: true,
-                  showQuickJumper: true,
-                  pageSize: paramsQCAAlarmMsgList.PageSize,
-                  current: paramsQCAAlarmMsgList.PageIndex,
-                  onChange: this.onTableChange,
-                  total: paramsQCAAlarmMsgList.total,
-                }}
-              />
-            </Card>
-          </PageHeaderWrapper>
-        </div>
-      </>
+        <PageHeaderWrapper>
+          <Card className="contentContainer"
+            title={
+              <Form layout="inline">
+                <Form.Item>
+                  {getFieldDecorator('time', {
+                    initialValue: defaultValue
+                  })(
+                    <RangePicker allowClear={false} format={this.state.formats} onChange={this.dateChange} />,
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  {getFieldDecorator('AlarmType', {
+                    initialValue: paramsQCAAlarmMsgList.AlarmType
+                  })(
+                    <Select style={{ width: "250px" }} allowClear placeholder="请选择报警类型" onChange={this.selectChange}>
+                      {
+                        AlarmTypeList.map(item => <Option key={item.BaseCode}>{item.BaseCnName}</Option>)
+                      }
+                    </Select>,
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" style={{ marginLeft: 10 }} onClick={this.onClickSearch}>查询</Button>
+                </Form.Item>
+              </Form>
+            }
+          >
+            <SdlTable
+              dataSource={qCAAlarmMsgData}
+              columns={columns}
+              loading={loading}
+              pagination={{
+                showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize: paramsQCAAlarmMsgList.PageSize,
+                current: paramsQCAAlarmMsgList.PageIndex,
+                onChange: this.onTableChange,
+                onShowSizeChange: this.onTableChange,
+                total: paramsQCAAlarmMsgList.total,
+                pageSizeOptions: ['10', '20', '30', '40', '50'],
+              }}
+            />
+          </Card>
+        </PageHeaderWrapper>
+      </div>
     );
   }
 }

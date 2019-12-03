@@ -48,6 +48,9 @@ export default Model.extend({
       current: 1,
       pageSize: 10,
       total: 0,
+      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DataTempletCode: [],
     },
     QCAStatusList: [],
     QCAStatusNameList: [],
@@ -327,16 +330,7 @@ export default Model.extend({
       select,
     }) {
       const statusRecordForm = yield select(state => state.qualityControl.statusRecordForm);
-      const postData = {
-        pageIndex: statusRecordForm.current,
-        pageSize: statusRecordForm.pageSize,
-        Code: statusRecordForm.DataTempletCode && statusRecordForm.DataTempletCode.value.toString(),
-        BeginTime: statusRecordForm.time && statusRecordForm.time.value[0] && moment(statusRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: statusRecordForm.time && statusRecordForm.time.value[1] && moment(statusRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
-        Status: statusRecordForm.status && statusRecordForm.status.value,
-        ...payload,
-      }
-      const result = yield call(services.QCAStatusByDGIMN, postData);
+      const result = yield call(services.QCAStatusByDGIMN, statusRecordForm);
       if (result.IsSuccess) {
         yield update({
           QCAStatusList: result.Datas,

@@ -13,7 +13,7 @@ class index extends PureComponent {
     super(props);
     this.state = {};
     this._SELF_ = {
-      scriptUrl: '//at.alicdn.com/t/font_1298443_weo7upayqrg.js',
+      scriptUrl: '//at.alicdn.com/t/font_1298443_apk5nbu88vo.js',
     }
   }
   render() {
