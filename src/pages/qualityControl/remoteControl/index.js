@@ -1,13 +1,13 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-15 15:46:20 
+ * @Author: Jiaqi
+ * @Date: 2019-11-15 15:46:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-18 16:12:29
+ * @Last Modified time: 2019-12-03 11:53:30
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Input, Select, InputNumber, Tabs, Form, Row, Col, Divider, Result } from 'antd';
+import { Card, Button, Input, Select, Alert, InputNumber, Tabs, Form, Row, Col, Divider, Result } from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
 import RemoteControlPage from './RemoteControlPage'
@@ -55,6 +55,25 @@ class index extends Component {
             console.log("123123=", value[0])
             this.setState({
               QCAMN: value[0].key
+            })
+            this.props.dispatch({
+              type: "qualityControl/updateState",
+              payload: {
+                currentQCAMN: value[0].key,
+                qualityControlName: null, // 质控仪名称
+                gasData: {  // 气瓶信息
+                  N2Info: {},
+                  NOxInfo: {},
+                  SO2Info: {},
+                  O2Info: {},
+                },
+                cemsList: [{}, {}, {}, {}], // CEMS列表
+                valveStatus: {}, // 阀门状态
+                flowList: {}, // 气瓶流量
+                p2Pressure: {},
+                p1Pressure: {},
+                QCStatus: undefined,
+              }
             })
           }
         }} />

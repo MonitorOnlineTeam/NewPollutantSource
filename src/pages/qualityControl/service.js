@@ -119,3 +119,9 @@ export async function getAlarmType(params) {
   return result;
 }
 
+// 获取质控仪信息
+export async function getCemsAndStandGasState(params) {
+  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/GetCemsAndStandGasState', params, null);
+  return result;
+}
+

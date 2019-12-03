@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 14:30:47
+ * @Last Modified time: 2019-12-03 11:52:43
  * @desc: 智能质控model
  */
 
@@ -74,6 +74,20 @@ export default Model.extend({
       DataList: [],
       legendList: [],
     },
+    // 质控仪流程图
+    qualityControlName: null, // 质控仪名称
+    gasData: {  // 气瓶信息
+      N2Info: {},
+      NOxInfo: {},
+      SO2Info: {},
+      O2Info: {},
+    },
+    cemsList: [{}, {}, {}, {}], // CEMS列表
+    valveStatus: {}, // 阀门状态
+    flowList: {}, // 气瓶流量
+    p2Pressure: {},
+    p1Pressure: {},
+    QCStatus: undefined, // 质控仪状态
   },
   effects: {
     // 获取企业及排口
@@ -459,5 +473,214 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取质控流程图基础数据
+    *getCemsAndStandGasState({ payload }, { call, put, update }) {
+      const result = yield call(services.getCemsAndStandGasState, payload);
+      if (result.IsSuccess) {
+        let gasData = {};
+        let cemsList = [{}, {}, {}, {}];
+        if (result.Datas) {
+          // 处理标气数据
+          if (result.Datas.GasList) {
+            let n2 = result.Datas.GasList.find(item => item.StandardGasCode === "065")
+            let NOx = result.Datas.GasList.find(item => item.StandardGasCode === "03")
+            let SO2 = result.Datas.GasList.find(item => item.StandardGasCode === "02")
+            let O2 = result.Datas.GasList.find(item => item.StandardGasCode === "s01")
+            gasData = {
+              N2Info: n2 || {},
+              NOxInfo: NOx || {},
+              SO2Info: SO2 || {},
+              O2Info: O2 || {},
+            }
+            console.log("gasData=", gasData)
+          }
+          // 处理CEMS数据
+          if (result.Datas.CemsList) {
+            result.Datas.CemsList.map(item => {
+              cemsList[item.MNHall - 1] = item
+            })
+          }
+        }
+        yield update({
+          gasData: gasData,
+          cemsList: cemsList,
+          qualityControlName: result.Datas.Center
+        })
+      } else {
+        message.error(result.Message)
+      }
+    }
   },
+  reducers: {
+    // 质控仪流程图 - 状态
+    changeQCState(state, { payload }) {
+      if (state.currentQCAMN) {
+        if (payload.DataGatherCode === state.currentQCAMN) {
+          console.log("payload=", payload)
+          let ValveStatus = {};
+          let code = payload.Code.replace("i", "")
+          const value = payload.Value ? payload.Value * 1 : 0;
+          if (code === "32002") {
+            // 门状态
+            ValveStatus.door = value
+          }
+          if (code === "32006") {
+            // O2配气阀门
+            ValveStatus.O2 = value
+          }
+          if (code === "32004") {
+            // SO2配气阀门
+            ValveStatus.SO2 = value
+          }
+          if (code === "32005") {
+            // NOx配气阀门
+            ValveStatus.NOx = value
+          }
+          if (code === "32007") {
+            // N2配气阀门
+            ValveStatus.N2 = value
+          }
+          if (code === "32008") {
+            // 吹扫阀门
+            ValveStatus.purge = value
+          }
+
+
+
+          // p1/p2 压力
+          let p2Pressure = state.p2Pressure;
+          let p1Pressure = state.p1Pressure;
+          if (code === "33502") {
+            // p2气瓶压力
+            p2Pressure = {
+              value: value,
+              isException: payload.IsException
+            };
+          }
+          if (code === "33503") {
+            // p1气瓶压力
+            p1Pressure = {
+              value: value,
+              isException: payload.IsException
+            };
+          }
+
+          let flowList = state.flowList;
+          // 气瓶流量
+          if (code === "33509") {
+            flowList[payload.PollutantCode] = payload.Value
+          }
+          // 标气浓度
+          let standardValue = state.standardValue;
+          if (code === "33510") {
+            console.log("standardValue=", payload.Value)
+            standardValue = payload.Value;
+          }
+
+          return {
+            ...state,
+            flowList: flowList,
+            valveStatus: ValveStatus,
+            p2Pressure: p2Pressure || state.p2Pressure,
+            p1Pressure: p1Pressure || state.p1Pressure,
+            standardValue: standardValue
+          }
+        }
+      }
+      if (state.cemsList.length) {
+        let code = payload.Code.replace("i", "")
+        // CEMS阀门状态
+        if (code === "32009" || code === "32013") {
+          let cemsList = state.cemsList.map(item => {
+            if (item.DGIMN == payload.DataGatherCode) {
+              console.log("payload12312312=", payload)
+              if (code === "32013") {
+                return {
+                  ...item,
+                  IsException: payload.IsException
+                }
+              }
+              return {
+                ...item,
+                valve: payload.valve
+              }
+            } else {
+              return { ...item }
+            }
+          })
+          return {
+            ...state,
+            cemsList
+          }
+        }
+
+        // if (code === "32013") {
+        //   // CENS1运行状态
+        //   ValveStatus.CENS1 = value
+        // }
+        // if (code === "32014") {
+        //   // CENS2运行状态
+        //   ValveStatus.CENS2 = value
+        // }
+        // if (code === "32015") {
+        //   // CENS3运行状态
+        //   ValveStatus.CENS3 = value
+        // }
+        // if (code === "32016") {
+        //   // CENS4运行状态
+        //   ValveStatus.CENS4 = value
+        // }
+
+        //   if (code === "32013") {
+        //     let cemsList = state.cemsList.map(item => {
+        //       if (item.DGIMN == payload.DataGatherCode) {
+        //         console.log("payload12312312=", payload)
+        //         return {
+        //           ...item,
+        //           valve: payload.valve
+        //         }
+        //       } else {
+        //         return { ...item }
+        //       }
+        //     })
+        //     return {
+        //       ...state,
+        //       cemsList
+        //     }
+        //   }
+      }
+      return { ...state }
+    },
+    // 质控仪状态
+    changeQCStatus(state, { payload }) {
+      if (state.currentQCAMN) {
+        let filterQC = payload.filter(item => item.DataGatherCode === state.currentQCAMN);
+        return {
+          ...state,
+          QCStatus: filterQC[0].Status
+        }
+      }
+      return { ...state }
+    },
+    // 重置质控仪流程图state
+    resetState(state, { payload }) {
+      return {
+        ...state,
+        qualityControlName: null, // 质控仪名称
+        gasData: {  // 气瓶信息
+          N2Info: {},
+          NOxInfo: {},
+          SO2Info: {},
+          O2Info: {},
+        },
+        cemsList: [{}, {}, {}, {}], // CEMS列表
+        valveStatus: {}, // 阀门状态
+        flowList: {}, // 气瓶流量
+        p2Pressure: {},
+        p1Pressure: {},
+        QCStatus: undefined,  // 质控仪状态}
+        ...payload
+      }
+    }
+  }
 });

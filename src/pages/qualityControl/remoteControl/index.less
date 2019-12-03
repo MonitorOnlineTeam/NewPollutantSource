@@ -6,7 +6,7 @@
   color: rgba(0, 0, 0, 0.85);
   font-size: 15px;
   color: #1890FF;
-    font-weight: 500;
+  font-weight: 500;
 }
 
 // .pollutantTitle {
@@ -14,3 +14,185 @@
 //   color: #000;
 //   font-size: 16px;
 // }
+
+.gasInfoBox {
+  // background: red;
+  opacity: 0.6;
+  position: absolute;
+  top: 63px;
+  left: 39px;
+  width: 234px;
+  height: 121px;
+
+  ul {
+    padding: 6px 10px;
+    /* height: 30px; */
+    color: #000;
+    font-weight: 500;
+    width: 72%;
+    float: left;
+
+    li {
+      line-height: 28px;
+      width: 100%;
+      height: 28px;
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+  }
+
+  .gasImg {
+    width: 20px;
+    height: 29px;
+    background: red;
+  }
+}
+
+.valve {
+  position: absolute;
+  top: 90px;
+  left: 322px;
+  z-index: 1;
+}
+
+.line {
+  position: absolute;
+  top: 109px;
+  left: 272px;
+  // width: 276px;
+  // height: 484px;
+}
+
+.CEMSInfoBox {
+  // background: red;
+  // opacity: 0.6;
+  position: absolute;
+  top: 232px;
+  left: 908px;
+  width: 192px;
+  height: 72px;
+  padding-left: 24px;
+  color: #fff;
+
+  .CEMSName {
+    width: 87px;
+    margin-top: 10px;
+    text-align: center;
+    float: left;
+    font-weight: 500;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .CEMSImg {
+    position: absolute;
+    top: 8px;
+    left: 24px;
+  }
+
+  .concentration {
+    width: 74px;
+    text-align: center;
+    color: #000;
+    position: absolute;
+    left: 114px;
+    top: 8px;
+    height: 58px;
+    background: #ebeef3;
+
+    p {
+      line-height: 26px;
+    }
+
+    span {
+      display: inline-block;
+      line-height: 30px;
+    }
+  }
+}
+
+.CEMSLine {
+  position: absolute;
+  top: 265px;
+  left: 740px;
+}
+
+.CEMSvalve {
+  position: absolute;
+  top: 244px;
+  left: 854px;
+  z-index: 1;
+}
+
+
+.pressure {
+  // background: red;
+  // opacity: 0.6;
+  position: absolute;
+  top: 276px;
+  left: 424px;
+  width: 96px;
+  height: 40px;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.exceptionPressure {
+  position: absolute;
+  top: 325px;
+  left: 452px;
+}
+
+
+
+.qualityControl {
+  // background: red;
+  // opacity: 0.6;
+  position: absolute;
+  top: 240px;
+  left: 548px;
+  width: 192px;
+  height: 400px;
+
+  .title {
+    text-align: center;
+    position: absolute;
+    top: 12px;
+    left: 27px;
+    font-size: 16px;
+    height: 22px;
+    /* margin: 11px 24px; */
+    color: #fff;
+    font-weight: 500;
+    background: #5379c2;
+    width: 138px;
+  }
+
+  .doorOpen {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .gasConcentration {
+    // background: red;
+    // opacity: 0.6;
+    position: absolute;
+    top: 96px;
+    left: 50%;
+    width: 96px;
+    height: 40px;
+    line-height: 20px;
+    // padding-top: 20px;
+    text-align: center;
+    margin-left: -48px;
+    background: #ebeef3;
+
+    p {
+      font-weight: 500;
+    }
+  }
+}
