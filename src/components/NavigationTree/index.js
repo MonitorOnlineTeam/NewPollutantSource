@@ -64,7 +64,7 @@ class NavigationTree extends Component {
       offState: true,
       overState: true,
       exceState: true,
-      screenList: [0, 1, 2, 3],
+      screenList: this.props.QCAUse == undefined ?[0, 1, 2, 3]:[0,1,3,4,5],
       treeVis: this.props.IsTree,
       panelVis: "none",
       QCAUse: "",
