@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-03 13:38:14
+ * @Last Modified time: 2019-12-04 14:39:07
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -184,13 +184,13 @@ class RemoteControlPage extends Component {
   returnQCStatus = () => {
     switch (this.props.QCStatus) {
       case "0":
-        return <Alert style={{ marginBottom: 10 }} message="质控仪离线中" banner />
+        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message="质控仪离线中" banner />
       case "1":
         return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪在线中" banner />
       case "3":
         return <Alert type="warning" style={{ marginBottom: 10 }} message="质控仪状态异常" banner />
       case "4":
-        return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪正在指控中" banner />
+        return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪正在质控中" banner />
       case "5":
         return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪正在吹扫中" banner />
       default:
@@ -398,7 +398,7 @@ class RemoteControlPage extends Component {
                           )}
                         </Form.Item>
                       </Col>
-                      <Col span={12} style={{ display: 'none' }}>
+                      <Col span={12}>
                         <Form.Item label="排口">
                           {getFieldDecorator('DGIMN', {
                             rules: [{
@@ -412,7 +412,7 @@ class RemoteControlPage extends Component {
                               // mode="multiple"
                               onChange={(value, option) => {
                                 this.setState({
-                                  MNHall: option.map(item => item.props.MNHall)
+                                  MNHall: option.props.MNHall
                                 })
                               }}>
                               {

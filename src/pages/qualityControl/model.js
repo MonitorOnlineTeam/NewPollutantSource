@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-03 11:52:43
+ * @Last Modified time: 2019-12-04 14:28:38
  * @desc: 智能质控model
  */
 
@@ -517,12 +517,12 @@ export default Model.extend({
       if (state.currentQCAMN) {
         if (payload.DataGatherCode === state.currentQCAMN) {
           console.log("payload=", payload)
-          let ValveStatus = {};
+          let ValveStatus = state.valveStatus;
           let code = payload.Code.replace("i", "")
           const value = payload.Value ? payload.Value * 1 : 0;
           if (code === "32002") {
             // 门状态
-            ValveStatus.door = value
+            ValveStatus.door = payload.Value
           }
           if (code === "32006") {
             // O2配气阀门
@@ -554,14 +554,16 @@ export default Model.extend({
             // p2气瓶压力
             p2Pressure = {
               value: value,
-              isException: payload.IsException
+              isException: payload.IsException,
+              pollutantCode: payload.PollutantCode
             };
           }
           if (code === "33503") {
             // p1气瓶压力
             p1Pressure = {
               value: value,
-              isException: payload.IsException
+              isException: payload.IsException,
+              pollutantCode: payload.PollutantCode
             };
           }
 
@@ -597,12 +599,12 @@ export default Model.extend({
               if (code === "32013") {
                 return {
                   ...item,
-                  IsException: payload.IsException
+                  isException: payload.IsException
                 }
               }
               return {
                 ...item,
-                valve: payload.valve
+                valve: payload.Value
               }
             } else {
               return { ...item }
@@ -658,6 +660,25 @@ export default Model.extend({
         return {
           ...state,
           QCStatus: filterQC[0].Status
+        }
+      }
+      return { ...state }
+    },
+    // 质控仪浓度
+    changeCEMSMonitorValue(state, { payload }) {
+      if (state.cemsList.length) {
+        let cemsList = state.cemsList.map(item => {
+          if (item.DGIMN == payload.DGIMN) {
+            return {
+              ...item,
+              monitorValue: payload.MonitorValue
+            }
+          }
+          return { ...item}
+        })
+        return {
+          ...state,
+          cemsList
         }
       }
       return { ...state }

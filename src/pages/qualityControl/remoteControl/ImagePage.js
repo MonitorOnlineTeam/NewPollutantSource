@@ -61,7 +61,8 @@ class ImagePage extends PureComponent {
                 浓度：{gasData.O2Info.Concentration}
               </li>
               <li>
-                过期时间：{gasData.O2Info.ExpirationDate}
+                <span>过期时间：</span>
+                <span className={styles.time} title={gasData.O2Info.ExpirationDate}>{gasData.O2Info.ExpirationDate}</span>
               </li>
               <li>
                 余量：{gasData.O2Info.VolumeValue}
@@ -70,14 +71,21 @@ class ImagePage extends PureComponent {
                 流量：{flowList["s01"]}
               </li>
             </ul>
-            {/* <img className={styles.gasImg} src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt="" /> */}
           </div>
+          {
+            (p1Pressure.pollutantCode == "s01" && p1Pressure.isException == "1") ?
+              <div className={styles.gasImgBox}>
+                <img src="/qualityControl/gasException.png" alt="" />
+                <p>O₂</p>
+              </div> : null
+          }
+
           <img className={styles.valve} src="/qualityControl/valveClose.jpg" alt="" />
-          {valveStatus.O2 &&
+          {valveStatus.O2 ?
             <>
               <img className={styles.line} src="/qualityControl/O2.png" alt="" />
               <img className={styles.valve} src="/qualityControl/valveOpen.jpg" alt="" />
-            </>
+            </> : null
           }
 
           {/* NOx */}
@@ -87,7 +95,8 @@ class ImagePage extends PureComponent {
                 浓度：{gasData.NOxInfo.Concentration}
               </li>
               <li>
-                过期时间：{gasData.NOxInfo.ExpirationDate}
+                <span>过期时间：</span>
+                <span className={styles.time} title={gasData.NOxInfo.ExpirationDate}>{gasData.NOxInfo.ExpirationDate}</span>
               </li>
               <li>
                 余量：{gasData.NOxInfo.VolumeValue}
@@ -97,12 +106,20 @@ class ImagePage extends PureComponent {
               </li>
             </ul>
           </div>
+          {
+            (p1Pressure.pollutantCode == "03" && p1Pressure.isException == "1") ?
+              <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px)" }}>
+                <img src="/qualityControl/gasException.png" alt="" />
+                <p style={{ fontSize: 15, left: 1 }}>NOx</p>
+              </div> : null
+          }
+
           <img className={styles.valve} style={{ top: "calc(90px + 130px + 30px)" }} src="/qualityControl/valveClose.jpg" alt="" />
-          {valveStatus.NOx &&
+          {valveStatus.NOx ?
             <>
               <img className={styles.line} src="/qualityControl/NOx.png" alt="" />
               <img className={styles.valve} style={{ top: "calc(90px + 130px + 30px)" }} src="/qualityControl/valveOpen.jpg" alt="" />
-            </>
+            </> : null
           }
 
           {/* SO2 */}
@@ -112,7 +129,8 @@ class ImagePage extends PureComponent {
                 浓度：{gasData.SO2Info.Concentration}
               </li>
               <li>
-                过期时间：{gasData.SO2Info.ExpirationDate}
+                <span>过期时间：</span>
+                <span className={styles.time} title={gasData.SO2Info.ExpirationDate}>{gasData.SO2Info.ExpirationDate}</span>
               </li>
               <li>
                 余量：{gasData.SO2Info.VolumeValue}
@@ -122,14 +140,20 @@ class ImagePage extends PureComponent {
               </li>
             </ul>
           </div>
+          {
+            (p1Pressure.pollutantCode == "02" && p1Pressure.isException == "1") ?
+              <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px * 2)" }}>
+                <img src="/qualityControl/gasException.png" alt="" />
+                <p style={{ fontSize: 15, left: 2 }}>SO₂</p>
+              </div> : null
+          }
           <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px)* 2)" }} src="/qualityControl/valveClose.jpg" alt="" />
-          {valveStatus.SO2 &&
+          {valveStatus.SO2 ?
             <>
               <img className={styles.line} src="/qualityControl/SO2.png" alt="" />
               <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 2)" }} src="/qualityControl/valveOpen.jpg" alt="" />
-            </>
+            </> : null
           }
-
           {/* N2 */}
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *3)" }}>
             <ul>
@@ -137,7 +161,8 @@ class ImagePage extends PureComponent {
                 浓度：{gasData.N2Info.Concentration}
               </li>
               <li>
-                过期时间：{gasData.N2Info.ExpirationDate}
+                <span>过期时间：</span>
+                <span className={styles.time} title={gasData.N2Info.ExpirationDate}>{gasData.N2Info.ExpirationDate}</span>
               </li>
               <li>
                 余量：{gasData.N2Info.VolumeValue}
@@ -147,26 +172,30 @@ class ImagePage extends PureComponent {
               </li>
             </ul>
           </div>
+          {
+            (p2Pressure.pollutantCode == "065" && p2Pressure.isException == "1") ?
+              <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px * 3)" }}>
+                <img src="/qualityControl/gasException.png" alt="" />
+                <p>N₂</p>
+              </div> : null
+          }
           <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px)* 3)" }} src="/qualityControl/valveClose.jpg" alt="" />
-          {valveStatus.N2 &&
+          {valveStatus.N2 ?
             <>
               <img className={styles.line} src="/qualityControl/N2.png" alt="" />
               <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 3)" }} src="/qualityControl/valveOpen.jpg" alt="" />
-            </>
+            </> : null
           }
           {/* 吹扫 */}
           <img className={styles.valve} style={{ top: "496px", left: "384px" }} src="/qualityControl/valveClose2.jpg" alt="" />
           {
-            valveStatus.purge && <>
+            !!valveStatus.purge ? <>
               <img className={styles.line} src="/qualityControl/purge.png" alt="" />
               <img className={styles.valve} style={{ top: "496px", left: "384px" }} src="/qualityControl/valveOpen2.jpg" alt="" />
-            </>
+            </> : null
           }
 
           {/* CEMS */}
-          {
-            console.log("cemsList-", cemsList)
-          }
           {
             cemsList.map((item, index) => {
               let top = 0;
@@ -182,34 +211,42 @@ class ImagePage extends PureComponent {
               if (index === 3) {
                 top = 586;
               }
-              console.log("CEMSStatus=", item.isException)
+              let lineSrc = `/qualityControl/CEMS${index + 1}.png`
               // if (item.MNHall !== undefined) {
               return <>
                 <div className={styles.CEMSInfoBox} style={{ top: `calc(232px + 112px * ${index})` }}>
                   <div className={styles.CEMSName}>
                     {
-                      item.CemsName &&
                       <>
-                        {item.CemsName} <br />
+                        {item.CemsName ?
+                          <p title={item.CemsName}>{item.CemsName}</p>
+                          : "未连接"} <br />
                         CEMS
                       </>
                     }
                   </div>
                   {/* CEMS状态: 1.离线 2.异常 0.正常 */}
-                  {item.isException == 1 && <img className={styles.CEMSImg} src="/qualityControl/cemsStatus1.png" alt="" />}
-                  {item.isException == 2 && <img className={styles.CEMSImg} src="/qualityControl/cemsStatus2.png" alt="" />}
+                  {item.isException == 1 ? <img className={styles.CEMSImg} src="/qualityControl/cemsStatus1.png" alt="" /> : null}
+                  {item.isException == 2 ? <img className={styles.CEMSImg} src="/qualityControl/cemsStatus2.png" alt="" /> : null}
+                  {(item.isException == undefined && !item.CemsName) && <img className={styles.CEMSImg} src="/qualityControl/cemsStatus1.png" alt="" />}
+
                   <div className={styles.concentration}>
-                    <p>浓度</p>
-                    <span></span>
+                    {
+                      item.monitorValue != undefined ?
+                        <>
+                          <p>浓度</p>
+                          <span>{item.monitorValue}</span>
+                        </> : null
+                    }
                   </div>
                 </div>
                 <img src="/qualityControl/valveClose.jpg" className={styles.CEMSvalve} style={{ top: top }} alt="" />
                 {
-                  item.valve &&
-                  <>
-                    <img className={styles.CEMSLine} src="/qualityControl/CEMS1.png" />
-                    <img className={styles.CEMSvalve} style={{ top: top }} src="/qualityControl/valveOpen.jpg" alt="" />
-                  </>
+                  item.valve === "1" ?
+                    <>
+                      <img className={styles.CEMSLine} src={lineSrc} />
+                      <img className={styles.CEMSvalve} style={{ top: top }} src="/qualityControl/valveOpen.jpg" alt="" />
+                    </> : undefined
                 }
               </>
               // }
@@ -222,20 +259,20 @@ class ImagePage extends PureComponent {
             {p1Pressure.value}
           </div>
           {
-            p1Pressure.isException && <img className={styles.exceptionPressure} src="p1Exception.png" />
+            p1Pressure.isException ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
           }
           {/* 压力p2 */}
           <div className={styles.pressure} style={{ top: 518 }}>
             {p2Pressure.value}
           </div>
           {
-            p2Pressure.isException && <img className={styles.exceptionPressure} style={{ top: 568 }} src="p2Exception.png" />
+            p2Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 568 }} src="p2Exception.png" /> : null
           }
           {/* 质控仪 */}
           <div className={styles.qualityControl}>
             {
               // 开门状态
-              valveStatus.door === "0" && <img className={styles.doorOpen} src="/qualityControl/doorOpen.png" alt="" />
+              valveStatus.door == "0" ? <img className={styles.doorOpen} src="/qualityControl/doorOpen.png" alt="" /> : null
             }
             <div className={styles.title}>
               {qualityControlName}

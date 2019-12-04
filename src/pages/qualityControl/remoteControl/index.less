@@ -29,7 +29,7 @@
     /* height: 30px; */
     color: #000;
     font-weight: 500;
-    width: 72%;
+    width: 76%;
     float: left;
 
     li {
@@ -41,13 +41,34 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
+
+      span.time {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        // display: inline-block;
+        width: 106px;
+        display: list-item;
+      }
     }
   }
+}
 
-  .gasImg {
-    width: 20px;
-    height: 29px;
-    background: red;
+.gasImgBox {
+  position: absolute;
+  top: 86px;
+  left: 220px;
+  width: 50px;
+  height: 80px;
+  background: #ebeef3;
+
+  p {
+    position: absolute;
+    top: 34px;
+    left: 8px;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
   }
 }
 
@@ -85,6 +106,15 @@
     font-weight: 500;
     position: absolute;
     z-index: 1;
+
+    p {
+      display: inline-block;
+      width: 84px;
+      height: 17px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .CEMSImg {

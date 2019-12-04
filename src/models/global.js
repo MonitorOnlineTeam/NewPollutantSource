@@ -379,6 +379,10 @@ export default Model.extend({
               type: 'qualityControlModel/changeRealTimeThanData',
               payload: { message: obj.Message },
             });
+            dispatch({
+              type: 'qualityControl/changeCEMSMonitorValue',
+              payload: obj.Message[0],
+            });
             break;
           case 'ControlData':
             dispatch({

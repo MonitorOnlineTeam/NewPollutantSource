@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:46:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-03 11:53:30
+ * @Last Modified time: 2019-12-04 14:35:18
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';
@@ -45,6 +45,7 @@ class index extends Component {
   }
 
   render() {
+    const { loading } = this.props;
     return (
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
@@ -52,7 +53,6 @@ class index extends Component {
             initLoadSuccess: true
           })
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
-            console.log("123123=", value[0])
             this.setState({
               QCAMN: value[0].key
             })
@@ -86,25 +86,26 @@ class index extends Component {
             }
             {
               // 无质控仪
-              (this.state.initLoadSuccess && !this.state.QCAMN) &&
-              <Result
-                status="404"
-                title="暂无数据"
-                subTitle="请先去添加质控仪！"
-                extra={
-                  <Button type="primary" onClick={() => router.push('/qualityControl/instrumentManage/add')}>
-                    添加质控仪
+              (!this.state.QCAMN && loading) ?
+                <Card className="contentContainer"><PageLoading /></Card> :
+                (!loading && !this.state.QCAMN ? <Result
+                  status="404"
+                  title="暂无数据"
+                  subTitle="请先去添加质控仪！"
+                  extra={
+                    <Button type="primary" onClick={() => router.push('/qualityControl/instrumentManage/add')}>
+                      添加质控仪
                   </Button>
-                }
-              ></Result>
+                  }
+                ></Result> : null)
             }
-            {
+            {/* {
               // 防止右侧内容空白，显示loading
-              !this.state.initLoadSuccess &&
+              (!this.state.initLoadSuccess && !this.state.QCAMN) &&  
               <Card className="contentContainer">
                 <PageLoading />
               </Card>
-            }
+            } */}
           </PageHeaderWrapper>
         </div>
       </>
