@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-05 17:24:59
+ * @Last Modified time: 2019-12-03 17:03:59
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -210,7 +210,7 @@ class SdlForm extends PureComponent {
       let { placeholder, validator } = item;
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
-      let initialValue = formData[fieldName] && `${formData[fieldName]}`;
+      let initialValue = (formData[fieldName] !== null || formData[fieldName] !== undefined) && `${formData[fieldName]}`;
       // 判断类型
       switch (item.type) {
         case '文本框':
@@ -369,7 +369,7 @@ class SdlForm extends PureComponent {
                 FileActualType: '1',
               },
             };
-            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid)=>{
+            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
             }} />
             // element = <Upload {...props} fileList={this.state.fileList}>
