@@ -23,12 +23,13 @@ const Model = {
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
 
-        if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          defaultNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          //response.Datas.MenuDatas[0].NavigateUrl
-        } else {
-          defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
-        }
+        // if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
+        //   defaultNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+        //   //response.Datas.MenuDatas[0].NavigateUrl
+        // } else {
+        //   defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
+        // }
+        defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
 
 
         delete response.Datas.MenuDatas;
