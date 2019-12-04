@@ -252,7 +252,7 @@ export default class UserInfoEdit extends Component {
         const title = this.state.selectKey === "base" ? "基本信息" : (this.state.selectKey === "roles" ? "角色设置" : "部门设置");
         return (
             <PageHeaderWrapper title={"编辑 - " + title}>
-                <div style={{ width: '100%', height: 'calc(100vh - 500px)', background: '#fff' }}>
+                <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
                             <Sider width={270} style={{ background: '#fff' }}>

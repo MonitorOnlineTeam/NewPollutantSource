@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:46:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-04 14:35:18
+ * @Last Modified time: 2019-12-04 17:09:50
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';
@@ -53,27 +53,29 @@ class index extends Component {
             initLoadSuccess: true
           })
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
+            if (this.state.QCAMN !== value[0].key) {
+              this.props.dispatch({
+                type: "qualityControl/updateState",
+                payload: {
+                  currentQCAMN: value[0].key,
+                  qualityControlName: null, // 质控仪名称
+                  gasData: {  // 气瓶信息
+                    N2Info: {},
+                    NOxInfo: {},
+                    SO2Info: {},
+                    O2Info: {},
+                  },
+                  cemsList: [{}, {}, {}, {}], // CEMS列表
+                  valveStatus: {}, // 阀门状态
+                  flowList: {}, // 气瓶流量
+                  p2Pressure: {},
+                  p1Pressure: {},
+                  QCStatus: undefined,
+                }
+              })
+            }
             this.setState({
               QCAMN: value[0].key
-            })
-            this.props.dispatch({
-              type: "qualityControl/updateState",
-              payload: {
-                currentQCAMN: value[0].key,
-                qualityControlName: null, // 质控仪名称
-                gasData: {  // 气瓶信息
-                  N2Info: {},
-                  NOxInfo: {},
-                  SO2Info: {},
-                  O2Info: {},
-                },
-                cemsList: [{}, {}, {}, {}], // CEMS列表
-                valveStatus: {}, // 阀门状态
-                flowList: {}, // 气瓶流量
-                p2Pressure: {},
-                p1Pressure: {},
-                QCStatus: undefined,
-              }
             })
           }
         }} />
