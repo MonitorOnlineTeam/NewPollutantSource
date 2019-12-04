@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-04 14:39:07
+ * @Last Modified time: 2019-12-04 16:59:39
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -50,7 +50,7 @@ class RemoteControlPage extends Component {
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 8 },
+          sm: { span: 10 },
         },
         wrapperCol: {
           xs: { span: 24 },
@@ -223,7 +223,7 @@ class RemoteControlPage extends Component {
             <Tabs defaultActiveKey={activeKey} onChange={(activeKey) => {
               this.setState({ activeKey: activeKey })
             }}>
-              <TabPane tab="质控仪" key="1">
+              <TabPane tab="手动质控" key="1">
                 <div>
                   <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
                     Modal.confirm({
@@ -255,221 +255,16 @@ class RemoteControlPage extends Component {
                       QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                     })
                   }}>质控仪开门</Button>
+                  <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                    this.setState({
+                      visible: true,
+                    })
+                  }}>手动质控</Button>
                 </div>
                 <Divider />
                 {this.state.QCAMN && <ImagePage QCAMN={this.state.QCAMN} />}
               </TabPane>
-              <TabPane tab="手动质控" key="2">
-
-                {/* <Divider /> */}
-                <Card
-                  style={{ marginTop: 16 }}
-                  type="inner"
-                  border={false}
-                  title="手动质控"
-                >
-                  <Form {...formItemLayout}>
-                    <Row>
-                      <Col span={12}>
-                        <Form.Item label="标气组分" style={{ width: '100%' }}>
-                          {getFieldDecorator('StandardPollutantCode', {
-                            rules: [{
-                              required: true,
-                              message: '请选择标气组分!',
-                            },],
-                          })(
-                            <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
-                              this.setState({
-                                StandardPollutantName: option.props.children ? option.props.children[0] : undefined
-                              })
-                              if (value == "02" || value == "03") {
-                                form.setFieldsValue({ "OldStandardUnit": "mg/m3", "MatchStandardUnit": "mg/m3" })
-                              } else {
-                                form.setFieldsValue({ "OldStandardUnit": "%", "MatchStandardUnit": "%" })
-                              }
-                            }}>
-                              {
-                                standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
-                                  return <Option key={item.PollutantCode} value={item.PollutantCode}>
-                                    {item.PollutantName}
-                                    {this.getResidueIcon(item.VolumeValue, item.GasInitPower)}
-                                  </Option>
-                                })
-                              }
-                            </Select>
-                          )}
-                        </Form.Item>
-
-                      </Col>
-                      <Col span={12}>
-                        <Form.Item label="总流量设定值">
-                          {getFieldDecorator('FlowValue', {
-                            rules: [{
-                              required: true,
-                              message: '请输入总流量设定值!',
-                            },],
-                          })(
-                            <InputNumber placeholder="请输入总流量设定值" style={{ width: '100%' }} min={0} max={1000} precision={1} />
-                          )}
-                        </Form.Item>
-                      </Col>
-
-                      <Col span={12}>
-                        <Form.Item label="原标气浓度">
-                          {getFieldDecorator('OldStandardValue', {
-                            rules: [{
-                              required: true,
-                              message: '请输入原标气浓度!',
-                            },],
-                          })(
-                            // min={500} max={5000}
-                            <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={12} style={{ display: "none" }}>
-                        <Form.Item label="原标气浓度值单位">
-                          {getFieldDecorator('OldStandardUnit', {
-                            // rules: [{
-                            //   required: true,
-                            //   message: '请选择原标气浓度值单位!',
-                            // },],
-                            initialValue: "mg/m3"
-                          })(
-                            <p>{form.getFieldValue("OldStandardUnit")}</p>
-                            // <Input disabled/>
-                            // <Select placeholder="请选择原标气浓度值单位">
-                            //   <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
-                            //   <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
-                            // </Select>
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={12}>
-                        <Form.Item label="配比标气浓度设定值">
-                          {getFieldDecorator('MatchStandardValue', {
-                            rules: [{
-                              required: true,
-                              message: '请输入配比标气浓度设定值!',
-                            },],
-                          })(
-                            // min={50} max={5000}
-                            <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} precision={1} />
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={12} style={{ display: "none" }}>
-                        <Form.Item label="配比标气浓度单位">
-                          {getFieldDecorator('MatchStandardUnit', {
-                            // rules: [{
-                            //   required: true,
-                            //   message: '请选择配比标气浓度单位!',
-                            // },],
-                            initialValue: "mg/m3"
-                          })(
-                            <p>{form.getFieldValue("MatchStandardUnit")}</p>
-                            // <Input disabled/>
-                            // <Select placeholder="请选择配比标气浓度单位">
-                            //   <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
-                            //   <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
-                            // </Select>
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={12}>
-                        <Form.Item label="稀释气组分名称">
-                          {getFieldDecorator('DeliPollutantCode', {
-                            rules: [{
-                              required: true,
-                              message: '请选择稀释气组分名称!',
-                            },],
-                            initialValue: "0"
-                          })(
-                            <Select placeholder="请选择稀释气组分名称">
-                              <Option key="0">
-                                N2
-                            {/*  TODO (WJQ) :
-                            替换成
-                            {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
-                            */}
-                                {this.getResidueIcon(VolumeValue, GasInitPower)}
-                              </Option>
-                            </Select>
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={12}>
-                        <Form.Item label="排口">
-                          {getFieldDecorator('DGIMN', {
-                            rules: [{
-                              required: true,
-                              message: '请选择排口!',
-                            },],
-                            initialValue: CEMSList.length ? CEMSList[0].DGIMN : undefined
-                          })(
-                            <Select
-                              placeholder="请选择排口"
-                              // mode="multiple"
-                              onChange={(value, option) => {
-                                this.setState({
-                                  MNHall: option.props.MNHall
-                                })
-                              }}>
-                              {
-                                CEMSList.map(item => {
-                                  return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
-                                })
-                              }
-                            </Select>
-                          )}
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    {/* <Row>
-                  <div>
-                    <CustomIcon type="icon-dianliang" />
-                    <span>余量剩余：12.13, 预计可用至2019-11-20 14:23:15</span>
-                  </div>
-                </Row> */}
-                    {/* <Divider orientation="right">
-
-                </Divider> */}
-                    <Row>
-                      <Button type="primary" style={{ float: "right" }} onClick={this.onSubmitForm}>开始质控</Button>
-                    </Row>
-                  </Form>
-                </Card>
-                {/* <Card
-              style={{ marginTop: 16 }}
-              type="inner"
-              border={false}
-              title="停止质控"
-            >
-              <Row>
-                <Col span={4} className="ant-form-item-required" style={{ textAlign: "right", paddingRight: 10, marginTop: 5 }}>排口:</Col>
-                <Col span={14}>
-                  <Select placeholder="请选择排口" style={{ width: "80%" }} mode="multiple" onChange={(value, option) => {
-                    this.setState({
-                      stopDGIMN: value,
-                      stopMNHall: option.map(item => item.props.MNHall)
-                    })
-                  }}>
-                    {
-                      CEMSList.map(item => {
-                        return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
-                      })
-                    }
-                  </Select>
-                </Col>
-                <Col>
-                  <Button type="primary" style={{ float: "right" }} onClick={() => {
-                    this.onStop()
-                  }}>停止质控</Button>
-                </Col>
-              </Row>
-            </Card> */}
-              </TabPane>
-              <TabPane tab="自动质控" key="3">
+              <TabPane tab="自动质控" key="2">
                 <Collapse bordered={false} defaultActiveKey={['0', '1', '2', '3']}>
                   {
                     autoQCAInfo.map((item, index) => {
@@ -508,51 +303,193 @@ class RemoteControlPage extends Component {
 
               </TabPane>
             </Tabs>
-            {/* <Modal
-          title="停止质控"
-          visible={this.state.visible}
-          onOk={this.onStop}
-          onCancel={() => {
-            this.setState({
-              visible: false
-            })
-          }}
-        >
-          <Row style={{ marginBottom: 16 }}>
-            <Col span="6" className="ant-form-item-required" style={{ textAlign: "right", paddingRight: 10, marginTop: 5 }}>标气组分:</Col>
-            <Col span="14">
-              <Select style={{ width: "100%" }} placeholder="请选择标气组分" onChange={(value, option) => {
+            <Modal
+              title="手动质控"
+              visible={this.state.visible}
+              onOk={this.onSubmitForm}
+              okText={"开始质控"}
+              // onClick={this.onSubmitForm}
+              width={900}
+              onCancel={() => {
                 this.setState({
-                  stopStandardPollutantName: option.props.children,
-                  stopStandardPollutantCode: value
+                  visible: false
                 })
-              }}>
-                {
-                  standardGasList.map(item => {
-                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
-                  })
-                }
-              </Select>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="6" className="ant-form-item-required" style={{ textAlign: "right", paddingRight: 10, marginTop: 5 }}>排口:</Col>
-            <Col span="14">
-              <Select placeholder="请选择排口" style={{ width: "100%" }} mode="multiple" onChange={(value, option) => {
-                this.setState({
-                  stopDGIMN: value,
-                  stopMNHall: option.map(item => item.props.MNHall)
-                })
-              }}>
-                {
-                  CEMSList.map(item => {
-                    return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
-                  })
-                }
-              </Select>
-            </Col>
-          </Row>
-        </Modal> */}
+              }}
+            >
+              <Form {...formItemLayout}>
+                <Row>
+                  <Col span={12}>
+                    <Form.Item label="标气组分" style={{ width: '100%' }}>
+                      {getFieldDecorator('StandardPollutantCode', {
+                        rules: [{
+                          required: true,
+                          message: '请选择标气组分!',
+                        },],
+                      })(
+                        <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
+                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"] })
+                          this.setState({
+                            StandardPollutantName: option.props.children ? option.props.children[0] : undefined
+                          })
+                          if (value == "02" || value == "03") {
+                            form.setFieldsValue({ "OldStandardUnit": "mg/m3", "MatchStandardUnit": "mg/m3" })
+                          } else {
+                            form.setFieldsValue({ "OldStandardUnit": "%", "MatchStandardUnit": "%" })
+                          }
+                        }}>
+                          {
+                            standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
+                              return <Option key={item.PollutantCode} value={item.PollutantCode} data-concentration={item.Concentration}>
+                                {item.PollutantName}
+                                {this.getResidueIcon(item.VolumeValue, item.GasInitPower)}
+                              </Option>
+                            })
+                          }
+                        </Select>
+                      )}
+                    </Form.Item>
+
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="总流量设定值">
+                      {getFieldDecorator('FlowValue', {
+                        rules: [{
+                          required: true,
+                          message: '请输入总流量设定值!',
+                        },],
+                      })(
+                        <InputNumber placeholder="请输入总流量设定值" style={{ width: '100%' }} min={0} max={1000} precision={1} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="配比标气浓度设定值">
+                      {getFieldDecorator('MatchStandardValue', {
+                        rules: [{
+                          required: true,
+                          message: '请输入配比标气浓度设定值!',
+                        },],
+                      })(
+                        // min={50} max={5000}
+                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} precision={1} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="排口">
+                      {getFieldDecorator('DGIMN', {
+                        rules: [{
+                          required: true,
+                          message: '请选择排口!',
+                        },],
+                        initialValue: CEMSList.length ? CEMSList[0].DGIMN : undefined
+                      })(
+                        <Select
+                          placeholder="请选择排口"
+                          // mode="multiple"
+                          onChange={(value, option) => {
+                            this.setState({
+                              MNHall: option.props.MNHall
+                            })
+                          }}>
+                          {
+                            CEMSList.map(item => {
+                              return <Option key={item.DGIMN} MNHall={item.MNHall} >{item.PointName}</Option>
+                            })
+                          }
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12} style={{ display: "none" }}>
+                    <Form.Item label="原标气浓度值单位">
+                      {getFieldDecorator('OldStandardUnit', {
+                        // rules: [{
+                        //   required: true,
+                        //   message: '请选择原标气浓度值单位!',
+                        // },],
+                        initialValue: "mg/m3"
+                      })(
+                        <p>{form.getFieldValue("OldStandardUnit")}</p>
+                        // <Input disabled/>
+                        // <Select placeholder="请选择原标气浓度值单位">
+                        //   <Option key="0" disabled={form.getFieldValue("OldStandardUnit") != "0"} >mg/m3</Option>
+                        //   <Option key="1" disabled={form.getFieldValue("OldStandardUnit") != "1"}>%</Option>
+                        // </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={12} style={{ display: "none" }}>
+                    <Form.Item label="配比标气浓度单位">
+                      {getFieldDecorator('MatchStandardUnit', {
+                        // rules: [{
+                        //   required: true,
+                        //   message: '请选择配比标气浓度单位!',
+                        // },],
+                        initialValue: "mg/m3"
+                      })(
+                        <p>{form.getFieldValue("MatchStandardUnit")}</p>
+                        // <Input disabled/>
+                        // <Select placeholder="请选择配比标气浓度单位">
+                        //   <Option key="0" disabled={form.getFieldValue("MatchStandardUnit") != "0"}>mg/m3</Option>
+                        //   <Option key="1" disabled={form.getFieldValue("MatchStandardUnit") != "1"}>%</Option>
+                        // </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="稀释气组分名称">
+                      {getFieldDecorator('DeliPollutantCode', {
+                        rules: [{
+                          // required: true,
+                          message: '请选择稀释气组分名称!',
+                        },],
+                        initialValue: "0"
+                      })(
+                        // <p>{"N2"} {this.getResidueIcon(VolumeValue, GasInitPower)}</p>
+                        <Select disabled placeholder="请选择稀释气组分名称">
+                          <Option key="0">
+                            N2
+                            {/*  TODO (WJQ) :
+                            替换成
+                            {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
+                            */}
+                            {this.getResidueIcon(VolumeValue, GasInitPower)}
+                          </Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="原标气浓度">
+                      {getFieldDecorator('OldStandardValue', {
+                        rules: [{
+                          // required: true,
+                          message: '请输入原标气浓度!',
+                        },],
+                      })(
+                        <p>{form.getFieldValue("OldStandardValue")}</p>
+                        // min={500} max={5000}
+                        // <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                {/* <Row>
+                  <div>
+                    <CustomIcon type="icon-dianliang" />
+                    <span>余量剩余：12.13, 预计可用至2019-11-20 14:23:15</span>
+                  </div>
+                </Row> */}
+                {/* <Divider orientation="right">
+
+                </Divider> */}
+                {/* <Row>
+                  <Button type="primary" style={{ float: "right" }}>开始质控</Button>
+                </Row> */}
+              </Form>
+            </Modal>
           </Spin>
         </Card>
       </>

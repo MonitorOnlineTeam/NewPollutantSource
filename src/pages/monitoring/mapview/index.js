@@ -14,6 +14,7 @@ import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
+import CustomIcon from '@/components/CustomIcon'
 
 const { TabPane } = Tabs;
 const entZoom = 11;
@@ -59,7 +60,10 @@ class MapView extends Component {
         _thismap = m;
         this.setState({
           createMap: true,
+        }, () => {
+          m.setFitView()
         })
+
       },
       zoomchange: value => {
         const zoom = _thismap.getZoom();
@@ -76,7 +80,7 @@ class MapView extends Component {
             coordinateSet: [],
             displayType: 0,
           }, () => {
-            this.randomMarker(this.props.allEntAndPointList)
+            this.randomMarker(this.props.allEntAndPointList, false)
           })
         }
       },
@@ -150,6 +154,7 @@ class MapView extends Component {
               overAll: false,
             }
             _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
+            // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
             this.randomMarker(extData.position.children)
           }
           // 设置平移
@@ -232,7 +237,13 @@ class MapView extends Component {
   }
 
   getPollutantIcon = (extData) => {
-    const style = { fontSize: 24, color: this.getColor(extData.position.Status) }
+    const mapStyle = {
+      fontSize: 24,
+      borderRadius: "50%",
+      background: "#fff",
+      boxShadow: "0px 0px 3px 2px #fff"
+    }
+    const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
     switch (extData.position.PollutantType) {
       case "1":
         // return <WaterIcon style={style} />
@@ -242,14 +253,18 @@ class MapView extends Component {
       case "10":
         return <VocIcon style={style} />
       case "12":
-        return <DustIcon style={style} />
+        return <CustomIcon type='icon-fenchen1' style={{ ...style, backgroundColor: "transparent" }} />
+      case "5":
+        return <a><CustomIcon type='icon-fangwu' style={style} /></a>
+      case "37":
+        return <CustomIcon type='icon-dian2' style={{...style}} />
     }
   }
 
 
 
   // 渲染点或企业
-  randomMarker = (dataList = this.state.currentEntInfo.children) => {
+  randomMarker = (dataList = this.state.currentEntInfo.children, flag = true) => {
     // const dataList = type === 0 ? this.props.allEnterpriseList : this.props.ponitList;
     const markersList = dataList.map((itm, idx) => {
       if (itm.Longitude && itm.Latitude) {
@@ -271,6 +286,8 @@ class MapView extends Component {
       markersList,
       // displayType: type,
       // infoWindowVisible: false,
+    }, () => {
+      flag && _thismap.setFitView();
     })
   }
 
@@ -555,7 +572,7 @@ class MapView extends Component {
       />);
     }
     return (
-      //QCAUse="1" 
+      //QCAUse="1"
       <div className={styles.mapWrapper}>
         <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {

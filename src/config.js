@@ -3,7 +3,7 @@
  */
 
 // 接口地址
-//外网：61.50.135.114  
+//外网：61.50.135.114
 //内网：172.16.12.165
 
 //域名服务器
@@ -28,6 +28,7 @@ module.exports = {
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
   apiHost,
   uploadHost,
+  iconFontUrl: "//at.alicdn.com/t/font_1298443_3xms6mdk6en.js",
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
