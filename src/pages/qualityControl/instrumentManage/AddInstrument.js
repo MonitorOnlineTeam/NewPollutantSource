@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-26 09:58:37
+ * @Last Modified time: 2019-12-05 14:11:18
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -132,7 +132,7 @@ class AddInstrument extends Component {
                StandardGasCode: item.PollutantCode,
                ExpirationDate: undefined,
                Concentration: undefined,
-               unit: 'mg/m3',
+               unit: item.PollutantCode === "s01" ? "%" : 'mg/m3',
                GasInitPower: undefined,
              })
            })
@@ -159,7 +159,7 @@ class AddInstrument extends Component {
            StandardGasCode: item.PollutantCode, // 标气code
            ExpirationDate: undefined, // 过期时间
            Concentration: undefined, // 气瓶浓度
-           unit: 'mg/m3',
+           unit: item.PollutantCode === "s01" ? "%" : 'mg/m3',
            GasInitPower: undefined, // 标气初始压力
          })
        })
@@ -723,7 +723,6 @@ class AddInstrument extends Component {
   }
 
   addStandardGasR = () => {
-    debugger;
     const { dataSourceR } = this.state;
     dataSourceR.push({
       // key: `${index}${key}`,
