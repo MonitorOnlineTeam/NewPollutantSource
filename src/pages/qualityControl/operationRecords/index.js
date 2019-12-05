@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 11:37:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-29 16:54:54
+ * @Last Modified time: 2019-12-05 11:09:33
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
@@ -26,6 +26,7 @@ class index extends Component {
       QCTime: null,
       StopTime: null,
       StandardPollutantName: null,
+      QCAMN: null,
     };
     this._SELF_ = {
       configId: "QCAnalyzerControlCommand"
@@ -33,7 +34,7 @@ class index extends Component {
   }
   render() {
     const { configId } = this._SELF_;
-    const { dateValue, DGIMN, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName } = this.state;
+    const { dateValue, DGIMN, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName, QCAMN } = this.state;
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
@@ -60,6 +61,7 @@ class index extends Component {
                       QCTime: row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"],
                       StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"],
                       StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"],
+                      QCAMN: row["dbo.T_Bas_QCAnalyzerControlCommand.QCAMN"],
                     })
                   }}><Icon type="profile" /></a>
                 </Tooltip>
@@ -81,9 +83,9 @@ class index extends Component {
           }}
         >
           {
-            (dateValue.length && DGIMN && PollutantCode && QCType && QCExecuType && QCTime && StopTime && StandardPollutantName) &&
+            (dateValue.length && DGIMN && PollutantCode && QCType && QCExecuType && QCTime && StopTime && StandardPollutantName && QCAMN) &&
             <ResultContrastPage dateValue={dateValue} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
-              QCExecuType={QCExecuType} QCTime={QCTime} StopTime={StopTime} StandardPollutantName={StandardPollutantName} />
+              QCExecuType={QCExecuType} QCTime={QCTime} QCAMN={QCAMN} StopTime={StopTime} StandardPollutantName={StandardPollutantName} />
           }
         </Modal>
       </PageHeaderWrapper>

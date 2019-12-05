@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 16:16:20
+ * @Last Modified time: 2019-12-05 11:07:33
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -49,6 +49,7 @@ class ResultContrastPage extends Component {
     this.state = {
       dateValue: props.dateValue || [],
       DGIMN: props.DGIMN,
+      QCAMN: props.QCAMN,
       PollutantCode: props.PollutantCode,
     };
     this._SELF_ = {
@@ -149,6 +150,7 @@ class ResultContrastPage extends Component {
         type: "qualityControl/QCAResultCheckByDGIMN",
         payload: {
           DGIMN: DGIMN,
+          QCAMN: this.props.QCAMN,
           PollutantCode: PollutantCode,
           // BeginTime: moment(dateValue[0]).format("YYYY-MM-DD HH:mm:ss"),
           // EndTime: moment(dateValue[1]).format("YYYY-MM-DD HH:mm:ss"),
