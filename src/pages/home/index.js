@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { routerRedux } from 'dva/router';
+import Cookie from 'js-cookie';
 import {
   connect
 } from 'dva';
@@ -911,8 +912,8 @@ class index extends Component {
         <header className={styles.homeHeader}>
           <p><span>SDL</span> 污染源智能分析系统</p>
           <a className={styles.backMenu} onClick={() => {
-            // router.push(Cookie.get("defaultNavigateUrl"))
-            router.push("/")
+            router.push(Cookie.get("systemNavigateUrl"))
+            //router.push("/")
           }}>系统功能</a>
         </header>
         <Map
