@@ -129,7 +129,7 @@ class SdlMap extends PureComponent {
         this.setState({
           mapCenter: [this.props.longitude, this.props.latitude]
         })
-      } else if(this.props.path) {
+      } else if (this.props.path) {
         this.setState({
           mapCenter: this.props.path[0][0][0]
         })
@@ -310,7 +310,7 @@ class SdlMap extends PureComponent {
   getPolygon = () => {
     const res = [];
     if (this.state.path) {
-      const arr = eval(this.state.path);
+      const arr = eval(this.state.path) || [];
       for (let i = 0; i < arr.length; i++) {
         res.push(<Polygon
           // events={this.polygonEvents}

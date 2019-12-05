@@ -913,7 +913,7 @@ class index extends Component {
           <a className={styles.backMenu} onClick={() => {
             // router.push(Cookie.get("defaultNavigateUrl"))
             router.push("/")
-          }}>返回菜单</a>
+          }}>系统功能</a>
         </header>
         <Map
           resizeEnable={true}
