@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-04 16:59:39
+ * @Last Modified time: 2019-12-05 13:37:39
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -441,10 +441,10 @@ class RemoteControlPage extends Component {
                   <Col span={12}>
                     <Form.Item label="稀释气组分名称">
                       {getFieldDecorator('DeliPollutantCode', {
-                        rules: [{
-                          // required: true,
-                          message: '请选择稀释气组分名称!',
-                        },],
+                        // rules: [{
+                        //   required: true,
+                        //   message: '请选择稀释气组分名称!',
+                        // },],
                         initialValue: "0"
                       })(
                         // <p>{"N2"} {this.getResidueIcon(VolumeValue, GasInitPower)}</p>
@@ -464,10 +464,10 @@ class RemoteControlPage extends Component {
                   <Col span={12}>
                     <Form.Item label="原标气浓度">
                       {getFieldDecorator('OldStandardValue', {
-                        rules: [{
-                          // required: true,
-                          message: '请输入原标气浓度!',
-                        },],
+                        // rules: [{
+                        //   required: true,
+                        //   message: '请输入原标气浓度!',
+                        // },],
                       })(
                         <p>{form.getFieldValue("OldStandardValue")}</p>
                         // min={500} max={5000}

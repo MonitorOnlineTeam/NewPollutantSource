@@ -14,6 +14,7 @@ import { connect } from 'dva';
   flowList: qualityControl.flowList,
   standardValue: qualityControl.standardValue,
   qualityControlName: qualityControl.qualityControlName,
+  standardValueUtin: qualityControl.standardValueUtin,
 }))
 
 class ImagePage extends PureComponent {
@@ -48,7 +49,7 @@ class ImagePage extends PureComponent {
   }
 
   render() {
-    const { gasData, cemsList, valveStatus, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -235,7 +236,7 @@ class ImagePage extends PureComponent {
                       item.monitorValue != undefined ?
                         <>
                           <p>浓度</p>
-                          <span>{item.monitorValue}</span>
+                          <span>{item.monitorValue} {standardValueUtin}</span>
                         </> : null
                     }
                   </div>
@@ -280,7 +281,7 @@ class ImagePage extends PureComponent {
             {/* 标气浓度 */}
             <div className={styles.gasConcentration}>
               <p>标气浓度</p>
-              <span>{standardValue}</span>
+              <span>{standardValue} {standardValueUtin}</span>
             </div>
           </div>
         </MapInteractionCSS>

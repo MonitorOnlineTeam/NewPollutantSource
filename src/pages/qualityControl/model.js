@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-04 14:28:38
+ * @Last Modified time: 2019-12-05 14:39:37
  * @desc: 智能质控model
  */
 
@@ -88,6 +88,7 @@ export default Model.extend({
     p2Pressure: {},
     p1Pressure: {},
     QCStatus: undefined, // 质控仪状态
+    standardValueUtin: null, // 单位
   },
   effects: {
     // 获取企业及排口
@@ -166,7 +167,7 @@ export default Model.extend({
           QCAGasRelation = result.Datas.QCAGasRelation.map((itm, idx) => ({
             ...itm,
             key: `${itm.ID}${idx}`,
-            unit: 'mg/m3',
+            unit: itm.StandardGasCode === "s01" ? "%" : 'mg/m3',
           }))
         }
         console.log('qualityControlTableData=', qualityControlTableData)
@@ -553,15 +554,16 @@ export default Model.extend({
           if (code === "33502") {
             // p2气瓶压力
             p2Pressure = {
-              value: value,
+              value: payload.Value + "",
               isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
+            
           }
           if (code === "33503") {
             // p1气瓶压力
             p1Pressure = {
-              value: value,
+              value: payload.Value + "",
               isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
@@ -574,8 +576,15 @@ export default Model.extend({
           }
           // 标气浓度
           let standardValue = state.standardValue;
+          let standardValueUtin = state.standardValueUtin;
           if (code === "33510") {
-            console.log("standardValue=", payload.Value)
+            if (payload.PollutantCode === "03" || payload.PollutantCode === "02") {
+              standardValueUtin = "mg/m3"
+            }
+            if (payload.PollutantCode === "s01") {
+              standardValueUtin = "%"
+            }
+            console.log("standardValueUtin=",standardValueUtin)
             standardValue = payload.Value;
           }
 
@@ -585,7 +594,8 @@ export default Model.extend({
             valveStatus: ValveStatus,
             p2Pressure: p2Pressure || state.p2Pressure,
             p1Pressure: p1Pressure || state.p1Pressure,
-            standardValue: standardValue
+            standardValue: standardValue,
+            standardValueUtin: standardValueUtin
           }
         }
       }
@@ -674,7 +684,7 @@ export default Model.extend({
               monitorValue: payload.MonitorValue
             }
           }
-          return { ...item}
+          return { ...item }
         })
         return {
           ...state,

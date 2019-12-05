@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:46:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-04 17:09:50
+ * @Last Modified time: 2019-12-05 14:23:07
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';
@@ -71,6 +71,7 @@ class index extends Component {
                   p2Pressure: {},
                   p1Pressure: {},
                   QCStatus: undefined,
+                  standardValueUtin: null,
                 }
               })
             }
