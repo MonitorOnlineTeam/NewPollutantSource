@@ -31,6 +31,7 @@ let _thismap = null;
   loading: loading.effects['mapView/getAllEntAndPoint'],
   pointLoading: loading.effects['mapView/getPointTableData'],
   chartLoading: loading.effects['mapView/getPointChartData'],
+  pollutantLoading: loading.effects['mapView/getPollutantList'],
   curPointData: mapView.curPointData,
   noticeList: global.notices
 }))
@@ -138,7 +139,8 @@ class MapView extends Component {
           _thismap.setCenter([extData.position.longitude, extData.position.latitude])
           let newState = {};
           if (this.state.displayType === 1) {
-            // 企业
+            console.log("this.state.displayType=", this.state.displayType)
+            // 点击排口，显示弹窗
             newState = {
               infoWindowVisible: true,
               currentPointInfo: extData.position,
@@ -146,16 +148,21 @@ class MapView extends Component {
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
-            // 排口
+            console.log("this.state.displayType2=", this.state.displayType)
+            // 显示排口，点击的企业
             newState = {
               // coordinateSet: this.state.currentEntInfo.CoordinateSet,
               coordinateSet: extData.position.CoordinateSet,
               displayType: 1,
               overAll: false,
             }
-            _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
-            // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
-            this.randomMarker(extData.position.children)
+            this.setState({
+              ...newState
+            }, () => {
+              // _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
+              // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
+              this.randomMarker(extData.position.children)
+            })
           }
           // 设置平移
           this.setState({
@@ -257,7 +264,7 @@ class MapView extends Component {
       case "5":
         return <a><CustomIcon type='icon-fangwu' style={style} /></a>
       case "37":
-        return <CustomIcon type='icon-dian2' style={{...style}} />
+        return <CustomIcon type='icon-dian2' style={{ ...style }} />
     }
   }
 
@@ -594,7 +601,7 @@ class MapView extends Component {
                   overAll: false,
                   coordinateSet: entInfo[0].CoordinateSet,
                 }, () => {
-                  _thismap.setZoomAndCenter(pointZoom, position)
+                  // _thismap.setZoomAndCenter(pointZoom, position)
                   this.randomMarker(entInfo[0].children)
                 })
               }
@@ -672,7 +679,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              // size={{ width: 430, height: }}
+              size={{ width: 430, height: 340}}
               closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
@@ -706,72 +713,74 @@ class MapView extends Component {
                 //   </div> : <div className={styles.pointInfoWindow}>
                 <div className={styles.pointInfoWindow}>
                   {
-                    this.props.pointLoading && <Spin
+                    (this.props.pointLoading || this.props.chartLoading || this.props.pollutantLoading) ? <Spin
                       style={{
                         width: '100%',
-                        height: '380px',
+                        height: '310px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}
                       size="large"
-                    />
-                  }
-                  {
-                    // ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                    !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
-                      <>
-                        <Descriptions
-                          title={
-                            // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                            <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                          }
-                          size="small"
-                          bordered>
-                          {
-                            // 只显示前六个
-                            this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
-                              this.setState({
-                                chartTitle: item.title
-                              })
-                              this.props.dispatch({
-                                type: "mapView/updateChartData",
-                                payload: {
-                                  key: item.key,
-                                  label: item.label
-                                }
-                              })
-                            }} className={styles.content} style={{ color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "") }}>{item.value}</div></Descriptions.Item>)
-                          }
-                        </Descriptions>
-                        {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
+                    /> : <>
                         {
-                          (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
-                            // !this.props.chartData.seriesData.length ?
-                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
-                            // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
-                            : <ReactEcharts
-                              className={styles.echartdiv}
-                              style={{ width: '100%', height: '200px', textAlign: 'center' }}
-                              option={option}
-                              notMerge
-                              lazyUpdate />
+                          ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                            // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
+                            <>
+                              <Descriptions
+                                title={
+                                  // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                                  <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                                }
+                                size="small"
+                                bordered>
+                                {
+                                  // 只显示前六个
+                                  this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                                    this.setState({
+                                      chartTitle: item.title
+                                    })
+                                    this.props.dispatch({
+                                      type: "mapView/updateChartData",
+                                      payload: {
+                                        key: item.key,
+                                        label: item.label
+                                      }
+                                    })
+                                  }} className={styles.content} style={{ color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "") }}>{item.value}</div></Descriptions.Item>)
+                                }
+                              </Descriptions>
+                              {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
+                              {
+                                // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
+                                !this.props.chartData.seriesData.length ?
+                                  <Empty style={{marginTop: 80}} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                  // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
+                                  : 
+                                  <ReactEcharts
+                                    className={styles.echartdiv}
+                                    style={{ width: '100%', height: '200px', textAlign: 'center' }}
+                                    option={option}
+                                    notMerge
+                                    lazyUpdate />
+                              }
+                              {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
+                              <a className={styles.pointDetails} size="small" onClick={() => {
+                                this.setState({
+                                  pointVisible: true,
+                                  //   DGIMN: "",
+                                  // }, () => {
+                                  //   setTimeout(() => {
+                                  //     this.setState({
+                                  //       DGIMN: this.state.currentKey
+                                  //     })
+                                  //   }, 200);
+                                })
+                              }}>排口详情</a>
+                            </>)
                         }
-                        {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
-                        <a className={styles.pointDetails} size="small" onClick={() => {
-                          this.setState({
-                            pointVisible: true,
-                            //   DGIMN: "",
-                            // }, () => {
-                            //   setTimeout(() => {
-                            //     this.setState({
-                            //       DGIMN: this.state.currentKey
-                            //     })
-                            //   }, 200);
-                          })
-                        }}>排口详情</a>
-                      </>)
+                      </>
                   }
 
                 </div>
