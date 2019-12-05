@@ -18,7 +18,9 @@
 
 const apiHost = 'http://172.16.12.165:9090/';
 // 文件上传地址
-const uploadHost = 'http://172.16.12.165:9090/upload/';
+const uploadHost = apiHost;
+// wensocket推送地址（第一个为内网，第二个为外网）
+const webSocketPush='172.16.12.165:50080,61.50.135.114:50080';
 
 module.exports = {
   // name: '污染源智能分析平台',
@@ -41,8 +43,7 @@ module.exports = {
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,
   apiPrefix: '/mock',
-  //wensocket推送地址（第一个为内网，第二个为外网）
-  webSocketPushURL: '172.16.12.165:50080,61.50.135.114:50080',
+  webSocketPushURL: webSocketPush,
   imgaddress: 'http://172.16.9.41:7001/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
