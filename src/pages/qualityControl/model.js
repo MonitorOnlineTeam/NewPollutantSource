@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 14:25:27
+ * @Last Modified time: 2019-12-05 14:39:37
  * @desc: 智能质控model
  */
 
@@ -554,15 +554,16 @@ export default Model.extend({
           if (code === "33502") {
             // p2气瓶压力
             p2Pressure = {
-              value: value,
+              value: payload.Value + "",
               isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
+            
           }
           if (code === "33503") {
             // p1气瓶压力
             p1Pressure = {
-              value: value,
+              value: payload.Value + "",
               isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
