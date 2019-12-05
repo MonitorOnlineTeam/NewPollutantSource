@@ -270,7 +270,7 @@ class AddInstrument extends Component {
            const arr = {
              QCAMN,
              StandardGasCode: item.StandardGasCode,
-             VolumeValue: (item.GasInitPower * 8 * 10/1000).toFixed(4),
+             VolumeValue: (item.GasInitPower * 8 * 10).toFixed(4),
            }
            const arr1 = {
              QCAMN,
