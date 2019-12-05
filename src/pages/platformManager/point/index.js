@@ -44,6 +44,8 @@ let pointConfigIdEdit = '';
 @connect(({ loading, autoForm, monitorTarget, common, point, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
+  saveLoadingAdd: loading.effects['point/addPoint'],
+  saveLoadingEdit: loading.effects['point/editPoint'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -325,6 +327,8 @@ export default class MonitorPoint extends Component {
       dispatch,
       pointDataWhere,
       isEdit,
+      saveLoadingAdd,
+      saveLoadingEdit
     } = this.props;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
@@ -451,6 +455,15 @@ export default class MonitorPoint extends Component {
             onCancel={this.handleCancel}
             width="60%"
             destroyOnClose
+            footer={[
+              !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
+                取消
+            </Button> ,
+                <Button key="submit" type="primary" loading={!this.state.isEdit ? saveLoadingAdd : saveLoadingEdit} onClick={this.onSubmitForm.bind(this)}>
+                  确定
+            </Button>) : ''
+              ,
+            ]}
           >
             {!this.state.isView ? (
               <SdlForm
