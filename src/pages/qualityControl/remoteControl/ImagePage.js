@@ -58,17 +58,17 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox}>
             <ul>
               <li>
-                浓度：{gasData.O2Info.Concentration}
+                浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
               </li>
               <li>
                 <span>过期时间：</span>
                 <span className={styles.time} title={gasData.O2Info.ExpirationDate}>{gasData.O2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.O2Info.VolumeValue}
+                余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}
               </li>
               <li>
-                流量：{flowList["s01"]}
+                流量：{flowList["s01"] != undefined ? `${flowList["s01"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -92,17 +92,17 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) * 1" }}>
             <ul>
               <li>
-                浓度：{gasData.NOxInfo.Concentration}
+                浓度：{gasData.NOxInfo.Concentration != undefined ? `${gasData.NOxInfo.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
                 <span className={styles.time} title={gasData.NOxInfo.ExpirationDate}>{gasData.NOxInfo.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.NOxInfo.VolumeValue}
+                余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}
               </li>
               <li>
-                流量：{flowList["03"]}
+                流量：{flowList["03"] != undefined ? `${flowList["03"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -126,17 +126,17 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *2)" }}>
             <ul>
               <li>
-                浓度：{gasData.SO2Info.Concentration}
+                浓度：{gasData.SO2Info.Concentration !== undefined ? `${gasData.SO2Info.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
                 <span className={styles.time} title={gasData.SO2Info.ExpirationDate}>{gasData.SO2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.SO2Info.VolumeValue}
+                余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}
               </li>
               <li>
-                流量：{flowList["02"]}
+                流量：{flowList["02"] != undefined ? `${flowList["02"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -165,10 +165,10 @@ class ImagePage extends PureComponent {
                 <span className={styles.time} title={gasData.N2Info.ExpirationDate}>{gasData.N2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.N2Info.VolumeValue}
+                余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}
               </li>
               <li>
-                流量：{flowList["065"]}
+                流量：{flowList["065"] != undefined ? `${flowList["065"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -256,14 +256,14 @@ class ImagePage extends PureComponent {
 
           {/* 压力p1 */}
           <div className={styles.pressure}>
-            {p1Pressure.value}
+            {p1Pressure.value != undefined ? `${p1Pressure.value}MPa` : undefined}
           </div>
           {
             p1Pressure.isException ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
           }
           {/* 压力p2 */}
           <div className={styles.pressure} style={{ top: 518 }}>
-            {p2Pressure.value}
+            {p2Pressure.value != undefined ? `${p2Pressure.value}MPa` : undefined}
           </div>
           {
             p2Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 568 }} src="p2Exception.png" /> : null
