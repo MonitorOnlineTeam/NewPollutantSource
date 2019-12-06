@@ -99,9 +99,13 @@ export async function getAlarmPushAuthor(params) {
 
 //获取角色或部门报警权限数据
 export async function insertAlarmPushAuthor(params) {
-  debugger
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmPushAuthor', params);
-
   return result;
 }
+// 是否显示预警多选框
+export async function getAlarmState(params) {
+  const result = await get('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmState', params);
+  return result;
+}
+
 
