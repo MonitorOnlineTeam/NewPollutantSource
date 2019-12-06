@@ -31,6 +31,7 @@ const styleNor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
 const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer", marginLeft: 5 }
 
 
+
 @connect(({ navigationtree, loading, global }) => ({
   ConfigInfo: global.configInfo,
   EntAndPoint: navigationtree.EntAndPoint,
@@ -64,7 +65,9 @@ class NavigationTree extends Component {
       offState: true,
       overState: true,
       exceState: true,
-      screenList: this.props.QCAUse == undefined ?[0, 1, 2, 3]:[0,1,3,4,5],
+      zState: true,
+      cState: true,
+      screenList: this.props.QCAUse == undefined ? [0, 1, 2, 3] : [0, 1, 3, 4, 5],
       treeVis: this.props.IsTree,
       panelVis: "none",
       QCAUse: "",
@@ -425,6 +428,8 @@ class NavigationTree extends Component {
     var normalState = this.state.normalState
     var overState = this.state.overState
     var exceState = this.state.exceState
+    var zState = this.state.zState
+    var cState = this.state.cState
     switch (type) {
       case 0://离线
         offState = !offState
@@ -438,6 +443,12 @@ class NavigationTree extends Component {
       case 3://异常
         exceState = !exceState
         break;
+      case 4://质控中
+        zState = !zState
+        break;
+      case 5://吹扫中
+        cState = !cState
+        break;
     }
     var typeList = this.state.screenList;
     var index = typeList.indexOf(type)
@@ -446,7 +457,7 @@ class NavigationTree extends Component {
     } else {
       typeList.splice(index, 1)
     }
-    this.setState({ screenList: typeList, offState, normalState, overState, exceState })
+    this.setState({ screenList: typeList, offState, normalState, overState, exceState, zState, cState })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
@@ -596,11 +607,11 @@ class NavigationTree extends Component {
       case "1":
         return <a><EntIcon style={{ fontSize: 16 }} /></a>
       case "2":
-        return <a><StationIcon /></a>
+        return <a><CustomIcon type='icon-kongqizhandian' style={{ fontSize: 20 }} /></a>
       case "3":
-        return <a><ReachIcon /></a>
+        return <a><CustomIcon type='icon-heliu' style={{ fontSize: 16 }} /></a>
       case "4":
-        return <a><SiteIcon /></a>
+        return <a><CustomIcon type='icon-tadiaobj' style={{ fontSize: 16 }} /></a>
     }
   }
   //根绝污染物类型获取icon
@@ -613,9 +624,11 @@ class NavigationTree extends Component {
       case "10":
         return <a><VocIcon style={{ fontSize: size }} /></a>
       case "12":
-        return <a><DustIcon style={{ fontSize: size }} /></a>
+        return <a><CustomIcon type='icon-yangchen1' style={{ fontSize: size }} /></a>
       case "5":
-        return <a><CustomIcon type='icon-fangwumiaoshu-copy' style={{ fontSize: 16 }} /></a>
+        return <a><CustomIcon type='icon-fangwu' style={{ fontSize: size }} /></a>
+      case "37":
+        return <a><CustomIcon type='icon-dian2' style={{ fontSize: size }} /></a>
     }
   }
 
@@ -687,15 +700,27 @@ class NavigationTree extends Component {
           }}
         >
           <div style={{ marginBottom: 15 }}>
-            <Row style={{ textAlign: "center" }}>
+            {this.props.QCAUse == undefined ? <Row style={{ textAlign: "center" }}>
               <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
-              <Col span={this.props.QCAUse == undefined ? 1 : 4}></Col>
+              <Col span={1}></Col>
               <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
-              {this.props.QCAUse == undefined ? <div><Col span={1}></Col>
-                <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col></div> : ""}
-              <Col span={this.props.QCAUse == undefined ? 1 : 4}></Col>
+              <Col span={1}></Col>
+              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: "#f04d4d" }} />超标</Col>
+              <Col span={1}></Col>
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
-            </Row>
+            </Row> :
+              <Row style={{ textAlign: "center" }}>
+                <Col span={4} style={this.state.normalState ? styleTrue : styleFalse} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
+                <Col span={1}></Col>
+                <Col span={4} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
+                <Col span={1}></Col>
+                <Col span={4} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
+                <Col span={1}></Col>
+                <Col span={4} style={this.state.zState ? styleTrue : styleFalse} onClick={() => this.screenData(4)}><LegendIcon style={{ color: "#1E90FF" }} />质控</Col>
+                <Col span={1}></Col>
+                <Col span={4} style={this.state.cState ? styleTrue : styleFalse} onClick={() => this.screenData(5)}><LegendIcon style={{ color: "#FFC1C1" }} />吹扫</Col>
+              </Row>
+            }
           </div>
 
           {this.props.QCAUse == undefined ? <SelectPollutantType
