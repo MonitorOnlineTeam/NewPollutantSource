@@ -16,12 +16,12 @@ import styles from './style.less';
 import NavigationTree from '@/components/NavigationTree'
 // import RecordEchartTable from '@/components/recordEchartTable'
 
-// import hkManagerIndex from '@/components/VideoView/hk/hkManagerIndex';
+import HkCameraIndex from '@/components/VideoView/hk/hkManagerIndex';
 import YSYManagerIndex from '@/components/VideoView/ysy';
 
-// @connect(({ loading, exceptionrecord }) => ({
-
-// }))
+@connect(({ loading, global }) => ({
+    configInfo: global.configInfo
+}))
 
 class Index extends Component {
     constructor(props) {
@@ -35,6 +35,8 @@ class Index extends Component {
 
     render() {
         const { pollutantType, dgimn } = this.state;
+        const { configInfo } = this.props;
+        console.log("configInfo=", configInfo);
 
         return (
             <div id="record">
@@ -49,7 +51,9 @@ class Index extends Component {
                     }
                 }} />
                 <PageHeaderWrapper>
-                    {dgimn && <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>}
+                    {/* {dgimn && <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>} */}
+                    {dgimn && configInfo.VideoType == 0 ? <HkCameraIndex DGIMN={dgimn}></HkCameraIndex> : <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>}
+                    {/* {dgimn && <HkCameraIndex DGIMN={dgimn}></HkCameraIndex>} */}
                 </PageHeaderWrapper>
 
             </div>
