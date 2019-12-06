@@ -282,7 +282,7 @@ class MapView extends Component {
       case "10":
         return <VocIcon style={style} />
       case "12":
-        return <CustomIcon type='icon-fenchen1' style={{ ...style, backgroundColor: "transparent" }} />
+        return <CustomIcon type='icon-yangchen1' style={{ ...style}} />
       case "5":
         return <a><CustomIcon type='icon-fangwu' style={style} /></a>
       case "37":
