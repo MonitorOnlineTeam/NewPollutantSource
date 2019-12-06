@@ -548,8 +548,8 @@ class AutoFormTable extends PureComponent {
         <Table
           rowKey={(record, index) => {
             if (keys[configId]) {
-              // return record[keys[configId][0]]
-              return record.rn
+              // return record[keys[configId][0]];
+              return `${current}-${index}`
             }
           }}
           size="small"
@@ -571,15 +571,15 @@ class AutoFormTable extends PureComponent {
           onRow={(record, index) => ({
             onClick: event => {
               const { selectedRowKeys } = this.state;
+              let rowkey = `${current}-${index}`;
               let keys = selectedRowKeys;
-              if (selectedRowKeys.some(item => item == index)) {
-                keys = keys.filter(item => item !== index)
+              if (selectedRowKeys.some(item => item == rowkey)) {
+                keys = keys.filter(item => item !== rowkey)
                 // keys.splice(index, 1)
               } else {
                 // keys = keys.concat([index])
-                keys = checkboxOrRadio === 1 ? [index] : keys.concat([index]);
+                keys = checkboxOrRadio === 1 ? [rowkey] : keys.concat([rowkey]);
               }
-              // return;
               this.setState({
                 selectedRowKeys: keys
               }, () => {

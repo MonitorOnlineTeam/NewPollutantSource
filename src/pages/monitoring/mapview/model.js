@@ -47,8 +47,19 @@ export default Model.extend({
       }
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
+        let monitorArr = result.Datas.filter(item => item.MonitorObjectType === "2");
+        let allEntAndPointList = result.Datas.filter(item => item.MonitorObjectType !== "2");
+        monitorArr.map(item => {
+          if (item.children) {
+            let childrenList = item.children.map(itm => {
+              return { ...itm, MonitorObjectType: 2, children: [] }
+            })
+            allEntAndPointList = allEntAndPointList.concat(childrenList);
+          }
+        })
         yield update({
-          allEntAndPointList: result.Datas,
+          // allEntAndPointList: result.Datas,
+          allEntAndPointList: allEntAndPointList,
           defaultMapInfo: result.Datas[0],
           // allEnterpriseList: result.Datas.filter
         })

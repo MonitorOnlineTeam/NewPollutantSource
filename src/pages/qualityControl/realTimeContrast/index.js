@@ -25,7 +25,7 @@ class index extends Component {
             })
             this.props.dispatch({
               type: "qualityControlModel/updateState",
-              payload: { 
+              payload: {
                 currentDGIMN: value[0].key,
                 DGIMNList: []
               }
@@ -38,7 +38,9 @@ class index extends Component {
         }} />
         <div id="contentWrapper">
           <PageHeaderWrapper>
-            {this.state.DGIMN && <RealTimeContrastPage DGIMN={this.state.DGIMN} flag={true}/>}
+            <div className="contentContainer">
+              {this.state.DGIMN && <RealTimeContrastPage DGIMN={this.state.DGIMN} flag={true} />}
+            </div>
           </PageHeaderWrapper>
         </div>
       </>

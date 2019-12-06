@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 14:39:37
+ * @Last Modified time: 2019-12-06 09:42:29
  * @desc: 智能质控model
  */
 
@@ -201,7 +201,7 @@ export default Model.extend({
       }
     },
     // 发送质控命令
-    * SendQCACmd({ payload }, { call, put, update }) {
+    * SendQCACmd({ payload, success }, { call, put, update }) {
       // if (payload.QCType == "3") {
       //   yield update({
       //     sendQCACmd3Loading: true
@@ -220,6 +220,7 @@ export default Model.extend({
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
         message.success('操作成功')
+        success && success()
         // yield update({
         //   sendQCACmd3Loading: false,
         //   sendQCACmd4Loading: false,
@@ -501,6 +502,14 @@ export default Model.extend({
               cemsList[item.MNHall - 1] = item
             })
           }
+          if (result.Datas.CemsList.length === 1) {
+            yield put({
+              type: "qualityControlModel/updateState",
+              payload: {
+                currentDGIMN: result.Datas.CemsList[0].DGIMN
+              }
+            })
+          }
         }
         yield update({
           gasData: gasData,
@@ -558,7 +567,7 @@ export default Model.extend({
               isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
-            
+
           }
           if (code === "33503") {
             // p1气瓶压力
@@ -584,7 +593,6 @@ export default Model.extend({
             if (payload.PollutantCode === "s01") {
               standardValueUtin = "%"
             }
-            console.log("standardValueUtin=",standardValueUtin)
             standardValue = payload.Value;
           }
 
@@ -625,41 +633,6 @@ export default Model.extend({
             cemsList
           }
         }
-
-        // if (code === "32013") {
-        //   // CENS1运行状态
-        //   ValveStatus.CENS1 = value
-        // }
-        // if (code === "32014") {
-        //   // CENS2运行状态
-        //   ValveStatus.CENS2 = value
-        // }
-        // if (code === "32015") {
-        //   // CENS3运行状态
-        //   ValveStatus.CENS3 = value
-        // }
-        // if (code === "32016") {
-        //   // CENS4运行状态
-        //   ValveStatus.CENS4 = value
-        // }
-
-        //   if (code === "32013") {
-        //     let cemsList = state.cemsList.map(item => {
-        //       if (item.DGIMN == payload.DataGatherCode) {
-        //         console.log("payload12312312=", payload)
-        //         return {
-        //           ...item,
-        //           valve: payload.valve
-        //         }
-        //       } else {
-        //         return { ...item }
-        //       }
-        //     })
-        //     return {
-        //       ...state,
-        //       cemsList
-        //     }
-        //   }
       }
       return { ...state }
     },
@@ -692,6 +665,34 @@ export default Model.extend({
         }
       }
       return { ...state }
+    },
+    // 余量报警
+    volumeWarning(state, { payload }) {
+      debugger
+      let gasData = state.gasData;
+      let { N2Info, NOxInfo, SO2Info, O2Info } = gasData;
+      payload.map(item => {
+        if (item.Type === "7") {
+          if (item.Code === "02") {
+            SO2Info.msg = item.Msg;
+          }
+          if (item.Code === "03") {
+            NOxInfo.msg = item.Msg
+          }
+          if (item.Code === "065") {
+            N2Info.msg = item.Msg
+          }
+          if (item.Code === "s01") {
+            O2Info.msg = item.Msg
+          }
+        }
+      })
+      return {
+        ...state,
+        gasData: {
+          N2Info, NOxInfo, SO2Info, O2Info
+        }
+      }
     },
     // 重置质控仪流程图state
     resetState(state, { payload }) {

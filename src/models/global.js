@@ -402,6 +402,12 @@ export default Model.extend({
               payload: obj.Message
             })
             break;
+          case 'QCAAlarmMsg':
+            dispatch({
+              type: "qualityControl/volumeWarning",
+              payload: obj.Message
+            })
+            break;
           default:
             break;
         }

@@ -16,11 +16,11 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.12.165:9090/';
+const apiHost = 'http://172.16.9.52:8096/';
 // 文件上传地址
 const uploadHost = apiHost;
 // wensocket推送地址（第一个为内网，第二个为外网）
-const webSocketPush='172.16.12.165:50080,61.50.135.114:50080';
+const webSocketPush='172.16.12.214:50083,61.50.135.114:50080';
 
 module.exports = {
   // name: '污染源智能分析平台',
@@ -33,6 +33,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
+  iconFontUrl:'//at.alicdn.com/t/font_1298443_rpnrsaadd2h.js',
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

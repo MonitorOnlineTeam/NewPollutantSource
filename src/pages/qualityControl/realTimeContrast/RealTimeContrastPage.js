@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-26 10:41:03 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-26 17:31:15
+ * @Last Modified time: 2019-12-05 17:42:21
  */
 import React, { Component } from 'react';
 import { Card, Alert, Row, Col, Select, Button, message } from 'antd'
@@ -43,16 +43,38 @@ const columns = [
 class index extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      PollutantCode: props.PollutantCode
+    };
   }
 
   componentDidMount() {
     // 获取污染物
     this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
+    this.props.dispatch({
+      type: "qualityControlModel/updateState",
+      payload: {
+        currentPollutantCode: this.props.PollutantCode
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // this.props.dispatch({
+    //   type: "qualityControlModel/updateState",
+    //   payload: {
+    //     currentDGIMN: value[0].key,
+    //     DGIMNList: []
+    //   }
+    // })
+    this.props.dispatch({
+      type: "qualityControlModel/updateRealtimeData",
+      payload: {}
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.standardGasList !== nextProps.standardGasList) {
+    if (!this.props.insert && this.props.standardGasList !== nextProps.standardGasList) {
       this.setState({
         PollutantCode: nextProps.standardGasList[0].PollutantCode
       })
@@ -61,7 +83,10 @@ class index extends Component {
 
   searchWhere = () => {
     const { dateValue, PollutantCode } = this.state;
-    const { standardGasList } = this.props;
+    const { standardGasList, insert } = this.props;
+    if (insert) {
+      return null;
+    }
     return (
       <Row>
         <Select placeholder="请选择污染物" value={PollutantCode} style={{ width: 200 }} onChange={(value) => {
@@ -166,9 +191,9 @@ class index extends Component {
   }
 
   render() {
-    const { valueList, timeList, tableData } = this.props;
+    const { valueList, timeList, tableData, PollutantCode } = this.props;
     return (
-      <Card title={this.searchWhere()} className="contentContainer">
+      <Card title={this.searchWhere()}>
         <ReactEcharts
           theme="line"
           // option={() => { this.lightOption() }}
@@ -176,7 +201,7 @@ class index extends Component {
           lazyUpdate={true}
           notMerge
           id="rightLine"
-          style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '200px' }}
+          style={{ width: '100%', height: '60%', minHeight: '400px' }}
         />
         <SdlTable dataSource={tableData} columns={columns} scroll={{ y: 'calc(100vh - 900px)' }} />
       </Card>
