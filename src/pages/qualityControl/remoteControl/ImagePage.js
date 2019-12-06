@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Card, notification, Modal, Tooltip, Select, message } from 'antd'
+import { Button, Card, notification, Modal, Tooltip, Select, message, Badge } from 'antd'
 import router from 'umi/router';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './index.less'
@@ -7,6 +7,15 @@ import { connect } from 'dva';
 import RealTimeContrastPage from '../realTimeContrast/RealTimeContrastPage'
 
 const { Option } = Select;
+// 质控仪状态 - 颜色
+// 0 离线 1 在线 3 异常 4质控中 5吹扫中
+const QCStatusColor = {
+  0: "#999999",
+  1: "#34c066",
+  3: "#e94",
+  4: "#1E90FF",
+  5: "#FFC1C1"
+}
 
 @connect(({ loading, qualityControl }) => ({
   gasData: qualityControl.gasData,
@@ -52,7 +61,7 @@ class ImagePage extends PureComponent {
       })
     }
     if (this.props.QCStatus === "4") {
-    // if (true) {
+      // if (true) {
       notification.close("notification")
       notification.open({
         message: '查看质控实时比对',
@@ -113,7 +122,7 @@ class ImagePage extends PureComponent {
   }
 
   render() {
-    const { gasData, cemsList, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -366,6 +375,10 @@ class ImagePage extends PureComponent {
             }
             <div className={styles.title}>
               {qualityControlName}
+            </div>
+            {/* 质控仪状态 */}
+            <div className={styles.status}>
+              <Badge color={QCStatusColor[this.props.QCStatus]} />
             </div>
             {/* 标气浓度 */}
             <div className={styles.gasConcentration}>

@@ -97,11 +97,18 @@ export default Model.extend({
     // 获取系统污染物
     * getPollutantTypeList({
       payload, callback
-    }, { call, update }) {
+    }, { call, update, select }) {
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
+        const dateReportForm = yield select(state => state.report.dateReportForm);
         yield update({
-          pollutantTypeList: result.Datas
+          pollutantTypeList: result.Datas,
+          dateReportForm: {
+            ...dateReportForm,
+            PollutantSourceType: result.Datas.length && {
+              value: result.Datas[0]["pollutantTypeCode"]
+            }
+          }
         })
         callback && callback(result)
       }
@@ -118,7 +125,9 @@ export default Model.extend({
           enterpriseList: result.Datas,
           dateReportForm: {
             ...dateReportForm,
-            EntCode: result.Datas.length && result.Datas[0]["ParentName"]
+            EntCode: result.Datas.length && {
+              value: result.Datas[0]["ParentCode"]
+            }
           }
         })
         payload.callback && payload.callback(result)
