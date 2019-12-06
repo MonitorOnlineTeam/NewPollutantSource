@@ -374,11 +374,6 @@ export default {
                   path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
                   component: './platformManager/standardLibrary/ViewLibrary',
                 },
-                // {
-                //   name: 'equipmentinfomanage',
-                //   path: '/platformconfig/equipmentinfomanage',
-                //   component: './platformManager/equipmentinfomanage',
-                // },
               ],
             },
             {
@@ -401,7 +396,6 @@ export default {
                 },
               ],
             },
-          
             {
               path: "/operations",
               name: "operations",
@@ -431,7 +425,11 @@ export default {
                     }
                   ]
                 },
-                
+                {
+                  name: 'equipmentinfomanage',
+                  path: '/operations/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                },
                 {
                   path: '/operations/log',
                   name: "log",
@@ -625,51 +623,6 @@ export default {
             //   ],
             // },
             {
-              name: 'alarmmanager',
-              path: '/alarmmanager',
-              routes: [
-                {
-                  path: '/alarmmanager',
-                  redirect: '/alarmmanager/alarmrecord',
-                },
-                {
-                  name: 'alarmrecord',
-                  path: '/alarmmanager/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
-                },
-                {
-                  name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord',
-                  component: './monitoring/alarmverifyrecord/index',
-                },
-              ]
-            },
-            {
-              name: 'dataquerymanager',
-              path: '/dataquerymanager',
-              routes: [
-                {
-                  path: '/dataquerymanager',
-                  redirect: '/dataquerymanager/exceptionrecord',
-                },
-                {
-                  name: 'exceptionrecord',
-                  path: '/dataquerymanager/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
-                },
-                {
-                  name: 'overrecord',
-                  path: '/dataquerymanager/overrecord',
-                  component: './monitoring/overRecord',
-                },
-                {
-                  name: 'originaldata',
-                  path: '/dataquerymanager/originaldata',
-                  component: './monitoring/originaldata',
-                },
-              ]
-            },
-            {
               path: '/monitoring',
               name: 'monitoring',
               routes: [
@@ -717,8 +670,52 @@ export default {
                   path: '/monitoring/overrecord',
                   component: './monitoring/overRecord',
                 },
-                
-               
+                {
+                  name: 'alarmmanager',
+                  path: '/monitoring/alarmmanager',
+                  routes: [
+                    {
+                      path: '/monitoring/alarmmanager',
+                      redirect: '/monitoring/alarmmanager/alarmrecord',
+                    },
+                    {
+                      name: 'alarmrecord',
+                      path: '/monitoring/alarmmanager/alarmrecord',
+                      component: './monitoring/alarmrecord/index',
+                    },
+                    {
+                      name: 'alarmverifyrecord',
+                      path: '/monitoring/alarmmanager/alarmverifyrecord',
+                      component: './monitoring/alarmverifyrecord/index',
+                    },
+                  ]
+                },
+
+                {
+                  name: 'dataquerymanager',
+                  path: '/monitoring/dataquerymanager',
+                  routes: [
+                    {
+                      path: '/monitoring/dataquerymanager',
+                      redirect: '/monitoring/dataquerymanager/exceptionrecord',
+                    },
+                    {
+                      name: 'exceptionrecord',
+                      path: '/monitoring/dataquerymanager/exceptionrecord',
+                      component: './monitoring/exceptionrecord',
+                    },
+                    {
+                      name: 'overrecord',
+                      path: '/monitoring/dataquerymanager/overrecord',
+                      component: './monitoring/overRecord',
+                    },
+                    {
+                      name: 'originaldata',
+                      path: '/monitoring/dataquerymanager/originaldata',
+                      component: './monitoring/originaldata',
+                    },
+                  ]
+                },
 
 
               ],
