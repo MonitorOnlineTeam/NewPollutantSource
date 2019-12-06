@@ -8,7 +8,7 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor
+  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
@@ -55,7 +55,8 @@ export default Model.extend({
       flagType: "",
       searchContent: ""
     },
-    alarmPushData: []
+    alarmPushData: [],
+    showAlarmState: true,
   },
 
   effects: {
@@ -75,7 +76,7 @@ export default Model.extend({
         // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
-          if(window.location.pathname === "/"){
+          if (window.location.pathname === "/") {
             router.push(Cookie.get('defaultNavigateUrl'))
           }
           yield put({
@@ -204,6 +205,18 @@ export default Model.extend({
         sdlMessage('操作失败', 'error');
       }
     },
+    // 是否显示预警多选框
+    *getAlarmState({ payload }, { put, call, update, select }) {
+      console.log("123123123")
+      const result = yield call(getAlarmState, payload);
+      if (result.IsSuccess) {
+        yield update({
+          showAlarmState: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    }
   },
 
   reducers: {

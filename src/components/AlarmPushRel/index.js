@@ -33,8 +33,10 @@ const FormItem = Form.Item;
 
     loadingGetData: loading.effects['user/getAlarmPushAuthor'],
     loadingInsertData: loading.effects['user/insertAlarmPushAuthor'],
+    loadingGetAlarmState: loading.effects['user/getAlarmState'],
     alarmPushParam: user.alarmPushParam,
-    alarmPushData: user.alarmPushData
+    alarmPushData: user.alarmPushData,
+    showAlarmState: user.showAlarmState,
 }))
 
 @Form.create()
@@ -70,6 +72,11 @@ class Index extends Component {
 
         dispatch({
             type: 'user/getAlarmPushAuthor',
+            payload: {}
+        })
+        // 是否显示预警
+        this.props.dispatch({
+            type: "user/getAlarmState",
             payload: {}
         })
     }
@@ -249,7 +256,7 @@ class Index extends Component {
         this.setState({ currentData: currentData });
     }
     render() {
-        const { alarmPushData, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingInsertData } = this.props;
+        const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState,loadingInsertData } = this.props;
         const { currentData, checkedYC, checkedCB, checkedYJ } = this.state;
 
         return (
@@ -277,12 +284,13 @@ class Index extends Component {
                                         checked={checkedCB}
                                         onChange={this.changeCheckboxGroup}
                                     >超标</Checkbox>
-                                    <Checkbox
-                                        AlarmTypes={'5'}
-                                        checked={checkedYJ}
-                                        onChange={this.changeCheckboxGroup}
-                                    >预警</Checkbox>
-
+                                    {
+                                        showAlarmState && <Checkbox
+                                            AlarmTypes={'5'}
+                                            checked={checkedYJ}
+                                            onChange={this.changeCheckboxGroup}
+                                        >预警</Checkbox>
+                                    }
                                     <Button type="primary" onClick={this.onReset}>重置</Button>
                                 </p>
                             </Card>
@@ -294,7 +302,7 @@ class Index extends Component {
                 <div style={{ background: '#ECECEC', padding: 15, overflow: 'auto', overflowY: 'scorll', minHeight: 350, height: 480 }}>
                     <Row gutter={16}>
                         {
-                            loadingGetData ? <Spin
+                            (loadingGetData || loadingGetAlarmState) ? <Spin
                                 style={{
                                     width: '100%',
                                     height: 'calc(100vh/2)',
@@ -322,12 +330,14 @@ class Index extends Component {
                                                     checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('2') > -1)).length > 0}
                                                     onChange={this.onChangeDGINM}
                                                 >超标</Checkbox>
-                                                <Checkbox
-                                                    DGIMN={item.DGIMN}
-                                                    AlarmTypes={'5'}
-                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
-                                                    onChange={this.onChangeDGINM}
-                                                >预警</Checkbox>
+                                                {
+                                                    showAlarmState && <Checkbox
+                                                        DGIMN={item.DGIMN}
+                                                        AlarmTypes={'5'}
+                                                        checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
+                                                        onChange={this.onChangeDGINM}
+                                                    >预警</Checkbox>
+                                                }
 
                                                 {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}
                                             </>
