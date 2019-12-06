@@ -768,7 +768,7 @@ class MapView extends Component {
                               {
                                 // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
                                 !this.props.chartData.seriesData.length ?
-                                  <Empty style={{ marginTop: 80 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                  <Empty style={{ marginTop: 128 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
                                   // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                                   :
                                   <ReactEcharts
