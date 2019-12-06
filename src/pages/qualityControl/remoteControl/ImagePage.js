@@ -1,10 +1,28 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-12-06 17:17:23 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-12-06 17:17:45
+ * @desc: 质控仪流程图页面
+ */
 import React, { PureComponent } from 'react';
-import { Button, Card, notification, Modal, Tooltip } from 'antd'
+import { Button, Card, notification, Modal, Tooltip, Select, message, Badge } from 'antd'
 import router from 'umi/router';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './index.less'
 import { connect } from 'dva';
 import RealTimeContrastPage from '../realTimeContrast/RealTimeContrastPage'
+
+const { Option } = Select;
+// 质控仪状态 - 颜色
+// 0 离线 1 在线 3 异常 4质控中 5吹扫中
+const QCStatusColor = {
+  0: "#999999",
+  1: "#34c066",
+  3: "#e94",
+  4: "#1E90FF",
+  5: "#FFC1C1"
+}
 
 @connect(({ loading, qualityControl }) => ({
   gasData: qualityControl.gasData,
@@ -50,6 +68,7 @@ class ImagePage extends PureComponent {
       })
     }
     if (this.props.QCStatus === "4") {
+      // if (true) {
       notification.close("notification")
       notification.open({
         message: '查看质控实时比对',
@@ -58,16 +77,59 @@ class ImagePage extends PureComponent {
         description:
           "点击查看质控实时结果比对信息",
         onClick: () => {
-          this.setState({
-            visible: true,
-          })
+          let filterCemsList = nextProps.cemsList.filter(item => item.MNHall != null)
+          if (filterCemsList.length > 1) {
+            Modal.confirm({
+              icon: null,
+              zIndex: 99999,
+              content: (
+                <>
+                  请选择CEMS：
+                  <Select style={{ width: 200 }} defaultValue={filterCemsList[0].DGIMN} onChange={(value, option) => {
+                    this.setState({
+                      currentDGIMN: value
+                    })
+                  }}>
+                    {
+                      filterCemsList.map(item => {
+                        return <Option key={item.DGIMN}>{item.CemsName}</Option>
+                      })
+                    }
+                  </Select>
+                </>
+              ),
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => {
+                if (!this.state.currentDGIMN && !filterCemsList[0].DGIMN) {
+                  message.error("请选择CEMS");
+                  return;
+                }
+                this.props.dispatch({
+                  type: "qualityControlModel/updateState",
+                  payload: {
+                    currentDGIMN: this.state.currentDGIMN
+                  }
+                })
+                setTimeout(() => {
+                  this.setState({
+                    visible: true,
+                  })
+                }, 0)
+              }
+            });
+          } else {
+            this.setState({
+              visible: true,
+            })
+          }
         },
       });
     }
   }
 
   render() {
-    const { gasData, cemsList, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -209,7 +271,7 @@ class ImagePage extends PureComponent {
                     </Tooltip> :
                     <span>余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}</span>
                 }
-                
+
               </li>
               <li>
                 流量：{flowList["065"] != undefined ? `${flowList["065"]} ml/min` : undefined}
@@ -320,6 +382,10 @@ class ImagePage extends PureComponent {
             }
             <div className={styles.title}>
               {qualityControlName}
+            </div>
+            {/* 质控仪状态 */}
+            <div className={styles.status}>
+              <Badge color={QCStatusColor[this.props.QCStatus]} />
             </div>
             {/* 标气浓度 */}
             <div className={styles.gasConcentration}>

@@ -81,9 +81,8 @@ const UserLayout = props => {
               </div>
             }
             title="手机端下载" trigger="hover">
-            <p style={{ fontSize: 14, textAlign: 'center', color: '#1890ff', marginBottom: -40, position: 'relative', cursor: 'pointer' }}>手机端下载</p>
+              <Icon type="qrcode" style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }}/>
           </Popover>
-
         }
         {
           configInfo && configInfo.IsShowFooterMessages === "true" && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />

@@ -227,7 +227,7 @@ class MapView extends Component {
       if (this.state.displayType === 0) {
         if (extData.position.MonitorObjectType == 2) {
           pointEl = <>
-            <CustomIcon type="icon-fangwu" style={iconStyle} />
+            <CustomIcon type="icon-fangwu" style={{...iconStyle, color: this.getColor(extData.position.Status)}} />
           </>
         } else {
           // 企业
@@ -282,7 +282,7 @@ class MapView extends Component {
       case "10":
         return <VocIcon style={style} />
       case "12":
-        return <CustomIcon type='icon-fenchen1' style={{ ...style, backgroundColor: "transparent" }} />
+        return <CustomIcon type='icon-yangchen1' style={{ ...style}} />
       case "5":
         return <a><CustomIcon type='icon-fangwu' style={style} /></a>
       case "37":
@@ -768,7 +768,7 @@ class MapView extends Component {
                               {
                                 // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
                                 !this.props.chartData.seriesData.length ?
-                                  <Empty style={{ marginTop: 80 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                  <Empty style={{ marginTop: 128 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
                                   // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                                   :
                                   <ReactEcharts

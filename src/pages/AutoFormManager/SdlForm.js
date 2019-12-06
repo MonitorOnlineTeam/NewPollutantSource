@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 14:30:40
+ * @Last Modified time: 2019-12-06 18:41:19
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -210,7 +210,7 @@ class SdlForm extends PureComponent {
       let { placeholder, validator } = item;
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
-      let initialValue = (formData[fieldName] !== undefined) && `${formData[fieldName]}`;
+      let initialValue = (formData[fieldName] != undefined) && `${formData[fieldName]}`;
       // 判断类型
       switch (item.type) {
         case '文本框':
@@ -346,6 +346,7 @@ class SdlForm extends PureComponent {
               onChange: (info) => {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid })
+                  setFieldsValue({ [fieldName]: uid })
                 } else if (info.file.status === 'error') {
                   message.error('上传文件失败！')
                 }
@@ -371,6 +372,7 @@ class SdlForm extends PureComponent {
             };
             element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
+              setFieldsValue({ [fieldName]: uid })
             }} />
             // element = <Upload {...props} fileList={this.state.fileList}>
             //   <div>
