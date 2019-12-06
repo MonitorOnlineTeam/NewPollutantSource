@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2019-12-06 17:17:23 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2019-12-06 17:17:45
+ * @desc: 质控仪流程图页面
+ */
 import React, { PureComponent } from 'react';
 import { Button, Card, notification, Modal, Tooltip, Select, message, Badge } from 'antd'
 import router from 'umi/router';

@@ -746,7 +746,7 @@ class DepartIndex extends Component {
             searchPlaceholder: '搜索',
             treeDefaultExpandedKeys: ["0"],
             style: {
-                width: 600,
+                width: 500,
                 marginLeft: 16
             },
             dropdownStyle: {
