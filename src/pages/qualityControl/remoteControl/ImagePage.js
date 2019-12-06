@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Button, Card } from 'antd'
+import { Button, Card, notification, Modal, Tooltip } from 'antd'
 import router from 'umi/router';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './index.less'
 import { connect } from 'dva';
+import RealTimeContrastPage from '../realTimeContrast/RealTimeContrastPage'
 
 @connect(({ loading, qualityControl }) => ({
   gasData: qualityControl.gasData,
@@ -15,13 +16,15 @@ import { connect } from 'dva';
   standardValue: qualityControl.standardValue,
   qualityControlName: qualityControl.qualityControlName,
   standardValueUtin: qualityControl.standardValueUtin,
+  QCStatus: qualityControl.QCStatus,
 }))
 
 class ImagePage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      QCAMN: props.QCAMN
+      QCAMN: props.QCAMN,
+      visible: false,
     };
   }
 
@@ -46,6 +49,21 @@ class ImagePage extends PureComponent {
         }
       })
     }
+    if (this.props.QCStatus === "4") {
+      notification.close("notification")
+      notification.open({
+        message: '查看质控实时比对',
+        key: "notification",
+        duration: null,
+        description:
+          "点击查看质控实时结果比对信息",
+        onClick: () => {
+          this.setState({
+            visible: true,
+          })
+        },
+      });
+    }
   }
 
   render() {
@@ -66,7 +84,13 @@ class ImagePage extends PureComponent {
                 <span className={styles.time} title={gasData.O2Info.ExpirationDate}>{gasData.O2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}
+                {
+                  gasData.O2Info.msg ?
+                    <Tooltip title={gasData.O2Info.msg}>
+                      <span style={{ color: "#FF9800" }}>余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}</span>
+                    </Tooltip> :
+                    <span>余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}</span>
+                }
               </li>
               <li>
                 流量：{flowList["s01"] != undefined ? `${flowList["s01"]} ml/min` : undefined}
@@ -100,7 +124,13 @@ class ImagePage extends PureComponent {
                 <span className={styles.time} title={gasData.NOxInfo.ExpirationDate}>{gasData.NOxInfo.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}
+                {
+                  gasData.NOxInfo.msg ?
+                    <Tooltip title={gasData.NOxInfo.msg}>
+                      <span style={{ color: "#FF9800" }}>余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}</span>
+                    </Tooltip> :
+                    <span>余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}</span>
+                }
               </li>
               <li>
                 流量：{flowList["03"] != undefined ? `${flowList["03"]} ml/min` : undefined}
@@ -134,7 +164,13 @@ class ImagePage extends PureComponent {
                 <span className={styles.time} title={gasData.SO2Info.ExpirationDate}>{gasData.SO2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}
+                {
+                  gasData.SO2Info.msg ?
+                    <Tooltip title={gasData.SO2Info.msg}>
+                      <span style={{ color: "#FF9800" }}>余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}</span>
+                    </Tooltip> :
+                    <span>余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}</span>
+                }
               </li>
               <li>
                 流量：{flowList["02"] != undefined ? `${flowList["02"]} ml/min` : undefined}
@@ -166,7 +202,14 @@ class ImagePage extends PureComponent {
                 <span className={styles.time} title={gasData.N2Info.ExpirationDate}>{gasData.N2Info.ExpirationDate}</span>
               </li>
               <li>
-                余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}
+                {
+                  gasData.N2Info.msg ?
+                    <Tooltip title={gasData.N2Info.msg}>
+                      <span style={{ color: "#FF9800" }}>余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}</span>
+                    </Tooltip> :
+                    <span>余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}</span>
+                }
+                
               </li>
               <li>
                 流量：{flowList["065"] != undefined ? `${flowList["065"]} ml/min` : undefined}
@@ -285,6 +328,21 @@ class ImagePage extends PureComponent {
             </div>
           </div>
         </MapInteractionCSS>
+        <Modal
+          title="查看结果实时比对"
+          visible={this.state.visible}
+          footer={[]}
+          okText={"开始质控"}
+          // onClick={this.onSubmitForm}
+          width={900}
+          style={{ width: 900, height: 600 }}
+          onCancel={() => {
+            this.setState({
+              visible: false
+            })
+          }}>
+          <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert />
+        </Modal>
       </div>
     );
   }
