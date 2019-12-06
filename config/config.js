@@ -374,11 +374,11 @@ export default {
                   path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
                   component: './platformManager/standardLibrary/ViewLibrary',
                 },
-                // {
-                //   name: 'equipmentinfomanage',
-                //   path: '/platformconfig/equipmentinfomanage',
-                //   component: './platformManager/equipmentinfomanage',
-                // },
+                 {
+                  name: 'equipmentinfomanage',
+                  path: '/platformconfig/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                }, 
               ],
             },
             {
