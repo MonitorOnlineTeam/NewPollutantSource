@@ -17,9 +17,16 @@ import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import CustomIcon from '@/components/CustomIcon'
 
 const { TabPane } = Tabs;
-const entZoom = 11;
+const entZoom = 8;
 const pointZoom = 13;
 let _thismap = null;
+const iconStyle = {
+  color: "#3c99d8",
+  fontSize: "28px",
+  borderRadius: "50%",
+  background: "rgb(255, 255, 255)",
+  boxShadow: "rgb(255, 255, 255) 0px 0px 3px 2px",
+}
 
 @Form.create()
 @connect(({ loading, mapView, global }) => ({
@@ -69,20 +76,21 @@ class MapView extends Component {
       zoomchange: value => {
         const zoom = _thismap.getZoom();
         // 地图缩放，显示企业
-        if (zoom < entZoom) {
+        if (zoom < this.state.zoom + 2) {
           // const displayType = this.state.displayType === 1
           if (this.state.displayType === 1) {
+            // this.setState({
+            // })
             this.setState({
               infoWindowVisible: false,
+              // infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1 && this.state.infoWindowVisible) && false,
+              coordinateSet: [],
+              displayType: 0,
+            }, () => {
+              this.randomMarker(this.props.allEntAndPointList, false)
             })
           }
-          this.setState({
-            // infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1 && this.state.infoWindowVisible) && false,
-            coordinateSet: [],
-            displayType: 0,
-          }, () => {
-            this.randomMarker(this.props.allEntAndPointList, false)
-          })
+
         }
       },
       complete: () => {
@@ -91,8 +99,6 @@ class MapView extends Component {
   }
 
   componentDidMount() {
-
-
     // 获取所有企业及排口信息
     this.props.dispatch({
       type: 'mapView/getAllEntAndPoint',
@@ -148,21 +154,30 @@ class MapView extends Component {
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
-            console.log("this.state.displayType2=", this.state.displayType)
-            // 显示排口，点击的企业
-            newState = {
-              // coordinateSet: this.state.currentEntInfo.CoordinateSet,
-              coordinateSet: extData.position.CoordinateSet,
-              displayType: 1,
-              overAll: false,
+            if (extData.position.MonitorObjectType == 2) {
+              // 监测站
+              newState = {
+                infoWindowVisible: true,
+                currentPointInfo: extData.position,
+                overAll: true,
+              }
+            } else {
+              // 显示排口，点击的企业
+              newState = {
+                // coordinateSet: this.state.currentEntInfo.CoordinateSet,
+                coordinateSet: extData.position.CoordinateSet,
+                overAll: false,
+                displayType: 1,
+              }
             }
-            this.setState({
-              ...newState
-            }, () => {
-              // _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
-              // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
-              this.randomMarker(extData.position.children)
-            })
+
+            // this.setState({
+            //   ...newState
+            // }, () => {
+            // _thismap.setZoomAndCenter(pointZoom, [extData.position.longitude, extData.position.latitude])
+            //   // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
+            //   this.randomMarker(extData.position.children)
+            // })
           }
           // 设置平移
           this.setState({
@@ -174,11 +189,12 @@ class MapView extends Component {
             ...newState
             // currentEntInfo: extData.position
           }, () => {
-            this.state.displayType !== 0 && this.getPointInfo(extData.position.PollutantType)
+            // this.state.displayType !== 0 &&
+            extData.position.MonitorObjectType != 2 && newState.displayType == 1 && this.randomMarker(extData.position.children)
+            this.getPointInfo(extData.position.PollutantType)
           })
         }
       }}>
-      {/* <Tooltip title={extData.position.title} overlayClassName="tooltipmy"> */}
       {
         // extData.position && <Popover content={extData.position.title}>
         //   {
@@ -209,17 +225,23 @@ class MapView extends Component {
     let pointEl = null;
     if (extData.position) {
       if (this.state.displayType === 0) {
-        // 企业
-        let isShow = "none";
-        extData.position.children.map(item => {
-          if (!!this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
-            isShow = "block";
-          }
-        })
-        pointEl = <>
-          <EntIcon style={{ fontSize: 28 }} />
-          <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>
-        </>
+        if (extData.position.MonitorObjectType == 2) {
+          pointEl = <>
+            <CustomIcon type="icon-fangwu" style={iconStyle} />
+          </>
+        } else {
+          // 企业
+          let isShow = "none";
+          extData.position.children && extData.position.children.map(item => {
+            if (!!this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
+              isShow = "block";
+            }
+          })
+          pointEl = <>
+            <EntIcon style={{ fontSize: 28 }} />
+            <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>
+          </>
+        }
       } else {
         // 排口
         pointEl = <div className={styles.container}>
@@ -271,9 +293,10 @@ class MapView extends Component {
 
 
   // 渲染点或企业
-  randomMarker = (dataList = this.state.currentEntInfo.children, flag = true) => {
+  randomMarker = (dataList = this.state.currentEntInfo.children, flag = true, did) => {
     // const dataList = type === 0 ? this.props.allEnterpriseList : this.props.ponitList;
-    const markersList = dataList.map((itm, idx) => {
+    let _dataList = dataList || [];
+    const markersList = _dataList.map((itm, idx) => {
       if (itm.Longitude && itm.Latitude) {
         return {
           position: {
@@ -295,6 +318,7 @@ class MapView extends Component {
       // infoWindowVisible: false,
     }, () => {
       flag && _thismap.setFitView();
+      did && this.setState({ zoom: _thismap.getZoom() })
     })
   }
 
@@ -337,16 +361,6 @@ class MapView extends Component {
       // console.log(extData === _this.markers[index]);
     },
     dragend: (MapsOption, marker) => { /* ... */ },
-    // mouseover: (MapsOption, marker) => {
-    //   this.setState({
-    //     infoWindowVisible: true,
-    //   });
-    // },
-    // mouseout: (MapsOption, marker) => {
-    //   this.setState({
-    //     infoWindowVisible: false,
-    //   });
-    // },
   }
 
   // 绘制厂界
@@ -400,7 +414,7 @@ class MapView extends Component {
             // currentKey: nextProps.defaultMapInfo.key,
           })
           // this.randomMarker(nextProps.defaultMapInfo.children);
-          this.randomMarker(nextProps.allEntAndPointList);
+          this.randomMarker(nextProps.allEntAndPointList, true, true);
           clearInterval(timer)
         }
       }, 200);
@@ -583,50 +597,49 @@ class MapView extends Component {
       <div className={styles.mapWrapper}>
         <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
+            // if (!val[0].isEnt) {
+            //   return;
+            // }
             const entInfo = allEntAndPointList.filter(item => item.key === val[0].key)
             if (entInfo.length) {
               const position = [entInfo[0].Longitude, entInfo[0].Latitude];
               if (this.state.currentEntInfo == entInfo[0]) {
-                // 点击的是当期企业
-                this.setState({
-                  overAll: false,
-                  infoWindowVisible: false,
-                })
+                if (entInfo[0].PollutantType != 5) {
+                  // 点击的是当期企业
+                  this.setState({
+                    overAll: false,
+                    infoWindowVisible: false,
+                  })
+                }
               } else {
                 // 切换企业
                 // const position = [entInfo[0].Longitude, entInfo[0].Latitude];
-                this.setState({
-                  displayType: 1,
-                  infoWindowVisible: false,
-                  overAll: false,
-                  coordinateSet: entInfo[0].CoordinateSet,
-                }, () => {
-                  // _thismap.setZoomAndCenter(pointZoom, position)
-                  this.randomMarker(entInfo[0].children)
-                })
+                if (entInfo[0].PollutantType == 5) {
+                  // 监测点
+                  this.setState({
+                    infoWindowVisible: true,
+                    currentPointInfo: entInfo[0],
+                    currentKey: val[0].key,
+                    overAll: true,
+                  }, () => {
+                    this.getPointInfo(entInfo[0].PollutantType)
+                  })
+                } else {
+                  this.setState({
+                    displayType: 1,
+                    infoWindowVisible: false,
+                    overAll: false,
+                    coordinateSet: entInfo[0].CoordinateSet,
+                  }, () => {
+                    // _thismap.setZoomAndCenter(pointZoom, position)
+                    this.randomMarker(entInfo[0].children)
+                  })
+                }
               }
               this.setState({
                 currentEntInfo: entInfo[0],
                 mapCenter: position,
               })
-              // 点击的企业
-              // const position = [entInfo[0]["Longitude"], entInfo[0]["Latitude"]];
-              // this.randomMarker(allEntAndPointList)
-              // _thismap.setZoomAndCenter(entZoom, position)
-              // this.setState({
-              //   displayType: 0,
-              //   infoWindowVisible: false,
-              //   mapCenter: position,
-              //   currentEntInfo: entInfo[0],
-              //   coordinateSet: []
-              // })
-              // this.setState({
-              //   displayType: 0,
-              //   infoWindowVisible: false,
-              //   mapCenter: position,
-              //   currentEntInfo: entInfo[0],
-              //   coordinateSet: []
-              // })
             } else {
               const entInfo = allEntAndPointList.find(item => {
                 if (item.children.filter(itm => itm.key === val[0].key).length) {
@@ -634,8 +647,8 @@ class MapView extends Component {
                 }
               })
               // 点击的排口
-              const pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
               if (entInfo) {
+                const pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
                 const position = [pointInfo.Longitude, pointInfo.Latitude];
                 _thismap.setZoomAndCenter(pointZoom, position)
                 this.randomMarker(entInfo.children)
@@ -679,7 +692,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              size={{ width: 430, height: 340}}
+              size={{ width: 430, height: 362 }}
               closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
@@ -726,7 +739,7 @@ class MapView extends Component {
                         {
                           ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
                             // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
+                            <Empty style={{ marginTop: 130 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
                             <>
                               <Descriptions
                                 title={
@@ -755,9 +768,9 @@ class MapView extends Component {
                               {
                                 // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
                                 !this.props.chartData.seriesData.length ?
-                                  <Empty style={{marginTop: 80}} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                  <Empty style={{ marginTop: 80 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
                                   // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
-                                  : 
+                                  :
                                   <ReactEcharts
                                     className={styles.echartdiv}
                                     style={{ width: '100%', height: '200px', textAlign: 'center' }}

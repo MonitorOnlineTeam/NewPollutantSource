@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 13:37:39
+ * @Last Modified time: 2019-12-06 09:41:46
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -106,8 +106,8 @@ class RemoteControlPage extends Component {
         QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         QCExecuType: 1,
         QCType: 1,
+        flag: true
       }
-      console.log("postData=", postData);
       // return;
       this.SendQCACmd(postData);
     })
@@ -143,7 +143,12 @@ class RemoteControlPage extends Component {
   SendQCACmd = (payload) => {
     this.props.dispatch({
       type: "qualityControl/SendQCACmd",
-      payload: payload
+      payload: payload,
+      success: () => {
+        if (payload.flag) {
+          this.setState({ visible: false });
+        }
+      }
     })
   }
 
