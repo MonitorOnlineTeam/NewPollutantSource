@@ -72,7 +72,7 @@ class Login extends Component {
 
   render() {
     const { userLogin, submitting } = this.props;
-    const { status, type: loginType } = userLogin;
+    const { status, type: loginType, message } = userLogin;
     const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
@@ -91,7 +91,7 @@ class Login extends Component {
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
-              this.renderMessage('用户名或密码错误')}
+              this.renderMessage(message)}
             <UserName
               name="userName"
               placeholder={`请输入用户名`}
