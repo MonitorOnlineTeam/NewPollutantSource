@@ -11,6 +11,7 @@ function getWebSocket(innerIp, outIp) {
   }
   debugger;
   return wss;
+  
 }
 try {
   window.ws = ws;
