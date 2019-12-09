@@ -7,7 +7,7 @@ import {
 } from './services';
 
 export default Model.extend({
-  namespace: 'hkvideo1',
+  namespace: 'hkvideo',
   state: {
    // 视频参数
    videoListParameters: {

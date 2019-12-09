@@ -227,7 +227,7 @@ class MapView extends Component {
       if (this.state.displayType === 0) {
         if (extData.position.MonitorObjectType == 2) {
           pointEl = <>
-            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: this.getColor(extData.position.Status) }} />
+            <CustomIcon type="icon-fangwu" style={{...iconStyle, color: this.getColor(extData.position.Status)}} />
           </>
         } else {
           // 企业
@@ -282,7 +282,7 @@ class MapView extends Component {
       case "10":
         return <VocIcon style={style} />
       case "12":
-        return <CustomIcon type='icon-yangchen1' style={{ ...style }} />
+        return <CustomIcon type='icon-yangchen1' style={{ ...style}} />
       case "5":
         return <a><CustomIcon type='icon-fangwu' style={style} /></a>
       case "37":
@@ -615,22 +615,12 @@ class MapView extends Component {
                 // 切换企业
                 // const position = [entInfo[0].Longitude, entInfo[0].Latitude];
                 if (entInfo[0].PollutantType == 5) {
-                  // 排口切换监测点
-                  let newState = {};
-                  if (this.state.displayType == 1) {
-                    newState = {
-                      displayType: 0,
-                      coordinateSet: []
-                    }
-                    _thismap.setZoomAndCenter(this.state.zoom, [entInfo[0].Longitude, entInfo[0].Latitude])
-                  }
                   // 监测点
                   this.setState({
                     infoWindowVisible: true,
                     currentPointInfo: entInfo[0],
                     currentKey: val[0].key,
                     overAll: true,
-                    ...newState
                   }, () => {
                     this.getPointInfo(entInfo[0].PollutantType)
                   })
