@@ -81,11 +81,9 @@ function isInnerIPFn() {
     var aEnd = getIpNum("10.255.255.255");
     var bBegin = getIpNum("172.16.0.0");
     var bEnd = getIpNum("172.31.255.255");
-    var cBegin = getIpNum("192.168.0.0");
-    var cEnd = getIpNum("192.168.255.255");
     var dBegin = getIpNum("127.0.0.0");
     var dEnd = getIpNum("127.255.255.255");
-    isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || isInner(ipNum, dBegin, dEnd);
+    isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, dBegin, dEnd);
     // console.log('是否是内网:' + isInnerIp);
     if (isInnerIp) {
       returnIP = innerIp;
