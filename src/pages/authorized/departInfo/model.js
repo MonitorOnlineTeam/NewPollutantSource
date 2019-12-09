@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 import {
     getdepartinfobytree, getdepartinfobyid, insertdepartinfo, deldepartinfo, upddepartinfo, getdeparttreeandobj, getalluser, getuserbydepid, insertdepartbyuser,
-    insertregionbyuser,getregionbydepid,getregioninfobytree,getentandpoint,getpointbydepid,insertpointfilterbydepid
+    insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid
 } from './service';
 import { message } from 'antd';
 /*
@@ -18,10 +18,10 @@ export default Model.extend({
         DepartTree: [],
         AllUser: [],
         UserByDepID: [],
-        RegionByDepID:[],
-        RegionInfoTree:[],
-        EntAndPoint:[],
-        CheckPoint:[],
+        RegionByDepID: [],
+        RegionInfoTree: [],
+        EntAndPoint: [],
+        CheckPoint: [],
     },
     subscriptions: {
         setup({
@@ -189,13 +189,14 @@ export default Model.extend({
         }) {
             const result = yield call(getregioninfobytree, { ...payload });
             if (result.IsSuccess) {
+
                 yield update({
                     RegionInfoTree: result.Datas
                 });
             }
         },
-         /*给部门添加行政区（可批量）**/
-         * insertregionbyuser({
+        /*给部门添加行政区（可批量）**/
+        * insertregionbyuser({
             payload
         }, {
             call,
@@ -250,26 +251,28 @@ export default Model.extend({
                         ...payload,
                         PollutantType: global.defaultPollutantCode
                     }
-                }else {
+                } else {
                     payload = {
                         ...payload,
-                        PollutantType:global.defaultPollutantCode
+                        PollutantType: global.defaultPollutantCode
                     }
                 }
-                
+
             }
             const result = yield call(getentandpoint, {
                 ...payload
             });
             if (result.IsSuccess) {
+                // 过滤掉没有子节点的数据
+                let EntAndPoint = result.Datas.filter(item => item.children.length);
                 yield update({
-                    EntAndPoint: result.Datas
+                    EntAndPoint: EntAndPoint
                 });
             }
 
         },
-         /*获取当前部门的排口**/
-         * getpointbydepid({
+        /*获取当前部门的排口**/
+        * getpointbydepid({
             payload
         }, {
             call,
@@ -286,13 +289,13 @@ export default Model.extend({
                         ...payload,
                         PollutantType: global.defaultPollutantCode
                     }
-                }else {
+                } else {
                     payload = {
                         ...payload,
-                        PollutantType:global.defaultPollutantCode
+                        PollutantType: global.defaultPollutantCode
                     }
                 }
-                
+
             }
             const result = yield call(getpointbydepid, {
                 ...payload
@@ -303,8 +306,8 @@ export default Model.extend({
                 });
             }
         },
-         /*给当前部门添加排口权限(可批量)**/
-         * insertpointfilterbydepid({
+        /*给当前部门添加排口权限(可批量)**/
+        * insertpointfilterbydepid({
             payload
         }, {
             call,
@@ -317,11 +320,11 @@ export default Model.extend({
                 if (!global.defaultPollutantCode) {
                     yield take('common/getPollutantTypeList/@@end');
                     global = yield select(state => state.common);
-                    payload.Type=global.defaultPollutantCode
-                }else {
-                    payload.Type=global.defaultPollutantCode
+                    payload.Type = global.defaultPollutantCode
+                } else {
+                    payload.Type = global.defaultPollutantCode
                 }
-                
+
             }
             const result = yield call(insertpointfilterbydepid, {
                 ...payload
