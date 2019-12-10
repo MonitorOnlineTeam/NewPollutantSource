@@ -11,7 +11,7 @@ export default Model.extend({
     dateReportForm: {
       PollutantSourceType: 1,
       current: 1,
-      pageSize: 27,
+      pageSize: 34,
       total: 0,
       EntCode: "",
       // Regions: ["110000000", "110100000", "110101000"],

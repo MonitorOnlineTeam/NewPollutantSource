@@ -21,7 +21,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
     ...loading,
     videoListParameters: hkvideo.videoListParameters,
 }))
-class HkCameraIndex extends Component {
+ class HkCameraIndex extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,8 +30,12 @@ class HkCameraIndex extends Component {
             title: '',
             width: 400,
             data: null,
+<<<<<<< HEAD
             // pointName: this.props.match.params.pointname,
             pointName: '排口名称',
+=======
+            pointName: this.props.match.params.pointname,
+>>>>>>> 151719f71582740c620221a0257fdcf6ac7634d4
             footer: <div>
                 <Button key="back" onClick={this.handleCancel}>Return</Button>,
                 <Button key="submit" type="primary" onClick={this.handleOk}>
@@ -42,12 +46,12 @@ class HkCameraIndex extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch({
-            type: 'hkvideo/hkvideourl',
-            payload: {
-                DGIMN: this.props.DGIMN,
-            },
-        });
+         this.props.dispatch({
+           type: 'hkvideo/hkvideourl',
+           payload: {
+               DGIMN: this.props.match.params.DGIMN,
+           },
+         });
     }
 
     componentWillReceiveProps = nextProps => {
@@ -68,10 +72,10 @@ class HkCameraIndex extends Component {
     onCancel = () => {
         this.setState({ visible: false })
         this.props.dispatch({
-            type: 'hkvideo/hkvideourl',
-            payload: {
-                DGIMN: this.props.DGIMN,
-            },
+          type: 'hkvideo/hkvideourl',
+          payload: {
+            DGIMN: this.props.match.params.DGIMN,
+          },
         });
     };
 
@@ -89,18 +93,18 @@ class HkCameraIndex extends Component {
         this.props.dispatch({
             type: 'hkvideo/deleteVideoInfo',
             payload: {
-                DGIMN: this.props.DGIMN,
+                DGIMN: this.props.match.params.DGIMN,
                 VedioCamera_ID: record.VedioCamera_ID,
                 VedioDevice_ID: record.VedioDevice_ID,
                 CameraMonitorID: record.CameraMonitorID,
                 callback: result => {
                     if (result) {
-                        this.props.dispatch({
-                            type: 'hkvideo/hkvideourl',
-                            payload: {
-                                DGIMN: this.props.DGIMN,
-                            },
-                        });
+                         this.props.dispatch({
+                           type: 'hkvideo/hkvideourl',
+                           payload: {
+                             DGIMN: this.props.match.params.DGIMN,
+                           },
+                         });
                         message.success('删除成功！')
                     } else {
                         message.error('删除失败！')
@@ -126,50 +130,50 @@ class HkCameraIndex extends Component {
                 width: '14%',
                 render: (text, record, index) => (
                     <span>
-                        <Tooltip title="详情">
-                            <a onClick={() => {
-                                this.setState({
-                                    visible: true,
-                                    type: 'details',
-                                    title: '视频详情信息',
-                                    width: 1130,
-                                    data: record,
-                                    footer: null,
-                                });
-                            }}><DetailIcon /></a>
+                     <Tooltip title="详情">
+                        <a onClick={() => {
+                            this.setState({
+                                visible: true,
+                                type: 'details',
+                                title: '视频详情信息',
+                                width: 1130,
+                                data: record,
+                                footer: null,
+                            });
+                        }}><DetailIcon/></a>
                         </Tooltip>
                         <Divider type="vertical" />
                         <Tooltip title="编辑">
-                            <a onClick={() => {
-                                this.setState({
-                                    visible: true,
-                                    type: 'update',
-                                    title: '编辑视频信息',
-                                    width: 1130,
-                                    data: record,
-                                    footer: <div>
-                                        <Button key="back" onClick={this.onCancel}>取消</Button>
-                                        <Button key="submit" type="primary" onClick={this.updateData}>
-                                            确定
+                        <a onClick={() => {
+                               this.setState({
+                                visible: true,
+                                type: 'update',
+                                title: '编辑视频信息',
+                                width: 1130,
+                                data: record,
+                                footer: <div>
+                                    <Button key="back" onClick={this.onCancel}>取消</Button>
+                                    <Button key="submit" type="primary" onClick={this.updateData}>
+                                        确定
                                     </Button>
-                                    </div>,
-                                });
-                            }}><EditIcon /></a></Tooltip>
+                                </div>,
+                            });
+                        }}><EditIcon/></a></Tooltip>
                         <Divider type="vertical" />
                         <Tooltip title="删除">
                             <Popconfirm placement="left" title="确定要删除此排口吗？" onConfirm={() => this.deleteVideoInfobyIndex(record)} okText="是" cancelText="否">
-                                <a href="#" > <DelIcon /> </a>
+                                <a href="#" > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip>
                         <Divider type="vertical" />
                         <Tooltip title="播放">
-                            <a onClick={() => {
-                                this.props.dispatch(
-                                    routerRedux.push(
-                                        `/platformconfig/hkshowvideo/${this.props.DGIMN}`,
-                                    ),
-                                );
-                            }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>
+                        <a onClick={() => {
+                            this.props.dispatch(
+                        routerRedux.push(
+                          `/platformconfig/hkshowvideo/${this.props.match.params.DGIMN}`,
+                        ),
+                      );
+                    }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>
                     </span>
                 ),
             },
@@ -177,8 +181,9 @@ class HkCameraIndex extends Component {
         ];
 
         return (
+            <PageHeaderWrapper>
                 <div className={styles.cardTitle}>
-                    <Card bordered={false} style={{ width: '100%' }}>
+                    <Card bordered={false} title={videoListParameters.pointname} style={{ width: '100%' }}>
                         <Form layout="inline" style={{ marginBottom: 10 }}>
                             <Row gutter={8} >
                                 <Col span={24} >
@@ -222,7 +227,7 @@ class HkCameraIndex extends Component {
                                 }
                             }
                         />
-                        <Modal
+                     <Modal
                             footer={this.state.footer}
                             destroyOnClose="true"
                             visible={this.state.visible}
@@ -237,6 +242,7 @@ class HkCameraIndex extends Component {
 
                     </Card>
                 </div>
+            </PageHeaderWrapper>
 
         );
     }

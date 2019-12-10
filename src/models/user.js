@@ -13,7 +13,7 @@ import {
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import { isUrl , sdlMessage } from '@/utils/utils';
+import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
 
 
@@ -22,6 +22,7 @@ function formatter(data, parentPath = '') {
     return data.map(item => {
       let { path } = item;
       if (!isUrl(path)) {
+        // path = parentPath + item.path;
         path = item.path;
       }
       const result = {
@@ -29,6 +30,7 @@ function formatter(data, parentPath = '') {
         path,
       };
       if (item.children) {
+        // result.children = formatter(item.children, `${parentPath}${item.path}/`);
         result.children = formatter(item.children, `${item.path}/`);
       }
       return result;
@@ -104,7 +106,7 @@ export default Model.extend({
         sdlMessage(result.Message, 'error');
       }
     },
-    /*获取单个用户实体* */
+    /* 获取单个用户实体* */
     *getUserInfo({ payload }, { call, update }) {
       const result = yield call(getUserInfo, {
         ...payload,
@@ -115,7 +117,7 @@ export default Model.extend({
       });
       payload.callback();
     },
-    /*个人设置编辑信息* */
+    /* 个人设置编辑信息* */
     *editpersonaluser({ payload }, { call, update }) {
       const result = yield call(editpersonaluser, {
         ...payload,

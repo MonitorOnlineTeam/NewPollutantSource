@@ -16,7 +16,7 @@ const Model = {
 
       yield put({
         type: 'changeLoginStatus',
-        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account' },
+        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
       });
 
       if (response.IsSuccess) {
@@ -69,7 +69,7 @@ const Model = {
     changeLoginStatus(state, { payload }) {
       //setAuthority(payload.currentAuthority);
       //;
-      return { ...state, status: payload.status, type: payload.type };
+      return { ...state, ...payload };
     },
     setConfigInfo(state, { payload }) {
       return { ...state, configInfo: { ...payload } };

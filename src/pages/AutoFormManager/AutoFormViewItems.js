@@ -91,6 +91,13 @@ class AutoFormViewItems extends Component {
       //   />
       // } else {
       showText = formData[item.fieldName]
+      if (item.configId && item.fullFieldName) {
+        // 有表连接时，取带表名的字段
+        if (formData[item.fullFieldName] != undefined) {
+          let fieldValue = formData[item.fullFieldName] + "";
+          showText = fieldValue.split(',')
+        }
+      };
       let el = <div className={styles.detail}>{showText}</div>;
       // }
       if (item.type === "坐标集合") {

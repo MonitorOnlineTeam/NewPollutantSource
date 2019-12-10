@@ -992,8 +992,8 @@ class DepartIndex extends Component {
                                     //     }}
                                     //     size="large"
                                     // /> :
-                                    <div style={{ height: "600px", overflow: "auto" }}>
-                                        <Row style={{ position: "fixed", background: "#fff", paddingBottom: 10, zIndex: 1 }}>
+                                    <div style={{ height: "600px", overflow: "hidden" }}>
+                                        <Row style={{ background: "#fff", paddingBottom: 10, zIndex: 1 }}>
                                             {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
                                                     <Radio.Button value="1">废水</Radio.Button>
                                                     <Radio.Button value="2">废气</Radio.Button>
@@ -1018,7 +1018,7 @@ class DepartIndex extends Component {
                                                 size="large"
                                             /> : (this.props.EntAndPoint.length > 0 ? <Tree
                                                 key="key"
-                                                style={{ marginTop: 47 }}
+                                                style={{ height: "560px", overflow: "auto" }}
                                                 checkable
                                                 // checkStrictly={false}
                                                 onExpand={this.onExpands}
