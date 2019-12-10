@@ -23,7 +23,7 @@ import {
   InitVideo, clickLogin, clickStartRealPlay, mouseDownPTZControl, mouseUpPTZControl,
   PTZZoomIn, PTZZoomOut, PTZZoomStop,
   PTZFocusIn, PTZFocusOut, PTZFocusStop,
-  PTZIrisIn, PTZIrisOut, PTZIrisStop
+  PTZIrisIn, PTZIrisOut, PTZIrisStop, clickStartPlayback, clickStopPlayback, clickPause, clickResume, clickPlaySlow, clickPlayFast, clickReversePlayback, clickCapturePic,
 } from '@/utils/video';
 
 const { TabPane } = Tabs;
@@ -50,8 +50,8 @@ class HkShowVideo extends Component {
       startValue: null,
       endValue: null,
       dgimn: '',
-      IsIE: true,
-      tabsKey: 1,
+      IsIE: false,
+      tabsKey: '1',
 
     };
   }
@@ -95,10 +95,12 @@ class HkShowVideo extends Component {
         this.setState({ IsIE: true });
         message.info(msg.message);
         const msg2 = clickLogin(loginPara);
-        if (msg2 != null && msg2 != undefined && msg2.flag) {
+        if (msg2 !== null && msg2 !== undefined && msg2.flag) {
+          debugger;
           message.success(msg2.message);
           // 实时视频立即播放
-          if (this.state.tabsKey === 1) {
+          if (this.state.tabsKey === '1') {
+            console.log('播放');
             const para = loginPara;
             setTimeout(() => {
               clickStartRealPlay(para);
@@ -119,44 +121,108 @@ class HkShowVideo extends Component {
   };
 
   /** 回放操作 */
-  backplay = opt => {
-    const {
-      beginDate,
-      endDate,
-    } = this.state;
-    if (beginDate !== '' && !endDate !== '') {
-      const obj = {
+   playBack = () => {
+     debugger;
+      const {
         beginDate,
         endDate,
-        opt,
-      };
-      const frame = document.getElementById('ifm').contentWindow;
-      frame.postMessage(obj, config.hisvideourl);
+      } = this.state;
+      console.log(this.props.hkvideoListParameters[0].Device_Port);
       this.child.startPlay(
         moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
         moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
       );
-    } else {
-      message.error('请选择时间间隔');
-    }
-  };
+     if (this.state.IsIE) {
+       if (this.props.hkvideoListParameters[0]) {
+         const para = {
+           beginTime: beginDate,
+           endTime: endDate,
+           ip: this.props.hkvideoListParameters[0].IP,
+           devicePort: this.props.hkvideoListParameters[0].Device_Port,
+           userName: this.props.hkvideoListParameters[0].User_Name,
+           userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+           cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+         };
+         const msg = clickStartPlayback(para);
+         if (msg === '开始回放成功！') {
+           this.child.startPlay(
+             moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
+             moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
+           );
+         }
+       }
+     }
+   };
 
   /** 历史视频操作 */
-  btnHisClick = opt => {
-    if (opt === 8) {
-      this.child.endPlay();
-    }
-    let obj = { opt };
-    const { beginDate, endDate } = this.state;
-    obj = { opt, beginDate, endDate };
-    const frame = document.getElementById('ifm').contentWindow;
-    frame.postMessage(obj, config.hisvideourl);
-  }
+   btnBackClick = opt => {
+     if (this.state.IsIE) {
+       switch (opt) {
+         case 1:
+           clickStopPlayback();
+           break;
+         case 2:
+           clickPause();
+           break;
+         case 3:
+           clickResume();
+           break;
+         case 4:
+           clickPlaySlow();
+           break;
+         case 5:
+           clickPlayFast();
+           break;
+         default:
+           clickStopPlayback();
+           break;
+       }
+     } else {
+       message.info('请在IE11浏览器下查看视频');
+     }
+   }
+
+     /** 截图 */
+     CapturePic = () => {
+       if (this.state.IsIE && this.props.hkvideoListParameters[0]) {
+        const msg = clickCapturePic(this.props.hkvideoListParameters[0].VedioCamera_No);
+        if (msg.flag) {
+          message.success(msg.message, 5);
+        } else {
+          message.error(msg.message);
+        }
+       }
+     }
+
+   // 倒放
+   reverseBack = () => {
+     const {
+       beginDate,
+       endDate,
+     } = this.state;
+     if (this.state.IsIE) {
+       if (this.props.hkvideoListParameters[0]) {
+         const para = {
+           beginTime: beginDate,
+           endTime: endDate,
+           ip: this.props.hkvideoListParameters[0].IP,
+           devicePort: this.props.hkvideoListParameters[0].Device_Port,
+           userName: this.props.hkvideoListParameters[0].User_Name,
+           userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+           cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+         };
+         const msg = clickReversePlayback(para);
+         message.info(msg);
+       }
+     } else {
+       message.info('请在IE11浏览器下查看视频');
+     }
+   }
 
   /** 实时视频操作 */
   btnClick = opt => {
     this.initV(this.props.hkvideoListParameters[0]);
-    if (this.state.IE) {
+    if (this.state.IsIE) {
       mouseDownPTZControl(opt);
       mouseUpPTZControl();
     }
@@ -164,7 +230,7 @@ class HkShowVideo extends Component {
 
   /** 调焦 */
   btnZoomClick = opt => {
-    if (this.state.IE) {
+    if (this.state.IsIE) {
       if (opt === 11) {
         PTZZoomIn();
         PTZZoomStop();
@@ -177,7 +243,7 @@ class HkShowVideo extends Component {
 
   /** 聚焦 */
   btnFocusClick = opt => {
-    if (this.state.IE) {
+    if (this.state.IsIE) {
       if (opt === 15) {
         PTZFocusIn();
         PTZFocusStop();
@@ -190,7 +256,7 @@ class HkShowVideo extends Component {
 
   /** 光圈 */
   btnIrisClick = opt => {
-    if (this.state.IE) {
+    if (this.state.IsIE) {
       if (opt === 19) {
         PTZIrisIn();
         PTZIrisStop();
@@ -203,12 +269,22 @@ class HkShowVideo extends Component {
 
   /** tabs切换 */
   tabsChange = key => {
+    console.log('----------------------key', key === '1');
     if (key === '1') {
-      this.getVideoIp(1);
-    }
-    if (key === '2') {
-      this.getVideoIp(2);
-    }
+      this.btnBackClick(1);
+       this.setState({
+         tabsKey: key,
+       }, () => {
+         this.btnBackClick(1);
+         this.initV(this.props.hkvideoListParameters[0]);
+       })
+    } else {
+     this.setState({
+       tabsKey: key,
+     }, () => {
+       this.initV(this.props.hkvideoListParameters[0]);
+     })
+   }
   };
 
   /** 时间控件 */
@@ -286,7 +362,7 @@ class HkShowVideo extends Component {
           height: 'calc(100vh - 225px)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
         size="large"
       />);
@@ -302,23 +378,13 @@ class HkShowVideo extends Component {
         /></div ></Card>);
     }
     return (
-      <div style={{ height: 'calc(100vh - 245px)', width: '100%' }}>
+      <div style={{ height: 'calc(100vh - 210px)', width: '100%' }}>
         <Row gutter={24} style={{ height: '100%' }}>
-          <Col xl={18} lg={24} md={24} sm={24} xs={24} style={{ height: '100%' }}>
-            <div id="divPlugin" style={{ width: '100%', margin: '0', height: '100%' }} />
+          <Col xl={18} lg={24} md={24} sm={24} xs={24} style={{ height: '100%', overflow: 'hidden' }}>
+            <div id="divPlugin" style={{ width: '100%', marginRight: '10px', height: '100%', position: 'absolute', zIndex: '-1' }} />
           </Col>
-          <Col xl={6} lg={24} md={24} sm={24} xs={24}>
-            <Card className={styles.card} extra={<span><Button
-              style={{ marginLeft: 10 }}
-              onClick={() => {
-                history.go(-1);
-              }}
-              type="link"
-              size="small"
-            >
-              <Icon type="rollback" />
-              返回上级
-                </Button></span>}>
+          <Col xl={6} lg={24} md={24} sm={24} xs={24} style={{ height: '100%' }}>
+            <Card className={styles.card}>
               <Tabs
                 defaultActiveKey="1"
                 onChange={key => {
@@ -332,7 +398,7 @@ class HkShowVideo extends Component {
                         <Button
                           icon="file-image"
                           size="Small"
-                          onClick={this.btnClick.bind(this, 10)}
+                          onClick={this.CapturePic.bind(this)}
                         > 抓图
                                                 </Button>
                       </Col>
@@ -344,7 +410,9 @@ class HkShowVideo extends Component {
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.btnClick.bind(this, 5)}
+                              onClick = {
+                                this.btnClick.bind(this, 5)
+                              }
                             > <Lefttop />左上
                                                 </Button>
                           </Col>
@@ -544,11 +612,11 @@ class HkShowVideo extends Component {
                     <Row>
                       <Col span={24}>
                         <Row style={{ marginTop: '10px' }}>
-                          <Col className={styles.gutterleft} span={8}>
-                            <Button icon="play-circle" onClick={this.backplay.bind(this, 7)}>开始回放</Button>
+                          <Col className={styles.gutterleft} span={12}>
+                            <Button icon="play-circle" onClick={this.playBack.bind(this)}>开始回放</Button>
                           </Col>
-                          <Col className={styles.gutterleft} span={8}>
-                            <Button icon="close-circle" onClick={this.backplay.bind(this, 8)}>停止回放</Button>
+                          <Col className={styles.gutterleft} span={12}>
+                            <Button icon="close-circle" onClick={this.btnBackClick.bind(this, 1)}>停止回放</Button>
                           </Col>
                         </Row>
                       </Col>
@@ -558,14 +626,14 @@ class HkShowVideo extends Component {
                       <Col span={24}>
                         <Row>
 
-                          <Col className={styles.gutterleft} span={8}><Button icon="pause-circle" onClick={this.btnHisClick.bind(this, 2)}>暂停</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="check-circle" onClick={this.btnHisClick.bind(this, 3)}>恢复</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="picture" onClick={this.btnHisClick.bind(this, 6)}>抓图</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="pause-circle" onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="check-circle" onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="picture" onClick={this.CapturePic.bind(this)}>抓图</Button></Col>
                         </Row>
                         <Row style={{ marginTop: '30px' }}>
-                          <Col className={styles.gutterleft} span={8}><Button icon="step-forward" onClick={this.btnHisClick.bind(this, 4)}>慢放</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="fast-forward" onClick={this.btnHisClick.bind(this, 5)}>快放</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="fast-backward" onClick={this.btnHisClick.bind(this, 1)}> 倒放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="step-forward" onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="fast-forward" onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="fast-backward" onClick={this.reverseBack.bind(this)}> 倒放</Button></Col>
                         </Row>
                       </Col>
                     </Row>

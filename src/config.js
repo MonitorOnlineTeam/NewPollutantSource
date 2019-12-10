@@ -3,24 +3,24 @@
  */
 
 // 接口地址
-//外网：61.50.135.114
-//内网：172.16.12.165
+// 外网：61.50.135.114
+// 内网：172.16.12.165
 
-//域名服务器
+// 域名服务器
 // const apiHost = 'http://api.chsdl.net/NewWryApi/';
 // // 文件上传地址
 // const uploadHost = 'http://api.chsdl.net/NewWryApi/upload/';
 
-//测试服务器
+// 测试服务器
 // const apiHost = 'http://172.16.12.165:9090/';
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.9.52:8096/';
+const apiHost = 'http://localhost:52198/';
 // 文件上传地址
 const uploadHost = apiHost;
 // wensocket推送地址（第一个为内网，第二个为外网）
-const webSocketPush='172.16.12.214:50083,61.50.135.114:50080';
+const webSocketPush = '172.16.12.177:50083,61.50.135.114:50083';
 
 module.exports = {
   // name: '污染源智能分析平台',
@@ -33,7 +33,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
-  iconFontUrl:'//at.alicdn.com/t/font_1298443_rpnrsaadd2h.js',
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_rpnrsaadd2h.js',
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
@@ -45,7 +45,7 @@ module.exports = {
   isMultiEnterprise: false,
   apiPrefix: '/mock',
   webSocketPushURL: webSocketPush,
-  imgaddress: 'http://172.16.9.41:7001/upload/',
+  imgaddress: 'http://172.16.12.177:9002/upload/',
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
   // 使用文档路径
@@ -57,9 +57,9 @@ module.exports = {
   // 萤石云视频地址
   ysyvideourl: `${apiHost}/Web/YsyVideo/YsyVideo.html`,
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
-  VideoServer: 1,
+  VideoServer: 0,
   // 历史视频定时播放数据时间（单位S）
-  PlayDatas: 10 * 1000,
+  PlayDatas: 10 * 60,
   // 手工数据上传地址
   templateUploadUrl: `${apiHost}/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
   // 设备运转率标准%

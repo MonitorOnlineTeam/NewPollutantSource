@@ -30,7 +30,7 @@ class HkCameraIndex extends Component {
             title: '',
             width: 400,
             data: null,
-            //pointName: this.props.match.params.pointname,
+            // pointName: this.props.match.params.pointname,
             pointName: '排口名称',
             footer: <div>
                 <Button key="back" onClick={this.handleCancel}>Return</Button>,
@@ -48,6 +48,17 @@ class HkCameraIndex extends Component {
                 DGIMN: this.props.DGIMN,
             },
         });
+    }
+
+    componentWillReceiveProps = nextProps => {
+        if (this.props.DGIMN !== nextProps.DGIMN) {
+            this.props.dispatch({
+              type: 'hkvideo/hkvideourl',
+              payload: {
+                DGIMN: nextProps.DGIMN,
+              },
+            });
+        }
     }
 
     onRef1 = ref => {
@@ -219,7 +230,7 @@ class HkCameraIndex extends Component {
                             width={this.state.width}
                             onCancel={this.onCancel}>
                             {
-                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={this.props.DGIMN} name={'监测点'} onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} />
+                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={this.props.DGIMN} name="监测点" onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} />
                             }
 
                         </Modal>

@@ -695,7 +695,7 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0 ? './platformManager/hkvideo/HkCameraIndex' : './monitoring/videopreview/ysyvideo/index'}`,
+                  component: `${config.VideoServer === 0 ? './monitoring/videopreview/hkvideo/index' : './monitoring/videopreview/ysyvideo/index'}`,
                 },
                 {
                   name: 'realtimedata',

@@ -3,7 +3,7 @@ import Model from '@/utils/model';
 import {
   getysyList,
   getvideolist,
-  hkvideourl, getqcaysyList
+  hkvideourl, getqcaysyList,
 } from '../services/videodata';
 import {
   querypollutantlist,
@@ -38,7 +38,7 @@ export default Model.extend({
     columns: [],
     realdata: [],
     hiscolumns: [],
-    qcaurl:"",
+    qcaurl: '',
   },
   effects: {
     /** 萤石云视频链接 */
@@ -99,12 +99,12 @@ export default Model.extend({
           }
         }
         yield update({
-          qcaurl:temprealurl
+          qcaurl: temprealurl,
         });
       } else {
         message.error(result.Message)
         yield update({
-          qcaurl:temprealurl
+          qcaurl: temprealurl,
         });
       }
     },
@@ -206,6 +206,7 @@ export default Model.extend({
     },
     /** 获取历史视频数据 */
     *queryhistorydatalisthis({ payload }, { call, update, select }) {
+      debugger;
       const res = yield call(queryhistorydatalist, {
         ...payload,
       });

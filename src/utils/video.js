@@ -208,7 +208,7 @@ export function clickCapturePic(cameraNo) {
         const szPicName = `${oWndInfo.szIP}_${szChannelID}_${new Date().getTime()}`;
         const iRet = WebVideoCtrl.I_CapturePic(szPicName);
         if (iRet == 0) {
-            msg = { flag: true, message: ' 抓图成功！' };
+            msg = { flag: true, message: ` 抓图成功,文件名为：【'${szPicName}'】` };
         } else {
             msg = { flag: false, message: ' 抓图失败！' };
         }
@@ -220,6 +220,7 @@ export function clickCapturePic(cameraNo) {
 // PTZ控制 9为自动，1,2,3,4,5,6,7,8为方向PTZ
 let g_bPTZAuto = false;
 export function mouseDownPTZControl(iPTZIndex) {
+    debugger;
     const oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
     const bZeroChannel = false;
     let iPTZSpeed = 4;
