@@ -22,14 +22,16 @@ function formatter(data, parentPath = '') {
     return data.map(item => {
       let { path } = item;
       if (!isUrl(path)) {
-        path = parentPath + item.path;
+        //path = parentPath + item.path;
+        path = item.path;
       }
       const result = {
         ...item,
         path,
       };
       if (item.children) {
-        result.children = formatter(item.children, `${parentPath}${item.path}/`);
+        //result.children = formatter(item.children, `${parentPath}${item.path}/`);
+        result.children = formatter(item.children, `${item.path}/`);
       }
       return result;
     });
