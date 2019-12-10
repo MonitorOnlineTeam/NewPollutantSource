@@ -300,7 +300,7 @@ class DailySummaryPage extends PureComponent {
             size="small"
             columns={this.state.columns}
             dataSource={dailySummaryDataList}
-            defaultWidth={pollutantSourceType == "2" ? 200 : 100}
+            // defaultWidth={200}
             rowClassName={
               (record, index, indent) => {
                 if (index === 0 || record.time === "0时") {

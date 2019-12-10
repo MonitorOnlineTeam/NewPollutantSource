@@ -452,6 +452,7 @@ class SiteDailyPage extends PureComponent {
             <p className={style.title}>{currentEntName}{currentDate}报表</p>
           }
           <SdlTable
+            rowKey={(record, index) => index}
             loading={loading}
             // style={{ minHeight: 80 }}
             size="small"
