@@ -9,7 +9,7 @@ function getWebSocket(innerIp, outIp) {
   if(!innerIp){
     wss = new WebSocket(`ws://${outIp}/`);
   }
-  debugger;
+  
   return wss;
   
 }
@@ -62,7 +62,7 @@ export function listen(callback) {
 /* 判断是否是内网IP */
 function isInnerIPFn() {
   var returnIP = '';
-  debugger;
+  
   const innerIp = config.webSocketPushURL.split(',')[0];
   const outIp = config.webSocketPushURL.split(',')[1];
   var returnIP = '';

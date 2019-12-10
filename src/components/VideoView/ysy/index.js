@@ -97,7 +97,7 @@ class YSYManagerIndex extends Component {
                     payload: {
                         SerialNumber: FormData.VedioCamera_No,
                         callback: result => {
-                            debugger;
+                            
                             if (result.Datas) {
                                 dispatch({
                                     type: 'ysyvideo/AddDevice',

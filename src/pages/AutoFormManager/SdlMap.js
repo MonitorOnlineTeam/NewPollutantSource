@@ -237,6 +237,8 @@ class SdlMap extends PureComponent {
       nextProps.path && this.setState({
         path: nextProps.path,
         mapCenter: nextProps.path[0][0][0]
+      }, () => {
+        // thisMap.setFitView()
       })
     }
   }
@@ -245,7 +247,12 @@ class SdlMap extends PureComponent {
 
   renderMapContent() {
     const events = {
-      created: (ins) => { thisMap = ins },
+      created: (ins) => {
+        thisMap = ins
+        setTimeout(() => {
+          ins.setFitView()
+        }, 1000)
+      },
       click: (e) => {
         if (this.state.isChangePos) {
           let position = {
@@ -327,6 +334,7 @@ class SdlMap extends PureComponent {
         />);
       }
     }
+    thisMap && thisMap.setFitView()
     return res;
   }
 

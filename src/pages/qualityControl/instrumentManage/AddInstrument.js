@@ -261,7 +261,7 @@ class AddInstrument extends Component {
       })
       const QCAGasVolume = [];
       const QCAGasRelation = [];
-      debugger;
+      
       if (dataSourceR.length > 0) {
          isErr = false;
 
