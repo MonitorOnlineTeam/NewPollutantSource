@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-06 18:41:19
+ * @Last Modified time: 2019-12-10 11:12:39
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -46,6 +46,7 @@ import MapModal from './MapModal';
 import SdlMap from './SdlMap'
 import styles from './index.less'
 import config from '@/config'
+import IndustryTree from '@/components/IndustryTree'
 
 const { RangePicker, MonthPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -211,6 +212,13 @@ class SdlForm extends PureComponent {
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
       let initialValue = (formData[fieldName] != undefined) && `${formData[fieldName]}`;
+      if (item.configId && item.fullFieldName) {
+        // 有表连接时，取带表名的字段
+        if (formData[item.fullFieldName] != undefined) {
+          let fieldValue = formData[item.fullFieldName] + "";
+          initialValue = fieldValue.split(',')
+        }
+      };
       // 判断类型
       switch (item.type) {
         case '文本框':
@@ -236,9 +244,17 @@ class SdlForm extends PureComponent {
             />
           );
           break;
+        case '下拉搜索树':
+          // initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
+          element = <IndustryTree
+            textField={item.configDataItemName}
+            valueField={item.configDataItemValue}
+            configId={item.configId}
+          />
+          break;
         case '多选下拉搜索树':
           placeholder = placeholder || selectPlaceholder;
-          initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
+          // initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
           element = (
             <SdlCascader
               itemName={item.configDataItemName}
