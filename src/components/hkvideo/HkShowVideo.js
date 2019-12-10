@@ -33,14 +33,14 @@ const { TabPane } = Tabs;
  * 2019-09-16
  */
 @connect(({
-      videodata, loading,
-    }) => ({
-        IsLoading: loading.effects['videodata/hkvideourl'],
-    hkvideoListParameters: videodata.hkvideoListParameters,
+  videodata, loading,
+}) => ({
+  IsLoading: loading.effects['videodata/hkvideourl'],
+  hkvideoListParameters: videodata.hkvideoListParameters,
 }))
 class HkShowVideo extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
     this.state = {
       displayR: true,
@@ -53,16 +53,16 @@ class HkShowVideo extends Component {
       IsIE: false,
       tabsKey: '1',
 
-        };
-    }
+    };
+  }
 
-    /** 初始化加载 */
-    componentDidMount() {
-      this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
-    }
+  /** 初始化加载 */
+  componentDidMount() {
+    this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
+  }
 
-    /** 改变排口后加载 */
-    componentWillReceiveProps = nextProps => {
+  /** 改变排口后加载 */
+  componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.setState({
         dgimn: nextProps.DGIMN,
@@ -73,18 +73,18 @@ class HkShowVideo extends Component {
 
   /** 根据排口信息初始化视频 */
   changeDgimn = dgimn => {
-      this.setState({
-        dgimn,
-      })
-      this.props.dispatch({
-        type: 'videodata/hkvideourl',
-        payload: {
-          DGIMN: dgimn,
-        },
-      }).then(() => {
-        this.initV(this.props.hkvideoListParameters[0])
-      })
-    }
+    this.setState({
+      dgimn,
+    })
+    this.props.dispatch({
+      type: 'videodata/hkvideourl',
+      payload: {
+        DGIMN: dgimn,
+      },
+    }).then(() => {
+      this.initV(this.props.hkvideoListParameters[0])
+    })
+  }
 
   /** 视频登陆初始化 */
   initV = loginPara => {
@@ -109,112 +109,113 @@ class HkShowVideo extends Component {
         } else {
           message.warning(msg.message, 100000)
         }
-    }
-   };
-
-    /** 历史视频 */
-    onRef1 = ref => {
-    this.child = ref;
+      }
     };
+  }
+
+  /** 历史视频 */
+  onRef1 = ref => {
+    this.child = ref;
+  };
 
   /** 回放操作 */
-   playBack = () => {
-     debugger;
-      const {
-        beginDate,
-        endDate,
-      } = this.state;
-      console.log(this.props.hkvideoListParameters[0].Device_Port);
-      this.child.startPlay(
-        moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
-        moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
-      );
-     if (this.state.IsIE) {
-       if (this.props.hkvideoListParameters[0]) {
-         const para = {
-           beginTime: beginDate,
-           endTime: endDate,
-           ip: this.props.hkvideoListParameters[0].IP,
-           devicePort: this.props.hkvideoListParameters[0].Device_Port,
-           userName: this.props.hkvideoListParameters[0].User_Name,
-           userPwd: this.props.hkvideoListParameters[0].User_Pwd,
-           cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
-         };
-         const msg = clickStartPlayback(para);
-         if (msg === '开始回放成功！') {
-           this.child.startPlay(
-             moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
-             moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
-           );
-         }
-       }
-     }
-   };
+  playBack = () => {
+    debugger;
+    const {
+      beginDate,
+      endDate,
+    } = this.state;
+    console.log(this.props.hkvideoListParameters[0].Device_Port);
+    this.child.startPlay(
+      moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
+      moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
+    );
+    if (this.state.IsIE) {
+      if (this.props.hkvideoListParameters[0]) {
+        const para = {
+          beginTime: beginDate,
+          endTime: endDate,
+          ip: this.props.hkvideoListParameters[0].IP,
+          devicePort: this.props.hkvideoListParameters[0].Device_Port,
+          userName: this.props.hkvideoListParameters[0].User_Name,
+          userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+          cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+        };
+        const msg = clickStartPlayback(para);
+        if (msg === '开始回放成功！') {
+          this.child.startPlay(
+            moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
+            moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
+          );
+        }
+      }
+    }
+  };
 
   /** 历史视频操作 */
-   btnBackClick = opt => {
-     if (this.state.IsIE) {
-       switch (opt) {
-         case 1:
-           clickStopPlayback();
-           break;
-         case 2:
-           clickPause();
-           break;
-         case 3:
-           clickResume();
-           break;
-         case 4:
-           clickPlaySlow();
-           break;
-         case 5:
-           clickPlayFast();
-           break;
-         default:
-           clickStopPlayback();
-           break;
-       }
-     } else {
-       message.info('请在IE11浏览器下查看视频');
-     }
-   }
+  btnBackClick = opt => {
+    if (this.state.IsIE) {
+      switch (opt) {
+        case 1:
+          clickStopPlayback();
+          break;
+        case 2:
+          clickPause();
+          break;
+        case 3:
+          clickResume();
+          break;
+        case 4:
+          clickPlaySlow();
+          break;
+        case 5:
+          clickPlayFast();
+          break;
+        default:
+          clickStopPlayback();
+          break;
+      }
+    } else {
+      message.info('请在IE11浏览器下查看视频');
+    }
+  }
 
-     /** 截图 */
-     CapturePic = () => {
-       if (this.state.IsIE && this.props.hkvideoListParameters[0]) {
-        const msg = clickCapturePic(this.props.hkvideoListParameters[0].VedioCamera_No);
-        if (msg.flag) {
-          message.success(msg.message, 5);
-        } else {
-          message.error(msg.message);
-        }
-       }
-     }
+  /** 截图 */
+  CapturePic = () => {
+    if (this.state.IsIE && this.props.hkvideoListParameters[0]) {
+      const msg = clickCapturePic(this.props.hkvideoListParameters[0].VedioCamera_No);
+      if (msg.flag) {
+        message.success(msg.message, 5);
+      } else {
+        message.error(msg.message);
+      }
+    }
+  }
 
-   // 倒放
-   reverseBack = () => {
-     const {
-       beginDate,
-       endDate,
-     } = this.state;
-     if (this.state.IsIE) {
-       if (this.props.hkvideoListParameters[0]) {
-         const para = {
-           beginTime: beginDate,
-           endTime: endDate,
-           ip: this.props.hkvideoListParameters[0].IP,
-           devicePort: this.props.hkvideoListParameters[0].Device_Port,
-           userName: this.props.hkvideoListParameters[0].User_Name,
-           userPwd: this.props.hkvideoListParameters[0].User_Pwd,
-           cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
-         };
-         const msg = clickReversePlayback(para);
-         message.info(msg);
-       }
-     } else {
-       message.info('请在IE11浏览器下查看视频');
-     }
-   }
+  // 倒放
+  reverseBack = () => {
+    const {
+      beginDate,
+      endDate,
+    } = this.state;
+    if (this.state.IsIE) {
+      if (this.props.hkvideoListParameters[0]) {
+        const para = {
+          beginTime: beginDate,
+          endTime: endDate,
+          ip: this.props.hkvideoListParameters[0].IP,
+          devicePort: this.props.hkvideoListParameters[0].Device_Port,
+          userName: this.props.hkvideoListParameters[0].User_Name,
+          userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+          cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+        };
+        const msg = clickReversePlayback(para);
+        message.info(msg);
+      }
+    } else {
+      message.info('请在IE11浏览器下查看视频');
+    }
+  }
 
   /** 实时视频操作 */
   btnClick = opt => {
@@ -264,24 +265,24 @@ class HkShowVideo extends Component {
     }
   }
 
-   /** tabs切换 */
+  /** tabs切换 */
   tabsChange = key => {
     console.log('----------------------key', key === '1');
     if (key === '1') {
       this.btnBackClick(1);
-       this.setState({
-         tabsKey: key,
-       }, () => {
-         this.btnBackClick(1);
-         this.initV(this.props.hkvideoListParameters[0]);
-       })
+      this.setState({
+        tabsKey: key,
+      }, () => {
+        this.btnBackClick(1);
+        this.initV(this.props.hkvideoListParameters[0]);
+      })
     } else {
-     this.setState({
-       tabsKey: key,
-     }, () => {
-       this.initV(this.props.hkvideoListParameters[0]);
-     })
-   }
+      this.setState({
+        tabsKey: key,
+      }, () => {
+        this.initV(this.props.hkvideoListParameters[0]);
+      })
+    }
   };
 
   /** 时间控件 */
@@ -364,25 +365,27 @@ class HkShowVideo extends Component {
         size="large"
       />);
     }
-       if (IsLoading) {
-           return (<Spin
-               style={{ width: '100%',
-                   height: 'calc(100vh - 225px)',
-                   display: 'flex',
-                   alignItems: 'center',
-                   justifyContent: 'center' }}
-               size="large"
-           />);
-       }
-       if (hkvideoListParameters.length === 0) {
-      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
+    if (IsLoading) {
+      return (<Spin
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 225px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        size="large"
+      />);
+    }
+    if (hkvideoListParameters.length === 0) {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style={
         {
           textAlign: 'center',
         }
-      } > <Empty image = {
+      } > <Empty image={
         Empty.PRESENTED_IMAGE_SIMPLE
       } description="暂无视频数据"
-      /></div ></Card>);
+        /></div ></Card>);
     }
     return (
       <div style={{ height: 'calc(100vh - 210px)', width: '100%' }}>
@@ -417,24 +420,24 @@ class HkShowVideo extends Component {
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick = {
+                              onClick={
                                 this.btnClick.bind(this, 5)
                               }
                             > <Lefttop />左上
                                                 </Button>
-                                                </Col>
-                                                <Col className={styles.gutterleft} span={8}>
-                                                  <Button
-                                                    size="Small"
-                                                    onClick = {this.btnClick.bind(this, 1)}
-                                                ><Top/>上&nbsp;&nbsp;&nbsp;
+                          </Col>
+                          <Col className={styles.gutterleft} span={8}>
+                            <Button
+                              size="Small"
+                              onClick={this.btnClick.bind(this, 1)}
+                            ><Top />上&nbsp;&nbsp;&nbsp;
                                                 </Button>
-                                                </Col>
-                                                <Col className={styles.gutterleft} span={8}>
-                                                  <Button
-                                                    size="Small"
-                                                    onClick = {this.btnClick.bind(this, 7)}
-                                                ><Righttop/> 右上
+                          </Col>
+                          <Col className={styles.gutterleft} span={8}>
+                            <Button
+                              size="Small"
+                              onClick={this.btnClick.bind(this, 7)}
+                            ><Righttop /> 右上
                                                 </Button>
                           </Col>
                         </Row>
