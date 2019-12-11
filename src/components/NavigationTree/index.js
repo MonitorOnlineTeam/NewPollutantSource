@@ -24,7 +24,8 @@ const { Search } = Input;
 const { TreeNode } = Tree;
 const children = [];
 const dataList = [];
-const floats = Setting.layout
+let floats = Setting.layout
+floats = floats === "sidemenu" ? "leftmenu" : floats;
 const styleTrue = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer" }
 const styleFalse = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#fff", cursor: "pointer" }
 const styleNor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer", marginLeft: 5 }
