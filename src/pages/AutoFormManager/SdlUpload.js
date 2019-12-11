@@ -99,7 +99,7 @@ class SdlUpload extends Component {
       listType: "picture-card",
       data: {
         FileUuid: cuid,
-        FileActualType: '1',
+        FileActualType: '0',
       },
     };
 

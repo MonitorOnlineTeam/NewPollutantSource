@@ -383,7 +383,7 @@ class SdlForm extends PureComponent {
               listType: "picture-card",
               data: {
                 FileUuid: uid,
-                FileActualType: '1',
+                FileActualType: '0',
               },
             };
             element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
