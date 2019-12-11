@@ -110,7 +110,7 @@
         const settings = {
 
             /** Whether this instance should log debug messages. */
-            debug: true,
+            debug: false,
 
             /** Whether or not the websocket should attempt to connect immediately upon instantiation. */
             automaticOpen: true,
@@ -212,7 +212,7 @@
                 ws = new WebSocket(self.out, protocols || []);
             }
             ws.binaryType = this.binaryType;
-
+            console.log(ws);
             if (reconnectAttempt) {
                 if (this.maxReconnectAttempts && this.reconnectAttempts > this.maxReconnectAttempts) {
                     return;
