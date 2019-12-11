@@ -4,6 +4,7 @@ import {
   Card,
   Divider,
   Table,
+  Empty,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -82,7 +83,10 @@ class HkRealVideoData extends Component {
         });
       }
     } else {
-      res = <div style={{ textAlign: 'center', height: 70, background: '#fff' }}>暂无数据</div>;
+      res = <div style={{ textAlign: 'center', height: 70, background: '#fff' }}><Empty image={
+        Empty.PRESENTED_IMAGE_SIMPLE
+      } description="暂无视频数据"
+        /></div>;
     }
     return res;
   };
@@ -98,7 +102,7 @@ class HkRealVideoData extends Component {
       <div className={styles.tab}>
         <Card
           title="实时数据"
-          style={{ height: 'calc(100vh - 731px)', overflowY: 'scroll' }}
+          style={{ height: 'calc(100vh - 752px)', overflowY: 'scroll' }}
           extra={<div style={{ color: 'gray' }}>{MonitorTime}</div>}
           loading={isloadingC && isloadingP}
           size="small"

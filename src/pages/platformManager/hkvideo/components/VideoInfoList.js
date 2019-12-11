@@ -48,7 +48,7 @@ const FormItem = Form.Item;
                             <FormItem
 
                                 {...formItemLayout}
-                                label="监测点名称">
+                                label="DGIMN">
                                 {getFieldDecorator('PointName', {
                                     initialValue: this.props.item.PointName,
 

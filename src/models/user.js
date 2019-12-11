@@ -8,28 +8,30 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState
+  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState,
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import { isUrl } from '@/utils/utils';
+import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
-import { sdlMessage } from '@/utils/utils';
+
 
 function formatter(data, parentPath = '') {
   if (data && data.length > 0) {
     return data.map(item => {
       let { path } = item;
       if (!isUrl(path)) {
-        path = parentPath + item.path;
+        // path = parentPath + item.path;
+        path = item.path;
       }
       const result = {
         ...item,
         path,
       };
       if (item.children) {
-        result.children = formatter(item.children, `${parentPath}${item.path}/`);
+        // result.children = formatter(item.children, `${parentPath}${item.path}/`);
+        result.children = formatter(item.children, `${item.path}/`);
       }
       return result;
     });
@@ -51,9 +53,9 @@ export default Model.extend({
       pageIndex: 1,
       pageSize: 12,
       total: 0,
-      authorId: "",
-      flagType: "",
-      searchContent: ""
+      authorId: '',
+      flagType: '',
+      searchContent: '',
     },
     alarmPushData: [],
     showAlarmState: true,
@@ -68,7 +70,7 @@ export default Model.extend({
       // });
     },
     *fetchCurrent(_, { call, put }) {
-      let currentUser = Cookie.get('currentUser');
+      const currentUser = Cookie.get('currentUser');
       if (currentUser) {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
 
@@ -76,18 +78,18 @@ export default Model.extend({
         // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
-          if (window.location.pathname === "/") {
+          if (window.location.pathname === '/') {
             router.push(Cookie.get('defaultNavigateUrl'))
           }
           yield put({
             type: 'saveCurrentUser',
             payload: {
-              currentUser: currentUser,
+              currentUser,
               currentMenu: cMenu,
             },
           });
         } else {
-          //message.info('菜单获取失败，请联系系统管理员！');
+          // message.info('菜单获取失败，请联系系统管理员！');
         }
       }
     },
@@ -95,16 +97,16 @@ export default Model.extend({
       console.log(payload);
       const payloaduser = {
         configId: payload.configId,
-        FormData: JSON.stringify(payload.FormData)
+        FormData: JSON.stringify(payload.FormData),
       };
       const result = yield call(postAutoFromDataUpdate, { ...payloaduser });
       if (result.IsSuccess) {
-        sdlMessage(result.Message, "success");
+        sdlMessage(result.Message, 'success');
       } else {
-        sdlMessage(result.Message, "error");
+        sdlMessage(result.Message, 'error');
       }
     },
-    /*获取单个用户实体**/
+    /* 获取单个用户实体* */
     *getUserInfo({ payload }, { call, update }) {
       const result = yield call(getUserInfo, {
         ...payload,
@@ -115,7 +117,7 @@ export default Model.extend({
       });
       payload.callback();
     },
-    /*个人设置编辑信息**/
+    /* 个人设置编辑信息* */
     *editpersonaluser({ payload }, { call, update }) {
       const result = yield call(editpersonaluser, {
         ...payload,
@@ -126,7 +128,7 @@ export default Model.extend({
       });
       payload.callback(result.requstresult === '1');
     },
-    //获取登陆信息配置
+    // 获取登陆信息配置
     *getSystemConfigInfo({ payload }, { put, call, update }) {
       const loginData = yield call(getSystemConfigInfo, { ...payload });
       if (loginData !== null) {
@@ -140,22 +142,21 @@ export default Model.extend({
     *vertifyOldPwd({ payload }, { put, call, update }) {
       const result = yield call(vertifyOldPwd, { pwd: payload.pwd });
       if (result.IsSuccess) {
-        //sdlMessage(result.Message, "success");
+        // sdlMessage(result.Message, "success");
       } else {
-        sdlMessage(result.Message, "error");
+        sdlMessage(result.Message, 'error');
       }
       payload.callback(result);
     },
     *changePwd({ payload }, { put, call, update }) {
       const result = yield call(changePwd, { pwd: payload.pwd });
       if (result.IsSuccess) {
-        sdlMessage(result.Message, "success");
+        sdlMessage(result.Message, 'success');
       } else {
-        sdlMessage(result.Message, "error");
+        sdlMessage(result.Message, 'error');
       }
     },
     *getAlarmPushAuthor({ payload }, { put, call, update, select }) {
-
       const { alarmPushParam } = yield select(state => state.user);
       // let body = {
       //   pageIndex: alarmPushParam.pageIndex,
@@ -166,27 +167,26 @@ export default Model.extend({
       // };
 
       const result = yield call(getAlarmPushAuthor, alarmPushParam);
-      console.log("getAlarmPushAuthor=", result);
+      console.log('getAlarmPushAuthor=', result);
       if (result.IsSuccess) {
         yield update({
           alarmPushData: result.Datas,
           alarmPushParam: {
             ...alarmPushParam,
-            total: result.Total
-          }
+            total: result.Total,
+          },
         });
       } else {
         yield update({
           alarmPushData: [],
           alarmPushParam: {
             ...alarmPushParam,
-            total: 0
-          }
+            total: 0,
+          },
         });
       }
     },
     *insertAlarmPushAuthor({ payload }, { put, call, update, select }) {
-
       // let body = {
       //   pageIndex: alarmPushParam.pageIndex,
       //   pageSize: alarmPushParam.pageSize,
@@ -194,11 +194,11 @@ export default Model.extend({
       //   flagType: alarmPushParam.flagType,
       //   searchContent: alarmPushParam.searchContent
       // };
-      let body = {
-        Datas: payload
+      const body = {
+        Datas: payload,
       };
       const result = yield call(insertAlarmPushAuthor, body);
-      console.log("insertAlarmPushAuthor=", result);
+      console.log('insertAlarmPushAuthor=', result);
       if (result.IsSuccess) {
         sdlMessage('操作成功', 'success');
       } else {
@@ -207,16 +207,16 @@ export default Model.extend({
     },
     // 是否显示预警多选框
     *getAlarmState({ payload }, { put, call, update, select }) {
-      console.log("123123123")
+      console.log('123123123')
       const result = yield call(getAlarmState, payload);
       if (result.IsSuccess) {
         yield update({
-          showAlarmState: result.Datas
+          showAlarmState: result.Datas,
         })
       } else {
         message.error(result.Message)
       }
-    }
+    },
   },
 
   reducers: {

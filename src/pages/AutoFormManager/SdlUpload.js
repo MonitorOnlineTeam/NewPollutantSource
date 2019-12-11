@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:49 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-05 17:37:14
+ * @Last Modified time: 2019-12-09 15:17:22
  * @desc: 上传组件
  */
 
@@ -73,7 +73,7 @@ class SdlUpload extends Component {
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
     const props = {
-      action: `${config.uploadHost}rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: `${config.uploadHost}/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
         if (info.file.status === 'done') {
@@ -99,7 +99,7 @@ class SdlUpload extends Component {
       listType: "picture-card",
       data: {
         FileUuid: cuid,
-        FileActualType: '1',
+        FileActualType: '0',
       },
     };
 

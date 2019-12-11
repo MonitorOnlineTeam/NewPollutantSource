@@ -88,7 +88,7 @@ class UpdateVideoInfo extends Component {
                             <FormItem
 
                                 {...formItemLayout}
-                                label="监测点名称">
+                                label="DFIMN">
                                 {getFieldDecorator('PointName', {
                                     initialValue: this.props.item.PointName,
 

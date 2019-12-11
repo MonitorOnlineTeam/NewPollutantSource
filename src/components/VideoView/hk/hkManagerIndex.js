@@ -30,7 +30,12 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
             title: '',
             width: 400,
             data: null,
+<<<<<<< HEAD
+            // pointName: this.props.match.params.pointname,
+            pointName: '排口名称',
+=======
             pointName: this.props.match.params.pointname,
+>>>>>>> 151719f71582740c620221a0257fdcf6ac7634d4
             footer: <div>
                 <Button key="back" onClick={this.handleCancel}>Return</Button>,
                 <Button key="submit" type="primary" onClick={this.handleOk}>
@@ -47,6 +52,17 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                DGIMN: this.props.match.params.DGIMN,
            },
          });
+    }
+
+    componentWillReceiveProps = nextProps => {
+        if (this.props.DGIMN !== nextProps.DGIMN) {
+            this.props.dispatch({
+              type: 'hkvideo/hkvideourl',
+              payload: {
+                DGIMN: nextProps.DGIMN,
+              },
+            });
+        }
     }
 
     onRef1 = ref => {
@@ -219,7 +235,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                             width={this.state.width}
                             onCancel={this.onCancel}>
                             {
-                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} name={this.props.match.params.Pointname} onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={this.props.match.params.DGIMN} item={this.state.data} onRef={this.onRef1} />
+                                this.state.type === 'add' ? <Add onCancels={this.onCancel} dgimn={this.props.DGIMN} name="监测点" onRef={this.onRef1} /> : this.state.type === 'update' ? <Update onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} /> : <InfoList onCancels={this.onCancel} dgimn={this.props.DGIMN} item={this.state.data} onRef={this.onRef1} />
                             }
 
                         </Modal>

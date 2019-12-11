@@ -13,7 +13,8 @@ export default Model.extend({
     level: null,
     imageListVisible: false,
     imageList: [],
-    pollutantCode: []
+    pollutantCode: [],
+    industryTreeList: [],
   },
 
   effects: {
@@ -107,6 +108,16 @@ export default Model.extend({
         callback && callback(result)
       } else {
         message.error(result.Message)
+      }
+    },
+
+    // 获取产业级联
+    * getIndustryTree({ payload }, { call, update }) {
+      const result = yield call(services.getIndustryTree, payload);
+      if(result.IsSuccess){
+        yield update({
+          industryTreeList: result.Datas
+        })
       }
     }
   },

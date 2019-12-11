@@ -34,6 +34,7 @@ class HkHisVideoData extends Component {
   }
 
   startPlay = (beginDate, endDate) => {
+    debugger;
     const { pageIndex, pageSize } = this.props;
     this.setState(
       {

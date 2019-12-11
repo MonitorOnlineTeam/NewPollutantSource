@@ -78,9 +78,9 @@ class AddVideoInfo extends Component {
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
                             <FormItem
                                 {...formItemLayout}
-                                label="监测点名称">
+                                label="DGIMN">
                                 {getFieldDecorator('PointName', {
-                                    initialValue: this.props.name,
+                                    initialValue: this.props.dgimn,
                                 })(
                                     <Input readOnly="true" />,
                                 )}
