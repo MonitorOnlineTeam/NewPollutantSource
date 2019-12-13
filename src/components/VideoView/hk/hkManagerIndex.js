@@ -30,12 +30,8 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
             title: '',
             width: 400,
             data: null,
-<<<<<<< HEAD
             // pointName: this.props.match.params.pointname,
             pointName: '排口名称',
-=======
-            pointName: this.props.match.params.pointname,
->>>>>>> 151719f71582740c620221a0257fdcf6ac7634d4
             footer: <div>
                 <Button key="back" onClick={this.handleCancel}>Return</Button>,
                 <Button key="submit" type="primary" onClick={this.handleOk}>
@@ -49,7 +45,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
          this.props.dispatch({
            type: 'hkvideo/hkvideourl',
            payload: {
-               DGIMN: this.props.match.params.DGIMN,
+               DGIMN: this.props.DGIMN,
            },
          });
     }
@@ -74,7 +70,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         this.props.dispatch({
           type: 'hkvideo/hkvideourl',
           payload: {
-            DGIMN: this.props.match.params.DGIMN,
+            DGIMN: this.props.DGIMN,
           },
         });
     };
@@ -93,7 +89,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         this.props.dispatch({
             type: 'hkvideo/deleteVideoInfo',
             payload: {
-                DGIMN: this.props.match.params.DGIMN,
+                DGIMN: this.props.DGIMN,
                 VedioCamera_ID: record.VedioCamera_ID,
                 VedioDevice_ID: record.VedioDevice_ID,
                 CameraMonitorID: record.CameraMonitorID,
@@ -102,7 +98,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                          this.props.dispatch({
                            type: 'hkvideo/hkvideourl',
                            payload: {
-                             DGIMN: this.props.match.params.DGIMN,
+                             DGIMN: this.props.DGIMN,
                            },
                          });
                         message.success('删除成功！')
@@ -170,7 +166,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                         <a onClick={() => {
                             this.props.dispatch(
                         routerRedux.push(
-                          `/platformconfig/hkshowvideo/${this.props.match.params.DGIMN}`,
+                          `/platformconfig/hkshowvideo/${this.props.DGIMN}`,
                         ),
                       );
                     }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>

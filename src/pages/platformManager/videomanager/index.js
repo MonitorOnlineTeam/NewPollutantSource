@@ -53,7 +53,7 @@ class Index extends Component {
                     }
                 }} />
                 <PageHeaderWrapper>
-                {dgimn && configInfo.VideoType === 0 ? <HkCameraIndex DGIMN={dgimn}></HkCameraIndex> : <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>}
+                {dgimn && (configInfo.VideoType == 0 ? <HkCameraIndex DGIMN={dgimn}></HkCameraIndex> : <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>)}
                 </PageHeaderWrapper>
 
             </div>
