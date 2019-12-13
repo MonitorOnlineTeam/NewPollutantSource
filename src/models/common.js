@@ -19,7 +19,7 @@ export default Model.extend({
 
   effects: {
     // 获取污染物类型
-    *getPollutantTypeList({ payload }, {
+    *getPollutantTypeList({ payload, callback }, {
       update, call
     }) {
       let { filterPollutantType } = payload;
@@ -36,10 +36,11 @@ export default Model.extend({
 
           // console.log("newPollutantTypelist2=", newPollutantTypelist);
         }
-
+        let defaultPollutantCode = data[0] && data[0]["pollutantTypeCode"];
+        callback && callback(defaultPollutantCode)
         yield update({
           pollutantTypelist: data,
-          defaultPollutantCode: data[0] && data[0]["pollutantTypeCode"]
+          defaultPollutantCode: defaultPollutantCode
         })
       }
     },
@@ -114,7 +115,7 @@ export default Model.extend({
     // 获取产业级联
     * getIndustryTree({ payload }, { call, update }) {
       const result = yield call(services.getIndustryTree, payload);
-      if(result.IsSuccess){
+      if (result.IsSuccess) {
         yield update({
           industryTreeList: result.Datas
         })

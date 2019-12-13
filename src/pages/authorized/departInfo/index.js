@@ -34,7 +34,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import AlarmPushRel from '@/components/AlarmPushRel';
 
 
-const TreeNode = TreeSelect.TreeNode;
+const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
 // Customize Table Transfer
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
@@ -138,6 +138,7 @@ const rightTableColumns = [
     GetDepartInfoByTree: loading.effects['departinfo/getdepartinfobytree'],
     DepartInfoOneLoading: loading.effects['departinfo/getdepartinfobyid'],
     CheckPointLoading: loading.effects['departinfo/getpointbydepid'],
+    getentandpointLoading: loading.effects['departinfo/getentandpoint'],
     DepartInfoTree: departinfo.DepartInfoTree,
     DepartInfoOne: departinfo.DepartInfoOne,
     DepartTree: departinfo.DepartTree,
@@ -216,7 +217,7 @@ class DepartIndex extends Component {
                     render: (text, record) =>
                         <span>
                             <Tooltip title="编辑">
-                                <a href="javascript:;" onClick={() => {
+                                <a onClick={() => {
                                     console.log(record.UserGroup_ID)
                                     this.props.dispatch({
                                         type: 'departinfo/getdepartinfobyid',
@@ -259,7 +260,7 @@ class DepartIndex extends Component {
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="分配用户">
-                                <a href="javascript:;" onClick={() => {
+                                <a onClick={() => {
                                     this.setState({
                                         selectedRowKeys: record
                                     }, () => {
@@ -269,7 +270,7 @@ class DepartIndex extends Component {
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="区域过滤">
-                                <a href="javascript:;" onClick={() => {
+                                <a onClick={() => {
                                     this.setState({
                                         selectedRowKeys: record
                                     }, () => {
@@ -279,7 +280,7 @@ class DepartIndex extends Component {
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="数据过滤">
-                                <a href="javascript:;" onClick={() => {
+                                <a onClick={() => {
                                     this.setState({
                                         selectedRowKeys: record
                                     }, () => {
@@ -289,7 +290,7 @@ class DepartIndex extends Component {
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="报警关联">
-                                <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
+                                <a style={{ cursor: 'pointer' }} onClick={() => {
                                     console.log(record.Roles_ID)
                                     this.setState({
                                         selectedRowKeys: record
@@ -959,8 +960,8 @@ class DepartIndex extends Component {
                                                 onSelect={this.onSelectRegion}
                                                 selectedKeys={this.state.selectedKey}
                                                 defaultExpandedKeys={['0']}
-                                            // autoExpandParent={true}
-                                            // defaultExpandAll
+                                                // autoExpandParent={true}
+                                                defaultExpandAll
                                             // defaultExpandParent
                                             >
                                                 {this.renderTreeNodes(this.props.RegionInfoTree)}
@@ -1007,7 +1008,7 @@ class DepartIndex extends Component {
                                             />
                                             <TreeSelect {...tProps} />
                                         </Row>{
-                                            this.props.CheckPointLoading ? <Spin
+                                            (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{
                                                     width: '100%',
                                                     height: 'calc(100vh/2)',
@@ -1029,7 +1030,7 @@ class DepartIndex extends Component {
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelectData}
                                                 selectedKeys={this.state.selectedKeys}
-                                                defaultExpandAll={true}
+                                                defaultExpandAll
                                             // autoExpandParent={true}
                                             // defaultExpandAll
                                             >
