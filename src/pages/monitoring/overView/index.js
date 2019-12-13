@@ -310,7 +310,6 @@ class dataList extends PureComponent {
         // selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
-        console.log('data state=', this.state.data)
         let columnsState = [{
             title: "1",
             dataIndex: "email",
@@ -321,7 +320,7 @@ class dataList extends PureComponent {
             key: '2',
         }]
         let fixed = false;
-        if (coldata && coldata[0]) {
+        if (coldata && coldata[0] && coldata.length > 4) {
             fixed = true;
         }
         let columns = [
@@ -356,18 +355,18 @@ class dataList extends PureComponent {
                 },
             },
         ];
-        if (!onlyOneEnt) {
-            columns = columns.concat({
-                title: '监控目标',
-                dataIndex: 'entName',
-                key: 'entName',
-                width: 300,
-                fixed: fixed,
-                render: (value, record, index) => {
-                    return <span>{value}</span>;
-                },
-            });
-        }
+        // if (!onlyOneEnt) {
+        //     columns = columns.concat({
+        //         title: '监控目标',
+        //         dataIndex: 'entName',
+        //         key: 'entName',
+        //         width: 300,
+        //         fixed: fixed,
+        //         render: (value, record, index) => {
+        //             return <span>{value}</span>;
+        //         },
+        //     });
+        // }
         columns = columns.concat({
             title: '监测点',
             dataIndex: 'pointName',
@@ -394,8 +393,7 @@ class dataList extends PureComponent {
                 return (
                     //   <Popover >
                     <span style={{ cursor: 'pointer' }}>
-                        {value}
-                        {lable}
+                        {record.abbreviation} - {value}
                     </span>
                     //   </Popover>
                 );
