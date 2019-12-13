@@ -16,26 +16,30 @@ import styles from './style.less';
 import NavigationTree from '@/components/NavigationTree'
 // import RecordEchartTable from '@/components/recordEchartTable'
 
-// import hkManagerIndex from '@/components/VideoView/hk/hkManagerIndex';
+import HkCameraIndex from '@/components/VideoView/hk/hkManagerIndex';
 import YSYManagerIndex from '@/components/VideoView/ysy';
 
-// @connect(({ loading, exceptionrecord }) => ({
-
-// }))
+@connect(({
+  loading,
+  global,
+}) => ({
+  configInfo: global.configInfo,
+}))
 
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dgimn: "",
-            pollutantType: ''
+            dgimn: '',
+            pollutantType: '',
         };
     }
 
 
     render() {
         const { pollutantType, dgimn } = this.state;
-
+        const { configInfo } = this.props;
+        console.log('configInfo=', configInfo);
         return (
             <div id="record">
                 {/* selKeys="31011537961003" */}
@@ -44,12 +48,12 @@ class Index extends Component {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.setState({
                             dgimn: value[0].key,
-                            pollutantType: value[0].Type
+                            pollutantType: value[0].Type,
                         })
                     }
                 }} />
                 <PageHeaderWrapper>
-                    {dgimn && <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>}
+                {dgimn && configInfo.VideoType === 0 ? <HkCameraIndex DGIMN={dgimn}></HkCameraIndex> : <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>}
                 </PageHeaderWrapper>
 
             </div>
