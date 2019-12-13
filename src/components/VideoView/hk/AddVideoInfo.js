@@ -91,6 +91,10 @@ class AddVideoInfo extends Component {
                                 {...formItemLayout}
                                 label="设备名称">
                                 {getFieldDecorator('VedioDevice_Name', {
+                                     rules: [{
+                                       required: true,
+                                       message: '请输入设备名称',
+                                     }],
                                 })(
                                     <Input placeholder="请输入设备名称" />,
                                 )}
@@ -189,6 +193,10 @@ class AddVideoInfo extends Component {
                                 {...formItemLayout}
                                 label="相机名称">
                                 {getFieldDecorator('VedioCamera_Name', {
+                                    rules: [{
+                                      required: true,
+                                      message: '请输入设备名称',
+                                    }],
                                 })(
                                     <Input placeholder="请输入相机名称" />,
                                 )}
@@ -214,7 +222,7 @@ class AddVideoInfo extends Component {
                                 {getFieldDecorator('VedioCamera_No', {
                                     rules: [{
                                         required: true,
-                                        message: '请输入通道号',
+                                        message: '请输入相机名称',
                                     }],
                                 })(
                                     <Input placeholder="请输入通道号" />,

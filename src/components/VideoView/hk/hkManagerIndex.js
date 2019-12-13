@@ -177,7 +177,6 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         ];
 
         return (
-            <PageHeaderWrapper>
                 <div className={styles.cardTitle}>
                     <Card bordered={false} title={videoListParameters.pointname} style={{ width: '100%' }}>
                         <Form layout="inline" style={{ marginBottom: 10 }}>
@@ -238,7 +237,6 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
                     </Card>
                 </div>
-            </PageHeaderWrapper>
 
         );
     }
