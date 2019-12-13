@@ -30,12 +30,8 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
             title: '',
             width: 400,
             data: null,
-<<<<<<< HEAD
             // pointName: this.props.match.params.pointname,
             pointName: '排口名称',
-=======
-            pointName: this.props.match.params.pointname,
->>>>>>> 151719f71582740c620221a0257fdcf6ac7634d4
             footer: <div>
                 <Button key="back" onClick={this.handleCancel}>Return</Button>,
                 <Button key="submit" type="primary" onClick={this.handleOk}>
