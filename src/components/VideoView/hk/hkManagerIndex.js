@@ -45,7 +45,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
          this.props.dispatch({
            type: 'hkvideo/hkvideourl',
            payload: {
-               DGIMN: this.props.match.params.DGIMN,
+               DGIMN: this.props.DGIMN,
            },
          });
     }
@@ -70,7 +70,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         this.props.dispatch({
           type: 'hkvideo/hkvideourl',
           payload: {
-            DGIMN: this.props.match.params.DGIMN,
+            DGIMN: this.props.DGIMN,
           },
         });
     };
@@ -89,7 +89,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         this.props.dispatch({
             type: 'hkvideo/deleteVideoInfo',
             payload: {
-                DGIMN: this.props.match.params.DGIMN,
+                DGIMN: this.props.DGIMN,
                 VedioCamera_ID: record.VedioCamera_ID,
                 VedioDevice_ID: record.VedioDevice_ID,
                 CameraMonitorID: record.CameraMonitorID,
@@ -98,7 +98,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                          this.props.dispatch({
                            type: 'hkvideo/hkvideourl',
                            payload: {
-                             DGIMN: this.props.match.params.DGIMN,
+                             DGIMN: this.props.DGIMN,
                            },
                          });
                         message.success('删除成功！')
@@ -166,7 +166,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                         <a onClick={() => {
                             this.props.dispatch(
                         routerRedux.push(
-                          `/platformconfig/hkshowvideo/${this.props.match.params.DGIMN}`,
+                          `/platformconfig/hkshowvideo/${this.props.DGIMN}`,
                         ),
                       );
                     }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>
@@ -177,7 +177,6 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         ];
 
         return (
-            <PageHeaderWrapper>
                 <div className={styles.cardTitle}>
                     <Card bordered={false} title={videoListParameters.pointname} style={{ width: '100%' }}>
                         <Form layout="inline" style={{ marginBottom: 10 }}>
@@ -238,7 +237,6 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
                     </Card>
                 </div>
-            </PageHeaderWrapper>
 
         );
     }

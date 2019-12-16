@@ -90,7 +90,7 @@ class UpdateVideoInfo extends Component {
                                 {...formItemLayout}
                                 label="DGIMN">
                                 {getFieldDecorator('PointName', {
-                                    initialValue: this.props.item.PointName,
+                                    initialValue: this.props.dgimn,
 
                                 })(
                                     <Input readOnly="true" />,
@@ -103,6 +103,10 @@ class UpdateVideoInfo extends Component {
                                 label="设备名称">
                                 {getFieldDecorator('VedioDevice_Name', {
                                     initialValue: this.props.item.VedioDevice_Name,
+                                    rules: [{
+                                      required: true,
+                                      message: '请输入设备名称',
+                                    }],
 
                                 })(
                                     <Input placeholder="请输入设备名称" />,
@@ -211,6 +215,10 @@ class UpdateVideoInfo extends Component {
                                 label="相机名称">
                                 {getFieldDecorator('VedioCamera_Name', {
                                     initialValue: this.props.item.VedioCamera_Name,
+                                    rules: [{
+                                      required: true,
+                                      message: '请输入相机名称',
+                                    }],
                                 })(
                                     <Input placeholder="请输入相机名称" />,
                                 )}
