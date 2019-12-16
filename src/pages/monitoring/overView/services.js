@@ -117,3 +117,23 @@ export async function querygetentdatalist(params) {
   const result = await post('/api/rest/PollutantSourceApi/DataList/GetEntDataList', params, null);
   return result === null ? { data: null } : result.data;
 }
+
+// 获取实时数据一览表头
+export async function getRealTimeColumn(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
+    params,
+    null
+  );
+  return result;
+}
+
+// 获取实时数据一览
+export async function getRealTimeDataView(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList',
+    params,
+    null,
+  );
+  return result;
+}

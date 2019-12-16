@@ -1,0 +1,324 @@
+import React, { Component } from 'react';
+import { Card, Table, Radio, Popover, Badge, Icon, Input } from 'antd'
+import { connect } from 'dva';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import SelectPollutantType from '@/components/SelectPollutantType'
+import SdlTable from '@/components/SdlTable'
+import { getPointStatusImg } from '@/utils/getStatusImg';
+import { LegendIcon } from '@/utils/icon';
+import { airLevel } from '../tools'
+import { router } from 'umi'
+import { formatPollutantPopover } from '@/utils/utils';
+
+
+@connect(({ loading, overview, global, common }) => ({
+  noticeList: global.notices,
+  realtimeColumns: overview.realtimeColumns,
+  realTimeDataView: overview.realTimeDataView,
+  dataLoading: loading.effects["overview/getRealTimeDataView"],
+  columnLoading: loading.effects["overview/getRealTimeColumn"],
+}))
+class index extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [],
+      currentDataType: "MinuteData"
+    };
+  }
+
+  componentDidMount() {
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
+      console.log("realtimeColumns=", nextProps.realtimeColumns)
+
+      let fixed = false;
+      if (nextProps.realtimeColumns.length > 4) {
+        fixed = true;
+      }
+      let realtimeColumns = nextProps.realtimeColumns.map(item => {
+        return {
+          title: item.title,
+          dataIndex: item.field,
+          width: 150,
+          sorter: (a, b) => a[item.field] - b[item.field],
+          render: (text, record) => {
+            if (item.field === "AQI") {
+              const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
+              const color = colorObj.color;
+              return <Popover content={
+                <div>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{record.AirQuality}</span></span>
+                  </div>
+                  <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                    <Badge color={color} text={`首要污染物：${record.PrimaryPollutant}`} />
+                  </li>
+                  <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                    <Badge color={color} text={`污染级别：${record.AirLevel}级`} />
+                  </li>
+                </div>
+              } trigger="hover">
+                <span style={{ color: color }}>{text ? text : "-"}</span>
+              </Popover>
+            }
+            if (record[item.field + "_Value"]) {
+              // const color = record[item.field + "_LevelColor"];
+              const level = record[item.field + "_Level"].replace("级", "");
+              const airLevelObj = airLevel.find(itm => itm.value == level) || {};
+              const airQuality = airLevelObj.text;
+              const color = airLevelObj.color;
+              return <Popover content={
+                <div>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
+                  </div>
+                  <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                    <Badge color={color} text={`污染级别：${record[item.field + "_Level"]}级`} />
+                  </li>
+                  <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                    <Badge color={color} text={`IAQI：${record[item.field + "_Value"]}`} />
+                  </li>
+                </div>
+              } trigger="hover">
+                <span style={{ color: color }}>{text}</span>
+              </Popover>
+            }
+            return formatPollutantPopover(text, record[`${item.field}_params`]);
+          }
+        }
+      })
+
+
+
+
+      let statusFilters = [
+        {
+          text: <span><LegendIcon style={{ color: "#34c066" }} />正常</span>,
+          value: 1,
+        },
+        {
+          text: <span><LegendIcon style={{ color: "#f04d4d" }} />超标</span>,
+          value: 2,
+        },
+        {
+          text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
+          value: 0,
+        },
+        {
+          text: <span><LegendIcon style={{ color: "#e94" }} />异常</span>,
+          value: 3,
+        },
+      ]
+
+      // 大气站状态筛选
+      if (this.state.pollutantCode === 5) {
+        statusFilters = airLevel.map(item => {
+          return {
+            text: <span><LegendIcon style={{ color: item.color }} />{item.text}</span>,
+            value: item.status,
+          }
+        })
+        statusFilters.unshift({
+          text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
+          value: 0,
+        })
+      }
+
+      let columns = [
+        {
+          title: '状态',
+          dataIndex: 'status',
+          key: 'status',
+          width: 120,
+          align: 'center',
+          fixed: fixed,
+          filters: statusFilters,
+          onFilter: (value, record) => record.status === value,
+          render: (value, record, index) => {
+            return getPointStatusImg(record, this.props.noticeList);
+          },
+        },
+        {
+          title: '监测点',
+          dataIndex: 'pointName',
+          width: 300,
+          key: 'pointName',
+          fixed: fixed,
+          render: (text, record) => {
+            return <span>{record.abbreviation} - {text}</span>
+          }
+        },
+        {
+          title: '监测时间',
+          width: 200,
+          dataIndex: 'MonitorTime',
+          key: 'MonitorTime',
+          fixed: fixed,
+        },
+        ...realtimeColumns
+      ];
+      this.setState({
+        columns: columns
+      })
+    }
+    // if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
+    //   // 判断是否是大气站
+    //   let airColumns = [];
+    //   if (nextProps.realTimeDataView.filter(item => item.pollutantTypeCode == 5).length) {
+    //     airColumns.concat([{
+    //       title: "首要污染物",
+    //       dataIndex: "PrimaryPollutant",
+    //       width: 150,
+    //       sorter: (a, b) => a[item.field] - b[item.field],
+    //     }, {
+    //       title: "AQI",
+    //       dataIndex: "AQI",
+    //       width: 150,
+    //       sorter: (a, b) => a[item.field] - b[item.field],
+    //     }])
+    //     console.log("airColumns=", airColumns)
+    //   }
+    //   this.setState({
+    //     columns: [
+    //       ...this.state.columns,
+    //       ...airColumns
+    //     ]
+    //   })
+    // }
+  }
+
+
+  // 获取页面数据
+  getPageData = (pollutantCode) => {
+    this.setState({
+      pollutantCode: pollutantCode
+    }, () => {
+      this.getColumns()
+      this.getRealTimeDataView();
+    })
+  }
+
+  // 获取表格数据
+  getRealTimeDataView = () => {
+    this.props.dispatch({
+      type: "overview/getRealTimeDataView",
+      payload: {
+        dataType: this.state.currentDataType,
+        pollutantTypes: this.state.pollutantCode
+      }
+    })
+  }
+
+  // 获取表头
+  getColumns = () => {
+    this.props.dispatch({
+      type: "overview/getRealTimeColumn",
+      payload: {
+        pollutantTypes: this.state.pollutantCode
+      }
+    })
+  }
+
+  render() {
+    const { currentDataType, columns } = this.state;
+    const { realTimeDataView, dataLoading, columnLoading } = this.props;
+
+    let scrollXWidth = columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    return (
+      <PageHeaderWrapper title="数据一览">
+        <Card
+          title={
+            <>
+              <SelectPollutantType
+                style={{ float: 'left', marginRight: 20 }}
+                showType="radio"
+                onChange={(e) => {
+                  this.getPageData(e.target.value)
+                  if (e.target.value == 5) {
+                    this.setState({
+                      currentDataType: "HourData"
+                    })
+                    this.props.dispatch({
+                      type: "overview/updateState",
+                      payload: {
+                        dataType: "HourData"
+                      }
+                    })
+                  }
+                  // this.setState({
+                  //   currentDataType: e.target.value
+                  // })
+                }}
+                initCallback={(defaultPollutantCode) => {
+                  this.getPageData(defaultPollutantCode)
+                }}
+              // defaultValue={selectpollutantTypeCode}
+              />
+              <Radio.Group value={currentDataType} onChange={(e) => {
+                this.props.dispatch({
+                  type: "overview/updateState",
+                  payload: {
+                    dataType: e.target.value
+                  }
+                })
+                this.setState({
+                  currentDataType: e.target.value
+                }, () => {
+                  this.getRealTimeDataView()
+                })
+              }}>
+                {console.log("currentDataType=",currentDataType)}
+                {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
+                <Radio.Button key={2} value="MinuteData" disabled={this.state.pollutantCode == 5}>分钟</Radio.Button>
+                <Radio.Button key={3} value="HourData">小时</Radio.Button>
+                <Radio.Button key={4} value="DayData">日均</Radio.Button>
+              </Radio.Group>
+              <Input.Search
+                allowClear
+                style={{ width: 300, marginLeft: 20 }}
+                onSearch={(val) => {
+                  this.props.dispatch({
+                    type: "overview/getRealTimeDataView",
+                    payload: {
+                      entName: val,
+                      dataType: this.state.currentDataType,
+                      pollutantTypes: this.state.pollutantCode
+                    }
+                  })
+                }}
+                placeholder="请输入监测点名称"
+              />
+            </>
+          }
+          extra={
+            <Radio.Group defaultValue="data" buttonStyle="solid" onChange={e => {
+              e.target.value === 'map' && router.push('/monitoring/mapview')
+            }}>
+              <Radio.Button value="data">数据</Radio.Button>
+              <Radio.Button value="map">地图</Radio.Button>
+            </Radio.Group>
+          }
+        >
+          <Table
+            style={{
+              // marginTop: 20,
+              paddingBottom: 10
+            }}
+            loading={dataLoading || columnLoading}
+            size="middle"
+            bordered={true}
+            pagination={false}
+            dataSource={realTimeDataView}
+            columns={columns}
+            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
+          />
+        </Card>
+      </PageHeaderWrapper>
+    );
+  }
+}
+
+export default index;

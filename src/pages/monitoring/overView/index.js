@@ -36,6 +36,7 @@ import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
 import style from '../mapview/index.less'
+import { airLevel } from './tools'
 
 const RadioGroup = Radio.Group;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
@@ -187,12 +188,16 @@ class dataList extends PureComponent {
 
     /**污染物类型选择 */
     onPollutantChange = e => {
+        this.setState({
+            pollutantCode: e.target.value
+        })
         const { dispatch } = this.props;
         const dataOverview = {
             selectStatus: null,
             time: moment(new Date()).add(-1, 'hour'),
             terate: null,
             pointName: null,
+
         };
         dispatch({
             type: 'overview/updateState',
@@ -306,54 +311,92 @@ class dataList extends PureComponent {
 
     render() {
         const { selectStatus, terate, time } = this.props.dataOverview;
+        const { pollutantCode } = this.state;
         let { selectpollutantTypeCode } = this.props;
         // selectpollutantTypeCode = parseInt(selectpollutantTypeCode);
         const coldata = this.props.columnsdata;
         let { gwidth } = this.props;
-        let columnsState = [{
-            title: "1",
-            dataIndex: "email",
-            key: '1',
-        }, {
-            title: "2",
-            dataIndex: "gender",
-            key: '2',
-        }]
+
         let fixed = false;
         if (coldata && coldata[0] && coldata.length > 4) {
             fixed = true;
         }
+
+        let statusFilters = [
+            {
+                text: <span><LegendIcon style={{ color: "#34c066" }} />正常</span>,
+                value: 1,
+            },
+            {
+                text: <span><LegendIcon style={{ color: "#f04d4d" }} />超标</span>,
+                value: 2,
+            },
+            {
+                text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
+                value: 0,
+            },
+            {
+                text: <span><LegendIcon style={{ color: "#e94" }} />异常</span>,
+                value: 3,
+            },
+        ]
+
+        // 大气站状态筛选
+        if (this.state.pollutantCode === 5) {
+            statusFilters = airLevel.map(item => {
+                return {
+                    text: <span><LegendIcon style={{ color: item.color }} />{item.text}</span>,
+                    value: item.status,
+                }
+            })
+            statusFilters.unshift({
+                text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
+                value: 0,
+            })
+        }
+
+        if (pollutantCode == 5) {
+
+        }
+
+
         let columns = [
             {
                 title: '状态',
                 dataIndex: 'status',
                 key: 'status',
-                width: 70,
+                width: 120,
                 align: 'center',
                 fixed: fixed,
-                filters: [
-                    {
-                        text: <span><LegendIcon style={{ color: "#34c066" }} />正常</span>,
-                        value: 1,
-                    },
-                    {
-                        text: <span><LegendIcon style={{ color: "#f04d4d" }} />超标</span>,
-                        value: 2,
-                    },
-                    {
-                        text: <span><LegendIcon style={{ color: "#999999" }} />离线</span>,
-                        value: 0,
-                    },
-                    {
-                        text: <span><LegendIcon style={{ color: "#e94" }} />异常</span>,
-                        value: 3,
-                    },
-                ],
+                filters: statusFilters,
                 onFilter: (value, record) => record.status === value,
                 render: (value, record, index) => {
                     return getPointStatusImg(record, this.props.noticeList);
                 },
-            },
+            }, {
+                title: '监测点',
+                dataIndex: 'pointName',
+                key: 'pointName',
+                width: 300,
+                fixed: fixed,
+                render: (value, record, index) => {
+                    // const content = this.gerpointButton(record);
+                    let lable = [];
+                    return (
+                        //   <Popover >
+                        <span style={{ cursor: 'pointer' }}>
+                            {record.abbreviation} - {value}
+                        </span>
+                        //   </Popover>
+                    );
+                },
+            }, {
+                title: '监测时间',
+                width: 200,
+                dataIndex: 'MonitorTime',
+                key: 'MonitorTime',
+                fixed: fixed,
+            }
         ];
         // if (!onlyOneEnt) {
         //     columns = columns.concat({
@@ -367,38 +410,6 @@ class dataList extends PureComponent {
         //         },
         //     });
         // }
-        columns = columns.concat({
-            title: '监测点',
-            dataIndex: 'pointName',
-            key: 'pointName',
-            width: 300,
-            fixed: fixed,
-            render: (value, record, index) => {
-                // const content = this.gerpointButton(record);
-                let lable = [];
-                // if (record.stop) {
-                //     lable.push(<span key={4} className={styles.stop}>停产中</span>);
-                // }
-                // else {
-                //     if (record.fault) {
-                //         lable.push(<span key={1} className={styles.fault}>故障中</span>);
-                //     }
-                //     if (record.warning) {
-                //         lable.push(<span key={2} className={styles.warning}>预警中</span>);
-                //     }
-                //     if (record.scene) {
-                //         lable.push(<span key={3} className={styles.operation}>运维中</span>);
-                //     }
-                // } trigger="click"
-                return (
-                    //   <Popover >
-                    <span style={{ cursor: 'pointer' }}>
-                        {record.abbreviation} - {value}
-                    </span>
-                    //   </Popover>
-                );
-            },
-        });
         let csyxl = 0;
         // if (selectpollutantTypeCode == 2) {
         //   csyxl = 140;
@@ -438,11 +449,52 @@ class dataList extends PureComponent {
                     key: item.field,
                     align: 'center',
                     width: colwidth,
-                    render: (value, record, index) => {
+                    render: (text, record, index) => {
                         if (record.stop) {
                             return '停产';
                         }
-                        return formatPollutantPopover(value, record[`${item.field}_params`]);
+                        if (item.field === "AQI") {
+                            const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
+                            const color = colorObj.color;
+                            return <Popover content={
+                                <div>
+                                    <div style={{ marginBottom: 10 }}>
+                                        <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{record.AirQuality}</span></span>
+                                    </div>
+                                    <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                                        <Badge color={color} text={`首要污染物：${record.PrimaryPollutant}`} />
+                                    </li>
+                                    <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                                        <Badge color={color} text={`污染级别：${record.AirLevel}级`} />
+                                    </li>
+                                </div>
+                            } trigger="hover">
+                                <span style={{ color: color }}>{text ? text : "-"}</span>
+                            </Popover>
+                        }
+                        if (record[item.field + "_Value"]) {
+                            // const color = record[item.field + "_LevelColor"];
+                            const level = record[item.field + "_Level"].replace("级", "");
+                            const airLevelObj = airLevel.find(itm => itm.value == level) || {};
+                            const airQuality = airLevelObj.text;
+                            const color = airLevelObj.color;
+                            return <Popover content={
+                                <div>
+                                    <div style={{ marginBottom: 10 }}>
+                                        <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
+                                    </div>
+                                    <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                                        <Badge color={color} text={`污染级别：${record[item.field + "_Level"]}级`} />
+                                    </li>
+                                    <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                                        <Badge color={color} text={`IAQI：${record[item.field + "_Value"]}`} />
+                                    </li>
+                                </div>
+                            } trigger="hover">
+                                <span style={{ color: color }}>{text}</span>
+                            </Popover>
+                        }
+                        return formatPollutantPopover(text, record[`${item.field}_params`]);
                     },
                 });
             })

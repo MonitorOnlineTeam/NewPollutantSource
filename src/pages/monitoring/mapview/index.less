@@ -5,7 +5,24 @@
   margin-left: 10px;
 }
 
+.airDescBox {
+  span {
+    font-weight: 'normal';
+    font-size: 13px;
+    margin-right: 10px;
+  }
+
+  &>div {
+    span {
+      font-size: 14px;
+    }
+  }
+}
+
 :global {
+  .antd-pro-pages-monitoring-mapview-index-mapWrapper .amap-info-content {}
+
+
   .amap-logo {
     display: none !important;
   }
@@ -91,15 +108,17 @@
 
     .ant-descriptions-title {
       font-weight: normal;
+      margin-bottom: 10px;
     }
 
     // .ant-descriptions-title{
     //   margin-bottom: 10px;
     // }
     .amap-info-content {
-      width: 430px;
       min-height: 150px;
-      max-height: 400px;
+      // max-height: 400px;
+      border-radius: 6px;
+      padding: 10px
     }
 
     .amap-info-close {
@@ -243,3 +262,49 @@
   animation-iteration-count: infinite;
   box-shadow: 1px 1px 30px red;
 }
+
+.legend {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+
+  ul {
+    li {
+      width: 67px;
+      line-height: 14px;
+      float: left;
+
+      span {
+        width: 100%;
+        display: inline-block;
+        font-weight: 500;
+      }
+
+      span:first-child {
+        text-align: center;
+        height: 14px;
+      }
+
+      span:nth-child(2) {
+        height: 6px;
+        background-color: #00e400;
+        border-right: solid 1px #fff;
+      }
+
+      span:last-child {
+        height: 14px;
+        text-align: left;
+        margin-left: -6px;
+      }
+
+    }
+  }
+}
+
+// 1. #00e400 
+// 2. #ffff00
+// 3. #ff7e00
+// 4. #ff0000
+// 5. #99004c
+// 6. #7e0023
+// 7. #3c0011

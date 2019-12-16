@@ -111,7 +111,11 @@ export default Model.extend({
                 value: itm[item.field],
                 key: item.field,
                 title: item.title,
-                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null
+                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null,
+                level: itm[item.field + "_Level"],
+                levelColor: itm[item.field + "_LevelColor"],
+                levelValue: itm[item.field + "_LevelValue"],
+                // ...itm,
               })
             }
           })
@@ -122,21 +126,66 @@ export default Model.extend({
           curPointData: result.Datas[0] ? result.Datas[0] : []
         })
         // yield take('getPointTableData/@@end');
-        yield put({
-          type: 'getPointChartData',
-          payload: {
-            postData: {
-              DGIMNs: payload.DGIMNs,
-              endTime: moment(new Date()).format('YYYY-MM-DD HH:00:00'),
-              beginTime: moment(new Date()).add('hour', -23).format('YYYY-MM-DD HH:00:00'),
-              dataType: "hour",
-              isAsc: true,
-              IsSupplyData: true
-            },
-            tableList: tableList,
-            pollutantType: pollutantType
+        if (payload.type == 5) {
+          // if (false) {
+          // 大气站
+          yield put({
+            type: 'getAirChartData',
+            payload: {
+              postData: {
+                DGIMNs: payload.DGIMNs,
+                endTime: moment(new Date()).format('YYYY-MM-DD HH:00:00'),
+                beginTime: moment(new Date()).add('hour', -23).format('YYYY-MM-DD HH:00:00'),
+                dataType: "hour",
+                isAsc: true,
+                IsSupplyData: true,
+                // pollutantType: payload.pollutantType
+              },
+            }
+          })
+        } else {
+          yield put({
+            type: 'getPointChartData',
+            payload: {
+              postData: {
+                DGIMNs: payload.DGIMNs,
+                endTime: moment(new Date()).format('YYYY-MM-DD HH:00:00'),
+                beginTime: moment(new Date()).add('hour', -23).format('YYYY-MM-DD HH:00:00'),
+                dataType: "hour",
+                isAsc: true,
+                IsSupplyData: true,
+                // pollutantType: payload.pollutantType
+              },
+              tableList: tableList,
+              pollutantType: pollutantType,
+              type: payload.type
+            }
+          })
+        }
+      }
+    },
+    // 获取大气站图表数据
+    * getAirChartData({ payload }, { call, update, select }) {
+      const result = yield call(services.getPointChartData, payload.postData);
+      if (result.IsSuccess) {
+        let seriesData = result.Datas.map(item => ({
+          value: item.AQI,
+          itemStyle: {
+            color: item.Color || "#3398DB",
           }
         })
+        );
+        let xAxisData = result.Datas.map(item => moment(item.MonitorTime).hour());
+        yield update({
+          chartData: {
+            seriesData: seriesData || [],
+            xAxisData: xAxisData,
+            allData: result.Datas,
+            legend: "AQI"
+          }
+        })
+      } else {
+        message.error(result.Message)
       }
     },
     // 获取点位气泡图表数据
@@ -152,40 +201,37 @@ export default Model.extend({
         const xAxisData = [];
         const legend = first && first.label;
         let flag = false;
-        let seriesData = first && result.Datas.map(item => {
+        let seriesData = [];
+        // 监测站
+        // if (false) {
+        seriesData = first && result.Datas.map(item => {
           xAxisData.push(moment(item.MonitorTime).hour())
           if (item[first.key]) {
             flag = true;
-            return item[first.key]
+            if (payload.type == 5) {
+              return {
+                value: item[first.key + "_IAQI"],
+                itemStyle: {
+                  color: item[first.key + "_LevelColor"] || "#3398DB",
+                }
+              }
+            } else {
+              return item[first.key]
+            }
           } else {
             return "-"
           }
         })
+
         seriesData = !flag ? [] : seriesData;
-        // let seriesData = [];
-        // let flag = false;
-        // // let arrItem = [];
-        // // let seriesData = [];
-        // pollutantType.map(item => {
-        //   result.Datas.map(itm => {
-        //     if (!flag) {
-        //       if (itm[item.field]) {
-        //         flag = true;
-        //         seriesData.push(itm[item.field])
-        //       } else {
-        //         seriesData.push("-")
-        //       }
-        //       xAxisData.push(moment(itm.MonitorTime).hour())
-        //     }
-        //   })
-        //   // xAxisData.push(timeItem)
-        //   // seriesData.push(arrItem)
-        // })
+
         console.log('seriesData=', seriesData)
         console.log('xAxisData=', xAxisData)
         yield update({
           chartData: {
-            seriesData: seriesData || [], xAxisData: xAxisData, legend,
+            seriesData: seriesData || [],
+            xAxisData: xAxisData,
+            legend,
             allData: result.Datas
           }
         })
@@ -193,22 +239,29 @@ export default Model.extend({
     },
     // 更新图表数据
     * updateChartData({ payload }, { select, update, put }) {
-      const key = payload.key;
+      let key = payload.key
       const chartData = yield select(state => state.mapView.chartData);
       const xAxisData = [];
       const legend = payload.label;
       let flag = false;
-      let seriesData = chartData.allData.map((item, index) => {
-        // if(index === 0){
-        //   xAxisData.push(`${moment(item.MonitorTime).hour()}\r\n09-04`);
-        // }else if(index === chartData.allData.length-1){
-        //   xAxisData.push(`${moment(item.MonitorTime).hour()}\r\n09-04`);
-        // } else{
+      let seriesData = [];
+      // if (key != "01" && key != "02" && key != "03" && key != "05" && key != "07" && key != "08") {
+      //   key = payload.key;
+      // }
+      seriesData = chartData.allData.map((item, index) => {
         xAxisData.push(moment(item.MonitorTime).hour())
-        // }
         if (item[key]) {
           flag = true;
-          return item[key]
+          if (payload.type == 5) {
+            return {
+              value: item[key],
+              itemStyle: {
+                color: item[key + "_LevelColor"] || "#3398DB",
+              }
+            }
+          } else {
+            return item[key]
+          }
         } else {
           return "-"
         }

@@ -374,11 +374,11 @@ export default {
                   path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
                   component: './platformManager/standardLibrary/ViewLibrary',
                 },
-                 {
+                {
                   name: 'equipmentinfomanage',
                   path: '/platformconfig/equipmentinfomanage/:configId',
                   component: './OperationSysManager/EquipmentInfoManage/',
-                }, 
+                },
               ],
             },
             {
@@ -401,7 +401,7 @@ export default {
                 },
               ],
             },
-          
+
             {
               path: "/operations",
               name: "operations",
@@ -431,7 +431,7 @@ export default {
                     }
                   ]
                 },
-                
+
                 {
                   path: '/operations/log',
                   name: "log",
@@ -682,6 +682,12 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 },
+                // 数据一览 - 实时
+                {
+                  name: 'realtimeDataView',
+                  path: '/monitoring/realtimeDataView',
+                  component: './monitoring/overView/realtime',
+                },
                 {
                   name: 'datalist',
                   path: '/monitoring/mapview/datalist',
@@ -717,8 +723,8 @@ export default {
                   path: '/monitoring/overrecord',
                   component: './monitoring/overRecord',
                 },
-                
-               
+
+
 
 
               ],

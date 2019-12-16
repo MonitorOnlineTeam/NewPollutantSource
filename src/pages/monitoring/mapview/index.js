@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Tag, Modal, Tabs, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
+import { Form, Select, Input, Button, Card, Row, Col, Tag, Modal, Tabs, Statistic, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import CustomIcon from '@/components/CustomIcon'
+import { airLevel } from '@/pages/monitoring/overView/tools'
 
 const { TabPane } = Tabs;
 const entZoom = 8;
@@ -39,6 +40,7 @@ const iconStyle = {
   pointLoading: loading.effects['mapView/getPointTableData'],
   chartLoading: loading.effects['mapView/getPointChartData'],
   pollutantLoading: loading.effects['mapView/getPollutantList'],
+  airChartLoading: loading.effects['mapView/getAirChartData'],
   curPointData: mapView.curPointData,
   noticeList: global.notices
 }))
@@ -57,7 +59,10 @@ class MapView extends Component {
       markersList: [],
       currentEntInfo: {},
       chartTitle: null,
-      currentKey: 1
+      currentKey: 1,
+      airVisible: false,
+      currentDescItem: {},
+      airShowType: undefined,
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -125,7 +130,7 @@ class MapView extends Component {
     // let extData = extData;
     return <div
       onMouseEnter={() => {
-        if (this.state.infoWindowVisible === false) {
+        if (this.state.infoWindowVisible === false && !this.state.airVisible) {
           this.setState({
             hoverMapCenter: extData.position,
             currentTitle: extData.position.title,
@@ -134,7 +139,7 @@ class MapView extends Component {
         }
       }}
       onMouseLeave={() => {
-        if (this.state.infoWindowVisible === false) {
+        if (this.state.infoWindowVisible === false && !this.state.airVisible) {
           this.setState({
             infoWindowHoverVisible: false,
           })
@@ -157,7 +162,8 @@ class MapView extends Component {
             if (extData.position.MonitorObjectType == 2) {
               // 监测站
               newState = {
-                infoWindowVisible: true,
+                // infoWindowVisible: true,
+                airVisible: true,
                 currentPointInfo: extData.position,
                 overAll: true,
               }
@@ -332,6 +338,7 @@ class MapView extends Component {
         dataType: 'HourData',
         isLastest: true,
         type: pollutantType,
+        pollutantTypes: pollutantType
       },
     })
     // 获取图表数据
@@ -395,6 +402,7 @@ class MapView extends Component {
     close: () => {
       this.setState({
         infoWindowVisible: false,
+        airVisible: false
       })
     },
     // change: () => { console.log('InfoWindow prop changed') },
@@ -492,7 +500,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData } = this.props;
+    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -563,6 +571,57 @@ class MapView extends Component {
       ],
     };
 
+    const airOption = {
+      // color: ['#3398DB'],
+      title: {
+        text: this.state.currentDescItem.label ? this.state.currentDescItem.label + ` 24小时${this.state.airShowType}柱状图` : "24小时AQI柱状图",
+        textStyle: {
+          color: 'rgba(0, 0, 0, 0.75)',
+          fontSize: 15,
+          fontWeight: '400',
+        },
+        x: 'center',
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter(params, ticket, callback) {
+          let res = `${params[0].axisValue}时<br/>`;
+          params.map(item => {
+            res += `${item.seriesName}:${item.value}<br />`;
+          });
+          return res;
+        },
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: chartData.xAxisData,
+          axisTick: {
+            alignWithLabel: true
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: chartData.legend,
+          type: 'bar',
+          barWidth: '60%',
+          // 10, 52, 200, 334, 390, 330, 220
+          data: chartData.seriesData
+        }
+      ]
+    };
 
     const plugins = [
       'MapType', // 地图模式（卫星）
@@ -592,6 +651,11 @@ class MapView extends Component {
         size="large"
       />);
     }
+    const statisticStyle = {
+      fontSize: 14
+    }
+    let AQIColorObj = airLevel.find(item => item.value == curPointData.AirLevel) || {};
+    let AQIColor = AQIColorObj.color
     return (
       //QCAUse="1"
       <div className={styles.mapWrapper}>
@@ -626,7 +690,8 @@ class MapView extends Component {
                   }
                   // 监测点
                   this.setState({
-                    infoWindowVisible: true,
+                    // infoWindowVisible: true,
+                    airVisible: true,
                     currentPointInfo: entInfo[0],
                     currentKey: val[0].key,
                     overAll: true,
@@ -703,6 +768,7 @@ class MapView extends Component {
               position={this.state.mapCenter}
               autoMove
               size={{ width: 430, height: 362 }}
+              // style={{ borderRadius: 6, padding: 10 }}
               closeWhenClickMap={true}
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
@@ -710,33 +776,9 @@ class MapView extends Component {
             // isCustom
             >
               {
-                // this.state.displayType == 0 ?
-                //   <div>
-                //     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
-                //     <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => {
-                //       // _thismap.setZoomAndCenter(13, [118.520708, 38.969114])
-                //       this.setState({
-                //         infoWindowVisible: false
-                //       })
-                //       let pointInfo = this.state.currentEntInfo.children;
-                //       console.log('pointInfo=', pointInfo)
-                //       if (pointInfo.length) {
-                //         const position = [pointInfo[0]["Longitude"], pointInfo[0]["Latitude"]];
-                //         _thismap.setZoomAndCenter(pointZoom, position)
-                //         this.randomMarker()
-                //         this.setState({
-                //           mapCenter: position,
-                //           // infoWindowVisible: true,
-                //           displayType: 1,
-                //           // currentEntInfo: entInfo[0],
-                //           coordinateSet: this.state.currentEntInfo.CoordinateSet || this.props.coordinateSet
-                //         })
-                //       }
-                //     }}>更多</Button>
-                //   </div> : <div className={styles.pointInfoWindow}>
                 <div className={styles.pointInfoWindow}>
                   {
-                    (this.props.pointLoading || this.props.chartLoading || this.props.pollutantLoading) ? <Spin
+                    (this.props.pointLoading || this.props.chartLoading || this.props.pollutantLoading || this.props.airChartLoading) ? <Spin
                       style={{
                         width: '100%',
                         height: '310px',
@@ -778,7 +820,7 @@ class MapView extends Component {
                               {
                                 // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
                                 !this.props.chartData.seriesData.length ?
-                                  <Empty style={{ marginTop: 128 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                  <Empty style={{ marginTop: 108 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
                                   // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
                                   :
                                   <ReactEcharts
@@ -809,6 +851,82 @@ class MapView extends Component {
                 </div>
               }
             </InfoWindow>
+            <InfoWindow
+              position={this.state.mapCenter}
+              autoMove
+              size={{ width: 480, height: 550 }}
+              // size={{ width: 480 }}
+              style={{ maxHeight: 524 }}
+              closeWhenClickMap={true}
+              visible={this.state.airVisible}
+              // visible={this.state.airVisible}
+              offset={[4, -35]}
+              events={this.windowEvents}
+            // isCustom
+            >
+              <div className={styles.pointInfoWindow}>
+                <Spin spinning={this.props.pointLoading || this.props.chartLoading || this.props.pollutantLoading}>
+                  <Descriptions
+                    title={
+                      <div className={styles.airDescBox}>
+                        {this.state.currentPointInfo.title}
+                        <br />
+                        <div>
+                          <span
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                              this.getPointInfo(5);
+                            }}
+                          >AQI：<span style={{ color: AQIColor }}>{curPointData.AQI}</span></span>
+                          <span>首要污染物：{curPointData.PrimaryPollutant}</span>
+                          <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span>
+                        </div>
+                        <span>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span>
+                      </div>
+                    }
+                    size="small"
+                    column={4}
+                    bordered>
+                    {
+                      this.props.tableList.map(item =>
+                        <Descriptions.Item label={item.label}><div onClick={() => {
+                          // 01,02,03,05,07,08
+                          let key = item.key + "_IAQI";
+                          let airShowType = "IAQI";
+                          if (item.key != "01" && item.key != "02" && item.key != "03" && item.key != "05" && item.key != "07" && item.key != "08") {
+                            key = item.key;
+                            airShowType = "浓度"
+                          }
+                          this.setState({
+                            chartTitle: item.title,
+                            currentDescItem: item,
+                            airShowType: airShowType
+                          })
+                          this.props.dispatch({
+                            type: "mapView/updateChartData",
+                            payload: {
+                              key: item.key,
+                              label: item.label,
+                              type: 5
+                            }
+                          })
+                        }} className={styles.content} style={{ color: item.levelColor }}>{item.value}</div></Descriptions.Item>)
+                    }
+                  </Descriptions>
+                  <ReactEcharts
+                    className={styles.echartdiv}
+                    style={{ width: '100%', height: '300px', textAlign: 'center' }}
+                    option={airOption}
+                    notMerge
+                    lazyUpdate />
+                  <a className={styles.pointDetails} style={{ marginTop: -6 }} size="small" onClick={() => {
+                    this.setState({
+                      pointVisible: true,
+                    })
+                  }}>排口详情</a>
+                </Spin>
+              </div>
+            </InfoWindow>
             <Markers
               markers={this.state.markersList}
               events={this.markersEvents}
@@ -818,12 +936,28 @@ class MapView extends Component {
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
             <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
-              e.target.value === 'data' && router.push('/monitoring/mapview/datalist')
+              e.target.value === 'data' && router.push('/monitoring/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>
             </Radio.Group>
           </div>
+          {/* 空气指数图例 */}
+          {
+            this.state.currentPointInfo.PollutantType == "5" && <div className={styles.legend}>
+              <ul>
+                {
+                  airLevel.map(item => {
+                    return <li>
+                      <span>{item.text}</span>
+                      <span style={{ backgroundColor: item.color }}></span>
+                      <span>{item.standardValue}</span>
+                    </li>
+                  })
+                }
+              </ul>
+            </div>
+          }
           <Modal
             title={`${this.state.currentPointInfo.title}详情`}
             width="80%"
@@ -862,15 +996,21 @@ class MapView extends Component {
               <TabPane tab="视频管理" key="2">
                 <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '62vh' }} />
               </TabPane>
-              <TabPane tab="报警记录" key="3">
-                <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
-              </TabPane>
+              {
+                this.state.currentPointInfo.PollutantType != "5" &&
+                <TabPane tab="报警记录" key="3">
+                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                </TabPane>
+              }
               <TabPane tab="异常记录" key="4">
                 <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
               </TabPane>
-              <TabPane tab="超标记录" key="5">
-                <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} noticeState={1} />
-              </TabPane>
+              {
+                this.state.currentPointInfo.PollutantType != "5" &&
+                <TabPane tab="超标记录" key="5">
+                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} noticeState={1} />
+                </TabPane>
+              }
             </Tabs>
           </Modal>
         </div>
