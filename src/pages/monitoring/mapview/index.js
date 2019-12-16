@@ -877,7 +877,7 @@ class MapView extends Component {
                             onClick={() => {
                               this.getPointInfo(5);
                             }}
-                          >AQI：<span style={{ color: AQIColor }}>{curPointData.AQI}</span></span>
+                          >AQI：<span style={{ background: AQIColor, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: "20px"}}>{curPointData.AQI}</span></span>
                           <span>首要污染物：{curPointData.PrimaryPollutant}</span>
                           <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span>
                         </div>
@@ -910,7 +910,7 @@ class MapView extends Component {
                               type: 5
                             }
                           })
-                        }} className={styles.content} style={{ color: item.levelColor }}>{item.value}</div></Descriptions.Item>)
+                        }} className={styles.content} style={{ background: item.levelColor }}>{item.value}</div></Descriptions.Item>)
                     }
                   </Descriptions>
                   <ReactEcharts

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Table, Radio, Popover, Badge, Icon, Input } from 'antd'
+import { Card, Table, Radio, Popover, Badge, Icon, Input, Tag } from 'antd'
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -270,7 +270,7 @@ class index extends Component {
                   this.getRealTimeDataView()
                 })
               }}>
-                {console.log("currentDataType=",currentDataType)}
+                {console.log("currentDataType=", currentDataType)}
                 {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
                 <Radio.Button key={2} value="MinuteData" disabled={this.state.pollutantCode == 5}>分钟</Radio.Button>
                 <Radio.Button key={3} value="HourData">小时</Radio.Button>

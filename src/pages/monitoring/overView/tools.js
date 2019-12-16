@@ -7,7 +7,8 @@ export const airLevel = [
     status: 4,
   },
   {
-    color: "#ffff00",
+    // color: "#ffff00",
+    color: "#f3dd22",
     text: "良",
     value: 2,
     standardValue: 50,
