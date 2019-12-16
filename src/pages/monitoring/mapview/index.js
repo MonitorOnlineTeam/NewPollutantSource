@@ -905,7 +905,8 @@ class MapView extends Component {
                           this.props.dispatch({
                             type: "mapView/updateChartData",
                             payload: {
-                              key: item.key,
+                              key: key,
+                              itemKey: item.key,
                               label: item.label,
                               type: 5
                             }

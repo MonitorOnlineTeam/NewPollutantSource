@@ -168,12 +168,17 @@ export default Model.extend({
     * getAirChartData({ payload }, { call, update, select }) {
       const result = yield call(services.getPointChartData, payload.postData);
       if (result.IsSuccess) {
-        let seriesData = result.Datas.map(item => ({
-          value: item.AQI,
-          itemStyle: {
-            color: item.Color || "#3398DB",
+        let seriesData = result.Datas.map(item => {
+          if (item.AQI) {
+            return {
+              value: item.AQI,
+              itemStyle: {
+                color: item.Color || "#3398DB",
+              }
+            }
           }
-        })
+          return "-"
+        }
         );
         let xAxisData = result.Datas.map(item => moment(item.MonitorTime).hour());
         yield update({
@@ -256,11 +261,11 @@ export default Model.extend({
             return {
               value: item[key],
               itemStyle: {
-                color: item[key + "_LevelColor"] || "#3398DB",
+                color: item[payload.itemKey + "_LevelColor"] || "#3398DB",
               }
             }
           } else {
-            return item[key]
+            return item[key] || "-"
           }
         } else {
           return "-"
