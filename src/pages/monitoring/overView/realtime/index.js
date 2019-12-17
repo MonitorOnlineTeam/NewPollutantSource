@@ -304,7 +304,6 @@ class index extends Component {
                   this.getRealTimeDataView()
                 })
               }}>
-                {console.log("currentDataType=", currentDataType)}
                 {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
                 {
                   this.state.pollutantCode != 5 && <Radio.Button key={2} value="MinuteData">分钟</Radio.Button>
@@ -349,7 +348,7 @@ class index extends Component {
             pagination={false}
             dataSource={realTimeDataView}
             columns={columns}
-            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 180px)' }}
+            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
           />
         </Card>
       </PageHeaderWrapper>

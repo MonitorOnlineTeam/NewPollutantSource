@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
-import styles from './index.less'
+import styles from './styles.less'
 import { isEqual } from 'lodash';
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
@@ -999,7 +999,7 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
                 <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />

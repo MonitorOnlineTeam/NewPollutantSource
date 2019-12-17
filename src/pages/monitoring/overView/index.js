@@ -35,7 +35,7 @@ import { onlyOneEnt } from '@/config';
 import Link from 'umi/link';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import { LegendIcon } from '@/utils/icon';
-import style from '../mapview/index.less'
+import style from '../mapview/styles.less'
 import { airLevel } from './tools'
 
 const RadioGroup = Radio.Group;
