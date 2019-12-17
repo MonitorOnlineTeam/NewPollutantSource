@@ -233,7 +233,7 @@ class MapView extends Component {
       if (this.state.displayType === 0) {
         if (extData.position.MonitorObjectType == 2) {
           pointEl = <>
-            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: this.getColor(extData.position.Status) }} />
+            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: extData.position.Color || "#999" }} />
           </>
         } else {
           // 企业
@@ -581,6 +581,7 @@ class MapView extends Component {
           fontWeight: '400',
         },
         x: 'center',
+        top: 20,
       },
       tooltip: {
         trigger: 'axis',
@@ -655,7 +656,9 @@ class MapView extends Component {
       fontSize: 14
     }
     let AQIColorObj = airLevel.find(item => item.value == curPointData.AirLevel) || {};
-    let AQIColor = AQIColorObj.color
+    let AQIColor = AQIColorObj.color;
+
+    const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
     return (
       //QCAUse="1"
       <div className={styles.mapWrapper}>
@@ -695,6 +698,7 @@ class MapView extends Component {
                     currentPointInfo: entInfo[0],
                     currentKey: val[0].key,
                     overAll: true,
+                    currentDescItem: {},
                     ...newState
                   }, () => {
                     this.getPointInfo(entInfo[0].PollutantType)
@@ -854,7 +858,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              size={{ width: 480, height: 550 }}
+              size={{ width: 480, height: 430 }}
               // size={{ width: 480 }}
               style={{ maxHeight: 524 }}
               closeWhenClickMap={true}
@@ -876,8 +880,11 @@ class MapView extends Component {
                             style={{ cursor: 'pointer' }}
                             onClick={() => {
                               this.getPointInfo(5);
+                              this.setState({
+                                currentDescItem: {}
+                              })
                             }}
-                          >AQI：<span style={{ background: AQIColor, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: "20px"}}>{curPointData.AQI}</span></span>
+                          >AQI：<span style={{ background: AQIColor, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: "20px" }}>{curPointData.AQI}</span></span>
                           <span>首要污染物：{curPointData.PrimaryPollutant}</span>
                           <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span>
                         </div>
@@ -916,7 +923,7 @@ class MapView extends Component {
                   </Descriptions>
                   <ReactEcharts
                     className={styles.echartdiv}
-                    style={{ width: '100%', height: '300px', textAlign: 'center' }}
+                    style={{ width: '100%', height: '200px', textAlign: 'center', marginTop: -10 }}
                     option={airOption}
                     notMerge
                     lazyUpdate />
@@ -992,24 +999,24 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto' }} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: '62vh' }} />
+                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
               </TabPane>
               {
                 this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="报警记录" key="3">
-                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} />
+                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
               <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} />
+                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} />
               </TabPane>
               {
                 this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="超标记录" key="5">
-                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '62vh' }} maxHeight={150} noticeState={1} />
+                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }
             </Tabs>

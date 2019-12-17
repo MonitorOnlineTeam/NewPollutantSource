@@ -307,7 +307,7 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '98%', height: 'calc(100vh - 330px)', padding: 20 }}
+                    style={{ width: '98%', height: '100%', padding: 20 }}
                 />);
             }
 
@@ -317,7 +317,7 @@ class DataQuery extends Component {
             rowKey={(record, index) => `complete${index}`}
             dataSource={datatable}
             columns={columns}
-            scroll={{ y: 'calc(100vh - 550px)' }}
+            scroll={{ y: this.props.style || 'calc(100vh - 550px)' }}
             pagination={
                 {
                     size: 'small',
@@ -334,11 +334,14 @@ class DataQuery extends Component {
         />);
     }
 
+
+
     render() {
+
         return (
             <div>
                 <Card
-                    className='contentContainer'
+                    className={!this.props.style ? "contentContainer" : null}
                     extra={
                         <div>
                             {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
@@ -353,11 +356,11 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <div>
-                    {this.loaddata()}
+                    <div style={{ ...this.props.style }}>
+                        {this.loaddata()}
                     </div>
                 </Card>
-            </div>
+            </div >
         );
     }
 }

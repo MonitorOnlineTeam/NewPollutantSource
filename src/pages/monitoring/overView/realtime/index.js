@@ -9,6 +9,7 @@ import { LegendIcon } from '@/utils/icon';
 import { airLevel } from '../tools'
 import { router } from 'umi'
 import { formatPollutantPopover } from '@/utils/utils';
+import styles from '../index.less';
 
 
 @connect(({ loading, overview, global, common }) => ({
@@ -32,18 +33,22 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      console.log("realtimeColumns=", nextProps.realtimeColumns)
 
       let fixed = false;
+      let width = 150;
       if (nextProps.realtimeColumns.length > 4) {
         fixed = true;
+      } else {
+        // 计算宽度
+        width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length
       }
       let realtimeColumns = nextProps.realtimeColumns.map(item => {
         return {
           title: item.title,
           dataIndex: item.field,
-          width: 150,
+          width: width,
           sorter: (a, b) => a[item.field] - b[item.field],
+          defaultSortOrder: item.field === "AQI" ? 'descend' : null,
           render: (text, record) => {
             if (item.field === "AQI") {
               const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
@@ -118,7 +123,7 @@ class index extends Component {
         statusFilters = airLevel.map(item => {
           return {
             text: <span><LegendIcon style={{ color: item.color }} />{item.text}</span>,
-            value: item.status,
+            value: item.value,
           }
         })
         statusFilters.unshift({
@@ -129,6 +134,17 @@ class index extends Component {
 
       let columns = [
         {
+          title: '序号',
+          dataIndex: 'index',
+          key: 'index',
+          width: 60,
+          align: 'center',
+          fixed: fixed,
+          render: (value, record, index) => {
+            return index + 1
+          },
+        },
+        {
           title: '状态',
           dataIndex: 'status',
           key: 'status',
@@ -136,8 +152,24 @@ class index extends Component {
           align: 'center',
           fixed: fixed,
           filters: statusFilters,
-          onFilter: (value, record) => record.status === value,
+          onFilter: (value, record) => {
+            if (record.pollutantTypeCode == 5) {
+              if (value != 0) {
+                return record.AirLevel == value
+              }else{
+                return !record.AirLevel
+              }
+            }
+            return record.status == value
+          },
           render: (value, record, index) => {
+            if (record.pollutantTypeCode == 5) {
+              const airLevelObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
+              const color = airLevelObj.color || "#999999";
+              return <div className={styles.airStatus}>
+                <span style={{ backgroundColor: color }}></span>
+              </div>
+            }
             return getPointStatusImg(record, this.props.noticeList);
           },
         },
@@ -157,6 +189,8 @@ class index extends Component {
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
+          // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
+          // defaultSortOrder: 'descend'
         },
         ...realtimeColumns
       ];
@@ -272,7 +306,9 @@ class index extends Component {
               }}>
                 {console.log("currentDataType=", currentDataType)}
                 {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
-                <Radio.Button key={2} value="MinuteData" disabled={this.state.pollutantCode == 5}>分钟</Radio.Button>
+                {
+                  this.state.pollutantCode != 5 && <Radio.Button key={2} value="MinuteData">分钟</Radio.Button>
+                }
                 <Radio.Button key={3} value="HourData">小时</Radio.Button>
                 <Radio.Button key={4} value="DayData">日均</Radio.Button>
               </Radio.Group>
