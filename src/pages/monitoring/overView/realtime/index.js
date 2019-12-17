@@ -10,6 +10,7 @@ import { airLevel } from '../tools'
 import { router } from 'umi'
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../index.less';
+import _ from 'lodash'
 
 
 @connect(({ loading, overview, global, common }) => ({
@@ -24,7 +25,8 @@ class index extends Component {
     super(props);
     this.state = {
       columns: [],
-      currentDataType: "MinuteData"
+      currentDataType: "MinuteData",
+      realTimeDataView: []
     };
   }
 
@@ -198,30 +200,15 @@ class index extends Component {
         columns: columns
       })
     }
-    // if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
-    //   // 判断是否是大气站
-    //   let airColumns = [];
-    //   if (nextProps.realTimeDataView.filter(item => item.pollutantTypeCode == 5).length) {
-    //     airColumns.concat([{
-    //       title: "首要污染物",
-    //       dataIndex: "PrimaryPollutant",
-    //       width: 150,
-    //       sorter: (a, b) => a[item.field] - b[item.field],
-    //     }, {
-    //       title: "AQI",
-    //       dataIndex: "AQI",
-    //       width: 150,
-    //       sorter: (a, b) => a[item.field] - b[item.field],
-    //     }])
-    //     console.log("airColumns=", airColumns)
-    //   }
-    //   this.setState({
-    //     columns: [
-    //       ...this.state.columns,
-    //       ...airColumns
-    //     ]
-    //   })
-    // }
+    if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
+      // 排序后在展示
+      let realTimeDataView = _.sortBy(nextProps.realTimeDataView, function (item) {
+         return -item.AQI
+        });
+      this.setState({
+        realTimeDataView: realTimeDataView
+      })
+    }
   }
 
 
@@ -257,8 +244,9 @@ class index extends Component {
   }
 
   render() {
-    const { currentDataType, columns } = this.state;
-    const { realTimeDataView, dataLoading, columnLoading } = this.props;
+    const { currentDataType, columns, realTimeDataView } = this.state;
+    // const { realTimeDataView, dataLoading, columnLoading } = this.props;
+    const { dataLoading, columnLoading } = this.props;
 
     let scrollXWidth = columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
