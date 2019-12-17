@@ -26,7 +26,8 @@ class index extends Component {
     this.state = {
       columns: [],
       currentDataType: "MinuteData",
-      realTimeDataView: []
+      realTimeDataView: [],
+      filteredInfo: null
     };
   }
 
@@ -134,6 +135,8 @@ class index extends Component {
         })
       }
 
+      let { sortedInfo, filteredInfo, pollutantCode } = this.state;
+      filteredInfo = filteredInfo || {};
       let columns = [
         {
           title: '序号',
@@ -148,12 +151,13 @@ class index extends Component {
         },
         {
           title: '状态',
-          dataIndex: 'status',
-          key: 'status',
+          dataIndex: 'Status',
+          key: 'Status',
           width: 120,
           align: 'center',
           fixed: fixed,
           filters: statusFilters,
+          filteredValue: filteredInfo.Status || null,
           onFilter: (value, record) => {
             if (record.pollutantTypeCode == 5) {
               if (value != 0) {
@@ -243,6 +247,16 @@ class index extends Component {
     })
   }
 
+  handleChange = (pagination, filters, sorter) => {
+    const newColumns = this.state.columns;
+    newColumns[1].filteredValue = filters.Status || null;
+    this.setState({
+      columns: newColumns,
+    });
+  };
+
+
+
   render() {
     const { currentDataType, columns, realTimeDataView } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
@@ -261,7 +275,8 @@ class index extends Component {
                   this.getPageData(e.target.value)
                   if (e.target.value == 5) {
                     this.setState({
-                      currentDataType: "HourData"
+                      currentDataType: "HourData",
+                      filteredInfo: null,
                     })
                     this.props.dispatch({
                       type: "overview/updateState",
@@ -286,8 +301,12 @@ class index extends Component {
                     dataType: e.target.value
                   }
                 })
+                const newColumns = this.state.columns;
+    newColumns[1].filteredValue = null;
                 this.setState({
-                  currentDataType: e.target.value
+                  currentDataType: e.target.value,
+                  filteredInfo: null,
+                  columns: newColumns
                 }, () => {
                   this.getRealTimeDataView()
                 })
@@ -337,6 +356,7 @@ class index extends Component {
             dataSource={realTimeDataView}
             columns={columns}
             scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
+            onChange={this.handleChange}
           />
         </Card>
       </PageHeaderWrapper>
