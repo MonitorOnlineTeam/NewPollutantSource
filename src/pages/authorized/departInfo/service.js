@@ -70,8 +70,8 @@ export async function getalluser(params) {
 }
 // 获取当前部门的用户
 export async function getuserbydepid(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID
+    const body = {
+        UserGroup_ID: params.UserGroup_ID
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserByDepID', body, null);
     return result === null ? {
@@ -80,9 +80,9 @@ export async function getuserbydepid(params) {
 }
 // 给部门添加用户（可批量）
 export async function insertdepartbyuser(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID,
-        User_ID:params.User_ID
+    const body = {
+        UserGroup_ID: params.UserGroup_ID,
+        User_ID: params.User_ID
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertDepartByUser', body, null);
     return result === null ? {
@@ -91,9 +91,9 @@ export async function insertdepartbyuser(params) {
 }
 // 给部门添加行政区（可批量）
 export async function insertregionbyuser(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID,
-        RegionCode:params.RegionCode
+    const body = {
+        UserGroup_ID: params.UserGroup_ID,
+        RegionCode: params.RegionCode
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRegionByUser', body, null);
     return result === null ? {
@@ -102,8 +102,8 @@ export async function insertregionbyuser(params) {
 }
 // 获取当前部门的行政区
 export async function getregionbydepid(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID
+    const body = {
+        UserGroup_ID: params.UserGroup_ID
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRegionByDepID', body, null);
     return result === null ? {
@@ -119,9 +119,9 @@ export async function getregioninfobytree(params) {
 }
 // 获取企业+排口
 export async function getentandpoint(params) {
-    const body={
-        PollutantTypes:params.PollutantType,
-        RegionCode:params.RegionCode,
+    const body = {
+        PollutantTypes: params.PollutantType,
+        RegionCode: params.RegionCode,
     }
     const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', body);
     return result === null ? {
@@ -130,9 +130,9 @@ export async function getentandpoint(params) {
 }
 // 获取当前部门的排口
 export async function getpointbydepid(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID,
-        PollutantType:params.PollutantType
+    const body = {
+        UserGroup_ID: params.UserGroup_ID,
+        PollutantType: params.PollutantType
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByDepID', body, null);
     return result === null ? {
@@ -141,13 +141,18 @@ export async function getpointbydepid(params) {
 }
 // 给当前部门添加排口权限(可批量)
 export async function insertpointfilterbydepid(params) {
-    const body={
-        UserGroup_ID:params.UserGroup_ID,
-        DGIMN:params.DGIMN,
-        Type:params.Type
+    const body = {
+        UserGroup_ID: params.UserGroup_ID,
+        DGIMN: params.DGIMN,
+        Type: params.Type
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByDepID', body, null);
     return result === null ? {
         data: null
     } : result;
+}
+// 是否显示区域过滤
+export async function getGroupRegionFilter(params) {
+    const result = get('/api/rest/PollutantSourceApi/BaseDataApi/GetGroupRegionFilter', params, null);
+    return result;
 }

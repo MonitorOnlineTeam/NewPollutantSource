@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 import {
     getdepartinfobytree, getdepartinfobyid, insertdepartinfo, deldepartinfo, upddepartinfo, getdeparttreeandobj, getalluser, getuserbydepid, insertdepartbyuser,
-    insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid
+    insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid, getGroupRegionFilter
 } from './service';
 import { message } from 'antd';
 /*
@@ -330,6 +330,17 @@ export default Model.extend({
             });
             payload.callback(result)
         },
+        // 是否显示区域过滤
+        * getGroupRegionFilter({ payload }, { call, update }) {
+            const result = yield call(getGroupRegionFilter, payload);
+            if (result.IsSuccess) {
+                yield update({
+                    showGroupRegionFilter: result.Datas
+                })
+            } else {
+                message.error(result.Message)
+            }
+        }
     },
     reducers: {
     },
