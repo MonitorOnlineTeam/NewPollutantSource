@@ -120,7 +120,13 @@ class NavigationTree extends Component {
   componentDidMount() {
     const dom = document.querySelector(this.props.domId);
     if (dom) {
-      floats === "topmenu" ? dom.style.marginLeft = "400px" : dom.style.marginRight = "400px"
+      if(floats === "topmenu") {
+        dom.style.marginLeft = "400px";
+        dom.style.marginRight = 0
+      }else{
+        dom.style.marginRight = "400px";
+        dom.style.marginLeft = 0
+      }
     }
     const { dispatch, EntAndPoint } = this.props;
     const { panelDataList, screenList } = this.state;
