@@ -98,6 +98,7 @@ class SiteDailyPage extends PureComponent {
               type: 'report/getEnterpriseList',
               payload: {
                 regionCode: RegionCode,
+                pollutantTypeCode: defalutVal,
                 callback: (res) => {
                   res.Datas.length && this.setState({
                     currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
@@ -358,7 +359,17 @@ class SiteDailyPage extends PureComponent {
                     //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
                     //   }
                     // </Select>
-                    <SelectPollutantType placeholder="请选择污染物类型" />
+                    <SelectPollutantType
+                      placeholder="请选择污染物类型"
+                      onChange={(value) => {
+                        this.props.dispatch({
+                          type: 'report/getEnterpriseList',
+                          payload: {
+                            regionCode: this.props.form.getFieldValue("Regions"),
+                            pollutantTypeCode: value,
+                          }
+                        })
+                      }} />
                   )}
                 </FormItem>
               </Col>
@@ -386,7 +397,8 @@ class SiteDailyPage extends PureComponent {
                         dispatch({
                           type: 'report/getEnterpriseList',
                           payload: {
-                            regionCode: val.toString()
+                            regionCode: val.toString(),
+                            pollutantTypeCode: this.props.form.getFieldValue("PollutantSourceType"),
                           }
                         })
                       }}
@@ -411,7 +423,6 @@ class SiteDailyPage extends PureComponent {
                           <Option value={item["ParentCode"]}>{item["ParentName"]}</Option>)
                       }
                     </Select>
-
                   )}
                 </FormItem>
               </Col>
