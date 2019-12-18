@@ -166,6 +166,7 @@ class MapView extends Component {
                 airVisible: true,
                 currentPointInfo: extData.position,
                 overAll: true,
+                currentDescItem: {}
               }
             } else {
               // 显示排口，点击的企业

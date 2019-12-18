@@ -46,7 +46,7 @@ export const airLevel = [
     color: "#3c0011",
     text: "爆表",
     value: 7,
-    standardValue: 500,
+    standardValue: "≥500",
     status: 10,
   },
 ]
