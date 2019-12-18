@@ -325,7 +325,7 @@ class index extends Component {
                   this.props.dispatch({
                     type: "overview/getRealTimeDataView",
                     payload: {
-                      entName: val,
+                      pointName: val,
                       dataType: this.state.currentDataType,
                       pollutantTypes: this.state.pollutantCode
                     }
