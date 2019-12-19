@@ -83,7 +83,7 @@ class index extends Component {
               const color = airLevelObj.color;
               return <Popover content={
                 <div>
-                  <div style={{ marginBottom: 10 }}>
+                <div style={{ marginBottom: 10 }}>
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>

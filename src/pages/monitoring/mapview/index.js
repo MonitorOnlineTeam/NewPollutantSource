@@ -233,8 +233,9 @@ class MapView extends Component {
     if (extData.position) {
       if (this.state.displayType === 0) {
         if (extData.position.MonitorObjectType == 2) {
+          let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
           pointEl = <>
-            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: extData.position.Color || "#999" }} />
+            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: color }} />
           </>
         } else {
           // 企业

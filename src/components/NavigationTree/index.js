@@ -42,7 +42,9 @@ const styleFor = { border: "1px solid", borderRadius: 4, padding: 3, borderColor
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
   IsTree: navigationtree.IsTree,
-  noticeList: global.notices
+  noticeList: global.notices,
+  configInfo: global.configInfo,
+
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -641,6 +643,7 @@ class NavigationTree extends Component {
 
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    const { configInfo } = this.props;
     //渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map(item => {
@@ -736,7 +739,7 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ""}
-          {this.props.QCAUse == undefined ? <EnterprisePointCascadeMultiSelect
+          {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect
             searchRegion={true}
             onChange={this.regionChange}
             placeholder="请选择区域"
