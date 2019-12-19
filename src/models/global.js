@@ -364,13 +364,13 @@ export default Model.extend({
             break;
           case 'HourData':
             // 实时数据一览 - 小时
-            dispatch({
-              type: "overview/updateRealTimeDataView",
-              payload: {
-                type: "HourData",
-                message: obj.Message
-              }
-            })
+            // dispatch({
+            //   type: "overview/updateRealTimeDataView",
+            //   payload: {
+            //     type: "HourData",
+            //     message: obj.Message
+            //   }
+            // })
             break;
 
           //工艺流程图动态参数数据

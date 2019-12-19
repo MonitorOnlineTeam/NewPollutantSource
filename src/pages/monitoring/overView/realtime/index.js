@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Table, Radio, Popover, Badge, Icon, Input, Tag } from 'antd'
+import { Card, Table, Radio, Popover, Badge, Icon, Input, Tag, TimePicker, DatePicker } from 'antd'
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -11,6 +11,7 @@ import { router } from 'umi'
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../index.less';
 import _ from 'lodash'
+import moment from 'moment'
 
 
 @connect(({ loading, overview, global, common }) => ({
@@ -27,7 +28,9 @@ class index extends Component {
       columns: [],
       currentDataType: "MinuteData",
       realTimeDataView: [],
-      filteredInfo: null
+      filteredInfo: null,
+      time: moment(new Date()).add(-1, 'hour'),
+      dayTime: moment(new Date()).add(-1, "day")
     };
   }
 
@@ -162,7 +165,7 @@ class index extends Component {
             if (record.pollutantTypeCode == 5) {
               if (value != 0) {
                 return record.AirLevel == value
-              }else{
+              } else {
                 return !record.AirLevel
               }
             }
@@ -207,8 +210,8 @@ class index extends Component {
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
       let realTimeDataView = _.sortBy(nextProps.realTimeDataView, function (item) {
-         return -item.AQI
-        });
+        return -item.AQI
+      });
       this.setState({
         realTimeDataView: realTimeDataView
       })
@@ -228,11 +231,24 @@ class index extends Component {
 
   // 获取表格数据
   getRealTimeDataView = () => {
+    const { pointName, currentDataType, pollutantCode, time, dayTime } = this.state;
+    let searchTime = undefined;
+    // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
+    if (currentDataType === "HourData") {
+      // 小时
+      searchTime = time ? moment(time).format("YYYY-MM-DD HH:00:00") : undefined
+    }
+    if (currentDataType === "DayData") {
+      // 日均
+      searchTime = dayTime ? moment(dayTime).format("YYYY-MM-DD 00:00:00") : undefined
+    }
     this.props.dispatch({
       type: "overview/getRealTimeDataView",
       payload: {
-        dataType: this.state.currentDataType,
-        pollutantTypes: this.state.pollutantCode
+        pointName: pointName,
+        dataType: currentDataType,
+        pollutantTypes: pollutantCode,
+        time: searchTime,
       }
     })
   }
@@ -258,7 +274,7 @@ class index extends Component {
 
 
   render() {
-    const { currentDataType, columns, realTimeDataView } = this.state;
+    const { currentDataType, columns, realTimeDataView, time, dayTime } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading } = this.props;
 
@@ -302,7 +318,7 @@ class index extends Component {
                   }
                 })
                 const newColumns = this.state.columns;
-    newColumns[1].filteredValue = null;
+                newColumns[1].filteredValue = null;
                 this.setState({
                   currentDataType: e.target.value,
                   filteredInfo: null,
@@ -318,18 +334,42 @@ class index extends Component {
                 <Radio.Button key={3} value="HourData">小时</Radio.Button>
                 <Radio.Button key={4} value="DayData">日均</Radio.Button>
               </Radio.Group>
+              {
+                currentDataType === "HourData" &&
+                <TimePicker
+                  onChange={(time, timeString) => {
+                    this.setState({
+                      time: time
+                    }, () => {
+                      this.getRealTimeDataView()
+                    })
+                  }}
+                  style={{ width: 150, marginLeft: 20 }}
+                  defaultValue={time}
+                  format="HH:00:00"
+                />
+              }
+              {
+                currentDataType === "DayData" &&
+                <DatePicker
+                  defaultValue={dayTime}
+                  style={{ width: 150, marginLeft: 20 }}
+                  onChange={(date, dateString) => {
+                    this.setState({ dayTime: date }, () => {
+                      this.getRealTimeDataView()
+                    })
+                  }} />
+              }
               <Input.Search
                 allowClear
                 style={{ width: 300, marginLeft: 20 }}
-                onSearch={(val) => {
-                  this.props.dispatch({
-                    type: "overview/getRealTimeDataView",
-                    payload: {
-                      pointName: val,
-                      dataType: this.state.currentDataType,
-                      pollutantTypes: this.state.pollutantCode
-                    }
+                onChange={(e) => {
+                  this.setState({
+                    pointName: e.target.value
                   })
+                }}
+                onSearch={(val) => {
+                  this.getRealTimeDataView()
                 }}
                 placeholder="请输入监测点名称"
               />
