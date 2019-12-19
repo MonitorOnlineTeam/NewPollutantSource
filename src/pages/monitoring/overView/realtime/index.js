@@ -65,7 +65,7 @@ class index extends Component {
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{record.AirQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
-                    <Badge color={color} text={`首要污染物：${record.PrimaryPollutant}`} />
+                    <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || "-"}`} />
                   </li>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
                     <Badge color={color} text={`污染级别：${record.AirLevel}级`} />
