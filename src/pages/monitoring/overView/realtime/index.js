@@ -75,7 +75,7 @@ class index extends Component {
                 <span style={{ color: color }}>{text ? text : "-"}</span>
               </Popover>
             }
-            if (record[item.field + "_Value"]) {
+            if (record[item.field + "_Value"] !== undefined) {
               // const color = record[item.field + "_LevelColor"];
               const level = record[item.field + "_Level"].replace("级", "");
               const airLevelObj = airLevel.find(itm => itm.value == level) || {};
