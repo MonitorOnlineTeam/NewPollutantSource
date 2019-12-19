@@ -72,7 +72,7 @@ class index extends Component {
                   </li>
                 </div>
               } trigger="hover">
-                <span style={{ color: color }}>{text ? text : "-"}</span>
+                <span style={{ color: color }}>{text !== undefined ? text : "-"}</span>
               </Popover>
             }
             if (record[item.field + "_Value"] !== undefined) {
