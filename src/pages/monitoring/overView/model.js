@@ -18,6 +18,8 @@ import {
   queryhistorydatalist,
   querypollutantlist,
   querygetentdatalist,
+  getRealTimeColumn,
+  getRealTimeDataView,
 } from './services';
 import Model from '@/utils/model';
 import { isNullOrUndefined } from 'util';
@@ -74,6 +76,10 @@ export default Model.extend({
       pollutantTypes: '2',
       RunState: '2',
     },
+    // 实时数据一览
+    realtimeColumns: [],
+    realTimeDataView: [],
+    dataType: "MinuteData",
   },
   effects: {
     *init({ payload }, { call, take, select }) {
@@ -102,7 +108,24 @@ export default Model.extend({
       if (data) {
         gwidth += 200 * data.length;
       }
-      yield update({ columns: data || [], gwidth });
+
+      let realtimeColumns = [];
+      if (selectpollutantTypeCode == 5) {
+        realtimeColumns = [{
+          field: "PrimaryPollutant",
+          title: "首要污染物",
+        }, {
+          title: "AQI",
+          field: "AQI"
+        }]
+      }
+
+      yield update({
+        columns: [
+          ...realtimeColumns,
+          ...data
+        ] || [], gwidth
+      });
     },
     *querydatalist({ payload }, { call, update, put, select }) {
       const {
@@ -133,7 +156,6 @@ export default Model.extend({
         body = {};
       }
       const data = yield call(querydatalist, body);
-      console.log("data=", data)
       if (data) {
         data.map(item => {
           item.position = {
@@ -513,5 +535,87 @@ export default Model.extend({
       const entlist = yield call(querygetentdatalist, body);
       yield update({ entlist });
     },
+
+    // 获取实时数据一览
+    *getRealTimeDataView({ payload }, { call, update, select }) {
+      const result = yield call(getRealTimeDataView, payload);
+      if (result.IsSuccess) {
+        yield update({
+          realTimeDataView: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取实时数据一览表头
+    *getRealTimeColumn({ payload }, { call, update }) {
+      const result = yield call(getRealTimeColumn, payload);
+      let realtimeColumns = [];
+      if (payload.pollutantTypes == 5) {
+        realtimeColumns = realtimeColumns.concat([{
+          field: "PrimaryPollutant",
+          title: "首要污染物",
+        }, {
+          title: "AQI",
+          field: "AQI"
+        }])
+      }
+      if (result.IsSuccess) {
+        yield update({
+          realtimeColumns: [
+            ...realtimeColumns,
+            ...result.Datas
+          ]
+        })
+      } else {
+        message.error(result.Message)
+      }
+    }
   },
+  reducers: {
+    // 实时
+    updateRealTimeDataView(state, { payload }) {
+      let newRealTimeDataView = state.realTimeDataView;
+      let dataType = state.dataType;
+      if (newRealTimeDataView.length && payload.type == dataType) {
+        payload.message.map(item => {
+          newRealTimeDataView.map((itm, idx) => {
+            if (item.DGIMN == itm.DGIMN && itm[item.PollutantCode] != undefined) {
+              // console.log("code=", newRealTimeDataView[idx][item.PollutantCode])
+              // console.log("newCode=", item.MonitorValue)
+              // console.log("MonitorTime=", newRealTimeDataView[idx]["MonitorTime"])
+              // console.log("newMonitorTime=", item.MonitorTime)
+              newRealTimeDataView[idx][item.PollutantCode] = item.MonitorValue;
+              newRealTimeDataView[idx]["MonitorTime"] = item.MonitorTime;
+              // 数据异常
+              // 异常§异常类别编号§异常类别名称
+              if (item.IsException) {
+                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;
+              } else {
+                delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
+              }
+              // 数据超标
+              //超标§报警颜色§标准值§超标倍数
+              if (item.IsOver > -1) {
+                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsOver}§null§${item.StandardValue}§${item.OverStandValue}`;
+              } else {
+                delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
+              }
+              // newRealTimeDataView[idx]["IsException"] = item.IsException;
+              // newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;
+              // newRealTimeDataView[idx]["ExceptionType"] = item.ExceptionType;
+
+              // newRealTimeDataView[idx]["IsOver"] = item.IsOver;
+              // newRealTimeDataView[idx]["OverStandValue"] = item.OverStandValue;
+            }
+          })
+        })
+      }
+      // console.log("newRealTimeDataView=", newRealTimeDataView)
+      return {
+        ...state,
+        realTimeDataView: newRealTimeDataView
+      }
+    }
+  }
 });

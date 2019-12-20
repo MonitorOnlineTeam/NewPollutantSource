@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 
-@connect(({ loading, report, autoForm }) => ({
+@connect(({ loading, report, autoForm, global }) => ({
   loading: loading.effects["report/getDateReportData"],
   exportLoading: loading.effects["report/reportExport"],
   entLoading: loading.effects["report/getEnterpriseList"],
@@ -24,6 +24,7 @@ const { Option } = Select;
   enterpriseList: report.enterpriseList,
   dateReportForm: report.dateReportForm,
   regionList: autoForm.regionList,
+  configInfo: global.configInfo,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -98,6 +99,7 @@ class SiteDailyPage extends PureComponent {
               type: 'report/getEnterpriseList',
               payload: {
                 regionCode: RegionCode,
+                pollutantTypeCode: defalutVal,
                 callback: (res) => {
                   res.Datas.length && this.setState({
                     currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
@@ -323,7 +325,7 @@ class SiteDailyPage extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading } = this.props;
+    const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading, configInfo } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
     if (exportLoading) {
@@ -358,11 +360,21 @@ class SiteDailyPage extends PureComponent {
                     //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
                     //   }
                     // </Select>
-                    <SelectPollutantType placeholder="请选择污染物类型" />
+                    <SelectPollutantType
+                      placeholder="请选择污染物类型"
+                      onChange={(value) => {
+                        this.props.dispatch({
+                          type: 'report/getEnterpriseList',
+                          payload: {
+                            regionCode: this.props.form.getFieldValue("Regions"),
+                            pollutantTypeCode: value,
+                          }
+                        })
+                      }} />
                   )}
                 </FormItem>
               </Col>
-              <Col md={5} sm={24}>
+              <Col md={5} sm={24} style={{display: configInfo.GroupRegionState === "1" ? "block" : "none"}}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     initialValue: defaultRegionCode,
@@ -386,7 +398,8 @@ class SiteDailyPage extends PureComponent {
                         dispatch({
                           type: 'report/getEnterpriseList',
                           payload: {
-                            regionCode: val.toString()
+                            regionCode: val.toString(),
+                            pollutantTypeCode: this.props.form.getFieldValue("PollutantSourceType"),
                           }
                         })
                       }}
@@ -411,7 +424,6 @@ class SiteDailyPage extends PureComponent {
                           <Option value={item["ParentCode"]}>{item["ParentName"]}</Option>)
                       }
                     </Select>
-
                   )}
                 </FormItem>
               </Col>

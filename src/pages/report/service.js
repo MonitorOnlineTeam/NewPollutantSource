@@ -28,7 +28,7 @@ export async function getPollutantTypeList(params) {
  * 获取企业
  */
 export async function getEnterpriseList(params) {
-  const result = await get('/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList', params, null);
+  const result = await post(`/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`, {}, null);
   return result === null ? { data: null } : result;
 }
 

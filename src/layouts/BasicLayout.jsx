@@ -118,7 +118,7 @@ const BasicLayout = props => {
   const menuDataRender = list => {
     let menuList = currentMenu;
     // 如果只有一个，平铺展示子菜单
-    if(currentMenu && currentMenu.length === 1){
+    if (currentMenu && currentMenu.length === 1) {
       menuList = currentMenu[0].children.map(item => {
         return {
           ...item,
@@ -215,15 +215,17 @@ const BasicLayout = props => {
           {children}
         </div>
       </ProLayout>
-      <SettingDrawer
-        settings={settings}
-        onSettingChange={config =>
-          dispatch({
-            type: 'settings/changeSetting',
-            payload: config,
-          })
-        }
-      />
+      {process.env.NODE_ENV === "development" &&
+        <SettingDrawer
+          settings={settings}
+          onSettingChange={config =>
+            dispatch({
+              type: 'settings/changeSetting',
+              payload: config,
+            })
+          }
+        />
+      }
     </>
   );
 };

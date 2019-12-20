@@ -118,7 +118,7 @@ export default Model.extend({
     * getEnterpriseList({
       payload
     }, { call, update, select }) {
-      const result = yield call(services.getEnterpriseList, { regionCode: payload.regionCode });
+      const result = yield call(services.getEnterpriseList, payload);
       if (result.IsSuccess) {
         const dateReportForm = yield select(state => state.report.dateReportForm);
         yield update({

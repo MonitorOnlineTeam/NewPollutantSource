@@ -68,7 +68,7 @@ export function formatMoment(mmt, formatType = 'YYYY-MM-DD HH:mm:ss') {
 export function formatPollutantPopover(value, additional) {
   if (additional) {
     const additionalInfo = additional.split('§');
-    if (additionalInfo[0] === 'IsOver') {
+    if (additionalInfo[0] == 0) {
       const content = (
         <div>
           <div style={{ marginBottom: 10 }}>

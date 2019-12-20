@@ -149,7 +149,8 @@ const rightTableColumns = [
     EntAndPoint: departinfo.EntAndPoint,
     CheckPoint: departinfo.CheckPoint,
     ConfigInfo: global.configInfo,
-    pollutantType: common.defaultPollutantCode
+    pollutantType: common.defaultPollutantCode,
+    showGroupRegionFilter: departinfo.showGroupRegionFilter,
 }))
 @Form.create()
 
@@ -269,16 +270,22 @@ class DepartIndex extends Component {
                                 }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
-                            <Tooltip title="区域过滤">
-                                <a onClick={() => {
-                                    this.setState({
-                                        selectedRowKeys: record
-                                    }, () => {
-                                        this.showRegionModal()
-                                    })
-                                }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
-                            </Tooltip>
-                            <Divider type="vertical" />
+                            {
+                                // 控制显示隐藏区域过滤
+                                this.props.showGroupRegionFilter &&
+                                <>
+                                    <Tooltip title="区域过滤">
+                                        <a onClick={() => {
+                                            this.setState({
+                                                selectedRowKeys: record
+                                            }, () => {
+                                                this.showRegionModal()
+                                            })
+                                        }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
+                                    </Tooltip>
+                                    <Divider type="vertical" />
+                                </>
+                            }
                             <Tooltip title="数据过滤">
                                 <a onClick={() => {
                                     this.setState({
@@ -378,6 +385,10 @@ class DepartIndex extends Component {
             type: 'departinfo/getdepartinfobytree',
             payload: {
             }
+        })
+        this.props.dispatch({
+            type: "departinfo/getGroupRegionFilter",
+            payload: {}
         })
         // this.props.dispatch({
         //     type: 'roleinfo/getrolestreeandobj',

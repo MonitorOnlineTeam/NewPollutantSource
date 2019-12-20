@@ -290,8 +290,11 @@
                 // CONNECTING：值为0，表示正在连接。
                 // OPEN：值为1，表示连接成功，可以通信了。
                 // CLOSING：值为2，表示连接正在关闭。
-                // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
-                self.url = self.local;
+                // CLOSED：值为3，表示连接已经关闭，或者打开连接失败。                
+                if(self.url === self.local)
+                    self.url = self.out;
+                else
+                    self.url = self.local;
                 if (self.debug || ReconnectingWebSocket.debugAll) {
                     console.debug('ReconnectingWebSocket', 'onerror', self.url, event);
                 }
