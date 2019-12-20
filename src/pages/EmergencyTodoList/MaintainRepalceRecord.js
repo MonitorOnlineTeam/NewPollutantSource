@@ -70,7 +70,7 @@ class MaintainRepalceRecord extends Component {
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record=this.props.MaintainRecordDetailRecord!==null?this.props.MaintainRecordDetailRecord.Record:null;
         const Content=Record!==null?Record.Content:null;
-        const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
+        const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;  
         // const columns = [ {
         //     title: '更换日期',
         //     dataIndex: 'DateOfChange',
@@ -106,7 +106,7 @@ class MaintainRepalceRecord extends Component {
         }
         return (
             <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
-                <div className={styles.FormName}>设备保养项记录表</div>
+                <div className={styles.FormName}>设备保养记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
                 <table className={styles.FormTable}>
                     <tbody>
@@ -127,7 +127,7 @@ class MaintainRepalceRecord extends Component {
                         <tr>
                            
                             <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        更换日期
+                                        保养日期
                             </td>
                             <td colSpan="2"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         保养内容
@@ -136,7 +136,7 @@ class MaintainRepalceRecord extends Component {
                                         备注
                             </td>
                             <td colSpan="2"  style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        下次更换日期
+                                        下次保养日期
                             </td>
                         </tr>
                         {
