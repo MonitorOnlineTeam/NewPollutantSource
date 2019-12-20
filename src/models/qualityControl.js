@@ -50,7 +50,8 @@ export default Model.extend({
             DGIMNList = DGIMNList.slice(payload.message.length)
           }
           console.log("DGIMNList=", DGIMNList)
-          let filterChartData = DGIMNList.filter(item => item.PollutantCode === state.currentPollutantCode)
+          // let filterChartData = DGIMNList.filter(item => item.PollutantCode === state.currentPollutantCode)
+          let filterChartData = DGIMNList;
           console.log("filterChartData=", filterChartData)
           // 污染物
           filterChartData.map(item => {

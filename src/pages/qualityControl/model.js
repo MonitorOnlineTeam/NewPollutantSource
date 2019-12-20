@@ -41,15 +41,18 @@ export default Model.extend({
     resultContrastTimeList: [],
     paramsRecordForm: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
+      time: {
+        value: [moment().add(-1, "hour"), moment()]
+      },
       total: 0,
     },
     statusRecordForm: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
       total: 0,
-      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      BeginTime: moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss'),
+      EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       DataTempletCode: [],
     },
     QCAStatusList: [],
@@ -267,7 +270,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         const { entResult } = result.Datas;
         entResult.map((item, index) => {
-          entResult[index] = item * 100;
+          entResult[index] = (item * 100).toFixed(2);
         })
         yield update({
           entRate: {
@@ -394,8 +397,8 @@ export default Model.extend({
         pageIndex: paramsRecordForm.current,
         pageSize: paramsRecordForm.pageSize,
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         status: paramsRecordForm.status && paramsRecordForm.status.value,
         ...payload,
       }
@@ -420,8 +423,8 @@ export default Model.extend({
       const paramsRecordForm = yield select(state => state.qualityControl.paramsRecordForm);
       const postData = {
         State: 0,
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
         ...payload,
       }
@@ -514,7 +517,8 @@ export default Model.extend({
         yield update({
           gasData: gasData,
           cemsList: cemsList,
-          qualityControlName: result.Datas.Center
+          qualityControlName: result.Datas.Center,
+          DeviceStatus: result.Datas.DeviceStatus
         })
       } else {
         message.error(result.Message)
@@ -580,8 +584,12 @@ export default Model.extend({
 
           let flowList = state.flowList;
           // 气瓶流量
-          if (code === "33509") {
+          if (code === "33513") {
             flowList[payload.PollutantCode] = payload.Value
+          }
+          // N2流量
+          if (code === "33515") {
+            flowList["N2"] = payload.Value
           }
           // 标气浓度
           let standardValue = state.standardValue;

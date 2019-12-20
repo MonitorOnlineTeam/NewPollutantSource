@@ -13,6 +13,7 @@ import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
 import { LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
+import moment from "moment";
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -37,7 +38,7 @@ const columns = [
     ],
     onFilter: (value, record) => record.Flag === value,
     render: (value, record, index) => {
-      if (record.Flag==1) {
+      if (record.Flag == 1) {
         return <img style={{ width: 14 }} src="/gisnormal.png" />
       }
       return <img style={{ width: 14 }} src="/gisexception.png" />
@@ -103,6 +104,7 @@ class index extends Component {
           span: 16,
         },
       },
+      defaultTime: [moment().add(-1, "hour"), moment()]
     }
   }
 
@@ -219,7 +221,7 @@ class index extends Component {
 
   render() {
     const { form: { getFieldDecorator }, paramsRecordForm, paramsTableData, loading, paramsList } = this.props;
-    const { formItemLayout } = this._SELF_;
+    const { formItemLayout, defaultTime } = this._SELF_;
     const { showType } = this.state;
     return (
       <>
@@ -238,11 +240,13 @@ class index extends Component {
               title={
                 <Form>
                   <Row gutter={16}>
-                    <Col span={4}></Col>
-                    <Col span={7}>
+                    <Col span={2}></Col>
+                    <Col span={9}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
-                        {getFieldDecorator('time')(
-                          <RangePicker />,
+                        {getFieldDecorator('time', {
+                          initialValue: defaultTime,
+                        })(
+                          <RangePicker allowClear={false} format={"YYYY-MM-DD HH:mm:ss"} />,
                         )}
                       </Form.Item>
                     </Col>
@@ -288,6 +292,7 @@ class index extends Component {
                   dataSource={paramsTableData}
                   columns={columns}
                   loading={loading}
+                  scroll={{ y: 'calc(100vh - 410px)'}}
                   pagination={{
                     // showSizeChanger: true,
                     showQuickJumper: true,
