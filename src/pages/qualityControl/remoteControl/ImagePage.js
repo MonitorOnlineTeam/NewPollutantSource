@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-12-06 17:17:23 
+ * @Author: Jiaqi
+ * @Date: 2019-12-06 17:17:23
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-12-06 17:17:45
  * @desc: 质控仪流程图页面
@@ -24,7 +24,7 @@ const QCStatusColor = {
   5: "#FFC1C1"
 }
 
-@connect(({ loading, qualityControl }) => ({
+@connect(({ loading, qualityControl, qualityControlModel }) => ({
   gasData: qualityControl.gasData,
   cemsList: qualityControl.cemsList,
   valveStatus: qualityControl.valveStatus,
@@ -35,6 +35,8 @@ const QCStatusColor = {
   qualityControlName: qualityControl.qualityControlName,
   standardValueUtin: qualityControl.standardValueUtin,
   QCStatus: qualityControl.QCStatus,
+  currentDGIMN: qualityControlModel.currentDGIMN,
+  realtimeStabilizationTime: qualityControl.realtimeStabilizationTime,
 }))
 
 class ImagePage extends PureComponent {
@@ -67,7 +69,19 @@ class ImagePage extends PureComponent {
         }
       })
     }
-    if (this.props.QCStatus === "4") {
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus === "4") {
+      if (nextProps.QCAMN && nextProps.currentDGIMN)
+        // 获取稳定时间
+        this.props.dispatch({
+          type: "qualityControl/getStabilizationTime",
+          payload: {
+            DGIMN: nextProps.currentDGIMN,
+            QCAMN: nextProps.QCAMN,
+          },
+          form: "realtime"
+        })
+    }
+    if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
       // if (true) {
       notification.close("notification")
       notification.open({
@@ -129,7 +143,7 @@ class ImagePage extends PureComponent {
   }
 
   render() {
-    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -407,7 +421,7 @@ class ImagePage extends PureComponent {
               visible: false
             })
           }}>
-          <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert />
+          <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert startTime={realtimeStabilizationTime.StartTime} stabilizationTime={realtimeStabilizationTime.StabilizationTime} />
         </Modal>
       </div>
     );
