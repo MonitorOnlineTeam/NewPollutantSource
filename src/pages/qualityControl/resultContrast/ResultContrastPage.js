@@ -42,6 +42,8 @@ const columns = [
   standardGasLoading: loading.effects["qualityControl/getStandardGas"],
   QCAResultCheckByDGIMNLoading: loading.effects["qualityControl/QCAResultCheckByDGIMN"],
   QCAResultCheckSelectListLoading: loading.effects["qualityControl/QCAResultCheckSelectList"],
+  stabilizationTime: qualityControl.stabilizationTime,
+  chartMax: qualityControl.chartMax,
 }))
 class ResultContrastPage extends Component {
   constructor(props) {
@@ -73,6 +75,15 @@ class ResultContrastPage extends Component {
     // // 获取时间列表
     // this.props.dispatch({ type: "qualityControl/QCAResultCheckSelectList", payload: { DGIMN: this.state.DGIMN } });
     this.getPageData();
+    // 获取稳定时间
+    // this.props.dispatch({
+    //   type: "qualityControl/getStabilizationTime",
+    //   payload: {
+    //     DGIMN: this.state.DGIMN,
+    //     QCAMN: this.props.QCAMN,
+    //     StandardGasCode: this.state.PollutantCode,
+    //   }
+    // })
   }
 
   componentWillUnmount() {
@@ -166,7 +177,7 @@ class ResultContrastPage extends Component {
 
   // 顶部查询条件
   searchWhere = () => {
-    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType, pointName } = this.props;
+    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType, pointName, entName } = this.props;
     const { formItemLayout } = this._SELF_;
     //质控类型
     let getQCTypes = [
@@ -273,8 +284,8 @@ class ResultContrastPage extends Component {
       //   </Row>
       // </Form>
       <Row>
-        <Col style={{color: "#524e4e", fontSize: 14}} span={22}>
-          测试企业 - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为{result}
+        <Col style={{ color: "#524e4e", fontSize: 14 }} span={22}>
+          {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为{result}
         </Col>
       </Row>
     )
@@ -294,8 +305,8 @@ class ResultContrastPage extends Component {
 
   // 折线图配置项
   lineOption = () => {
-    const { resultContrastData } = this.props;
-    return {
+    const { resultContrastData, stabilizationTime,chartMax } = this.props;
+    let option = {
       color: ["#c23531", "#56f485"],
       legend: {
         data: ["测量浓度", "配比标气浓度"],
@@ -312,7 +323,7 @@ class ResultContrastPage extends Component {
       xAxis: {
         type: 'category',
         // type: 'time',
-        boundaryGap: false,
+        // boundaryGap: false,
         data: resultContrastData.timeList,
         // axisPointer: {
         //   // type: "none",
@@ -337,9 +348,28 @@ class ResultContrastPage extends Component {
         //   }
         // },
       },
-      yAxis: {
-        type: 'value',
-      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '',
+          min: 0,
+          max: chartMax,
+          // interval: 50,
+          axisLabel: {
+            formatter: '{value}'
+          }
+        },
+        {
+          type: 'value',
+          name: '',
+          // min: 0,
+          // max: 25,
+          // interval: 5,
+          // axisLabel: {
+          //     formatter: '{value} °C'
+          // }
+        }
+      ],
       dataZoom: [{
         type: 'inside',
         start: 0,
@@ -362,11 +392,6 @@ class ResultContrastPage extends Component {
         data: resultContrastData.valueList,
         smooth: true,
         type: 'line',
-        label: {
-          normal: {
-            show: true,
-          }
-        },
       },
       {
         name: '配比标气浓度',
@@ -376,13 +401,29 @@ class ResultContrastPage extends Component {
         lineStyle: {
           color: "#56f485"
         },
-        label: {
-          normal: {
-            show: true,
-          }
-        },
-      }]
+      },
+      {
+        name: '稳定时间',
+        type: 'bar',
+        markLine: {
+          name: 'aa',
+          data: [[
+            { coord: [`${stabilizationTime}`, 0] },
+            { coord: [`${stabilizationTime}`, chartMax] }
+            // { coord: ["2019/12/6 19:26:24", 0] },
+            // { coord: ["2019/12/6 19:26:24", 115] }
+          ]],
+          label: {
+            normal: {
+              formatter: '稳定时间' // 基线名称
+            }
+          },
+        }
+
+      },]
     };
+
+    return option;
   }
 
   render() {
@@ -426,7 +467,7 @@ class ResultContrastPage extends Component {
         }>
           {
             showType === "chart" ? <ReactEcharts
-              theme="line"
+              // theme="line"
               // option={() => { this.lightOption() }}
               option={this.lineOption()}
               lazyUpdate

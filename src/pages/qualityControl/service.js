@@ -125,3 +125,9 @@ export async function getCemsAndStandGasState(params) {
   return result;
 }
 
+// 获取稳定时间
+export async function getStabilizationTime(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetStabilizationTime', params, null);
+  return result;
+}
+

@@ -10,6 +10,9 @@ export default Model.extend({
     timeList: [],
     tableData: [],
     DGIMNList: [],
+    standardValueList: [],
+    start: 0,
+    end: 20,
   },
   effects: {
     *updateRealtimeData({ payload }, { call, put, select }) {
@@ -33,9 +36,12 @@ export default Model.extend({
       let newTimeList = [];
       let newValueList = [];
       let newTableData = [];
+      let newStandardValueList = [];
       let DGIMNList = [
         ...state.DGIMNList
       ];
+      let start = state.start;
+      let end = state.end;
       let realtimeData = payload.message;
 
 
@@ -46,22 +52,25 @@ export default Model.extend({
             ...DGIMNList,
             ...filterDGIMNList
           ]
-          if (DGIMNList.length > 40) {
-            DGIMNList = DGIMNList.slice(payload.message.length)
+          // if (DGIMNList.length > 40) {
+          //   DGIMNList = DGIMNList.slice(payload.message.length)
+          // }
+          if (DGIMNList.length > 20) {
+            start += payload.message.length
+            end += payload.message.length;
           }
-          console.log("DGIMNList=", DGIMNList)
           // let filterChartData = DGIMNList.filter(item => item.PollutantCode === state.currentPollutantCode)
           let filterChartData = DGIMNList;
-          console.log("filterChartData=", filterChartData)
           // 污染物
           filterChartData.map(item => {
             newValueList.push(item.MonitorValue);
             newTimeList.push(item.MonitorTime);
+            newStandardValueList.push(item.QCAStandardValue)
             newTableData.push(
               {
                 Time: item.MonitorTime,
                 Value: item.MonitorValue,
-                StandValue: item.StandardValue,
+                StandValue: item.QCAStandardValue,
               }
             )
           })
@@ -78,8 +87,9 @@ export default Model.extend({
         DGIMNList: [
           ...DGIMNList
         ],
-        tableData: newTableData
-
+        tableData: newTableData,
+        standardValueList: newStandardValueList,
+        start, end
       }
     },
     setConfigInfo(state, { payload }) {

@@ -192,16 +192,20 @@ class RemoteControlPage extends Component {
     switch (this.props.QCStatus) {
       case "3":
         text = "，工作状态异常";
+        break;
       case "4":
         text = "，工作状态质控中"
+        break;
       case "5":
         text = "，工作状态吹扫中"
+        break;
       case "6":
         text = ""
+        break;
       default:
         text = "";
+        break;
     }
-
     switch (this.props.DeviceStatus) {
       case "0":
         return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />
@@ -323,6 +327,7 @@ class RemoteControlPage extends Component {
               title="手动质控"
               visible={this.state.visible}
               onOk={this.onSubmitForm}
+              confirmLoading={loading}
               okText={"开始质控"}
               // onClick={this.onSubmitForm}
               width={900}
@@ -384,10 +389,10 @@ class RemoteControlPage extends Component {
                         rules: [{
                           required: true,
                           message: '请输入配比标气浓度设定值!',
-                        },],
+                        }],
                       })(
                         // min={50} max={5000}
-                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} precision={1} />
+                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} max={form.getFieldValue("OldStandardValue")} precision={1} />
                       )}
                     </Form.Item>
                   </Col>
