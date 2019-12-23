@@ -139,7 +139,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox}>
             <ul>
               <li>
-                浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
+                气瓶浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -179,7 +179,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) * 1" }}>
             <ul>
               <li>
-                浓度：{gasData.NOxInfo.Concentration != undefined ? `${gasData.NOxInfo.Concentration} mg/m3` : undefined}
+                气瓶浓度：{gasData.NOxInfo.Concentration != undefined ? `${gasData.NOxInfo.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -219,7 +219,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *2)" }}>
             <ul>
               <li>
-                浓度：{gasData.SO2Info.Concentration !== undefined ? `${gasData.SO2Info.Concentration} mg/m3` : undefined}
+                气瓶浓度：{gasData.SO2Info.Concentration !== undefined ? `${gasData.SO2Info.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -256,9 +256,9 @@ class ImagePage extends PureComponent {
           {/* N2 */}
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *3)" }}>
             <ul>
-              <li>
+              {/* <li>
                 浓度：{gasData.N2Info.Concentration}
-              </li>
+              </li> */}
               <li>
                 <span>过期时间：</span>
                 <span className={styles.time} title={gasData.N2Info.ExpirationDate}>{gasData.N2Info.ExpirationDate}</span>
@@ -274,7 +274,7 @@ class ImagePage extends PureComponent {
 
               </li>
               <li>
-                流量：{flowList["065"] != undefined ? `${flowList["065"]} ml/min` : undefined}
+                流量：{flowList["N2"] != undefined ? `${flowList["N2"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -389,7 +389,7 @@ class ImagePage extends PureComponent {
             </div>
             {/* 标气浓度 */}
             <div className={styles.gasConcentration}>
-              <p>标气浓度</p>
+              <p>配比标气浓度</p>
               <span>{standardValue} {standardValueUtin}</span>
             </div>
           </div>

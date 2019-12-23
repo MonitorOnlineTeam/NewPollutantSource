@@ -26,7 +26,7 @@ class index extends Component {
     super(props);
     this.state = {
       columns: [],
-      currentDataType: "MinuteData",
+      currentDataType: "MinuteData", // 实时改成  "RealTimeData"
       realTimeDataView: [],
       filteredInfo: null,
       time: moment(new Date()).add(-1, 'hour'),

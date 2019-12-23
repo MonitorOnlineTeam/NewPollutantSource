@@ -6,7 +6,7 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -51,6 +51,7 @@ class ResultContrastPage extends Component {
       DGIMN: props.DGIMN,
       QCAMN: props.QCAMN,
       PollutantCode: props.PollutantCode,
+      showType: "chart"
     };
     this._SELF_ = {
       formItemLayout: {
@@ -165,7 +166,7 @@ class ResultContrastPage extends Component {
 
   // 顶部查询条件
   searchWhere = () => {
-    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType } = this.props;
+    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType, pointName } = this.props;
     const { formItemLayout } = this._SELF_;
     //质控类型
     let getQCTypes = [
@@ -205,6 +206,9 @@ class ResultContrastPage extends Component {
         description: "周期"
       },
     ];
+
+    const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
+    const result = this.props.resultContrastData.errorStr;
     return (
       // <Row>
       //   <RangePicker_ style={{ width: 340 }} showTime dateValue={dateValue} placeholder="请选择时间" onChange={(date, dateString) => {
@@ -241,32 +245,38 @@ class ResultContrastPage extends Component {
       //     this.getPageData(true)
       //   }}>查询</Button>
       // </Row>
-      <Form>
-        <Row>
-          <Col span={12}>
-            <Form.Item {...formItemLayout} label="时间">
-              <Input style={{ width: 300 }} defaultValue={QCTime + " - " + StopTime} readOnly={true} />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item {...formItemLayout} label="污染物名称">
-              <Input defaultValue={StandardPollutantName} readOnly={true} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <Form.Item {...formItemLayout} label="质控类型">
-              <Input defaultValue={getQCTypes.find(n => n.id === QCType).description} readOnly={true} />
-            </Form.Item >
-          </Col>
-          <Col span={12}>
-            <Form.Item {...formItemLayout} label="质控执行类型">
-              <Input defaultValue={getQCExecuTypes.find(n => n.id === QCExecuType).description} readOnly={true} />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
+      // -------
+      // <Form>
+      //   <Row>
+      //     <Col span={12}>
+      //       <Form.Item {...formItemLayout} label="时间">
+      //         <Input style={{ width: 300 }} defaultValue={QCTime + " - " + StopTime} readOnly={true} />
+      //       </Form.Item>
+      //     </Col>
+      //     <Col span={12}>
+      //       <Form.Item {...formItemLayout} label="污染物名称">
+      //         <Input defaultValue={StandardPollutantName} readOnly={true} />
+      //       </Form.Item>
+      //     </Col>
+      //   </Row>
+      //   <Row>
+      //     <Col span={12}>
+      //       <Form.Item {...formItemLayout} label="质控类型">
+      //         <Input defaultValue={getQCTypes.find(n => n.id === QCType).description} readOnly={true} />
+      //       </Form.Item >
+      //     </Col>
+      //     <Col span={12}>
+      //       <Form.Item {...formItemLayout} label="质控执行类型">
+      //         <Input defaultValue={getQCExecuTypes.find(n => n.id === QCExecuType).description} readOnly={true} />
+      //       </Form.Item>
+      //     </Col>
+      //   </Row>
+      // </Form>
+      <Row>
+        <Col style={{color: "#524e4e", fontSize: 14}} span={22}>
+          测试企业 - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为{result}
+        </Col>
+      </Row>
     )
   }
 
@@ -291,7 +301,7 @@ class ResultContrastPage extends Component {
         data: ["测量浓度", "配比标气浓度"],
       },
       tooltip: {
-        trigger: 'axis',
+        // trigger: 'none',
         axisPointer: {
           type: 'cross',
           label: {
@@ -302,10 +312,11 @@ class ResultContrastPage extends Component {
       xAxis: {
         type: 'category',
         // type: 'time',
+        boundaryGap: false,
         data: resultContrastData.timeList,
         // axisPointer: {
         //   // type: "none",
-        //   value: '2016-10-7',
+        //   value: '2019/12/6 19:30:56',
         //   snap: true,
         //   // triggerTooltip: false,
         //   lineStyle: {
@@ -327,8 +338,25 @@ class ResultContrastPage extends Component {
         // },
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
+      dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 20
+      }, {
+        start: 0,
+        end: 10,
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleSize: '80%',
+        handleStyle: {
+          color: '#fff',
+          shadowBlur: 3,
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOffsetX: 2,
+          shadowOffsetY: 2
+        }
+      }],
       series: [{
         name: '测量浓度',
         data: resultContrastData.valueList,
@@ -359,7 +387,7 @@ class ResultContrastPage extends Component {
 
   render() {
     const { resultContrastData, resultContrastTimeList, standardGasLoading, QCAResultCheckByDGIMNLoading, QCAResultCheckSelectListLoading } = this.props;
-    const { dateValue } = this.state;
+    const { dateValue, showType } = this.state;
     if (standardGasLoading || QCAResultCheckByDGIMNLoading || QCAResultCheckSelectListLoading) {
       return <PageLoading />
     }
@@ -373,7 +401,7 @@ class ResultContrastPage extends Component {
                 message="本次结果比对合格!"
                 onClose={this.onAlertClose}
                 banner
-                closable
+              // closable
               />
             ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
               <Alert
@@ -381,22 +409,32 @@ class ResultContrastPage extends Component {
                 message="本次结果比对不合格!"
                 onClose={this.onAlertClose}
                 banner
-                closable
+              // closable
               /> : null
               )
           }
         </div>
-        <Card title={this.searchWhere()}>
-          <ReactEcharts
-            theme="line"
-            // option={() => { this.lightOption() }}
-            option={this.lineOption()}
-            lazyUpdate
-            notMerge
-            id="rightLine"
-            style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '200px' }}
-          />
-          <SdlTable dataSource={resultContrastData.tableData} columns={columns} scroll={{ y: 'calc(100vh - 900px)' }} />
+        <Card title={this.searchWhere()} extra={
+          <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+            this.setState({
+              showType: e.target.value
+            })
+          }}>
+            <Radio.Button value="chart">图表</Radio.Button>
+            <Radio.Button value="data">数据</Radio.Button>
+          </Radio.Group>
+        }>
+          {
+            showType === "chart" ? <ReactEcharts
+              theme="line"
+              // option={() => { this.lightOption() }}
+              option={this.lineOption()}
+              lazyUpdate
+              notMerge
+              id="rightLine"
+              style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns} scroll={{ y: '200px' }} />
+          }
         </Card>
       </>
     );

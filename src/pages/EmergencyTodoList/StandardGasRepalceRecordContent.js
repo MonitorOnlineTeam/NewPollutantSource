@@ -68,7 +68,7 @@ class StandardGasRepalceRecord extends Component {
                             {item.Supplier}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.PeriodOfValidity}
+                            {item.AnotherTimeOfChange}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                             {item.StandardGasBottleCode}
@@ -128,7 +128,7 @@ class StandardGasRepalceRecord extends Component {
             align: 'center',
         }, {
             title: '有效期',
-            dataIndex: 'PeriodOfValidity',
+            dataIndex: 'AnotherTimeOfChange',
             width: '17%',
             align: 'center',
         }];
@@ -187,7 +187,7 @@ class StandardGasRepalceRecord extends Component {
                                         供应商
                             </td>
                             <td style={{ width: '17%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        失效日期
+                                        下次更换日期
                             </td>
                             <td style={{ width: '25%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         标气瓶编号

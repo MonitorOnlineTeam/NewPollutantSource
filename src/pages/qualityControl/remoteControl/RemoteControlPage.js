@@ -32,7 +32,8 @@ const { Panel } = Collapse;
   sendQCACmd4Loading: qualityControl.sendQCACmd4Loading,
   sendQCACmd5Loading: qualityControl.sendQCACmd5Loading,
   QCStatus: qualityControl.QCStatus,
-  loading: loading.effects["qualityControl/SendQCACmd"]
+  loading: loading.effects["qualityControl/SendQCACmd"],
+  DeviceStatus: qualityControl.DeviceStatus,
 }))
 class RemoteControlPage extends Component {
   constructor(props) {
@@ -187,19 +188,29 @@ class RemoteControlPage extends Component {
   }
 
   returnQCStatus = () => {
+    let text = "";
     switch (this.props.QCStatus) {
-      case "0":
-        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message="质控仪离线中" banner />
-      case "1":
-        return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪在线中" banner />
       case "3":
-        return <Alert type="warning" style={{ marginBottom: 10 }} message="质控仪状态异常" banner />
+        text = "，工作状态异常";
       case "4":
-        return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪正在质控中" banner />
+        text = "，工作状态质控中"
       case "5":
-        return <Alert type="success" style={{ marginBottom: 10 }} message="质控仪正在吹扫中" banner />
+        text = "，工作状态吹扫中"
+      case "6":
+        text = ""
       default:
-        return null
+        text = "";
+    }
+
+    switch (this.props.DeviceStatus) {
+      case "0":
+        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />
+      case "1":
+        return <Alert type="success" style={{ marginBottom: 10 }} message={`质控仪在线中${text}`} banner />
+      case "3":
+        return <Alert type="warning" style={{ marginBottom: 10 }} message={`质控仪状态异常${text}`} banner />
+      default:
+        return "";
     }
   }
 
@@ -253,13 +264,13 @@ class RemoteControlPage extends Component {
                       DGIMN: getFieldValue("DGIMN")
                     })
                   }}>质控仪吹扫</Button>
-                  <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                  {/* <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
                     this.SendQCACmd({
                       QCType: 5,
                       QCAMN: QCAMN,
                       QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
                     })
-                  }}>质控仪开门</Button>
+                  }}>质控仪开门</Button> */}
                   <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
                     this.setState({
                       visible: true,
