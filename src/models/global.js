@@ -146,6 +146,14 @@ export default Model.extend({
           case EnumPropellingAlarmSourceType.DataOverWarning:
             flagAlarm = 'warn';
             orderby = 3;
+          case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
+            flagAlarm = 'exception';
+            orderby = 2;
+            break;
+            case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
+              flagAlarm = 'exception';
+              orderby = 2;
+              break;
         }
         //超标枚举
         let over = [
@@ -187,6 +195,14 @@ export default Model.extend({
           {
             id: 5,
             description: "超标预警"
+          },
+          {
+            id: 6,
+            description: "过期时间报警"
+          },
+          {
+            id: 7,
+            description: "余量不足报警"
           },
         ];
         //如果推送是超标并且之前没有数据

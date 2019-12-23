@@ -16,6 +16,8 @@ export const EnumPropellingAlarmSourceType = {
   DYSTATEALARM: 3, //状态异常
   DataLogicErr: 4, //逻辑异常
   DataOverWarning: 5, //超标预警
+  ExpirationTimeAlarm: 6, //超标预警
+  InsufficientMarginAlarm: 7, //超标预警
 };
 
 //污染源类型
