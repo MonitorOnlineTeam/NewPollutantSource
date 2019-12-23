@@ -85,19 +85,22 @@ class CalendarPage extends PureComponent {
           href: "",
           title: <div>
             <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
-            {item.SparePart ? <Tag color="#f50" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 1) }}>备件更换{item.SparePart}个</Tag> : null}
-            {item.Consumables ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 2) }}>易耗品更换{item.Consumables}个</Tag> : null}
-            {item.StandardGas ? <Tag color="#108ee9" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 3) }}>标气更换{item.StandardGas}个</Tag> : null}
-            {item.Maintain ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>保养更换{item.Maintain}个</Tag> : null}
+            {item.SparePartCount ? <Tag color="#f50" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 1) }}>备件更换{item.SparePartCount}个</Tag> : null}
+            {item.ConsumablesCount ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 2) }}>易耗品更换{item.ConsumablesCount}个</Tag> : null}
+            {item.StandardGasCount ? <Tag color="#108ee9" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 3) }}>标气更换{item.StandardGasCount}个</Tag> : null}
+            {item.MaintainCount ? <Tag color="#87d068" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>保养更换{item.MaintainCount}个</Tag> : null}
+            {item.V233 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >日常运维提醒{item.V233}个</Tag> : null}
+            {item.V235 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >校准周期提醒{item.V235}个</Tag> : null}
+            {item.V236 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >校验周期提醒{item.V236}个</Tag> : null}
           </div>,
           description: <div style={{ color: "#333" }}>
             {item.PointName}
-            {
-              item.TaskType === 2 && <Tag color="#ff5506" style={{ position: "relative", top: '-10px', marginLeft: 4 }} >应急</Tag>
-            }
           </div>,
           content:
-            <div>运维人：{item.OperationName} <Tag color={item.TaskStatus === 3 ? "green" : "volcano"}>{item.TaskStatusText}</Tag></div>
+            <div>
+              <div>运维人：{item.OperationName}</div>
+            </div>
+
         }
       })
       this.setState({
@@ -117,10 +120,11 @@ class CalendarPage extends PureComponent {
     let endTime = moment(date).endOf(scope).format("YYYY-MM-DD HH:mm:ss");
 
     const payload = {
-      TaskID: item.TaskID,
+      // TaskID: item.TaskID,
       Type: type,
       beginTime: beginTime,
-      endTime: endTime
+      endTime: endTime,
+      DGIMN:item.DGIMN,
     }
 
     this.setState({
@@ -263,8 +267,8 @@ class CalendarPage extends PureComponent {
             key: 'DateOfChange',
           }, {
             title: '保养内容',
-            dataIndex: 'ConsumablesName',
-            key: 'ConsumablesName',
+            dataIndex: 'MaintainName',
+            key: 'MaintainName',
           }, {
             title: '备注',
             dataIndex: 'Remark',
@@ -332,24 +336,39 @@ class CalendarPage extends PureComponent {
       }
       // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
       if (item.FutureDate === value) {
-        // 需备件更换点位数
+        // 需备件更换个数
         if (item.SparePartTotal) {
-          listData.push({ color: '#f50', content: `需备件更换${item.SparePartTotal}个`, type: 1, date: item.FutureDate, text: "需备件更换点位数", future: true })
+          listData.push({ color: '#f50', content: `需备件更换${item.SparePartTotal}个`, type: 1, date: item.FutureDate, text: "需备件更换个数", future: true })
         }
-        // 需易耗品更换点位数
+        // 需易耗品更换个数
         if (item.ConsumablesTotal) {
-          listData.push({ color: '#2db7f5', content: `需易耗品更换${item.ConsumablesTotal}个`, type: 2, date: item.FutureDate, text: "需易耗品更换点位数", future: true })
+          listData.push({ color: '#2db7f5', content: `需易耗品更换${item.ConsumablesTotal}个`, type: 2, date: item.FutureDate, text: "需易耗品更换个数", future: true })
         }
-        // 需标气更换点位数
+        // 需标气更换个数
         if (item.StandardGasTotal) {
-          listData.push({ color: '#108ee9', content: `需标气更换${item.StandardGasTotal}个`, type: 3, date: item.FutureDate, text: "需标气更换点位数", future: true })
+          listData.push({ color: '#108ee9', content: `需标气更换${item.StandardGasTotal}个`, type: 3, date: item.FutureDate, text: "需标气更换个数", future: true })
         }
-        // 需清理点位数
-        if (item.Maintain) {
-          listData.push({ color: '#87d068', content: `需清理${item.Maintain}个`, type: 4, date: item.FutureDate, text: "需清理点位数", future: true })
+        // 需清理个数
+        if (item.MaintainTotal) {
+          listData.push({ color: '#87d068', content: `需保养${item.MaintainTotal}个`, type: 4, date: item.FutureDate, text: "需保养个数", future: true })
         }
+
+
+        // 需日常运维提醒个数
+        if (item.M233Total) {
+          listData.push({ color: '#FACD27', content: `需日常运维提醒${item.M233Total}个`, type: 5, date: item.FutureDate, text: "需日常运维提醒个数", future: true })
+        }
+        // 需校准周期提醒个数
+        if (item.M235Total) {
+          listData.push({ color: '#FACD27', content: `需校准周期提醒${item.M235Total}个`, type: 6, date: item.FutureDate, text: "需校准周期提醒个数", future: true })
+        }
+        // 需校验周期提醒个数
+        if (item.M236Total) {
+          listData.push({ color: '#FACD27', content: `需校验周期提醒${item.M236Total}个`, type: 7, date: item.FutureDate, text: "需校验周期提醒个数", future: true })
+        }
+
         // 无异常
-        if (!item.SparePartTotal && !item.ConsumablesTotal && !item.StandardGasTotal && !item.Maintain) {
+        if (!item.SparePartTotal && !item.ConsumablesTotal && !item.StandardGasTotal && !item.MaintainTotal && !item.M233Total && !item.M235Total && !item.M236Total) {
           listData.push({ notAbnormal: true, date: item.FutureDate, type: 0, future: true })
         }
       }
@@ -402,7 +421,6 @@ class CalendarPage extends PureComponent {
     let scope = this.state.mode === "month" ? "day" : "month";
     let beginTime = moment(date).startOf(scope).format("YYYY-MM-DD HH:mm:ss");
     let endTime = moment(date).endOf(scope).format("YYYY-MM-DD HH:mm:ss");
-
     // 判断传参
     let payload = future ? {
       exceptionType: undefined,
