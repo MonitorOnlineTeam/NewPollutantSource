@@ -81,7 +81,7 @@ class MapView extends Component {
       zoomchange: value => {
         const zoom = _thismap.getZoom();
         // 地图缩放，显示企业
-        if (zoom < this.state.zoom + 2) {
+        if (zoom < this.state.zoom) {
           // const displayType = this.state.displayType === 1
           if (this.state.displayType === 1) {
             // this.setState({
@@ -326,7 +326,11 @@ class MapView extends Component {
       // infoWindowVisible: false,
     }, () => {
       flag && _thismap.setFitView();
-      did && this.setState({ zoom: _thismap.getZoom() })
+      let zoom = _thismap.getZoom();
+      if (zoom > 14) {
+        zoom = 14;
+      }
+      did && this.setState({ zoom: zoom })
     })
   }
 
@@ -731,7 +735,7 @@ class MapView extends Component {
               if (entInfo) {
                 const pointInfo = entInfo.children.filter(item => item.key === val[0].key)[0];
                 const position = [pointInfo.Longitude, pointInfo.Latitude];
-                _thismap.setZoomAndCenter(pointZoom, position)
+                // _thismap.setZoomAndCenter(pointZoom, position)
                 this.randomMarker(entInfo.children)
                 this.setState({
                   mapCenter: position,
@@ -753,7 +757,7 @@ class MapView extends Component {
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
-            zoom={this.state.zoom}
+            // zoom={this.state.zoom}
             mapStyle="amap://styles/fresh"
             // isHotspot={true}
             // features={['bg','point','building']}

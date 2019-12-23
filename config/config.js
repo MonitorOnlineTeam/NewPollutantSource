@@ -713,16 +713,16 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                {
-                  name: 'exceptionrecord',
-                  path: '/monitoring/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
-                },
-                {
-                  name: 'overrecord',
-                  path: '/monitoring/overrecord',
-                  component: './monitoring/overRecord',
-                },
+                // {
+                //   name: 'exceptionrecord',
+                //   path: '/monitoring/exceptionrecord',
+                //   component: './monitoring/exceptionrecord',
+                // },
+                // {
+                //   name: 'overrecord',
+                //   path: '/monitoring/overrecord',
+                //   component: './monitoring/overRecord',
+                // },
 
 
 

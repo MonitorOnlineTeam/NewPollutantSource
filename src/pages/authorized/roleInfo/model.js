@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 import {
     getroleinfobytree, getroleinfobyid, insertroleinfo, delroleinfo, updroleinfo, getrolestreeandobj, getalluser, getuserbyroleid, insertrolebyuser
-    ,getparenttree,getrolemenutree,getmenubyroleid,insertmenubyroleid
+    , getparenttree, getrolemenutree, getmenubyroleid, insertmenubyroleid
 } from './service';
 import { message } from 'antd';
 /*
@@ -18,9 +18,9 @@ export default Model.extend({
         RolesTree: [],
         AllUser: [],
         UserByRoleID: [],
-        SelectMenu:[],
-        MenuTree:[],
-        CheckMenu:[],
+        SelectMenu: [],
+        MenuTree: [],
+        CheckMenu: [],
     },
     subscriptions: {
         setup({
@@ -179,8 +179,8 @@ export default Model.extend({
                 ...payload
             });
         },
-         /*获取下拉菜单权限**/
-         * getparenttree({
+        /*获取下拉菜单权限**/
+        * getparenttree({
             payload
         }, {
             call,
@@ -190,13 +190,19 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
+                let SelectMenu = result.Datas.filter(item => item.TipsName.indexOf("ReactShow") > -1)
+                SelectMenu.unshift({
+                    ID: "0",
+                    Name: "全部",
+                    TipsName: "全部"
+                })
                 yield update({
-                    SelectMenu: result.Datas
+                    SelectMenu: SelectMenu
                 });
             }
         },
-         /*获取菜单列表层级关系**/
-         * getrolemenutree({
+        /*获取菜单列表层级关系**/
+        * getrolemenutree({
             payload
         }, {
             call,
@@ -225,8 +231,8 @@ export default Model.extend({
                 });
             }
         },
-         /*给角色添加菜单权限（可批量）**/
-         * insertmenubyroleid({
+        /*给角色添加菜单权限（可批量）**/
+        * insertmenubyroleid({
             payload
         }, {
             call,
