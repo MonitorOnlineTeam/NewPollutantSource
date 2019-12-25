@@ -15,14 +15,14 @@ import { Xiangshang, Xiangxia } from '@/utils/icon';
 import styles from './ProcessFlowChart.less';
 const { TabPane } = Tabs;
 @connect(({ loading, dataquery, realtimeserver }) => ({
-    pollutantlist: dataquery.pollutantlist,
-    dataloading: loading.effects['dataquery/queryhistorydatalist'],
-    option: dataquery.chartdata,
-    selectpoint: dataquery.selectpoint,
-    isloading: loading.effects['dataquery/querypollutantlist'],
+    pollutantlist: realtimeserver.pollutantlist,
+    dataloading: loading.effects['realtimeserver/queryhistorydatalist'],
+    option: realtimeserver.chartdata,
+    selectpoint: realtimeserver.selectpoint,
+    isloading: loading.effects['realtimeserver/querypollutantlist'],
     paramsInfo: realtimeserver.paramsInfo,
     dataInfo: realtimeserver.dataInfo,
-    historyparams: dataquery.historyparams
+    historyparams: realtimeserver.historyparams
 }))
 class CommonChart extends Component {
     constructor(props) {
@@ -31,10 +31,11 @@ class CommonChart extends Component {
             paramsInfo: [],
         }
     }
-    componentWillMount() {
+    
+    componentDidMount() {
         const { dispatch, DGIMN } = this.props;
         dispatch({
-            type: 'dataquery/querypollutantlist',
+            type: 'realtimeserver/querypollutantlist',
             payload: {
                 dgimn: DGIMN
             },
@@ -102,13 +103,13 @@ class CommonChart extends Component {
         historyparams.payloadpollutantName = pollutantName;
         historyparams.unit=Unit;
         dispatch({
-            type: 'dataquery/updateState',
+            type: 'realtimeserver/updateState',
             payload: {
                 historyparams: historyparams
             }
         })
         dispatch({
-            type: 'dataquery/queryhistorydatalist',
+            type: 'realtimeserver/queryhistorydatalist',
             payload: {
             }
         })
