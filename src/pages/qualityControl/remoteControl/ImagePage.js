@@ -57,6 +57,11 @@ class ImagePage extends PureComponent {
     })
   }
 
+  componentWillUnmount() {
+    notification.close("notification")
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({
@@ -82,7 +87,7 @@ class ImagePage extends PureComponent {
         })
     }
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
-      // if (true) {
+    // if (true) {
       notification.close("notification")
       notification.open({
         message: '查看质控实时比对',
@@ -415,6 +420,7 @@ class ImagePage extends PureComponent {
           okText={"开始质控"}
           // onClick={this.onSubmitForm}
           width={900}
+          destroyOnClose
           style={{ width: 900, height: 600 }}
           onCancel={() => {
             this.setState({

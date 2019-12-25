@@ -434,6 +434,28 @@ class AddInstrument extends Component {
           </FormItem>
         },
       },
+      {
+        title: '总流量设定值',
+        dataIndex: 'TotalFlowSetVal',
+        width: 180,
+        render: (text, record, idx) => {
+          return <FormItem style={{ marginBottom: '0' }}>
+            {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
+              rules: [
+                { required: true, message: '请输入总流量设定值' },
+              ],
+              initialValue: text || undefined,
+            })(
+              <InputNumber
+                // formatter={value => `${value}${record.unit}`}
+                // parser={value => value.replace(`${record.unit}`, '')}
+                min={0}
+                onChange={value => { this.changeStandardGasData(index, 'TotalFlowSetVal', value, idx) }}
+              />,
+            )}
+          </FormItem>
+        },
+      },
       // {
       //   title: '偏移范围',
       //   dataIndex: 'OffsetValue',
@@ -709,6 +731,7 @@ class AddInstrument extends Component {
       StandardGasCode: undefined, // 标气code
       Range: undefined, // 满量程值
       StandardValue: undefined, // 标准值
+      TotalFlowSetVal: undefined, // 总流量设定值
       Cycle: undefined, // 周期数
       DateType: 0, // 周期类型(0:天 1:小时)
       Hour: undefined, // 小时
