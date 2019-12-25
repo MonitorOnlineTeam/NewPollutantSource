@@ -58,7 +58,7 @@ export default Model.extend({
           }
         })
         yield update({
-          // allEntAndPointList: result.Datas,
+          // allEntAndPointList: [allEntAndPointList[0]],
           allEntAndPointList: allEntAndPointList,
           defaultMapInfo: result.Datas[0],
           // allEnterpriseList: result.Datas.filter

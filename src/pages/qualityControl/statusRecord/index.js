@@ -53,6 +53,12 @@ const columns = [
     title: '指标名称',
     dataIndex: 'Name',
     key: 'Name',
+    render: (text , record) => {
+      if(record.getPointName){
+        return `${record.getPointName} - ${text}`
+      }
+      return text
+    }
   },
   {
     title: '指标状态',

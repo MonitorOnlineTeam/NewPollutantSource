@@ -12,6 +12,7 @@ import Model from '@/utils/model';
 import { router } from 'umi'
 import { message } from 'antd';
 import * as services from './service';
+import _ from 'lodash'
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -41,15 +42,18 @@ export default Model.extend({
     resultContrastTimeList: [],
     paramsRecordForm: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
+      time: {
+        value: [moment().add(-1, "hour"), moment()]
+      },
       total: 0,
     },
     statusRecordForm: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
       total: 0,
-      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      BeginTime: moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss'),
+      EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       DataTempletCode: [],
     },
     QCAStatusList: [],
@@ -89,6 +93,7 @@ export default Model.extend({
     p1Pressure: {},
     QCStatus: undefined, // 质控仪状态
     standardValueUtin: null, // 单位
+    realtimeStabilizationTime: {}
   },
   effects: {
     // 获取企业及排口
@@ -267,7 +272,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         const { entResult } = result.Datas;
         entResult.map((item, index) => {
-          entResult[index] = item * 100;
+          entResult[index] = (item * 100).toFixed(2);
         })
         yield update({
           entRate: {
@@ -302,8 +307,19 @@ export default Model.extend({
         if (otherParams.isSearch) {
           message.success('结果比对完成！')
         }
+        // 获取稳定时间
+        yield put({
+          type: "getStabilizationTime",
+          payload: {
+            DGIMN: payload.DGIMN,
+            QCAMN: payload.QCAMN,
+            StandardGasCode: payload.PollutantCode,
+          },
+          data: result.Datas.timeList && result.Datas.timeList
+        })
         yield update({
           resultContrastData: result.Datas,
+          chartMax: _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined
         })
       } else {
         message.error(result.Message)
@@ -394,8 +410,8 @@ export default Model.extend({
         pageIndex: paramsRecordForm.current,
         pageSize: paramsRecordForm.pageSize,
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         status: paramsRecordForm.status && paramsRecordForm.status.value,
         ...payload,
       }
@@ -420,8 +436,8 @@ export default Model.extend({
       const paramsRecordForm = yield select(state => state.qualityControl.paramsRecordForm);
       const postData = {
         State: 0,
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD'),
+        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
         ...payload,
       }
@@ -475,6 +491,34 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+
+    // 获取稳定时间
+    * getStabilizationTime({ payload, data, form }, { call, put, update, select }) {
+      const result = yield call(services.getStabilizationTime, payload);
+      // console.log('123123123123=', aaa)
+      if (result.IsSuccess) {
+        if (form === "realtime") {
+          // 实时
+          yield update({
+            realtimeStabilizationTime: result.Datas || {},
+          })
+        } else {
+          // 历史
+          let timeData = [...data];
+          if (timeData) {
+            let n = moment(timeData[0]).add(result.Datas.StabilizationTime, "minutes").valueOf()
+            timeData.sort(function (a, b) {
+              return Math.abs(moment(a).valueOf() - n) - Math.abs(moment(b).valueOf() - n);
+            })[0];
+          }
+          yield update({
+            stabilizationTime: timeData[0],
+          })
+        }
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取质控流程图基础数据
     *getCemsAndStandGasState({ payload }, { call, put, update }) {
       const result = yield call(services.getCemsAndStandGasState, payload);
@@ -514,7 +558,8 @@ export default Model.extend({
         yield update({
           gasData: gasData,
           cemsList: cemsList,
-          qualityControlName: result.Datas.Center
+          qualityControlName: result.Datas.Center,
+          DeviceStatus: result.Datas.DeviceStatus
         })
       } else {
         message.error(result.Message)
@@ -580,8 +625,12 @@ export default Model.extend({
 
           let flowList = state.flowList;
           // 气瓶流量
-          if (code === "33509") {
+          if (code === "33513") {
             flowList[payload.PollutantCode] = payload.Value
+          }
+          // N2流量
+          if (code === "33515") {
+            flowList["N2"] = payload.Value
           }
           // 标气浓度
           let standardValue = state.standardValue;
@@ -668,7 +717,6 @@ export default Model.extend({
     },
     // 余量报警
     volumeWarning(state, { payload }) {
-      debugger
       let gasData = state.gasData;
       let { N2Info, NOxInfo, SO2Info, O2Info } = gasData;
       payload.map(item => {
