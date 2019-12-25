@@ -86,8 +86,11 @@ class ImagePage extends PureComponent {
           form: "realtime"
         })
     }
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
+      notification.close("notification")
+    }
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
-    // if (true) {
+      // if (true) {
       notification.close("notification")
       notification.open({
         message: '查看质控实时比对',
