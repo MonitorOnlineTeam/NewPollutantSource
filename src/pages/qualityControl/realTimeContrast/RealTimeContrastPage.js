@@ -5,7 +5,7 @@
  * @Last Modified time: 2019-12-05 17:42:21
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Radio } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -48,7 +48,8 @@ class index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      PollutantCode: props.PollutantCode
+      PollutantCode: props.PollutantCode,
+      showType: "chart"
     };
   }
 
@@ -280,18 +281,29 @@ class index extends Component {
 
   render() {
     const { valueList, timeList, tableData, PollutantCode } = this.props;
+    const { showType } = this.state;
     return (
-      <Card title={this.searchWhere()}>
-        <ReactEcharts
-          theme="line"
-          // option={() => { this.lightOption() }}
-          option={this.lineOption()}
-          lazyUpdate={true}
-          notMerge
-          id="rightLine"
-          style={{ width: '100%', height: '60%', minHeight: '400px' }}
-        />
-        <SdlTable dataSource={tableData} columns={columns} scroll={{ y: 'calc(100vh - 900px)' }} />
+      <Card title={this.searchWhere()} extra={
+        <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+          this.setState({
+            showType: e.target.value
+          })
+        }}>
+          <Radio.Button value="chart">图表</Radio.Button>
+          <Radio.Button value="data">数据</Radio.Button>
+        </Radio.Group>
+      }>
+        {
+          showType === "chart" ? <ReactEcharts
+            theme="line"
+            // option={() => { this.lightOption() }}
+            option={this.lineOption()}
+            lazyUpdate={true}
+            notMerge
+            id="rightLine"
+            style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+          /> : <SdlTable dataSource={tableData} columns={columns} scroll={{ y: '200px' }} />
+        }
       </Card>
     );
   }
