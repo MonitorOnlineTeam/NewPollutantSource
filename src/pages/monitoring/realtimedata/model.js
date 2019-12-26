@@ -501,7 +501,7 @@ export default Model.extend({
         datatable: [],
         total: 0,
         tablewidth: 0,
-        
+
         historyparams: {
             datatype: 'realtime',
             DGIMNs: null,
@@ -536,7 +536,7 @@ export default Model.extend({
                 else {
                     var info = res.Datas.paramsInfo
                     if (payload.dgimn == '42102320160824') {
-                        info = params
+                        //info = params
                     }
                     yield update({
                         operationInfo: res.Datas.operationInfo,
@@ -571,7 +571,7 @@ export default Model.extend({
             const result = yield call(querypollutantlist, body);
             let { historyparams } = yield select(_ => _.realtimeserver);
             let { pollutantlist } = yield select(_ => _.realtimeserver);
-            console.log("result=",result);
+            console.log("result=", result);
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
@@ -613,7 +613,7 @@ export default Model.extend({
             // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
-            if (result&&result.length === 0) {
+            if (result && result.length === 0) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
@@ -713,11 +713,11 @@ export default Model.extend({
             }
             let option = null;
             if (arr && arr.length > 0) {
-                if (xAxis.length > 20) {
-                    xAxis = xAxis.splice(xAxis.length - 20, 20);
+                if (xAxis.length > 50) {
+                    xAxis = xAxis.splice(xAxis.length - 50, 50);
                 }
-                if (arr[0].data.length > 20) {
-                    arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
+                if (arr[0].data.length > 50) {
+                    arr[0].data = arr[0].data.splice(arr[0].data.length - 50, 50);
                 }
                 let unit = historyparams.unit ? `(${historyparams.unit})` : "";
                 option = {
@@ -797,8 +797,10 @@ export default Model.extend({
                 },
             ];
             //如果原生数据和推送数据都不为空并且MN号一致则更新
+
             if (realtimedata && paramsInfo) {
-                if (realtimedata[0].DGIMN === state.DGIMN) {
+
+                if (realtimedata[0].DGIMN === state.historyparams.DGIMN) {
                     paramsInfo.map((item, index) => {
                         let firstOrDefault = realtimedata.find(n => n.PollutantCode == item.pollutantCode);
                         if (firstOrDefault) {
@@ -818,10 +820,13 @@ export default Model.extend({
                                 pollutantName: item.pollutantName,
                                 DGIMN: state.DGIMN,
                                 pollutantParamInfo: item.pollutantParamInfo,
+                                state: item.value > firstOrDefault.MonitorValue ? '1' : item.value == firstOrDefault.MonitorValue ? '0' : '1',
+                                MonitorTime: firstOrDefault.MonitorTime
                             }
                             )
                         }
                     })
+
                     if (newInfo.length !== 0) {
                         return {
                             ...state,
@@ -929,7 +934,7 @@ export default Model.extend({
             let realtimedata = action.payload.data;
             //原始数据
             let chartdata = state.chartdata;
-           
+
             //根据污染物查询出最新数据
             let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
             //纵坐标显示单位
@@ -970,12 +975,12 @@ export default Model.extend({
                     seriesData.push(series);
                 }
                 //默认展示十条数据
-                if (xAxisdata && xAxisdata.length === 20) {
-                    xAxisdata = xAxisdata.splice(1, 19);
+                if (xAxisdata && xAxisdata.length === 50) {
+                    xAxisdata = xAxisdata.splice(1, 49);
                 }
                 xAxisdata.push(realtimedata[0].MonitorTime);
-                if (seriesData && seriesData[0] && seriesData[0].data.length === 20) {
-                    seriesData[0].data = seriesData[0].data.splice(1, 19);
+                if (seriesData && seriesData[0] && seriesData[0].data.length === 50) {
+                    seriesData[0].data = seriesData[0].data.splice(1, 49);
                 }
                 seriesData[0].data.push(newDataByPollutant ? newDataByPollutant[0].MonitorValue : 0)
                 newChartInfo.title = {};
@@ -1011,6 +1016,7 @@ export default Model.extend({
                     y2: 20,
                 };
                 newChartInfo.series = seriesData;
+
                 return {
                     ...state,
                     chartdata: newChartInfo,

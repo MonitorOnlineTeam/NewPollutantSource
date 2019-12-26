@@ -31,7 +31,7 @@ class CommonChart extends Component {
             paramsInfo: [],
         }
     }
-    
+
     componentDidMount() {
         const { dispatch, DGIMN } = this.props;
         dispatch({
@@ -44,35 +44,39 @@ class CommonChart extends Component {
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
-        if (nextProps.paramsInfo) {
-            if (nextProps.paramsInfo !== this.props.paramsInfo) {
-                var paramsInfo = nextProps.paramsInfo
-                if (paramsInfo) {
-                    paramsInfo.map(item => {
-                        var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
-                        var state = '0'
-                        if (params != null) {
-                            if (item.value > params.value) {
-                                state = '1'  //向上箭头
-                            } else if (item.value == params.value) {
-                                state = '0' //无箭头
-                            } else {
-                                state = '2' //向下箭头
-                            }
-                        }
-                        item.state = state;
-                    })
-                }
-                this.setState({ paramsInfo })
-            }
-        }
-        //推送数据改变曲线图
-        if (this.props.option !== nextProps.option) {
-            if (this.echartsReact && nextProps.option) {
-                console.log("nextProps.option=", nextProps.option)
-                this.echartsReact.getEchartsInstance().setOption(nextProps.option);
-            }
-        }
+        // if (nextProps.paramsInfo) {
+        //     console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
+        //     console.log('this.props.paramsInfo=', this.props.paramsInfo);
+        //     if (nextProps.paramsInfo !== this.props.paramsInfo) {
+        //         let paramsInfo = nextProps.paramsInfo;
+        //         //console.log('paramsInfo=', paramsInfo);
+        //         if (paramsInfo) {
+        //             paramsInfo.map(item => {
+        //                 var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
+        //                 var state = '0'
+        //                 if (params != null) {
+        //                     if (item.value > params.value) {
+        //                         state = '1'  //向上箭头
+        //                     } else if (item.value == params.value) {
+        //                         state = '0' //无箭头
+        //                     } else {
+        //                         state = '2' //向下箭头
+        //                     }
+        //                 }
+        //                 item.state = state;
+        //             })
+        //             this.setState({ paramsInfo })
+        //         }
+
+        //     }
+        // }
+        // //推送数据改变曲线图
+        // if (this.props.option !== nextProps.option) {
+        //     if (this.echartsReact && nextProps.option) {
+        //         //console.log("nextProps.option=", nextProps.option)
+        //         this.echartsReact.getEchartsInstance().setOption(nextProps.option);
+        //     }
+        // }
     }
 
     //加载曲线图
@@ -96,12 +100,12 @@ class CommonChart extends Component {
         }
     }
     /**仪表盘的点击事件 */
-    dashboardClick = (pollutantCode, pollutantName,Unit) => {
+    dashboardClick = (pollutantCode, pollutantName, Unit) => {
         let { historyparams, dispatch } = this.props;
 
         historyparams.payloadpollutantCode = pollutantCode;
         historyparams.payloadpollutantName = pollutantName;
-        historyparams.unit=Unit;
+        historyparams.unit = Unit;
         dispatch({
             type: 'realtimeserver/updateState',
             payload: {
@@ -144,7 +148,7 @@ class CommonChart extends Component {
 
     //污染物选项卡改变事件
     pollutantClick = (e) => {
-        this.dashboardClick(this.props.pollutantlist[e].PollutantCode, this.props.pollutantlist[e].PollutantName,this.props.pollutantlist[e].Unit);
+        this.dashboardClick(this.props.pollutantlist[e].PollutantCode, this.props.pollutantlist[e].PollutantName, this.props.pollutantlist[e].Unit);
     }
 
     /**仪表盘 */
@@ -191,11 +195,12 @@ class CommonChart extends Component {
         </TabPane>)
     }
     render() {
-        const { pollutantlist, paramsInfo, dataloading, isloading, option } = this.props;
-
+        const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo } = this.props;
+        console.log("paramsInfo1111=", paramsInfo);
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
                 <div className={styles.maintabs} style={{ padding: 10 }}>
+                    {/* <p>刷新时间：{paramsInfo && dataInfo && paramsInfo[0].MonitorTime ? paramsInfo[0].MonitorTime : dataInfo && dataInfo.time}</p> */}
                     <Tabs onChange={this.pollutantClick}>
                         {this.getLastestData()}
                     </Tabs>
