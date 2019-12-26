@@ -44,39 +44,40 @@ class CommonChart extends Component {
 
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
-        // if (nextProps.paramsInfo) {
-        //     console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
-        //     console.log('this.props.paramsInfo=', this.props.paramsInfo);
-        //     if (nextProps.paramsInfo !== this.props.paramsInfo) {
-        //         let paramsInfo = nextProps.paramsInfo;
-        //         //console.log('paramsInfo=', paramsInfo);
-        //         if (paramsInfo) {
-        //             paramsInfo.map(item => {
-        //                 var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
-        //                 var state = '0'
-        //                 if (params != null) {
-        //                     if (item.value > params.value) {
-        //                         state = '1'  //向上箭头
-        //                     } else if (item.value == params.value) {
-        //                         state = '0' //无箭头
-        //                     } else {
-        //                         state = '2' //向下箭头
-        //                     }
-        //                 }
-        //                 item.state = state;
-        //             })
-        //             this.setState({ paramsInfo })
-        //         }
+        if (nextProps.paramsInfo) {
+            console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
+            console.log('this.props.paramsInfo=', this.props.paramsInfo);
+            if (nextProps.paramsInfo !== this.props.paramsInfo) {
+                let paramsInfo = nextProps.paramsInfo;
+                //console.log('paramsInfo=', paramsInfo);
+                if (paramsInfo) {
+                    debugger
+                    paramsInfo.map(item => {
+                        var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
+                        var state = '0'
+                        if (params != null) {
+                            if (item.value > params.value) {
+                                state = '1'  //向上箭头
+                            } else if (item.value == params.value) {
+                                state = '0' //无箭头
+                            } else {
+                                state = '2' //向下箭头
+                            }
+                        }
+                        item.state = state;
+                    })
+                    this.setState({ paramsInfo })
+                }
 
-        //     }
-        // }
-        // //推送数据改变曲线图
-        // if (this.props.option !== nextProps.option) {
-        //     if (this.echartsReact && nextProps.option) {
-        //         //console.log("nextProps.option=", nextProps.option)
-        //         this.echartsReact.getEchartsInstance().setOption(nextProps.option);
-        //     }
-        // }
+            }
+        }
+        //推送数据改变曲线图
+        if (this.props.option !== nextProps.option) {
+            if (this.echartsReact && nextProps.option) {
+                //console.log("nextProps.option=", nextProps.option)
+                this.echartsReact.getEchartsInstance().setOption(nextProps.option);
+            }
+        }
     }
 
     //加载曲线图
