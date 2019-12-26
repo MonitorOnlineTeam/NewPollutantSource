@@ -972,7 +972,7 @@ class MapView extends Component {
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
             <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
-              e.target.value === 'data' && router.push('/monitoring/realtimeDataView')
+              e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>

@@ -26,7 +26,7 @@ class index extends Component {
     super(props);
     this.state = {
       columns: [],
-      currentDataType: "MinuteData", // 实时改成  "RealTimeData"
+      currentDataType: "RealTimeData",
       realTimeDataView: [],
       filteredInfo: null,
       time: moment(new Date()).add(-1, 'hour'),
@@ -42,7 +42,7 @@ class index extends Component {
 
       let fixed = false;
       let width = 150;
-      if (nextProps.realtimeColumns.length > 4) {
+      if (nextProps.realtimeColumns.length > 5) {
         fixed = true;
       } else {
         // 计算宽度
@@ -156,7 +156,7 @@ class index extends Component {
           title: '状态',
           dataIndex: 'Status',
           key: 'Status',
-          width: 120,
+          width: 80,
           align: 'center',
           fixed: fixed,
           filters: statusFilters,
@@ -185,16 +185,16 @@ class index extends Component {
         {
           title: '监测点',
           dataIndex: 'pointName',
-          width: 300,
+          width: 160,
           key: 'pointName',
           fixed: fixed,
           render: (text, record) => {
-            return <span>{record.abbreviation} - {text}</span>
+            return <span>{text}</span>
           }
         },
         {
           title: '监测时间',
-          width: 200,
+          width: 150,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
@@ -327,7 +327,7 @@ class index extends Component {
                   this.getRealTimeDataView()
                 })
               }}>
-                {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
+                <Radio.Button key={1} value="RealTimeData">实时</Radio.Button>
                 {
                   this.state.pollutantCode != 5 && <Radio.Button key={2} value="MinuteData">分钟</Radio.Button>
                 }
