@@ -31,7 +31,7 @@ export default Model.extend({
             payloadpollutantName: null,
             unit: null,
             isAsc: true,
-            DGIMN: "",
+            DGIMN: '',
         },
     },
     effects: {
@@ -42,7 +42,7 @@ export default Model.extend({
             }
             const result = yield call(querypollutantlist, body);
             let { historyparams } = yield select(_ => _.dataquery);
-            let { pollutantlist } = yield select(_ => _.dataquery);
+            const { pollutantlist } = yield select(_ => _.dataquery);
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
@@ -51,7 +51,7 @@ export default Model.extend({
                         payloadpollutantCode: result[0].PollutantCode,
                         payloadpollutantName: result[0].PollutantName,
                         unit: result[0].Unit,
-                        DGIMN: payload.dgimn
+                        DGIMN: payload.dgimn,
                     }
                     yield update({
                         historyparams,
@@ -156,14 +156,14 @@ export default Model.extend({
                     title: '时间',
                     dataIndex: 'MonitorTime',
                     key: 'MonitorTime',
-                    width: 80,
+                    width: 160,
                     fixed: 'left',
                     align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
             } else {
                 pollutantlist.map((item, key) => {
-                    let unit = item.Unit ? "(" + item.Unit + ")" : ""
+                    const unit = item.Unit ? `(${item.Unit })` : ''
                     pollutantcols = pollutantcols.concat({
                         title: item.PollutantName + unit,
                         dataIndex: item.PollutantCode,
@@ -177,7 +177,7 @@ export default Model.extend({
                     title: '时间',
                     dataIndex: 'MonitorTime',
                     key: 'MonitorTime',
-                    width: 80,
+                    width: 160,
                     align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
@@ -190,7 +190,7 @@ export default Model.extend({
                 if (arr[0].data.length > 20) {
                     arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
                 }
-                let unit = historyparams.unit ? `(${historyparams.unit})` : "";
+                const unit = historyparams.unit ? `(${historyparams.unit})` : '';
                 option = {
                     title: {
                         // text: '2018-05-17~2018-05-18'
@@ -215,7 +215,7 @@ export default Model.extend({
                     },
                     yAxis: {
                         type: 'value',
-                        name: "浓度值" + unit,
+                        name: `浓度值${unit}`,
                         axisLabel: {
                             formatter: '{value}',
                         },
@@ -234,25 +234,26 @@ export default Model.extend({
     },
     reducers: {
         updateRealTimeCharts(state, action) {
-            //最新推送数据
-            let realtimedata = action.payload.data;
-            //原始数据
-            let chartdata = state.chartdata;
-            //根据污染物查询出最新数据
-            let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
-            //纵坐标显示单位
-            let unit = state.historyparams.unit ? `(${state.historyparams.unit})` : "";
-            //MN号相同的代表是选中的进行数据更新
+            // 最新推送数据
+            const realtimedata = action.payload.data;
+            // 原始数据
+            const { chartdata } = state;
+            // 根据污染物查询出最新数据
+            const newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
+            // 纵坐标显示单位
+            const unit = state.historyparams.unit ? `(${state.historyparams.unit})` : '';
+            // MN号相同的代表是选中的进行数据更新
             if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN) {
-                let newChartInfo = new Object();
-                let legendData = [], xAxisdata = [], seriesData = [];
-                //如果原始数据初始不为空将固定数据反填到定义对象并进行更新
+                const newChartInfo = new Object();
+                let legendData = []; let xAxisdata = []; let
+seriesData = [];
+                // 如果原始数据初始不为空将固定数据反填到定义对象并进行更新
                 if (chartdata) {
                     legendData = chartdata.legend.data;
                     xAxisdata = chartdata.xAxis.data;
                     seriesData = chartdata.series;
                 }
-                //原始数据为空的话标准先去推送数据中的标准
+                // 原始数据为空的话标准先去推送数据中的标准
                 else {
                     legendData = state.historyparams.payloadpollutantName.split(',');
                     let markLineData = [];
@@ -268,16 +269,16 @@ export default Model.extend({
                             }],
                         }
                     }
-                    let series = {
+                    const series = {
                         type: 'line',
                         name: legendData,
                         data: [],
                         markLine: markLineData,
                     }
-                    //将小数组添加到大数组中
+                    // 将小数组添加到大数组中
                     seriesData.push(series);
                 }
-                //默认展示十条数据
+                // 默认展示十条数据
                 if (xAxisdata && xAxisdata.length === 20) {
                     xAxisdata = xAxisdata.splice(1, 19);
                 }
@@ -307,7 +308,7 @@ export default Model.extend({
                 };
                 newChartInfo.yAxis = {
                     type: 'value',
-                    name: '浓度值' + unit,
+                    name: `浓度值${unit}`,
                     axisLabel: {
                         formatter: '{value}',
                     },
@@ -324,12 +325,10 @@ export default Model.extend({
                     chartdata: newChartInfo,
                 };
             }
-            else {
+
                 return {
                     ...state,
                 };
-            }
-
         },
-    }
+    },
 });
