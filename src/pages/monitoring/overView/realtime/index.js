@@ -42,7 +42,7 @@ class index extends Component {
 
       let fixed = false;
       let width = 150;
-      if (nextProps.realtimeColumns.length > 4) {
+      if (nextProps.realtimeColumns.length > 5) {
         fixed = true;
       } else {
         // 计算宽度

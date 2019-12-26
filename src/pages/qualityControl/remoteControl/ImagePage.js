@@ -57,6 +57,11 @@ class ImagePage extends PureComponent {
     })
   }
 
+  componentWillUnmount() {
+    notification.close("notification")
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({
@@ -80,6 +85,9 @@ class ImagePage extends PureComponent {
           },
           form: "realtime"
         })
+    }
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
+      notification.close("notification")
     }
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
       // if (true) {
@@ -415,6 +423,7 @@ class ImagePage extends PureComponent {
           okText={"开始质控"}
           // onClick={this.onSubmitForm}
           width={900}
+          destroyOnClose
           style={{ width: 900, height: 600 }}
           onCancel={() => {
             this.setState({
