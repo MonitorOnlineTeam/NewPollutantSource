@@ -83,7 +83,7 @@ class MapView extends Component {
         const zoom = _thismap.getZoom();
         let stateZoom = this.state.zoom;
         if (this.props.allEntAndPointList.length === 1) {
-          stateZoom = this.state.zoom - 2;
+          stateZoom = this.state.zoom - 4;
         }
         // this.state.zoom - ((this.state.zoom / this.state.multiple).toFixed())
         // 地图缩放，显示企业
