@@ -21,7 +21,7 @@ export default Model.extend({
         tablewidth: 0,
 
         historyparams: {
-            datatype: 'realtime',
+            datatype: 'minute',
             DGIMNs: null,
             pageIndex: null,
             pageSize: null,
@@ -84,7 +84,7 @@ export default Model.extend({
             // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
-            if (result.length === 0) {
+            if (result && result.length === 0) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
@@ -156,14 +156,14 @@ export default Model.extend({
                     title: '时间',
                     dataIndex: 'MonitorTime',
                     key: 'MonitorTime',
-                    width: 160,
+                    width: 150,
                     fixed: 'left',
                     align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
             } else {
                 pollutantlist.map((item, key) => {
-                    const unit = item.Unit ? `(${item.Unit })` : ''
+                    const unit = item.Unit ? `(${item.Unit})` : ''
                     pollutantcols = pollutantcols.concat({
                         title: item.PollutantName + unit,
                         dataIndex: item.PollutantCode,
@@ -184,12 +184,12 @@ export default Model.extend({
             }
             let option = null;
             if (arr && arr.length > 0) {
-                if (xAxis.length > 20) {
-                    xAxis = xAxis.splice(xAxis.length - 20, 20);
-                }
-                if (arr[0].data.length > 20) {
-                    arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
-                }
+                // if (xAxis.length > 20) {
+                //     xAxis = xAxis.splice(xAxis.length - 20, 20);
+                // }
+                // if (arr[0].data.length > 20) {
+                //     arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
+                // }
                 const unit = historyparams.unit ? `(${historyparams.unit})` : '';
                 option = {
                     title: {
@@ -237,7 +237,8 @@ export default Model.extend({
             // 最新推送数据
             const realtimedata = action.payload.data;
             // 原始数据
-            const { chartdata } = state;
+            const {chartdata} = state;
+
             // 根据污染物查询出最新数据
             const newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
             // 纵坐标显示单位

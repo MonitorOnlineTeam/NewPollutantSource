@@ -26,7 +26,7 @@ class index extends Component {
     super(props);
     this.state = {
       columns: [],
-      currentDataType: "MinuteData",
+      currentDataType: "RealTimeData",
       realTimeDataView: [],
       filteredInfo: null,
       time: moment(new Date()).add(-1, 'hour'),
@@ -42,7 +42,7 @@ class index extends Component {
 
       let fixed = false;
       let width = 150;
-      if (nextProps.realtimeColumns.length > 4) {
+      if (nextProps.realtimeColumns.length > 5) {
         fixed = true;
       } else {
         // 计算宽度
@@ -65,17 +65,17 @@ class index extends Component {
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{record.AirQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
-                    <Badge color={color} text={`首要污染物：${record.PrimaryPollutant}`} />
+                    <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || "-"}`} />
                   </li>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
                     <Badge color={color} text={`污染级别：${record.AirLevel}级`} />
                   </li>
                 </div>
               } trigger="hover">
-                <span style={{ color: color }}>{text ? text : "-"}</span>
+                <span style={{ color: color }}>{text !== undefined ? text : "-"}</span>
               </Popover>
             }
-            if (record[item.field + "_Value"]) {
+            if (record[item.field + "_Value"] !== undefined) {
               // const color = record[item.field + "_LevelColor"];
               const level = record[item.field + "_Level"].replace("级", "");
               const airLevelObj = airLevel.find(itm => itm.value == level) || {};
@@ -83,7 +83,7 @@ class index extends Component {
               const color = airLevelObj.color;
               return <Popover content={
                 <div>
-                  <div style={{ marginBottom: 10 }}>
+                <div style={{ marginBottom: 10 }}>
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -156,7 +156,7 @@ class index extends Component {
           title: '状态',
           dataIndex: 'Status',
           key: 'Status',
-          width: 120,
+          width: 80,
           align: 'center',
           fixed: fixed,
           filters: statusFilters,
@@ -185,16 +185,16 @@ class index extends Component {
         {
           title: '监测点',
           dataIndex: 'pointName',
-          width: 300,
+          width: 160,
           key: 'pointName',
           fixed: fixed,
           render: (text, record) => {
-            return <span>{record.abbreviation} - {text}</span>
+            return <span>{text}</span>
           }
         },
         {
           title: '监测时间',
-          width: 200,
+          width: 150,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
@@ -327,7 +327,7 @@ class index extends Component {
                   this.getRealTimeDataView()
                 })
               }}>
-                {/* <Radio.Button key={1} value="RealTimeData">实时</Radio.Button> */}
+                <Radio.Button key={1} value="RealTimeData">实时</Radio.Button>
                 {
                   this.state.pollutantCode != 5 && <Radio.Button key={2} value="MinuteData">分钟</Radio.Button>
                 }

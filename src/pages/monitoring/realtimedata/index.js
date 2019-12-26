@@ -67,18 +67,19 @@ class Index extends Component {
         })
         //同時更新此Model中的DGIMN
         dispatch({
+            type: 'realtimeserver/updateState',
+            payload: {
+                DGIMN: dgimn
+            }
+        });
+        //同時更新此Model中的DGIMN
+        dispatch({
             type: 'realtimeserver/GetProcessFlowChartStatus',
             payload: {
                 dgimn: dgimn
             }
         });
-        //同時更新此Model中的DGIMN
-        dispatch({
-            type: 'dataquery/updateState',
-            payload: {
-                DGIMN: dgimn
-            }
-        });
+        
     }
     // /** dgimn改變時候切換數據源 */
     // componentWillReceiveProps = nextProps => {
@@ -247,6 +248,7 @@ class Index extends Component {
     getChartType = () => {
         const { dataInfo, DGIMN } = this.props;
         const { dgimn } = this.state;
+       
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
                 case "1":
@@ -260,9 +262,12 @@ class Index extends Component {
                 case "3":
                     return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} />)
+                case "5":
+                    return <CommonChart DGIMN={dgimn} />
                 default:
-                    return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} />)
+                    return <CommonChart DGIMN={dgimn} />
+                    // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
+                    //     getsystemstate={this.getsystemstate} />)
             }
         }
         else if (dgimn) {
@@ -384,7 +389,7 @@ class Index extends Component {
             // console.log(' this.state=',this.state)
         }
         return (
-            <div id="dataquery">
+            <div id="realtimedata">
                 <PageHeaderWrapper>
                     <div style={{ overflowX: 'hidden' }}>
                         <Layout className={this.state.contentstyle} hasSider={true}>
@@ -412,7 +417,7 @@ class Index extends Component {
                     </div>
 
                 </PageHeaderWrapper>
-                <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
+                <NavigationTree domId="#realtimedata" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }

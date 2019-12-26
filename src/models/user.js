@@ -15,6 +15,7 @@ import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
+import configToken from '@/config'
 
 
 function formatter(data, parentPath = '') {
@@ -151,7 +152,14 @@ export default Model.extend({
     *changePwd({ payload }, { put, call, update }) {
       const result = yield call(changePwd, { pwd: payload.pwd });
       if (result.IsSuccess) {
-        sdlMessage(result.Message, 'success');
+        sdlMessage("修改成功，请重新登录", 'success');
+        // 退出登录
+        Cookie.set(configToken.cookieName, null);
+        Cookie.set('currentUser', null);
+        yield put({
+          type: 'login/logout',
+        });
+        // router.push("/user/login")
       } else {
         sdlMessage(result.Message, 'error');
       }
@@ -167,7 +175,6 @@ export default Model.extend({
       // };
 
       const result = yield call(getAlarmPushAuthor, alarmPushParam);
-      console.log('getAlarmPushAuthor=', result);
       if (result.IsSuccess) {
         yield update({
           alarmPushData: result.Datas,
@@ -207,7 +214,6 @@ export default Model.extend({
     },
     // 是否显示预警多选框
     *getAlarmState({ payload }, { put, call, update, select }) {
-      console.log('123123123')
       const result = yield call(getAlarmState, payload);
       if (result.IsSuccess) {
         yield update({

@@ -365,7 +365,7 @@ class dataList extends PureComponent {
                 title: '状态',
                 dataIndex: 'status',
                 key: 'status',
-                width: 120,
+                width: 80,
                 align: 'center',
                 fixed: fixed,
                 filters: statusFilters,
@@ -377,7 +377,7 @@ class dataList extends PureComponent {
                 title: '监测点',
                 dataIndex: 'pointName',
                 key: 'pointName',
-                width: 300,
+                width: 160,
                 fixed: fixed,
                 render: (value, record, index) => {
                     // const content = this.gerpointButton(record);
@@ -385,14 +385,15 @@ class dataList extends PureComponent {
                     return (
                         //   <Popover >
                         <span style={{ cursor: 'pointer' }}>
-                            {record.abbreviation} - {value}
+                            {/* {record.abbreviation} - {value} */}
+                            {value}
                         </span>
                         //   </Popover>
                     );
                 },
             }, {
                 title: '监测时间',
-                width: 200,
+                width: 150,
                 dataIndex: 'MonitorTime',
                 key: 'MonitorTime',
                 fixed: fixed,

@@ -34,7 +34,7 @@ class index extends Component {
   }
   render() {
     const { configId } = this._SELF_;
-    const { dateValue, DGIMN, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName, QCAMN } = this.state;
+    const { dateValue, DGIMN, pointName, entName, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName, QCAMN } = this.state;
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
@@ -62,6 +62,8 @@ class index extends Component {
                       StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"],
                       StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"],
                       QCAMN: row["dbo.T_Bas_QCAnalyzerControlCommand.QCAMN"],
+                      pointName: row["dbo.View_Point.PointName"],
+                      entName: row["dbo.View_Point.ParentName"]
                     })
                   }}><Icon type="profile" /></a>
                 </Tooltip>
@@ -72,7 +74,7 @@ class index extends Component {
           />
         </Card>
         <Modal
-          width={"70%"}
+          width={"90%"}
           title="质控结果比对"
           destroyOnClose
           visible={this.state.visible}
@@ -83,8 +85,8 @@ class index extends Component {
           }}
         >
           {
-            (dateValue.length && DGIMN && PollutantCode && QCType && QCExecuType && QCTime && StopTime && StandardPollutantName && QCAMN) &&
-            <ResultContrastPage dateValue={dateValue} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
+            (dateValue.length && DGIMN && entName && PollutantCode && QCType && QCExecuType && pointName && QCTime && StopTime && StandardPollutantName && QCAMN) &&
+            <ResultContrastPage pointName={pointName} entName={entName} dateValue={dateValue} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
               QCExecuType={QCExecuType} QCTime={QCTime} QCAMN={QCAMN} StopTime={StopTime} StandardPollutantName={StandardPollutantName} />
           }
         </Modal>

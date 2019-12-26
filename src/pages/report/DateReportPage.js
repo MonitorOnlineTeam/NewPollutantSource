@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 
-@connect(({ loading, report, autoForm }) => ({
+@connect(({ loading, report, autoForm, global }) => ({
   loading: loading.effects["report/getDateReportData"],
   exportLoading: loading.effects["report/reportExport"],
   entLoading: loading.effects["report/getEnterpriseList"],
@@ -24,6 +24,7 @@ const { Option } = Select;
   enterpriseList: report.enterpriseList,
   dateReportForm: report.dateReportForm,
   regionList: autoForm.regionList,
+  configInfo: global.configInfo,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -324,7 +325,7 @@ class SiteDailyPage extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading } = this.props;
+    const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading, configInfo } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
     if (exportLoading) {
@@ -373,7 +374,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5} sm={24}>
+              <Col md={5} sm={24} style={{display: configInfo.GroupRegionState === "1" ? "block" : "none"}}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     initialValue: defaultRegionCode,

@@ -1,11 +1,11 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-26 10:41:03 
+ * @Author: Jiaqi
+ * @Date: 2019-11-26 10:41:03
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-12-05 17:42:21
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Radio } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -22,12 +22,12 @@ const columns = [
     key: 'Time',
   },
   {
-    title: '浓度',
+    title: '测量浓度',
     dataIndex: 'Value',
     key: 'Value',
   },
   {
-    title: '标准值',
+    title: '配比标气浓度',
     dataIndex: 'StandValue',
     key: 'StandValue',
   },
@@ -39,12 +39,17 @@ const columns = [
   timeList: qualityControlModel.timeList,
   tableData: qualityControlModel.tableData,
   dataSource: qualityControlModel.dataSource,
+  standardValueList: qualityControlModel.standardValueList,
+  start: qualityControlModel.start,
+  end: qualityControlModel.end
+  // chartMax: qualityControlModel.chartMax,
 }))
 class index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      PollutantCode: props.PollutantCode
+      PollutantCode: props.PollutantCode,
+      showType: "chart"
     };
   }
 
@@ -79,11 +84,41 @@ class index extends Component {
         PollutantCode: nextProps.standardGasList[0].PollutantCode
       })
     }
+    // 获取稳定时间
+    if (this.props.timeList !== nextProps.timeList) {
+      let timeData = [...nextProps.timeList];
+      if (timeData) {
+        let n = moment(nextProps.startTime).add(nextProps.stabilizationTime, "minutes").valueOf()
+        timeData.sort(function (a, b) {
+          return Math.abs(moment(a).valueOf() - n) - Math.abs(moment(b).valueOf() - n);
+        })[0];
+      }
+      this.setState({
+        stabilizationTime: timeData[0]
+      })
+    }
+
+    // 获取最大值
+    if (this.props.valueList !== nextProps.valueList) {
+      let chartYMaxValue = undefined;
+      chartYMaxValue = _.max(nextProps.valueList) * 1 + 10;
+      this.setState({
+        chartYMaxValue
+      })
+    }
+
+    if (this.props.standardValueList !== nextProps.standardValueList) {
+      let chartYMaxValue2 = undefined;
+      chartYMaxValue2 = _.max(nextProps.standardValueList) * 1 + 10;
+      this.setState({
+        chartYMaxValue2
+      })
+    }
   }
 
   searchWhere = () => {
-    const { dateValue, PollutantCode } = this.state;
-    const { standardGasList, insert } = this.props;
+    const { dateValue, PollutantCode, chartYMaxValue } = this.state;
+    const { standardGasList, insert, } = this.props;
     if (insert) {
       return null;
     }
@@ -118,8 +153,16 @@ class index extends Component {
 
   // 折线图配置项
   lineOption = () => {
-    const { valueList, timeList, tableData } = this.props;
+    const { valueList, timeList, tableData, start, end, standardValueList } = this.props;
+    const { stabilizationTime, chartYMaxValue, chartYMaxValue2 } = this.state;
+    const maxVal = chartYMaxValue > chartYMaxValue2 ? chartYMaxValue : chartYMaxValue2;
+    // if(stabilizationTime)
+    let markLineVal = stabilizationTime ? stabilizationTime + "" : undefined;
     return {
+      color: ["#56f485", "#c23531"],
+      legend: {
+        data: ["测量浓度", "配比标气浓度"],
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -157,53 +200,110 @@ class index extends Component {
         //   }
         // },
       },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        name: '浓度',
-        data: valueList,
-        type: 'line',
-        label: {
-          normal: {
-            show: true,
+      // dataZoom: [{
+      //   type: 'inside',
+      //   start: start,
+      //   end: end
+      // }, {
+      //   start: 0,
+      //   end: 10,
+      //   handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+      //   handleSize: '80%',
+      //   handleStyle: {
+      //     color: '#fff',
+      //     shadowBlur: 3,
+      //     shadowColor: 'rgba(0, 0, 0, 0.6)',
+      //     shadowOffsetX: 2,
+      //     shadowOffsetY: 2
+      //   }
+      // }],
+      yAxis: [
+        {
+          type: 'value',
+          name: '',
+          min: 0,
+          max: maxVal,
+          // interval: 50,
+          axisLabel: {
+            formatter: '{value}'
           }
         },
-        // markLine: {
-        //   silent: true,
-        //   lineStyle: {
-        //     normal: {
-        //       color: '#56f485' // 基线颜色
-        //     }
-        //   },
-        //   data: [{
-        //     yAxis: resultContrastData.standValue
-        //   }],
-        //   label: {
-        //     normal: {
-        //       formatter: '标准值' // 基线名称
-        //     }
-        //   },
+        {
+          type: 'value',
+          name: '',
+          // min: 0,
+          // max: 25,
+          // interval: 5,
+          // axisLabel: {
+          //     formatter: '{value} °C'
+          // }
+        }
+      ],
+      series: [{
+        name: '测量浓度',
+        data: valueList,
+        type: 'line',
+        // label: {
+        //   normal: {
+        //     show: true,
+        //   }
         // },
-
+      },
+      {
+        name: '配比标气浓度',
+        data: standardValueList,
+        smooth: true,
+        type: 'line',
+        // lineStyle: {
+        //   color: "#56f485"
+        // },
+      },
+      {
+        name: '稳定时间',
+        type: 'bar',
+        markLine: {
+          name: 'aa',
+          data: [[
+            { coord: [markLineVal, 0] },
+            { coord: [markLineVal, maxVal] }
+            // { coord: ["2019/12/6 19:26:24", 0] },
+            // { coord: ["2019/12/6 19:26:24", 115] }
+          ]],
+          label: {
+            normal: {
+              formatter: '稳定时间' // 基线名称
+            }
+          },
+        }
       }]
     };
   }
 
   render() {
     const { valueList, timeList, tableData, PollutantCode } = this.props;
+    const { showType } = this.state;
     return (
-      <Card title={this.searchWhere()}>
-        <ReactEcharts
-          theme="line"
-          // option={() => { this.lightOption() }}
-          option={this.lineOption()}
-          lazyUpdate={true}
-          notMerge
-          id="rightLine"
-          style={{ width: '100%', height: '60%', minHeight: '400px' }}
-        />
-        <SdlTable dataSource={tableData} columns={columns} scroll={{ y: 'calc(100vh - 900px)' }} />
+      <Card title={this.searchWhere()} extra={
+        <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+          this.setState({
+            showType: e.target.value
+          })
+        }}>
+          <Radio.Button value="chart">图表</Radio.Button>
+          <Radio.Button value="data">数据</Radio.Button>
+        </Radio.Group>
+      }>
+        {
+          showType === "chart" ? <ReactEcharts
+            theme="line"
+            // option={() => { this.lightOption() }}
+            option={this.lineOption()}
+            lazyUpdate={true}
+            notMerge
+            id="rightLine"
+            style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+          /> : <SdlTable dataSource={tableData} columns={columns} scroll={{ y: '200px' }} />
+        }
       </Card>
     );
   }

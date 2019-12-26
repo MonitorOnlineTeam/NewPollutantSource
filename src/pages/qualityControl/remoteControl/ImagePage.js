@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-12-06 17:17:23 
+ * @Author: Jiaqi
+ * @Date: 2019-12-06 17:17:23
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-12-06 17:17:45
  * @desc: 质控仪流程图页面
@@ -24,7 +24,7 @@ const QCStatusColor = {
   5: "#FFC1C1"
 }
 
-@connect(({ loading, qualityControl }) => ({
+@connect(({ loading, qualityControl, qualityControlModel }) => ({
   gasData: qualityControl.gasData,
   cemsList: qualityControl.cemsList,
   valveStatus: qualityControl.valveStatus,
@@ -35,6 +35,8 @@ const QCStatusColor = {
   qualityControlName: qualityControl.qualityControlName,
   standardValueUtin: qualityControl.standardValueUtin,
   QCStatus: qualityControl.QCStatus,
+  currentDGIMN: qualityControlModel.currentDGIMN,
+  realtimeStabilizationTime: qualityControl.realtimeStabilizationTime,
 }))
 
 class ImagePage extends PureComponent {
@@ -55,6 +57,11 @@ class ImagePage extends PureComponent {
     })
   }
 
+  componentWillUnmount() {
+    notification.close("notification")
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({
@@ -67,7 +74,22 @@ class ImagePage extends PureComponent {
         }
       })
     }
-    if (this.props.QCStatus === "4") {
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus === "4") {
+      if (nextProps.QCAMN && nextProps.currentDGIMN)
+        // 获取稳定时间
+        this.props.dispatch({
+          type: "qualityControl/getStabilizationTime",
+          payload: {
+            DGIMN: nextProps.currentDGIMN,
+            QCAMN: nextProps.QCAMN,
+          },
+          form: "realtime"
+        })
+    }
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
+      notification.close("notification")
+    }
+    if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
       // if (true) {
       notification.close("notification")
       notification.open({
@@ -129,7 +151,7 @@ class ImagePage extends PureComponent {
   }
 
   render() {
-    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -139,7 +161,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox}>
             <ul>
               <li>
-                浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
+                气瓶浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -179,7 +201,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) * 1" }}>
             <ul>
               <li>
-                浓度：{gasData.NOxInfo.Concentration != undefined ? `${gasData.NOxInfo.Concentration} mg/m3` : undefined}
+                气瓶浓度：{gasData.NOxInfo.Concentration != undefined ? `${gasData.NOxInfo.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -219,7 +241,7 @@ class ImagePage extends PureComponent {
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *2)" }}>
             <ul>
               <li>
-                浓度：{gasData.SO2Info.Concentration !== undefined ? `${gasData.SO2Info.Concentration} mg/m3` : undefined}
+                气瓶浓度：{gasData.SO2Info.Concentration !== undefined ? `${gasData.SO2Info.Concentration} mg/m3` : undefined}
               </li>
               <li>
                 <span>过期时间：</span>
@@ -256,9 +278,9 @@ class ImagePage extends PureComponent {
           {/* N2 */}
           <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) *3)" }}>
             <ul>
-              <li>
+              {/* <li>
                 浓度：{gasData.N2Info.Concentration}
-              </li>
+              </li> */}
               <li>
                 <span>过期时间：</span>
                 <span className={styles.time} title={gasData.N2Info.ExpirationDate}>{gasData.N2Info.ExpirationDate}</span>
@@ -274,7 +296,7 @@ class ImagePage extends PureComponent {
 
               </li>
               <li>
-                流量：{flowList["065"] != undefined ? `${flowList["065"]} ml/min` : undefined}
+                流量：{flowList["N2"] != undefined ? `${flowList["N2"]} ml/min` : undefined}
               </li>
             </ul>
           </div>
@@ -389,7 +411,7 @@ class ImagePage extends PureComponent {
             </div>
             {/* 标气浓度 */}
             <div className={styles.gasConcentration}>
-              <p>标气浓度</p>
+              <p>配比标气浓度</p>
               <span>{standardValue} {standardValueUtin}</span>
             </div>
           </div>
@@ -400,14 +422,15 @@ class ImagePage extends PureComponent {
           footer={[]}
           okText={"开始质控"}
           // onClick={this.onSubmitForm}
-          width={900}
-          style={{ width: 900, height: 600 }}
+          width={"90%"}
+          destroyOnClose
+          // style={{ width: "90%", height: 600 }}
           onCancel={() => {
             this.setState({
               visible: false
             })
           }}>
-          <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert />
+          <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert startTime={realtimeStabilizationTime.StartTime} stabilizationTime={realtimeStabilizationTime.StabilizationTime} />
         </Modal>
       </div>
     );

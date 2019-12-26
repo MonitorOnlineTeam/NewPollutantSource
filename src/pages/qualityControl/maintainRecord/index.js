@@ -66,7 +66,7 @@ class MaintainRecord extends Component {
           }}
         >
           {
-            VideoNo && <YsyShowVideo VideoNo={VideoNo} defaultActiveKey="2" showModal={true} startTime={startTime} endTime={moment().format("YYYY-MM-DD HH:mm:ss")}/>
+            VideoNo && <YsyShowVideo VideoNo={VideoNo} defaultActiveKey="2" showModal={true} startTime={startTime} endTime={moment().format("YYYY-MM-DD 23:59:59")}/>
           }
         </Modal>
       </PageHeaderWrapper>
