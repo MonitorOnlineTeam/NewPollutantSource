@@ -106,7 +106,7 @@ class index extends Component {
       })
     }
 
-    if(this.props.standardValueList !== nextProps.standardValueList){
+    if (this.props.standardValueList !== nextProps.standardValueList) {
       let chartYMaxValue2 = undefined;
       chartYMaxValue2 = _.max(nextProps.standardValueList) * 1 + 10;
       this.setState({
@@ -158,7 +158,7 @@ class index extends Component {
     // if(stabilizationTime)
     let markLineVal = stabilizationTime ? stabilizationTime + "" : undefined;
     return {
-      color: ["#c23531", "#56f485"],
+      color: ["#56f485", "#c23531"],
       legend: {
         data: ["测量浓度", "配比标气浓度"],
       },
@@ -253,9 +253,9 @@ class index extends Component {
         data: standardValueList,
         smooth: true,
         type: 'line',
-        lineStyle: {
-          color: "#56f485"
-        },
+        // lineStyle: {
+        //   color: "#56f485"
+        // },
       },
       {
         name: '稳定时间',

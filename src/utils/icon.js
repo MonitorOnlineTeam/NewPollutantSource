@@ -1,6 +1,9 @@
 import { Icon } from 'antd';
+import config from '@/config'
 
-const scriptUrl = '//at.alicdn.com/t/font_1298443_apk5nbu88vo.js';
+// const scriptUrl = '//at.alicdn.com/t/font_1298443_apk5nbu88vo.js';
+const scriptUrl = config.iconFontUrl;
+
 const style = {
   fontSize: 16,
 }

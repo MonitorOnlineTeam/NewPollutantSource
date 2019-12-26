@@ -43,9 +43,7 @@ export default Model.extend({
     paramsRecordForm: {
       current: 1,
       pageSize: 20,
-      time: {
-        value: [moment().add(-1, "hour"), moment()]
-      },
+      BeginTime: { value: moment().add(-1, "hour") },
       total: 0,
     },
     statusRecordForm: {
@@ -317,9 +315,11 @@ export default Model.extend({
           },
           data: result.Datas.timeList && result.Datas.timeList
         })
+        const valueMax = _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined;
+        const standValMax = _.max(result.Datas.standValue) ? _.max(result.Datas.standValue) * 1 + 10 : undefined
         yield update({
           resultContrastData: result.Datas,
-          chartMax: _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined
+          chartMax: valueMax > standValMax ? valueMax: standValMax
         })
       } else {
         message.error(result.Message)
@@ -410,8 +410,8 @@ export default Model.extend({
         pageIndex: paramsRecordForm.current,
         pageSize: paramsRecordForm.pageSize,
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: paramsRecordForm.BeginTime && paramsRecordForm.BeginTime.value && moment(paramsRecordForm.BeginTime.value).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
         status: paramsRecordForm.status && paramsRecordForm.status.value,
         ...payload,
       }
@@ -505,15 +505,16 @@ export default Model.extend({
         } else {
           // 历史
           let timeData = [...data];
-          if (timeData) {
+          if (timeData && result.Datas && result.Datas.StabilizationTime) {
             let n = moment(timeData[0]).add(result.Datas.StabilizationTime, "minutes").valueOf()
             timeData.sort(function (a, b) {
               return Math.abs(moment(a).valueOf() - n) - Math.abs(moment(b).valueOf() - n);
             })[0];
+
+            yield update({
+              stabilizationTime: timeData[0],
+            })
           }
-          yield update({
-            stabilizationTime: timeData[0],
-          })
         }
       } else {
         message.error(result.Message)

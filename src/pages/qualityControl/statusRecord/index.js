@@ -53,8 +53,8 @@ const columns = [
     title: '指标名称',
     dataIndex: 'Name',
     key: 'Name',
-    render: (text , record) => {
-      if(record.getPointName){
+    render: (text, record) => {
+      if (record.getPointName) {
         return `${record.getPointName} - ${text}`
       }
       return text
@@ -120,10 +120,10 @@ class Index extends Component {
 
   // 获取表格数据
   getTableData = () => {
-      this.props.dispatch({
-        type: 'qualityControl/QCAStatusByDGIMN',
+    this.props.dispatch({
+      type: 'qualityControl/QCAStatusByDGIMN',
 
-      })
+    })
   }
 
   // 分页
@@ -144,18 +144,18 @@ class Index extends Component {
 
   //日期改变事件
   dateChange = (dataMoment, dateString) => {
-    if (dateString.length === 2) {
-      this.props.dispatch({
-        type: 'qualityControl/updateState',
-        payload: {
-          statusRecordForm: {
-            ...this.props.statusRecordForm,
-            BeginTime: dateString[0],
-            EndTime: dateString[1],
-          },
+    // if (dateString.length === 2) {
+    this.props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        statusRecordForm: {
+          ...this.props.statusRecordForm,
+          BeginTime: dateString,
+          EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
-      });
-    }
+      },
+    });
+    // }
   }
 
   //参数改变事件
@@ -179,7 +179,7 @@ class Index extends Component {
 
   render() {
     const { form: { getFieldDecorator }, QCAStatusList, loading, QCAStatusNameList, statusRecordForm } = this.props;
-    let defaultValue = [moment(statusRecordForm.BeginTime), moment(statusRecordForm.EndTime)];
+    let defaultValue = moment(statusRecordForm.BeginTime);
     let selectValues = [];
     if (statusRecordForm.DataTempletCode) {
       statusRecordForm.DataTempletCode.map((item) => {
@@ -190,7 +190,7 @@ class Index extends Component {
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
-              this.changeDgimn(value[0].key);
+            this.changeDgimn(value[0].key);
           }
         }} />
         <div id="contentWrapper">
@@ -205,12 +205,13 @@ class Index extends Component {
                         {getFieldDecorator('time', {
                           initialValue: defaultValue
                         })(
-                          <RangePicker
-                            style={{ width: '100%', marginBottom: 0 }}
-                            allowClear={false}
-                            format="YYYY-MM-DD HH:mm:ss"
-                            onChange={this.dateChange}
-                          />,
+                          // <RangePicker
+                          //   style={{ width: '100%', marginBottom: 0 }}
+                          //   allowClear={false}
+                          //   format="YYYY-MM-DD HH:mm:ss"
+                          //   onChange={this.dateChange}
+                          // />,
+                          <DatePicker showTime allowClear={false} placeholder="监控时间" onChange={this.dateChange} />
                         )}
                       </Form.Item>
                     </Col>

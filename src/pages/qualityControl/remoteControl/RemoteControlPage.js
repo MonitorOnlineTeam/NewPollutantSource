@@ -329,6 +329,7 @@ class RemoteControlPage extends Component {
               onOk={this.onSubmitForm}
               confirmLoading={loading}
               okText={"开始质控"}
+              destroyOnClose
               // onClick={this.onSubmitForm}
               width={900}
               onCancel={() => {
