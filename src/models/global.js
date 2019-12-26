@@ -123,7 +123,7 @@ export default Model.extend({
       try {
         //不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
-        const { Message: data } = payload;
+        const { Message: data } = message;
         const { notices } = state;
         let count = state.currentUserNoticeCnt.unreadCount;
         let { key, newnotices } = { key: '', newnotices: [] };
