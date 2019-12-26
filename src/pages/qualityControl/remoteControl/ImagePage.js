@@ -422,9 +422,9 @@ class ImagePage extends PureComponent {
           footer={[]}
           okText={"开始质控"}
           // onClick={this.onSubmitForm}
-          width={900}
+          width={"90%"}
           destroyOnClose
-          style={{ width: 900, height: 600 }}
+          // style={{ width: "90%", height: 600 }}
           onCancel={() => {
             this.setState({
               visible: false
