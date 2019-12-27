@@ -43,9 +43,7 @@ export default Model.extend({
     paramsRecordForm: {
       current: 1,
       pageSize: 20,
-      time: {
-        value: [moment().add(-1, "hour"), moment()]
-      },
+      BeginTime: { value: moment().add(-1, "hour") },
       total: 0,
     },
     statusRecordForm: {
@@ -122,17 +120,19 @@ export default Model.extend({
     },
     // 获取标气
     *getStandardGas({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.getStandardGas, payload);
-      if (result.IsSuccess) {
-        yield update({
-          standardGasList: result.Datas,
-          // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
-        })
-        yield put({
-          type: 'qualityControlModel/changeCurrentPollutantCode',
-          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
-        })
-        callback && callback(result.Datas);
+      if (payload.QCAMN) {
+        const result = yield call(services.getStandardGas, payload);
+        if (result.IsSuccess) {
+          yield update({
+            standardGasList: result.Datas,
+            // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+          })
+          yield put({
+            type: 'qualityControlModel/changeCurrentPollutantCode',
+            payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
+          })
+          callback && callback(result.Datas);
+        }
       }
     },
     // 添加质控仪
@@ -207,37 +207,12 @@ export default Model.extend({
     },
     // 发送质控命令
     * SendQCACmd({ payload, success }, { call, put, update }) {
-      // if (payload.QCType == "3") {
-      //   yield update({
-      //     sendQCACmd3Loading: true
-      //   })
-      // }
-      // if (payload.QCType == "4") {
-      //   yield update({
-      //     sendQCACmd4Loading: true
-      //   })
-      // }
-      // if (payload.QCType == "5") {
-      //   yield update({
-      //     sendQCACmd5Loading: true
-      //   })
-      // }
       const result = yield call(services.SendQCACmd, payload);
       if (result.IsSuccess) {
         message.success('操作成功')
         success && success()
-        // yield update({
-        //   sendQCACmd3Loading: false,
-        //   sendQCACmd4Loading: false,
-        //   sendQCACmd5Loading: false
-        // })
       } else {
         message.error(result.Message)
-        // yield update({
-        //   sendQCACmd3Loading: false,
-        //   sendQCACmd4Loading: false,
-        //   sendQCACmd5Loading: false
-        // })
       }
     },
     // 获取自动质控信息
@@ -317,9 +292,11 @@ export default Model.extend({
           },
           data: result.Datas.timeList && result.Datas.timeList
         })
+        const valueMax = _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined;
+        const standValMax = _.max(result.Datas.standValue) ? _.max(result.Datas.standValue) * 1 + 10 : undefined
         yield update({
           resultContrastData: result.Datas,
-          chartMax: _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined
+          chartMax: valueMax > standValMax ? valueMax : standValMax
         })
       } else {
         message.error(result.Message)
@@ -410,8 +387,8 @@ export default Model.extend({
         pageIndex: paramsRecordForm.current,
         pageSize: paramsRecordForm.pageSize,
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: paramsRecordForm.BeginTime && paramsRecordForm.BeginTime.value && moment(paramsRecordForm.BeginTime.value).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
         status: paramsRecordForm.status && paramsRecordForm.status.value,
         ...payload,
       }
@@ -436,8 +413,10 @@ export default Model.extend({
       const paramsRecordForm = yield select(state => state.qualityControl.paramsRecordForm);
       const postData = {
         State: 0,
-        BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: paramsRecordForm.BeginTime && paramsRecordForm.BeginTime.value && moment(paramsRecordForm.BeginTime.value).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        // BeginTime: paramsRecordForm.time && paramsRecordForm.time.value[0] && moment(paramsRecordForm.time.value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        // EndTime: paramsRecordForm.time && paramsRecordForm.time.value[1] && moment(paramsRecordForm.time.value[1]).format('YYYY-MM-DD HH:mm:ss'),
         Code: paramsRecordForm.DataTempletCode && paramsRecordForm.DataTempletCode.value.toString(),
         ...payload,
       }
@@ -505,15 +484,16 @@ export default Model.extend({
         } else {
           // 历史
           let timeData = [...data];
-          if (timeData) {
+          if (timeData && result.Datas && result.Datas.StabilizationTime) {
             let n = moment(timeData[0]).add(result.Datas.StabilizationTime, "minutes").valueOf()
             timeData.sort(function (a, b) {
               return Math.abs(moment(a).valueOf() - n) - Math.abs(moment(b).valueOf() - n);
             })[0];
+
+            yield update({
+              stabilizationTime: timeData[0],
+            })
           }
-          yield update({
-            stabilizationTime: timeData[0],
-          })
         }
       } else {
         message.error(result.Message)
@@ -571,7 +551,7 @@ export default Model.extend({
     changeQCState(state, { payload }) {
       if (state.currentQCAMN) {
         if (payload.DataGatherCode === state.currentQCAMN) {
-          console.log("payload=", payload)
+          // console.log("payload=", payload)
           let ValveStatus = state.valveStatus;
           let code = payload.Code.replace("i", "")
           const value = payload.Value ? payload.Value * 1 : 0;
@@ -628,9 +608,16 @@ export default Model.extend({
           if (code === "33513") {
             flowList[payload.PollutantCode] = payload.Value
           }
-          // N2流量
-          if (code === "33515") {
-            flowList["N2"] = payload.Value
+          if (state.QCStatus === "4") {
+            // N2流量
+            if (code === "33515") {
+              flowList["N2"] = payload.Value
+            }
+          } else if (state.QCStatus === "5") {
+            // N2流量
+            if (code === "33513") {
+              flowList["N2"] = payload.Value
+            }
           }
           // 标气浓度
           let standardValue = state.standardValue;
@@ -662,7 +649,6 @@ export default Model.extend({
         if (code === "32009" || code === "32013") {
           let cemsList = state.cemsList.map(item => {
             if (item.DGIMN == payload.DataGatherCode) {
-              console.log("payload12312312=", payload)
               if (code === "32013") {
                 return {
                   ...item,

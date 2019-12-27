@@ -124,7 +124,7 @@ export default Model.extend({
         debugger
         //不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
-        const { Message: data } = payload;
+        const { Message: data } = message;
         const { notices } = state;
         let count = state.currentUserNoticeCnt.unreadCount;
         let { key, newnotices } = { key: '', newnotices: [] };
@@ -512,7 +512,7 @@ export default Model.extend({
         //console.log('real=', obj)
         switch (obj.MessageType) {
           case 'RealTimeData':
-            // // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
+            // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
             dispatch({
               type: 'realtimeserver/updateRealTimeDatas',
               payload: {
@@ -520,7 +520,7 @@ export default Model.extend({
               },
             });
             dispatch({
-              type: 'dataquery/updateRealTimeCharts',
+              type: 'realtimeserver/updateRealTimeCharts',
               payload: {
                 data: obj.Message
               },

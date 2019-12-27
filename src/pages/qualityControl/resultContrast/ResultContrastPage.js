@@ -23,7 +23,7 @@ const columns = [
     key: 'Time',
   },
   {
-    title: '浓度',
+    title: '测量浓度',
     dataIndex: 'Value',
     key: 'Value',
   },
@@ -220,6 +220,7 @@ class ResultContrastPage extends Component {
 
     const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
     const result = this.props.resultContrastData.errorStr;
+    const color = result === "不合格" ? "#f5232d" : "#51c41b";
     return (
       // <Row>
       //   <RangePicker_ style={{ width: 340 }} showTime dateValue={dateValue} placeholder="请选择时间" onChange={(date, dateString) => {
@@ -285,7 +286,7 @@ class ResultContrastPage extends Component {
       // </Form>
       <Row>
         <Col style={{ color: "#524e4e", fontSize: 14 }} span={22}>
-          {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为{result}
+          {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为<span style={{ color: color }}>{result}</span>
         </Col>
       </Row>
     )
@@ -305,14 +306,39 @@ class ResultContrastPage extends Component {
 
   // 折线图配置项
   lineOption = () => {
-    const { resultContrastData, stabilizationTime,chartMax } = this.props;
+    const { resultContrastData, stabilizationTime, chartMax } = this.props;
+    let stabilizationTimeSeries = stabilizationTime ? {
+      name: '稳定时间',
+      type: 'bar',
+      markLine: {
+        name: 'aa',
+        data: [[
+          { coord: [`${stabilizationTime}`, 0] },
+          { coord: [`${stabilizationTime}`, chartMax] }
+        ]],
+        label: {
+          normal: {
+            formatter: '稳定时间' // 基线名称
+          }
+        },
+      }
+    } : { type: 'bar', };
     let option = {
-      color: ["#c23531", "#56f485"],
+      color: ["#56f485", "#c23531"],
       legend: {
         data: ["测量浓度", "配比标气浓度"],
       },
+      // tooltip: {
+      //   // trigger: 'none',
+      //   axisPointer: {
+      //     type: 'cross',
+      //     label: {
+      //       backgroundColor: '#6a7985',
+      //     }
+      //   }
+      // },
       tooltip: {
-        // trigger: 'none',
+        trigger: 'axis',
         axisPointer: {
           type: 'cross',
           label: {
@@ -353,7 +379,7 @@ class ResultContrastPage extends Component {
           type: 'value',
           name: '',
           min: 0,
-          max: chartMax,
+          max: chartMax ? chartMax.toFixed() : 10,
           // interval: 50,
           axisLabel: {
             formatter: '{value}'
@@ -398,29 +424,12 @@ class ResultContrastPage extends Component {
         data: resultContrastData.standValue,
         smooth: true,
         type: 'line',
-        lineStyle: {
-          color: "#56f485"
-        },
+        // lineStyle: {
+        //   color: "#56f485"
+        // },
       },
-      {
-        name: '稳定时间',
-        type: 'bar',
-        markLine: {
-          name: 'aa',
-          data: [[
-            { coord: [`${stabilizationTime}`, 0] },
-            { coord: [`${stabilizationTime}`, chartMax] }
-            // { coord: ["2019/12/6 19:26:24", 0] },
-            // { coord: ["2019/12/6 19:26:24", 115] }
-          ]],
-          label: {
-            normal: {
-              formatter: '稳定时间' // 基线名称
-            }
-          },
-        }
-
-      },]
+      { ...stabilizationTimeSeries }
+      ]
     };
 
     return option;
@@ -439,7 +448,11 @@ class ResultContrastPage extends Component {
             (resultContrastData.errorStr === "合格" && dateValue) ? (
               <Alert
                 type="success"
-                message="本次结果比对合格!"
+                message={
+                  <div>
+                    本次结果比对<span style={{ color: "#51c41b" }}>合格!</span>
+                  </div>
+                }
                 onClose={this.onAlertClose}
                 banner
               // closable
@@ -447,7 +460,11 @@ class ResultContrastPage extends Component {
             ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
               <Alert
                 type="error"
-                message="本次结果比对不合格!"
+                message={
+                  <div>
+                    本次结果比对<span style={{ color: "#f5232d" }}>不合格!</span>
+                  </div>
+                }
                 onClose={this.onAlertClose}
                 banner
               // closable

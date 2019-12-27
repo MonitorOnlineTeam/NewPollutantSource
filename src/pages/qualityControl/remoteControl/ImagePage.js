@@ -57,6 +57,11 @@ class ImagePage extends PureComponent {
     })
   }
 
+  componentWillUnmount() {
+    notification.close("notification")
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({
@@ -81,6 +86,34 @@ class ImagePage extends PureComponent {
           form: "realtime"
         })
     }
+    // 吹扫状态时，关闭查看实时比对提示
+    if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
+      notification.close("notification");
+      // 重置model数据
+      this.props.dispatch({
+        type: "qualityControlModel/changeRealTimeThanData",
+        payload: {
+          valueList: [],
+          timeList: [],
+          tableData: [],
+          standardValueList: [],
+          start: 0,
+          end: 20,
+          flag: true
+        }
+      })
+    }
+    // 状态从吹扫变为空时，清空所有流量和浓度数据
+    if (this.props.QCStatus === "5" && nextProps.QCStatus === "6") {
+      this.props.dispatch({
+        type: "qualityControl/updateState",
+        payload: {
+          flowList: {},
+          cemsList: this.props.cemsList.map(item => ({ ...item, monitorValue: undefined }))
+        }
+      })
+    }
+    // 控制查看实时比对提示显示隐藏
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
       // if (true) {
       notification.close("notification")
@@ -414,8 +447,9 @@ class ImagePage extends PureComponent {
           footer={[]}
           okText={"开始质控"}
           // onClick={this.onSubmitForm}
-          width={900}
-          style={{ width: 900, height: 600 }}
+          width={"90%"}
+          destroyOnClose
+          // style={{ width: "90%", height: 600 }}
           onCancel={() => {
             this.setState({
               visible: false

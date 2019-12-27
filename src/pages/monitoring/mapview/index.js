@@ -63,6 +63,7 @@ class MapView extends Component {
       airVisible: false,
       currentDescItem: {},
       airShowType: undefined,
+      multiple: 4
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -80,8 +81,13 @@ class MapView extends Component {
       },
       zoomchange: value => {
         const zoom = _thismap.getZoom();
+        let stateZoom = this.state.zoom;
+        if (this.props.allEntAndPointList.length === 1) {
+          stateZoom = this.state.zoom - 4;
+        }
+        // this.state.zoom - ((this.state.zoom / this.state.multiple).toFixed())
         // 地图缩放，显示企业
-        if (zoom < this.state.zoom) {
+        if (zoom < stateZoom) {
           // const displayType = this.state.displayType === 1
           if (this.state.displayType === 1) {
             // this.setState({
@@ -327,9 +333,10 @@ class MapView extends Component {
     }, () => {
       flag && _thismap.setFitView();
       let zoom = _thismap.getZoom();
-      if (zoom > 14) {
-        zoom = 14;
-      }
+      // console.log('didZoom=', zoom)
+      // if (zoom > 14) {
+      //   zoom = 14;
+      // }
       did && this.setState({ zoom: zoom })
     })
   }
@@ -418,9 +425,9 @@ class MapView extends Component {
     const { defaultMapInfo } = this.props;
     if (defaultMapInfo !== nextProps.defaultMapInfo) {
       const timer = setInterval(() => {
-        if (_thismap && nextProps.defaultMapInfo) {
+        if (_thismap && nextProps.defaultMapInfo && nextProps.allEntAndPointList.length > 1) {
           // _thismap.setZoomAndCenter(pointZoom, [nextProps.defaultMapInfo.Longitude, nextProps.defaultMapInfo.Latitude])
-          _thismap.setZoomAndCenter(5, [105.121964, 33.186871])
+          // _thismap.setZoomAndCenter(5, [105.121964, 33.186871])
           this.setState({
             // coordinateSet: nextProps.defaultMapInfo.CoordinateSet,
             // currentEntInfo: nextProps.defaultMapInfo,
@@ -442,6 +449,21 @@ class MapView extends Component {
       //   })
       //   this.randomMarker(nextProps.defaultMapInfo.children);
       // }, 1000)
+    }
+    if (this.props.allEntAndPointList !== nextProps.allEntAndPointList && nextProps.allEntAndPointList.length === 1) {
+      const timer = setInterval(() => {
+        if (_thismap) {
+          this.setState({
+            displayType: 1,
+            coordinateSet: nextProps.allEntAndPointList[0].CoordinateSet,
+            currentEntInfo: nextProps.allEntAndPointList[0],
+            multiple: 8,
+          })
+          this.randomMarker(nextProps.allEntAndPointList[0].children, true, true);
+          clearInterval(timer)
+        }
+      }, 200);
+
     }
   }
 
@@ -950,7 +972,7 @@ class MapView extends Component {
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
             <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
-              e.target.value === 'data' && router.push('/monitoring/realtimeDataView')
+              e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>

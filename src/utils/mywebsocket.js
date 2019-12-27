@@ -6,10 +6,10 @@ import ReconnectingWebSocket from './reconnecting-websocket'
 // cg add 2018.4.1
 let websocket;
 try {
-   websocket = new ReconnectingWebSocket(`ws://${config.webSocketPushURL.split(',')[0]}/`, `ws://${config.webSocketPushURL.split(',')[1]}/`);
-  // const ip = isInnerIPFn();
-  // console.log(ip)
-  // websocket = new WebSocket(`ws://${ip}/`);
+  //  websocket = new ReconnectingWebSocket(`ws://${config.webSocketPushURL.split(',')[0]}/`, `ws://${config.webSocketPushURL.split(',')[1]}/`);
+  const ip = isInnerIPFn();
+  console.log(ip)
+  websocket = new WebSocket(`ws://${ip}/`);
   window.websocket = websocket;
 } catch (e) {
   console.log(e);

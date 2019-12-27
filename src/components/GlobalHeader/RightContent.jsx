@@ -10,7 +10,7 @@ import config from '@/config';
 import NoticeIconView from './NoticeIconView';
 
 const GlobalHeaderRight = props => {
-  const { theme, layout } = props;
+  const { theme, layout,configInfo } = props;
   //console.log("changePwdVisible=",props);
   let className = styles.right;
 
@@ -57,18 +57,22 @@ const GlobalHeaderRight = props => {
           <Icon type="question-circle-o" />
         </a>
       </Tooltip> */}
-      <Popover content={<div><img
-        width={272}
-        alt="logo"
-        src={`/api/upload/phoneQRCode.png`}
-      /></div>} title="手机端下载" trigger="hover">
-        <a
-          rel="noopener noreferrer"
-          className={styles.action}
-        >
-          <Icon type="qrcode" />
-        </a>
-      </Popover>
+      {
+        configInfo && configInfo.IsShowQRcode==="true" &&
+        <Popover content={<div><img
+          width={272}
+          alt="logo"
+          src={`/api/upload/phoneQRCode.png`}
+        /></div>} title="手机端下载" trigger="hover">
+          <a
+            rel="noopener noreferrer"
+            className={styles.action}
+          >
+            <Icon type="qrcode" />
+          </a>
+        </Popover>
+      }
+     
       <NoticeIconView />
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}

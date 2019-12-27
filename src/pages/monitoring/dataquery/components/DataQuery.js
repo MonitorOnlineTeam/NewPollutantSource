@@ -66,6 +66,7 @@ class DataQuery extends Component {
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
         let { historyparams } = this.props;
+        //debugger;
         switch (historyparams.datatype) {
             case 'realtime':
                 if (date[1].add(-7, 'day') > date[0]) {
@@ -80,25 +81,26 @@ class DataQuery extends Component {
                     message.info('分钟数据时间间隔不能超过1个月');
                     return;
                 }
-                date[1].add(-1, 'month')
+                date[1].add(1, 'month')
                 break;
             case 'hour':
                 if (date[1].add(-6, 'month') > date[0]) {
                     message.info('小时数据时间间隔不能超过6个月');
                     return;
                 }
-                date[1].add(-6, 'month')
+                date[1].add(6, 'month')
                 break;
             case 'day':
                 if (date[1].add(-12, 'month') > date[0]) {
                     message.info('日数据时间间隔不能超过1年个月');
                     return;
                 }
-                date[1].add(-12, 'month')
+                date[1].add(12, 'month')
                 break;
             default:
                 return;
         }
+        console.log("date=", date);
         this.setState({ rangeDate: date });
         historyparams = {
             ...historyparams,
@@ -195,8 +197,8 @@ class DataQuery extends Component {
         }
         historyparams = {
             ...historyparams,
-            payloadpollutantCode: value.length > 0 ? value.toString() : '',
-            payloadpollutantName: res.length > 0 ? res.toString() : '',
+            pollutantCodes: value.length > 0 ? value.toString() : '',
+            pollutantNames: res.length > 0 ? res.toString() : '',
 
         }
         this.setState({
@@ -244,8 +246,8 @@ class DataQuery extends Component {
         const { rangeDate } = this.state;
         historyparams = {
             ...historyparams,
-            payloadpollutantCode: '',
-            payloadpollutantName: '',
+            pollutantCodes: '',
+            pollutantNames: '',
             beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
             pageIndex: 1,
@@ -346,7 +348,7 @@ class DataQuery extends Component {
                         <div>
                             {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
-                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            <ButtonGroup_ style={{ marginRight: 20, padding: 10, paddingLeft: 0 }} checked="realtime" onChange={this._handleDateTypeChange}  />
                             <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
                                 this.displayChange(e.target.value)
                             }}>
@@ -356,7 +358,7 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <div style={{ height: "100%",...this.props.style }}>
+                    <div style={{ height: "100%", ...this.props.style }}>
                         {this.loaddata()}
                     </div>
                 </Card>
