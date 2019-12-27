@@ -56,8 +56,8 @@ const columns = [
   },
   {
     title: '参数值',
-    dataIndex: 'Value',
-    key: 'Value',
+    dataIndex: 'RealValue',
+    key: 'RealValue',
   },
 ];
 
