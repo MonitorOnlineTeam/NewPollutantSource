@@ -54,6 +54,7 @@ const FormItem = Form.Item;
 @connect(({ loading, autoForm }) => ({
   loadingConfig: loading.effects['autoForm/getPageConfig'],
   loadingAdd: loading.effects['autoForm/add'],
+  loadingEdit: loading.effects['autoForm/saveEdit'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
   formItemLayout: autoForm.formLayout,
@@ -567,13 +568,14 @@ class SdlForm extends PureComponent {
   }
 
   renderContent() {
-    const { onSubmitForm, form, form: { getFieldDecorator, setFieldsValue, getFieldValue } } = this.props;
+    const { onSubmitForm, form, form: { getFieldDecorator, setFieldsValue, getFieldValue }, loadingEdit, loadingAdd } = this.props;
     const submitFormLayout = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
         sm: { span: 10, offset: 7 },
       },
     };
+    const loading = this._SELF_.isEdit ? loadingEdit : loadingAdd;
     return <Card bordered={false}>
       <Form onSubmit={e => {
         e.preventDefault();
@@ -598,7 +600,7 @@ class SdlForm extends PureComponent {
         }
         {
           !this.props.hideBtns && <Divider orientation="right">
-            <Button type="primary" htmlType="submit">保存</Button>
+            <Button type="primary" htmlType="submit" loading={loading}>保存</Button>
             <Button
               style={{ marginLeft: 8 }}
               onClick={() => {
