@@ -197,8 +197,8 @@ class DataQuery extends Component {
         }
         historyparams = {
             ...historyparams,
-            payloadpollutantCode: value.length > 0 ? value.toString() : '',
-            payloadpollutantName: res.length > 0 ? res.toString() : '',
+            pollutantCodes: value.length > 0 ? value.toString() : '',
+            pollutantNames: res.length > 0 ? res.toString() : '',
 
         }
         this.setState({
@@ -246,8 +246,8 @@ class DataQuery extends Component {
         const { rangeDate } = this.state;
         historyparams = {
             ...historyparams,
-            payloadpollutantCode: '',
-            payloadpollutantName: '',
+            pollutantCodes: '',
+            pollutantNames: '',
             beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
             pageIndex: 1,

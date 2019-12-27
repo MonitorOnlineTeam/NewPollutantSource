@@ -21,17 +21,17 @@ export default Model.extend({
         tablewidth: 0,
 
         historyparams: {
-            datatype: 'minute',
+            datatype: 'realtime',
             DGIMNs: null,
             pageIndex: null,
             pageSize: null,
             beginTime: null,
             endTime: null,
-            payloadpollutantCode: null,
-            payloadpollutantName: null,
+            pollutantCodes: null,
+            pollutantNames: null,
             unit: null,
             isAsc: true,
-            DGIMN: "",
+            DGIMN: '',
         },
     },
     effects: {
@@ -42,16 +42,16 @@ export default Model.extend({
             }
             const result = yield call(querypollutantlist, body);
             let { historyparams } = yield select(_ => _.dataquery);
-            let { pollutantlist } = yield select(_ => _.dataquery);
+            const { pollutantlist } = yield select(_ => _.dataquery);
             if (result && result[0]) {
                 yield update({ pollutantlist: result });
                 if (!payload.overdata) {
                     historyparams = {
                         ...historyparams,
-                        payloadpollutantCode: result[0].PollutantCode,
-                        payloadpollutantName: result[0].PollutantName,
+                        pollutantCodes: result[0].PollutantCode,
+                        pollutantNames: result[0].PollutantName,
                         unit: result[0].Unit,
-                        DGIMN: payload.dgimn
+                        DGIMN: payload.dgimn,
                     }
                     yield update({
                         historyparams,
@@ -70,7 +70,7 @@ export default Model.extend({
             payload,
         }, { select, call, update }) {
             const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-            if (!pollutantlist[0] || !historyparams.payloadpollutantCode) {
+            if (!pollutantlist[0] || !historyparams.pollutantCodes) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
@@ -84,7 +84,7 @@ export default Model.extend({
             // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
-            if (result&&result.length === 0) {
+            if (result && result.length === 0) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
@@ -92,8 +92,8 @@ export default Model.extend({
             const arr = [];
 
             let i = 0;
-            const arrname = historyparams.payloadpollutantName.split(',');
-            historyparams.payloadpollutantCode.split(',').map((item, key) => {
+            const arrname = historyparams.pollutantNames.split(',');
+            historyparams.pollutantCodes.split(',').map((item, key) => {
                 let seriesdata = [];
                 let series = {
                     type: 'line',
@@ -163,7 +163,7 @@ export default Model.extend({
                 columns = columns.concat(pollutantcols);
             } else {
                 pollutantlist.map((item, key) => {
-                    let unit = item.Unit ? "(" + item.Unit + ")" : ""
+                    const unit = item.Unit ? `(${item.Unit})` : ''
                     pollutantcols = pollutantcols.concat({
                         title: item.PollutantName + unit,
                         dataIndex: item.PollutantCode,
@@ -177,7 +177,7 @@ export default Model.extend({
                     title: '时间',
                     dataIndex: 'MonitorTime',
                     key: 'MonitorTime',
-                    width: 80,
+                    width: 160,
                     align: 'center',
                 }];
                 columns = columns.concat(pollutantcols);
@@ -190,7 +190,7 @@ export default Model.extend({
                 // if (arr[0].data.length > 20) {
                 //     arr[0].data = arr[0].data.splice(arr[0].data.length - 20, 20);
                 // }
-                let unit = historyparams.unit ? `(${historyparams.unit})` : "";
+                const unit = historyparams.unit ? `(${historyparams.unit})` : '';
                 option = {
                     title: {
                         // text: '2018-05-17~2018-05-18'
@@ -199,7 +199,7 @@ export default Model.extend({
                         trigger: 'axis',
                     },
                     legend: {
-                        data: historyparams.payloadpollutantName.split(','),
+                        data: historyparams.pollutantNames.split(','),
                     },
                     toolbox: {
                         show: true,
@@ -215,7 +215,7 @@ export default Model.extend({
                     },
                     yAxis: {
                         type: 'value',
-                        name: "浓度值" + unit,
+                        name: `浓度值${unit}`,
                         axisLabel: {
                             formatter: '{value}',
                         },
@@ -233,104 +233,103 @@ export default Model.extend({
         },
     },
     reducers: {
-        updateRealTimeCharts(state, action) {
-            //最新推送数据
-            let realtimedata = action.payload.data;
-            //原始数据
-            let chartdata = state.chartdata;
-           
-            //根据污染物查询出最新数据
-            let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
-            //纵坐标显示单位
-            let unit = state.historyparams.unit ? `(${state.historyparams.unit})` : "";
-            //MN号相同的代表是选中的进行数据更新
-            if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN) {
-                let newChartInfo = new Object();
-                let legendData = [], xAxisdata = [], seriesData = [];
-                //如果原始数据初始不为空将固定数据反填到定义对象并进行更新
-                if (chartdata) {
-                    legendData = chartdata.legend.data;
-                    xAxisdata = chartdata.xAxis.data;
-                    seriesData = chartdata.series;
-                }
-                //原始数据为空的话标准先去推送数据中的标准
-                else {
-                    legendData = state.historyparams.payloadpollutantName.split(',');
-                    let markLineData = [];
-                    if (parseInt(newDataByPollutant[0].IsOver) > 0) {
-                        markLineData = {
-                            symbol: 'none', // 去掉警戒线最后面的箭头
-                            data: [{
-                                lineStyle: {
-                                    type: 'dash',
-                                    color: newDataByPollutant[0].StandardColor,
-                                },
-                                yAxis: newDataByPollutant[0].Upperpollutant,
-                            }],
-                        }
-                    }
-                    let series = {
-                        type: 'line',
-                        name: legendData,
-                        data: [],
-                        markLine: markLineData,
-                    }
-                    //将小数组添加到大数组中
-                    seriesData.push(series);
-                }
-                //默认展示十条数据
-                if (xAxisdata && xAxisdata.length === 20) {
-                    xAxisdata = xAxisdata.splice(1, 19);
-                }
-                xAxisdata.push(realtimedata[0].MonitorTime);
-                if (seriesData && seriesData[0] && seriesData[0].data.length === 20) {
-                    seriesData[0].data = seriesData[0].data.splice(1, 19);
-                }
-                seriesData[0].data.push(newDataByPollutant ? newDataByPollutant[0].MonitorValue : 0)
-                newChartInfo.title = {};
-                newChartInfo.tooltip = {
-                    trigger: 'axis',
-                };
-                newChartInfo.legend = {
-                    data: legendData,
-                };
-                newChartInfo.toolbox = {
-                    show: true,
-                    feature: {
-                        saveAsImage: {},
-                    },
-                };
-                newChartInfo.xAxis = {
-                    type: 'category',
-                    name: '时间',
-                    boundaryGap: false,
-                    data: xAxisdata,
-                };
-                newChartInfo.yAxis = {
-                    type: 'value',
-                    name: '浓度值' + unit,
-                    axisLabel: {
-                        formatter: '{value}',
-                    },
-                };
-                newChartInfo.grid = {
-                    x: 60,
-                    y: 45,
-                    x2: 45,
-                    y2: 20,
-                };
-                newChartInfo.series = seriesData;
-                return {
-                    ...state,
-                    chartdata: newChartInfo,
-                };
-            }
-            else {
-                return {
-                    ...state,
-                };
-            }
+//         updateRealTimeCharts(state, action) {
+//             // 最新推送数据
+//             const realtimedata = action.payload.data;
+//             // 原始数据
+//             const {chartdata} = state;
 
-        },
-    }
+//             // 根据污染物查询出最新数据
+//             const newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.pollutantCodes);
+//             // 纵坐标显示单位
+//             const unit = state.historyparams.unit ? `(${state.historyparams.unit})` : '';
+//             // MN号相同的代表是选中的进行数据更新
+//             if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN) {
+//                 const newChartInfo = new Object();
+//                 let legendData = []; let xAxisdata = []; let
+// seriesData = [];
+//                 // 如果原始数据初始不为空将固定数据反填到定义对象并进行更新
+//                 if (chartdata) {
+//                     legendData = chartdata.legend.data;
+//                     xAxisdata = chartdata.xAxis.data;
+//                     seriesData = chartdata.series;
+//                 }
+//                 // 原始数据为空的话标准先去推送数据中的标准
+//                 else {
+//                     legendData = state.historyparams.pollutantNames.split(',');
+//                     let markLineData = [];
+//                     if (parseInt(newDataByPollutant[0].IsOver) > 0) {
+//                         markLineData = {
+//                             symbol: 'none', // 去掉警戒线最后面的箭头
+//                             data: [{
+//                                 lineStyle: {
+//                                     type: 'dash',
+//                                     color: newDataByPollutant[0].StandardColor,
+//                                 },
+//                                 yAxis: newDataByPollutant[0].Upperpollutant,
+//                             }],
+//                         }
+//                     }
+//                     const series = {
+//                         type: 'line',
+//                         name: legendData,
+//                         data: [],
+//                         markLine: markLineData,
+//                     }
+//                     // 将小数组添加到大数组中
+//                     seriesData.push(series);
+//                 }
+//                 // 默认展示十条数据
+//                 if (xAxisdata && xAxisdata.length === 20) {
+//                     xAxisdata = xAxisdata.splice(1, 19);
+//                 }
+//                 xAxisdata.push(realtimedata[0].MonitorTime);
+//                 if (seriesData && seriesData[0] && seriesData[0].data.length === 20) {
+//                     seriesData[0].data = seriesData[0].data.splice(1, 19);
+//                 }
+//                 seriesData[0].data.push(newDataByPollutant ? newDataByPollutant[0].MonitorValue : 0)
+//                 newChartInfo.title = {};
+//                 newChartInfo.tooltip = {
+//                     trigger: 'axis',
+//                 };
+//                 newChartInfo.legend = {
+//                     data: legendData,
+//                 };
+//                 newChartInfo.toolbox = {
+//                     show: true,
+//                     feature: {
+//                         saveAsImage: {},
+//                     },
+//                 };
+//                 newChartInfo.xAxis = {
+//                     type: 'category',
+//                     name: '时间',
+//                     boundaryGap: false,
+//                     data: xAxisdata,
+//                 };
+//                 newChartInfo.yAxis = {
+//                     type: 'value',
+//                     name: `浓度值${unit}`,
+//                     axisLabel: {
+//                         formatter: '{value}',
+//                     },
+//                 };
+//                 newChartInfo.grid = {
+//                     x: 60,
+//                     y: 45,
+//                     x2: 45,
+//                     y2: 20,
+//                 };
+//                 newChartInfo.series = seriesData;
+//                 return {
+//                     ...state,
+//                     chartdata: newChartInfo,
+//                 };
+//             }
+
+//                 return {
+//                     ...state,
+//                 };
+//         },
+    },
 });

@@ -246,6 +246,8 @@ class DepartIndex extends Component {
                                                             payload: {
                                                             }
                                                         })
+                                                    }else{
+                                                        message.error(res.Message);
                                                     }
                                                 }
                                             }
@@ -591,6 +593,8 @@ class DepartIndex extends Component {
                     if (res.IsSuccess) {
                         message.success("成功");
                         this.handleCancel()
+                    }else{
+                        message.error(res.Message);
                     }
                 }
             }
@@ -609,6 +613,8 @@ class DepartIndex extends Component {
                     if (res.IsSuccess) {
                         message.success("成功");
                         this.handleCancel()
+                    }else{
+                        message.error(res.Message);
                     }
                 }
             }
@@ -678,6 +684,8 @@ class DepartIndex extends Component {
                                     payload: {
                                     }
                                 })
+                            }else{
+                                message.error(res.Message);
                             }
                         }
                     }
