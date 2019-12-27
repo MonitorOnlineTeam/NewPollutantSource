@@ -121,6 +121,7 @@ export default Model.extend({
     //接收消息推送更改Model内存
     changeNotices(state, { payload }) {
       try {
+        debugger
         //不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
         const { Message: data } = message;
@@ -146,6 +147,14 @@ export default Model.extend({
           case EnumPropellingAlarmSourceType.DataOverWarning:
             flagAlarm = 'warn';
             orderby = 3;
+          case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
+            flagAlarm = 'exception';
+            orderby = 2;
+            break;
+            case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
+              flagAlarm = 'exception';
+              orderby = 2;
+              break;
         }
         //超标枚举
         let over = [
@@ -187,6 +196,14 @@ export default Model.extend({
           {
             id: 5,
             description: "超标预警"
+          },
+          {
+            id: 6,
+            description: "过期时间报警"
+          },
+          {
+            id: 7,
+            description: "余量不足报警"
           },
         ];
         //如果推送是超标并且之前没有数据
@@ -254,6 +271,171 @@ export default Model.extend({
             unreadCount: count,
           },
         };
+      }
+      catch (e) {
+        console.log(e)
+        return {
+          ...state,
+        };
+      }
+    },
+     //接收消息推送更改Model内存
+     changeQCANotices(state, { payload }) {
+      try {
+        debugger
+        //不要用超级管理员测试，否则会出问题**********************
+        const { message } = payload;
+        const { notices } = state;
+        let count = state.currentUserNoticeCnt.unreadCount;
+        let { key, newnotices } = { key: '', newnotices: [] };
+        let flagAlarm = ''; //报警类型标识（1.超标 over;2.预警 warn;2.异常 exception
+        let orderby = 0; //排序标识根据类型排序
+        for(var i=0;i<message.count;i++)
+        {
+          var data=message[i];
+          data.AlarmType = parseInt(data.AlarmType);
+          //标识判断（用于设置id及主键等标识）
+          switch (data.AlarmType) {
+            case EnumPropellingAlarmSourceType.DataOver:
+              flagAlarm = 'over';
+              orderby = 1;
+              break;
+            case EnumPropellingAlarmSourceType.DataException:
+            case EnumPropellingAlarmSourceType.DYPARAMETER:
+            case EnumPropellingAlarmSourceType.DataLogicErr:
+            case EnumPropellingAlarmSourceType.DYSTATEALARM:
+              flagAlarm = 'exception';
+              orderby = 2;
+              break;
+            case EnumPropellingAlarmSourceType.DataOverWarning:
+              flagAlarm = 'warn';
+              orderby = 3;
+            case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
+              flagAlarm = 'exception';
+              orderby = 2;
+              break;
+              case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
+                flagAlarm = 'exception';
+                orderby = 2;
+                break;
+          }
+          //超标枚举
+          let over = [
+            EnumPropellingAlarmSourceType.DataOver,
+          ];
+          //异常枚举
+          let exception = [
+            EnumPropellingAlarmSourceType.DataException,
+            EnumPropellingAlarmSourceType.DYPARAMETER,
+            EnumPropellingAlarmSourceType.DataLogicErr,
+            EnumPropellingAlarmSourceType.DYSTATEALARM
+          ];
+          //预警枚举
+          let warnover = [
+            EnumPropellingAlarmSourceType.DataOverWarning
+          ];
+          //报警描述
+          let getAlarmExceptions = [
+            {
+              id: 0,
+              description: "数据异常"
+            },
+            {
+              id: 1,
+              description: "参数异常"
+            },
+            {
+              id: 2,
+              description: "数据超标"
+            },
+            {
+              id: 3,
+              description: "逻辑异常"
+            },
+            {
+              id: 4,
+              description: "状态异常"
+            },
+            {
+              id: 5,
+              description: "超标预警"
+            },
+            {
+              id: 6,
+              description: "过期时间报警"
+            },
+            {
+              id: 7,
+              description: "余量不足报警"
+            },
+          ];
+          //如果推送是超标并且之前没有数据
+          if ((!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) && over.includes(data.AlarmType)) ||
+            (!notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) && warnover.includes(data.AlarmType)) ||
+            (!notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) && exception.includes(data.AlarmType))
+          ) {
+            newnotices = notices;
+            count += 1;
+            newnotices.push({
+              id: `${flagAlarm}_${data.DGIMN}`,
+              key: `${flagAlarm}_${data.DGIMN}`,
+              pointname: data.PointName,
+              pollutantnames: data.PollutantName,
+              firsttime: data.FirstOverTime,
+              lasttime: data.AlarmTime,
+              alarmcount: data.AlarmCount,
+              sontype: flagAlarm,
+              type: 'alarm',
+              orderby: orderby,
+              title: flagAlarm === 'warn' ?
+                <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
+                <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
+              description:
+                flagAlarm === 'over' ?
+                  `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警` :
+                  flagAlarm === 'exception' ?
+                    `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警` :
+                    `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`,
+              exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
+            });
+          }
+          // 证明之前有数据，在之前的数据上叠加
+          else {
+            newnotices = notices.map(notice => {
+              //判断类型是否包含
+              if (over.includes(data.AlarmType) ||
+                warnover.includes(data.AlarmType) ||
+                exception.includes(data.AlarmType)
+              ) {
+                key = `${flagAlarm}_${data.DGIMN}`;
+                if (notice.id === key) {
+                  notice.lasttime = data.AlarmTime;
+                  notice.alarmcount += 1;
+                  notice.title =
+                    flagAlarm === 'warn' ?
+                      <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> :
+                      <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> ,
+                    notice.description =
+                    flagAlarm === 'over' ?
+                      `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
+                      flagAlarm === 'exception' ?
+                        `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
+                        `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
+                }
+              }
+              return notice;
+            });
+          }
+          return {
+            ...state,
+            notices: newnotices,
+            currentUserNoticeCnt: {
+              notifyCount: count,
+              unreadCount: count,
+            },
+          };
+        }
+       
       }
       catch (e) {
         console.log(e)
@@ -433,6 +615,10 @@ export default Model.extend({
               type: "qualityControl/volumeWarning",
               payload: obj.Message
             })
+            // dispatch({
+            //   type: 'changeQCANotices',
+            //   payload: { message: obj.Message },
+            // });
             break;
           default:
             break;
