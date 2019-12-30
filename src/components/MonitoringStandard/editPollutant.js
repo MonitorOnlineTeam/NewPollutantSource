@@ -21,6 +21,7 @@ const {Option} = Select;
 const {Panel} = Collapse;
 @connect(({ loading, standardLibrary }) => ({
   isloading: loading.effects['standardLibrary/getMonitorPointPollutantDetails'],
+  btnisloading: loading.effects['standardLibrary/editmonitorpointPollutant'],
   reason: standardLibrary.reason,
   requstresult: standardLibrary.requstresult,
   PollutantList: standardLibrary.PollutantList,
@@ -129,6 +130,7 @@ class EditPollutant extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const{btnisloading}=this.props;
     const { TextArea } = Input;
     const customPanelStyle = {
       background: '#ffff',
@@ -246,7 +248,7 @@ class EditPollutant extends Component {
             </Panel>
           </Collapse>
           <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={btnisloading}>
               保存
             </Button>
             <Divider type="vertical" />

@@ -37,6 +37,7 @@ const FormItem = Form.Item;
     data: alarmrecord.overdata,
     total: alarmrecord.overtotal,
     overdataparams: alarmrecord.overdataparams,
+    btnisloading: loading.effects['alarmrecord/AddExceptionVerify'],
 }))
 @Form.create()
 class AlarmRecord extends Component {
@@ -373,7 +374,12 @@ class AlarmRecord extends Component {
               onFilter: (value, record) => record.State.indexOf(value) === 0,
           },
         ];
-           const { isloading, overdataparams, form } = this.props;
+           const {
+             isloading,
+             overdataparams,
+             form,
+             btnisloading,
+           } = this.props;
            const {
              getFieldDecorator,
            } = this.props.form;
@@ -450,6 +456,7 @@ class AlarmRecord extends Component {
                               visible={this.state.visible}
                               destroyOnClose // 清除上次数据
                               onOk={this.handleOk}
+                              confirmLoading={btnisloading}
                               okText="保存"
                               cancelText="关闭"
                               onCancel={() => {

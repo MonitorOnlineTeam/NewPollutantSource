@@ -18,6 +18,8 @@ import {
     tableInfo: autoForm.tableInfo,
     searchForm: autoForm.searchForm,
     routerConfig: autoForm.routerConfig,
+    btnloading: loading.effects['operationsysmanage/Add'],
+    btnloading1: loading.effects['operationsysmanage/Edit'],
 }))
 @Form.create()
  class Index extends Component {
@@ -178,7 +180,11 @@ import {
 
     render() {
         console.log('this.props111111111111111111111', this.props);
-        const { configId } = this.props;
+        const {
+          configId,
+          btnloading,
+          btnloading1,
+           } = this.props;
         const { DataWhere } = this.state;
         if (this.props.loading) {
             return (<Spin
@@ -257,6 +263,7 @@ import {
                               onOk={this.handleOk}
                               okText="保存"
                               cancelText="关闭"
+                              confirmLoading={btnloading}
                               onCancel={() => {
                                 this.setState({
                                   visible: false,
@@ -271,6 +278,7 @@ import {
                               visible={this.state.Evisible}
                               destroyOnClose // 清除上次数据
                               onOk={this.SaveOk}
+                               confirmLoading={btnloading1}
                               okText="保存"
                               cancelText="关闭"
                               onCancel={() => {
