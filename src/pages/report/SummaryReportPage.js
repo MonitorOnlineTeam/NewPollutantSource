@@ -10,6 +10,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { MonthPicker } = DatePicker
 
 @Form.create()
 @connect(({ loading, report, autoForm, global }) => ({
@@ -28,7 +29,8 @@ class DailySummaryPage extends PureComponent {
     this.state = {
       columns: [],
       currentYear: moment().format("YYYY"),
-      defaultRegionCode: []
+      defaultRegionCode: [],
+      currentDate: moment()
     };
     this.SELF = {
       formLayout: {
@@ -78,7 +80,7 @@ class DailySummaryPage extends PureComponent {
             this.props.dispatch({
               type: "report/getPollutantList",
               payload: {
-                pollutantTypes: 1,
+                pollutantTypes: defalutVal,
                 callback: () => {
                   // 获取表格数据
                   this.props.dispatch({
@@ -102,7 +104,8 @@ class DailySummaryPage extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
-      const { form } = this.props;
+      const { form, match: { params: { reportType } } } = this.props;
+      const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
       // 获取表格数据
       this.props.dispatch({
         type: "report/getDailySummaryDataList",
@@ -178,7 +181,8 @@ class DailySummaryPage extends PureComponent {
     form.validateFields((err, values) => {
       if (!err) {
         this.setState({
-          currentYear: values.ReportTime && moment(values.ReportTime).format("YYYY")
+          currentYear: values.ReportTime && moment(values.ReportTime).format("YYYY"),
+          currentDate: values.ReportTime
         })
         // 获取污染物类型 = 表头
         this.props.dispatch({
@@ -204,7 +208,7 @@ class DailySummaryPage extends PureComponent {
   }
 
   export() {
-    const { form } = this.props;
+    const { form, match: { params: { reportType } } } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
         this.props.dispatch({
@@ -221,17 +225,21 @@ class DailySummaryPage extends PureComponent {
   }
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList, configInfo} = this.props;
+    const { loading, dailySummaryDataList, exportLoading, regionList, match: { params: { reportType } }, form: { getFieldDecorator }, pollutantTypeList, enterpriseList, configInfo } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
     const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
+    let timeEle = <DatePicker format={format} allowClear={false} style={{ width: "100%" }} />;
+    if (reportType === "monthly") {
+      timeEle = <MonthPicker allowClear={false} style={{ width: "100%" }} />
+    }
     return (
       <PageHeaderWrapper>
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={6} sm={24}>
+              <Col xl={6} sm={24} md={12}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     // initialValue: defaultSearchForm.PollutantSourceType,
@@ -250,7 +258,7 @@ class DailySummaryPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={6} sm={24} style={{display: configInfo.GroupRegionState === "1" ? "block" : "none"}}>
+              <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     // initialValue: defaultSearchForm.Regions,
@@ -271,7 +279,7 @@ class DailySummaryPage extends PureComponent {
               {/* </Row> */}
               {/* <Row gutter={{ md: 8, lg: 24, x
               l: 48 }}> */}
-              <Col md={6} sm={24}>
+              <Col xl={6} sm={24} md={12}>
                 <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                   {getFieldDecorator("ReportTime", {
                     initialValue: defaultSearchForm.ReportTime,
@@ -280,11 +288,11 @@ class DailySummaryPage extends PureComponent {
                       message: '请填写统计时间',
                     }],
                   })(
-                    <DatePicker format={format} style={{ width: "100%" }} />
+                    timeEle
                   )}
                 </FormItem>
               </Col>
-              <Col md={6}>
+              <Col xl={6} md={12}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                   {/* {getFieldDecorator("", {})( */}
                   <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
@@ -294,7 +302,7 @@ class DailySummaryPage extends PureComponent {
               </Col>
             </Row>
           </Form>
-          <p className={style.title}>{this.state.currentYear}年{reportText}</p>
+          <p className={style.title}>{moment(this.state.currentDate).format(format)} {reportText}</p>
           <SdlTable
             loading={loading}
             style={{ minHeight: 80 }}

@@ -11,6 +11,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 import SdlTable from '@/components/SdlTable'
 const FormItem = Form.Item;
 const { Option } = Select;
+const { MonthPicker } = DatePicker
 
 
 @connect(({ loading, report, autoForm, global }) => ({
@@ -51,9 +52,11 @@ const { Option } = Select;
 class SiteDailyPage extends PureComponent {
   constructor(props) {
     super(props);
+    const format = props.match.params.reportType === "siteDaily" ? "YYYY-MM-DD" : (props.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
     this.state = {
+      format: format,
       columns: [],
-      currentDate: moment().format("YYYY-MM-DD"),
+      currentDate: moment().format(format),
       defaultRegionCode: []
     };
     this.SELF = {
@@ -102,7 +105,7 @@ class SiteDailyPage extends PureComponent {
                 pollutantTypeCode: defalutVal,
                 callback: (res) => {
                   res.Datas.length && this.setState({
-                    currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
+                    currentEntName: res.Datas[0]["ParentName"]
                   })
                   // 获取污染物类型 = 表头
                   this.props.dispatch({
@@ -146,8 +149,9 @@ class SiteDailyPage extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname && this.props.form.getFieldValue("EntCode")) {
       // 格式化日期
-      const format = nextProps.match.params.reportType === "daily" ? "YYYY-MM-DD" : (nextProps.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
+      const format = nextProps.match.params.reportType === "siteDaily" ? "YYYY-MM-DD" : (nextProps.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
       this.setState({
+        format: format,
         currentDate: this.props.form.getFieldValue("ReportTime") && moment(this.props.form.getFieldValue("ReportTime")).format(format),
       })
       // 获取表格数据
@@ -230,7 +234,10 @@ class SiteDailyPage extends PureComponent {
 
   statisticsReport() {
     const { form, match } = this.props;
+    const { format } = this.state;
     // const { uid, configId, isEdit, keysParams } = this._SELF_;
+    // const format = match.params.reportType === "daily" ? "YYYY-MM-DD" : (match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
+
     form.validateFields((err, values) => {
       if (!err) {
         //         EntCode: undefined
@@ -255,7 +262,7 @@ class SiteDailyPage extends PureComponent {
         //   return;
         // }
         this.setState({
-          currentDate: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
+          currentDate: values.ReportTime && moment(values.ReportTime).format(format),
           currentEntName: this.props.enterpriseList.filter(item => item["ParentCode"] == values.EntCode)[0]["ParentName"]
         })
         // 获取污染物类型 = 表头
@@ -327,7 +334,14 @@ class SiteDailyPage extends PureComponent {
   render() {
     const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading, configInfo } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
-    const { currentEntName, currentDate, defaultRegionCode } = this.state;
+    const { currentEntName, currentDate, defaultRegionCode, format } = this.state;
+
+    let timeEle = null;
+    if (format === "YYYY-MM") {
+      timeEle = <MonthPicker allowClear={false} style={{ width: "100%" }} />
+    } else {
+      timeEle = <DatePicker allowClear={false} style={{ width: "100%" }} format={format} />
+    }
     if (exportLoading) {
       return <Spin
         style={{
@@ -344,8 +358,8 @@ class SiteDailyPage extends PureComponent {
       <PageHeaderWrapper>
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={3} sm={24}>
+            <Row>
+              <Col xl={3} sm={24} lg={6}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     // initialValue: defaultSearchForm.PollutantSourceType,
@@ -374,7 +388,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5} sm={24} style={{display: configInfo.GroupRegionState === "1" ? "block" : "none"}}>
+              <Col xl={5} sm={24} lg={8} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator("Regions", {
                     initialValue: defaultRegionCode,
@@ -407,7 +421,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5} sm={24}>
+              <Col xl={5} sm={24} lg={10}>
                 <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                   {getFieldDecorator("EntCode", {
                     initialValue: enterpriseList.length ? enterpriseList[0]["ParentCode"] : undefined,
@@ -427,7 +441,7 @@ class SiteDailyPage extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5} sm={24}>
+              <Col xl={5} sm={24} lg={6}>
                 <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                   {getFieldDecorator("ReportTime", {
                     initialValue: defaultSearchForm.ReportTime,
@@ -436,13 +450,13 @@ class SiteDailyPage extends PureComponent {
                       message: '请填写统计时间',
                     }],
                   })(
-                    <DatePicker allowClear={false} style={{ width: "100%" }} />
+                    timeEle
                   )}
                 </FormItem>
               </Col>
-              <Col md={6}>
+              <Col xl={6} lg={8}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                  <Button type="primary" style={{ margin: "0 10px" }} onClick={() => {
                     this.props.dispatch({
                       type: 'report/updateState',
                       payload: {
