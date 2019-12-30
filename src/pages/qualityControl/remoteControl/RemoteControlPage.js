@@ -147,6 +147,11 @@ class RemoteControlPage extends Component {
       payload: payload,
       success: () => {
         if (payload.flag) {
+          // 重置实时结果比对数据
+          this.props.dispatch({
+            type: "qualityControlModel/updateRealtimeData",
+            payload: {}
+          })
           this.setState({ visible: false });
         }
       }

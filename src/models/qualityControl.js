@@ -33,63 +33,81 @@ export default Model.extend({
       }
     },
     changeRealTimeThanData(state, { payload }) {
-      let newTimeList = [];
-      let newValueList = [];
-      let newTableData = [];
-      let newStandardValueList = [];
-      let DGIMNList = [
-        ...state.DGIMNList
-      ];
-      let start = state.start;
-      let end = state.end;
-      let realtimeData = payload.message;
-
-
-      if (realtimeData) {
-        if (state.currentPollutantCode && state.currentDGIMN) {
-          const filterDGIMNList = realtimeData.filter(item => item.DGIMN === state.currentDGIMN);
-          DGIMNList = [
-            ...DGIMNList,
-            ...filterDGIMNList
-          ]
-          // if (DGIMNList.length > 40) {
-          //   DGIMNList = DGIMNList.slice(payload.message.length)
-          // }
-          if (DGIMNList.length > 20) {
-            start += payload.message.length
-            end += payload.message.length;
-          }
-          // let filterChartData = DGIMNList.filter(item => item.PollutantCode === state.currentPollutantCode)
-          let filterChartData = DGIMNList;
-          // 污染物
-          filterChartData.map(item => {
-            newValueList.push(item.MonitorValue);
-            newTimeList.push(item.MonitorTime);
-            newStandardValueList.push(item.QCAStandardValue)
-            newTableData.push(
-              {
-                Time: item.MonitorTime,
-                Value: item.MonitorValue,
-                StandValue: item.QCAStandardValue,
-              }
-            )
-          })
+      if (payload.flag) {
+        return {
+          ...state,
+          valueList: [],
+          timeList: [],
+          tableData: [],
+          DGIMNList: [],
+          standardValueList: [],
+          start: 0,
+          end: 20,
         }
-      }
-      return {
-        ...state,
-        timeList: [
-          ...newTimeList
-        ],
-        valueList: [
-          ...newValueList
-        ],
-        DGIMNList: [
-          ...DGIMNList
-        ],
-        tableData: newTableData,
-        standardValueList: newStandardValueList,
-        start, end
+      } else {
+
+
+        console.log('payload12321311111111=', payload)
+        let newTimeList = [];
+        let newValueList = [];
+        let newTableData = [];
+        let newStandardValueList = [];
+        let DGIMNList = [
+          ...state.DGIMNList
+        ];
+        let start = state.start;
+        let end = state.end;
+        let realtimeData = payload.message;
+
+
+        if (realtimeData) {
+          if (state.currentPollutantCode && state.currentDGIMN) {
+            const filterDGIMNList = realtimeData.filter(item => item.DGIMN === state.currentDGIMN);
+            DGIMNList = [
+              ...DGIMNList,
+              ...filterDGIMNList
+            ]
+            // if (DGIMNList.length > 40) {
+            //   DGIMNList = DGIMNList.slice(payload.message.length)
+            // }
+            if (DGIMNList.length > 20) {
+              start += payload.message.length
+              end += payload.message.length;
+            }
+            // let filterChartData = DGIMNList.filter(item => item.PollutantCode === state.currentPollutantCode)
+            let filterChartData = DGIMNList;
+            // 污染物
+            filterChartData.map(item => {
+              newValueList.push(item.MonitorValue);
+              newTimeList.push(item.MonitorTime);
+              newStandardValueList.push(item.QCAStandardValue)
+              newTableData.push(
+                {
+                  Time: item.MonitorTime,
+                  Value: item.MonitorValue,
+                  StandValue: item.QCAStandardValue,
+                }
+              )
+            })
+          }
+        }
+        return {
+          ...state,
+          timeList: [
+            ...newTimeList
+          ],
+          valueList: [
+            ...newValueList
+          ],
+          DGIMNList: [
+            ...DGIMNList
+          ],
+          tableData: [
+            ...newTableData
+          ],
+          standardValueList: newStandardValueList,
+          // start, end
+        }
       }
     },
     setConfigInfo(state, { payload }) {

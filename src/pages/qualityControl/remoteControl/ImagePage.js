@@ -86,9 +86,34 @@ class ImagePage extends PureComponent {
           form: "realtime"
         })
     }
+    // 吹扫状态时，关闭查看实时比对提示
     if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
-      notification.close("notification")
+      notification.close("notification");
+      // 重置model数据
+      this.props.dispatch({
+        type: "qualityControlModel/changeRealTimeThanData",
+        payload: {
+          valueList: [],
+          timeList: [],
+          tableData: [],
+          standardValueList: [],
+          start: 0,
+          end: 20,
+          flag: true
+        }
+      })
     }
+    // 状态从吹扫变为空时，清空所有流量和浓度数据
+    if (this.props.QCStatus === "5" && nextProps.QCStatus === "6") {
+      this.props.dispatch({
+        type: "qualityControl/updateState",
+        payload: {
+          flowList: {},
+          cemsList: this.props.cemsList.map(item => ({ ...item, monitorValue: undefined }))
+        }
+      })
+    }
+    // 控制查看实时比对提示显示隐藏
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
       // if (true) {
       notification.close("notification")

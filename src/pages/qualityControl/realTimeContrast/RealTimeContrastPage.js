@@ -55,7 +55,7 @@ class index extends Component {
 
   componentDidMount() {
     // 获取污染物
-    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
+    !this.props.insert && this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: "" } });
     this.props.dispatch({
       type: "qualityControlModel/updateState",
       payload: {
