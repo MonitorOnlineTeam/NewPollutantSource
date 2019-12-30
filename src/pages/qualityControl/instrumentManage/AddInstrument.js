@@ -132,7 +132,7 @@ class AddInstrument extends Component {
                StandardGasCode: item.PollutantCode,
                ExpirationDate: undefined,
                Concentration: undefined,
-               unit: item.PollutantCode === "s01" ? "%" : 'mg/m3',
+               unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
                GasInitPower: undefined,
              })
            })
@@ -159,7 +159,7 @@ class AddInstrument extends Component {
            StandardGasCode: item.PollutantCode, // 标气code
            ExpirationDate: undefined, // 过期时间
            Concentration: undefined, // 气瓶浓度
-           unit: item.PollutantCode === "s01" ? "%" : 'mg/m3',
+           unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
            GasInitPower: undefined, // 标气初始压力
          })
        })
@@ -261,7 +261,7 @@ class AddInstrument extends Component {
       })
       const QCAGasVolume = [];
       const QCAGasRelation = [];
-      
+
       if (dataSourceR.length > 0) {
          isErr = false;
 
@@ -438,8 +438,7 @@ class AddInstrument extends Component {
         title: '总流量设定值',
         dataIndex: 'TotalFlowSetVal',
         width: 180,
-        render: (text, record, idx) => {
-          return <FormItem style={{ marginBottom: '0' }}>
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
             {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
               rules: [
                 { required: true, message: '请输入总流量设定值' },
@@ -453,8 +452,7 @@ class AddInstrument extends Component {
                 onChange={value => { this.changeStandardGasData(index, 'TotalFlowSetVal', value, idx) }}
               />,
             )}
-          </FormItem>
-        },
+          </FormItem>,
       },
       // {
       //   title: '偏移范围',
@@ -825,6 +823,7 @@ class AddInstrument extends Component {
             })(
                 <InputNumber
                   min={0}
+                  precision={2}
                   onChange={value => { this.changeStandardGasDataR('Concentration', value, idx) }}
                 />,
             )} &nbsp;{record.unit}

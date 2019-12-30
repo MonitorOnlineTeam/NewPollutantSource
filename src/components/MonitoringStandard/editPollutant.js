@@ -17,10 +17,11 @@ import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
-const Panel = Collapse.Panel;
+const {Option} = Select;
+const {Panel} = Collapse;
 @connect(({ loading, standardLibrary }) => ({
   isloading: loading.effects['standardLibrary/getMonitorPointPollutantDetails'],
+  btnisloading: loading.effects['standardLibrary/editmonitorpointPollutant'],
   reason: standardLibrary.reason,
   requstresult: standardLibrary.requstresult,
   PollutantList: standardLibrary.PollutantList,
@@ -43,12 +44,12 @@ class EditPollutant extends Component {
     });
     this.props.onRef(this);
     const Id = this.props.pid;
-    const DGIMN = this.props.DGIMN;
+    const {DGIMN} = this.props;
     if (Id !== null && DGIMN !== null) {
       this.props.dispatch({
         type: 'standardLibrary/getMonitorPointPollutantDetails',
         payload: {
-          DGIMN: DGIMN,
+          DGIMN,
           PollutantCode: Id,
           callback: () => {
             this.props.form.setFieldsValue({
@@ -109,8 +110,7 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
-              callback: (res) => {
-
+              callback: res => {
                 if (res.IsSuccess) {
                   message.success('编辑成功', 1).then(() => this.props.oncancel());
                 } else {
@@ -130,6 +130,7 @@ class EditPollutant extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const{btnisloading}=this.props;
     const { TextArea } = Input;
     const customPanelStyle = {
       background: '#ffff',
@@ -143,7 +144,7 @@ class EditPollutant extends Component {
         <Form onSubmit={this.handleSubmit}>
           <Collapse
             bordered={false}
-            defaultActiveKey={['1']}
+            defaultActiveKey={['1', '2']}
             expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
           >
             <Panel header="报警设置" key="1" style={customPanelStyle}>
@@ -247,7 +248,7 @@ class EditPollutant extends Component {
             </Panel>
           </Collapse>
           <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={btnisloading}>
               保存
             </Button>
             <Divider type="vertical" />

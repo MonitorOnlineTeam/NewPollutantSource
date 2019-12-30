@@ -22,8 +22,9 @@ import {
 import { connect } from 'dva';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlForm from "@/pages/AutoFormManager/SdlForm"
-const Search = Input.Search;
+import SdlForm from '@/pages/AutoFormManager/SdlForm'
+
+const { Search } = Input;
 
 
 const FormItem = Form.Item;
@@ -32,10 +33,9 @@ const {
 } = Layout;
 
 const {
-    Item
+    Item,
 } = Menu;
 const { TreeNode } = Tree;
-
 
 
 @connect(({ userinfo, loading }) => ({
@@ -44,7 +44,8 @@ const { TreeNode } = Tree;
     UserRolesLoading: loading.effects['userinfo/getrolebyuserid'],
     UserDepLoading: loading.effects['userinfo/getdepbyuserid'],
     UserRoles: userinfo.UserRoles,
-    UserDep: userinfo.UserDep
+    UserDep: userinfo.UserDep,
+   btnisloading: loading.effects['userinfo/edit'],
 }))
 @Form.create()
 export default class UserInfoEdit extends Component {
@@ -64,7 +65,7 @@ export default class UserInfoEdit extends Component {
             selectedKeys: [],
             selectedKey: [],
             FormDatas: [],
-            leafTreeDatas: []
+            leafTreeDatas: [],
         };
 
         this.postFormDatas = this.postFormDatas.bind(this)
@@ -74,23 +75,23 @@ export default class UserInfoEdit extends Component {
     componentDidMount() {
         this.props.dispatch({
             type: 'userinfo/getdepartmenttree',
-            payload: {}
+            payload: {},
         })
         this.props.dispatch({
             type: 'userinfo/getrolestree',
-            payload: {}
+            payload: {},
         })
         this.props.dispatch({
             type: 'userinfo/getrolebyuserid',
             payload: {
                 User_ID: this.props.match.params.userid,
-            }
+            },
         })
         this.props.dispatch({
             type: 'userinfo/getdepbyuserid',
             payload: {
                 User_ID: this.props.match.params.userid,
-            }
+            },
         })
     }
 
@@ -98,13 +99,13 @@ export default class UserInfoEdit extends Component {
         if (this.props.UserRoles !== nextProps.UserRoles) {
             this.setState({
                 checkedKey: nextProps.UserRoles,
-                checkedKeySel: nextProps.UserRoles
+                checkedKeySel: nextProps.UserRoles,
             })
         }
         if (this.props.UserDep !== nextProps.UserDep) {
             this.setState({
                 checkedKeys: nextProps.UserDep,
-                checkedKeysSel: nextProps.UserDep
+                checkedKeysSel: nextProps.UserDep,
             })
         }
     }
@@ -132,6 +133,7 @@ export default class UserInfoEdit extends Component {
     onSelect = (selectedKey, info) => {
         this.setState({ selectedKey });
     };
+
     onChecks = checkedKeys => {
         this.setState({ checkedKeys });
         const leafTree = [];
@@ -142,9 +144,11 @@ export default class UserInfoEdit extends Component {
         });
         this.setState({ checkedKeysSel: leafTree });
     };
+
     onSelects = (selectedKeys, info) => {
         this.setState({ selectedKeys });
     };
+
     renderTreeNodes = data =>
         data.map(item => {
             if (item.children.length == 0) {
@@ -168,22 +172,26 @@ export default class UserInfoEdit extends Component {
 
     postFormDatas() {
         // this.onSubmitForm();
-        const { dispatch, form, RolesTreeData } = this.props;
+        const {
+          dispatch,
+          form,
+          RolesTreeData,
+        } = this.props;
         const { leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
         if (checkedKeySel.length == 0) {
-            message.error("角色不能为空");
+            message.error('角色不能为空');
             return;
         }
         if (checkedKeysSel.length == 0) {
-            message.error("部门不能为空");
+            message.error('部门不能为空');
             return;
         }
         form.validateFields((err, values) => {
-            console.log("11=", values)
+            console.log('11=', values)
             if (!err) {
-                let FormData = {};
-                for (let key in values) {
-                    if (values[key] && values[key]["fileList"]) {
+                const FormData = {};
+                for (const key in values) {
+                    if (values[key] && values[key].fileList) {
                         FormData[key] = uid;
                     } else {
                         FormData[key] = values[key] && values[key].toString()
@@ -202,11 +210,11 @@ export default class UserInfoEdit extends Component {
                         roleID: this.state.checkedKeySel,
                         departID: this.state.checkedKeysSel,
                         FormData: {
-                            "User_ID": this.props.match.params.userid,
+                            User_ID: this.props.match.params.userid,
                             ...FormData,
                             // uid: uid
                         },
-                    }
+                    },
                 })
             }
         });
@@ -228,19 +236,19 @@ export default class UserInfoEdit extends Component {
     }
 
     render() {
-        const { match, routerData, children } = this.props;
+        const { match, routerData, children, btnisloading } = this.props;
         const tablist = [{
             key: 'base',
-            tab: '基本信息'
+            tab: '基本信息',
         },
         {
             key: 'roles',
-            tab: '角色设置'
+            tab: '角色设置',
         },
         {
             key: 'departs',
-            tab: '部门设置'
-        }
+            tab: '部门设置',
+        },
         ];
 
         const submitFormLayout = {
@@ -249,25 +257,24 @@ export default class UserInfoEdit extends Component {
                 sm: { span: 10, offset: 7 },
             },
         };
-        const title = this.state.selectKey === "base" ? "基本信息" : (this.state.selectKey === "roles" ? "角色设置" : "部门设置");
+        const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
-            <PageHeaderWrapper title={"编辑 - " + title}>
+            <PageHeaderWrapper title={`编辑 - ${title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
                             <Sider width={270} style={{ background: '#fff' }}>
                                 <Menu
                                     mode="inline"
-                                    selectedKeys={this.state.activeKey || "base"}
+                                    selectedKeys={this.state.activeKey || 'base'}
                                     onClick={({ key }) => {
-
                                         this.setState({
                                             activeKey: key,
                                         });
                                         switch (key) {
-                                            case "base": this.setState({ baseState: 'block', rolesState: 'none', departState: 'none' }); break;
-                                            case "roles": this.setState({ baseState: 'none', rolesState: 'block', departState: 'none' }); break;
-                                            case "departs": this.setState({ baseState: 'none', rolesState: 'none', departState: 'block' }); break;
+                                            case 'base': this.setState({ baseState: 'block', rolesState: 'none', departState: 'none' }); break;
+                                            case 'roles': this.setState({ baseState: 'none', rolesState: 'block', departState: 'none' }); break;
+                                            case 'departs': this.setState({ baseState: 'none', rolesState: 'none', departState: 'block' }); break;
                                             default: return null;
                                         }
                                         this.setState({
@@ -281,9 +288,9 @@ export default class UserInfoEdit extends Component {
                                 </Menu>
 
                             </Sider>
-                            <Content style={{ padding: '0 10px', position: "relative" }}>
+                            <Content style={{ padding: '0 10px', position: 'relative' }}>
                                 <Button
-                                    style={{ position: "absolute", right: 20, zIndex: 1, top: 11 }}
+                                    style={{ position: 'absolute', right: 20, zIndex: 1, top: 11 }}
                                     onClick={() => {
                                         history.go(-1);
                                     }}
@@ -291,12 +298,12 @@ export default class UserInfoEdit extends Component {
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
                                     <SdlForm
-                                        configId={"UserInfoAdd"}
+                                        configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm}
                                         form={this.props.form}
-                                        isEdit={true}
-                                        hideBtns={true}
-                                        keysParams={{ "dbo.Base_UserInfo.User_ID": this.props.match.params.userid }}
+                                        isEdit
+                                        hideBtns
+                                        keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
                                     >
                                         {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
@@ -326,10 +333,10 @@ export default class UserInfoEdit extends Component {
 
                                                 onClick={() => {
                                                     this.setState({
-                                                        activeKey: "roles",
+                                                        activeKey: 'roles',
                                                         baseState: 'none',
                                                         rolesState: 'block',
-                                                        departState: 'none'
+                                                        departState: 'none',
                                                     })
                                                 }}
                                             >下一步
@@ -346,7 +353,7 @@ export default class UserInfoEdit extends Component {
                                                 height: 'calc(100vh/2)',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
                                             }}
                                             size="large"
                                         /> :
@@ -370,10 +377,10 @@ export default class UserInfoEdit extends Component {
                                             type="primary"
                                             onClick={() => {
                                                 this.setState({
-                                                    activeKey: "departs",
+                                                    activeKey: 'departs',
                                                     baseState: 'none',
                                                     rolesState: 'none',
-                                                    departState: 'block'
+                                                    departState: 'block',
                                                 })
                                             }}
                                         >下一步
@@ -388,7 +395,7 @@ export default class UserInfoEdit extends Component {
                                                 height: 'calc(100vh/2)',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
                                             }}
                                             size="large"
                                         /> :
@@ -411,6 +418,7 @@ export default class UserInfoEdit extends Component {
                                         <Button
                                             type="primary"
                                             onClick={this.postFormDatas}
+                                            loading={btnisloading}
                                         >保存
                                         </Button>
                                     </Divider>

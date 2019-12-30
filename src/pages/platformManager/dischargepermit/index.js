@@ -24,6 +24,9 @@ import {
     tableInfo: autoForm.tableInfo,
     searchForm: autoForm.searchForm,
     routerConfig: autoForm.routerConfig,
+    btnisloading: loading.effects['autoForm/add'],
+    btnisloading1: loading.effects['autoForm/saveEdit'],
+
 }))
 @Form.create()
  class Index extends Component {
@@ -152,6 +155,7 @@ import {
 
     render() {
         console.log('this.props', this.props);
+        const { btnisloading, btnisloading1 } = this.props;
         const { configId, EntName } = this.props.match.params;
         const { DataWhere } = this.state;
         if (this.props.loading) {
@@ -232,6 +236,7 @@ import {
                               onOk={this.handleOk}
                               okText="保存"
                               cancelText="关闭"
+                              confirmLoading={btnisloading}
                               onCancel={() => {
                                 this.setState({
                                   visible: false,
@@ -246,6 +251,7 @@ import {
                               visible={this.state.Evisible}
                               destroyOnClose // 清除上次数据
                                 onOk={this.SaveOk}
+                                confirmLoading={btnisloading1}
                               okText="保存"
                               cancelText="关闭"
                               onCancel={() => {

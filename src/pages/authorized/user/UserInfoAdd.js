@@ -22,8 +22,9 @@ import {
 import { connect } from 'dva';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SdlForm from "@/pages/AutoFormManager/SdlForm"
-const Search = Input.Search;
+import SdlForm from '@/pages/AutoFormManager/SdlForm'
+
+const { Search } = Input;
 
 
 const FormItem = Form.Item;
@@ -32,17 +33,17 @@ const {
 } = Layout;
 
 const {
-    Item
+    Item,
 } = Menu;
 const { TreeNode } = Tree;
-
 
 
 @connect(({ userinfo, loading }) => ({
     treeDataLoading: loading.effects['userinfo/getdepartmenttree'],
     RolesTreeDataLoading: loading.effects['userinfo/getrolestree'],
     treeData: userinfo.DepartTree,
-    RolesTreeData: userinfo.RolesTree
+    RolesTreeData: userinfo.RolesTree,
+    btnisloading: loading.effects['userinfo/add'],
 }))
 @Form.create()
 export default class UserInfoAdd extends Component {
@@ -62,7 +63,7 @@ export default class UserInfoAdd extends Component {
             selectedKeys: [],
             selectedKey: [],
             FormDatas: [],
-            leafTreeDatas: []
+            leafTreeDatas: [],
         };
 
         this.postFormDatas = this.postFormDatas.bind(this)
@@ -71,11 +72,11 @@ export default class UserInfoAdd extends Component {
     componentDidMount() {
         this.props.dispatch({
             type: 'userinfo/getdepartmenttree',
-            payload: {}
+            payload: {},
         })
         this.props.dispatch({
             type: 'userinfo/getrolestree',
-            payload: {}
+            payload: {},
         })
     }
 
@@ -102,6 +103,7 @@ export default class UserInfoAdd extends Component {
     onSelect = (selectedKey, info) => {
         this.setState({ selectedKey });
     };
+
     onChecks = checkedKeys => {
         this.setState({ checkedKeys });
         const leafTree = [];
@@ -116,6 +118,7 @@ export default class UserInfoAdd extends Component {
     onSelects = (selectedKeys, info) => {
         this.setState({ selectedKeys });
     };
+
     renderTreeNodes = data =>
         data.map(item => {
             if (item.children.length == 0) {
@@ -148,18 +151,18 @@ export default class UserInfoAdd extends Component {
         const { dispatch, form, RolesTreeData } = this.props;
         const { FormDatas, leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
         if (checkedKeySel.length == 0) {
-            message.error("角色不能为空");
+            message.error('角色不能为空');
             return;
         }
         if (checkedKeysSel.length == 0) {
-            message.error("部门不能为空");
+            message.error('部门不能为空');
             return;
         }
         form.validateFields((err, values) => {
             if (!err) {
-                let FormData = {};
-                for (let key in values) {
-                    if (values[key] && values[key]["fileList"]) {
+                const FormData = {};
+                for (const key in values) {
+                    if (values[key] && values[key].fileList) {
                         FormData[key] = uid;
                     } else {
                         FormData[key] = values[key] && values[key].toString()
@@ -180,27 +183,26 @@ export default class UserInfoAdd extends Component {
                             ...FormData,
                             // uid: uid
                         },
-                    }
+                    },
                 })
-
             }
         });
     }
 
     render() {
-        const { match, routerData, children } = this.props;
+        const { match, routerData, children, btnisloading } = this.props;
         const tablist = [{
             key: 'base',
-            tab: '基本信息'
+            tab: '基本信息',
         },
         {
             key: 'roles',
-            tab: '角色设置'
+            tab: '角色设置',
         },
         {
             key: 'departs',
-            tab: '部门设置'
-        }
+            tab: '部门设置',
+        },
         ];
 
         const submitFormLayout = {
@@ -209,25 +211,24 @@ export default class UserInfoAdd extends Component {
                 sm: { span: 10, offset: 7 },
             },
         };
-        const title = this.state.selectKey === "base" ? "基本信息" : (this.state.selectKey === "roles" ? "角色设置" : "部门设置");
+        const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
-            <PageHeaderWrapper title={"添加 - " + title}>
+            <PageHeaderWrapper title={`添加 - ${  title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
                             <Sider width={270} style={{ background: '#fff' }}>
                                 <Menu
                                     mode="inline"
-                                    selectedKeys={this.state.activeKey || "base"}
+                                    selectedKeys={this.state.activeKey || 'base'}
                                     onClick={({ key }) => {
-
                                         this.setState({
                                             activeKey: key,
                                         });
                                         switch (key) {
-                                            case "base": this.setState({ baseState: 'block', rolesState: 'none', departState: 'none' }); break;
-                                            case "roles": this.setState({ baseState: 'none', rolesState: 'block', departState: 'none' }); break;
-                                            case "departs": this.setState({ baseState: 'none', rolesState: 'none', departState: 'block' }); break;
+                                            case 'base': this.setState({ baseState: 'block', rolesState: 'none', departState: 'none' }); break;
+                                            case 'roles': this.setState({ baseState: 'none', rolesState: 'block', departState: 'none' }); break;
+                                            case 'departs': this.setState({ baseState: 'none', rolesState: 'none', departState: 'block' }); break;
                                             default: return null;
                                         }
                                         this.setState({
@@ -241,9 +242,9 @@ export default class UserInfoAdd extends Component {
                                 </Menu>
 
                             </Sider>
-                            <Content style={{ padding: '0 10px', position: "relative" }}>
+                            <Content style={{ padding: '0 10px', position: 'relative' }}>
                                 <Button
-                                    style={{ position: "absolute", right: 20, zIndex: 1, top: 11 }}
+                                    style={{ position: 'absolute', right: 20, zIndex: 1, top: 11 }}
                                     onClick={() => {
                                         history.go(-1);
                                     }}
@@ -251,10 +252,10 @@ export default class UserInfoAdd extends Component {
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ display: this.state.baseState }}>
                                     <SdlForm
-                                        configId={'UserInfoAdd'}
+                                        configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm.bind(this)}
                                         form={this.props.form}
-                                        hideBtns={true}
+                                        hideBtns
                                     >
                                         {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
@@ -287,11 +288,11 @@ export default class UserInfoAdd extends Component {
                                                     form.validateFields((err, values) => {
                                                         if (!err) {
                                                             this.setState({
-                                                                activeKey: "roles",
+                                                                activeKey: 'roles',
                                                                 baseState: 'none',
                                                                 rolesState: 'block',
                                                                 departState: 'none',
-                                                                selectKey: "roles"
+                                                                selectKey: 'roles',
                                                             })
                                                         }
                                                     })
@@ -310,7 +311,7 @@ export default class UserInfoAdd extends Component {
                                                 height: 'calc(100vh/2)',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
                                             }}
                                             size="large"
                                         /> :
@@ -326,7 +327,7 @@ export default class UserInfoAdd extends Component {
                                                 onSelect={this.onSelect}
                                                 selectedKeys={this.state.selectedKey}
                                                 // autoExpandParent={true}
-                                                defaultExpandAll={true}
+                                                defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.RolesTreeData)}
                                             </Tree>
@@ -337,11 +338,11 @@ export default class UserInfoAdd extends Component {
                                             type="primary"
                                             onClick={() => {
                                                 this.setState({
-                                                    activeKey: "departs",
+                                                    activeKey: 'departs',
                                                     baseState: 'none',
                                                     rolesState: 'none',
                                                     departState: 'block',
-                                                    selectKey: "departs"
+                                                    selectKey: 'departs',
                                                 })
                                             }}
                                         >下一步
@@ -356,7 +357,7 @@ export default class UserInfoAdd extends Component {
                                                 height: 'calc(100vh/2)',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
                                             }}
                                             size="large"
                                         /> :
@@ -370,8 +371,8 @@ export default class UserInfoAdd extends Component {
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
-                                                autoExpandParent={true}
-                                                defaultExpandAll={true}
+                                                autoExpandParent
+                                                defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>
@@ -380,6 +381,7 @@ export default class UserInfoAdd extends Component {
                                         <Button
                                             type="primary"
                                             onClick={this.postFormDatas}
+                                            loading={btnisloading}
                                         >保存
                                         </Button>
                                     </Divider>
