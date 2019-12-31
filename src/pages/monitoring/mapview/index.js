@@ -82,6 +82,9 @@ class MapView extends Component {
       zoomchange: value => {
         const zoom = _thismap.getZoom();
         let stateZoom = this.state.zoom;
+        // if (stateZoom <= 14) {
+        //   stateZoom = this.state.zoom - 2;
+        // }
         if (this.props.allEntAndPointList.length === 1) {
           stateZoom = this.state.zoom - 4;
         }
@@ -972,7 +975,7 @@ class MapView extends Component {
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
             <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
-              e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
+              e.target.value === 'data' && router.push('/monitoring/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>
