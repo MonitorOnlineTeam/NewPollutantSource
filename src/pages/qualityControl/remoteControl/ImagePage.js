@@ -13,6 +13,7 @@ import styles from './index.less'
 import { connect } from 'dva';
 import RealTimeContrastPage from '../realTimeContrast/RealTimeContrastPage'
 
+
 const { Option } = Select;
 // 质控仪状态 - 颜色
 // 0 离线 1 在线 3 异常 4质控中 5吹扫中
@@ -37,6 +38,7 @@ const QCStatusColor = {
   QCStatus: qualityControl.QCStatus,
   currentDGIMN: qualityControlModel.currentDGIMN,
   realtimeStabilizationTime: qualityControl.realtimeStabilizationTime,
+  totalFlow: qualityControl.totalFlow,
 }))
 
 class ImagePage extends PureComponent {
@@ -89,20 +91,31 @@ class ImagePage extends PureComponent {
     // 吹扫状态时，关闭查看实时比对提示
     if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
       notification.close("notification");
-      // 重置model数据
-      this.props.dispatch({
-        type: "qualityControlModel/changeRealTimeThanData",
-        payload: {
-          valueList: [],
-          timeList: [],
-          tableData: [],
-          standardValueList: [],
-          start: 0,
-          end: 20,
-          flag: true
-        }
-      })
+      // // 重置model数据
+      // this.props.dispatch({
+      //   type: "qualityControlModel/changeRealTimeThanData",
+      //   payload: {
+      //     valueList: [],
+      //     timeList: [],
+      //     tableData: [],
+      //     standardValueList: [],
+      //     start: 0,
+      //     end: 20,
+      //     flag: true
+      //   }
+      // })
     }
+
+    // 状态从指控中变为吹扫，获取质控结果
+    // if (this.props.QCStatus === "4" && nextProps.QCStatus === "5") {
+    //   this.props.dispatch({
+    //     type: "qualityControl/getQCAResult",
+    //     payload: {
+    //       QCAMN: nextProps.QCAMN
+    //     }
+    //   })
+    // }
+
     // 状态从吹扫变为空时，清空所有流量和浓度数据
     if (this.props.QCStatus === "5" && nextProps.QCStatus === "6") {
       this.props.dispatch({
@@ -176,7 +189,7 @@ class ImagePage extends PureComponent {
   }
 
   render() {
-    const { gasData, cemsList, QCStatus, valveStatus, standardValueUtin, p1Pressure, p2Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <MapInteractionCSS style={{ position: 'relative' }}>
@@ -438,6 +451,14 @@ class ImagePage extends PureComponent {
             <div className={styles.gasConcentration}>
               <p>配比标气浓度</p>
               <span>{standardValue} {standardValueUtin}</span>
+            </div>
+
+            {/* 标气浓度 */}
+            <div className={styles.sum}>
+              <p>总流量</p>
+              <span>
+                {totalFlow ? `${totalFlow}ml/min` : undefined}
+              </span>
             </div>
           </div>
         </MapInteractionCSS>

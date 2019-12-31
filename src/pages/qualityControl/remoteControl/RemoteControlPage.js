@@ -148,9 +148,28 @@ class RemoteControlPage extends Component {
       success: () => {
         if (payload.flag) {
           // 重置实时结果比对数据
+          // this.props.dispatch({
+          //   type: "qualityControlModel/updateRealtimeData",
+          //   payload: {}
+          // })
+          // 重置model数据
           this.props.dispatch({
-            type: "qualityControlModel/updateRealtimeData",
-            payload: {}
+            type: "qualityControlModel/changeRealTimeThanData",
+            payload: {
+              valueList: [],
+              timeList: [],
+              tableData: [],
+              standardValueList: [],
+              start: 0,
+              end: 20,
+              flag: true
+            }
+          })
+          this.props.dispatch({
+            type: "qualityControl/updateState",
+            payload: {
+              QCAResult: "0"
+            }
           })
           this.setState({ visible: false });
         }
@@ -385,8 +404,12 @@ class RemoteControlPage extends Component {
                           message: '请输入总流量设定值!',
                         },],
                       })(
-                        <InputNumber placeholder="请输入总流量设定值" style={{ width: '100%' }} min={0} max={1000} precision={1} />
+                        <InputNumber
+                          // formatter={value => `${value}${form.getFieldValue("OldStandardUnit")}`}
+                          // parser={value => value.replace(`${form.getFieldValue("OldStandardUnit")}`, '')}
+                          placeholder="请输入总流量设定值" style={{ width: '70%' }} min={0} precision={1} />
                       )}
+                      <span className="ant-form-text">ml</span>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -398,8 +421,9 @@ class RemoteControlPage extends Component {
                         }],
                       })(
                         // min={50} max={5000}
-                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '100%' }} min={0} max={form.getFieldValue("OldStandardValue")} precision={1} />
+                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '70%' }} min={0} max={form.getFieldValue("OldStandardValue")} precision={1} />
                       )}
+                      <span className="ant-form-text">{form.getFieldValue("OldStandardUnit")}</span>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -496,7 +520,15 @@ class RemoteControlPage extends Component {
                         //   message: '请输入原标气浓度!',
                         // },],
                       })(
-                        <p>{form.getFieldValue("OldStandardValue")}</p>
+                        <>
+                          {
+                            form.getFieldValue("OldStandardValue") ?
+                              <p>
+                                {form.getFieldValue("OldStandardValue")}
+                                {form.getFieldValue("OldStandardUnit")}
+                              </p> : undefined
+                          }
+                        </>
                         // min={500} max={5000}
                         // <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
                       )}

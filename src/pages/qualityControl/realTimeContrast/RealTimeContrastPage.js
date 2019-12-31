@@ -5,13 +5,15 @@
  * @Last Modified time: 2019-12-05 17:42:21
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Radio } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
+import CustomIcon from '@/components/CustomIcon'
+import styles from '../remoteControl/index.less'
 
 const Option = Select.Option;
 
@@ -41,7 +43,8 @@ const columns = [
   dataSource: qualityControlModel.dataSource,
   standardValueList: qualityControlModel.standardValueList,
   start: qualityControlModel.start,
-  end: qualityControlModel.end
+  end: qualityControlModel.end,
+  QCAResult: qualityControl.QCAResult,
   // chartMax: qualityControlModel.chartMax,
 }))
 class index extends Component {
@@ -72,10 +75,10 @@ class index extends Component {
     //     DGIMNList: []
     //   }
     // })
-    this.props.dispatch({
-      type: "qualityControlModel/updateRealtimeData",
-      payload: {}
-    })
+    // this.props.dispatch({
+    //   type: "qualityControlModel/updateRealtimeData",
+    //   payload: {}
+    // })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -220,8 +223,8 @@ class index extends Component {
       yAxis: [
         {
           type: 'value',
-          name: '',
-          min: 0,
+          // name: '',
+          // min: 0,
           max: maxVal,
           // interval: 50,
           axisLabel: {
@@ -279,6 +282,21 @@ class index extends Component {
     };
   }
 
+  // 获取质控结果
+  getQCAResult = () => {
+    console.log('QCAResult-new=', this.props.QCAResult)
+    switch (this.props.QCAResult) {
+      case "0":
+        return <Spin style={{position: 'absolute', right: 20}} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+      case "1":
+        return <CustomIcon className={styles.QCResult} type="icon-hege" />
+      case "2":
+        return <CustomIcon className={styles.QCResult} type="icon-buhege" />
+      case "3":
+        return <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+    }
+  }
+
   render() {
     const { valueList, timeList, tableData, PollutantCode } = this.props;
     const { showType } = this.state;
@@ -293,6 +311,7 @@ class index extends Component {
           <Radio.Button value="data">数据</Radio.Button>
         </Radio.Group>
       }>
+        {this.getQCAResult()}
         {
           showType === "chart" ? <ReactEcharts
             theme="line"
