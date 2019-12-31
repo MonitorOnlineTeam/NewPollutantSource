@@ -9,6 +9,7 @@ import SdlCascader from '../AutoFormManager/SdlCascader'
 import SearchSelect from '../AutoFormManager/SearchSelect'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import SdlTable from '@/components/SdlTable'
+import YearPicker from '@/components/YearPicker'
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker
@@ -347,11 +348,13 @@ class SiteDailyPage extends PureComponent {
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode, format } = this.state;
 
-    let timeEle = null;
+    let timeEle = <DatePicker allowClear={false} style={{ width: "100%" }} format={format} />;
     if (format === "YYYY-MM") {
       timeEle = <MonthPicker allowClear={false} style={{ width: "100%" }} />
-    } else {
-      timeEle = <DatePicker allowClear={false} style={{ width: "100%" }} format={format} />
+    } else if (format === "YYYY") {
+      timeEle = <YearPicker format={format} allowClear={false} style={{ width: "100%" }} _onPanelChange={(v) => {
+        this.props.form.setFieldsValue({ "ReportTime": v })
+      }} />
     }
     if (exportLoading) {
       return <Spin

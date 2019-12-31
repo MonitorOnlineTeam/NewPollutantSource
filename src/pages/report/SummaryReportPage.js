@@ -7,6 +7,7 @@ import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
 import SdlTable from '@/components/SdlTable'
 import SelectPollutantType from '@/components/SelectPollutantType'
+import YearPicker from '@/components/YearPicker'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -234,6 +235,30 @@ class DailySummaryPage extends PureComponent {
     let timeEle = <DatePicker format={format} allowClear={false} style={{ width: "100%" }} />;
     if (reportType === "monthly") {
       timeEle = <MonthPicker allowClear={false} style={{ width: "100%" }} />
+    } else if (reportType === "annals") {
+      timeEle = <YearPicker format={format} allowClear={false} style={{ width: "100%" }} _onPanelChange={(v) => {
+        this.props.form.setFieldsValue({ "ReportTime": v })
+      }} />
+      // timeEle = <DatePicker
+      //   allowClear={false}
+      //   format={format}
+      //   mode="year"
+      //   open={isopen}
+      //   style={{ width: "100%" }}
+      //   onOpenChange={(status) => {
+      //     if (status) {
+      //       this.setState({ isopen: true })
+      //     } else {
+      //       this.setState({ isopen: false })
+      //     }
+      //   }}
+      //   onPanelChange={(v) => {
+      //     this.setState({
+      //       isopen: false
+      //     })
+      //     this.props.form.setFieldsValue({ "ReportTime": v })
+      //   }}
+      // />
     }
     return (
       <PageHeaderWrapper>
@@ -241,7 +266,7 @@ class DailySummaryPage extends PureComponent {
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col xl={6} sm={24} md={12}>
+                <Col xl={5} sm={24} md={12}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator("PollutantSourceType", {
                       // initialValue: defaultSearchForm.PollutantSourceType,
@@ -281,7 +306,7 @@ class DailySummaryPage extends PureComponent {
                 {/* </Row> */}
                 {/* <Row gutter={{ md: 8, lg: 24, x
               l: 48 }}> */}
-                <Col xl={6} sm={24} md={12}>
+                <Col xl={7} sm={24} md={12}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator("ReportTime", {
                       initialValue: defaultSearchForm.ReportTime,
