@@ -493,7 +493,7 @@ class ImagePage extends PureComponent {
           <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert startTime={realtimeStabilizationTime.StartTime} stabilizationTime={realtimeStabilizationTime.StabilizationTime} />
         </Modal>
         <Modal
-          title="全屏查看"
+          // title="全屏查看"
           visible={this.state.fullscreenVisible}
           footer={[]}
           // okText={"开始质控"}
@@ -501,7 +501,7 @@ class ImagePage extends PureComponent {
           width={"98%"}
           destroyOnClose
           style={{ top: 20 }}
-          bodyStyle={{ height: "calc(100vh - 40px - 55px - 21px)" }}
+          bodyStyle={{ height: "calc(100vh - 40px - 21px)" }}
           onCancel={() => {
             this.setState({
               fullscreenVisible: false
