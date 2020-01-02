@@ -131,3 +131,8 @@ export async function getStabilizationTime(params) {
   return result;
 }
 
+// 获取质控结果
+export async function getQCAResult(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAResultByQCAMN', params, null);
+  return result;
+}

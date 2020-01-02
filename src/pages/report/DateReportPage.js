@@ -9,8 +9,10 @@ import SdlCascader from '../AutoFormManager/SdlCascader'
 import SearchSelect from '../AutoFormManager/SearchSelect'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import SdlTable from '@/components/SdlTable'
+import YearPicker from '@/components/YearPicker'
 const FormItem = Form.Item;
 const { Option } = Select;
+const { MonthPicker } = DatePicker
 
 
 @connect(({ loading, report, autoForm, global }) => ({
@@ -51,9 +53,11 @@ const { Option } = Select;
 class SiteDailyPage extends PureComponent {
   constructor(props) {
     super(props);
+    const format = props.match.params.reportType === "siteDaily" ? "YYYY-MM-DD" : (props.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
     this.state = {
+      format: format,
       columns: [],
-      currentDate: moment().format("YYYY-MM-DD"),
+      currentDate: moment().format(format),
       defaultRegionCode: []
     };
     this.SELF = {
@@ -102,8 +106,19 @@ class SiteDailyPage extends PureComponent {
                 pollutantTypeCode: defalutVal,
                 callback: (res) => {
                   res.Datas.length && this.setState({
-                    currentEntName: res.Datas[0]["dbo.T_Bas_Enterprise.EntName"]
+                    currentEntName: res.Datas[0]["ParentName"]
                   })
+                  if (!res.Datas.length) {
+                    this.props.dispatch({
+                      type: "report/updateState",
+                      payload: {
+                        dateReportForm: {
+                          ...this.props.dateReportForm,
+                          total: 0
+                        }
+                      }
+                    })
+                  }
                   // 获取污染物类型 = 表头
                   this.props.dispatch({
                     type: "report/getPollutantList",
@@ -146,8 +161,9 @@ class SiteDailyPage extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname && this.props.form.getFieldValue("EntCode")) {
       // 格式化日期
-      const format = nextProps.match.params.reportType === "daily" ? "YYYY-MM-DD" : (nextProps.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
+      const format = nextProps.match.params.reportType === "siteDaily" ? "YYYY-MM-DD" : (nextProps.match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
       this.setState({
+        format: format,
         currentDate: this.props.form.getFieldValue("ReportTime") && moment(this.props.form.getFieldValue("ReportTime")).format(format),
       })
       // 获取表格数据
@@ -230,7 +246,10 @@ class SiteDailyPage extends PureComponent {
 
   statisticsReport() {
     const { form, match } = this.props;
+    const { format } = this.state;
     // const { uid, configId, isEdit, keysParams } = this._SELF_;
+    // const format = match.params.reportType === "daily" ? "YYYY-MM-DD" : (match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
+
     form.validateFields((err, values) => {
       if (!err) {
         //         EntCode: undefined
@@ -255,7 +274,7 @@ class SiteDailyPage extends PureComponent {
         //   return;
         // }
         this.setState({
-          currentDate: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
+          currentDate: values.ReportTime && moment(values.ReportTime).format(format),
           currentEntName: this.props.enterpriseList.filter(item => item["ParentCode"] == values.EntCode)[0]["ParentName"]
         })
         // 获取污染物类型 = 表头
@@ -327,7 +346,16 @@ class SiteDailyPage extends PureComponent {
   render() {
     const { form: { getFieldDecorator }, entAndPointLoading, dateReportForm, exportLoading, match: { params: { reportType } }, dateReportData, pollutantTypeList, regionList, loading, dispatch, enterpriseList, entLoading, configInfo } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
-    const { currentEntName, currentDate, defaultRegionCode } = this.state;
+    const { currentEntName, currentDate, defaultRegionCode, format } = this.state;
+
+    let timeEle = <DatePicker allowClear={false} style={{ width: "100%" }} format={format} />;
+    if (format === "YYYY-MM") {
+      timeEle = <MonthPicker allowClear={false} style={{ width: "100%" }} />
+    } else if (format === "YYYY") {
+      timeEle = <YearPicker format={format} allowClear={false} style={{ width: "100%" }} _onPanelChange={(v) => {
+        this.props.form.setFieldsValue({ "ReportTime": v })
+      }} />
+    }
     if (exportLoading) {
       return <Spin
         style={{
@@ -342,157 +370,159 @@ class SiteDailyPage extends PureComponent {
     }
     return (
       <PageHeaderWrapper>
-        <Card className="contentContainer">
-          <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={3} sm={24}>
-                <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
-                  {getFieldDecorator("PollutantSourceType", {
-                    // initialValue: defaultSearchForm.PollutantSourceType,
-                    initialValue: pollutantTypeList.length ? pollutantTypeList[0].pollutantTypeCode : undefined,
-                    rules: [{
-                      required: true,
-                      message: '请选择污染物类型',
-                    }],
-                  })(
-                    // <Select placeholder="请选择污染物类型">
-                    //   {
-                    //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
-                    //   }
-                    // </Select>
-                    <SelectPollutantType
-                      placeholder="请选择污染物类型"
-                      onChange={(value) => {
-                        this.props.dispatch({
-                          type: 'report/getEnterpriseList',
-                          payload: {
-                            regionCode: this.props.form.getFieldValue("Regions"),
-                            pollutantTypeCode: value,
+        <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
+          <Card className="contentContainer">
+            <Form layout="inline" style={{ marginBottom: 20 }}>
+              <Row>
+                <Col xxl={3} xl={4} sm={24} lg={7}>
+                  <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+                    {getFieldDecorator("PollutantSourceType", {
+                      // initialValue: defaultSearchForm.PollutantSourceType,
+                      initialValue: pollutantTypeList.length ? pollutantTypeList[0].pollutantTypeCode : undefined,
+                      rules: [{
+                        required: true,
+                        message: '请选择污染物类型',
+                      }],
+                    })(
+                      // <Select placeholder="请选择污染物类型">
+                      //   {
+                      //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
+                      //   }
+                      // </Select>
+                      <SelectPollutantType
+                        placeholder="请选择污染物类型"
+                        onChange={(value) => {
+                          this.props.dispatch({
+                            type: 'report/getEnterpriseList',
+                            payload: {
+                              regionCode: this.props.form.getFieldValue("Regions"),
+                              pollutantTypeCode: value,
+                            }
+                          })
+                        }} />
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={5} xl={6} sm={24} lg={8} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}>
+                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                    {getFieldDecorator("Regions", {
+                      initialValue: defaultRegionCode,
+                      rules: [{
+                        required: true,
+                        message: '请选择行政区',
+                      }],
+                    })(
+                      <SdlCascader
+                        changeOnSelect={false}
+                        placeholder="请选择行政区"
+                        data={regionList}
+                        allowClear={false}
+                        onChange={(val) => {
+                          if (!val.length) {
+                            this.props.form.setFieldsValue({
+                              EntCode: undefined,
+                            });
                           }
-                        })
-                      }} />
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5} sm={24} style={{display: configInfo.GroupRegionState === "1" ? "block" : "none"}}>
-                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                  {getFieldDecorator("Regions", {
-                    initialValue: defaultRegionCode,
-                    rules: [{
-                      required: true,
-                      message: '请选择行政区',
-                    }],
-                  })(
-                    <SdlCascader
-                      changeOnSelect={false}
-                      placeholder="请选择行政区"
-                      data={regionList}
-                      allowClear={false}
-                      onChange={(val) => {
-                        if (!val.length) {
-                          this.props.form.setFieldsValue({
-                            EntCode: undefined,
-                          });
+                          // 根据省市区获取企业
+                          dispatch({
+                            type: 'report/getEnterpriseList',
+                            payload: {
+                              regionCode: val.toString(),
+                              pollutantTypeCode: this.props.form.getFieldValue("PollutantSourceType"),
+                            }
+                          })
+                        }}
+                      />
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={5} xl={7} sm={24} lg={9}>
+                  <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                    {getFieldDecorator("EntCode", {
+                      initialValue: enterpriseList.length ? enterpriseList[0]["ParentCode"] : undefined,
+                      rules: [{
+                        required: true,
+                        message: '请选择监控目标',
+                      }],
+                    })(
+                      // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
+                      <Select
+                        placeholder="请选择监控目标">
+                        {
+                          enterpriseList.map(item =>
+                            <Option value={item["ParentCode"]}>{item["ParentName"]}</Option>)
                         }
-                        // 根据省市区获取企业
-                        dispatch({
-                          type: 'report/getEnterpriseList',
-                          payload: {
-                            regionCode: val.toString(),
-                            pollutantTypeCode: this.props.form.getFieldValue("PollutantSourceType"),
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={5} xl={7} sm={24} lg={7}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator("ReportTime", {
+                      initialValue: defaultSearchForm.ReportTime,
+                      rules: [{
+                        required: true,
+                        message: '请填写统计时间',
+                      }],
+                    })(
+                      timeEle
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={6} xl={7} lg={8}>
+                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                    <Button type="primary" style={{ margin: "0 10px" }} onClick={() => {
+                      this.props.dispatch({
+                        type: 'report/updateState',
+                        payload: {
+                          dateReportForm: {
+                            ...this.props.dateReportForm,
+                            current: 1,
                           }
-                        })
-                      }}
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5} sm={24}>
-                <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
-                  {getFieldDecorator("EntCode", {
-                    initialValue: enterpriseList.length ? enterpriseList[0]["ParentCode"] : undefined,
-                    rules: [{
-                      required: true,
-                      message: '请选择监控目标',
-                    }],
-                  })(
-                    // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
-                    <Select
-                      placeholder="请选择监控目标">
-                      {
-                        enterpriseList.map(item =>
-                          <Option value={item["ParentCode"]}>{item["ParentName"]}</Option>)
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5} sm={24}>
-                <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                  {getFieldDecorator("ReportTime", {
-                    initialValue: defaultSearchForm.ReportTime,
-                    rules: [{
-                      required: true,
-                      message: '请填写统计时间',
-                    }],
-                  })(
-                    <DatePicker allowClear={false} style={{ width: "100%" }} />
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={6}>
-                <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
-                    this.props.dispatch({
-                      type: 'report/updateState',
-                      payload: {
-                        dateReportForm: {
-                          ...this.props.dateReportForm,
-                          current: 1,
                         }
-                      }
-                    });
-                    setTimeout(() => { this.statisticsReport() }, 0)
-                  }}>生成统计</Button>
-                  <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          {
-            currentEntName &&
-            <p className={style.title}>{currentEntName}{currentDate}报表</p>
-          }
-          <SdlTable
-            rowKey={(record, index) => index}
-            loading={loading}
-            // style={{ minHeight: 80 }}
-            size="small"
-            columns={this.state.columns}
-            dataSource={dateReportData}
-            // defaultWidth={80}
-            scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
-            rowClassName={
-              (record, index, indent) => {
-                if (index === 0 || record.time === "0时") {
-                  return;
-                } else if (index % 2 !== 0 || record.time === "0时") {
-                  return style["light"];
+                      });
+                      setTimeout(() => { this.statisticsReport() }, 0)
+                    }}>生成统计</Button>
+                    <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
+                  </FormItem>
+                </Col>
+              </Row>
+            </Form>
+            {
+              currentEntName &&
+              <p className={style.title}>{currentEntName}{currentDate}报表</p>
+            }
+            <SdlTable
+              rowKey={(record, index) => index}
+              loading={loading}
+              // style={{ minHeight: 80 }}
+              size="small"
+              columns={this.state.columns}
+              dataSource={dateReportData}
+              // defaultWidth={80}
+              scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
+              rowClassName={
+                (record, index, indent) => {
+                  if (index === 0 || record.time === "0时") {
+                    return;
+                  } else if (index % 2 !== 0 || record.time === "0时") {
+                    return style["light"];
+                  }
                 }
               }
-            }
-            bordered
-            pagination={{
-              // showSizeChanger: true,
-              showQuickJumper: true,
-              pageSize: dateReportForm.pageSize,
-              current: dateReportForm.current,
-              onChange: this.onTableChange,
-              total: dateReportForm.total
-            }}
-          />
-        </Card>
-      </PageHeaderWrapper>
+              bordered
+              pagination={{
+                // showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize: dateReportForm.pageSize,
+                current: dateReportForm.current,
+                onChange: this.onTableChange,
+                total: dateReportForm.total
+              }}
+            />
+          </Card>
+        </Spin>
+      </PageHeaderWrapper >
     );
   }
 }

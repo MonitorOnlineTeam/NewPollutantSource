@@ -122,10 +122,10 @@ class NavigationTree extends Component {
   componentDidMount() {
     const dom = document.querySelector(this.props.domId);
     if (dom) {
-      if(floats === "topmenu") {
+      if (floats === "topmenu") {
         dom.style.marginLeft = "400px";
         dom.style.marginRight = 0
-      }else{
+      } else {
         dom.style.marginRight = "400px";
         dom.style.marginLeft = 0
       }
@@ -719,16 +719,10 @@ class NavigationTree extends Component {
               <Col span={1}></Col>
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
             </Row> :
-              <Row style={{ textAlign: "center" }}>
-                <Col span={4} style={this.state.normalState ? styleTrue : styleFalse} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066" }} />正常</Col>
-                <Col span={1}></Col>
-                <Col span={4} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999" }} />离线</Col>
-                <Col span={1}></Col>
-                <Col span={4} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94" }} />异常</Col>
-                <Col span={1}></Col>
-                <Col span={4} style={this.state.zState ? styleTrue : styleFalse} onClick={() => this.screenData(4)}><LegendIcon style={{ color: "#1E90FF" }} />质控</Col>
-                <Col span={1}></Col>
-                <Col span={4} style={this.state.cState ? styleTrue : styleFalse} onClick={() => this.screenData(5)}><LegendIcon style={{ color: "#FFC1C1" }} />吹扫</Col>
+              <Row style={{ textAlign: "center" }} type="flex" justify="space-around">
+                <Col span={6} style={this.state.normalState ? styleTrue : styleFalse} onClick={() => this.screenData(1)}><LegendIcon style={{ color: "#34c066", marginRight: 2 }} />正常</Col>
+                <Col span={6} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: "#999999", marginRight: 2 }} />离线</Col>
+                <Col span={6} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: "#e94", marginRight: 2 }} />异常</Col>
               </Row>
             }
           </div>

@@ -590,14 +590,14 @@ export default Model.extend({
               // 数据异常
               // 异常§异常类别编号§异常类别名称
               if (item.IsException) {
-                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;
+                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `1§${item.IsException}§${item.ExceptionType}`;
               } else {
                 delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
               }
               // 数据超标
               //超标§报警颜色§标准值§超标倍数
               if (item.IsOver > -1) {
-                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsOver}§null§${item.StandardValue}§${item.OverStandValue}`;
+                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
               } else {
                 delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
               }
@@ -614,7 +614,7 @@ export default Model.extend({
       // console.log("newRealTimeDataView=", newRealTimeDataView)
       return {
         ...state,
-        realTimeDataView: newRealTimeDataView
+        realTimeDataView: [...newRealTimeDataView]
       }
     }
   }
