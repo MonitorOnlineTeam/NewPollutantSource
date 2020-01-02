@@ -313,8 +313,8 @@ class ResultContrastPage extends Component {
       markLine: {
         name: 'aa',
         data: [[
-          { coord: [`${stabilizationTime}`, 0] },
-          { coord: [`${stabilizationTime}`, chartMax] }
+          { coord: [stabilizationTime, 0] },
+          { coord: [stabilizationTime, chartMax] }
         ]],
         label: {
           normal: {
@@ -328,15 +328,6 @@ class ResultContrastPage extends Component {
       legend: {
         data: ["测量浓度", "配比标气浓度"],
       },
-      // tooltip: {
-      //   // trigger: 'none',
-      //   axisPointer: {
-      //     type: 'cross',
-      //     label: {
-      //       backgroundColor: '#6a7985',
-      //     }
-      //   }
-      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -348,38 +339,14 @@ class ResultContrastPage extends Component {
       },
       xAxis: {
         type: 'category',
-        // type: 'time',
-        // boundaryGap: false,
         data: resultContrastData.timeList,
-        // axisPointer: {
-        //   // type: "none",
-        //   value: '2019/12/6 19:30:56',
-        //   snap: true,
-        //   // triggerTooltip: false,
-        //   lineStyle: {
-        //     color: '#004E52',
-        //     opacity: 0.5,
-        //     width: 2
-        //   },
-        //   label: {
-        //     show: true,
-        //     // formatter: function (params) {
-        //     //   return echarts.format.formatTime('yyyy-MM-dd', params.value);
-        //     // },
-        //     backgroundColor: '#004E52'
-        //   },
-        //   handle: {
-        //     show: true,
-        //     color: 'transparent'
-        //   }
-        // },
       },
       yAxis: [
         {
           type: 'value',
-          name: '',
-          min: 0,
-          max: chartMax ? chartMax.toFixed() : 10,
+          // name: '',
+          // min: 0,
+          max: chartMax ? Math.ceil(chartMax) : 10,
           // interval: 50,
           axisLabel: {
             formatter: '{value}'
@@ -388,12 +355,6 @@ class ResultContrastPage extends Component {
         {
           type: 'value',
           name: '',
-          // min: 0,
-          // max: 25,
-          // interval: 5,
-          // axisLabel: {
-          //     formatter: '{value} °C'
-          // }
         }
       ],
       dataZoom: [{
@@ -424,9 +385,7 @@ class ResultContrastPage extends Component {
         data: resultContrastData.standValue,
         smooth: true,
         type: 'line',
-        // lineStyle: {
-        //   color: "#56f485"
-        // },
+
       },
       { ...stabilizationTimeSeries }
       ]

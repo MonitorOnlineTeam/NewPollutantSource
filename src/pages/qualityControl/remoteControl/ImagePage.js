@@ -84,6 +84,7 @@ class ImagePage extends PureComponent {
           payload: {
             DGIMN: nextProps.currentDGIMN,
             QCAMN: nextProps.QCAMN,
+            Type: "Real"
           },
           form: "realtime"
         })

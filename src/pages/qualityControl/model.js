@@ -291,6 +291,7 @@ export default Model.extend({
             DGIMN: payload.DGIMN,
             QCAMN: payload.QCAMN,
             StandardGasCode: payload.PollutantCode,
+            Type: "History"
           },
           data: result.Datas.timeList && result.Datas.timeList
         })
