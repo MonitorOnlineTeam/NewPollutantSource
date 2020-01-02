@@ -685,7 +685,7 @@ export default {
                 // 数据一览 - 实时
                 {
                   name: 'realtimeDataView',
-                  path: '/monitoring/realtimeDataView',
+                  path: '/monitoring/mapview/realtimeDataView',
                   component: './monitoring/overView/realtime',
                 },
                 {

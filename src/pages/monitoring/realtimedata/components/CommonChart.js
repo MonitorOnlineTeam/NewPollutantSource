@@ -45,13 +45,12 @@ class CommonChart extends Component {
     /** dgimn改變時候切換數據源 */
     componentWillReceiveProps = nextProps => {
         if (nextProps.paramsInfo) {
-            console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
-            console.log('this.props.paramsInfo=', this.props.paramsInfo);
+            // console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
+            // console.log('this.props.paramsInfo=', this.props.paramsInfo);
             if (nextProps.paramsInfo !== this.props.paramsInfo) {
                 let paramsInfo = nextProps.paramsInfo;
                 //console.log('paramsInfo=', paramsInfo);
                 if (paramsInfo) {
-                    debugger
                     paramsInfo.map(item => {
                         var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
                         var state = '0'
