@@ -187,7 +187,7 @@ export default Model.extend({
       }
     },
     // 获取CEMS列表
-    *getCEMSList({ payload }, { call, put, update }) {
+    *getCEMSList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getCEMSList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -204,6 +204,7 @@ export default Model.extend({
             // },
           ],
         })
+        callback && callback(result.Datas)
       }
     },
     // 发送质控命令
