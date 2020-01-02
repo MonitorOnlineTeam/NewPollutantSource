@@ -49,6 +49,7 @@ class Index extends Component {
     render() {
         return (
             <RangePicker
+
                 showTime={this.state.showTime}
                 value={this.props.dateValue}
                 onChange={this.props.onChange}
@@ -61,6 +62,7 @@ class Index extends Component {
                 allowClear = {
                   this.props.allowClear === undefined ? true : this.props.allowClear
                 }
+                {...this.props}
             />
         );
     }

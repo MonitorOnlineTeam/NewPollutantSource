@@ -4,7 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
     Card,
     Spin,
-    message, Empty, Radio,
+    message, Empty, Radio, Row, Col,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -174,7 +174,7 @@ class DataQuery extends Component {
                 mode="multiple"
                 optionDatas={pollutantlist}
                 defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-                style={{ width: 300, marginRight: 10 }}
+                style={{ width: '80%', margin: '5px' }}
                 onChange={this.handlePollutantChange}
                 placeholder="请选择污染物"
                 maxTagCount={2}
@@ -247,8 +247,6 @@ class DataQuery extends Component {
             pollutantNames: '',
             beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
-            pageIndex: 1,
-            pageSize: 20,
         }
         dispatch({
             type: 'dataquery/updateState',
@@ -259,26 +257,6 @@ class DataQuery extends Component {
         this.getpointpollutants(dgimn);
     }
 
-    /** 分页 */
-    onShowSizeChange = (pageIndex, pageSize) => {
-        let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            pageIndex,
-            pageSize,
-        }
-        this.reloaddatalist(historyparams);
-    }
-
-    onChange = (pageIndex, pageSize) => {
-        let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            pageIndex,
-            pageSize,
-        }
-        this.reloaddatalist(historyparams);
-    }
 
     /** 渲染数据展示 */
 
@@ -317,6 +295,7 @@ class DataQuery extends Component {
             dataSource={datatable}
             columns={columns}
             scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
+            Pagination={null}
 
         />);
     }
@@ -328,17 +307,27 @@ class DataQuery extends Component {
             <div>
                 <Card
                     className={!this.props.style ? 'contentContainer' : null}
-                    extra={
+                    title={
                         <div>
+                            <Row>
+                                <Col xxl={6} xl={24} md={24} lg={24}>
                             {!this.props.isloading && this.getpollutantSelect()}
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
-                            <ButtonGroup_ style={{ marginRight: 20, padding: 10, paddingLeft: 0 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                </Col>
+                                <Col xxl={7} xl={24} md={24} lg={24}>
+                            <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                </Col>
+                                <Col xxl={7} xl={24} md={24} lg={24}>
+                            <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                </Col>
+                                <Col xxl={3} xl={24} md={24} lg={24}>
+                            <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
                                 this.displayChange(e.target.value)
                             }}>
                                 <Radio.Button value="chart">图表</Radio.Button>
                                 <Radio.Button value="data">数据</Radio.Button>
                             </Radio.Group>
+                                 </Col>
+                            </Row>
                         </div>
                     }
                 >
