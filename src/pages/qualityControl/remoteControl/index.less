@@ -9,6 +9,22 @@
   font-weight: 500;
 }
 
+.QCResult {
+  font-size: 200px !important;
+  position: absolute;
+  right: 0;
+  z-index: 999;
+  transform: rotate(60deg);
+}
+
+.fullscreen {
+  position: absolute;
+  right: 14px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1;
+}
+
 // .pollutantTitle {
 //   // width: 100%;
 //   color: #000;
@@ -213,7 +229,8 @@
     left: 0;
   }
 
-  .gasConcentration {
+  .gasConcentration,
+  .sum {
     // background: red;
     // opacity: 0.6;
     position: absolute;
@@ -226,6 +243,14 @@
     text-align: center;
     margin-left: -48px;
     background: #ebeef3;
+
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .sum {
+    top: 246px;
 
     p {
       font-weight: 500;

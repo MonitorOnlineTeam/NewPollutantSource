@@ -175,13 +175,13 @@ const BasicLayout = props => {
 
           // let userCookie = Cookie.get('currentUser');
           if (menuItemProps.replace && userCookie !== "null") {
-            dispatch({
-              type: 'global/getBtnAuthority',
-              payload: {
-                Menu_ID: menuItemProps.id,
-                User_ID: JSON.parse(userCookie).User_ID,
-              },
-            });
+            // dispatch({
+            //   type: 'global/getBtnAuthority',
+            //   payload: {
+            //     Menu_ID: menuItemProps.id,
+            //     User_ID: JSON.parse(userCookie).User_ID,
+            //   },
+            // });
           } else if (userCookie === "null") {
             router.push("/user/login");
           }

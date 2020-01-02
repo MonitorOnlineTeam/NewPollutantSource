@@ -91,7 +91,8 @@ export default Model.extend({
     p1Pressure: {},
     QCStatus: undefined, // 质控仪状态
     standardValueUtin: null, // 单位
-    realtimeStabilizationTime: {}
+    realtimeStabilizationTime: {},
+    QCAResult: "0", // 质控结果
   },
   effects: {
     // 获取企业及排口
@@ -186,7 +187,7 @@ export default Model.extend({
       }
     },
     // 获取CEMS列表
-    *getCEMSList({ payload }, { call, put, update }) {
+    *getCEMSList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getCEMSList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -203,6 +204,7 @@ export default Model.extend({
             // },
           ],
         })
+        callback && callback(result.Datas)
       }
     },
     // 发送质控命令
@@ -470,7 +472,17 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    //  获取质控结果
+    * getQCAResult({ payload, otherParams }, { call, put, update, select }) {
+      const result = yield call(services.getQCAResult, {});
+      if (result.IsSuccess) {
+        yield update({
+          QCAResult: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取稳定时间
     * getStabilizationTime({ payload, data, form }, { call, put, update, select }) {
       const result = yield call(services.getStabilizationTime, payload);
@@ -553,6 +565,8 @@ export default Model.extend({
         if (payload.DataGatherCode === state.currentQCAMN) {
           // console.log("payload=", payload)
           let ValveStatus = state.valveStatus;
+          let totalFlow = state.totalFlow;
+          let QCAResult = state.QCAResult;
           let code = payload.Code.replace("i", "")
           const value = payload.Value ? payload.Value * 1 : 0;
           if (code === "32002") {
@@ -580,7 +594,16 @@ export default Model.extend({
             ValveStatus.purge = value
           }
 
+          // 总流量
+          if (code === "33509") {
+            totalFlow = payload.Value
+          }
 
+          // 质控结果
+          if (code === "QCAResult") {
+            console.log("QCAResult=", payload.Value)
+            QCAResult = payload.Value
+          }
 
           // p1/p2 压力
           let p2Pressure = state.p2Pressure;
@@ -639,7 +662,9 @@ export default Model.extend({
             p2Pressure: p2Pressure || state.p2Pressure,
             p1Pressure: p1Pressure || state.p1Pressure,
             standardValue: standardValue,
-            standardValueUtin: standardValueUtin
+            standardValueUtin: standardValueUtin,
+            totalFlow: totalFlow,
+            QCAResult: QCAResult
           }
         }
       }

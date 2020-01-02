@@ -45,9 +45,6 @@ export default Model.extend({
           end: 20,
         }
       } else {
-
-
-        console.log('payload12321311111111=', payload)
         let newTimeList = [];
         let newValueList = [];
         let newTableData = [];

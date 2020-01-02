@@ -41,13 +41,13 @@ class index extends Component {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
 
       let fixed = false;
-      let width = 180;
-      if (nextProps.realtimeColumns.length > 5) {
-        fixed = true;
-      } else {
-        // 计算宽度
-        width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length
-      }
+      let width = 150;
+      // if (nextProps.realtimeColumns.length > 5) {
+      //   fixed = true;
+      // } else {
+      //   // 计算宽度
+      //   width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length
+      // }
       let realtimeColumns = nextProps.realtimeColumns.map(item => {
         return {
           title: item.title,
@@ -83,7 +83,7 @@ class index extends Component {
               const color = airLevelObj.color;
               return <Popover content={
                 <div>
-                <div style={{ marginBottom: 10 }}>
+                  <div style={{ marginBottom: 10 }}>
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -141,17 +141,17 @@ class index extends Component {
       let { sortedInfo, filteredInfo, pollutantCode } = this.state;
       filteredInfo = filteredInfo || {};
       let columns = [
-        {
-          title: '序号',
-          dataIndex: 'index',
-          key: 'index',
-          width: 60,
-          align: 'center',
-          fixed: fixed,
-          render: (value, record, index) => {
-            return index + 1
-          },
-        },
+        // {
+        //   title: '序号',
+        //   dataIndex: 'index',
+        //   key: 'index',
+        //   width: 60,
+        //   align: 'center',
+        //   // fixed: fixed,
+        //   render: (value, record, index) => {
+        //     return index + 1
+        //   },
+        // },
         {
           title: '状态',
           dataIndex: 'Status',
@@ -391,11 +391,12 @@ class index extends Component {
             }}
             loading={dataLoading || columnLoading}
             size="middle"
-            bordered={true}
+            bordered={false}
             pagination={false}
             dataSource={realTimeDataView}
             columns={columns}
-            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
+            // scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
+            // scroll={{ y: 'calc(100vh - 65px - 100px - 200px)' }}
             onChange={this.handleChange}
           />
         </Card>

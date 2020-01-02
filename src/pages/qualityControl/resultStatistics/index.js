@@ -109,7 +109,7 @@ class index extends Component {
       yAxis: [
         {
           type: 'value',
-          max: 100
+          // max: 100
         }
       ],
       series: [

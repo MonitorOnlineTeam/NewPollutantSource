@@ -8,7 +8,7 @@ export async function getEntAndPoint(params) {
 
 // 获取标气
 export async function getStandardGas(params) {
-  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/GetPollutantListByQC', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetPollutantListByQC', params, null);
   return result;
 }
 
@@ -131,3 +131,8 @@ export async function getStabilizationTime(params) {
   return result;
 }
 
+// 获取质控结果
+export async function getQCAResult(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAResultByQCAMN', params, null);
+  return result;
+}
