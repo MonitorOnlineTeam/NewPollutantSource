@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { DatePicker } from 'antd';
+import PropTypes from 'prop-types';
 
 const { RangePicker } = DatePicker;
 
@@ -53,7 +54,7 @@ class Index extends Component {
                 onChange={this.props.onChange}
                 onOk={this.props.onOk}
                 ranges={this.state.ranges}
-                format={this.state.dateFormat}
+                format={this.props.format}
                 disabled={this.props.disabled}
                 style={{ width: 250, marginLeft: 5, marginRight: 5, ...this.props.style }}
                 placeholder={this.state.placeholder}
@@ -63,6 +64,10 @@ class Index extends Component {
             />
         );
     }
+}
+
+Index.defaultProps = {
+   format: 'YYYY-MM-DD HH:mm:ss',
 }
 
 export default Index;

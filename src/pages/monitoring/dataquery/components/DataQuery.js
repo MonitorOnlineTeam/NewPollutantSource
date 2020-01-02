@@ -66,7 +66,7 @@ class DataQuery extends Component {
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
         let { historyparams } = this.props;
-        //debugger;
+        // debugger;
         switch (historyparams.datatype) {
             case 'realtime':
                 if (date[1].add(-7, 'day') > date[0]) {
@@ -100,7 +100,7 @@ class DataQuery extends Component {
             default:
                 return;
         }
-        console.log("date=", date);
+        console.log('date=', date);
         this.setState({ rangeDate: date });
         historyparams = {
             ...historyparams,
@@ -170,7 +170,6 @@ class DataQuery extends Component {
             selectP,
         } = this.state;
         const { pollutantlist } = this.props;
-        if (displayType === 'chart') {
             return (<PollutantSelect
                 mode="multiple"
                 optionDatas={pollutantlist}
@@ -182,8 +181,6 @@ class DataQuery extends Component {
                 maxTagTextLength={5}
                 maxTagPlaceholder="..."
             />);
-        }
-        return '';
     }
 
     /**切换污染物 */
@@ -309,7 +306,7 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '98%', height: this.props.style ? '100%' : "calc(100vh - 330px)", padding: 20 }}
+                    style={{ width: '98%', height: this.props.style ? '100%' : 'calc(100vh - 330px)', padding: 20 }}
                 />);
             }
 
@@ -320,35 +317,22 @@ class DataQuery extends Component {
             dataSource={datatable}
             columns={columns}
             scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
-            pagination={
-                {
-                    size: 'small',
-                    showSizeChanger: true,
-                    showQuickJumper: true,
-                    total: this.props.total,
-                    pageSize: this.props.historyparams.pageSize,
-                    current: this.props.historyparams.pageIndex,
-                    onChange: this.onChange,
-                    onShowSizeChange: this.onShowSizeChange,
-                    pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-                }
-            }
+
         />);
     }
 
 
-
     render() {
-
+        console.log('---------------------', this.state.format);
         return (
             <div>
                 <Card
-                    className={!this.props.style ? "contentContainer" : null}
+                    className={!this.props.style ? 'contentContainer' : null}
                     extra={
                         <div>
-                            {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
-                            <ButtonGroup_ style={{ marginRight: 20, padding: 10, paddingLeft: 0 }} checked="realtime" onChange={this._handleDateTypeChange}  />
+                            {!this.props.isloading && this.getpollutantSelect()}
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                            <ButtonGroup_ style={{ marginRight: 20, padding: 10, paddingLeft: 0 }} checked="realtime" onChange={this._handleDateTypeChange} />
                             <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
                                 this.displayChange(e.target.value)
                             }}>
@@ -358,7 +342,7 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <div style={{ height: "100%", ...this.props.style }}>
+                    <div style={{ height: '100%', ...this.props.style }}>
                         {this.loaddata()}
                     </div>
                 </Card>
