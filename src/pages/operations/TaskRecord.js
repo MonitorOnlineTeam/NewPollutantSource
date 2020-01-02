@@ -10,6 +10,7 @@ import { connect } from 'dva';
 import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin } from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
+import { routerRedux } from 'dva/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
@@ -117,26 +118,36 @@ class TaskRecord extends Component {
             configId={configId}
             appendHandleRows={(row, key) => {
               const text = row["dbo.T_Bas_Task.CompleteTime"];
+              const DGIMN=row["dbo.T_Bas_Task.DGIMN"];
+              const TaskID=row["dbo.T_Bas_Task.ID"];
+              let reslist=[];
+              reslist.push(
+                <Tooltip title="详情">
+                <a><Icon onClick={()=>this.props.dispatch(routerRedux.push
+                  (`/operations/calendar/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
+                   </Tooltip>
+              )
               if (text) {
                 // 当前时间 > 完成时间显示驳回
                 if (moment().diff(text, 'days') > 7) {
-                  return <>
-                    <Divider type="vertical" />
-                    <Tooltip title="驳回">
-                      <Popconfirm
-                        placement="left"
-                        title="确认是否驳回?"
-                        onConfirm={() => {
-                          this.rejectTask(key);
-                        }}
-                        okText="是"
-                        cancelText="否">
-                        <a><Icon type="close-circle" /></a>
-                      </Popconfirm>
-                    </Tooltip>
-                  </>
+                  reslist.push(
+                  <>
+                  <Divider type="vertical" />
+                  <Tooltip title="驳回">
+                    <Popconfirm
+                      placement="left"
+                      title="确认是否驳回?"
+                      onConfirm={() => {
+                        this.rejectTask(key);
+                      }}
+                      okText="是"
+                      cancelText="否">
+                      <a><Icon type="close-circle" /></a>
+                    </Popconfirm>
+                  </Tooltip></>)
                 }
               }
+              return reslist;
             }}
             appendHandleButtons={(keys, rows) => {
               return <Button icon="plus" type="primary" onClick={() => {
