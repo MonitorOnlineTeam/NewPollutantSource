@@ -62,10 +62,22 @@ class RemoteControlPage extends Component {
   }
 
   componentDidMount() {
-    // 获取标气列表
-    this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: this.state.QCAMN } });
     // 获取质控仪CEMS
-    this.props.dispatch({ type: "qualityControl/getCEMSList", payload: { QCAMN: this.state.QCAMN } });
+    this.props.dispatch({
+      type: "qualityControl/getCEMSList",
+      payload: {
+        QCAMN: this.state.QCAMN
+      },
+      callback: (res) => {
+        // 获取标气列表
+        this.props.dispatch({
+          type: "qualityControl/getStandardGas",
+          payload: {
+            QCAMN: this.state.QCAMN, DGIMN: res[0].DGIMN
+          }
+        });
+      }
+    });
     // 获取自动质控信息
     this.props.dispatch({ type: "qualityControl/getAutoQCAInfo", payload: { qcamn: this.state.QCAMN } });
   }
@@ -73,10 +85,22 @@ class RemoteControlPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.QCAMN !== nextProps.QCAMN) {
       this.setState({ QCAMN: nextProps.QCAMN }, () => {
-        // 获取标气列表
-        this.props.dispatch({ type: "qualityControl/getStandardGas", payload: { QCAMN: this.state.QCAMN } });
         // 获取质控仪CEMS
-        this.props.dispatch({ type: "qualityControl/getCEMSList", payload: { QCAMN: this.state.QCAMN } });
+        this.props.dispatch({
+          type: "qualityControl/getCEMSList",
+          payload: {
+            QCAMN: this.state.QCAMN
+          },
+          callback: (res) => {
+            // 获取标气列表
+            this.props.dispatch({
+              type: "qualityControl/getStandardGas",
+              payload: {
+                QCAMN: this.state.QCAMN, DGIMN: res[0].DGIMN
+              }
+            });
+          }
+        });
         // 获取自动质控信息
         this.props.dispatch({ type: "qualityControl/getAutoQCAInfo", payload: { qcamn: this.state.QCAMN } });
       });
@@ -373,7 +397,7 @@ class RemoteControlPage extends Component {
                         },],
                       })(
                         <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
-                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"] })
+                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"], "FlowValue": option.props["data-totalFlowSetVal"] })
                           this.setState({
                             StandardPollutantName: option.props.children ? option.props.children[0] : undefined
                           })
@@ -385,7 +409,7 @@ class RemoteControlPage extends Component {
                         }}>
                           {
                             standardGasList.filter(itm => itm.PollutantCode !== "065").map(item => {
-                              return <Option key={item.PollutantCode} value={item.PollutantCode} data-concentration={item.Concentration}>
+                              return <Option key={item.PollutantCode} value={item.PollutantCode} data-concentration={item.Concentration} data-totalFlowSetVal={item.TotalFlowSetVal}>
                                 {item.PollutantName}
                                 {this.getResidueIcon(item.VolumeValue, item.GasInitPower)}
                               </Option>
@@ -442,6 +466,13 @@ class RemoteControlPage extends Component {
                             this.setState({
                               MNHall: option.props.MNHall
                             })
+                            // 获取标气列表
+                            this.props.dispatch({
+                              type: "qualityControl/getStandardGas",
+                              payload: {
+                                QCAMN: this.state.QCAMN, DGIMN: value
+                              }
+                            });
                           }}>
                           {
                             CEMSList.map(item => {

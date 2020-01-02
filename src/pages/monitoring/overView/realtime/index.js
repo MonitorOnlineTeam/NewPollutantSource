@@ -41,7 +41,7 @@ class index extends Component {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
 
       let fixed = false;
-      let width = 150;
+      let width = 180;
       if (nextProps.realtimeColumns.length > 5) {
         fixed = true;
       } else {
