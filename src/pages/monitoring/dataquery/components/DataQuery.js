@@ -4,7 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
     Card,
     Spin,
-    message, Empty, Radio,
+    message, Empty, Radio, Row, Col,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -66,7 +66,7 @@ class DataQuery extends Component {
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
         let { historyparams } = this.props;
-        //debugger;
+        // debugger;
         switch (historyparams.datatype) {
             case 'realtime':
                 if (date[1].add(-7, 'day') > date[0]) {
@@ -100,7 +100,7 @@ class DataQuery extends Component {
             default:
                 return;
         }
-        console.log("date=", date);
+        console.log('date=', date);
         this.setState({ rangeDate: date });
         historyparams = {
             ...historyparams,
@@ -170,20 +170,17 @@ class DataQuery extends Component {
             selectP,
         } = this.state;
         const { pollutantlist } = this.props;
-        if (displayType === 'chart') {
             return (<PollutantSelect
                 mode="multiple"
                 optionDatas={pollutantlist}
                 defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-                style={{ width: 300, marginRight: 10 }}
+                style={{ width: '80%', margin: '5px' }}
                 onChange={this.handlePollutantChange}
                 placeholder="请选择污染物"
                 maxTagCount={2}
                 maxTagTextLength={5}
                 maxTagPlaceholder="..."
             />);
-        }
-        return '';
     }
 
     /**切换污染物 */
@@ -250,8 +247,6 @@ class DataQuery extends Component {
             pollutantNames: '',
             beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
-            pageIndex: 1,
-            pageSize: 20,
         }
         dispatch({
             type: 'dataquery/updateState',
@@ -262,26 +257,6 @@ class DataQuery extends Component {
         this.getpointpollutants(dgimn);
     }
 
-    /** 分页 */
-    onShowSizeChange = (pageIndex, pageSize) => {
-        let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            pageIndex,
-            pageSize,
-        }
-        this.reloaddatalist(historyparams);
-    }
-
-    onChange = (pageIndex, pageSize) => {
-        let { historyparams } = this.props;
-        historyparams = {
-            ...historyparams,
-            pageIndex,
-            pageSize,
-        }
-        this.reloaddatalist(historyparams);
-    }
 
     /** 渲染数据展示 */
 
@@ -309,7 +284,7 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '98%', height: this.props.style ? '100%' : "calc(100vh - 330px)", padding: 20 }}
+                    style={{ width: '98%', height: this.props.style ? '100%' : 'calc(100vh - 330px)', padding: 20 }}
                 />);
             }
 
@@ -320,45 +295,43 @@ class DataQuery extends Component {
             dataSource={datatable}
             columns={columns}
             scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
-            pagination={
-                {
-                    size: 'small',
-                    showSizeChanger: true,
-                    showQuickJumper: true,
-                    total: this.props.total,
-                    pageSize: this.props.historyparams.pageSize,
-                    current: this.props.historyparams.pageIndex,
-                    onChange: this.onChange,
-                    onShowSizeChange: this.onShowSizeChange,
-                    pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-                }
-            }
+            Pagination={null}
+
         />);
     }
 
 
-
     render() {
-
+        console.log('---------------------', this.state.format);
         return (
             <div>
                 <Card
-                    className={!this.props.style ? "contentContainer" : null}
-                    extra={
+                    className={!this.props.style ? 'contentContainer' : null}
+                    title={
                         <div>
-                            {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} allowClear={false} />
-                            <ButtonGroup_ style={{ marginRight: 20, padding: 10, paddingLeft: 0 }} checked="realtime" onChange={this._handleDateTypeChange}  />
-                            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={e => {
+                            <Row>
+                                <Col xxl={6} xl={24} md={24} lg={24}>
+                            {!this.props.isloading && this.getpollutantSelect()}
+                                </Col>
+                                <Col xxl={7} xl={24} md={24} lg={24}>
+                            <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                </Col>
+                                <Col xxl={7} xl={24} md={24} lg={24}>
+                            <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                </Col>
+                                <Col xxl={3} xl={24} md={24} lg={24}>
+                            <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
                                 this.displayChange(e.target.value)
                             }}>
                                 <Radio.Button value="chart">图表</Radio.Button>
                                 <Radio.Button value="data">数据</Radio.Button>
                             </Radio.Group>
+                                 </Col>
+                            </Row>
                         </div>
                     }
                 >
-                    <div style={{ height: "100%", ...this.props.style }}>
+                    <div style={{ height: '100%', ...this.props.style }}>
                         {this.loaddata()}
                     </div>
                 </Card>
