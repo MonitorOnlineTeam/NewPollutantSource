@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi
+ * @Date: 2020-01-02 15:53:37
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2020-01-02 17:01:29
+ * @desc: table组件
+ */
 import React, { PureComponent } from 'react';
 import {
   Table,
@@ -15,7 +22,7 @@ class SdlTable extends PureComponent {
   render() {
     const { columns, defaultWidth } = this.props;
     let _props = {}
-    if (this.sdlTable && this.sdlTable.props.dataSource.length) {
+    if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length) {
       _props = {
         className: "sdlTable"
       }
