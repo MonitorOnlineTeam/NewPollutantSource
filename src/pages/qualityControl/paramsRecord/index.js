@@ -94,6 +94,7 @@ class index extends Component {
     super(props);
     this.state = {
       showType: 'data',
+      defaultTime: moment().add(-1, "hour"),
     };
     this._SELF_ = {
       formItemLayout: {
@@ -104,7 +105,6 @@ class index extends Component {
           span: 16,
         },
       },
-      defaultTime: moment().add(-1, "hour"),
     }
   }
 
@@ -135,6 +135,10 @@ class index extends Component {
   // 查询
   onSearch = () => {
     const { showType } = this.state;
+    this.setState({
+      defaultTime: moment().add(-1, "hour"),
+    })
+    this.props.form.setFieldsValue({ BeginTime: moment().add(-1, "hour") })
     if (showType === 'data') {
       // 查询表格数据
       this.props.dispatch({
@@ -142,6 +146,7 @@ class index extends Component {
         payload: {
           paramsRecordForm: {
             ...this.props.paramsRecordForm,
+            BeginTime: { value: moment().add(-1, "hour") },
             current: 1,
           },
         },
@@ -238,8 +243,8 @@ class index extends Component {
 
   render() {
     const { form: { getFieldDecorator }, paramsRecordForm, paramsTableData, loading, paramsList } = this.props;
-    const { formItemLayout, defaultTime } = this._SELF_;
-    const { showType } = this.state;
+    const { formItemLayout } = this._SELF_;
+    const { showType, defaultTime } = this.state;
     return (
       <>
         <NavigationTree QCAUse="1" onItemClick={value => {
