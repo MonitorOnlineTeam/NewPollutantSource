@@ -22,7 +22,7 @@ class SdlTable extends PureComponent {
   render() {
     const { columns, defaultWidth } = this.props;
     let _props = {}
-    if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length) {
+    if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length && this.sdlTable.props.dataSource.length > 5) {
       _props = {
         className: "sdlTable"
       }
