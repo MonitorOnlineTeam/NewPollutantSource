@@ -334,6 +334,7 @@ export default Model.extend({
           QCAStatusList: result.Datas,
           statusRecordForm: {
             ...statusRecordForm,
+            pageIndex: statusRecordForm.current,
             total: result.Total,
           },
         })
