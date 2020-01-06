@@ -229,7 +229,20 @@ class Index extends Component {
                       </Form.Item>
                     </Col>
                     <Col span={6} style={{ marginTop: 4 }}>
-                      <Button type="primary" style={{ marginRight: 10 }} onClick={this.getTableData}>查询</Button>
+                      <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                        this.props.dispatch({
+                          type: 'qualityControl/updateState',
+                          payload: {
+                            statusRecordForm: {
+                              ...this.props.statusRecordForm,
+                              BeginTime: moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss'),
+                            }
+                          }
+                        })
+                        setTimeout(() => {
+                          this.getTableData()
+                        }, 0)
+                      }}>查询</Button>
                     </Col>
                   </Row>
                 </Form>
