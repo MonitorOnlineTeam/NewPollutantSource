@@ -686,7 +686,7 @@ class MapView extends Component {
     const statisticStyle = {
       fontSize: 14
     }
-    let AQIColorObj = airLevel.find(item => item.value == curPointData.AirLevel) || {};
+    let AQIColorObj = airLevel.find(item => item.levelText == curPointData.AirLevel) || {};
     let AQIColor = AQIColorObj.color;
 
     const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
