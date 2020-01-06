@@ -20,7 +20,7 @@ export function getPointStatusImg(record, noticeList) {
     return <div className={styles.container} style={{ display: "inline" }}>
       <img style={{ width: imgWidth }} src={imgSrc} />
       {/* <div className={styles.pulse}></div> */}
-      <div className={styles.pulse1}></div>
+      {/* <div className={styles.pulse1}></div> */}
     </div>
   }
   return <img style={{ width: imgWidth }} src={imgSrc} />;

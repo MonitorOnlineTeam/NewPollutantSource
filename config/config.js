@@ -675,7 +675,7 @@ export default {
               routes: [
                 {
                   path: '/monitoring',
-                  redirect: '/monitoring/mapview',
+                  redirect: '/monitoring/mapview/realtimeDataView',
                 },
                 {
                   name: 'realtimedata',
