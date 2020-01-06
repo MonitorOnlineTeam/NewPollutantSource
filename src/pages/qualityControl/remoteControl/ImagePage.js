@@ -6,7 +6,7 @@
  * @desc: 质控仪流程图页面
  */
 import React, { PureComponent } from 'react';
-import { Button, Card, notification, Modal, Tooltip, Select, message, Badge, Icon } from 'antd'
+import { Button, Card, notification, Modal, Tooltip, Select, message, Badge, Icon, Alert } from 'antd'
 import router from 'umi/router';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './index.less'
@@ -39,6 +39,7 @@ const QCStatusColor = {
   currentDGIMN: qualityControlModel.currentDGIMN,
   realtimeStabilizationTime: qualityControl.realtimeStabilizationTime,
   totalFlow: qualityControl.totalFlow,
+  DeviceStatus: qualityControl.DeviceStatus,
 }))
 
 class ImagePage extends PureComponent {
@@ -60,7 +61,7 @@ class ImagePage extends PureComponent {
   }
 
   componentWillUnmount() {
-    notification.close("notification")
+    notification.close("QCAnotification")
   }
 
 
@@ -84,13 +85,14 @@ class ImagePage extends PureComponent {
           payload: {
             DGIMN: nextProps.currentDGIMN,
             QCAMN: nextProps.QCAMN,
+            Type: "Real"
           },
           form: "realtime"
         })
     }
     // 吹扫状态时，关闭查看实时比对提示
     if (this.props.QCStatus !== nextProps.QCStatus && nextProps.QCStatus !== "4") {
-      notification.close("notification");
+      notification.close("QCAnotification");
       // // 重置model数据
       // this.props.dispatch({
       //   type: "qualityControlModel/changeRealTimeThanData",
@@ -128,12 +130,14 @@ class ImagePage extends PureComponent {
     }
     // 控制查看实时比对提示显示隐藏
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
-      // if (true) {
-      notification.close("notification")
+    // if (true) {
+      notification.close("QCAnotification")
       notification.open({
         message: '查看质控实时比对',
-        key: "notification",
+        key: "QCAnotification",
         duration: null,
+        top: 50,
+        className: styles.QCnotification,
         description:
           "点击查看质控实时结果比对信息",
         onClick: () => {
@@ -185,6 +189,37 @@ class ImagePage extends PureComponent {
           }
         },
       });
+    }
+  }
+
+  returnQCStatus = () => {
+    let text = "";
+    switch (this.props.QCStatus) {
+      case "3":
+        text = "，工作状态异常";
+        break;
+      case "4":
+        text = "，工作状态质控中"
+        break;
+      case "5":
+        text = "，工作状态吹扫中"
+        break;
+      case "6":
+        text = ""
+        break;
+      default:
+        text = "";
+        break;
+    }
+    switch (this.props.DeviceStatus) {
+      case "0":
+        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />
+      case "1":
+        return <Alert type="success" style={{ marginBottom: 10 }} message={`质控仪在线中${text}`} banner />
+      case "3":
+        return <Alert type="warning" style={{ marginBottom: 10 }} message={`质控仪状态异常${text}`} banner />
+      default:
+        return "";
     }
   }
 
@@ -480,10 +515,12 @@ class ImagePage extends PureComponent {
           title="查看结果实时比对"
           visible={this.state.visible}
           footer={[]}
-          okText={"开始质控"}
+          // okText={"开始质控"}
           // onClick={this.onSubmitForm}
           width={"90%"}
           destroyOnClose
+          zIndex={1001}
+          style={{ top: 130 }}
           // style={{ width: "90%", height: 600 }}
           onCancel={() => {
             this.setState({
@@ -493,21 +530,24 @@ class ImagePage extends PureComponent {
           <RealTimeContrastPage PollutantCode={p1Pressure.pollutantCode} insert startTime={realtimeStabilizationTime.StartTime} stabilizationTime={realtimeStabilizationTime.StabilizationTime} />
         </Modal>
         <Modal
-          title="全屏查看"
+          // title="全屏查看"
           visible={this.state.fullscreenVisible}
           footer={[]}
           // okText={"开始质控"}
           // onClick={this.onSubmitForm}
           width={"98%"}
           destroyOnClose
-          style={{ top: 20 }}
-          bodyStyle={{ height: "calc(100vh - 40px - 55px - 21px)" }}
+          style={{ top: 10 }}
+          bodyStyle={{ height: "calc(100vh - 40px - 21px)" }}
           onCancel={() => {
             this.setState({
               fullscreenVisible: false
             })
           }}>
-          {this.pageContent("modal")}
+          <>
+            {this.returnQCStatus()}
+            {this.pageContent("modal")}
+          </>
         </Modal>
       </div>
     );

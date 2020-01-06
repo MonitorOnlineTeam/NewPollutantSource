@@ -686,7 +686,7 @@ class MapView extends Component {
     const statisticStyle = {
       fontSize: 14
     }
-    let AQIColorObj = airLevel.find(item => item.value == curPointData.AirLevel) || {};
+    let AQIColorObj = airLevel.find(item => item.levelText == curPointData.AirLevel) || {};
     let AQIColor = AQIColorObj.color;
 
     const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
@@ -975,7 +975,7 @@ class MapView extends Component {
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
             <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
-              e.target.value === 'data' && router.push('/monitoring/realtimeDataView')
+              e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>

@@ -217,7 +217,7 @@ class DailySummaryPage extends PureComponent {
           type: "report/summaryReportExcel",
           payload: {
             ...values,
-            type: reportType === "siteDaily" ? 0 : (reportType === "monthly" ? 1 : 2),
+            type: reportType === "daily" ? 0 : (reportType === "monthly" ? 1 : 2),
             Regions: values.Regions.toString(),
             ReportTime: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
           }

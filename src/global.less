@@ -38,11 +38,23 @@ ol {
   list-style: none;
 }
 
+.sdlTable {
+  .ant-table-body {
+    min-height: 200px;
+  }
+}
+
 :global {
   .ant-layout {
     .ant-pro-basicLayout-content {
       margin-bottom: 0;
       // padding-top: 64px;
+    }
+
+    // table没有数据时，隐藏表头滚动条
+    .ant-table-empty .ant-table-body {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
     }
   }
 }

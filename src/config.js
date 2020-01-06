@@ -16,7 +16,7 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.12.177:9002/';
+const apiHost = 'http://localhost:52198/';
 // 文件上传地址
 const uploadHost = apiHost;
 // wensocket推送地址（第一个为内网，第二个为外网）
@@ -45,7 +45,7 @@ module.exports = {
   isMultiEnterprise: false,
   apiPrefix: '/mock',
   webSocketPushURL: webSocketPush,
-  imgaddress: 'http://172.16.12.177:9002/upload/',
+  imgaddress: `${apiHost}/upload/`,
   // 年度检测报告路径
   annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
   // 使用文档路径

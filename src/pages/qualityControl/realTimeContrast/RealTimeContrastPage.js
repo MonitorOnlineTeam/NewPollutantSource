@@ -158,7 +158,8 @@ class index extends Component {
   lineOption = () => {
     const { valueList, timeList, tableData, start, end, standardValueList } = this.props;
     const { stabilizationTime, chartYMaxValue, chartYMaxValue2 } = this.state;
-    const maxVal = chartYMaxValue > chartYMaxValue2 ? chartYMaxValue : chartYMaxValue2;
+    let maxVal = chartYMaxValue > chartYMaxValue2 ? chartYMaxValue : chartYMaxValue2;
+    maxVal = Math.trunc(maxVal)
     // if(stabilizationTime)
     let markLineVal = stabilizationTime ? stabilizationTime + "" : undefined;
     return {
@@ -177,49 +178,9 @@ class index extends Component {
       },
       xAxis: {
         type: 'category',
-        // type: 'time',
         boundaryGap: false,
         data: timeList,
-        // axisPointer: {
-        //   // type: "none",
-        //   value: '2016-10-7',
-        //   snap: true,
-        //   // triggerTooltip: false,
-        //   lineStyle: {
-        //     color: '#004E52',
-        //     opacity: 0.5,
-        //     width: 2
-        //   },
-        //   label: {
-        //     show: true,
-        //     // formatter: function (params) {
-        //     //   return echarts.format.formatTime('yyyy-MM-dd', params.value);
-        //     // },
-        //     backgroundColor: '#004E52'
-        //   },
-        //   handle: {
-        //     show: true,
-        //     color: 'transparent'
-        //   }
-        // },
       },
-      // dataZoom: [{
-      //   type: 'inside',
-      //   start: start,
-      //   end: end
-      // }, {
-      //   start: 0,
-      //   end: 10,
-      //   handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-      //   handleSize: '80%',
-      //   handleStyle: {
-      //     color: '#fff',
-      //     shadowBlur: 3,
-      //     shadowColor: 'rgba(0, 0, 0, 0.6)',
-      //     shadowOffsetX: 2,
-      //     shadowOffsetY: 2
-      //   }
-      // }],
       yAxis: [
         {
           type: 'value',
@@ -284,10 +245,9 @@ class index extends Component {
 
   // 获取质控结果
   getQCAResult = () => {
-    console.log('QCAResult-new=', this.props.QCAResult)
     switch (this.props.QCAResult) {
       case "0":
-        return <Spin style={{position: 'absolute', right: 20}} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
       case "1":
         return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "2":

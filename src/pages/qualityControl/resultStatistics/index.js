@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-14 11:39:35 
+ * @Author: Jiaqi
+ * @Date: 2019-11-14 11:39:35
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-28 09:54:49
  * @desc: 结果统计页面
@@ -36,7 +36,7 @@ const columns = [
     dataIndex: 'QCResult',
     key: 'QCResult',
     render: (text, record) => {
-      return text && `${text * 100}%`
+      return text && (text * 100).toFixed() + "%"
     }
   },
 ];
@@ -157,8 +157,8 @@ class index extends Component {
           radius: '55%',
           center: ['50%', '60%'],
           data: [
-            { value: entRate.allResult * 100, name: '已合格' },
-            { value: entRate.noAllResult * 100, name: '未合格' },
+            { value: (entRate.allResult * 100).toFixed(), name: '已合格' },
+            { value: (entRate.noAllResult * 100).toFixed(), name: '未合格' },
           ],
           itemStyle: {
             emphasis: {
