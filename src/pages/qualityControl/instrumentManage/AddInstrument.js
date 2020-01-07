@@ -29,6 +29,7 @@ const InputGroup = Input.Group;
   QCAGasRelation: qualityControl.QCAGasRelation,
   Sloading: loading.effects['qualityControl/getStandardGas'],
   loading: loading.effects['qualityControl/getQualityControlData'],
+  btnloading: loading.effects['qualityControl/addQualityControl'],
 }))
 class AddInstrument extends Component {
   constructor(props) {
@@ -1050,7 +1051,7 @@ class AddInstrument extends Component {
           </Form>
           <Row>
             <Divider orientation="right">
-              <Button type="primary" onClick={this.onSubmitForm}>保存</Button>
+              <Button type="primary" loading={this.props.btnloading} onClick={this.onSubmitForm}>保存</Button>
               <Button
                 style={{ marginLeft: 8 }}
                 onClick={() => {
