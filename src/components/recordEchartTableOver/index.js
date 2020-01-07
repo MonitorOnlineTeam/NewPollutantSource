@@ -112,8 +112,7 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-debugger
-        if (this.props.DGIMN != nextProps.DGIMN) {
+        if (nextProps.DGIMN &&this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }
         // if (this.props.firsttime != nextProps.firsttime) {

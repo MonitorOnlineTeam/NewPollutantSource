@@ -46,7 +46,7 @@ export default Model.extend({
             return {
               id: item.ID,
               key: item.ID,
-              pointname: item.PointName,
+              PointName: item.PointName,
               DGIMN: item.DGIMN,
               pollutantnames: item.PollutantNames, //超标显示时用到此字段
               firsttime: item.FirstAlarmTime,
@@ -147,6 +147,7 @@ export default Model.extend({
           case EnumPropellingAlarmSourceType.DataOverWarning:
             flagAlarm = 'warn';
             orderby = 3;
+            break;
           case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
             flagAlarm = 'exception';
             orderby = 2;
@@ -216,7 +217,7 @@ export default Model.extend({
           newnotices.push({
             id: `${flagAlarm}_${data.DGIMN}`,
             key: `${flagAlarm}_${data.DGIMN}`,
-            pointname: data.PointName,
+            PointName: data.PointName,
             pollutantnames: data.PollutantName,
             firsttime: data.FirstOverTime,
             lasttime: data.AlarmTime,
@@ -238,6 +239,7 @@ export default Model.extend({
         }
         // 证明之前有数据，在之前的数据上叠加
         else {
+          
           newnotices = notices.map(notice => {
             //判断类型是否包含
             if (over.includes(data.AlarmType) ||
@@ -250,14 +252,14 @@ export default Model.extend({
                 notice.alarmcount += 1;
                 notice.title =
                   flagAlarm === 'warn' ?
-                    <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> :
-                    <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> ,
+                    <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
+                    <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> ,
                   notice.description =
                   flagAlarm === 'over' ?
                     `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
                     flagAlarm === 'exception' ?
                       `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
-                      `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
+                      `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`
               }
             }
             return notice;
@@ -310,6 +312,7 @@ export default Model.extend({
             case EnumPropellingAlarmSourceType.DataOverWarning:
               flagAlarm = 'warn';
               orderby = 3;
+              break;
             case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
               flagAlarm = 'exception';
               orderby = 2;

@@ -33,7 +33,7 @@ class ExceptionAlarm extends PureComponent {
         dispatch({
             type: "workbenchmodel/getExceptionAlarmData",
             payload: {
-                // DGIMN: DGIMN
+                DGIMN: DGIMN
             }
         })
     }

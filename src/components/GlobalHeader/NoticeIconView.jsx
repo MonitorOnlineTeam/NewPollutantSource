@@ -139,27 +139,26 @@ export default class GlobalHeaderRight extends PureComponent {
               // firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')),
               // lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')),
               DGIMN: item.DGIMN,
-              pointname: item.pointname,
+              PointName: item.PointName,
             });
-            console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '实时预警-' + item.pointname,
+                    title: '实时预警-' + item.PointName,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标记录-' + item.pointname,
+                    title: '超标记录-' + item.PointName,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警-' + item.pointname,
+                    title: '异常报警-' + item.PointName,
                     flag: 'exception',
                   });
                   break;
