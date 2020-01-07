@@ -39,6 +39,7 @@ class DataQuery extends Component {
             selectDisplay: false,
             dd: [],
             selectP: '',
+            dgimn: '',
         };
     }
 
@@ -235,6 +236,7 @@ class DataQuery extends Component {
         this.setState({
             selectDisplay: true,
             selectP: '',
+            dgimn,
         })
         const {
             dispatch,
@@ -309,17 +311,17 @@ class DataQuery extends Component {
                     className={!this.props.style ? 'contentContainer' : null}
                     title={
                         <div>
-                            <Row>
-                                <Col xxl={6} xl={24} md={24} lg={24}>
+                            <Row gutter={48}>
+                                <Col xxl={6} xl={8} lg={11} md={12} sm={12}>
                             {!this.props.isloading && this.getpollutantSelect()}
                                 </Col>
-                                <Col xxl={7} xl={24} md={24} lg={24}>
+                                <Col xxl={7} xl={8} lg={14} md={12} sm={12}>
                             <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
                                 </Col>
-                                <Col xxl={7} xl={24} md={24} lg={24}>
+                                <Col xxl={7} xl={8} lg={12} md={12} sm={12}>
                             <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
                                 </Col>
-                                <Col xxl={3} xl={24} md={24} lg={24}>
+                                <Col xxl={3} xl={3} lg={12} md={12} >
                             <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
                                 this.displayChange(e.target.value)
                             }}>

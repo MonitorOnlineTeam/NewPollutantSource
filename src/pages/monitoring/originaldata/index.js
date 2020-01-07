@@ -33,7 +33,7 @@ import RangePicker_ from '@/components/RangePicker'
     tableDatas: originalData.tableDatas,
     total: originalData.total,
     pageIndex: originalData.pageIndex,
-    pageSize: originalData.pageSize
+    pageSize: originalData.pageSize,
 }))
 
 class Index extends Component {
@@ -71,11 +71,11 @@ class Index extends Component {
                 type: 'originalData/updateState',
                 payload: {
                     beginTime: dateString[0],
-                    endTime: dateString[1]
-                }
+                    endTime: dateString[1],
+                },
             });
             this.setState({
-                rangeDate: date
+                rangeDate: date,
             });
             setTimeout(() => {
                 this.reloaddatalist();
@@ -100,28 +100,29 @@ class Index extends Component {
         const {
             dispatch,
         } = this.props;
-        
+
         dispatch({
             type: 'originalData/updateState',
             payload: {
                 dgimn,
-                pageIndex:1,
-                pageSize:10,
-                total:0
+                pageIndex: 1,
+                pageSize: 10,
+                total: 0,
             },
         })
         setTimeout(() => {
             this.reloaddatalist();
         }, 0);
     }
+
     // 分页页数change
     onTableChange(current, pageSize) {
         this.props.dispatch({
             type: 'originalData/updateState',
             payload: {
                 pageIndex: current,
-                pageSize: pageSize
-            }
+                pageSize,
+            },
         });
         setTimeout(() => {
             this.reloaddatalist();
@@ -138,15 +139,15 @@ class Index extends Component {
                 dataIndex: 'SendTime',
                 key: 'SendTime',
                 width: '15%',
-                align: 'center'
+                align: 'center',
             },
             {
                 title: '原始数据包值',
                 dataIndex: 'OriginalValue',
                 key: 'OriginalValue',
                 width: '80%',
-                align: 'left'
-            }
+                align: 'left',
+            },
         ];
 
         return (<SdlTable
@@ -158,12 +159,12 @@ class Index extends Component {
             pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
-                pageSize: pageSize,
+                pageSize,
                 current: pageIndex,
                 onChange: this.onTableChange,
                 onShowSizeChange: this.onTableChange,
                 pageSizeOptions: ['10', '20', '30', '40'],
-                total: total
+                total,
             }}
         />);
     }
@@ -181,11 +182,11 @@ class Index extends Component {
                         <Card
                             extra={
                                 <div>
-                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
+                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format}/>
                                 </div>
                             }
                             className="contentContainer"
-                            style={{ width: '100%'}}
+                            style={{ width: '100%' }}
                         >
                             {this.loaddata()}
                         </Card>

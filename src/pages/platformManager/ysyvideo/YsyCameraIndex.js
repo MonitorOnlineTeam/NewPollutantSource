@@ -27,6 +27,7 @@ import { DelIcon } from '@/utils/icon'
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
+  btnloading: loading.effects['video/AddDevice'],
 }))
 @Form.create()
 class YsyCameraIndex extends Component {
@@ -213,6 +214,7 @@ class YsyCameraIndex extends Component {
           <Modal
             title="摄像头管理"
             visible={this.state.visible}
+            confirmLoading={this.props.btnloading}
             destroyOnClose // 清除上次数据
             onOk={this.handleOk}
             okText="保存"
