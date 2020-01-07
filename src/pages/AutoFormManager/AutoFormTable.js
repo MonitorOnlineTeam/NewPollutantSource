@@ -44,6 +44,7 @@ class AutoFormTable extends PureComponent {
     this.state = {
       selectedRowKeys: [],
       delPostData: {},
+      otherParams: {}
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };
 
@@ -79,7 +80,7 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params,
+        otherParams: params || this.state.otherParams,
       },
     });
   }
@@ -129,16 +130,36 @@ class AutoFormTable extends PureComponent {
   };
 
   _handleTableChange(pagination, filters, sorter) {
-    console.log('sorter=', sorter)
+    const { current, pageSize } = pagination;
+    let sorterObj = {};
     if (sorter.order) {
-      const sorterObj = {
+      sorterObj = {
         IsAsc: sorter.order === 'ascend',
         SortFileds: sorter.field,
       };
+      this.setState({
+        otherParams: sorterObj
+      })
       // sorterObj.IsAsc = sorter.order === "ascend"
       // sorterObj.SortFileds = sorter.field;
-      this.loadDataSource(sorterObj);
     }
+    this.props.dispatch({
+      type: 'autoForm/updateState',
+      payload: {
+        searchForm: {
+          ...this.props.searchForm,
+          [this.props.configId]: {
+            ...this.props.searchForm[this.props.configId],
+            current,
+            pageSize,
+          },
+        },
+      },
+    });
+
+    setTimeout(() => {
+      this.loadDataSource(sorterObj);
+    }, 0);
   }
   //行删除
   delRowData(record) {
@@ -592,7 +613,7 @@ class AutoFormTable extends PureComponent {
             showQuickJumper: true,
             pageSize,
             current,
-            onChange: this.onTableChange,
+            // onShowSizeChange: this.onTableChange,
             onShowSizeChange: this.onTableChange,
             pageSizeOptions: ['10', '20', '30', '40'],
             total,

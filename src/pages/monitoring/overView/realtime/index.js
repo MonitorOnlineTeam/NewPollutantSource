@@ -57,8 +57,9 @@ class index extends Component {
           defaultSortOrder: item.field === "AQI" ? 'descend' : null,
           render: (text, record) => {
             if (item.field === "AQI") {
-              const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
-              const color = colorObj.color;
+              // const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
+              // const color = colorObj.color;
+              const color = record["AQI_Color"];
               return <Popover content={
                 <div>
                   <div style={{ marginBottom: 10 }}>
@@ -68,7 +69,7 @@ class index extends Component {
                     <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || "-"}`} />
                   </li>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
-                    <Badge color={color} text={`污染级别：${record.AirLevel}级`} />
+                    <Badge color={color} text={`污染级别：${record.AirLevel}`} />
                   </li>
                 </div>
               } trigger="hover">
@@ -77,13 +78,15 @@ class index extends Component {
             }
             if (record[item.field + "_Value"] !== undefined) {
               // const color = record[item.field + "_LevelColor"];
-              const level = record[item.field + "_Level"].replace("级", "");
-              const airLevelObj = airLevel.find(itm => itm.value == level) || {};
+              // const level = record[item.field + "_Level"].replace("级", "");
+              const level = record[item.field + "_Level"] + "级";
+              const airLevelObj = airLevel.find(itm => itm.levelText == level) || {};
               const airQuality = airLevelObj.text;
-              const color = airLevelObj.color;
+              // const color = airLevelObj.color;
+              const color = record[item.field + "_LevelColor"];
               return <Popover content={
                 <div>
-                <div style={{ marginBottom: 10 }}>
+                  <div style={{ marginBottom: 10 }}>
                     <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
                   </div>
                   <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -129,7 +132,7 @@ class index extends Component {
         statusFilters = airLevel.map(item => {
           return {
             text: <span><LegendIcon style={{ color: item.color }} />{item.text}</span>,
-            value: item.value,
+            value: item.levelText,
           }
         })
         statusFilters.unshift({
@@ -173,7 +176,7 @@ class index extends Component {
           },
           render: (value, record, index) => {
             if (record.pollutantTypeCode == 5) {
-              const airLevelObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
+              const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
               const color = airLevelObj.color || "#999999";
               return <div className={styles.airStatus}>
                 <span style={{ backgroundColor: color }}></span>
@@ -265,10 +268,12 @@ class index extends Component {
 
   handleChange = (pagination, filters, sorter) => {
     const newColumns = this.state.columns;
-    newColumns[1].filteredValue = filters.Status || null;
-    this.setState({
-      columns: newColumns,
-    });
+    if (newColumns.length) {
+      newColumns[1].filteredValue = filters.Status || null;
+      this.setState({
+        columns: newColumns,
+      });
+    }
   };
 
 
