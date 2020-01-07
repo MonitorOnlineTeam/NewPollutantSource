@@ -124,16 +124,20 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   render() {
-    const { fetchingNotices, currentUserNoticeCnt, dispatch, } = this.props;
+    const { fetchingNotices, currentUserNoticeCnt, dispatch, notices } = this.props;
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
     let className = styles.right;
-
     return (
       <div className={`${styles.action} ${styles.account}`}>
         <NoticeIcon
-          count={currentUserNoticeCnt.unreadCount}
+          // count={currentUserNoticeCnt.unreadCount}
+          count={notices.length}
           onItemClick={(item, tabProps) => {
+            // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗
+            if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9) {
+              return;
+            }
             this.setState({
               visible: true,
               // firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')),

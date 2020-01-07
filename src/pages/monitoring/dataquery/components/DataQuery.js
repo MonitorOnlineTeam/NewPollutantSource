@@ -39,6 +39,7 @@ class DataQuery extends Component {
             selectDisplay: false,
             dd: [],
             selectP: '',
+            dgimn: '',
         };
     }
 
@@ -170,17 +171,17 @@ class DataQuery extends Component {
             selectP,
         } = this.state;
         const { pollutantlist } = this.props;
-            return (<PollutantSelect
-                mode="multiple"
-                optionDatas={pollutantlist}
-                defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-                style={{ width: '80%', margin: '5px' }}
-                onChange={this.handlePollutantChange}
-                placeholder="请选择污染物"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-            />);
+        return (<PollutantSelect
+            mode="multiple"
+            optionDatas={pollutantlist}
+            defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
+            style={{ width: '80%', margin: '5px' }}
+            onChange={this.handlePollutantChange}
+            placeholder="请选择污染物"
+            maxTagCount={2}
+            maxTagTextLength={5}
+            maxTagPlaceholder="..."
+        />);
     }
 
     /**切换污染物 */
@@ -235,6 +236,7 @@ class DataQuery extends Component {
         this.setState({
             selectDisplay: true,
             selectP: '',
+            dgimn,
         })
         const {
             dispatch,
@@ -309,24 +311,44 @@ class DataQuery extends Component {
                     className={!this.props.style ? 'contentContainer' : null}
                     title={
                         <div>
+                            {/* <Row>
+                                <Col xxl={6} xl={12} lg={13} md={24}>
+                                    {!this.props.isloading && this.getpollutantSelect()}
+                                </Col>
+                                <Col xxl={7} xl={12} lg={24} md={24}>
+                                    <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                </Col>
+                                <Col xxl={7} xl={8} lg={12} md={24}>
+                                    <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                </Col>
+                                <Col xxl={3} xl={8} lg={12} md={24}>
+                                    <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                        this.displayChange(e.target.value)
+                                    }}>
+                                        <Radio.Button value="chart">图表</Radio.Button>
+                                        <Radio.Button value="data">数据</Radio.Button>
+                                    </Radio.Group>
+                                </Col>
+                            </Row> */}
+
                             <Row>
-                                <Col xxl={6} xl={24} md={24} lg={24}>
-                            {!this.props.isloading && this.getpollutantSelect()}
+                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
+                                    {!this.props.isloading && this.getpollutantSelect()}
                                 </Col>
-                                <Col xxl={7} xl={24} md={24} lg={24}>
-                            <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={9}>
+                                    <RangePicker_ style={{ width: '90%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
                                 </Col>
-                                <Col xxl={7} xl={24} md={24} lg={24}>
-                            <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                <Col xs={24} sm={24} md={24} lg={12} xl={18} xxl={5}>
+                                    <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
                                 </Col>
-                                <Col xxl={3} xl={24} md={24} lg={24}>
-                            <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
-                                this.displayChange(e.target.value)
-                            }}>
-                                <Radio.Button value="chart">图表</Radio.Button>
-                                <Radio.Button value="data">数据</Radio.Button>
-                            </Radio.Group>
-                                 </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={3}>
+                                    <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                        this.displayChange(e.target.value)
+                                    }}>
+                                        <Radio.Button value="chart">图表</Radio.Button>
+                                        <Radio.Button value="data">数据</Radio.Button>
+                                    </Radio.Group>
+                                </Col>
                             </Row>
                         </div>
                     }
