@@ -44,6 +44,7 @@ export default Model.extend({
         notices = notices.concat(
           result.Datas.map((item, index) => {
             return {
+              ...item,
               id: item.ID,
               key: item.ID,
               pointname: item.PointName,
@@ -151,10 +152,10 @@ export default Model.extend({
             flagAlarm = 'exception';
             orderby = 2;
             break;
-            case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
-              flagAlarm = 'exception';
-              orderby = 2;
-              break;
+          case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
+            flagAlarm = 'exception';
+            orderby = 2;
+            break;
         }
         //超标枚举
         let over = [
@@ -279,170 +280,57 @@ export default Model.extend({
         };
       }
     },
-     //接收消息推送更改Model内存
-     changeQCANotices(state, { payload }) {
-      try {
-        debugger
-        //不要用超级管理员测试，否则会出问题**********************
-        const { message } = payload;
-        const { notices } = state;
-        let count = state.currentUserNoticeCnt.unreadCount;
-        let { key, newnotices } = { key: '', newnotices: [] };
-        let flagAlarm = ''; //报警类型标识（1.超标 over;2.预警 warn;2.异常 exception
-        let orderby = 0; //排序标识根据类型排序
-        for(var i=0;i<message.count;i++)
-        {
-          var data=message[i];
-          data.AlarmType = parseInt(data.AlarmType);
-          //标识判断（用于设置id及主键等标识）
-          switch (data.AlarmType) {
-            case EnumPropellingAlarmSourceType.DataOver:
-              flagAlarm = 'over';
-              orderby = 1;
-              break;
-            case EnumPropellingAlarmSourceType.DataException:
-            case EnumPropellingAlarmSourceType.DYPARAMETER:
-            case EnumPropellingAlarmSourceType.DataLogicErr:
-            case EnumPropellingAlarmSourceType.DYSTATEALARM:
-              flagAlarm = 'exception';
-              orderby = 2;
-              break;
-            case EnumPropellingAlarmSourceType.DataOverWarning:
-              flagAlarm = 'warn';
-              orderby = 3;
-            case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
-              flagAlarm = 'exception';
-              orderby = 2;
-              break;
-              case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
-                flagAlarm = 'exception';
-                orderby = 2;
-                break;
-          }
-          //超标枚举
-          let over = [
-            EnumPropellingAlarmSourceType.DataOver,
-          ];
-          //异常枚举
-          let exception = [
-            EnumPropellingAlarmSourceType.DataException,
-            EnumPropellingAlarmSourceType.DYPARAMETER,
-            EnumPropellingAlarmSourceType.DataLogicErr,
-            EnumPropellingAlarmSourceType.DYSTATEALARM
-          ];
-          //预警枚举
-          let warnover = [
-            EnumPropellingAlarmSourceType.DataOverWarning
-          ];
-          //报警描述
-          let getAlarmExceptions = [
-            {
-              id: 0,
-              description: "数据异常"
-            },
-            {
-              id: 1,
-              description: "参数异常"
-            },
-            {
-              id: 2,
-              description: "数据超标"
-            },
-            {
-              id: 3,
-              description: "逻辑异常"
-            },
-            {
-              id: 4,
-              description: "状态异常"
-            },
-            {
-              id: 5,
-              description: "超标预警"
-            },
-            {
-              id: 6,
-              description: "过期时间报警"
-            },
-            {
-              id: 7,
-              description: "余量不足报警"
-            },
-          ];
-          //如果推送是超标并且之前没有数据
-          if ((!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) && over.includes(data.AlarmType)) ||
-            (!notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) && warnover.includes(data.AlarmType)) ||
-            (!notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) && exception.includes(data.AlarmType))
-          ) {
-            newnotices = notices;
-            count += 1;
-            newnotices.push({
-              id: `${flagAlarm}_${data.DGIMN}`,
-              key: `${flagAlarm}_${data.DGIMN}`,
-              pointname: data.PointName,
-              pollutantnames: data.PollutantName,
-              firsttime: data.FirstOverTime,
-              lasttime: data.AlarmTime,
-              alarmcount: data.AlarmCount,
-              sontype: flagAlarm,
-              type: 'alarm',
-              orderby: orderby,
-              title: flagAlarm === 'warn' ?
-                <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
-                <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
-              description:
-                flagAlarm === 'over' ?
-                  `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警` :
-                  flagAlarm === 'exception' ?
-                    `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警` :
-                    `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`,
-              exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
-            });
-          }
-          // 证明之前有数据，在之前的数据上叠加
-          else {
-            newnotices = notices.map(notice => {
-              //判断类型是否包含
-              if (over.includes(data.AlarmType) ||
-                warnover.includes(data.AlarmType) ||
-                exception.includes(data.AlarmType)
-              ) {
-                key = `${flagAlarm}_${data.DGIMN}`;
-                if (notice.id === key) {
-                  notice.lasttime = data.AlarmTime;
-                  notice.alarmcount += 1;
-                  notice.title =
-                    flagAlarm === 'warn' ?
-                      <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> :
-                      <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> ,
-                    notice.description =
-                    flagAlarm === 'over' ?
-                      `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
-                      flagAlarm === 'exception' ?
-                        `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
-                        `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
-                }
-              }
-              return notice;
-            });
-          }
-          return {
-            ...state,
-            notices: newnotices,
-            currentUserNoticeCnt: {
-              notifyCount: count,
-              unreadCount: count,
-            },
-          };
+    //接收消息推送更改Model内存
+    changeQCANotices(state, { payload }) {
+      let notices = [...state.notices];
+      let newNotices = [];
+      let falg = false;
+      // 67: 余量、过期时间报警; 89: 工作状态异常、压力异常报警
+      let changeType = payload.find(t => t.Type == 6 || t.Type == 7) ? 67 : 89;
+      payload.map(item => {
+        // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警
+        // 判断过滤条件
+        let filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && item.Code == 0)
+        let PollutantName = item.TypeName;
+        if (changeType === 67) {
+          filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && notice.PollutantCodes == item.Code)
+          PollutantName = item.PollutantName;
         }
-       
-      }
-      catch (e) {
-        console.log(e)
-        return {
-          ...state,
-        };
-      }
+
+        // 有相同数据，每次接收推送消息后数量加1
+        if (filterDataIndex >= 0) {
+          notices[filterDataIndex] = {
+            ...notices[filterDataIndex],
+            alarmcount: notices[filterDataIndex].alarmcount + 1,
+            LastAlarmTime: item.Time,
+            title: <span>{`${notices[filterDataIndex].PointName}，${PollutantName}报警${notices[filterDataIndex].alarmcount + 1}次`}<br /><span style={{ fontSize: 11 }}>{notices[filterDataIndex].TargetName}</span></span>,
+            description: `从${notices[filterDataIndex].FirstAlarmTime}至${item.Time},${PollutantName}发生了${notices[filterDataIndex].alarmcount + 1}次${notices[filterDataIndex].exceptiontypes}`,//右侧标签用到，可多个
+          }
+        } else {
+          // 无相同数据，追加推送的新数据
+          let name = changeType === 67 ? item.PollutantName : item.TypeName;
+          notices.push({
+            FirstAlarmTime: item.Time,
+            DGIMN: item.DataGatherCode,
+            PointName: item.PointName,
+            TargetName: item.PointName,
+            AlarmType: item.Type,
+            PollutantCodes: item.Code,
+            alarmcount: 1,
+            LastAlarmTime: item.Time,
+            sontype: "exception",
+            type: "alarm",
+            exceptiontypes: item.TypeName + "报警",
+            title: <span>{`${item.PointName}，${name}报警1次`}<br /><span style={{ fontSize: 11 }}>{item.PointName}</span></span>,
+            // description: item.Description,
+            description: `从${item.Time}至${item.Time}，${name}发生了1次报警`,//右侧标签用到，可多个
+          })
+        }
+      })
+      return {
+        ...state,
+        notices: notices
+      };
     },
     changeAdvises(state, { payload }) {
       const { message } = payload;
@@ -615,10 +503,10 @@ export default Model.extend({
               type: "qualityControl/volumeWarning",
               payload: obj.Message
             })
-            // dispatch({
-            //   type: 'changeQCANotices',
-            //   payload: { message: obj.Message },
-            // });
+            dispatch({
+              type: 'changeQCANotices',
+              payload: obj.Message,
+            });
             break;
           default:
             break;
