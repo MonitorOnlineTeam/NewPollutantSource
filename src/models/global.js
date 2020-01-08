@@ -31,7 +31,7 @@ export default Model.extend({
     getAlarmNoticesParameters: {
       BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-      DGIMN: "",
+      DGIMN: '',
     },
   },
   effects: {
@@ -47,7 +47,7 @@ export default Model.extend({
               ...item,
               id: item.ID,
               key: item.ID,
-              PointName: item.PointName,
+              pointname: item.PointName,
               DGIMN: item.DGIMN,
               pollutantnames: item.PollutantNames, //超标显示时用到此字段
               firsttime: item.FirstAlarmTime,
@@ -119,20 +119,20 @@ export default Model.extend({
     ) {
       return { ...state, collapsed: payload };
     },
-    //接收消息推送更改Model内存
+    // 接收消息推送更改Model内存
     changeNotices(state, { payload }) {
       try {
         debugger
-        //不要用超级管理员测试，否则会出问题**********************
+        // 不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
         const { Message: data } = message;
         const { notices } = state;
         let count = state.currentUserNoticeCnt.unreadCount;
         let { key, newnotices } = { key: '', newnotices: [] };
-        let flagAlarm = ''; //报警类型标识（1.超标 over;2.预警 warn;2.异常 exception
-        let orderby = 0; //排序标识根据类型排序
+        let flagAlarm = ''; // 报警类型标识（1.超标 over;2.预警 warn;2.异常 exception
+        let orderby = 0; // 排序标识根据类型排序
         data.AlarmType = parseInt(data.AlarmType);
-        //标识判断（用于设置id及主键等标识）
+        // 标识判断（用于设置id及主键等标识）
         switch (data.AlarmType) {
           case EnumPropellingAlarmSourceType.DataOver:
             flagAlarm = 'over';
@@ -148,67 +148,66 @@ export default Model.extend({
           case EnumPropellingAlarmSourceType.DataOverWarning:
             flagAlarm = 'warn';
             orderby = 3;
-            break;
           case EnumPropellingAlarmSourceType.ExpirationTimeAlarm:
             flagAlarm = 'exception';
             orderby = 2;
             break;
-          case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
-            flagAlarm = 'exception';
-            orderby = 2;
-            break;
+            case EnumPropellingAlarmSourceType.InsufficientMarginAlarm:
+              flagAlarm = 'exception';
+              orderby = 2;
+              break;
         }
-        //超标枚举
-        let over = [
+        // 超标枚举
+        const over = [
           EnumPropellingAlarmSourceType.DataOver,
         ];
-        //异常枚举
-        let exception = [
+        // 异常枚举
+        const exception = [
           EnumPropellingAlarmSourceType.DataException,
           EnumPropellingAlarmSourceType.DYPARAMETER,
           EnumPropellingAlarmSourceType.DataLogicErr,
-          EnumPropellingAlarmSourceType.DYSTATEALARM
+          EnumPropellingAlarmSourceType.DYSTATEALARM,
         ];
-        //预警枚举
-        let warnover = [
-          EnumPropellingAlarmSourceType.DataOverWarning
+        // 预警枚举
+        const warnover = [
+          EnumPropellingAlarmSourceType.DataOverWarning,
         ];
-        //报警描述
-        let getAlarmExceptions = [
+        // 报警描述
+        const getAlarmExceptions = [
           {
             id: 0,
-            description: "数据异常"
+            description: '数据异常',
           },
           {
             id: 1,
-            description: "参数异常"
+            description: '参数异常',
           },
           {
             id: 2,
-            description: "数据超标"
+            description: '数据超标',
           },
           {
             id: 3,
-            description: "逻辑异常"
+            description: '逻辑异常',
           },
           {
             id: 4,
-            description: "状态异常"
+            description: '状态异常',
           },
           {
             id: 5,
-            description: "超标预警"
+            description: '超标预警',
           },
           {
             id: 6,
-            description: "过期时间报警"
+            description: '过期时间报警',
           },
           {
             id: 7,
-            description: "余量不足报警"
+            description: '余量不足报警',
           },
         ];
-        //如果推送是超标并且之前没有数据
+        // 如果推送是超标并且之前没有数据
         if ((!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) && over.includes(data.AlarmType)) ||
           (!notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) && warnover.includes(data.AlarmType)) ||
           (!notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) && exception.includes(data.AlarmType))
@@ -218,14 +217,14 @@ export default Model.extend({
           newnotices.push({
             id: `${flagAlarm}_${data.DGIMN}`,
             key: `${flagAlarm}_${data.DGIMN}`,
-            PointName: data.PointName,
+            pointname: data.PointName,
             pollutantnames: data.PollutantName,
             firsttime: data.FirstOverTime,
             lasttime: data.AlarmTime,
             alarmcount: data.AlarmCount,
             sontype: flagAlarm,
             type: 'alarm',
-            orderby: orderby,
+            orderby,
             title: flagAlarm === 'warn' ?
               <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
               <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
@@ -240,9 +239,8 @@ export default Model.extend({
         }
         // 证明之前有数据，在之前的数据上叠加
         else {
-          
           newnotices = notices.map(notice => {
-            //判断类型是否包含
+            // 判断类型是否包含
             if (over.includes(data.AlarmType) ||
               warnover.includes(data.AlarmType) ||
               exception.includes(data.AlarmType)
@@ -253,14 +251,14 @@ export default Model.extend({
                 notice.alarmcount += 1;
                 notice.title =
                   flagAlarm === 'warn' ?
-                    <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
-                    <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> ,
+                    <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> :
+                    <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span>,
                   notice.description =
                   flagAlarm === 'over' ?
                     `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
                     flagAlarm === 'exception' ?
                       `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
-                      `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`
+                      `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
               }
             }
             return notice;
@@ -274,8 +272,7 @@ export default Model.extend({
             unreadCount: count,
           },
         };
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e)
         return {
           ...state,
@@ -285,8 +282,6 @@ export default Model.extend({
     //接收消息推送更改Model内存
     changeQCANotices(state, { payload }) {
       let notices = [...state.notices];
-      let newNotices = [];
-      let falg = false;
       // 67: 余量、过期时间报警; 89: 工作状态异常、压力异常报警
       let changeType = payload.find(t => t.Type == 6 || t.Type == 7) ? 67 : 89;
       payload.map(item => {
@@ -301,12 +296,13 @@ export default Model.extend({
 
         // 有相同数据，每次接收推送消息后数量加1
         if (filterDataIndex >= 0) {
+          let filterObj = notices[filterDataIndex];
           notices[filterDataIndex] = {
             ...notices[filterDataIndex],
-            alarmcount: notices[filterDataIndex].alarmcount + 1,
+            alarmcount: filterObj.alarmcount + 1,
             LastAlarmTime: item.Time,
-            title: <span>{`${notices[filterDataIndex].PointName}，${PollutantName}报警${notices[filterDataIndex].alarmcount + 1}次`}<br /><span style={{ fontSize: 11 }}>{notices[filterDataIndex].TargetName}</span></span>,
-            description: `从${notices[filterDataIndex].FirstAlarmTime}至${item.Time},${PollutantName}发生了${notices[filterDataIndex].alarmcount + 1}次${notices[filterDataIndex].exceptiontypes}`,//右侧标签用到，可多个
+            title: <span>{`${filterObj.pointname}，${PollutantName}报警${filterObj.alarmcount + 1}次`}<br /><span style={{ fontSize: 11 }}>{filterObj.TargetName}</span></span>,
+            description: `从${filterObj.FirstAlarmTime}至${item.Time},${PollutantName}发生了${filterObj.alarmcount + 1}次${filterObj.exceptiontypes}`,//右侧标签用到，可多个
           }
         } else {
           // 无相同数据，追加推送的新数据
@@ -406,32 +402,32 @@ export default Model.extend({
             dispatch({
               type: 'realtimeserver/updateRealTimeDatas',
               payload: {
-                data: obj.Message
+                data: obj.Message,
               },
             });
             dispatch({
               type: 'realtimeserver/updateRealTimeCharts',
               payload: {
-                data: obj.Message
+                data: obj.Message,
               },
             });
             // 实时数据一览
             dispatch({
-              type: "overview/updateRealTimeDataView",
+              type: 'overview/updateRealTimeDataView',
               payload: {
-                type: "RealTimeData",
-                message: obj.Message
-              }
+                type: 'RealTimeData',
+                message: obj.Message,
+              },
             })
             break;
           case 'MinuteData':
             // 实时数据一览 - 分钟
             dispatch({
-              type: "overview/updateRealTimeDataView",
+              type: 'overview/updateRealTimeDataView',
               payload: {
-                type: "MinuteData",
-                message: obj.Message
-              }
+                type: 'MinuteData',
+                message: obj.Message,
+              },
             })
             break;
           case 'HourData':
@@ -445,25 +441,25 @@ export default Model.extend({
             // })
             break;
 
-          //工艺流程图动态参数数据
+          // 工艺流程图动态参数数据
           case 'DynamicControlParam':
           case 'DynamicControlState':
             dispatch({
               type: 'realtimeserver/updateDynamicControl',
               payload: {
-                data: obj
+                data: obj,
               },
             });
             break;
-          //推送报警数据
+          // 推送报警数据
           case 'Alarm':
             dispatch({
               type: 'changeNotices',
               payload: { message: obj.Message },
             });
-            //异常推送消息 例： {"message":{"ID":null,"ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"9d89f0fb-0fab-4e3f-b4a1-33298eebf748","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":2,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":"0","AlarmMessage":"[广东瑞明电力-废水出口]在2019/10/24 9:00:00 pH值发生[超限异常]:。异常次数：2。首次异常时间：2019/10/24 9:00:00","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T09:36:37","Cate":"Alarm","State":null,"Dgimn":null}}
-            //超标推送消息 例： {"message":{"ID":"5ca35487-873e-4af4-9d9f-b766d964400e","ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"5ca35487-873e-4af4-9d9f-b766d964400e","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":1,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":2,"AlarmMessage":"[广东瑞明电力-废水出口]于2019-10-24 09:00:00 pH值数据超标[1]次，首次超标时间2019-10-24 09:00:00，超标值158.303[9为正常值]","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T10:37:27","Cate":"Alarm","State":null,"Dgimn":null}}
-            //预警推送消息  例：{"Message":{"ID":"171f862f-0d5a-4c34-a62b-174ed9d47d6a","ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":6017.819,"ID":"171f862f-0d5a-4c34-a62b-174ed9d47d6a","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T10:50:00","StandardValue":null,"AlarmCount":7,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T10:40:00","AlarmType":"5","AlarmMessage":"[广东瑞明电力-废水出口]于2019-10-24 10:50:00 pH值由于数据超标倍数过大，已经超标，请注意！","DataType":"MinuteData","Level":null,"ExceptionType":"-1","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0.0,"SuggestValue":0.0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T10:52:23","Cate":"Alarm","State":null,"Dgimn":null}}
+            // 异常推送消息 例： {"message":{"ID":null,"ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"9d89f0fb-0fab-4e3f-b4a1-33298eebf748","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":2,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":"0","AlarmMessage":"[广东瑞明电力-废水出口]在2019/10/24 9:00:00 pH值发生[超限异常]:。异常次数：2。首次异常时间：2019/10/24 9:00:00","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T09:36:37","Cate":"Alarm","State":null,"Dgimn":null}}
+            // 超标推送消息 例： {"message":{"ID":"5ca35487-873e-4af4-9d9f-b766d964400e","ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":0,"ID":"5ca35487-873e-4af4-9d9f-b766d964400e","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T09:00:00","StandardValue":null,"AlarmCount":1,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T09:00:00","AlarmType":2,"AlarmMessage":"[广东瑞明电力-废水出口]于2019-10-24 09:00:00 pH值数据超标[1]次，首次超标时间2019-10-24 09:00:00，超标值158.303[9为正常值]","DataType":"HourData","Level":null,"ExceptionType":"","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0,"SuggestValue":0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T10:37:27","Cate":"Alarm","State":null,"Dgimn":null}}
+            // 预警推送消息  例：{"Message":{"ID":"171f862f-0d5a-4c34-a62b-174ed9d47d6a","ToUserID":null,"FromUserID":null,"UserName":"系统报警","Message":{"alarmValue":6017.819,"ID":"171f862f-0d5a-4c34-a62b-174ed9d47d6a","PointName":"废水出口","PollutantName":"pH值","AlarmTime":"2019-10-24T10:50:00","StandardValue":null,"AlarmCount":7,"AlarmLevel":null,"DGIMN":"51052216080301","PollutantCode":"001","PollutantTypeCode":1,"FirstOverTime":"2019-10-24T10:40:00","AlarmType":"5","AlarmMessage":"[广东瑞明电力-废水出口]于2019-10-24 10:50:00 pH值由于数据超标倍数过大，已经超标，请注意！","DataType":"MinuteData","Level":null,"ExceptionType":"-1","MessageModel":null,"Start":null,"End":null,"PCUrl":null,"AppUrl":null,"MaxMultiple":0.0,"SuggestValue":0.0,"MsgType":0,"ParentCode":"0051264","ParentName":"广东瑞明电力股份有限公司","Abbreviation":"广东瑞明电力","Col1":null,"Col2":null,"Col3":null,"Col4":null,"Col5":null},"MessageTime":"2019-10-24T10:52:23","Cate":"Alarm","State":null,"Dgimn":null}}
             break;
           case 'Notice':
             dispatch({
@@ -483,21 +479,21 @@ export default Model.extend({
             break;
           case 'ControlData':
             dispatch({
-              type: "qualityControl/changeQCState",
-              payload: obj.Message[0]
+              type: 'qualityControl/changeQCState',
+              payload: obj.Message[0],
             })
             break;
           case 'ControlState':
             dispatch({
-              type: "qualityControl/changeQCState",
-              payload: obj.Message[0]
+              type: 'qualityControl/changeQCState',
+              payload: obj.Message[0],
             })
             break;
           case 'QCACemsStatus':
             // 质控仪状态
             dispatch({
-              type: "qualityControl/changeQCStatus",
-              payload: obj.Message
+              type: 'qualityControl/changeQCStatus',
+              payload: obj.Message,
             })
             break;
           case 'QCAAlarmMsg':

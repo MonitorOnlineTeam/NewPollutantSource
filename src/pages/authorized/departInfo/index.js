@@ -24,7 +24,7 @@ import {
     Divider,
     Popconfirm,
     Empty,
-    Transfer, Switch, Tag, Tree, Radio, Tooltip
+    Transfer, Switch, Tag, Tree, Radio, Tooltip,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -129,7 +129,6 @@ const rightTableColumns = [
         title: '手机',
     },
 ];
-
 @connect(({ departinfo, loading, global, common }) => ({
     GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
     GetRegionByDepID: loading.effects['departinfo/getregionbydepid'],
@@ -151,6 +150,8 @@ const rightTableColumns = [
     ConfigInfo: global.configInfo,
     pollutantType: common.defaultPollutantCode,
     showGroupRegionFilter: departinfo.showGroupRegionFilter,
+    btnloading: loading.effects['departinfo/insertdepartinfo'],
+    btnloading1: loading.effects['departinfo/upddepartinfo'],
 }))
 @Form.create()
 
@@ -164,7 +165,7 @@ class DepartIndex extends Component {
             value: undefined,
             IsEdit: false,
             FormDatas: [],
-            Tittle: "添加部门",
+            Tittle: '添加部门',
             selectedRowKeys: [],
             autoExpandParent: true,
             expandedKeys: [],
@@ -182,14 +183,14 @@ class DepartIndex extends Component {
             visibleRegion: false,
             leafTreeDatas: [],
             visibleData: false,
-            pollutantType: "",
+            pollutantType: '',
             DataTreeValue: [],
             columns: [
                 {
                     title: '部门名称',
                     dataIndex: 'UserGroup_Name',
                     key: 'UserGroup_Name',
-                    width: "auto"
+                    width: 'auto',
                 },
                 {
                     title: '部门描述',
@@ -223,8 +224,8 @@ class DepartIndex extends Component {
                                     this.props.dispatch({
                                         type: 'departinfo/getdepartinfobyid',
                                         payload: {
-                                            UserGroup_ID: record.UserGroup_ID
-                                        }
+                                            UserGroup_ID: record.UserGroup_ID,
+                                        },
                                     })
                                     this.showModalEdit()
                                 }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
@@ -238,19 +239,19 @@ class DepartIndex extends Component {
                                             type: 'departinfo/deldepartinfo',
                                             payload: {
                                                 UserGroup_ID: record.UserGroup_ID,
-                                                callback: (res) => {
+                                                callback: res => {
                                                     if (res.IsSuccess) {
-                                                        message.success("删除成功");
+                                                        message.success('删除成功');
                                                         this.props.dispatch({
-                                                            type: "departinfo/getdepartinfobytree",
+                                                            type: 'departinfo/getdepartinfobytree',
                                                             payload: {
-                                                            }
+                                                            },
                                                         })
-                                                    }else{
+                                                    }else {
                                                         message.error(res.Message);
                                                     }
-                                                }
-                                            }
+                                                },
+                                            },
                                         })
                                     }}
                                     onCancel={this.cancel}
@@ -265,7 +266,7 @@ class DepartIndex extends Component {
                             <Tooltip title="分配用户">
                                 <a onClick={() => {
                                     this.setState({
-                                        selectedRowKeys: record
+                                        selectedRowKeys: record,
                                     }, () => {
                                         this.showUserModal()
                                     })
@@ -279,7 +280,7 @@ class DepartIndex extends Component {
                                     <Tooltip title="区域过滤">
                                         <a onClick={() => {
                                             this.setState({
-                                                selectedRowKeys: record
+                                                selectedRowKeys: record,
                                             }, () => {
                                                 this.showRegionModal()
                                             })
@@ -291,7 +292,7 @@ class DepartIndex extends Component {
                             <Tooltip title="数据过滤">
                                 <a onClick={() => {
                                     this.setState({
-                                        selectedRowKeys: record
+                                        selectedRowKeys: record,
                                     }, () => {
                                         this.showDataModal()
                                     })
@@ -302,37 +303,35 @@ class DepartIndex extends Component {
                                 <a style={{ cursor: 'pointer' }} onClick={() => {
                                     console.log(record.Roles_ID)
                                     this.setState({
-                                        selectedRowKeys: record
+                                        selectedRowKeys: record,
                                     }, () => {
                                         this.showAlarmModal(record)
                                     })
-
                                 }}><Icon type="bell" style={{ fontSize: 16 }} /></a>
                             </Tooltip>
-                        </span>
+                        </span>,
                 },
-            ]
+            ],
         };
-
-
     }
-    onChanges = nextTargetKeys => {
 
+    onChanges = nextTargetKeys => {
         // if (nextTargetKeys.length == 0) {
         //     message.error("请至少保留一个角色")
         //     return
         // }
-        console.log("nextTargetKeys.length=", nextTargetKeys.length)
-        console.log("this.props.AllUser.length=", this.props.AllUser.length)
+        console.log('nextTargetKeys.length=', nextTargetKeys.length)
+        console.log('this.props.AllUser.length=', this.props.AllUser.length)
         this.props.dispatch({
             type: 'departinfo/insertdepartbyuser',
             payload: {
                 User_ID: nextTargetKeys,
                 UserGroup_ID: this.state.selectedRowKeys.key,
-            }
+            },
         })
         this.setState({ targetKeys: nextTargetKeys });
     };
+
     onExpand = expandedKeys => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
@@ -341,6 +340,7 @@ class DepartIndex extends Component {
             autoExpandParent: false,
         });
     };
+
     onExpands = expandedKey => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
@@ -349,9 +349,11 @@ class DepartIndex extends Component {
             autoExpandParent: false,
         });
     };
+
     onCheck = checkedKey => {
         this.setState({ checkedKey });
     };
+
     onChecks = checkedKeys => {
         console.log('select=', checkedKeys)
         console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas)
@@ -364,12 +366,15 @@ class DepartIndex extends Component {
         });
         this.setState({ checkedKeySel: checkedKeys });
     };
+
     onSelect = (record, selected, selectedRows) => {
-        console.log("record=", record.key);
+        console.log('record=', record.key);
     }
+
     onSelectRegion = (selectedKey, info) => {
         this.setState({ selectedKey });
     };
+
     onSelectData = (selectedKey, info) => {
         this.setState({ selectedKey });
     };
@@ -386,11 +391,11 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/getdepartinfobytree',
             payload: {
-            }
+            },
         })
         this.props.dispatch({
-            type: "departinfo/getGroupRegionFilter",
-            payload: {}
+            type: 'departinfo/getGroupRegionFilter',
+            payload: {},
         })
         // this.props.dispatch({
         //     type: 'roleinfo/getrolestreeandobj',
@@ -406,72 +411,73 @@ class DepartIndex extends Component {
     }
 
     showModal = () => {
-
         this.props.dispatch({
             type: 'departinfo/getdeparttreeandobj',
             payload: {
-                Type: '1'
-            }
+                Type: '1',
+            },
         })
         this.setState({
             visible: true,
             IsEdit: false,
-            Tittle: "添加部门"
+            Tittle: '添加部门',
         });
     };
+
     showUserModal = () => {
         if (this.state.selectedRowKeys.length == 0) {
-            message.error("请选中一行")
+            message.error('请选中一行')
             return
         }
-        var keys = this.state.selectedRowKeys.key
+        let keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getalluser',
-            payload: {}
+            payload: {},
         })
-        console.log("111=", keys)
+        console.log('111=', keys)
 
         this.props.dispatch({
             type: 'departinfo/getuserbydepid',
             payload: {
-                UserGroup_ID: keys.toString()
-            }
+                UserGroup_ID: keys.toString(),
+            },
         })
         // console.log("selectID=",this.props.UserByRoleID)
         // console.log("filterArr=",this.props.AllUser)
         const selectId = this.props.UserByDepID.map(item => item.key)
 
         const filterArr = this.props.AllUser.filter(item => selectId.indexOf(item.key))
-        console.log("filterArr=", filterArr)
+        console.log('filterArr=', filterArr)
         this.setState({
             visibleUser: true,
             targetKeys: selectId,
-            allKeys: filterArr
+            allKeys: filterArr,
         })
     }
 
     showRegionModal = () => {
         if (this.state.selectedRowKeys.length == 0) {
-            message.error("请选中一行")
+            message.error('请选中一行')
             return
         }
-        var keys = this.state.selectedRowKeys.key
+        let keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getregioninfobytree',
-            payload: {}
+            payload: {},
         })
         this.props.dispatch({
             type: 'departinfo/getregionbydepid',
             payload: {
-                UserGroup_ID: keys.toString()
-            }
+                UserGroup_ID: keys.toString(),
+            },
         })
-        console.log("regioncode=", this.props.RegionByDepID);
+        console.log('regioncode=', this.props.RegionByDepID);
         this.setState({
             visibleRegion: true,
-            checkedKey: this.props.RegionByDepID
+            checkedKey: this.props.RegionByDepID,
         })
     }
+
     showDataModal = () => {
         // console.log('///=', this.props.ConfigInfo)
         // var list = this.props.ConfigInfo.SystemPollutantType ? this.props.ConfigInfo.SystemPollutantType.split(',') : []
@@ -480,13 +486,13 @@ class DepartIndex extends Component {
         //     pollutantType: type,
         // })
         if (this.state.selectedRowKeys.length == 0) {
-            message.error("请选中一行")
+            message.error('请选中一行')
             return
         }
-        var keys = this.state.selectedRowKeys.key
+        let keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getregioninfobytree',
-            payload: {}
+            payload: {},
         })
         this.setState({
             visibleData: true,
@@ -497,26 +503,25 @@ class DepartIndex extends Component {
             payload: {
                 PollutantType: this.state.pollutantType,
                 RegionCode: this.state.DataTreeValue.toString(),
-            }
+            },
         })
         this.props.dispatch({
             type: 'departinfo/getpointbydepid',
             payload: {
                 UserGroup_ID: keys.toString(),
-                PollutantType: this.state.pollutantType
-            }
+                PollutantType: this.state.pollutantType,
+            },
         })
 
-        console.log("pollutantType=", this.state.pollutantType);
-
+        console.log('pollutantType=', this.state.pollutantType);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.UserByDepID !== nextProps.UserByDepID) {
             const selectId = nextProps.UserByDepID.map(item => item.key)
-            console.log("selectId=", selectId)
+            console.log('selectId=', selectId)
             const filterArr = nextProps.AllUser.filter(item => selectId.indexOf(item.key))
-            console.log("filterArr=", filterArr)
+            console.log('filterArr=', filterArr)
             this.setState({
                 visibleUser: true,
                 targetKeys: selectId,
@@ -552,15 +557,16 @@ class DepartIndex extends Component {
         //     // })
         // }
     }
+
     showModalEdit = () => {
         this.props.dispatch({
             type: 'departinfo/getdeparttreeandobj',
-            payload: {}
+            payload: {},
         })
         this.setState({
             visible: true,
             IsEdit: true,
-            Tittle: "编辑部门"
+            Tittle: '编辑部门',
         });
     }
 
@@ -569,9 +575,11 @@ class DepartIndex extends Component {
             visible: false,
         });
     };
+
     onChange = value => {
         this.setState({ value });
     };
+
     handleCancel = e => {
         this.setState({
             visible: false,
@@ -581,47 +589,50 @@ class DepartIndex extends Component {
             visibleData: false,
         });
     };
+
     handleRegionOK = e => {
-        console.log("regioncode=", this.state.checkedKey)
-        console.log("selectedRowKeys=", this.state.selectedRowKeys.key)
+        console.log('regioncode=', this.state.checkedKey)
+        console.log('selectedRowKeys=', this.state.selectedRowKeys.key)
         this.props.dispatch({
             type: 'departinfo/insertregionbyuser',
             payload: {
                 RegionCode: this.state.checkedKey,
                 UserGroup_ID: this.state.selectedRowKeys.key,
-                callback: (res) => {
+                callback: res => {
                     if (res.IsSuccess) {
-                        message.success("成功");
+                        message.success('成功');
                         this.handleCancel()
-                    }else{
+                    }else {
                         message.error(res.Message);
                     }
-                }
-            }
+                },
+            },
         })
     };
+
     handleDataOK = e => {
-        console.log("regioncode=", this.state.checkedKeySel)
-        console.log("selectedRowKeys=", this.state.selectedRowKeys.key)
+        console.log('regioncode=', this.state.checkedKeySel)
+        console.log('selectedRowKeys=', this.state.selectedRowKeys.key)
         this.props.dispatch({
             type: 'departinfo/insertpointfilterbydepid',
             payload: {
                 DGIMN: this.state.checkedKeySel,
                 UserGroup_ID: this.state.selectedRowKeys.key,
                 Type: this.state.pollutantType,
-                callback: (res) => {
+                callback: res => {
                     if (res.IsSuccess) {
-                        message.success("成功");
+                        message.success('成功');
                         this.handleCancel()
-                    }else{
+                    }else {
                         message.error(res.Message);
                     }
-                }
-            }
+                },
+            },
         })
     };
+
     handleSizeChange = e => {
-        var keys = this.state.selectedRowKeys.key
+        let keys = this.state.selectedRowKeys.key
 
 
         this.setState({ pollutantType: e.target.value });
@@ -629,40 +640,39 @@ class DepartIndex extends Component {
             type: 'departinfo/getpointbydepid',
             payload: {
                 UserGroup_ID: keys.toString(),
-                PollutantType: e.target.value
-            }
+                PollutantType: e.target.value,
+            },
         })
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
                 RegionCode: this.state.DataTreeValue.toString(),
                 PollutantType: e.target.value,
-            }
+            },
         })
-
-
     };
+
     onChangeTree = value => {
         console.log('onChange ', value);
         this.setState({
-            DataTreeValue: value
+            DataTreeValue: value,
         });
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
                 RegionCode: value.toString(),
                 PollutantType: this.state.pollutantType,
-            }
+            },
         })
-
     };
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                let FormData = {};
-                for (let key in values) {
-                    if (values[key] && values[key]["fileList"]) {
+                const FormData = {};
+                for (const key in values) {
+                    if (values[key] && values[key].fileList) {
                         FormData[key] = uid;
                     } else {
                         FormData[key] = values[key] && values[key].toString()
@@ -672,29 +682,30 @@ class DepartIndex extends Component {
                 const msg = this.state.IsEdit == true ? '修改成功' : '添加成功'
 
                 this.props.dispatch({
-                    type: type,
+                    type,
                     payload: {
                         ...FormData,
-                        callback: (res) => {
+                        callback: res => {
                             if (res.IsSuccess) {
                                 message.success(msg);
                                 this.handleCancel()
                                 this.props.dispatch({
                                     type: 'departinfo/getdepartinfobytree',
                                     payload: {
-                                    }
+                                    },
                                 })
-                            }else{
+                            }else {
                                 message.error(res.Message);
                             }
-                        }
-                    }
+                        },
+                    },
 
                 })
                 console.log('FormData=', FormData);
             }
         });
     };
+
     renderTreeNodes = data =>
         data.map(item => {
             if (item.children) {
@@ -706,6 +717,7 @@ class DepartIndex extends Component {
             }
             return <TreeNode {...item} />;
         });
+
     renderDataTreeNodes = data =>
         data.map(item => {
             if (item.children) {
@@ -725,35 +737,36 @@ class DepartIndex extends Component {
 
     cancelAlarmModal = () => {
         this.setState({
-            visibleAlarm: false
+            visibleAlarm: false,
         });
     }
 
-    showAlarmModal = (e) => {
-
+    showAlarmModal = e => {
         this.setState({
-            visibleAlarm: true
+            visibleAlarm: true,
         });
     }
+
     render() {
         const { getFieldDecorator } = this.props.form;
+        const{btnloading,btnloading1}=this.props;
         const { targetKeys, disabled, showSearch } = this.state;
         const formItemLayout = {
             labelCol: {
-                span: 6
+                span: 6,
             },
             wrapperCol: {
-                span: 16
+                span: 16,
             },
         };
         const rowRadioSelection = {
             type: 'radio',
-            columnTitle: "选择",
+            columnTitle: '选择',
             selectedRowKeys: this.state.rowKeys,
             onChange: (selectedRowKeys, selectedRows) => {
                 this.setState({
                     selectedRowKeys: selectedRows[0],
-                    rowKeys: selectedRowKeys
+                    rowKeys: selectedRowKeys,
                 })
             },
         }
@@ -764,14 +777,14 @@ class DepartIndex extends Component {
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
             searchPlaceholder: '搜索',
-            treeDefaultExpandedKeys: ["0"],
+            treeDefaultExpandedKeys: ['0'],
             style: {
                 width: 500,
-                marginLeft: 16
+                marginLeft: 16,
             },
             dropdownStyle: {
-                maxHeight: "700px", overflowY: "auto"
-            }
+                maxHeight: '700px', overflowY: 'auto',
+            },
         };
         if (this.props.GetDepartInfoByTree) {
             return <Spin
@@ -780,7 +793,7 @@ class DepartIndex extends Component {
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}
                 size="large"
             />
@@ -797,7 +810,7 @@ class DepartIndex extends Component {
                     // }
                     // >
                     <PageHeaderWrapper>
-                        <Card bordered={false}  >
+                        <Card bordered={false} >
                             <Button type="primary"
                                 onClick={this.showModal}
                             >新增</Button>
@@ -816,17 +829,15 @@ class DepartIndex extends Component {
 
                             <Table
                                 // rowKey={}
-                                onRow={record => {
-                                    return {
+                                onRow={record => ({
                                         onClick: event => {
                                             this.setState({
                                                 selectedRowKeys: record,
                                                 rowKeys: [record.key]
                                             })
                                         },
-                                    };
-                                }}
-                                style={{ marginTop: "20px" }}
+                                    })}
+                                style={{ marginTop: '20px' }}
                                 //rowSelection={rowRadioSelection}
                                 size="small" columns={this.state.columns} defaultExpandAllRows dataSource={this.props.DepartInfoTree} />
 
@@ -836,6 +847,7 @@ class DepartIndex extends Component {
                             <Modal
                                 title={this.state.Tittle}
                                 visible={this.state.visible}
+                                confirmLoading={ this.state.IsEdit === true ? btnloading1 : btnloading}
                                 onOk={this.handleSubmit}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
@@ -848,7 +860,7 @@ class DepartIndex extends Component {
                                             height: 'calc(100vh/2)',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
                                         }}
                                         size="large"
                                     /> :
@@ -856,7 +868,7 @@ class DepartIndex extends Component {
                                             <Form.Item label="父节点" {...formItemLayout} >
                                                 {getFieldDecorator('ParentId', {
                                                     rules: [{ required: true, message: '请选择父节点' }],
-                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : ""
+                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : '',
                                                 })(
                                                     <TreeSelect
                                                         type="ParentId"
@@ -869,15 +881,15 @@ class DepartIndex extends Component {
                                                         treeDefaultExpandAll
                                                         onChange={this.onChange}
                                                         treeData={this.props.DepartTree}
-                                                        style={{ width: "100%" }}
+                                                        style={{ width: '100%' }}
                                                     >
-                                                    </TreeSelect>
+                                                    </TreeSelect>,
                                                 )}
                                             </Form.Item>
-                                            <Form.Item label="部门名称"  {...formItemLayout}>
+                                            <Form.Item label="部门名称" {...formItemLayout}>
                                                 {getFieldDecorator('UserGroup_Name', {
                                                     rules: [{ required: true, message: '请输入部门名称' }],
-                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Name : ""
+                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Name : '',
                                                 })(
                                                     <Input
                                                         type="UserGroup_Name"
@@ -885,9 +897,9 @@ class DepartIndex extends Component {
                                                     />,
                                                 )}
                                             </Form.Item>
-                                            <Form.Item label="部门描述"  {...formItemLayout}>
+                                            <Form.Item label="部门描述" {...formItemLayout}>
                                                 {getFieldDecorator('UserGroup_Remark', {
-                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Remark : ""
+                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Remark : '',
                                                 })(
                                                     <TextArea
                                                         type="UserGroup_Remark"
@@ -897,7 +909,7 @@ class DepartIndex extends Component {
                                             </Form.Item>
                                             <Form.Item>
                                                 {getFieldDecorator('UserGroup_ID', {
-                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_ID : ""
+                                                    initialValue: this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_ID : '',
                                                 })(
                                                     <Input
                                                         type="UserGroup_ID"
@@ -909,7 +921,7 @@ class DepartIndex extends Component {
                                 }
                             </Modal>
                             <Modal
-                                title={"分配用户-" + this.state.selectedRowKeys.UserGroup_Name}
+                                title={'分配用户-' + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleUser}
                                 onOk={this.handleCancel}
                                 destroyOnClose="true"
@@ -923,7 +935,7 @@ class DepartIndex extends Component {
                                             height: 'calc(100vh/2)',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
                                         }}
                                         size="large"
                                     /> :
@@ -940,14 +952,14 @@ class DepartIndex extends Component {
                                             }
                                             leftColumns={leftTableColumns}
                                             rightColumns={rightTableColumns}
-                                            style={{ width: "100%", height: "600px" }}
+                                            style={{ width: '100%', height: '600px' }}
                                         />
 
                                 }
 
                             </Modal>
                             <Modal
-                                title={"区域过滤-" + this.state.selectedRowKeys.UserGroup_Name}
+                                title={'区域过滤-' + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleRegion}
                                 onOk={this.handleRegionOK}
                                 destroyOnClose="true"
@@ -962,11 +974,11 @@ class DepartIndex extends Component {
                                             height: 'calc(100vh/2)',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
                                         }}
                                         size="large"
                                     /> :
-                                        <div style={{ maxHeight: "600px", overflowY: "auto" }}>
+                                        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                                             <Tree
                                                 key="key"
                                                 checkable
@@ -992,7 +1004,7 @@ class DepartIndex extends Component {
                             </Modal>
 
                             <Modal
-                                title={"数据过滤-" + this.state.selectedRowKeys.UserGroup_Name}
+                                title={'数据过滤-' + this.state.selectedRowKeys.UserGroup_Name}
                                 visible={this.state.visibleData}
                                 onOk={this.handleDataOK}
                                 // destroyOnClose="true"
@@ -1012,8 +1024,8 @@ class DepartIndex extends Component {
                                     //     }}
                                     //     size="large"
                                     // /> :
-                                    <div style={{ height: "600px", overflow: "hidden" }}>
-                                        <Row style={{ background: "#fff", paddingBottom: 10, zIndex: 1 }}>
+                                    <div style={{ height: '600px', overflow: 'hidden' }}>
+                                        <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
                                             {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
                                                     <Radio.Button value="1">废水</Radio.Button>
                                                     <Radio.Button value="2">废气</Radio.Button>
@@ -1033,12 +1045,12 @@ class DepartIndex extends Component {
                                                     height: 'calc(100vh/2)',
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    justifyContent: 'center'
+                                                    justifyContent: 'center',
                                                 }}
                                                 size="large"
                                             /> : (this.props.EntAndPoint.length > 0 ? <Tree
                                                 key="key"
-                                                style={{ height: "560px", overflow: "auto" }}
+                                                style={{ height: '560px', overflow: 'auto' }}
                                                 checkable
                                                 // checkStrictly={false}
                                                 onExpand={this.onExpands}
@@ -1066,15 +1078,15 @@ class DepartIndex extends Component {
 
                             </Modal>
                             <Modal
-                                title='报警关联'
+                                title="报警关联"
                                 visible={this.state.visibleAlarm}
                                 footer={null}
                                 onCancel={this.cancelAlarmModal}
-                                destroyOnClose={true}
-                                width='70%'
+                                destroyOnClose
+                                width="70%"
                             >
 
-                                <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType='Dept' cancelModal={this.cancelAlarmModal} />
+                                <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Dept" cancelModal={this.cancelAlarmModal} />
                             </Modal>
                         </div>
                         {/* </MonitorContent> */}

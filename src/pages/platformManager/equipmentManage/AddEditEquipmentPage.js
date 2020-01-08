@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-10-25 10:18:12 
+ * @Author: Jiaqi
+ * @Date: 2019-10-25 10:18:12
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-10-25 10:23:28
  * @desc: 设备管理（添加、编辑页面）
@@ -21,7 +21,9 @@ import PageLoading from '@/components/PageLoading';
   Manufacturer: equipment.Manufacturer,
   Measurement: equipment.Measurement,
   equipmentData: equipment.equipmentData,
-  loading: loading.effects["equipment/getEquipmentByID"],
+  loading: loading.effects['equipment/getEquipmentByID'],
+  btnisloading: loading.effects['autoForm/add'],
+   btnisloading1: loading.effects['autoForm/add'],
 }))
 class AddEditEquipmentPage extends PureComponent {
   constructor(props) {
@@ -29,7 +31,7 @@ class AddEditEquipmentPage extends PureComponent {
     this.state = {
     };
     this._SELF_ = {
-      type: props.match.params.id === "null" ? "add" : "edit",
+      type: props.match.params.id === 'null' ? 'add' : 'edit',
       routerParams: props.match.params,
       formItemLayout: {
         labelCol: {
@@ -40,42 +42,42 @@ class AddEditEquipmentPage extends PureComponent {
           xs: { span: 24 },
           sm: { span: 14 },
         },
-      }
+      },
     }
   }
 
   componentDidMount() {
     const { type, routerParams } = this._SELF_;
-    if (type === "add") {
+    if (type === 'add') {
       this.props.form.resetFields();
       this.props.dispatch({
-        type: "equipment/getEquipmentWhere",
+        type: 'equipment/getEquipmentWhere',
         payload: {
-          EquipmentType: "",
-          EquipmentModel: "",
-          Manufacturer: ""
-        }
+          EquipmentType: '',
+          EquipmentModel: '',
+          Manufacturer: '',
+        },
       })
       this.props.dispatch({
-        type: "equipment/updateState",
+        type: 'equipment/updateState',
         payload: {
-          equipmentData: []
-        }
+          equipmentData: [],
+        },
       })
     } else {
       this.props.dispatch({
-        type: "equipment/getEquipmentByID",
+        type: 'equipment/getEquipmentByID',
         payload: {
-          id: routerParams.id
-        }
+          id: routerParams.id,
+        },
       })
     }
   }
 
   changeWhere = payload => {
     this.props.dispatch({
-      type: "equipment/getEquipmentWhere",
-      payload: payload
+      type: 'equipment/getEquipmentWhere',
+      payload,
     })
   }
 
@@ -86,38 +88,38 @@ class AddEditEquipmentPage extends PureComponent {
     const { form, onSubmitForm, dispatch, match: { params } } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let formData = handleFormData(values)
-        console.log("formData=", formData)
+        const formData = handleFormData(values)
+        console.log('formData=', formData)
         // return;
-        type === "add" ?
+        type === 'add' ?
           // 添加
           dispatch({
             type: 'autoForm/add',
             payload: {
-              configId: "Equipment",
+              configId: 'Equipment',
               FormData: {
                 ...formData,
-                DGIMN: params.DGIMN
+                DGIMN: params.DGIMN,
               },
-              callback: (res) => {
-                router.push("/platformconfig/equipmentManage")
-              }
-            }
+              callback: res => {
+                router.push('/platformconfig/equipmentManage')
+              },
+            },
           }) :
           // 编辑
           dispatch({
             type: 'autoForm/saveEdit',
             payload: {
-              configId: "Equipment",
+              configId: 'Equipment',
               FormData: {
                 ...formData,
                 DGIMN: routerParams.DGIMN,
-                ID: routerParams.id
+                ID: routerParams.id,
               },
-              callback: (res) => {
-                router.push("/platformconfig/equipmentManage")
-              }
-            }
+              callback: res => {
+                router.push('/platformconfig/equipmentManage')
+              },
+            },
           });
       }
     })
@@ -125,13 +127,13 @@ class AddEditEquipmentPage extends PureComponent {
 
   render() {
     // const { type } = this.state;
-    const { form, form: { getFieldDecorator }, EquipmentModel, EquipmentType, Manufacturer, Measurement, equipmentData, loading } = this.props;
+    const { form, form: { getFieldDecorator }, EquipmentModel, EquipmentType, Manufacturer, Measurement, equipmentData, loading, btnisloading, btnisloading1 } = this.props;
     const { type, formItemLayout } = this._SELF_;
-    if (loading && type === "edit") {
+    if (loading && type === 'edit') {
       return <PageLoading />
     }
     return (
-      <PageHeaderWrapper title={type === "add" ? "添加" : "编辑"}>
+      <PageHeaderWrapper title={type === 'add' ? '添加' : '编辑'}>
         <Card>
           <Form {...formItemLayout} onSubmit={this.submitForm}>
             <Row>
@@ -139,115 +141,109 @@ class AddEditEquipmentPage extends PureComponent {
                 <Form.Item label="设备类别">
                   {getFieldDecorator('EquipmentType', {
                     rules: [{ required: true, message: '请选择设备类别' }],
-                    initialValue: equipmentData.EquipmentType
+                    initialValue: equipmentData.EquipmentType,
                   })(
                     <Select placeholder="请选择设备类别" onChange={val => {
                       this.changeWhere({
                         EquipmentType: val,
                       });
-                      form.setFieldsValue({ "Manufacturer": undefined, "EquipmentModel": undefined })
+                      form.setFieldsValue({ Manufacturer: undefined, EquipmentModel: undefined })
                     }}>
                       {
-                        EquipmentType.map(item => {
-                          return <Option key={item} value={item}>{item}</Option>
-                        })
+                        EquipmentType.map(item => <Option key={item} value={item}>{item}</Option>)
                       }
-                    </Select>
+                    </Select>,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="设备厂商">
                   {getFieldDecorator('Manufacturer', {
-                    rules: [{ required: true, message: "请选择设备厂商" }],
-                    initialValue: equipmentData.Manufacturer
+                    rules: [{ required: true, message: '请选择设备厂商' }],
+                    initialValue: equipmentData.Manufacturer,
                   })(
                     <Select placeholder="请选择设备厂商" onChange={val => {
                       this.changeWhere({
                         EquipmentType: form.getFieldValue('EquipmentType'),
                         Manufacturer: val,
                       });
-                      form.setFieldsValue({ "EquipmentModel": undefined })
+                      form.setFieldsValue({ EquipmentModel: undefined })
                     }}>
                       {
-                        Manufacturer.map(item => {
-                          return <Option key={item} value={item}>{item}</Option>
-                        })
+                        Manufacturer.map(item => <Option key={item} value={item}>{item}</Option>)
                       }
-                    </Select>
+                    </Select>,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="设备型号">
                   {getFieldDecorator('EquipmentModel', {
-                    rules: [{ required: true, message: "请选择设备型号" }],
-                    initialValue: equipmentData.EquipmentModel
+                    rules: [{ required: true, message: '请选择设备型号' }],
+                    initialValue: equipmentData.EquipmentModel,
                   })(
                     <Select placeholder="请选择设备型号" onChange={val => {
                       this.changeWhere({
                         EquipmentType: form.getFieldValue('EquipmentType'),
                         Manufacturer: form.getFieldValue('Manufacturer'),
-                        EquipmentModel: val
+                        EquipmentModel: val,
                       });
                     }}>
                       {
-                        EquipmentModel.map(item => {
-                          return <Option key={item} value={item}>{item}</Option>
-                        })
+                        EquipmentModel.map(item => <Option key={item} value={item}>{item}</Option>)
                       }
-                    </Select>
+                    </Select>,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="测量参数">
                   {getFieldDecorator('Measurement', {
-                    rules: [{ required: true, message: "请填写测量参数" }],
-                    initialValue: Measurement
+                    rules: [{ required: true, message: '请填写测量参数' }],
+                    initialValue: Measurement,
                   })(
-                    <Input placeholder="测量参数" />
+                    <Input placeholder="测量参数" />,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="调试完日期">
                   {getFieldDecorator('OverTime', {
-                    rules: [{ required: true, message: "请选择调试完日期" }],
-                    initialValue: equipmentData.OverTime ? moment(equipmentData.OverTime) : undefined
+                    rules: [{ required: true, message: '请选择调试完日期' }],
+                    initialValue: equipmentData.OverTime ? moment(equipmentData.OverTime) : undefined,
                   })(
-                    <DatePicker placeholder="调试完日期" style={{ width: '100%' }} showTime />
+                    <DatePicker placeholder="调试完日期" style={{ width: '100%' }} showTime />,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="出厂日期">
                   {getFieldDecorator('FactoryTime', {
-                    rules: [{ required: true, message: "请选择出厂日期" }],
-                    initialValue: equipmentData.FactoryTime ? moment(equipmentData.FactoryTime) : undefined
+                    rules: [{ required: true, message: '请选择出厂日期' }],
+                    initialValue: equipmentData.FactoryTime ? moment(equipmentData.FactoryTime) : undefined,
                   })(
-                    <DatePicker placeholder="出厂日期" style={{ width: '100%' }} showTime />
+                    <DatePicker placeholder="出厂日期" style={{ width: '100%' }} showTime />,
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="使用年限">
                   {getFieldDecorator('UserYears', {
-                    rules: [{ required: true, message: "请填写使用年限" }],
-                    initialValue: equipmentData.UserYears
+                    rules: [{ required: true, message: '请填写使用年限' }],
+                    initialValue: equipmentData.UserYears,
                   })(
                     <InputNumber
                       style={{ width: '100%' }}
                       formatter={value => `${value}年`}
                       parser={value => value.replace('年', '')}
-                    />
+                    />,
                   )}
                 </Form.Item>
               </Col>
             </Row>
             <Row>
               <Divider orientation="right">
-                <Button type="primary" htmlType="submit">保存</Button>
+                <Button type="primary" htmlType="submit" loading={type === 'edit' ? btnisloading1 : btnisloading}>保存</Button>
                 <Button
                   style={{ marginLeft: 8 }}
                   onClick={() => {
