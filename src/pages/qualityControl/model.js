@@ -603,6 +603,7 @@ export default Model.extend({
 
           // 质控结果
           if (code === "QCAResult") {
+            console.log("QCAResult=", payload.Value)
             QCAResult = payload.Value
           }
 
