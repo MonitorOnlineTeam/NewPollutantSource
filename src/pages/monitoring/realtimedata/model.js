@@ -509,8 +509,8 @@ export default Model.extend({
             pageSize: null,
             beginTime: null,
             endTime: null,
-            payloadpollutantCode: null,
-            payloadpollutantName: null,
+            pollutantCodes: null,
+            pollutantNames: null,
             unit: null,
             isAsc: true,
             DGIMN: "",
@@ -577,8 +577,8 @@ export default Model.extend({
                 if (!payload.overdata) {
                     historyparams = {
                         ...historyparams,
-                        payloadpollutantCode: result[0].PollutantCode,
-                        payloadpollutantName: result[0].PollutantName,
+                        pollutantCodes: result[0].PollutantCode,
+                        pollutantNames: result[0].PollutantName,
                         unit: result[0].Unit,
                         DGIMN: payload.dgimn
                     }
@@ -599,7 +599,7 @@ export default Model.extend({
             payload,
         }, { select, call, update }) {
             const { pollutantlist, historyparams } = yield select(_ => _.realtimeserver);
-            if (!pollutantlist[0] || !historyparams.payloadpollutantCode) {
+            if (!pollutantlist[0] || !historyparams.pollutantCodes) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
@@ -607,9 +607,9 @@ export default Model.extend({
                 historyparams.DGIMNs = payload.dgimn;
             }
             // // 如果是初次加载的话
-            // if (!historyparams.payloadpollutantCode && pollutantlist.length > 0) {
-            //     historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
-            //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
+            // if (!historyparams.pollutantCodes && pollutantlist.length > 0) {
+            //     historyparams.pollutantCodes = pollutantlist[0].PollutantCode;
+            //     historyparams.pollutantNames = pollutantlist[0].PollutantName;
             // }
             const resultlist = yield call(queryhistorydatalist, historyparams);
             const result = resultlist.Datas;
@@ -621,8 +621,8 @@ export default Model.extend({
             const arr = [];
 
             let i = 0;
-            const arrname = historyparams.payloadpollutantName.split(',');
-            historyparams.payloadpollutantCode.split(',').map((item, key) => {
+            const arrname = historyparams.pollutantNames.split(',');
+            historyparams.pollutantCodes.split(',').map((item, key) => {
                 let seriesdata = [];
                 let series = {
                     type: 'line',
@@ -728,7 +728,7 @@ export default Model.extend({
                         trigger: 'axis',
                     },
                     legend: {
-                        data: historyparams.payloadpollutantName.split(','),
+                        data: historyparams.pollutantNames.split(','),
                     },
                     toolbox: {
                         show: true,
@@ -936,7 +936,7 @@ export default Model.extend({
             let chartdata = state.chartdata;
 
             //根据污染物查询出最新数据
-            let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.payloadpollutantCode);
+            let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.pollutantCodes);
             //纵坐标显示单位
             let unit = state.historyparams.unit ? `(${state.historyparams.unit})` : "";
             //MN号相同的代表是选中的进行数据更新
@@ -951,7 +951,7 @@ export default Model.extend({
                 }
                 //原始数据为空的话标准先去推送数据中的标准
                 else {
-                    legendData = state.historyparams.payloadpollutantName.split(',');
+                    legendData = state.historyparams.pollutantNames.split(',');
                     let markLineData = [];
                     if (parseInt(newDataByPollutant[0].IsOver) > 0) {
                         markLineData = {

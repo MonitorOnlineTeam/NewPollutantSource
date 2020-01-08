@@ -103,8 +103,8 @@ class CommonChart extends Component {
     dashboardClick = (pollutantCode, pollutantName, Unit) => {
         let { historyparams, dispatch } = this.props;
 
-        historyparams.payloadpollutantCode = pollutantCode;
-        historyparams.payloadpollutantName = pollutantName;
+        historyparams.pollutantCodes = pollutantCode;
+        historyparams.pollutantNames = pollutantName;
         historyparams.unit = Unit;
         dispatch({
             type: 'realtimeserver/updateState',

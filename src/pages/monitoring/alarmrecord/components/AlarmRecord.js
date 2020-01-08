@@ -349,12 +349,12 @@ class AlarmRecord extends Component {
       key: 'AlarmCount',
      
     },
-    {
-      title: '报警值',
-      dataIndex: 'AlarmValue',
-      key: 'AlarmValue',
+    // {
+    //   title: '报警值',
+    //   dataIndex: 'AlarmValue',
+    //   key: 'AlarmValue',
      
-    },
+    // },
     {
       title: '核实状态',
       dataIndex: 'State',
