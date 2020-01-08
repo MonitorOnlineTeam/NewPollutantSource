@@ -334,32 +334,32 @@ class AlarmRecord extends Component {
       title: '报警类型',
       dataIndex: 'AlarmTypeName',
       key: 'AlarmTypeName',
-     
+
     },
     {
       title: '污染物',
       dataIndex: 'PollutantName',
       key: 'PollutantName',
-     
+
     },
 
     {
       title: '报警次数',
       dataIndex: 'AlarmCount',
       key: 'AlarmCount',
-     
+
     },
     {
       title: '报警值',
       dataIndex: 'AlarmValue',
       key: 'AlarmValue',
-     
+
     },
     {
       title: '核实状态',
       dataIndex: 'State',
       key: 'State',
-     
+
       render: (text, record) => {
         if (text === '0') {
           return <span> <Badge status="error" text="未核实" /> </span>;
@@ -409,7 +409,7 @@ class AlarmRecord extends Component {
           height: 'calc(100vh/2)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
         size="large"
       />);
@@ -423,7 +423,7 @@ class AlarmRecord extends Component {
           extra={
             <div>
               {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm:ss" onChange={this._handleDateChange} dateValue={this.state.rangeDate} />
+              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm" onChange={this._handleDateChange} dateValue={this.state.rangeDate} showTime="YYYY-MM-DD HH:mm" />
             </div>
           }
           className="contentContainer"
