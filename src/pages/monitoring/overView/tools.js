@@ -5,6 +5,7 @@ export const airLevel = [
     value: 1,
     standardValue: 0,
     status: 4,
+    levelText: "一级"
   },
   {
     // color: "#ffff00",
@@ -13,6 +14,7 @@ export const airLevel = [
     value: 2,
     standardValue: 50,
     status: 5,
+    levelText: "二级"
   },
   {
     color: "#ff7e00",
@@ -20,6 +22,7 @@ export const airLevel = [
     value: 3,
     standardValue: 100,
     status: 6,
+    levelText: "三级"
   },
   {
     color: "#ff0000",
@@ -27,6 +30,7 @@ export const airLevel = [
     value: 4,
     standardValue: 150,
     status: 7,
+    levelText: "四级"
   },
   {
     color: "#99004c",
@@ -34,6 +38,7 @@ export const airLevel = [
     value: 5,
     standardValue: 200,
     status: 8,
+    levelText: "五级"
   },
   {
     color: "#7e0023",
@@ -41,6 +46,7 @@ export const airLevel = [
     value: 6,
     standardValue: 300,
     status: 9,
+    levelText: "六级"
   },
   {
     color: "#3c0011",
@@ -48,6 +54,7 @@ export const airLevel = [
     value: 7,
     standardValue: "≥500",
     status: 10,
+    levelText: "七级"
   },
 ]
 

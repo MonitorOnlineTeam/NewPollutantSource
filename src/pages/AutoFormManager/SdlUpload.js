@@ -57,14 +57,19 @@ class SdlUpload extends Component {
   }
 
   handlePreview = async file => {
+    const nameSplit = file.name.split('.');
+    const postfix = nameSplit[nameSplit.length - 1];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
+    {
+      this.setState({
+        previewImage: file.url || file.preview,
+        previewVisible: true,
+      });
+    }
 
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-    });
   };
 
 
@@ -132,9 +137,15 @@ class SdlUpload extends Component {
               >
                 {
                   this.props.fileList && this.props.fileList.map(item => {
-                    return <div key={item.Guid}>
+                    debugger
+                    const nameSplit = item.name.split('.');
+                    const postfix = nameSplit[nameSplit.length - 1];
+                    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
+                    {
+                      return <div key={item.Guid}>
                       <img alt="example" style={{ width: '100%' }} src={item.url} />
                     </div>
+                    }
                   })
                 }
               </Carousel>

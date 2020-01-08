@@ -158,7 +158,8 @@ class index extends Component {
   lineOption = () => {
     const { valueList, timeList, tableData, start, end, standardValueList } = this.props;
     const { stabilizationTime, chartYMaxValue, chartYMaxValue2 } = this.state;
-    const maxVal = chartYMaxValue > chartYMaxValue2 ? chartYMaxValue : chartYMaxValue2;
+    let maxVal = chartYMaxValue > chartYMaxValue2 ? chartYMaxValue : chartYMaxValue2;
+    maxVal = Math.trunc(maxVal)
     // if(stabilizationTime)
     let markLineVal = stabilizationTime ? stabilizationTime + "" : undefined;
     return {
@@ -244,10 +245,9 @@ class index extends Component {
 
   // 获取质控结果
   getQCAResult = () => {
-    console.log('QCAResult-new=', this.props.QCAResult)
     switch (this.props.QCAResult) {
       case "0":
-        return <Spin style={{position: 'absolute', right: 20}} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
       case "1":
         return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "2":

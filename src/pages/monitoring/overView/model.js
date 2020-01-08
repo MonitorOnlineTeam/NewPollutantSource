@@ -46,12 +46,12 @@ export default Model.extend({
     selectpoint: null,
     onlypollutantList: [],
     selectpollutantTypeCode: '',
-    //数据一览表头
+    // 数据一览表头
     columns: [],
     data: [],
-    dataOne: null, //如果有点信息去第一个数据的MN号码
+    dataOne: null, // 如果有点信息去第一个数据的MN号码
     entlist: [],
-    //数据一览的参数
+    // 数据一览的参数
     dataOverview: {
       selectStatus: null,
       time: moment(new Date()).add(-1, 'hour'),
@@ -79,7 +79,7 @@ export default Model.extend({
     // 实时数据一览
     realtimeColumns: [],
     realTimeDataView: [],
-    dataType: "RealTimeData",
+    dataType: 'RealTimeData',
   },
   effects: {
     *init({ payload }, { call, take, select }) {
@@ -90,10 +90,9 @@ export default Model.extend({
     },
 
     *querypollutanttypecode({ payload }, { call, update, put, take, select }) {
-
       let gwidth = 300 + 140 + 70;
       if (!onlyOneEnt) {
-        gwidth = gwidth + 300;
+        gwidth += 300;
       }
       const { dataOverview, selectpollutantTypeCode } = yield select(a => a.overview);
       const body = {
@@ -112,19 +111,20 @@ export default Model.extend({
       let realtimeColumns = [];
       if (selectpollutantTypeCode == 5) {
         realtimeColumns = [{
-          field: "PrimaryPollutant",
-          title: "首要污染物",
+          field: 'PrimaryPollutant',
+          title: '首要污染物',
         }, {
-          title: "AQI",
-          field: "AQI"
+          title: 'AQI',
+          field: 'AQI',
         }]
       }
 
       yield update({
         columns: [
           ...realtimeColumns,
-          ...data
-        ] || [], gwidth
+          ...data,
+        ] || [],
+gwidth,
       });
     },
     *querydatalist({ payload }, { call, update, put, select }) {
@@ -146,7 +146,7 @@ export default Model.extend({
         status: dataOverview.selectStatus,
         terate: dataOverview.terate,
         entName: dataOverview.entName,
-        entCode: entCode,
+        entCode,
         ...payload,
       };
       if (body.time) {
@@ -165,7 +165,7 @@ export default Model.extend({
           item.key = item.DGIMN;
         });
       }
-      let { selectpoint } = yield select(_ => _.overview);
+      const { selectpoint } = yield select(_ => _.overview);
       if (selectpoint) {
         const newpoint = data.find(value => value.DGIMN == selectpoint.DGIMN);
         yield update({
@@ -180,7 +180,7 @@ export default Model.extend({
         payload.callback(data);
       }
     },
-    //手工数据上传数据列表（单独独立）
+    // 手工数据上传数据列表（单独独立）
     *manualUploadQuerydatalist({ payload }, { call, update, put, take, select }) {
       const { upLoadParameters } = yield select(a => a.overview);
       const body = {
@@ -227,9 +227,7 @@ export default Model.extend({
           dataIndex: item.pollutantCode,
           key: item.pollutantCode,
           align: 'center',
-          render: (value, record, index) => {
-            return formatPollutantPopover(value, record[`${item.pollutantCode}_params`]);
-          },
+          render: (value, record, index) => formatPollutantPopover(value, record[`${item.pollutantCode}_params`]),
         });
       });
       yield update({ mainpcol: col });
@@ -240,7 +238,7 @@ export default Model.extend({
         pollutantTypes: selectpoint.pollutantTypeCode,
       });
 
-      //没绑定污染物则不渲染
+      // 没绑定污染物则不渲染
       if (!pollutantInfoList || !pollutantInfoList[0]) {
         yield update({
           detailtime: null,
@@ -273,7 +271,7 @@ export default Model.extend({
           align: 'center',
         },
         {
-          title: `浓度`,
+          title: '浓度',
           dataIndex: 'pollutantCode',
           key: 'pollutantCode',
           align: 'center',
@@ -286,10 +284,10 @@ export default Model.extend({
           },
         },
       ];
-      //只有废气有折算浓度
+      // 只有废气有折算浓度
       if (selectpoint.pollutantTypeCode == 2) {
         detailpcol = detailpcol.concat({
-          title: `折算`,
+          title: '折算',
           dataIndex: 'zspollutantCode',
           key: 'zspollutantCode',
           align: 'center',
@@ -302,7 +300,7 @@ export default Model.extend({
         });
       }
 
-      let detaildata = [];
+      const detaildata = [];
       let detailtime = null;
       const body = {
         dataType: mapdetailParams.dataType,
@@ -332,10 +330,10 @@ export default Model.extend({
           }
           detaildata.push({
             pollutantName: item.name,
-            pollutantCode: pollutantCode,
+            pollutantCode,
             pollutantCodeParam: res.data[0][`${item.field}_params`],
-            zspollutantCode: zspollutantCode,
-            zspollutantCodeParam: zspollutantCodeParam,
+            zspollutantCode,
+            zspollutantCodeParam,
             dgimn: payload.dgimn,
             pcode: item.field,
           });
@@ -383,7 +381,7 @@ export default Model.extend({
           zsseriesdata = zsseriesdata.concat(item[`zs${mapdetailParams.pollutantCode}`]);
         });
       }
-      //污染物标准线的组织;
+      // 污染物标准线的组织;
       let polluntinfo;
       let zspolluntinfo;
       let markLine = {};
@@ -431,7 +429,7 @@ export default Model.extend({
       const pollutantInfoList = mainpoll.find(
         value => value.pollutantCode == selectpollutantTypeCode,
       );
-      let legend = [mapdetailParams.pollutantName];
+      const legend = [mapdetailParams.pollutantName];
       if (pollutantInfoList.zspollutant) {
         legend.push(`折算${mapdetailParams.pollutantName}`);
       }
@@ -441,7 +439,7 @@ export default Model.extend({
         },
         tooltip: {
           trigger: 'axis',
-          formatter: function (params, ticket, callback) {
+          formatter (params, ticket, callback) {
             let res = `${params[0].axisValue}时<br/>`;
             params.map(item => {
               res += `${item.seriesName}:${item.value}<br />`;
@@ -473,7 +471,7 @@ export default Model.extend({
             type: 'line',
             name: mapdetailParams.pollutantName,
             data: seriesdata,
-            markLine: markLine,
+            markLine,
             itemStyle: {
               normal: {
                 color: '#54A8FF',
@@ -507,7 +505,7 @@ export default Model.extend({
       });
     },
 
-    //获取系统污染物类型
+    // 获取系统污染物类型
     *getPollutantTypeList({ payload }, { call, update, put, take }) {
       const res = yield call(getPollutantTypeList, payload);
       if (res.IsSuccess) {
@@ -541,7 +539,7 @@ export default Model.extend({
       const result = yield call(getRealTimeDataView, payload);
       if (result.IsSuccess) {
         yield update({
-          realTimeDataView: result.Datas
+          realTimeDataView: result.Datas,
         })
       } else {
         message.error(result.Message)
@@ -553,53 +551,54 @@ export default Model.extend({
       let realtimeColumns = [];
       if (payload.pollutantTypes == 5) {
         realtimeColumns = realtimeColumns.concat([{
-          field: "PrimaryPollutant",
-          title: "首要污染物",
+          field: 'PrimaryPollutant',
+          title: '首要污染物',
         }, {
-          title: "AQI",
-          field: "AQI"
+          title: 'AQI',
+          field: 'AQI',
         }])
       }
       if (result.IsSuccess) {
         yield update({
           realtimeColumns: [
             ...realtimeColumns,
-            ...result.Datas
-          ]
+            ...result.Datas,
+          ],
         })
       } else {
         message.error(result.Message)
       }
-    }
+    },
   },
   reducers: {
     // 实时
     updateRealTimeDataView(state, { payload }) {
-      let newRealTimeDataView = state.realTimeDataView;
-      let dataType = state.dataType;
+      const newRealTimeDataView = state.realTimeDataView;
+      const {dataType} = state;
       if (newRealTimeDataView.length && payload.type == dataType) {
         payload.message.map(item => {
           newRealTimeDataView.map((itm, idx) => {
             if (item.DGIMN == itm.DGIMN && itm[item.PollutantCode] != undefined) {
+              debugger;
               // console.log("code=", newRealTimeDataView[idx][item.PollutantCode])
               // console.log("newCode=", item.MonitorValue)
               // console.log("MonitorTime=", newRealTimeDataView[idx]["MonitorTime"])
               // console.log("newMonitorTime=", item.MonitorTime)
               newRealTimeDataView[idx][item.PollutantCode] = item.MonitorValue;
-              newRealTimeDataView[idx]["MonitorTime"] = item.MonitorTime;
+              newRealTimeDataView[idx].MonitorTime = item.MonitorTime;
               // 数据异常
               // 异常§异常类别编号§异常类别名称
               if (item.IsException) {
-                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `1§${item.IsException}§${item.ExceptionType}`;
+                newRealTimeDataView[idx][`${item.PollutantCode  }_params`] = `1§${item.IsException}§${item.ExceptionType}`;
               } else {
-                delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
+                delete newRealTimeDataView[idx][`${item.PollutantCode  }_params`];
               }
               // 数据超标
-              //超标§报警颜色§标准值§超标倍数
+              // 超标§报警颜色§标准值§超标倍数
               if (item.IsOver > -1) {
-                newRealTimeDataView[idx][item.PollutantCode + "_params"] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
+                newRealTimeDataView[idx][`${item.PollutantCode  }_params`] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
               } else {
-                delete newRealTimeDataView[idx][item.PollutantCode + "_params"];
+                delete newRealTimeDataView[idx][`${item.PollutantCode  }_params`];
               }
               // newRealTimeDataView[idx]["IsException"] = item.IsException;
               // newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;
@@ -614,8 +613,8 @@ export default Model.extend({
       // console.log("newRealTimeDataView=", newRealTimeDataView)
       return {
         ...state,
-        realTimeDataView: [...newRealTimeDataView]
+        realTimeDataView: [...newRealTimeDataView],
       }
-    }
-  }
+    },
+  },
 });

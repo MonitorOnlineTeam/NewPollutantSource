@@ -11,10 +11,10 @@ import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable';
+import moment from 'moment';
 import styles from './index.less';
 import RangePicker_ from '@/components/RangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
-import moment from 'moment';
 
 
 @connect(({ recordEchartTable, loading }) => ({
@@ -27,22 +27,22 @@ import moment from 'moment';
     overfirstData: recordEchartTable.overfirstData,
     OverTotal: recordEchartTable.OverTotal,
     pageSize: recordEchartTable.pageSize,
-    pageIndex: recordEchartTable.pageIndex
+    pageIndex: recordEchartTable.pageIndex,
 }))
 @Form.create()
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rangeDate:this.props.noticeState==0?[this.props.firsttime,this.props.lasttime]: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-            format: this.props.noticeState==0?'YYYY-MM-DD HH':'YYYY-MM-DD HH:mm:ss',
+            rangeDate: this.props.noticeState == 0 ? [this.props.firsttime, this.props.lasttime] : [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
+            format: this.props.noticeState == 0 ? 'YYYY-MM-DD HH' : 'YYYY-MM-DD HH:mm:ss',
             bar: [],
-            dataType: this.props.noticeState==0?'HourData':'RealTimeData',
+            dataType: this.props.noticeState == 0 ? 'HourData' : 'RealTimeData',
             DGIMN: [],
-            beginTime:this.props.noticeState==0? this.props.firsttime.format('YYYY-MM-DD HH:mm:ss'): "",
-            endTime:this.props.noticeState==0? this.props.lasttime.format('YYYY-MM-DD HH:mm:ss'): "",
-            Pollutant: "",
-            ExceptionType: "",
+            beginTime: this.props.noticeState == 0 ? this.props.firsttime.format('YYYY-MM-DD HH:mm:ss') : '',
+            endTime: this.props.noticeState == 0 ? this.props.lasttime.format('YYYY-MM-DD HH:mm:ss') : '',
+            Pollutant: '',
+            ExceptionType: '',
             column: [
                 {
                     title: '污染物',
@@ -71,6 +71,7 @@ class Index extends Component {
             ],
         };
     }
+
     /** 初始化加载 */
     componentDidMount() {
         // let { historyparams } = this.props;
@@ -85,13 +86,11 @@ class Index extends Component {
         //     },
         // })
         debugger
-        let beginTime = moment(new Date()).add(-60, 'minutes');
+        const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
-        if(this.props.noticeState==0)
-        {
+        if (this.props.noticeState == 0) {
             this.getLoadData(this.props)
-        }else
-        {
+        } else {
             this.setState({
                 beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
                 endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
@@ -100,6 +99,7 @@ class Index extends Component {
             })
         }
     }
+
     componentWillReceiveProps(nextProps) {
         // if (this.props.overcount != nextProps.overcount) {
         //     var barList = [];
@@ -112,8 +112,7 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-debugger
-        if (this.props.DGIMN != nextProps.DGIMN) {
+        if (nextProps.DGIMN &&this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }
         // if (this.props.firsttime != nextProps.firsttime) {
@@ -142,8 +141,8 @@ debugger
     //     } = this.props;
     //     console.log("dgmn=",this.props.DGIMN)
 
-    getLoadData = (nextProps) => {
-        let beginTime = moment(new Date()).add(-60, 'minutes');
+    getLoadData = nextProps => {
+        const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
@@ -152,42 +151,43 @@ debugger
             },
         })
         this.props.dispatch({
-            type: "recordEchartTable/getovermodellist",
+            type: 'recordEchartTable/getovermodellist',
             payload: {
-                beginTime: this.state.beginTime == "" ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-                endTime: this.state.endTime == "" ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
+                beginTime: this.state.beginTime == '' ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                endTime: this.state.endTime == '' ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [nextProps.DGIMN],
-            }
+            },
         })
     }
+
     // }
     /** 数据类型切换 */
     _handleDateTypeChange = e => {
         let formats;
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
-        var dataType = this.state.dataType
+        let { dataType } = this.state
         switch (e.target.value) {
             case 'realtime':
                 beginTime = moment(new Date()).add(-60, 'minutes');
                 formats = 'YYYY-MM-DD HH:mm:ss';
-                dataType = "RealTimeData"
+                dataType = 'RealTimeData'
                 break;
             case 'minute':
                 beginTime = moment(new Date()).add(-1, 'day');
                 formats = 'YYYY-MM-DD HH:mm';
-                dataType = "MinuteData"
+                dataType = 'MinuteData'
                 break;
             case 'hour':
                 beginTime = moment(new Date()).add(-1, 'day');
                 formats = 'YYYY-MM-DD HH';
-                dataType = "HourData"
+                dataType = 'HourData'
                 break;
             case 'day':
                 beginTime = moment(new Date()).add(-1, 'month');
                 formats = 'YYYY-MM-DD';
-                dataType = "DayData"
+                dataType = 'DayData'
                 break;
         }
         //
@@ -196,23 +196,23 @@ debugger
             format: formats,
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            dataType: dataType,
+            dataType,
         });
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
                 overData: [],
-                pageIndex: 1
+                pageIndex: 1,
             },
         })
         this.props.dispatch({
-            type: "recordEchartTable/getovermodellist",
+            type: 'recordEchartTable/getovermodellist',
             payload: {
                 beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
                 endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-                dataType: dataType,
+                dataType,
                 DGIMN: [this.props.DGIMN],
-            }
+            },
         })
     }
 
@@ -220,8 +220,8 @@ debugger
     _handleDateChange = (date, dateString) => {
         if (date) {
             // 判断
-            console.log("dateString=", dateString)
-            var hisData = [];
+            console.log('dateString=', dateString)
+            let hisData = [];
             hisData = hisData.concat(date);
             switch (this.state.dataType) {
                 case 'RealTimeData':
@@ -255,8 +255,8 @@ debugger
                 default:
                     return;
             }
-            console.log("hisData=", hisData)
-            console.log("date=", date)
+            console.log('hisData=', hisData)
+            console.log('date=', date)
             this.setState({
                 rangeDate: date,
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -266,71 +266,75 @@ debugger
                 type: 'recordEchartTable/updateState',
                 payload: {
                     overData: [],
-                    pageIndex: 1
+                    pageIndex: 1,
                 },
             })
             this.props.dispatch({
-                type: "recordEchartTable/getovermodellist",
+                type: 'recordEchartTable/getovermodellist',
                 payload: {
                     beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                     endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
                     dataType: this.state.dataType,
                     DGIMN: [this.props.DGIMN],
-                }
+                },
             })
         }
     };
+
     onclick = {
-        'click': this.clickEchartsPie.bind(this)
+        click: this.clickEchartsPie.bind(this),
     }
+
     clickEchartsPie(e) {
-        var name = e.name
+        const { name } = e
         // var seriesName = e.seriesName
         this.props.dispatch({
             type: 'recordEchartTable/updateState',
             payload: {
                 overfirstData: [],
-                pageIndex: 1
+                pageIndex: 1,
             },
         })
         this.setState({
-            Pollutant: name
+            Pollutant: name,
         })
         this.props.dispatch({
-            type: "recordEchartTable/getoverdata",
+            type: 'recordEchartTable/getoverdata',
             payload: {
                 beginTime: this.state.beginTime,
                 endTime: this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [this.props.DGIMN],
                 Pollutant: e.name,
-            }
+            },
         })
         console.log(e)
     }
+
     // 分页
     onTableChange = (current, pageSize) => {
         this.props.dispatch({
-            type: "recordEchartTable/updateState",
+            type: 'recordEchartTable/updateState',
             payload: {
                 pageIndex: current,
-                pageSize: pageSize
-            }
+                pageSize,
+            },
         })
         setTimeout(() => {
             // 获取表格数据
             this.props.dispatch({
-                type: "recordEchartTable/getoverdata",
+                type: 'recordEchartTable/getoverdata',
                 payload: {
                     beginTime: this.state.beginTime,
                     endTime: this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN: [this.props.DGIMN],
-                    Pollutant: this.state.Pollutant == "" ? this.props.overmodellist[0].product : this.state.Pollutant,
-                }
+                    Pollutant: this.state.Pollutant == '' ? this.props.overmodellist[0].product : this.state.Pollutant,
+                },
             })
         }, 0)
     }
+
     render() {
         const { column } = this.state
         const option = {
@@ -339,14 +343,14 @@ debugger
             dataset: {
                 dimensions: this.props.overlist,
                 // ['product', '2012', '2013', '2017', '2018'],
-                source: this.props.overmodellist
+                source: this.props.overmodellist,
                 // [
                 //     {'product': '大气', '2012': "43.3", '2013': 85.8, '2017': 93.7,'2018':111},
                 //     {'product': 'Milk Tea', '2012': "83.1", '2013': 73.4, '2017': 55.1},
                 //     {'product': 'Cheese Cocoa', '2012': "86.4", '2013': 65.2, '2017': 82.5},
                 //     {'product': 'Walnut Brownie', '2012': "72.4", '2013': 53.9, '2017': 39.1}
                 // ]
-                //[{ "product": "实测烟尘", "连续值异常": "2" }, { "product": "流速", "连续值异常": "2" }, { "product": "流量", "连续值异常": "2" }, { "product": "烟气温度", "连续值异常": "2" }]
+                // [{ "product": "实测烟尘", "连续值异常": "2" }, { "product": "流速", "连续值异常": "2" }, { "product": "流量", "连续值异常": "2" }, { "product": "烟气温度", "连续值异常": "2" }]
             },
             xAxis: { type: 'category', triggerEvent: true },
             yAxis: { triggerEvent: true },
@@ -360,12 +364,12 @@ debugger
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.formats} onChange={this._handleDateChange} />
-                            {this.props.noticeState==0? <Button key={3} value="hour">小时</Button>:<ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />}
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} />
+                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: "auto", ...this.props.style, }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}>
                         {
                             this.props.overmodellistLoading ? <Spin
                                 style={{
@@ -373,7 +377,7 @@ debugger
                                     height: 'calc(100vh/2)',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
                                 }}
                                 size="large"
                             /> :
@@ -414,7 +418,7 @@ debugger
                                                     pageSize: this.props.pageSize,
                                                     current: this.props.pageIndex,
                                                     onChange: this.onTableChange,
-                                                    total: this.props.OverTotal
+                                                    total: this.props.OverTotal,
                                                 }}
                                             >
                                             </SdlTable>

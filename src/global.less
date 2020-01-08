@@ -50,8 +50,13 @@ ol {
       margin-bottom: 0;
       // padding-top: 64px;
     }
-  }
 
+    // table没有数据时，隐藏表头滚动条
+    .ant-table-empty .ant-table-body {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+    }
+  }
 }
 
 a:hover {

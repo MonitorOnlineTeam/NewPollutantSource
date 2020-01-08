@@ -17,8 +17,8 @@ import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
 
 const FormItem = Form.Item;
-const {Option} = Select;
-const {Panel} = Collapse;
+const { Option } = Select;
+const { Panel } = Collapse;
 @connect(({ loading, standardLibrary }) => ({
   isloading: loading.effects['standardLibrary/getMonitorPointPollutantDetails'],
   btnisloading: loading.effects['standardLibrary/editmonitorpointPollutant'],
@@ -44,7 +44,7 @@ class EditPollutant extends Component {
     });
     this.props.onRef(this);
     const Id = this.props.pid;
-    const {DGIMN} = this.props;
+    const { DGIMN } = this.props;
     if (Id !== null && DGIMN !== null) {
       this.props.dispatch({
         type: 'standardLibrary/getMonitorPointPollutantDetails',
@@ -112,7 +112,8 @@ class EditPollutant extends Component {
               AlarmDescription: values.AlarmDescription,
               callback: res => {
                 if (res.IsSuccess) {
-                  message.success('编辑成功', 1).then(() => this.props.oncancel());
+                  this.props.oncancel();
+                  message.success('编辑成功', 1);
                 } else {
                   message.error(res.Message);
                 }
@@ -130,7 +131,7 @@ class EditPollutant extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const{btnisloading}=this.props;
+    const { btnisloading } = this.props;
     const { TextArea } = Input;
     const customPanelStyle = {
       background: '#ffff',

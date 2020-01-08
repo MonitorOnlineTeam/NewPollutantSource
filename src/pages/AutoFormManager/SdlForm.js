@@ -266,7 +266,7 @@ class SdlForm extends PureComponent {
           )
           break;
         case '日期框':
-          initialValue = moment(initialValue);
+          initialValue = initialValue ? moment(initialValue) : undefined;
           element = this._rtnDateEl(item);
           break;
         case '单选':
