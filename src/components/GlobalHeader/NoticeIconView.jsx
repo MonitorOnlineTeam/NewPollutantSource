@@ -124,42 +124,45 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   render() {
-    const { fetchingNotices, currentUserNoticeCnt, dispatch, } = this.props;
+    const { fetchingNotices, currentUserNoticeCnt, dispatch, notices } = this.props;
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
     let className = styles.right;
-
     return (
       <div className={`${styles.action} ${styles.account}`}>
         <NoticeIcon
-          count={currentUserNoticeCnt.unreadCount}
+          // count={currentUserNoticeCnt.unreadCount}
+          count={notices.length}
           onItemClick={(item, tabProps) => {
+            // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗
+            if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9) {
+              return;
+            }
             this.setState({
               visible: true,
               // firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')),
               // lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')),
               DGIMN: item.DGIMN,
-              pointname: item.pointname,
+              PointName: item.PointName,
             });
-            console.log('item11=',item)
             // 报警
             if (item.type === 'alarm') {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '实时预警-' + item.pointname,
+                    title: '实时预警-' + item.PointName,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标记录-' + item.pointname,
+                    title: '超标记录-' + item.PointName,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警-' + item.pointname,
+                    title: '异常报警-' + item.PointName,
                     flag: 'exception',
                   });
                   break;

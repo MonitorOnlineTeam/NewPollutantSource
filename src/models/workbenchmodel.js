@@ -42,8 +42,10 @@ export default Model.extend({
             total: 0,
         },
         exceptionAlarm: {
-            beginTime: moment().add(-24, 'hour').format("YYYY-MM-DD HH:mm:ss"),
-            endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+            endTime: moment().format('YYYY-MM-DD 23:59:59'),
+            // beginTime: moment().add(-24, 'hour').format("YYYY-MM-DD HH:mm:ss"),
+            // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             tableDatas: [],
             pageIndex: 1,
             pageSize: 100,
@@ -108,8 +110,8 @@ export default Model.extend({
             selectedPollutantCode: '',
             pageIndex: 1,
             pageSize: 2000,
-            beginTime: moment().add(-2, 'hour').format("YYYY-MM-DD HH:00:00"),
-            endTime: moment().format('YYYY-MM-DD HH:00:00'),
+            beginTime: moment().format("YYYY-MM-DD HH:00:00"),
+            endTime: moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
             // beginTime:'2018-12-28 20:00:00',
             // endTime: '2018-12-28 21:00:00',
         },
@@ -171,7 +173,7 @@ export default Model.extend({
                 endTime: exceptionAlarm.endTime,
                 pageSize: exceptionAlarm.pageSize,
                 pageIndex: exceptionAlarm.pageIndex,
-                PollutantType:2,
+                PollutantType:'',
                 DGIMN:payload.DGIMN
                 // IsQueryAllUser:true,
                 // IsPaging:false
@@ -371,6 +373,7 @@ export default Model.extend({
                 pageIndex: warningDetailsDatas.pageIndex,
                 pageSize: warningDetailsDatas.pageSize,
             };
+            debugger
             const response = yield call(queryhistorydatalist, body);
             yield update({
                 warningDetailsDatas: {

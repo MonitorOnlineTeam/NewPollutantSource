@@ -54,8 +54,7 @@ class RealTimeWarningModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.props.DGIMN!==nextProps.DGIMN)
-        {
+        if (this.props.DGIMN !== nextProps.DGIMN) {
             this.props.dispatch({
                 type: pageUrl.getDataOverWarningData,
                 payload: {
@@ -162,7 +161,7 @@ class RealTimeWarningModal extends Component {
         let xAxis = [];
         let seriesData = [];
 
-        chartDatas.map((item) => {
+        chartDatas && chartDatas.map((item) => {
             xAxis.push(`${moment(item.MonitorTime).format('HH:mm:ss')}`);
             seriesData.push(item[selectedPollutantCode]);
         });
