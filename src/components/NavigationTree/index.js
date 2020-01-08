@@ -54,7 +54,7 @@ class NavigationTree extends Component {
     this.state = {
       visible: true,
       Name: "",
-      PollutantTypes: this.props.choice ? this.props.checkpPol : "",
+      PollutantTypes: this.props.checkpPol ? this.props.checkpPol : "",
       Status: "",
       RegionCode: "",
       right: floats == "topmenu" ? "caret-left" : "caret-right",
@@ -139,26 +139,16 @@ class NavigationTree extends Component {
       QCAUse: QCAUse
     })
     console.log('qca=', QCAUse)
-    if (this.props.choice) {
-      dispatch({
-        type: 'navigationtree/getentandpoint',
-        payload: {
-          Status: screenList,
-          QCAUse: QCAUse,
-          RunState: state,
-          PollutantTypes: this.state.PollutantTypes
-        }
-      })
-    } else {
-      dispatch({
-        type: 'navigationtree/getentandpoint',
-        payload: {
-          Status: screenList,
-          QCAUse: QCAUse,
-          RunState: state
-        }
-      })
-    }
+
+    dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+        Status: screenList,
+        QCAUse: QCAUse,
+        RunState: state,
+        PollutantTypes: this.state.PollutantTypes
+      }
+    })
     // panelDataList.splice(0, panelDataList.length)
     // console.log('list1=',EntAndPoint)
     // this.generateList(EntAndPoint)
@@ -258,10 +248,10 @@ class NavigationTree extends Component {
             nowExpandKey = this.props.overallexpkeys
           }
         }
-        console.log("nowkeyss",nowKey)
+        console.log("nowkeyss", nowKey)
         this.setState({
           selectedKeys: nowKey,
-          checkedKeys:nowKey,
+          checkedKeys: nowKey,
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
@@ -315,9 +305,9 @@ class NavigationTree extends Component {
     console.log("values!!!=", this.props.choice)
     console.log("values222=", this.props.checkpPol)
     this.setState({
-      PollutantTypes: this.props.choice ? this.props.checkpPol : value,
+      PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
     })
-    value = this.props.choice ? this.props.checkpPol : value;
+    value = this.props.checkpPol ? this.props.checkpPol : value;
     this.defaultKey = 0;
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
@@ -420,7 +410,7 @@ class NavigationTree extends Component {
   };
   //复选框选中
   onCheck = checkedKeys => {
-    console.log("checked",checkedKeys)
+    console.log("checked", checkedKeys)
     this.setState({ checkedKeys });
     this.returnData(checkedKeys)
   };
@@ -757,7 +747,7 @@ class NavigationTree extends Component {
             }
           </div>
 
-          {this.props.QCAUse == undefined&& !this.props.polShow? <SelectPollutantType
+          {this.props.QCAUse == undefined && !this.props.polShow ? <SelectPollutantType
             mode="multiple"
             style={{ width: '100%', marginBottom: 10 }}
             onChange={this.handleChange}
