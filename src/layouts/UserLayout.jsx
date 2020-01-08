@@ -47,9 +47,17 @@ const UserLayout = props => {
       title={title}
     >
       <div className={styles.container}>
-        <div className={styles.lang}>
-          <SelectLang />
-        </div>
+        {
+        
+          <div className={styles.lang}>
+            {
+                configInfo && configInfo.IsShowQRcode === "true" &&
+                <SelectLang />
+            }
+      
+          </div>
+        }
+
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
@@ -70,6 +78,7 @@ const UserLayout = props => {
         </div>
         {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
         {
+          configInfo && configInfo.IsShowQRcode === "true" &&
           <Popover
             content={
               <div>
@@ -81,7 +90,7 @@ const UserLayout = props => {
               </div>
             }
             title="手机端下载" trigger="hover">
-              <Icon type="qrcode" style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }}/>
+            <Icon type="qrcode" style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }} />
           </Popover>
         }
         {
