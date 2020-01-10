@@ -70,7 +70,7 @@ export default Model.extend({
             const result = yield call(getentandpoint, { ...payload });
             if (result.IsSuccess) {
                 yield update({
-                    EntAndPoint: result.Datas
+                    EntAndPoint: payload.isFilter ? result.Datas : result.Datas.filter(item => item.children.length)
                 });
             }
         },

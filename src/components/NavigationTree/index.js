@@ -146,7 +146,8 @@ class NavigationTree extends Component {
         Status: screenList,
         QCAUse: QCAUse,
         RunState: state,
-        PollutantTypes: this.state.PollutantTypes
+        PollutantTypes: this.state.PollutantTypes,
+        isFilter:this.props.isMap
       }
     })
     // panelDataList.splice(0, panelDataList.length)
@@ -318,6 +319,7 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
@@ -335,6 +337,7 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
@@ -390,6 +393,7 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState,
+        isFilter:this.props.isMap
 
       }
     })
@@ -485,6 +489,7 @@ class NavigationTree extends Component {
         Status: typeList,
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
