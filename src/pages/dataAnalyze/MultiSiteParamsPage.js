@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2020-01-10 10:44:31 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2020-01-10 14:19:04
+ * @Description: 多站多参对比分析
+ */
 import React, { PureComponent } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Divider } from 'antd'
 // import styles from './index.less'
@@ -68,6 +75,7 @@ class MultiSiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         DataType: this.state.dataType,
         Type: "1",
+        PollutantType: 5,
       }
     })
   }
@@ -237,20 +245,9 @@ class MultiSiteParamsPage extends PureComponent {
             })
           }} />
         </Col>
-        <Col span={8}>
+        <Col span={4}>
           <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
           <Button type="primary" style={{ marginRight: 10 }} loading={exportLoading} onClick={this.export}>导出</Button>
-          <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-            this.setState({
-              dataType: e.target.value,
-              format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
-            }, () => {
-              this.getChartAndTableData()
-            })
-          }}>
-            <Radio.Button value="Hour">小时</Radio.Button>
-            <Radio.Button value="Day">日均</Radio.Button>
-          </Radio.Group>
         </Col>
       </Row>
     )
@@ -296,7 +293,7 @@ class MultiSiteParamsPage extends PureComponent {
           choice
           onItemClick={value => {
             if (value.length) {
-              console.log('value=',value)
+              console.log('value=', value)
               let DGIMNsList = value.filter(item => item.IsEnt === false)
               this.setState({
                 DGIMNs: DGIMNsList.map(item => item.key)
@@ -312,6 +309,19 @@ class MultiSiteParamsPage extends PureComponent {
           <PageHeaderWrapper>
             <Card
               title={this.cardTitle()}
+              extra={
+                <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                  this.setState({
+                    dataType: e.target.value,
+                    format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
+                  }, () => {
+                    this.getChartAndTableData()
+                  })
+                }}>
+                  <Radio.Button value="Hour">小时</Radio.Button>
+                  <Radio.Button value="Day">日均</Radio.Button>
+                </Radio.Group>
+              }
               className="contentContainer"
             >
               {chartList.length ? this.pageContent() : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

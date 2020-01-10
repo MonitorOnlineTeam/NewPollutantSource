@@ -1,4 +1,11 @@
-import React, { PureComponent } from 'react';
+/*
+ * @Author: Jiaqi 
+ * @Date: 2020-01-10 10:44:55 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2020-01-10 14:24:10
+ * @Description: 单站多参对比分析
+ */
+import React, { PureComponent, Fragment } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message } from 'antd'
 // import styles from './index.less'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -58,7 +65,8 @@ class SiteParamsPage extends PureComponent {
       payload: {
         DGIMN: this.state.DGIMN,
         // PollutantType: this.state.PollutantType,
-        Type: "0"
+        Type: "0",
+        PollutantType: this.state.PollutantType,
       }
     })
   }
@@ -78,6 +86,7 @@ class SiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         DataType: this.state.dataType,
         Type: "0",
+        PollutantType: this.state.PollutantType,
       }
     })
   }
@@ -163,7 +172,7 @@ class SiteParamsPage extends PureComponent {
             }
           </Select>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <RangePicker style={{ width: '100%' }} defaultValue={time} showTime={dataType === "Hour"} format={format} onChange={(dates) => {
             this.setState({
               time: dates
@@ -172,24 +181,8 @@ class SiteParamsPage extends PureComponent {
         </Col>
         <Col span={8}>
           <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-          {
-            this.state.showType === "data" && <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.export}>导出</Button>
-          }
-          <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-            this.setState({
-              dataType: e.target.value,
-              format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
-            }, () => {
-              this.getChartAndTableData()
-            })
-          }}>
-            <Radio.Button value="Hour">小时</Radio.Button>
-            <Radio.Button value="Day">日均</Radio.Button>
-          </Radio.Group>
-          <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => { this.setState({ showType: e.target.value }) }}>
-            <Radio.Button value="chart">图表</Radio.Button>
-            <Radio.Button value="data">数据</Radio.Button>
-          </Radio.Group>
+          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.export}>导出</Button>
+
         </Col>
       </Row>
     )
@@ -367,8 +360,8 @@ class SiteParamsPage extends PureComponent {
       <>
         <NavigationTree
           // QCAUse="1"
-          // checkpPol="5"
-          // polShow
+          checkpPol="5"
+          polShow
           // choice
           onItemClick={value => {
             if (value.length) {
@@ -379,7 +372,8 @@ class SiteParamsPage extends PureComponent {
                 }
               })
               this.setState({
-                DGIMN: DGIMNs.key
+                DGIMN: DGIMNs.key,
+                PollutantType: DGIMNs.Type
               }, () => {
                 this.getPollutantList()
               })
@@ -390,6 +384,25 @@ class SiteParamsPage extends PureComponent {
           <PageHeaderWrapper>
             <Card
               title={this.cardTitle()}
+              extra={
+                <>
+                  <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                    this.setState({
+                      dataType: e.target.value,
+                      format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
+                    }, () => {
+                      this.getChartAndTableData()
+                    })
+                  }}>
+                    <Radio.Button value="Hour">小时</Radio.Button>
+                    <Radio.Button value="Day">日均</Radio.Button>
+                  </Radio.Group>
+                  <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => { this.setState({ showType: e.target.value }) }}>
+                    <Radio.Button value="chart">图表</Radio.Button>
+                    <Radio.Button value="data">数据</Radio.Button>
+                  </Radio.Group>
+                </>
+              }
               className="contentContainer"
             >
               {this.pageContent()}
