@@ -46,5 +46,19 @@ export async function getDataGainRateTableData(params) {
   return result;
 }
 
+// 获取数据获取率 - 详情污染物数据
+export async function getDataGainRateDetailPollutantList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  return result;
+}
+
+// 获取数据获取率 - table数据
+export async function queryhistorydatalist(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params);
+  return result === null ? { data: null } : result;
+}
+
+
+
 
 

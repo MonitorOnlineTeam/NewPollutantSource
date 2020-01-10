@@ -22,7 +22,9 @@ export default Model.extend({
     pollutantTypeList: [],
     enterpriseList: [],
     dataGainRateColumn: [],
-    dataGainRateTableData: []
+    dataGainRateTableData: [],
+    pollutantlist: [],
+    chartAndTableData: [],
   },
 
   effects: {
@@ -109,7 +111,7 @@ export default Model.extend({
           dataGainRateColumn: result.Datas
         })
       } else {
-        message.error(result.Datas)
+        message.error(result.Message)
       }
     },
     // 获取数据获取率 - table数据
@@ -123,9 +125,30 @@ export default Model.extend({
         })
         callback && callback()
       } else {
-        message.error(result.Datas)
+        message.error(result.Message)
       }
     },
-
+    // 获取数据获取率 - 详情污染物列表
+    *querypollutantlist({ payload }, { call, put, update }) {
+      const result = yield call(services.getDataGainRateDetailPollutantList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pollutantlist: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取数据获取率 - 详情数据
+    *queryhistorydatalist({ payload }, { call, put, update }) {
+      const result = yield call(services.queryhistorydatalist, payload);
+      if (result.IsSuccess) {
+        yield update({
+          chartAndTableData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    }
   }
 });

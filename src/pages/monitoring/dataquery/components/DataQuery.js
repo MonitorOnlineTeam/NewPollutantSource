@@ -47,7 +47,7 @@ class DataQuery extends Component {
         this.props.initLoadData && this.changeDgimn(this.props.DGIMN)
     }
 
-    /** dgimn改變時候切換數據源 */
+    /** dgimn改變時候切換數據源 */  
     componentWillReceiveProps = nextProps => {
         if (nextProps.DGIMN !== this.props.DGIMN) {
             this.changeDgimn(nextProps.DGIMN);

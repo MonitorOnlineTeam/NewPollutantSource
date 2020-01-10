@@ -1,12 +1,20 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2020-01-10 10:44:13 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2020-01-10 16:05:32
+ * @Description: 数据获取率
+ */
 import React, { PureComponent } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Row, Select, Col, DatePicker, Button, Form, Input, Alert } from "antd"
+import { Card, Row, Select, Col, DatePicker, Button, Form, Input, Alert, Icon, Modal, message } from "antd"
 import SdlTable from '@/components/SdlTable';
 import { connect } from "dva";
 import SelectPollutantType from '@/components/SelectPollutantType'
 import SdlCascader from '../AutoFormManager/SdlCascader'
 import NavigationTree from '@/components/NavigationTree'
 import moment from 'moment'
+import DataDetailPage from './DataDetailPage'
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const dataSource = [
@@ -36,8 +44,10 @@ class DataGainRatePage extends PureComponent {
     super(props);
     this.state = {
       DGIMNs: [],
+      DGIMN: [],
       PollutantType: null,
-      columns: []
+      columns: [],
+      visible: false,
     };
   }
 
@@ -99,8 +109,15 @@ class DataGainRatePage extends PureComponent {
           {
             title: "操作",
             width: 200,
+            fixed: "right",
+            align: "center",
             render: (text, record) => {
-              
+              return <a onClick={() => {
+                this.setState({
+                  visible: true,
+                  DGIMN: record.DGIMN
+                })
+              }}><Icon type="profile" /></a>
             }
           },
         ]
@@ -115,8 +132,10 @@ class DataGainRatePage extends PureComponent {
     return (
       <>
         <NavigationTree
-          defaultPollutant={"undefined"}
+          // defaultPollutant={"undefined"}
           choice
+          checkpPol="5"
+          polShow
           onItemClick={value => {
             if (value.length) {
               console.log('value=', value)
@@ -150,6 +169,18 @@ class DataGainRatePage extends PureComponent {
               <SdlTable loading={loading} dataSource={dataGainRateTableData} columns={columns} defaultWidth={100} pagination={{ pageSize: 20 }} />
             </Card>
           </PageHeaderWrapper>
+          <Modal
+            title="查看详情"
+            destroyOnClose
+            footer={[]}
+            visible={this.state.visible}
+            onOk={this.handleOk}
+            width={"90%"}
+            style={{ height: "90vh" }}
+            onCancel={() => { this.setState({ visible: false }) }}
+          >
+            <DataDetailPage DGIMN={this.state.DGIMN} time={[moment(this.state.recordTime).add(-24, "hour"), moment(this.state.recordTime)]} dataType={"hour"} />
+          </Modal>
         </div>
       </>
     );
