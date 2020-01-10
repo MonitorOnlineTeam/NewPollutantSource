@@ -754,6 +754,24 @@ export default {
                   path: '/Intelligentanalysis/effluentFee',
                   component: './Intelligentanalysis/effluentFee',
                 },
+                // 单站多参对比分析
+                {
+                  name: 'siteParamsPage',
+                  path: '/Intelligentanalysis/siteParamsPage',
+                  component: './dataAnalyze/SiteParamsPage',
+                },
+                // 多站多参对比分析
+                {
+                  name: 'multiSiteParamsPage',
+                  path: '/Intelligentanalysis/multiSiteParamsPage',
+                  component: './dataAnalyze/MultiSiteParamsPage',
+                },
+                // 数据获取率
+                {
+                  name: 'dataGainRate',
+                  path: '/Intelligentanalysis/dataGainRatePage',
+                  component: './dataAnalyze/DataGainRatePage',
+                },
               ],
             },
             {

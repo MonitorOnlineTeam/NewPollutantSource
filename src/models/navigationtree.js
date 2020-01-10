@@ -49,23 +49,23 @@ export default Model.extend({
             select,
             take
         }) {
-            if (!payload.PollutantTypes) {
+            if (!payload.PollutantTypes || payload.PollutantTypes === "undefined") {
                 let global = yield select(state => state.global);
                 if (!global.configInfo) {
                     yield take('global/getSystemConfigInfo/@@end');
                     global = yield select(state => state.global);
-                    console.log("///=",global.configInfo.SystemPollutantType)
+                    console.log("///=", global.configInfo.SystemPollutantType)
                     payload = {
                         ...payload,
-                        PollutantTypes: global.configInfo.SystemPollutantType
+                        PollutantTypes: payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
                     }
-                }else {
+                } else {
                     payload = {
                         ...payload,
-                        PollutantTypes: global.configInfo.SystemPollutantType
+                        PollutantTypes: payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
                     }
                 }
-                
+
             }
             const result = yield call(getentandpoint, { ...payload });
             if (result.IsSuccess) {
