@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:55 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 14:24:10
+ * @Last Modified time: 2020-01-10 16:25:09
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -100,7 +100,6 @@ class SiteParamsPage extends PureComponent {
           dataIndex: item.PollutantCode,
           render: (text, record) => {
             if (item.PollutantName === "AQI") {
-              console.log('123123123')
               return AQIPopover(text, record, true)
             }
             if (record[item.PollutantCode + "_Value"] !== undefined) {
@@ -274,7 +273,6 @@ class SiteParamsPage extends PureComponent {
     //         let dirLevel = getDirLevel(item.value);
     //         format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
     //       })
-    //       console.log("format=", format)
     //       return format;
     //     }
     //   }
@@ -298,7 +296,6 @@ class SiteParamsPage extends PureComponent {
             animation: false,
           },
           formatter: function (params, ticket, callback) {
-            console.log("params=", params)
             let format = `${params[0].axisValue}: `
             params.map((item, index) => {
               if (item.seriesName === "风向") {
@@ -308,7 +305,6 @@ class SiteParamsPage extends PureComponent {
                 format += `<br />${item.marker}${item.seriesName}: ${item.value}`
               }
             })
-            // console.log("format=", format)
             return format;
           }
           // ...formatter
@@ -365,7 +361,6 @@ class SiteParamsPage extends PureComponent {
           // choice
           onItemClick={value => {
             if (value.length) {
-              console.log('value=', value)
               let DGIMNs = value.find(item => {
                 if (item.IsEnt === false) {
                   return item.key

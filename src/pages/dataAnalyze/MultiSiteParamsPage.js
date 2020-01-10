@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:31 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 14:19:04
+ * @Last Modified time: 2020-01-10 16:24:35
  * @Description: 多站多参对比分析
  */
 import React, { PureComponent } from 'react';
@@ -154,7 +154,6 @@ class MultiSiteParamsPage extends PureComponent {
             let dirLevel = getDirLevel(item.value);
             format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
           })
-          console.log("format=", format)
           return format;
         }
       }
@@ -293,7 +292,6 @@ class MultiSiteParamsPage extends PureComponent {
           choice
           onItemClick={value => {
             if (value.length) {
-              console.log('value=', value)
               let DGIMNsList = value.filter(item => item.IsEnt === false)
               this.setState({
                 DGIMNs: DGIMNsList.map(item => item.key)

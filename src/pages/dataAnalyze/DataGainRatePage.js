@@ -138,7 +138,6 @@ class DataGainRatePage extends PureComponent {
           polShow
           onItemClick={value => {
             if (value.length) {
-              console.log('value=', value)
               let DGIMNsList = value.filter(item => item.IsEnt === false);
               this.setState({
                 DGIMNs: DGIMNsList.map(item => item.key),
