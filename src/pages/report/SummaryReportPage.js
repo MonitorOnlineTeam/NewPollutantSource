@@ -8,6 +8,7 @@ import SdlCascader from '../AutoFormManager/SdlCascader'
 import SdlTable from '@/components/SdlTable'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import YearPicker from '@/components/YearPicker'
+import { getDirLevel } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -133,9 +134,12 @@ class DailySummaryPage extends PureComponent {
           render: (text, row, index) => {
             if (text) {
               const _text = text.split("|");
-              const val = _text[0];
+              let val = _text[0];
               const status = _text[1];
               // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
+              if (item.dataIndex === "风向") {
+                val = getDirLevel(text)
+              }
               return status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val
             }
             return "-"

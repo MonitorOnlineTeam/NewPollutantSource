@@ -6,7 +6,7 @@ import {
     querypollutantlist,
 }
     from '../services/baseapi';
-import { formatPollutantPopover } from '@/utils/utils';
+import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 
 export default Model.extend({
     namespace: 'dataquery',
@@ -70,13 +70,16 @@ export default Model.extend({
             payload, from
         }, { select, call, update }) {
             const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-            let _historyparams = {...historyparams};
+            let _historyparams = { ...historyparams };
             if (!from && (!pollutantlist[0] || !historyparams.pollutantCodes)) {
                 yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
                 return;
             }
             if (payload.dgimn) {
                 _historyparams.DGIMNs = payload.dgimn;
+            }
+            if (!_historyparams.DGIMNs) {
+                _historyparams.DGIMNs = _historyparams.DGIMN
             }
 
             if (from) {
@@ -154,7 +157,13 @@ export default Model.extend({
                         key: item.PollutantCode,
                         align: 'center',
                         width,
-                        render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
+                        render: (value, record, index) => {
+                            let text = value;
+                            if (item.PollutantName === "风向") {
+                                text = getDirLevel(text)
+                            }
+                            return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+                        }
                     });
                 });
                 columns = [{
@@ -175,7 +184,13 @@ export default Model.extend({
                         key: item.PollutantCode,
                         align: 'center',
                         width,
-                        render: (value, record, index) => formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),
+                        render: (value, record, index) => {
+                            let text = value;
+                            if (item.PollutantName === "风向") {
+                                text = getDirLevel(text)
+                            }
+                            return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+                        },
                     });
                 });
                 columns = [{

@@ -23,6 +23,7 @@ import SearchSelect from '../AutoFormManager/SearchSelect';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
+import { getDirLevel } from '@/utils/utils';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -68,8 +69,8 @@ class SiteDailyPage extends PureComponent {
       props.match.params.reportType === 'siteDaily'
         ? 'YYYY-MM-DD'
         : props.match.params.reportType === 'monthly'
-        ? 'YYYY-MM'
-        : 'YYYY';
+          ? 'YYYY-MM'
+          : 'YYYY';
     this.state = {
       format: format,
       columns: [],
@@ -185,8 +186,8 @@ class SiteDailyPage extends PureComponent {
         nextProps.match.params.reportType === 'siteDaily'
           ? 'YYYY-MM-DD'
           : nextProps.match.params.reportType === 'monthly'
-          ? 'YYYY-MM'
-          : 'YYYY';
+            ? 'YYYY-MM'
+            : 'YYYY';
       this.setState({
         format: format,
         currentDate:
@@ -222,9 +223,12 @@ class SiteDailyPage extends PureComponent {
             if (text) {
               const _text = text.split('|');
               // console.log('_text=', _text)
-              const val = _text[0];
+              let val = _text[0];
               // const status = _text[_text.length-1];
               const status = _text[1];
+              if (item.dataIndex === "风向") {
+                val = getDirLevel(text)
+              }
               // console.log('///=', status)
               // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
               return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
@@ -544,7 +548,7 @@ class SiteDailyPage extends PureComponent {
                     })(timeEle)}
                   </FormItem>
                 </Col>
-                <Col xxl={6} xl={7} lg={8}>
+                <Col xxl={6} xl={6} lg={8}>
                   <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                     <Button
                       type="primary"

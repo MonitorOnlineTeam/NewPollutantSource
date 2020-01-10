@@ -26,7 +26,7 @@ class index extends Component {
     super(props);
     this.state = {
       columns: [],
-      currentDataType: 'RealTimeData',
+      currentDataType: 'MinuteData',
       realTimeDataView: [],
       filteredInfo: null,
       time: moment(new Date()).add(-1, 'hour'),
@@ -102,7 +102,7 @@ class index extends Component {
             }
             // 风向转换
             if (item.field === '13') {
-              let _text = text ? `${text}（${getDirLevel(text)}）` : '-';
+              let _text = text ? `${getDirLevel(text)}` : '-';
               return formatPollutantPopover(_text, record[`${item.field}_params`]);
             }
             return formatPollutantPopover(text, record[`${item.field}_params`]);
@@ -379,9 +379,9 @@ class index extends Component {
                   );
                 }}
               >
-                <Radio.Button key={1} value="RealTimeData">
+                {/* <Radio.Button key={1} value="RealTimeData">
                   实时
-                </Radio.Button>
+                </Radio.Button> */}
                 {this.state.pollutantCode != 5 && (
                   <Radio.Button key={2} value="MinuteData">
                     分钟

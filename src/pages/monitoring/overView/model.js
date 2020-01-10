@@ -79,7 +79,7 @@ export default Model.extend({
     // 实时数据一览
     realtimeColumns: [],
     realTimeDataView: [],
-    dataType: 'RealTimeData',
+    dataType: 'MinuteData',
   },
   effects: {
     *init({ payload }, { call, take, select }) {

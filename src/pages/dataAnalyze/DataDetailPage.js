@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:45:15 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 16:22:41
+ * @Last Modified time: 2020-01-10 18:02:01
  * @Description: 数据详情
  */
 import React, { PureComponent } from 'react';
@@ -53,7 +53,7 @@ class DataDetailPage extends PureComponent {
         DGIMNs: this.state.DGIMN,
         pageIndex: null,
         pageSize: null,
-        beginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        beginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:00:00"),
         endTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         pollutantCodes: this.state.pollutantValue.toString(),
         pollutantNames: this.state.pollutantNames.toString(),

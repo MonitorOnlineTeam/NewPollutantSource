@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:13 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 16:05:32
+ * @Last Modified time: 2020-01-10 17:58:46
  * @Description: 数据获取率
  */
 import React, { PureComponent } from 'react';
@@ -178,7 +178,7 @@ class DataGainRatePage extends PureComponent {
             style={{ height: "90vh" }}
             onCancel={() => { this.setState({ visible: false }) }}
           >
-            <DataDetailPage DGIMN={this.state.DGIMN} time={[moment(this.state.recordTime).add(-24, "hour"), moment(this.state.recordTime)]} dataType={"hour"} />
+            <DataDetailPage DGIMN={this.state.DGIMN} time={[moment(this.state.recordTime).add(-23, "hour"), moment(this.state.recordTime)]} dataType={"hour"} />
           </Modal>
         </div>
       </>

@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:55 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 16:25:09
+ * @Last Modified time: 2020-01-10 18:05:33
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -33,7 +33,7 @@ class SiteParamsPage extends PureComponent {
     super(props);
     this.state = {
       pollutantValue: [],
-      time: [moment().add(-1, "day"), moment()],
+      time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
       showType: "chart",
       format: "YYYY-MM-DD HH",
@@ -77,13 +77,14 @@ class SiteParamsPage extends PureComponent {
       message.error('请选择污染物');
       return;
     }
+    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
     this.props.dispatch({
       type: "dataAnalyze/getChartAndTableData",
       payload: {
         DGIMN: [this.state.DGIMN],
         PollutantCode: this.state.pollutantValue,
-        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(this.state.time[0]).format(format),
+        EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "0",
         PollutantType: this.state.PollutantType,
@@ -133,13 +134,14 @@ class SiteParamsPage extends PureComponent {
       message.error('请选择污染物');
       return;
     }
+    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
     this.props.dispatch({
       type: "dataAnalyze/export",
       payload: {
         DGIMN: [this.state.DGIMN],
         PollutantCode: this.state.pollutantValue,
-        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(this.state.time[0]).format(format),
+        EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "0",
       }
@@ -265,7 +267,7 @@ class SiteParamsPage extends PureComponent {
     const appendText = dataType === "Hour" ? "时" : "";
 
     // let formatter = {};
-    // if (chartList.PollutantName === "风向") {
+    // if (chartList.PollutantName = == "风向") {
     //   formatter = {
     //     formatter: function (params, ticket, callback) {
     //       let format = `${params[0].axisValue}: `

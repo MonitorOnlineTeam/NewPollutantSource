@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:31 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 16:24:35
+ * @Last Modified time: 2020-01-10 18:06:07
  * @Description: 多站多参对比分析
  */
 import React, { PureComponent } from 'react';
@@ -32,7 +32,7 @@ class MultiSiteParamsPage extends PureComponent {
     super(props);
     this.state = {
       pollutantValue: [],
-      time: [moment().add(-1, "day"), moment()],
+      time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
       DGIMNs: [],
       one: true,
@@ -66,13 +66,14 @@ class MultiSiteParamsPage extends PureComponent {
       message.error('请在左侧勾选监测点');
       return;
     }
+    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
     this.props.dispatch({
       type: "dataAnalyze/getChartAndTableData",
       payload: {
         DGIMN: this.state.DGIMNs,
         PollutantCode: this.state.pollutantValue,
-        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(this.state.time[0]).format(format),
+        EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "1",
         PollutantType: 5,
@@ -90,13 +91,14 @@ class MultiSiteParamsPage extends PureComponent {
       message.error('请在左侧勾选监测点');
       return;
     }
+    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
     this.props.dispatch({
       type: "dataAnalyze/export",
       payload: {
         DGIMN: this.state.DGIMNs,
         PollutantCode: this.state.pollutantValue,
-        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(this.state.time[0]).format(format),
+        EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "1",
       }
