@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:31 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 18:06:07
+ * @Last Modified time: 2020-01-13 17:16:01
  * @Description: 多站多参对比分析
  */
 import React, { PureComponent } from 'react';
@@ -31,6 +31,7 @@ class MultiSiteParamsPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      defalutPollutantType: props.match.params.type,
       pollutantValue: [],
       time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
@@ -168,6 +169,9 @@ class MultiSiteParamsPage extends PureComponent {
       },
       legend: {
         data: legend,
+        // left: 60,
+        width: "70%"
+        // align: 'center',
       },
       toolbox: {
         feature: {
@@ -283,13 +287,13 @@ class MultiSiteParamsPage extends PureComponent {
   }
 
   render() {
-    const { showType, columns } = this.state;
+    const { showType, columns, defalutPollutantType } = this.state;
     const { multiSiteParamsData: { timeList, tableList, chartList } } = this.props;
     return (
       <>
         <NavigationTree
           // QCAUse="1"
-          checkpPol="5"
+          checkpPol={defalutPollutantType}
           polShow
           choice
           onItemClick={value => {

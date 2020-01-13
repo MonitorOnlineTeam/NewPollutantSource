@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-01-10 10:44:55 
+ * @Author: Jiaqi
+ * @Date: 2020-01-10 10:44:55
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 18:05:33
+ * @Last Modified time: 2020-01-13 17:12:24
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -32,6 +32,7 @@ class SiteParamsPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      defalutPollutantType: props.match.params.type,
       pollutantValue: [],
       time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
@@ -261,6 +262,9 @@ class SiteParamsPage extends PureComponent {
             width: 2
           }
         },
+        splitLine: {
+          show: false
+        },
         ...otherProps
       }
     })
@@ -298,7 +302,6 @@ class SiteParamsPage extends PureComponent {
           //   animation: false,
           // },
           formatter: function (params, ticket, callback) {
-            console.log('params=',params);
             // let format = `${params[0].axisValue}: `
             // params.map((item, index) => {
             //   if (item.seriesName === "风向") {
@@ -310,12 +313,12 @@ class SiteParamsPage extends PureComponent {
             // })
             // return format;
             let format = `${params.name}: `
-              if (params.seriesName === "风向") {
-                let dirLevel = getDirLevel(params.value);
-                format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
-              } else {
-                format += `<br />${params.marker}${params.seriesName}: ${params.value}`
-              }
+            if (params.seriesName === "风向") {
+              let dirLevel = getDirLevel(params.value);
+              format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
+            } else {
+              format += `<br />${params.marker}${params.seriesName}: ${params.value}`
+            }
             return format;
           }
           // ...formatter
@@ -330,6 +333,9 @@ class SiteParamsPage extends PureComponent {
             boundaryGap: false,
             axisLine: { onZero: false },
             data: timeList.map(item => moment(item).format(format) + appendText),
+            splitLine: {
+              show: false
+            },
           }
         ],
         yAxis: [...yAxis],
@@ -361,13 +367,13 @@ class SiteParamsPage extends PureComponent {
   }
 
   render() {
-    const { showType, columns } = this.state;
+    const { showType, columns, defalutPollutantType } = this.state;
     const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     return (
       <>
         <NavigationTree
           // QCAUse="1"
-          checkpPol="5"
+          checkpPol={defalutPollutantType}
           polShow
           // choice
           onItemClick={value => {

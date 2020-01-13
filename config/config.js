@@ -757,13 +757,13 @@ export default {
                 // 单站多参对比分析
                 {
                   name: 'siteParamsPage',
-                  path: '/Intelligentanalysis/siteParamsPage',
+                  path: '/Intelligentanalysis/siteParamsPage/:type',
                   component: './dataAnalyze/SiteParamsPage',
                 },
                 // 多站多参对比分析
                 {
                   name: 'multiSiteParamsPage',
-                  path: '/Intelligentanalysis/multiSiteParamsPage',
+                  path: '/Intelligentanalysis/multiSiteParamsPage/:type',
                   component: './dataAnalyze/MultiSiteParamsPage',
                 },
                 // 数据获取率
@@ -771,6 +771,12 @@ export default {
                   name: 'dataGainRate',
                   path: '/Intelligentanalysis/dataGainRatePage',
                   component: './dataAnalyze/DataGainRatePage',
+                },
+                // 数据获取率`
+                {
+                  name: 'report',
+                  path: '/Intelligentanalysis/report/:type',
+                  component: './dataAnalyze/Report',
                 },
               ],
             },

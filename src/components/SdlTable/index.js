@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-02 17:01:29
+ * @Last Modified time: 2020-01-13 14:03:17
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -60,7 +60,7 @@ class SdlTable extends PureComponent {
         bordered
         {...this.props}
         defaultWidth={80}
-        scroll={{ x: scrollXWidth, y: this.props.scroll && this.props.scroll.y && this.props.scroll.y }}
+        scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll && this.props.scroll.y && this.props.scroll.y }}
         columns={_columns}
         {..._props}
       />

@@ -168,7 +168,7 @@ class MapView extends Component {
               // coordinateSet: extData.position.CoordinateSet,
             }
           } else {
-            if (extData.position.MonitorObjectType == 2) {
+            if (extData.position.MonitorObjectType == 2 || extData.position.MonitorObjectType == 4) {
               // 监测站
               newState = {
                 // infoWindowVisible: true,
@@ -206,8 +206,9 @@ class MapView extends Component {
             // currentEntInfo: extData.position
           }, () => {
             // this.state.displayType !== 0 &&
-            extData.position.MonitorObjectType != 2 && newState.displayType == 1 && this.randomMarker(extData.position.children)
-            this.getPointInfo(extData.position.PollutantType)
+            const isAirOrSite = extData.position.MonitorObjectType != 2 || extData.position.MonitorObjectType != 4;
+            isAirOrSite && newState.displayType == 1 && this.randomMarker(extData.position.children)
+            this.getPointInfo(extData.position.PollutantType, isAirOrSite)
           })
         }
       }}>
@@ -245,6 +246,11 @@ class MapView extends Component {
           let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
           pointEl = <>
             <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: color }} />
+          </>
+        } else if (extData.position.MonitorObjectType == 4) {
+          let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
+          pointEl = <>
+            <CustomIcon type="icon-yangchen1" style={{ ...iconStyle, color: color }} />
           </>
         } else {
           // 企业
@@ -345,7 +351,7 @@ class MapView extends Component {
   }
 
   // 点击气泡获取数据
-  getPointInfo = pollutantType => {
+  getPointInfo = (pollutantType, isAirOrSite) => {
     // 获取table数据
     this.props.dispatch({
       type: 'mapView/getPollutantList',
@@ -354,6 +360,7 @@ class MapView extends Component {
         dataType: 'HourData',
         isLastest: true,
         type: pollutantType,
+        isAirOrSite: isAirOrSite,
         pollutantTypes: pollutantType
       },
     })
@@ -687,7 +694,8 @@ class MapView extends Component {
       fontSize: 14
     }
     let AQIColorObj = airLevel.find(item => item.levelText == curPointData.AirLevel) || {};
-    let AQIColor = AQIColorObj.color;
+    // let AQIColor = AQIColorObj.color;
+    let AQIColor = curPointData.AQI_Color;
 
     const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
     return (
@@ -712,7 +720,8 @@ class MapView extends Component {
               } else {
                 // 切换企业
                 // const position = [entInfo[0].Longitude, entInfo[0].Latitude];
-                if (entInfo[0].PollutantType == 5) {
+                if (entInfo[0].MonitorObjectType == 2 || entInfo[0].MonitorObjectType == 4) {
+                  // if (entInfo[0].PollutantType == 5) {
                   // 排口切换监测点
                   let newState = {};
                   if (this.state.displayType == 1) {
@@ -721,6 +730,7 @@ class MapView extends Component {
                       coordinateSet: []
                     }
                     _thismap.setZoomAndCenter(this.state.zoom, [entInfo[0].Longitude, entInfo[0].Latitude])
+                    this.randomMarker(this.props.allEntAndPointList)
                   }
                   // 监测点
                   this.setState({
@@ -732,7 +742,7 @@ class MapView extends Component {
                     currentDescItem: {},
                     ...newState
                   }, () => {
-                    this.getPointInfo(entInfo[0].PollutantType)
+                    this.getPointInfo(entInfo[0].PollutantType, true)
                   })
                 } else {
                   this.setState({
@@ -889,7 +899,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              size={{ width: 480, height: 430 }}
+              size={{ width: 480, height: this.state.currentPointInfo.MonitorObjectType == "4" ? 380 : 430 }}
               // size={{ width: 480 }}
               style={{ maxHeight: 524 }}
               closeWhenClickMap={true}
@@ -910,7 +920,7 @@ class MapView extends Component {
                           <span
                             style={{ cursor: 'pointer' }}
                             onClick={() => {
-                              this.getPointInfo(5);
+                              this.getPointInfo(this.state.currentPointInfo.PollutantType, true);
                               this.setState({
                                 currentDescItem: {}
                               })
@@ -946,7 +956,7 @@ class MapView extends Component {
                               key: key,
                               itemKey: item.key,
                               label: item.label,
-                              type: 5
+                              isAirOrSite: true
                             }
                           })
                         }} className={styles.content} style={{ background: item.levelColor }}>{item.value}</div></Descriptions.Item>)
@@ -983,7 +993,7 @@ class MapView extends Component {
           </div>
           {/* 空气指数图例 */}
           {
-            this.state.currentPointInfo.PollutantType == "5" && <div className={styles.legend}>
+            (this.state.currentPointInfo.MonitorObjectType == "2" || this.state.currentPointInfo.MonitorObjectType == "4") && <div className={styles.legend}>
               <ul>
                 {
                   airLevel.map(item => {
