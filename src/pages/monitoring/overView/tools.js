@@ -62,7 +62,7 @@ export const airLevel = [
 
 export const AQIPopover = (text, record) => {
   let color = record['AQI_Color'];
-  if (text && text != "-") {
+  if (text !== undefined && text != "-") {
     return (
       <Popover
         content={

@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:44:31 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-13 17:16:01
+ * @Last Modified time: 2020-01-13 17:56:56
  * @Description: 多站多参对比分析
  */
 import React, { PureComponent } from 'react';
@@ -51,7 +51,7 @@ class MultiSiteParamsPage extends PureComponent {
       type: 'dataAnalyze/getPollutantList',
       payload: {
         // DGIMN: this.state.DGIMN,
-        PollutantType: 5,
+        PollutantType: this.state.defalutPollutantType,
         Type: "1"
       }
     })
@@ -77,7 +77,7 @@ class MultiSiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "1",
-        PollutantType: 5,
+        PollutantType: this.state.defalutPollutantType,
       }
     })
   }

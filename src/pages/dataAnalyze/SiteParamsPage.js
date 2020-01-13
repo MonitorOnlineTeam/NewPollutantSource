@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-10 10:44:55
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-13 17:12:24
+ * @Last Modified time: 2020-01-13 18:21:55
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -120,7 +120,19 @@ class SiteParamsPage extends PureComponent {
       this.setState({
         pollutantValue: nextProps.defaultPollutant,
         columns: [
-          ...this.state.columns,
+          {
+            title: "时间",
+            dataIndex: "MonitorTime",
+            fixed: 'left',
+            render: (text, record) => {
+              return this.state.dataType === "Hour" ? moment(text).format(this.state.format) + "时" : moment(text).format(this.state.format)
+            }
+          },
+          {
+            title: "监测点",
+            dataIndex: "PointName",
+            fixed: 'left',
+          },
           ...columns
         ]
       }, () => {
@@ -130,7 +142,7 @@ class SiteParamsPage extends PureComponent {
   }
 
   // 导出
-  export = () => {
+  exportReport = () => {
     if (!this.state.pollutantValue || !this.state.pollutantValue.length) {
       message.error('请选择污染物');
       return;
@@ -183,7 +195,7 @@ class SiteParamsPage extends PureComponent {
         </Col>
         <Col span={8}>
           <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.export}>导出</Button>
+          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
 
         </Col>
       </Row>

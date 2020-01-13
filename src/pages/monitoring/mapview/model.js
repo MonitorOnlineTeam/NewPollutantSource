@@ -170,7 +170,7 @@ export default Model.extend({
       const result = yield call(services.getPointChartData, payload.postData);
       if (result.IsSuccess) {
         let seriesData = result.Datas.map(item => {
-          if (item.AQI) {
+          if (item.AQI != undefined) {
             return {
               value: item.AQI,
               itemStyle: {
