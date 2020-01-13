@@ -167,7 +167,7 @@ class MultiSiteParamsPage extends PureComponent {
         // left: 'center'
       },
       legend: {
-        data: legend
+        data: legend,
       },
       toolbox: {
         feature: {
@@ -176,11 +176,11 @@ class MultiSiteParamsPage extends PureComponent {
         }
       },
       tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          animation: false,
-        },
+        trigger: 'item',
+        // axisPointer: {
+        //   type: 'cross',
+        //   animation: false,
+        // },
         ...otherProps
         // formatter: function (params, ticket, callback) {
         //   console.log("params=",params)

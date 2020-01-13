@@ -292,21 +292,30 @@ class SiteParamsPage extends PureComponent {
           }
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            animation: false,
-          },
+          trigger: 'item',
+          // axisPointer: {
+          //   type: 'cross',
+          //   animation: false,
+          // },
           formatter: function (params, ticket, callback) {
-            let format = `${params[0].axisValue}: `
-            params.map((item, index) => {
-              if (item.seriesName === "风向") {
-                let dirLevel = getDirLevel(item.value);
-                format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
+            console.log('params=',params);
+            // let format = `${params[0].axisValue}: `
+            // params.map((item, index) => {
+            //   if (item.seriesName === "风向") {
+            //     let dirLevel = getDirLevel(item.value);
+            //     format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
+            //   } else {
+            //     format += `<br />${item.marker}${item.seriesName}: ${item.value}`
+            //   }
+            // })
+            // return format;
+            let format = `${params.name}: `
+              if (params.seriesName === "风向") {
+                let dirLevel = getDirLevel(params.value);
+                format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
               } else {
-                format += `<br />${item.marker}${item.seriesName}: ${item.value}`
+                format += `<br />${params.marker}${params.seriesName}: ${params.value}`
               }
-            })
             return format;
           }
           // ...formatter
