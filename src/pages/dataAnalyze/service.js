@@ -13,7 +13,7 @@ export async function getChartAndTableData(params) {
 }
 
 // 获取单站多参图表及表格数据
-export async function exportData (params) {
+export async function exportData(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportDataForGasPoint', params, null);
   return result;
 }
@@ -57,6 +57,22 @@ export async function queryhistorydatalist(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params);
   return result === null ? { data: null } : result;
 }
+
+
+// 报表数据
+export async function getGasReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetGasReport', params);
+  return result === null ? { data: null } : result;
+}
+
+// 报表数据
+export async function exportGasReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportGasReport', params);
+  return result === null ? { data: null } : result;
+}
+
+
+
 
 
 

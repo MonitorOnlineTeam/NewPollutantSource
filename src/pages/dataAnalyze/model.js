@@ -25,6 +25,7 @@ export default Model.extend({
     dataGainRateTableData: [],
     pollutantlist: [],
     chartAndTableData: [],
+    reportTableData: [],
   },
 
   effects: {
@@ -149,6 +150,27 @@ export default Model.extend({
       } else {
         message.error(result.Message)
       }
-    }
+    },
+    // 获取报表数据
+    *getGasReport({ payload }, { call, put, update }) {
+      const result = yield call(services.getGasReport, payload);
+      if (result.IsSuccess) {
+        yield update({
+          reportTableData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 导出
+    *exportGasReport({ payload }, { call, put, update }) {
+      const result = yield call(services.exportGasReport, payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas);
+        message.success("导出成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 });

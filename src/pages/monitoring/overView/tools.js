@@ -61,31 +61,34 @@ export const airLevel = [
 ];
 
 export const AQIPopover = (text, record) => {
-  const color = record['AQI_Color'];
-  return (
-    <Popover
-      content={
-        <div>
-          <div style={{ marginBottom: 10 }}>
-            <span style={{ fontWeight: 'Bold', fontSize: 16 }}>
-              空气质量：<span style={{ color: color }}>{record.AirQuality}</span>
-            </span>
-          </div>
-          {record.PrimaryPollutant !== undefined && (
+  let color = record['AQI_Color'];
+  if (text !== undefined && text != "-") {
+    return (
+      <Popover
+        content={
+          <div>
+            <div style={{ marginBottom: 10 }}>
+              <span style={{ fontWeight: 'Bold', fontSize: 16 }}>
+                空气质量：<span style={{ color: color }}>{record.AirQuality}</span>
+              </span>
+            </div>
+            {record.PrimaryPollutant !== undefined && (
+              <li style={{ listStyle: 'none', marginBottom: 10 }}>
+                <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || '-'}`} />
+              </li>
+            )}
             <li style={{ listStyle: 'none', marginBottom: 10 }}>
-              <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || '-'}`} />
+              <Badge color={color} text={`污染级别：${record.AirLevel}`} />
             </li>
-          )}
-          <li style={{ listStyle: 'none', marginBottom: 10 }}>
-            <Badge color={color} text={`污染级别：${record.AirLevel}`} />
-          </li>
-        </div>
-      }
-      trigger="hover"
-    >
-      <span style={{ color: color }}>{text !== undefined ? text : '-'}</span>
-    </Popover>
-  );
+          </div>
+        }
+        trigger="hover"
+      >
+        <span style={{ color: color }}>{text !== undefined ? text : '-'}</span>
+      </Popover>
+    );
+  }
+  return text !== undefined ? text : '-';
 };
 
 export const IAQIPopover = (text, record, field) => {
