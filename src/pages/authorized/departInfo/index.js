@@ -247,7 +247,7 @@ class DepartIndex extends Component {
                                                             payload: {
                                                             },
                                                         })
-                                                    }else {
+                                                    } else {
                                                         message.error(res.Message);
                                                     }
                                                 },
@@ -602,7 +602,7 @@ class DepartIndex extends Component {
                     if (res.IsSuccess) {
                         message.success('成功');
                         this.handleCancel()
-                    }else {
+                    } else {
                         message.error(res.Message);
                     }
                 },
@@ -623,7 +623,7 @@ class DepartIndex extends Component {
                     if (res.IsSuccess) {
                         message.success('成功');
                         this.handleCancel()
-                    }else {
+                    } else {
                         message.error(res.Message);
                     }
                 },
@@ -694,7 +694,7 @@ class DepartIndex extends Component {
                                     payload: {
                                     },
                                 })
-                            }else {
+                            } else {
                                 message.error(res.Message);
                             }
                         },
@@ -749,7 +749,7 @@ class DepartIndex extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const{btnloading,btnloading1}=this.props;
+        const { btnloading, btnloading1 } = this.props;
         const { targetKeys, disabled, showSearch } = this.state;
         const formItemLayout = {
             labelCol: {
@@ -830,13 +830,13 @@ class DepartIndex extends Component {
                             <Table
                                 // rowKey={}
                                 onRow={record => ({
-                                        onClick: event => {
-                                            this.setState({
-                                                selectedRowKeys: record,
-                                                rowKeys: [record.key]
-                                            })
-                                        },
-                                    })}
+                                    onClick: event => {
+                                        this.setState({
+                                            selectedRowKeys: record,
+                                            rowKeys: [record.key]
+                                        })
+                                    },
+                                })}
                                 style={{ marginTop: '20px' }}
                                 //rowSelection={rowRadioSelection}
                                 size="small" columns={this.state.columns} defaultExpandAllRows dataSource={this.props.DepartInfoTree} />
@@ -847,7 +847,7 @@ class DepartIndex extends Component {
                             <Modal
                                 title={this.state.Tittle}
                                 visible={this.state.visible}
-                                confirmLoading={ this.state.IsEdit === true ? btnloading1 : btnloading}
+                                confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                                 onOk={this.handleSubmit}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
@@ -992,7 +992,7 @@ class DepartIndex extends Component {
                                                 selectedKeys={this.state.selectedKey}
                                                 defaultExpandedKeys={['0']}
                                                 // autoExpandParent={true}
-                                                defaultExpandAll
+                                                defaultExpandAll={false}
                                             // defaultExpandParent
                                             >
                                                 {this.renderTreeNodes(this.props.RegionInfoTree)}

@@ -1243,7 +1243,7 @@ class index extends Component {
                     <Statistic title={<span style={{ color: "#d5d9e2" }}>环保税：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.EffluentFeeValue} prefix="￥" />
                   </Col>
                   <Col span={12} style={{ textAlign: 'right' }}>
-                    <Statistic title={<span style={{ color: "#d5d9e2" }}>超级排放奖励：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.UltralowEmissionIncentives} prefix="￥" />
+                    <Statistic title={<span style={{ color: "#d5d9e2" }}>超低排放奖励：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.UltralowEmissionIncentives} prefix="￥" />
                   </Col>
                 </Row>
                 <Divider style={{ background: "#1c324c" }} />
