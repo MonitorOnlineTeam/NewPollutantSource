@@ -18,5 +18,11 @@ export async function updateDataFlag(params) {
   return result;
 }
 
+// 修改数据标识
+export async function exportDataAuditReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataForFlag', params, null);
+  return result;
+}
+
 
 

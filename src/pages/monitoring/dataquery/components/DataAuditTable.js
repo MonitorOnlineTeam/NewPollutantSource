@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SdlTable from '@/components/SdlTable';
 import { Popover, Popconfirm, Row, Input, message, Alert, Form } from 'antd'
 import { connect } from 'dva'
+import { getDirLevel } from "@/utils/utils"
 const { TextArea } = Input;
 
 const _style = {
@@ -76,13 +77,14 @@ class DataAuditTable extends Component {
           title: item.PollutantName,
           dataIndex: item.PollutantCode,
           render: (text, record) => {
-            let content = text || "-"
+            let _text = item.PollutantName === "风向" ? getDirLevel(text) : text;
+            let content = _text != undefined ? _text : "-";
             let flag = record[item.PollutantCode + "_Flag"];
             if (flag && flag !== "N") {
               content = (
                 <div style={_style.flagBox}>
                   <span style={_style.flag}>{flag}</span>
-                  {text || "-"}
+                  {content}
                 </div>
               )
             }
@@ -137,7 +139,7 @@ class DataAuditTable extends Component {
           </p>
           } type="warning" showIcon style={{ marginBottom: 10 }} />
             : <Alert message={
-              <p className="ant-result-subtitle" style={{ textAlign: "left", color: "#6f6868", fontSize: 12  }}>
+              <p className="ant-result-subtitle" style={{ textAlign: "left", color: "#6f6868", fontSize: 12 }}>
                 H：有效数据不足 BB：连接不良 B：运行不良 W：等待数据恢复 HSp：数据超上限 LSp：数据超下限 PS：跨度检查 PZ：零点检查 AS：精度检查 CZ：零点校准 CS：跨度校准 RM：自动或人工审核为无效 E或D：站点有效个数不足
           </p>
             } type="warning" showIcon style={{ marginBottom: 10 }} />)

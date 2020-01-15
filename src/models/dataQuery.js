@@ -286,5 +286,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 导出报表
+    *exportDataAuditReport({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.exportDataAuditReport, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功');
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 });

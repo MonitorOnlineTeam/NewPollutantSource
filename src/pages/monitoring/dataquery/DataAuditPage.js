@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider } from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
 import moment from 'moment'
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -11,6 +11,7 @@ const { RangePicker } = DatePicker;
 @connect(({ loading, dataquery }) => ({
   pollutantList: dataquery.pollutantList,
   loading: loading.effects['dataquery/getAllTypeDataForFlag'],
+  exportLoading: loading.effects['dataquery/exportDataAuditReport'],
   dataAuditDataSource: dataquery.dataAuditDataSource,
 }))
 class DataAuditPage extends Component {
@@ -39,10 +40,11 @@ class DataAuditPage extends Component {
     });
   }
 
-  getPageData = () => {
+  getPageData = (queryType) => {
     const format = this.state.dataType === "hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00";
+    const actionType = queryType === "export" ? "dataquery/exportDataAuditReport" : "dataquery/getAllTypeDataForFlag";
     this.props.dispatch({
-      type: "dataquery/getAllTypeDataForFlag",
+      type: actionType,
       payload: {
         datatype: this.state.dataType,
         DGIMNs: this.state.DGIMN,
@@ -77,12 +79,10 @@ class DataAuditPage extends Component {
         this.getPageData()
       })
     }
-
-
   }
 
   getCardTitle = () => {
-    const { pollutantList } = this.props;
+    const { pollutantList, exportLoading } = this.props;
     const { pollutantValue, time, dataType, format, isShowFlag } = this.state;
     return (
       <Row gutter={16}>
@@ -92,7 +92,7 @@ class DataAuditPage extends Component {
             style={{ width: '100%' }}
             value={pollutantValue}
             placeholder="请选择污染物"
-            maxTagCount={3}
+            maxTagCount={2}
             maxTagPlaceholder="..."
             onChange={(value, option) => {
               console.log('option=', option)
@@ -124,18 +124,9 @@ class DataAuditPage extends Component {
               this.getPageData()
             })
           }}>显示数据标识</Checkbox>
-          {/* <Radio.Group defaultValue={isShowFlag} buttonStyle="solid" onChange={(e) => {
-            this.setState({
-              isShowFlag: e.target.value
-            }, () => {
-              this.getPageData()
-            })
-          }}>
-            <Radio.Button value={true}>显示数据标识</Radio.Button>
-            <Radio.Button value={false}>不显示数据标识</Radio.Button>
-          </Radio.Group> */}
           <Button type="primary" style={{ marginLeft: 10 }} onClick={this.getPageData}>查询</Button>
-          <Divider type="vertical" />
+          <Button onClick={() => { this.getPageData("export") }} loading={exportLoading} style={{ marginLeft: 10 }}><Icon type="export" />导出</Button>
+          {/* <Divider type="vertical" /> */}
         </Col>
       </Row >
     )
