@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-13 17:24:42
+ * @Last Modified time: 2020-01-14 16:47:28
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -16,17 +16,40 @@ import styles from './index.less'
 class SdlTable extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      _props: {}
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.dataSource !== nextProps.dataSource) {
+      if (nextProps.dataSource.length > 4) {
+        this.setState({
+          _props: {
+            className: "sdlTable"
+          }
+        })
+      }else{
+        this.setState({
+          _props: {}
+        })
+      }
+    }
   }
 
   render() {
     const { columns, defaultWidth } = this.props;
-    let _props = {}
-    if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length && this.sdlTable.props.dataSource.length > 5) {
-      _props = {
-        className: "sdlTable"
-      }
-    }
+    const { _props } = this.state;
+    // let _props = {}
+    // if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length && this.sdlTable.props.dataSource.length > 5) {
+    //   _props = {
+    //     className: "sdlTable"
+    //   }
+    // }else{
+    //   _props = {}
+    // }
+    // console.log('this.sdlTable=', this.sdlTable)
+    // console.log('_props=', _props)
     // 处理表格长度，防止错位
     let _columns = (columns || []).map(col => {
       return {
