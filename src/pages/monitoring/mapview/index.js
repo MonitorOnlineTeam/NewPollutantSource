@@ -1040,7 +1040,7 @@ class MapView extends Component {
               // })
             }}>
               <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
+                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
               </TabPane>
               <TabPane tab="视频管理" key="2">
                 <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
@@ -1048,7 +1048,7 @@ class MapView extends Component {
               {
                 this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="报警记录" key="3">
-                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
+                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               <TabPane tab="异常记录" key="4">

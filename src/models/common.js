@@ -58,7 +58,7 @@ export default Model.extend({
             factorial(data.children[0]);
           }
         }
-        factorial(result.Datas.list[0]);
+        result.Datas.list && result.Datas.list.length && factorial(result.Datas.list[0]);
         yield update({
           enterpriseAndPointList: result.Datas.list,
           defaultSelected: defaultValue,
