@@ -3,6 +3,7 @@ import SdlTable from '@/components/SdlTable';
 import { Popover, Popconfirm, Row, Input, message, Alert, Form } from 'antd'
 import { connect } from 'dva'
 import { getDirLevel } from "@/utils/utils"
+import moment from 'moment'
 const { TextArea } = Input;
 
 const _style = {
@@ -116,10 +117,19 @@ class DataAuditTable extends Component {
       this.setState({
         columns: [
           {
+            title: '监测点名称',
+            dataIndex: 'PointName',
+            key: 'PointName',
+            fixed: "left",
+          },
+          {
             title: '时间',
             dataIndex: 'MonitorTime',
             key: 'MonitorTime',
             fixed: "left",
+            render: (text, record) => {
+              return this.props.dataType === "hour" ? moment(text).format("YYYY-MM-DD HH") + "时" : moment(text).format("YYYY-MM-DD")
+            }
           },
           ...columns
         ]

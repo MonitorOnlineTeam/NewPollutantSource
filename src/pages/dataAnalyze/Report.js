@@ -17,6 +17,13 @@ const columns = [
     // fixed: 'left',
   },
   {
+    title: '监测时间',
+    dataIndex: 'PointName',
+    key: 'PointName1',
+    width: 200,
+    // fixed: 'left',
+  },
+  {
     title: '污染物浓度及空气质量分指数（IAQI）',
     children: [
       {
