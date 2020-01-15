@@ -14,7 +14,7 @@ export default class AppDilutionSamplingRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <DilutionSamplingRecordContent {...match.params} scrolly="none"/>
+                <DilutionSamplingRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none"/>
             </MapInteractionCSS>
         );
     }

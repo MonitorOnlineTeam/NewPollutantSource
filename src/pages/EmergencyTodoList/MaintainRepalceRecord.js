@@ -67,6 +67,17 @@ class MaintainRepalceRecord extends Component {
     }
 
     render() {
+        const appStyle = this.props.appStyle;
+        let style = null;
+        debugger
+        if (appStyle) {
+            style = appStyle;
+        }
+        else {
+            style = {
+                height: 'calc(100vh - 200px)'
+            }
+        }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record=this.props.MaintainRecordDetailRecord!==null?this.props.MaintainRecordDetailRecord.Record:null;
         const Content=Record!==null?Record.Content:null;
@@ -105,7 +116,7 @@ class MaintainRepalceRecord extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
+            <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>设备保养记录表</div>
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
                 <table className={styles.FormTable}>

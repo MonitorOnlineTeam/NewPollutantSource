@@ -49,10 +49,10 @@ class CompleteExtractionRecordContent extends Component {
         let childIDarray = [];
         let flag = 0;
         if (Repair !== null) {
-            if (Repair.Content!== null) {
+            if (Repair.Content !== null) {
                 remark.push(
-                    Repair.Content.Remark1,Repair.Content.Remark2,Repair.Content.Remark3,
-                    Repair.Content.Remark4,Repair.Content.Remark5,Repair.Content.Remark6,
+                    Repair.Content.Remark1, Repair.Content.Remark2, Repair.Content.Remark3,
+                    Repair.Content.Remark4, Repair.Content.Remark5, Repair.Content.Remark6,
                     Repair.Content.Remark7
                 );
             }
@@ -156,10 +156,21 @@ class CompleteExtractionRecordContent extends Component {
     }
 
     render() {
-        const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
-        const Record=this.props.PatrolRecord!==null?this.props.PatrolRecord.Record:null;
-        const Content=Record!==null?Record.Content:null;
-        let SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
+        const appStyle = this.props.appStyle;
+        let style = null;
+        debugger
+        if (appStyle) {
+            style = appStyle;
+        }
+        else {
+            style = {
+                height: 'calc(100vh - 200px)'
+            }
+        }
+        const SCREEN_HEIGHT = this.props.scrolly === "none" ? { overflowY: 'none' } : { height: document.querySelector('body').offsetHeight - 250 };
+        const Record = this.props.PatrolRecord !== null ? this.props.PatrolRecord.Record : null;
+        const Content = Record !== null ? Record.Content : null;
+        let SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
 
         if (this.props.isloading) {
             return (<Spin
@@ -174,29 +185,29 @@ class CompleteExtractionRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
+            <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>完全抽取法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>
-                            <td style={{ width: '50%',minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px', fontWeight: 'bold', border: 0 }}>企业名称：{Content!==null?Content.EnterpriseName:null}</td>
-                            <td style={{ width: '50%',minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px', fontWeight: 'bold', border: 0 }}> 巡检日期：{Content!==null?Content.PatrolDate:null}</td>
+                            <td style={{ width: '50%', minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px', fontWeight: 'bold', border: 0 }}>企业名称：{Content !== null ? Content.EnterpriseName : null}</td>
+                            <td style={{ width: '50%', minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px', fontWeight: 'bold', border: 0 }}> 巡检日期：{Content !== null ? Content.PatrolDate : null}</td>
                         </tr>
                     </tbody>
                 </table>
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>
-                            <td style={{ width: '50%',minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.GasCemsEquipmentManufacturer:null}</td>
-                            <td style={{ width: '50%',minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.GasCemsCode:null}</td>
+                            <td style={{ width: '50%', minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.GasCemsEquipmentManufacturer : null}</td>
+                            <td style={{ width: '50%', minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.GasCemsCode : null}</td>
                         </tr>
                         <tr>
-                            <td style={{ width: '50%',minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.KlwCemsEquipmentManufacturer:null}</td>
-                            <td style={{ width: '50%',minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.KlwCemsCode:null}</td>
+                            <td style={{ width: '50%', minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.KlwCemsEquipmentManufacturer : null}</td>
+                            <td style={{ width: '50%', minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.KlwCemsCode : null}</td>
                         </tr>
                         <tr>
-                            <td style={{ width: '50%',minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.PointPosition:null}</td>
-                            <td style={{ width: '50%',minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content!==null?Content.MaintenanceManagementUnit:null}</td>
+                            <td style={{ width: '50%', minWidth: 450, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.PointPosition : null}</td>
+                            <td style={{ width: '50%', minWidth: 500, height: '50px', textAlign: 'left', fontSize: '14px' }}>{Content !== null ? Content.MaintenanceManagementUnit : null}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -217,10 +228,10 @@ class CompleteExtractionRecordContent extends Component {
                         }
                         <tr>
                             <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        异常情况处理
+                                异常情况处理
                             </td>
                             <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null?Content.ExceptionHandling:null}
+                                {Content !== null ? Content.ExceptionHandling : null}
                             </td>
                         </tr>
                     </tbody>
@@ -228,7 +239,7 @@ class CompleteExtractionRecordContent extends Component {
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>
-                            <td style={{ width: '87%', minWidth: 800,height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>负责人签名：</td>
+                            <td style={{ width: '87%', minWidth: 800, height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>负责人签名：</td>
                             <td style={{ width: '13%', height: '50px', border: '0' }}>
                                 {
                                     SignContent === null ? null : <img style={{ width: '80%', height: '110%' }} src={SignContent} />
@@ -236,8 +247,8 @@ class CompleteExtractionRecordContent extends Component {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ width: '87%', minWidth: 800,height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>签名时间：</td>
-                            <td style={{ width: '13%', height: '50px', border: '0' , minWidth: 150}}>{Record!==null?Record.SignTime:null}</td>
+                            <td style={{ width: '87%', minWidth: 800, height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>签名时间：</td>
+                            <td style={{ width: '13%', height: '50px', border: '0', minWidth: 150 }}>{Record !== null ? Record.SignTime : null}</td>
                         </tr>
                     </tbody>
                 </table>

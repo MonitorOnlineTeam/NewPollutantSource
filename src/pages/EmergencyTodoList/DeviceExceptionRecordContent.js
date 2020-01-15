@@ -35,6 +35,17 @@ class DeviceExceptionRecordContent extends Component {
     }
 
     render() {
+        const appStyle = this.props.appStyle;
+        let style = null;
+        debugger
+        if (appStyle) {
+            style = appStyle;
+        }
+        else {
+            style = {
+                height: 'calc(100vh - 200px)'
+            }
+        }
         const {pointName}=this.props;
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record = this.props.ExceptionRecord!==null?this.props.ExceptionRecord.Record:null;
@@ -54,7 +65,7 @@ class DeviceExceptionRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
+            <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>CEMS设备数据异常记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>

@@ -14,7 +14,7 @@ export default class AppDirectMeasurementRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <DirectMeasurementRecordContent {...match.params} scrolly="none"/>
+                <DirectMeasurementRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none"/>
             </MapInteractionCSS>
         );
     }
