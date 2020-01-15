@@ -79,7 +79,7 @@ export default Model.extend({
     // 实时数据一览
     realtimeColumns: [],
     realTimeDataView: [],
-    dataType: 'RealTimeData',
+    dataType: 'MinuteData',
   },
   effects: {
     *init({ payload }, { call, take, select }) {
@@ -109,7 +109,7 @@ export default Model.extend({
       }
 
       let realtimeColumns = [];
-      if (selectpollutantTypeCode == 5) {
+      if (selectpollutantTypeCode == 5 || selectpollutantTypeCode == 12) {
         realtimeColumns = [{
           field: 'PrimaryPollutant',
           title: '首要污染物',
@@ -124,7 +124,7 @@ export default Model.extend({
           ...realtimeColumns,
           ...data,
         ] || [],
-gwidth,
+        gwidth,
       });
     },
     *querydatalist({ payload }, { call, update, put, select }) {
@@ -439,7 +439,7 @@ gwidth,
         },
         tooltip: {
           trigger: 'axis',
-          formatter (params, ticket, callback) {
+          formatter(params, ticket, callback) {
             let res = `${params[0].axisValue}时<br/>`;
             params.map(item => {
               res += `${item.seriesName}:${item.value}<br />`;
@@ -549,7 +549,7 @@ gwidth,
     *getRealTimeColumn({ payload }, { call, update }) {
       const result = yield call(getRealTimeColumn, payload);
       let realtimeColumns = [];
-      if (payload.pollutantTypes == 5) {
+      if (payload.pollutantTypes == 5 || payload.pollutantTypes == 12) {
         realtimeColumns = realtimeColumns.concat([{
           field: 'PrimaryPollutant',
           title: '首要污染物',
@@ -574,7 +574,7 @@ gwidth,
     // 实时
     updateRealTimeDataView(state, { payload }) {
       const newRealTimeDataView = state.realTimeDataView;
-      const {dataType} = state;
+      const { dataType } = state;
       if (newRealTimeDataView.length && payload.type == dataType) {
         payload.message.map(item => {
           newRealTimeDataView.map((itm, idx) => {
@@ -589,16 +589,16 @@ gwidth,
               // 数据异常
               // 异常§异常类别编号§异常类别名称
               if (item.IsException) {
-                newRealTimeDataView[idx][`${item.PollutantCode  }_params`] = `1§${item.IsException}§${item.ExceptionType}`;
+                newRealTimeDataView[idx][`${item.PollutantCode}_params`] = `1§${item.IsException}§${item.ExceptionType}`;
               } else {
-                delete newRealTimeDataView[idx][`${item.PollutantCode  }_params`];
+                delete newRealTimeDataView[idx][`${item.PollutantCode}_params`];
               }
               // 数据超标
               // 超标§报警颜色§标准值§超标倍数
               if (item.IsOver > -1) {
-                newRealTimeDataView[idx][`${item.PollutantCode  }_params`] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
+                newRealTimeDataView[idx][`${item.PollutantCode}_params`] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
               } else {
-                delete newRealTimeDataView[idx][`${item.PollutantCode  }_params`];
+                delete newRealTimeDataView[idx][`${item.PollutantCode}_params`];
               }
               // newRealTimeDataView[idx]["IsException"] = item.IsException;
               // newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;

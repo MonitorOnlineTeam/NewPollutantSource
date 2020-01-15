@@ -47,12 +47,13 @@ export default Model.extend({
       }
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
-        let monitorArr = result.Datas.filter(item => item.MonitorObjectType === "2");
-        let allEntAndPointList = result.Datas.filter(item => item.MonitorObjectType !== "2");
-        monitorArr.map(item => {
+        let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
+        // let constructionSiteArr = result.Datas.filter(item => item.MonitorObjectType === "4");
+        let allEntAndPointList = result.Datas.filter(item => item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4");
+        filterList.map(item => {
           if (item.children) {
             let childrenList = item.children.map(itm => {
-              return { ...itm, MonitorObjectType: 2, children: [] }
+              return { ...itm, MonitorObjectType: item.MonitorObjectType, children: [] }
             })
             allEntAndPointList = allEntAndPointList.concat(childrenList);
           }
@@ -126,9 +127,9 @@ export default Model.extend({
           curPointData: result.Datas[0] ? result.Datas[0] : []
         })
         // yield take('getPointTableData/@@end');
-        if (payload.type == 5) {
+        if (payload.isAirOrSite) {
           // if (false) {
-          // 大气站
+          // 大气站或工地
           yield put({
             type: 'getAirChartData',
             payload: {
@@ -164,12 +165,12 @@ export default Model.extend({
         }
       }
     },
-    // 获取大气站图表数据
+    // 获取大气站或工地图表数据
     * getAirChartData({ payload }, { call, update, select }) {
       const result = yield call(services.getPointChartData, payload.postData);
       if (result.IsSuccess) {
         let seriesData = result.Datas.map(item => {
-          if (item.AQI) {
+          if (item.AQI != undefined) {
             return {
               value: item.AQI,
               itemStyle: {
@@ -257,7 +258,7 @@ export default Model.extend({
         xAxisData.push(moment(item.MonitorTime).hour())
         if (item[key]) {
           flag = true;
-          if (payload.type == 5) {
+          if (payload.isAirOrSite) {
             return {
               value: item[key],
               itemStyle: {

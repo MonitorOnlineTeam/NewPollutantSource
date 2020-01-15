@@ -68,25 +68,37 @@ class AlarmRecord extends Component {
       overdataparams = {
         ...overdataparams,
         DGIMN,
-        beginTime: moment(firsttime).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(lasttime).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: firsttime ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss') : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
+        endTime: lasttime ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss') : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
       }
-      this.setState({
-        rangeDate: [firsttime, lasttime],
-      })
+      console.log("firsttime=", firsttime);
+      console.log("lasttime=", lasttime);
+      console.log("this.props.DGIMN=", this.props.DGIMN);
+      if (firsttime && lasttime) {
+        this.setState({
+          rangeDate: [firsttime, lasttime],
+        })
+      } else {
+        this.setState({
+          rangeDate: this.state.rangeDate,
+        })
+      }
+
       this.changeDgimn(this.props.DGIMN, overdataparams)
     }
   }
 
   componentWillReceiveProps = nextProps => {
-    console.log('------------------------------------------000', nextProps.DGIMN);
-    console.log('------------------------------------------111', this.props.DGIMN);
+    console.log('nextProps.DGIMN=', nextProps.DGIMN);
+    console.log('this.props.DGIMN=', this.props.DGIMN);
+    console.log('nextProps.lasttime=', nextProps.lasttime);
+    console.log('nextProps.firsttime=', nextProps.firsttime);
     const { DGIMN, lasttime, firsttime } = this.props;
     if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
       // 如果传入参数有变化，则重新加载数据
-      if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('yyyy-MM-dd HH:mm:ss') !==
-        moment(lasttime).format('yyyy-MM-dd HH:mm:ss') ||
-        moment(nextProps.firsttime).format('yyyy-MM-dd HH:mm:ss') !== moment(firsttime).format('yyyy-MM-dd HH:mm:ss')) {
+      if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss') !==
+        moment(lasttime).format('YYYY-MM-DD HH:mm:ss') ||
+        moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss') !== moment(firsttime).format('YYYY-MM-DD HH:mm:ss')) {
         let {
           overdataparams,
         } = this.props;
@@ -366,16 +378,16 @@ class AlarmRecord extends Component {
         }
         return <span> <Badge status="default" text="已核实" /> </span>;
       },
-      filters: [{
-        text: '未核实',
-        value: '0',
-      },
-      {
-        text: '已核实',
-        value: '1',
-      },
-      ],
-      onFilter: (value, record) => record.State.indexOf(value) === 0,
+      // filters: [{
+      //   text: '未核实',
+      //   value: '0',
+      // },
+      // {
+      //   text: '已核实',
+      //   value: '1',
+      // },
+      // ],
+      // onFilter: (value, record) => record.State.indexOf(value) === 0,
     },
     {
       title: '报警信息',
@@ -417,53 +429,53 @@ class AlarmRecord extends Component {
     return (
       <div className={Styles.check}>
         <Card
-          title={
-            <Button onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
-          }
           extra={
             <div>
               {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} format="YYYY-MM-DD HH:mm" onChange={this._handleDateChange} dateValue={this.state.rangeDate} showTime="YYYY-MM-DD HH:mm" />
+              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }} format="YYYY-MM-DD HH:mm" onChange={this._handleDateChange} dateValue={this.state.rangeDate} showTime="YYYY-MM-DD HH:mm" />
+              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
             </div>
           }
-          className="contentContainer"
-          style={{ width: '100%', ...this.props.style }}
+
         >
-          <SdlTable
-            loading={this.props.dataloading}
-            columns={columns}
-            dataSource={this.props.data}
-            rowKey="ID"
-            rowSelection={rowSelection}
-            scroll={{ y: 'calc(100vh - 430px)' }}
-            pagination={
-              {
-                size: 'small',
-                showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                pageSize: this.props.overdataparams.pageSize,
-                current: this.props.overdataparams.pageIndex,
-                onChange: this.onChange,
-                onShowSizeChange: this.onShowSizeChange,
-                pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-              }
-            }
-            onRow={(record, index) => ({
-              onClick: event => {
-                const { selectedRowKeys } = this.state;
-                let keys = selectedRowKeys;
-                if (selectedRowKeys.some(item => item === record.ID)) {
-                  keys = keys.filter(item => item !== record.ID)
-                } else if (record.State !== '1') {
-                  keys.push(record.ID);
+          <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', overflow: 'auto', ...this.props.style }}>
+            <SdlTable
+              loading={this.props.dataloading}
+              columns={columns}
+              dataSource={this.props.data}
+              rowKey="ID"
+              rowSelection={rowSelection}
+              // scroll={{ y: 'calc(100vh - 450px)' }}
+              pagination={
+                {
+                  size: 'small',
+                  // showSizeChanger: true,
+                  showQuickJumper: true,
+                  total: this.props.total,
+                  pageSize: 10,//this.props.overdataparams.pageSize,
+                  current: this.props.overdataparams.pageIndex,
+                  onChange: this.onChange,
+                  onShowSizeChange: this.onShowSizeChange,
+                  pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
                 }
-                this.setState({
-                  selectedRowKeys: keys,
-                })
-              },
-            })}
-          />
+              }
+              onRow={(record, index) => ({
+                onClick: event => {
+                  const { selectedRowKeys } = this.state;
+                  let keys = selectedRowKeys;
+                  if (selectedRowKeys.some(item => item === record.ID)) {
+                    keys = keys.filter(item => item !== record.ID)
+                  } else if (record.State !== '1') {
+                    keys.push(record.ID);
+                  }
+                  this.setState({
+                    selectedRowKeys: keys,
+                  })
+                },
+              })}
+            />
+          </Card.Grid>
+
           <Modal
             title="核实单详情"
             visible={this.state.visible}

@@ -54,7 +54,7 @@ class NavigationTree extends Component {
     this.state = {
       visible: true,
       Name: "",
-      PollutantTypes: this.props.checkpPol ? this.props.checkpPol : "",
+      PollutantTypes: this.props.checkpPol ? this.props.checkpPol : (this.props.defaultPollutant === "undefined" ? "undefined" : ""),
       Status: "",
       RegionCode: "",
       right: floats == "topmenu" ? "caret-left" : "caret-right",
@@ -146,7 +146,8 @@ class NavigationTree extends Component {
         Status: screenList,
         QCAUse: QCAUse,
         RunState: state,
-        PollutantTypes: this.state.PollutantTypes
+        PollutantTypes: this.state.PollutantTypes,
+        isFilter:this.props.isMap
       }
     })
     // panelDataList.splice(0, panelDataList.length)
@@ -317,7 +318,8 @@ class NavigationTree extends Component {
         Name: this.state.Name,
         Status: this.state.screenList,
         QCAUse: this.state.QCAUse,
-        RunState: this.state.RunState
+        RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
@@ -334,7 +336,8 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
-        RunState: this.state.RunState
+        RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
@@ -389,7 +392,9 @@ class NavigationTree extends Component {
         RegionCode: value,
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
-        RunState: this.state.RunState
+        RunState: this.state.RunState,
+        isFilter:this.props.isMap
+
       }
     })
   }
@@ -483,7 +488,8 @@ class NavigationTree extends Component {
         RegionCode: this.state.RegionCode,
         Status: typeList,
         QCAUse: this.state.QCAUse,
-        RunState: this.state.RunState
+        RunState: this.state.RunState,
+        isFilter:this.props.isMap
       }
     })
   }
@@ -713,6 +719,8 @@ class NavigationTree extends Component {
 
 
       });
+    const SelectPollutantProps = this.props.defaultPollutant === "undefined" ? {} : { mode: "multiple" }
+
     return (
       <div >
 
@@ -748,7 +756,9 @@ class NavigationTree extends Component {
           </div>
 
           {this.props.QCAUse == undefined && !this.props.polShow ? <SelectPollutantType
-            mode="multiple"
+            // mode="multiple"
+            {...SelectPollutantProps}
+            showDefaultValue={this.props.defaultPollutant === "undefined"}
             style={{ width: '100%', marginBottom: 10 }}
             onChange={this.handleChange}
           />

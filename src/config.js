@@ -33,7 +33,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_wayosrtec6l.js',
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_wayosrtec6l.js',//局域网部署需要1.更换路径： iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

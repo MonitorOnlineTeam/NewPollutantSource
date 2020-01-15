@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import * as services from '../services/commonApi';
-import config from '@/config'
+import config from '@/config';
 import Model from '@/utils/model';
 
 export default Model.extend({
@@ -19,35 +19,31 @@ export default Model.extend({
 
   effects: {
     // 获取污染物类型
-    *getPollutantTypeList({ payload, callback }, {
-      update, call
-    }) {
+    *getPollutantTypeList({ payload = {}, callback }, { update, call }) {
       let { filterPollutantType } = payload;
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
-
-        let data = result.Datas
-        if (filterPollutantType !== "undefined") {
+        let data = result.Datas;
+        if (filterPollutantType !== 'undefined') {
           let thisPollutantType = filterPollutantType && filterPollutantType.split(',');
-          thisPollutantType && (data = data.filter(item => {
-            let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
-            return flag.length > 0;
-          }))
+          thisPollutantType &&
+            (data = data.filter(item => {
+              let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
+              return flag.length > 0;
+            }));
 
           // console.log("newPollutantTypelist2=", newPollutantTypelist);
         }
-        let defaultPollutantCode = data[0] && data[0]["pollutantTypeCode"];
-        callback && callback(defaultPollutantCode)
+        let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
+        callback && callback(defaultPollutantCode);
         yield update({
           pollutantTypelist: data,
-          defaultPollutantCode: defaultPollutantCode
-        })
+          defaultPollutantCode: defaultPollutantCode,
+        });
       }
     },
     // 获取省市区/企业/排口
-    * getEnterpriseAndPoint({
-      payload, callback
-    }, { call, update, select }) {
+    *getEnterpriseAndPoint({ payload, callback }, { call, update, select }) {
       const level = yield select(state => state.common.level);
       const result = yield call(services.getEnterpriseAndPoint, payload);
       if (result.IsSuccess) {
@@ -58,22 +54,22 @@ export default Model.extend({
         function factorial(data) {
           // if (n == 1) return n;
           if (data && data.children) {
-            defaultValue.push(data.value)
-            factorial(data.children[0])
+            defaultValue.push(data.value);
+            factorial(data.children[0]);
           }
         }
-        factorial(result.Datas.list[0])
+        result.Datas.list && result.Datas.list.length && factorial(result.Datas.list[0]);
         yield update({
           enterpriseAndPointList: result.Datas.list,
-          defaultSelected: defaultValue
+          defaultSelected: defaultValue,
         });
 
-        callback && callback(result.Datas.list, defaultValue)
+        callback && callback(result.Datas.list, defaultValue);
       }
     },
 
     // 获取运维日志详情图片
-    * getOperationImageList({ payload, callback }, { call, put, update }) {
+    *getOperationImageList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getOperationImageList, payload);
       if (result.IsSuccess) {
         let imageList = [];
@@ -83,43 +79,43 @@ export default Model.extend({
               uid: index,
               name: item,
               status: 'done',
-              url: config.imgaddress + item
-            }
-          })
+              url: config.imgaddress + item,
+            };
+          });
           yield update({
-            imageListVisible: true
-          })
-          callback && callback(result)
+            imageListVisible: true,
+          });
+          callback && callback(result);
         } else {
-          message.error("暂无数据")
+          message.error('暂无数据');
         }
         yield update({
           imageList: imageList,
-        })
+        });
       }
     },
 
     // 根据污染物类型获取污染物
-    * getAllPollutantCode({ payload, callback }, { call, update }) {
+    *getAllPollutantCode({ payload, callback }, { call, update }) {
       const result = yield call(services.getPollutantTypeCode, payload);
       if (result.IsSuccess) {
         yield update({
-          pollutantCode: result.Datas
-        })
-        callback && callback(result)
+          pollutantCode: result.Datas,
+        });
+        callback && callback(result);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
     // 获取产业级联
-    * getIndustryTree({ payload }, { call, update }) {
+    *getIndustryTree({ payload }, { call, update }) {
       const result = yield call(services.getIndustryTree, payload);
       if (result.IsSuccess) {
         yield update({
-          industryTreeList: result.Datas
-        })
+          industryTreeList: result.Datas,
+        });
       }
-    }
+    },
   },
 });

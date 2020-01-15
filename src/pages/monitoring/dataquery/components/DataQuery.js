@@ -269,7 +269,7 @@ class DataQuery extends Component {
             return (<Spin
                 style={{
                     width: '100%',
-                    height: 'calc(100vh/2)',
+                    height: 'calc(100vh - 400px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -280,26 +280,31 @@ class DataQuery extends Component {
 
         if (displayType === 'chart') {
             if (option) {
-                return (<ReactEcharts
+                return (<Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}><ReactEcharts
                     theme="light"
                     option={option}
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '98%', height: this.props.style ? '100%' : 'calc(100vh - 330px)', padding: 20 }}
-                />);
+                    style={{ width: '100%', height: 'calc(100vh - 400px)', padding: 20 }}
+                /></Card.Grid>);
             }
 
             return (<div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>);
         }
-        return (<SdlTable
-            rowKey={(record, index) => `complete${index}`}
-            dataSource={datatable}
-            columns={columns}
-            scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
-            Pagination={null}
+        return (
+            <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
+                <SdlTable
+                    rowKey={(record, index) => `complete${index}`}
+                    dataSource={datatable}
+                    columns={columns}
+                    // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
+                    Pagination={null}
 
-        />);
+                />
+            </Card.Grid>
+
+        );
     }
 
 
@@ -308,29 +313,9 @@ class DataQuery extends Component {
         return (
             <div>
                 <Card
-                    className={!this.props.style ? 'contentContainer' : null}
+                    // className={!this.props.style ? 'contentContainer' : null}
                     title={
                         <div>
-                            {/* <Row>
-                                <Col xxl={6} xl={12} lg={13} md={24}>
-                                    {!this.props.isloading && this.getpollutantSelect()}
-                                </Col>
-                                <Col xxl={7} xl={12} lg={24} md={24}>
-                                    <RangePicker_ style={{ width: '80%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
-                                </Col>
-                                <Col xxl={7} xl={8} lg={12} md={24}>
-                                    <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
-                                </Col>
-                                <Col xxl={3} xl={8} lg={12} md={24}>
-                                    <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
-                                        this.displayChange(e.target.value)
-                                    }}>
-                                        <Radio.Button value="chart">图表</Radio.Button>
-                                        <Radio.Button value="data">数据</Radio.Button>
-                                    </Radio.Group>
-                                </Col>
-                            </Row> */}
-
                             <Row>
                                 <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
                                     {!this.props.isloading && this.getpollutantSelect()}
@@ -353,9 +338,9 @@ class DataQuery extends Component {
                         </div>
                     }
                 >
-                    <div style={{ height: '100%', ...this.props.style }}>
-                        {this.loaddata()}
-                    </div>
+                    {this.loaddata()}
+
+
                 </Card>
             </div >
         );

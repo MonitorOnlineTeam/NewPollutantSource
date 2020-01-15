@@ -46,7 +46,7 @@ class SelectPollutantType extends PureComponent {
               </Radio.Group> :
               <Select
                 placeholder="请选择污染物类型"
-                // defaultValue={defaultPollutantCode}
+                defaultValue={this.props.showDefaultValue ? defaultPollutantCode : undefined}
                 {...this.props}
               >
                 {

@@ -112,7 +112,7 @@ class Index extends Component {
         //         bar: barList
         //     })
         // }
-        if (nextProps.DGIMN &&this.props.DGIMN != nextProps.DGIMN) {
+        if (nextProps.DGIMN && this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
         }
         // if (this.props.firsttime != nextProps.firsttime) {
@@ -365,11 +365,11 @@ class Index extends Component {
                     extra={
                         <div>
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} />
-                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />}
+                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', overflow: 'auto', ...this.props.style }}>
                         {
                             this.props.overmodellistLoading ? <Spin
                                 style={{
@@ -408,14 +408,14 @@ class Index extends Component {
                                             //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
                                             <SdlTable
                                                 loading={this.props.overDataLoading}
-                                                scroll={{ y: this.props.maxHeight || 300 }}
-                                                // style={{  minHeight: "200px" }}
+                                                // scroll={{ y: this.props.maxHeight || 300 }}
+                                                style={{ paddingBottom: 0 }}
                                                 columns={column}
                                                 dataSource={this.props.overfirstData}
                                                 pagination={{
                                                     // showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    pageSize: this.props.pageSize,
+                                                    pageSize: 10,//this.props.pageSize,
                                                     current: this.props.pageIndex,
                                                     onChange: this.onTableChange,
                                                     total: this.props.OverTotal,
