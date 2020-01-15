@@ -14,7 +14,7 @@ export default class AppRepairRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <RepairRecordContent {...match.params} scrolly="none" />
+                <RepairRecordContent {...match.params} appStyle={{height: 'calc(100vh - 200px)'}} scrolly="none" />
             </MapInteractionCSS>
         );
     }

@@ -14,7 +14,7 @@ export default class AppDeviceExceptionRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <DeviceExceptionRecordContent {...match.params} scrolly="none" />
+                <DeviceExceptionRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none" />
             </MapInteractionCSS>
         );
     }

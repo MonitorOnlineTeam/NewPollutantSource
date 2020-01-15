@@ -112,12 +112,24 @@ class RepairRecordContent extends Component {
     }
 
     render() {
-        const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:'calc(100vh-200px)'};
-        const Record=this.props.Repair!==null?this.props.Repair.Record:null;
-        const Content=Record!==null?Record.Content:null;
-        const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
-        const StartTime=Content!==null?Content.StartTime!==null?Content.StartTime:"--":null;
-        const EndTime=Content!==null?Content.EndTime!==null?Content.EndTime:"--":null;
+        const appStyle = this.props.appStyle;
+        let style =null;
+        if(appStyle)
+        {
+            style=appStyle;
+        }
+        else
+        {
+            style=   {
+                height: 'calc(100vh - 200px)'
+            }
+        }
+        const SCREEN_HEIGHT = this.props.scrolly === "none" ? { overflowY: 'none' } : { height: 'calc(100vh-200px)' };
+        const Record = this.props.Repair !== null ? this.props.Repair.Record : null;
+        const Content = Record !== null ? Record.Content : null;
+        const SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
+        const StartTime = Content !== null ? Content.StartTime !== null ? Content.StartTime : "--" : null;
+        const EndTime = Content !== null ? Content.EndTime !== null ? Content.EndTime : "--" : null;
         if (this.props.isloading) {
             return (<Spin
                 style={{
@@ -131,17 +143,17 @@ class RepairRecordContent extends Component {
             />);
         }
         return (
-            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
+            <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>CEMS维修记录表</div>
-                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null?Content.EnterpriseName:null}</div>
+                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content !== null ? Content.EnterpriseName : null}</div>
                 <table key="1" className={styles.FormTable}>
                     <tbody>
                         <tr>
                             <td style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        安装地点
+                                安装地点
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null?Content.PointPosition:null}
+                                {Content !== null ? Content.PointPosition : null}
                             </td>
                         </tr>
                         {
@@ -149,31 +161,31 @@ class RepairRecordContent extends Component {
                         }
                         <tr>
                             <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        站房是否清理
+                                站房是否清理
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null?Content.IsClear:null}
+                                {Content !== null ? Content.IsClear : null}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        维修情况总结
+                                维修情况总结
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null?Content.RepairSummary:null}
+                                {Content !== null ? Content.RepairSummary : null}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        备注
+                                备注
                             </td>
                             <td colSpan="2" style={{ width: '25%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null?Content.Remark:null}
+                                {Content !== null ? Content.Remark : null}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                <b>维修人:</b>{Record!==null?Record.CreateUserID:null}
+                                <b>维修人:</b>{Record !== null ? Record.CreateUserID : null}
                             </td>
                             <td style={{ width: '25%', height: '50px', textAlign: 'center', fontSize: '14px' }} colSpan="2">
                                 <b>维修时间&nbsp;：</b>{StartTime} &nbsp;至&nbsp;{EndTime}
@@ -190,7 +202,7 @@ class RepairRecordContent extends Component {
                         </tr>
                         <tr>
                             <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>签名时间：</td>
-                            <td style={{ width: '13%', height: '50px', border: '0', minWidth: 120 }}>{Record!==null?Record.SignTime:null}</td>
+                            <td style={{ width: '13%', height: '50px', border: '0', minWidth: 120 }}>{Record !== null ? Record.SignTime : null}</td>
                         </tr>
                     </tbody>
                 </table>
