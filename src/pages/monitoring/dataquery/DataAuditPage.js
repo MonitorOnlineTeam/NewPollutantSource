@@ -149,7 +149,7 @@ class DataAuditPage extends Component {
         <NavigationTree
           // QCAUse="1"
           checkpPol={defalutPollutantType}
-          // polShow
+          polShow
           // choice
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
