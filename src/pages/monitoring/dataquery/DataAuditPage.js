@@ -10,7 +10,7 @@ const { RangePicker } = DatePicker;
 
 @connect(({ loading, dataquery }) => ({
   pollutantList: dataquery.pollutantList,
-  loading: loading.effects['dataquery/queryhistorydatalist'],
+  loading: loading.effects['dataquery/getAllTypeDataForFlag'],
   dataAuditDataSource: dataquery.dataAuditDataSource,
 }))
 class DataAuditPage extends Component {
@@ -22,6 +22,7 @@ class DataAuditPage extends Component {
       format: "YYYY-MM-DD HH",
       DGIMN: "",
       isShowFlag: true,
+      defalutPollutantType: props.match.params.type
     };
   }
 
@@ -142,12 +143,12 @@ class DataAuditPage extends Component {
 
   render() {
     const { loading, dataAuditDataSource, pollutantList } = this.props;
-    const { dataType, isShowFlag } = this.state;
+    const { dataType, isShowFlag, defalutPollutantType } = this.state;
     return (
       <>
         <NavigationTree
           // QCAUse="1"
-          // checkpPol={defalutPollutantType}
+          checkpPol={defalutPollutantType}
           // polShow
           // choice
           onItemClick={value => {
@@ -190,6 +191,7 @@ class DataAuditPage extends Component {
                 pagination={{ pageSize: 20 }}
                 scroll={{ y: isShowFlag ? "calc(100vh - 500px)" : "calc(100vh - 400px)" }}
                 isShowFlag={isShowFlag}
+                loading={loading}
                 updateData={() => {
                   this.getPageData()
                 }}

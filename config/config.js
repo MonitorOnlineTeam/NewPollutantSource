@@ -669,7 +669,7 @@ export default {
                 },
                 {
                   name: 'dataAudit',
-                  path: '/dataquerymanager/dataAudit',
+                  path: '/dataquerymanager/dataAudit/:type',
                   component: './monitoring/dataquery/DataAuditPage',
                 },
               ]
