@@ -18,8 +18,8 @@ const columns = [
   },
   {
     title: '监测时间',
-    dataIndex: 'PointName',
-    key: 'PointName1',
+    dataIndex: 'MonitorTime',
+    key: 'MonitorTime',
     width: 200,
     // fixed: 'left',
   },
