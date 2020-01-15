@@ -23,7 +23,7 @@ class SdlTable extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.dataSource !== nextProps.dataSource) {
-      if (nextProps.dataSource.length > 4) {
+      if (nextProps.dataSource.length > 4 && !nextProps.className) {
         this.setState({
           _props: {
             className: "sdlTable"

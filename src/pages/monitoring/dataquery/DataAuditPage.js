@@ -192,6 +192,7 @@ class DataAuditPage extends Component {
                 scroll={{ y: isShowFlag ? "calc(100vh - 500px)" : "calc(100vh - 400px)" }}
                 isShowFlag={isShowFlag}
                 loading={loading}
+                className=" "
                 updateData={() => {
                   this.getPageData()
                 }}
