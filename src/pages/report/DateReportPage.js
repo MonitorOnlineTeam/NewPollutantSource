@@ -209,11 +209,21 @@ class SiteDailyPage extends PureComponent {
     }
     // if (this.props.pollutantList !== nextProps.pollutantList) {
     if (this.props.dateReportData !== nextProps.dateReportData) {
+      let AQIColumn = [];
+      // 站点日报 - 扬尘和大气站显示AQI
+      let pollutantSourceType = nextProps.form.getFieldValue("PollutantSourceType");
+      if (nextProps.match.params.reportType === "siteDaily" && pollutantSourceType == 5 || pollutantSourceType == 12) {
+        AQIColumn = [{
+          title: 'AQI',
+          dataIndex: 'AQI',
+        }]
+      }
       const _columns = [
         {
           title: '时间',
           dataIndex: 'time',
         },
+        ...AQIColumn,
         ...nextProps.pollutantList,
       ];
       let columns = _columns.map(item => {
