@@ -219,7 +219,7 @@ class HkShowVideo extends Component {
 
   /** 实时视频操作 */
   btnClick = opt => {
-    this.initV(this.props.hkvideoListParameters[0]);
+    //this.initV(this.props.hkvideoListParameters[0]);
     if (this.state.IsIE) {
       mouseDownPTZControl(opt);
       mouseUpPTZControl();
