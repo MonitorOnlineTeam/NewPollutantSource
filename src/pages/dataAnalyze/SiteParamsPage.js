@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-10 10:44:55
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-13 18:21:55
+ * @Last Modified time: 2020-01-15 18:11:17
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -40,6 +40,11 @@ class SiteParamsPage extends PureComponent {
       format: "YYYY-MM-DD HH",
       columns: [
         {
+          title: "监测点",
+          dataIndex: "PointName",
+          fixed: 'left',
+        },
+        {
           title: "时间",
           dataIndex: "MonitorTime",
           fixed: 'left',
@@ -47,11 +52,6 @@ class SiteParamsPage extends PureComponent {
             return this.state.dataType === "Hour" ? moment(text).format(this.state.format) + "时" : moment(text).format(this.state.format)
           }
         },
-        {
-          title: "监测点",
-          dataIndex: "PointName",
-          fixed: 'left',
-        }
       ],
     };
   }
@@ -121,17 +121,17 @@ class SiteParamsPage extends PureComponent {
         pollutantValue: nextProps.defaultPollutant,
         columns: [
           {
+            title: "监测点",
+            dataIndex: "PointName",
+            fixed: 'left',
+          },
+          {
             title: "时间",
             dataIndex: "MonitorTime",
             fixed: 'left',
             render: (text, record) => {
               return this.state.dataType === "Hour" ? moment(text).format(this.state.format) + "时" : moment(text).format(this.state.format)
             }
-          },
-          {
-            title: "监测点",
-            dataIndex: "PointName",
-            fixed: 'left',
           },
           ...columns
         ]
@@ -157,6 +157,7 @@ class SiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "0",
+        PollutantType: this.state.PollutantType,
       }
     })
   }

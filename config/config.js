@@ -667,6 +667,11 @@ export default {
                   path: '/dataquerymanager/originaldata',
                   component: './monitoring/originaldata',
                 },
+                {
+                  name: 'dataAudit',
+                  path: '/dataquerymanager/dataAudit/:type',
+                  component: './monitoring/dataquery/DataAuditPage',
+                },
               ]
             },
             {
@@ -793,8 +798,6 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-
-
                 {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',

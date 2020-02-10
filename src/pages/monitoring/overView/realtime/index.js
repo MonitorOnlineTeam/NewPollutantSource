@@ -110,7 +110,7 @@ class index extends Component {
       ];
 
       // 大气站状态筛选
-      if (this.state.pollutantCode === 5) {
+      if (this.state.pollutantCode === 5 || this.state.pollutantCode === 12) {
         statusFilters = airLevel.map(item => {
           return {
             text: (
@@ -158,7 +158,7 @@ class index extends Component {
           filters: statusFilters,
           filteredValue: filteredInfo.Status || null,
           onFilter: (value, record) => {
-            if (record.pollutantTypeCode == 5) {
+            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
               if (value != 0) {
                 return record.AirLevel == value;
               } else {
@@ -168,7 +168,7 @@ class index extends Component {
             return record.status == value;
           },
           render: (value, record, index) => {
-            if (record.pollutantTypeCode == 5) {
+            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
               const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
               const color = airLevelObj.color || '#999999';
               return (
@@ -295,7 +295,7 @@ class index extends Component {
                 showType="radio"
                 onChange={e => {
                   this.getPageData(e.target.value);
-                  if (e.target.value == 5) {
+                  if (e.target.value == 5 || e.target.value == 12) {
                     this.setState({
                       currentDataType: 'HourData',
                       filteredInfo: null,
@@ -342,7 +342,7 @@ class index extends Component {
                 {/* <Radio.Button key={1} value="RealTimeData">
                   实时
                 </Radio.Button> */}
-                {this.state.pollutantCode != 5 && (
+                {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
                   <Radio.Button key={2} value="MinuteData">
                     分钟
                   </Radio.Button>

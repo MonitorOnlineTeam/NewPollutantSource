@@ -153,13 +153,24 @@ class DirectMeasurementRecordContent extends Component {
     }
 
     render() {
+        const appStyle = this.props.appStyle;
+        let style = null;
+        debugger
+        if (appStyle) {
+            style = appStyle;
+        }
+        else {
+            style = {
+                height: 'calc(100vh - 200px)'
+            }
+        }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record=this.props.PatrolRecord!==null?this.props.PatrolRecord.Record:null;
         const Content=Record!==null?Record.Content:null;
         let SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
 
         return (
-            <div className={styles.FormDiv} style={{height: 'calc(100vh - 200px)'}}>
+            <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>直接测量法CEMS日常巡检记录表</div>
                 <table className={styles.FormTable}>
                     <tbody>
