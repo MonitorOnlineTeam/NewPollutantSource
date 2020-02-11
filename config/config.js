@@ -527,7 +527,13 @@ export default {
                   path: '/operations/recordForm/:typeID/:taskID',
                   name: "recordForm",
                   component: "./operations/recordForm"
-                }
+                },
+                {
+                  path: '/operations/CommandDispatchReport',
+                  name: "CommandDispatchReport",
+                  component: "./operations/CommandDispatchReport"
+                },
+               
               ]
             },
             {
