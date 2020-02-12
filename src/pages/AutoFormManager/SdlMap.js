@@ -1,8 +1,10 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes, { array } from 'prop-types';
 import { Input, Modal, Icon, Button, message } from 'antd'
-import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+// import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import styles from './MapContent.less';
+import config from "@/config"
 
 const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
 
@@ -74,6 +76,16 @@ class SdlMap extends PureComponent {
     this.toolEvents = {
       created: (tool) => {
         AMap = window.AMap;
+        if (config.offlineMapScriptSrc) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          Layer.setMap(tool);
+        }
         // console.log("created=", tool)
         self.tool = tool;
       },

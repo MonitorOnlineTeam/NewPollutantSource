@@ -32,6 +32,7 @@ module.exports = {
   uploadHost,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
+  offlineMapScriptSrc: "http://61.50.135.114:50036/amap-master/amap/js/maps.js", // 离线地图js配置（空 -> 在线地图，非空 -> 离线地图）
   zoom: 12,
   iconFontUrl: '//at.alicdn.com/t/font_1298443_wayosrtec6l.js',//局域网部署需要1.更换路径： iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
