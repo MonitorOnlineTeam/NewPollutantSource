@@ -76,17 +76,6 @@ class SdlMap extends PureComponent {
     this.toolEvents = {
       created: (tool) => {
         AMap = window.AMap;
-        if (config.offlineMapScriptSrc) {
-          var Layer = new window.AMap.TileLayer({
-            zIndex: 2,
-            getTileUrl: function (x, y, z) {
-              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
-              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
-            }
-          });
-          Layer.setMap(tool);
-        }
-        // console.log("created=", tool)
         self.tool = tool;
       },
       draw({ obj }) {
@@ -207,6 +196,9 @@ class SdlMap extends PureComponent {
   // 自定义绘制区域
   drawPolygon() {
     if (this.tool) {
+      this.setState({
+        polygon: []
+      })
       this.tool.polygon();
       this.setState({
         isChangePos: false,
@@ -260,10 +252,23 @@ class SdlMap extends PureComponent {
   renderMapContent() {
     const events = {
       created: (ins) => {
-        thisMap = ins
-        setTimeout(() => {
-          ins.setFitView()
-        }, 1000)
+        thisMap = ins;
+        if (config.offlineMapScriptSrc) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          // console.log("window.AMap=", window.AMap)
+          Layer.setMap(ins);
+        }
+        if (this.props.handlePolygon) {
+          setTimeout(() => {
+            ins.setFitView()
+          }, 1000)
+        }
       },
       click: (e) => {
         if (this.state.isChangePos) {
@@ -346,7 +351,7 @@ class SdlMap extends PureComponent {
         />);
       }
     }
-    thisMap && thisMap.setFitView()
+    thisMap && this.props.handlePolygon && thisMap.setFitView()
     return res;
   }
 
