@@ -433,18 +433,20 @@ class SdlMap extends PureComponent {
                 handlePolygon &&
                 <Button style={{ marginLeft: 10 }} onClick={this.drawPolygon} className={styles.ClearButton}>设置区域</Button>
               }
-              <Input
-                placeholder="搜索地址"
-                // defaultValue={this.state.address}
-                value={this.state.address}
-                onChange={input => {
-                  this.setState({
-                    address: input.target.value
-                  })
-                }}
-                onPressEnter={value => this.onSearch(value)}
-                style={{ width: 300, marginLeft: 10 }}
-              />
+              {
+                !config.offlineMapScriptSrc && <Input
+                  placeholder="搜索地址"
+                  // defaultValue={this.state.address}
+                  value={this.state.address}
+                  onChange={input => {
+                    this.setState({
+                      address: input.target.value
+                    })
+                  }}
+                  onPressEnter={value => this.onSearch(value)}
+                  style={{ width: 300, marginLeft: 10 }}
+                />
+              }
             </div>
           </div>
         </Modal>
