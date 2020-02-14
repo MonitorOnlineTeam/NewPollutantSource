@@ -102,7 +102,6 @@ export async function getVehicleTrajectory(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetVehicleTrajectoryByAppID', params, null);
   return result;
 }
-<<<<<<< HEAD
 
 // 获取任务类型
 export async function getTaskType(params) {
@@ -123,10 +122,8 @@ export async function getPointInfoList(params) {
   return result;
 }
 
-=======
 /** 获取指挥调度数据 */
 export async function getcommanddispatchreport(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCommandDispatchReport', params, null);
   return result;
 }
->>>>>>> 5ef30de385dbac51abb1137d5fb5ecb31880e558

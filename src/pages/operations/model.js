@@ -393,7 +393,7 @@ export default Model.extend({
             yield update({
               recordType: result.Datas
             })
-          },        
+          },
         // 获取监控标列表
         *getTargetInfoList({ payload }, { call, update }) {
           const result = yield call(services.getTargetInfoList, payload);
