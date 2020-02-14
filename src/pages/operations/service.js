@@ -102,3 +102,23 @@ export async function getVehicleTrajectory(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetVehicleTrajectoryByAppID', params, null);
   return result;
 }
+
+// 获取任务类型
+export async function getTaskType(params) {
+  const result = post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTaskType', params, null);
+  return result;
+}
+
+
+// 获取监控标列表
+export async function getTargetInfoList(params) {
+  const result = post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTargetInfoList', params, null);
+  return result;
+}
+
+// 获取站点列表
+export async function getPointInfoList(params) {
+  const result = post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetPointInfoList', params, null);
+  return result;
+}
+

@@ -57,6 +57,34 @@ export async function summaryReportExcel(params) {
 }
 
 /**
+ * 获取上报数据月报
+ */
+export async function getStatisticsReportDataList(params) {
+ 
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataList', params, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 获取上报数据月报
+ */
+export async function getEntSewageList(params) {
+ 
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetEntSewageList', params, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 导出上报数据月报
+ */
+export async function getStatisticsReportDataExcel(params) {
+ 
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataExcel', params, null);
+  return result === null ? { data: null } : result;
+}
+
+ 
+/**
  * 获取站点月报数据
  */
 export async function getMonthlyReport(params) {

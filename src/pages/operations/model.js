@@ -54,6 +54,9 @@ export default Model.extend({
     speedList: [],
     recordingTimeList: [],
     railData: null,
+    recordType:[],
+    targetInfoList:[],
+    pointInfoList:[]
   },
   effects: {
     // 获取日历信息
@@ -375,6 +378,28 @@ export default Model.extend({
 
       }
     },
+
+        // 获取任务类型
+        *getTaskType({ payload }, { call, update }) {
+          const result = yield call(services.getTaskType, payload);
+            yield update({
+              recordType: result.Datas
+            })
+          },        
+        // 获取监控标列表
+        *getTargetInfoList({ payload }, { call, update }) {
+          const result = yield call(services.getTargetInfoList, payload);
+            yield update({
+              targetInfoList: result.Datas
+            })
+          },      
+       // 获取站点列表
+        *getPointInfoList({ payload }, { call, update }) {
+          const result = yield call(services.getPointInfoList, payload);
+            yield update({
+              pointInfoList: result.Datas
+            })
+          },      
   },
   reducers: {
     // 更新车辆申请state
