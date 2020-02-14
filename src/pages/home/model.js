@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-23 15:59:07
+ * @Last Modified time: 2019-11-29 14:27:17
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -126,6 +126,7 @@ export default Model.extend({
     },
 
     // 智能监控数据
+    // TODO: 接口更换
     *getStatisticsPointStatus({ payload }, { call, update }) {
       const result = yield call(services.getStatisticsPointStatus, payload);
       if (result.requstresult) {

@@ -4,7 +4,7 @@ import { post, get, getNew } from '@/utils/request';
 export async function getCalendarInfo(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCalendarInfo', params, null);
   return result.Datas === null ? {
-    Datas: []
+    Datas: [],
   } : result;
 }
 
@@ -12,7 +12,7 @@ export async function getCalendarInfo(params) {
 export async function getAbnormalDetailList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationHistoryRecordPageList', params, null);
   return result === null ? {
-    data: null
+    data: null,
   } : result;
 }
 
@@ -20,7 +20,7 @@ export async function getAbnormalDetailList(params) {
 export async function getOperationLogList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationPageList', params, null);
   return result === null ? {
-    data: null
+    data: null,
   } : result;
 }
 
@@ -38,7 +38,7 @@ export async function getVehicleApplicationList(params) {
 
 // 获取车辆列表
 export async function getVehicleList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/GetVehicleList?type=' + params.type, null);
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/GetVehicleList?type=${  params.type}`, null);
   return result;
 }
 
@@ -50,13 +50,13 @@ export async function addVehicleApplication(params) {
 
 // 撤销申请
 export async function cancelApplication(params) {
-  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/CancelApplication/' + params.ID, null);
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/CancelApplication/${  params.ID}`, null);
   return result;
 }
 
 // 车辆审批
 export async function approve(params) {
-  console.log('////2',params)
+  console.log('////2', params)
   const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/ApprovalApplication/${params.ID}?RefuseReason=${params.RefuseReason}&type=${params.type}`, {}, null);
   return result;
 }
@@ -69,13 +69,13 @@ export async function returnVehicle(params) {
 
 // 车辆归还
 export async function getApplicant(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/GetApplicant`, params, null);
+  const result = await post('/api/rest/PollutantSourceApi/VehicleApplicationApi/GetApplicant', params, null);
   return result;
 }
 
 // 派单
 export async function addTask(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/AddTask`, params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/AddTask', params, null);
   return result;
 }
 
@@ -87,13 +87,13 @@ export async function rejectTask(params) {
 
 // 获取运维人员
 export async function getOperationsUserList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/UserApi/GetUserRolesGroupList`, params, null);
+  const result = await post('/api/rest/PollutantSourceApi/UserApi/GetUserRolesGroupList', params, null);
   return result;
 }
 
 // 获取运维更换记录
 export async function getOperationReplacePageList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationReplacePageList`, params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationReplacePageList', params, null);
   return result;
 }
 
@@ -102,6 +102,7 @@ export async function getVehicleTrajectory(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetVehicleTrajectoryByAppID', params, null);
   return result;
 }
+<<<<<<< HEAD
 
 // 获取任务类型
 export async function getTaskType(params) {
@@ -122,3 +123,10 @@ export async function getPointInfoList(params) {
   return result;
 }
 
+=======
+/** 获取指挥调度数据 */
+export async function getcommanddispatchreport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCommandDispatchReport', params, null);
+  return result;
+}
+>>>>>>> 5ef30de385dbac51abb1137d5fb5ecb31880e558

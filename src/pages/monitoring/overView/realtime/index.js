@@ -34,7 +34,7 @@ class index extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
@@ -55,53 +55,13 @@ class index extends Component {
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
           render: (text, record) => {
             if (item.field === 'AQI') {
-              // const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};
-              // const color = colorObj.color;
-              // const color = record["AQI_Color"];
               return AQIPopover(text, record);
-              // return <Popover content={
-              //   <div>
-              //     <div style={{ marginBottom: 10 }}>
-              //       <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{record.AirQuality}</span></span>
-              //     </div>
-              //     <li style={{ listStyle: 'none', marginBottom: 10 }}>
-              //       <Badge color={color} text={`首要污染物：${record.PrimaryPollutant || "-"}`} />
-              //     </li>
-              //     <li style={{ listStyle: 'none', marginBottom: 10 }}>
-              //       <Badge color={color} text={`污染级别：${record.AirLevel}`} />
-              //     </li>
-              //   </div>
-              // } trigger="hover">
-              //   <span style={{ color: color }}>{text !== undefined ? text : "-"}</span>
-              // </Popover>
             }
             if (record[item.field + '_Value'] !== undefined) {
-              // const color = record[item.field + "_LevelColor"];
-              // const level = record[item.field + "_Level"].replace("级", "");
-              // const level = record[item.field + "_Level"] + "级";
-              // const airLevelObj = airLevel.find(itm => itm.levelText == level) || {};
-              // const airQuality = airLevelObj.text;
-              // // const color = airLevelObj.color;
-              // const color = record[item.field + "_LevelColor"];
               return IAQIPopover(text, record, item.field);
-              // return <Popover content={
-              //   <div>
-              //     <div style={{ marginBottom: 10 }}>
-              //       <span style={{ fontWeight: 'Bold', fontSize: 16 }}>空气质量：<span style={{ color: color }}>{airQuality}</span></span>
-              //     </div>
-              //     <li style={{ listStyle: 'none', marginBottom: 10 }}>
-              //       <Badge color={color} text={`污染级别：${record[item.field + "_Level"]}级`} />
-              //     </li>
-              //     <li style={{ listStyle: 'none', marginBottom: 10 }}>
-              //       <Badge color={color} text={`IAQI：${record[item.field + "_Value"]}`} />
-              //     </li>
-              //   </div>
-              // } trigger="hover">
-              //   <span style={{ color: color }}>{text}</span>
-              // </Popover>
             }
             // 风向转换
-            if (item.field === '13') {
+            if (item.name === '风向') {
               let _text = text ? `${getDirLevel(text)}` : '-';
               return formatPollutantPopover(_text, record[`${item.field}_params`]);
             }
@@ -150,7 +110,7 @@ class index extends Component {
       ];
 
       // 大气站状态筛选
-      if (this.state.pollutantCode === 5) {
+      if (this.state.pollutantCode === 5 || this.state.pollutantCode === 12) {
         statusFilters = airLevel.map(item => {
           return {
             text: (
@@ -198,7 +158,7 @@ class index extends Component {
           filters: statusFilters,
           filteredValue: filteredInfo.Status || null,
           onFilter: (value, record) => {
-            if (record.pollutantTypeCode == 5) {
+            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
               if (value != 0) {
                 return record.AirLevel == value;
               } else {
@@ -208,7 +168,7 @@ class index extends Component {
             return record.status == value;
           },
           render: (value, record, index) => {
-            if (record.pollutantTypeCode == 5) {
+            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
               const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
               const color = airLevelObj.color || '#999999';
               return (
@@ -253,7 +213,7 @@ class index extends Component {
     }
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
-      let realTimeDataView = _.sortBy(nextProps.realTimeDataView, function(item) {
+      let realTimeDataView = _.sortBy(nextProps.realTimeDataView, function (item) {
         return -item.AQI;
       });
       this.setState({
@@ -335,7 +295,7 @@ class index extends Component {
                 showType="radio"
                 onChange={e => {
                   this.getPageData(e.target.value);
-                  if (e.target.value == 5) {
+                  if (e.target.value == 5 || e.target.value == 12) {
                     this.setState({
                       currentDataType: 'HourData',
                       filteredInfo: null,
@@ -354,7 +314,7 @@ class index extends Component {
                 initCallback={defaultPollutantCode => {
                   this.getPageData(defaultPollutantCode);
                 }}
-                // defaultValue={selectpollutantTypeCode}
+              // defaultValue={selectpollutantTypeCode}
               />
               <Radio.Group
                 value={currentDataType}
@@ -382,7 +342,7 @@ class index extends Component {
                 {/* <Radio.Button key={1} value="RealTimeData">
                   实时
                 </Radio.Button> */}
-                {this.state.pollutantCode != 5 && (
+                {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
                   <Radio.Button key={2} value="MinuteData">
                     分钟
                   </Radio.Button>

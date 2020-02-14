@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-01-10 10:44:55 
+ * @Author: Jiaqi
+ * @Date: 2020-01-10 10:44:55
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 18:05:33
+ * @Last Modified time: 2020-01-15 18:11:17
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -32,12 +32,18 @@ class SiteParamsPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      defalutPollutantType: props.match.params.type,
       pollutantValue: [],
       time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
       showType: "chart",
       format: "YYYY-MM-DD HH",
       columns: [
+        {
+          title: "监测点",
+          dataIndex: "PointName",
+          fixed: 'left',
+        },
         {
           title: "时间",
           dataIndex: "MonitorTime",
@@ -46,11 +52,6 @@ class SiteParamsPage extends PureComponent {
             return this.state.dataType === "Hour" ? moment(text).format(this.state.format) + "时" : moment(text).format(this.state.format)
           }
         },
-        {
-          title: "监测点",
-          dataIndex: "PointName",
-          fixed: 'left',
-        }
       ],
     };
   }
@@ -119,7 +120,19 @@ class SiteParamsPage extends PureComponent {
       this.setState({
         pollutantValue: nextProps.defaultPollutant,
         columns: [
-          ...this.state.columns,
+          {
+            title: "监测点",
+            dataIndex: "PointName",
+            fixed: 'left',
+          },
+          {
+            title: "时间",
+            dataIndex: "MonitorTime",
+            fixed: 'left',
+            render: (text, record) => {
+              return this.state.dataType === "Hour" ? moment(text).format(this.state.format) + "时" : moment(text).format(this.state.format)
+            }
+          },
           ...columns
         ]
       }, () => {
@@ -129,7 +142,7 @@ class SiteParamsPage extends PureComponent {
   }
 
   // 导出
-  export = () => {
+  exportReport = () => {
     if (!this.state.pollutantValue || !this.state.pollutantValue.length) {
       message.error('请选择污染物');
       return;
@@ -144,6 +157,7 @@ class SiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "0",
+        PollutantType: this.state.PollutantType,
       }
     })
   }
@@ -182,7 +196,7 @@ class SiteParamsPage extends PureComponent {
         </Col>
         <Col span={8}>
           <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.export}>导出</Button>
+          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
 
         </Col>
       </Row>
@@ -261,6 +275,9 @@ class SiteParamsPage extends PureComponent {
             width: 2
           }
         },
+        splitLine: {
+          show: false
+        },
         ...otherProps
       }
     })
@@ -292,21 +309,29 @@ class SiteParamsPage extends PureComponent {
           }
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            animation: false,
-          },
+          trigger: 'item',
+          // axisPointer: {
+          //   type: 'cross',
+          //   animation: false,
+          // },
           formatter: function (params, ticket, callback) {
-            let format = `${params[0].axisValue}: `
-            params.map((item, index) => {
-              if (item.seriesName === "风向") {
-                let dirLevel = getDirLevel(item.value);
-                format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
-              } else {
-                format += `<br />${item.marker}${item.seriesName}: ${item.value}`
-              }
-            })
+            // let format = `${params[0].axisValue}: `
+            // params.map((item, index) => {
+            //   if (item.seriesName === "风向") {
+            //     let dirLevel = getDirLevel(item.value);
+            //     format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
+            //   } else {
+            //     format += `<br />${item.marker}${item.seriesName}: ${item.value}`
+            //   }
+            // })
+            // return format;
+            let format = `${params.name}: `
+            if (params.seriesName === "风向") {
+              let dirLevel = getDirLevel(params.value);
+              format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
+            } else {
+              format += `<br />${params.marker}${params.seriesName}: ${params.value}`
+            }
             return format;
           }
           // ...formatter
@@ -321,6 +346,9 @@ class SiteParamsPage extends PureComponent {
             boundaryGap: false,
             axisLine: { onZero: false },
             data: timeList.map(item => moment(item).format(format) + appendText),
+            splitLine: {
+              show: false
+            },
           }
         ],
         yAxis: [...yAxis],
@@ -352,13 +380,13 @@ class SiteParamsPage extends PureComponent {
   }
 
   render() {
-    const { showType, columns } = this.state;
+    const { showType, columns, defalutPollutantType } = this.state;
     const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     return (
       <>
         <NavigationTree
           // QCAUse="1"
-          checkpPol="5"
+          checkpPol={defalutPollutantType}
           polShow
           // choice
           onItemClick={value => {

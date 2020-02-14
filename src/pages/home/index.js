@@ -24,18 +24,19 @@ import Cookie from 'js-cookie';
 import {
   connect
 } from 'dva';
-import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
+// import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
+import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { onlyOneEnt } from '../../config';
-import config from '../../config';
 import styles from './index.less';
 import { router } from 'umi';
 import Link from 'umi/link';
 import Time from '@/components/Time';
 import Marquee from '@/components/Marquee'
+import config from "@/config"
 
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
@@ -89,9 +90,19 @@ class index extends Component {
     this.mapEvents = {
       created(m) {
         _thismap = m;
+        m.setFitView();
+        if (config.offlineMapScriptSrc) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          Layer.setMap(m);
+        }
       },
       zoomchange: (value) => {
-        if (_thismap.getZoom() <= 8) {
+        if (_thismap.getZoom() <= this.state.zoom) {
           props.dispatch({
             type: "home/updateState",
             payload: {
@@ -246,6 +257,19 @@ class index extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.allEntAndPointList !== nextProps.allEntAndPointList) {
+      if (_thismap) {
+        _thismap.setFitView();
+      } else {
+        setTimeout(() => {
+          _thismap.setFitView();
+          this.setState({
+            zoom: _thismap.getZoom()
+          })
+        }, 2000)
+      }
+    }
+
     if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
       this.getHomeData(nextProps.currentEntInfo.key);
       if (nextProps.currentEntInfo.Longitude && nextProps.currentEntInfo.Latitude) {
@@ -253,7 +277,8 @@ class index extends Component {
           mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
           zoom: 13
         })
-        _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
+        _thismap.setFitView();
+        // _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
       }
     }
     if (this.props.currentMarkersList !== nextProps.currentMarkersList) {
@@ -268,6 +293,10 @@ class index extends Component {
       })
       this.setState({
         currentMarkersList
+      }, () => {
+        setTimeout(() => {
+          _thismap.setFitView();
+        }, 2000)
       })
     }
   }
@@ -331,8 +360,7 @@ class index extends Component {
   markersEvents = {
     click: (MapsOption, marker) => {
       // console.log('MapsOption=', MapsOption)
-      // console.log('marker=', marker)
-      const itemData = marker.F ? marker.F.extData : marker.B.extData;
+      const itemData = marker.getExtData();
       this.markersCilck(itemData);
     }
   };
@@ -899,7 +927,7 @@ class index extends Component {
               width: "100%",
               height: "100%",
               top: 0,
-              
+
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -919,7 +947,7 @@ class index extends Component {
         <Map
           resizeEnable={true}
           events={this.mapEvents}
-          zoom={this.state.zoom}
+          // zoom={this.state.zoom}
           mapStyle="amap://styles/darkblue"
           amapkey={amapKey}
           center={mapCenter}
@@ -1243,7 +1271,7 @@ class index extends Component {
                     <Statistic title={<span style={{ color: "#d5d9e2" }}>环保税：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.EffluentFeeValue} prefix="￥" />
                   </Col>
                   <Col span={12} style={{ textAlign: 'right' }}>
-                    <Statistic title={<span style={{ color: "#d5d9e2" }}>超级排放奖励：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.UltralowEmissionIncentives} prefix="￥" />
+                    <Statistic title={<span style={{ color: "#d5d9e2" }}>超低排放奖励：</span>} valueStyle={{ color: '#fff', fontSize: 18 }} value={taxInfo.UltralowEmissionIncentives} prefix="￥" />
                   </Col>
                 </Row>
                 <Divider style={{ background: "#1c324c" }} />

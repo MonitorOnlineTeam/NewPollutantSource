@@ -150,7 +150,7 @@ class Index extends Component {
         let formats;
         let beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
-        let {dataType} = this.state
+        let { dataType } = this.state
         switch (e.target.value) {
             case 'realtime':
                 beginTime = moment(new Date()).add(-60, 'minutes');
@@ -274,8 +274,8 @@ class Index extends Component {
                 pageIndex: 1,
             },
         })
-        let {name} = e
-        let {seriesName} = e
+        let { name } = e
+        let { seriesName } = e
         this.setState({
             Pollutant: name,
             ExceptionType: seriesName,
@@ -349,12 +349,12 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} allowClear={false} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format}/>
-                            <ButtonGroup_ style={{ marginRight: 20 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} allowClear={false} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} />
+                            <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 230px)', overflow: 'auto', ...this.props.style }}>
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', paddingBottom: 0, overflow: 'auto', ...this.props.style }}>
                         {
                             this.props.exmodellistLoading ? <Spin
                                 style={{
@@ -376,7 +376,7 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '200px' }}
+                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '250px' }}
                                         />
 
                                         {
@@ -394,14 +394,14 @@ class Index extends Component {
                                             <SdlTable
                                                 loading={this.props.exceptionDataLoading}
                                                 // style={{ width: "400px", height: "500px" }}
-                                                scroll={{ y: this.props.maxHeight || 300 }}
-                                                style={{ minHeight: '200px' }}
+                                                // scroll={{ y: 'calc(100vh - 1400px)' }}
+                                                style={{ paddingBottom: 0 }}
                                                 columns={column}
                                                 dataSource={this.props.exfirstData}
                                                 pagination={{
                                                     // showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    pageSize: this.props.pageSize,
+                                                    pageSize: 10,//this.props.pageSize,
                                                     current: this.props.pageIndex,
                                                     onChange: this.onTableChange,
                                                     total: this.props.ExceptionTotal,

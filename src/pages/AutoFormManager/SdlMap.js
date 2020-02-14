@@ -1,8 +1,10 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes, { array } from 'prop-types';
 import { Input, Modal, Icon, Button, message } from 'antd'
-import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+// import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import styles from './MapContent.less';
+import config from "@/config"
 
 const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
 
@@ -74,7 +76,6 @@ class SdlMap extends PureComponent {
     this.toolEvents = {
       created: (tool) => {
         AMap = window.AMap;
-        // console.log("created=", tool)
         self.tool = tool;
       },
       draw({ obj }) {
@@ -195,6 +196,9 @@ class SdlMap extends PureComponent {
   // 自定义绘制区域
   drawPolygon() {
     if (this.tool) {
+      this.setState({
+        polygon: []
+      })
       this.tool.polygon();
       this.setState({
         isChangePos: false,
@@ -248,10 +252,23 @@ class SdlMap extends PureComponent {
   renderMapContent() {
     const events = {
       created: (ins) => {
-        thisMap = ins
-        setTimeout(() => {
-          ins.setFitView()
-        }, 1000)
+        thisMap = ins;
+        if (config.offlineMapScriptSrc) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          // console.log("window.AMap=", window.AMap)
+          Layer.setMap(ins);
+        }
+        if (this.props.handlePolygon) {
+          setTimeout(() => {
+            ins.setFitView()
+          }, 1000)
+        }
       },
       click: (e) => {
         if (this.state.isChangePos) {
@@ -334,7 +351,7 @@ class SdlMap extends PureComponent {
         />);
       }
     }
-    thisMap && thisMap.setFitView()
+    thisMap && this.props.handlePolygon && thisMap.setFitView()
     return res;
   }
 
@@ -421,18 +438,20 @@ class SdlMap extends PureComponent {
                 handlePolygon &&
                 <Button style={{ marginLeft: 10 }} onClick={this.drawPolygon} className={styles.ClearButton}>设置区域</Button>
               }
-              <Input
-                placeholder="搜索地址"
-                // defaultValue={this.state.address}
-                value={this.state.address}
-                onChange={input => {
-                  this.setState({
-                    address: input.target.value
-                  })
-                }}
-                onPressEnter={value => this.onSearch(value)}
-                style={{ width: 300, marginLeft: 10 }}
-              />
+              {
+                !config.offlineMapScriptSrc && <Input
+                  placeholder="搜索地址"
+                  // defaultValue={this.state.address}
+                  value={this.state.address}
+                  onChange={input => {
+                    this.setState({
+                      address: input.target.value
+                    })
+                  }}
+                  onPressEnter={value => this.onSearch(value)}
+                  style={{ width: 300, marginLeft: 10 }}
+                />
+              }
             </div>
           </div>
         </Modal>

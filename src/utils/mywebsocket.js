@@ -5,15 +5,21 @@ import ReconnectingWebSocket from './reconnecting-websocket'
 
 // cg add 2018.4.1
 let websocket;
-try {
-  //  websocket = new ReconnectingWebSocket(`ws://${config.webSocketPushURL.split(',')[0]}/`, `ws://${config.webSocketPushURL.split(',')[1]}/`);
-  const ip = isInnerIPFn();
-  console.log(ip)
-  websocket = new WebSocket(`ws://${ip}/`);
-  window.websocket = websocket;
-} catch (e) {
-  console.log(e);
+
+
+export function InitWebsocket(webSocketPushURL){
+
+  try {
+    //  websocket = new ReconnectingWebSocket(`ws://${config.webSocketPushURL.split(',')[0]}/`, `ws://${config.webSocketPushURL.split(',')[1]}/`);
+    const ip = isInnerIPFn(webSocketPushURL);
+    console.log(ip)
+    websocket = new WebSocket(`ws://${ip}/`);
+    window.websocket = websocket;
+  } catch (e) {
+    console.log(e);
+  }
 }
+
 
 export function listen(callback) {
   try {
@@ -56,10 +62,10 @@ export function listen(callback) {
 }
 
 // /* 判断是否是内网IP */
- function isInnerIPFn() {
+ function isInnerIPFn(webSocketPushURL) {
   var returnIP = '';
-  const innerIp = config.webSocketPushURL.split(',')[0];
-  const outIp = config.webSocketPushURL.split(',')[1];
+  const innerIp = webSocketPushURL.split(',')[0];
+  const outIp = webSocketPushURL.split(',')[1];
   var returnIP = '';
   // 获取当前页面url
   let curPageUrl = window.location.href;

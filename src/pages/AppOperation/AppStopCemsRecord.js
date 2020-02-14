@@ -14,7 +14,7 @@ export default class AppStopCemsRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <StopCemsRecordContent {...match.params} scrolly="none" />
+                <StopCemsRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none" />
             </MapInteractionCSS>
         );
     }

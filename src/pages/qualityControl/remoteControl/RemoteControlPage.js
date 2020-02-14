@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-06 09:41:46
+ * @Last Modified time: 2020-01-15 13:53:52
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -433,7 +433,7 @@ class RemoteControlPage extends Component {
                           // parser={value => value.replace(`${form.getFieldValue("OldStandardUnit")}`, '')}
                           placeholder="请输入总流量设定值" style={{ width: '70%' }} min={0} precision={1} />
                       )}
-                      <span className="ant-form-text">ml</span>
+                      <span className="ant-form-text">ml/min</span>
                     </Form.Item>
                   </Col>
                   <Col span={12}>

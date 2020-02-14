@@ -138,7 +138,7 @@ class Index extends Component {
                 title: '发送时间',
                 dataIndex: 'SendTime',
                 key: 'SendTime',
-                width: '15%',
+                width: '18%',
                 align: 'center',
             },
             {

@@ -556,7 +556,13 @@ export default {
                   path: '/operations/recordForm/:typeID/:taskID',
                   name: "recordForm",
                   component: "./operations/recordForm"
-                }
+                },
+                {
+                  path: '/operations/CommandDispatchReport',
+                  name: "CommandDispatchReport",
+                  component: "./operations/CommandDispatchReport"
+                },
+               
               ]
             },
             {
@@ -696,6 +702,11 @@ export default {
                   path: '/dataquerymanager/originaldata',
                   component: './monitoring/originaldata',
                 },
+                {
+                  name: 'dataAudit',
+                  path: '/dataquerymanager/dataAudit/:type',
+                  component: './monitoring/dataquery/DataAuditPage',
+                },
               ]
             },
             {
@@ -786,13 +797,13 @@ export default {
                 // 单站多参对比分析
                 {
                   name: 'siteParamsPage',
-                  path: '/Intelligentanalysis/siteParamsPage',
+                  path: '/Intelligentanalysis/siteParamsPage/:type',
                   component: './dataAnalyze/SiteParamsPage',
                 },
                 // 多站多参对比分析
                 {
                   name: 'multiSiteParamsPage',
-                  path: '/Intelligentanalysis/multiSiteParamsPage',
+                  path: '/Intelligentanalysis/multiSiteParamsPage/:type',
                   component: './dataAnalyze/MultiSiteParamsPage',
                 },
                 // 数据获取率
@@ -800,6 +811,12 @@ export default {
                   name: 'dataGainRate',
                   path: '/Intelligentanalysis/dataGainRatePage',
                   component: './dataAnalyze/DataGainRatePage',
+                },
+                // 数据获取率`
+                {
+                  name: 'report',
+                  path: '/Intelligentanalysis/report/:type',
+                  component: './dataAnalyze/Report',
                 },
               ],
             },
@@ -816,8 +833,6 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-
-
                 {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',
