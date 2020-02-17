@@ -16,7 +16,7 @@ import {
     getDataOverWarningPageList,
     getAllPointOverDataList,
     getOverPoints,
-    getStatisticsPointStatus
+    getStatisticsPointStatus,
 } from '@/services/workbenchapi';
 // import {
 //     querypolluntantentinfolist
@@ -29,12 +29,12 @@ export default Model.extend({
     state: {
         pageSize: 20,
         pageIndex: 1,
-        beginTime: '2018-12-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
-        endTime: '2019-01-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: '2018-12-01 00:00:00', // moment().format('YYYY-MM-DD HH:mm:ss'),
+        endTime: '2019-01-01 00:00:00', // moment().format('YYYY-MM-DD HH:mm:ss'),
         tableDatas: [],
         operation: {
-            beginTime: moment().add(-3, 'months').format("YYYY-MM-01 00:00:00"),//'2018-12-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
-            endTime: moment().format('YYYY-MM-DD HH:mm:ss'),//'2019-01-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: moment().add(-3, 'months').format('YYYY-MM-01 00:00:00'), // '2018-12-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
+            endTime: moment().format('YYYY-MM-DD HH:mm:ss'), // '2019-01-01 00:00:00',//moment().format('YYYY-MM-DD HH:mm:ss'),
             tableDatas: [],
             tempTableDatas: [],
             pageIndex: 1,
@@ -52,19 +52,19 @@ export default Model.extend({
             total: 0,
         },
         rateStatistics: {
-            beginTime: moment().format("YYYY-MM-01 00:00:00"),
+            beginTime: moment().format('YYYY-MM-01 00:00:00'),
             endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-            model: {}
+            model: {},
         },
         networkeRateList: {
             tableDatas: [],
             pageIndex: 1,
             pageSize: 3,
             total: 0,
-            NetSort: ''
+            NetSort: '',
         },
         runningRateList: {
-            beginTime: moment().format("YYYY-MM-01 00:00:00"),
+            beginTime: moment().format('YYYY-MM-01 00:00:00'),
             endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             tableDatas: [],
             pageIndex: 1,
@@ -72,7 +72,7 @@ export default Model.extend({
             total: 0,
         },
         transmissionEffectiveRateList: {
-            beginTime: moment().format("YYYY-MM-01 00:00:00"),
+            beginTime: moment().format('YYYY-MM-01 00:00:00'),
             endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             tableDatas: [],
             pageIndex: 1,
@@ -80,8 +80,8 @@ export default Model.extend({
             total: 0,
         },
         hourDataOverWarningList: {
-            beginTime: moment().format("YYYY-MM-DD HH:00:00") ,
-            endTime:  moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
+            beginTime: moment().format('YYYY-MM-DD HH:00:00'),
+            endTime: moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
             tableDatas: [],
             pageIndex: 1,
             pageSize: 3,
@@ -89,7 +89,7 @@ export default Model.extend({
         },
         allPointOverDataList: {
             tableDatas: [],
-            beginTime: moment().format("YYYY-MM-DD 00:00:00"),
+            beginTime: moment().format('YYYY-MM-DD 00:00:00'),
             endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             pageIndex: 1,
             pageSize: 100,
@@ -101,7 +101,7 @@ export default Model.extend({
         },
         statisticsPointStatus: {
             model: {},
-            total: 0
+            total: 0,
         },
         warningDetailsDatas: {
             chartDatas: [],
@@ -110,7 +110,7 @@ export default Model.extend({
             selectedPollutantCode: '',
             pageIndex: 1,
             pageSize: 2000,
-            beginTime: moment().format("YYYY-MM-DD HH:00:00"),
+            beginTime: moment().format('YYYY-MM-DD HH:00:00'),
             endTime: moment().add(1, 'hour').format('YYYY-MM-DD HH:00:00'),
             // beginTime:'2018-12-28 20:00:00',
             // endTime: '2018-12-28 21:00:00',
@@ -168,16 +168,17 @@ export default Model.extend({
          */
         * getExceptionAlarmData({ payload }, { call, put, update, select }) {
             const { exceptionAlarm } = yield select(state => state.workbenchmodel);
-            let body = {
+            const body = {
                 beginTime: exceptionAlarm.beginTime,
                 endTime: exceptionAlarm.endTime,
                 pageSize: exceptionAlarm.pageSize,
                 pageIndex: exceptionAlarm.pageIndex,
-                PollutantType:'',
-                DGIMN:payload.DGIMN
+                PollutantType: '',
+                DGIMN: payload.DGIMN,
+                Type: payload.Type,
                 // IsQueryAllUser:true,
                 // IsPaging:false
-                //operationUserId:'766f911d-5e41-4bbf-b705-add427a16e77'
+                // operationUserId:'766f911d-5e41-4bbf-b705-add427a16e77'
             };
             const response = yield call(getDataExceptionAlarmPageList, body);
             yield update({
@@ -186,9 +187,9 @@ export default Model.extend({
                     ...{
                         tableDatas: response.Datas,
                         pageIndex: payload.pageIndex || 1,
-                        total: response.Total
-                    }
-                }
+                        total: response.Total,
+                    },
+                },
             });
             // const tableDatasNew = yield select(state => state.workbenchmodel.exceptionAlarm);
             // console.log('new', tableDatasNew);
@@ -273,12 +274,12 @@ export default Model.extend({
          */
         * getDataOverWarningData({ payload }, { call, put, update, select }) {
             const { hourDataOverWarningList } = yield select(state => state.workbenchmodel);
-            let body = {
+            const body = {
                 beginTime: hourDataOverWarningList.beginTime,
                 endTime: hourDataOverWarningList.endTime,
                 pageSize: hourDataOverWarningList.pageSize,
                 pageIndex: hourDataOverWarningList.pageIndex,
-                DGIMN:payload.DGIMN
+                DGIMN: payload.DGIMN,
             };
             const response = yield call(getDataOverWarningPageList, body);
             yield update({
@@ -287,9 +288,9 @@ export default Model.extend({
                     ...{
                         tableDatas: response.Datas,
                         pageIndex: hourDataOverWarningList.pageIndex || 1,
-                        total: response.Total
-                    }
-                }
+                        total: response.Total,
+                    },
+                },
             });
         },
         // /**
@@ -379,9 +380,9 @@ export default Model.extend({
                 warningDetailsDatas: {
                     ...warningDetailsDatas,
                     ...{
-                        chartDatas: response.Datas
-                    }
-                }
+                        chartDatas: response.Datas,
+                    },
+                },
             });
         },
         // //菜单-运维日历
@@ -418,65 +419,64 @@ export default Model.extend({
         //         });
         //     }
         // },
-        //获取工作台所有方法
+        // 获取工作台所有方法
         * getAllMethods({ payload }, { call, put, update, select }) {
-            //报警汇总
+            // 报警汇总
             yield put({
                 type: 'getAllPointOverDataList',
-                payload: {}
+                payload: {},
             });
 
-            //实时预警
+            // 实时预警
             yield put({
                 type: 'getDataOverWarningData',
-                payload: {}
+                payload: {},
             });
 
-            //实时联网率
+            // 实时联网率
             yield put({
                 type: 'getRateStatisticsData',
-                payload: {}
+                payload: {},
             });
 
-            //设备运转率
+            // 设备运转率
             yield put({
                 type: 'equipmentoperatingrate/getData',
-                payload: {}
+                payload: {},
             });
 
-            //传输有效率
+            // 传输有效率
             yield put({
                 type: 'transmissionefficiency/getData',
-                payload: {}
+                payload: {},
             });
 
-            //报警信息
+            // 报警信息
             yield put({
                 type: 'getExceptionAlarmData',
-                payload: {}
+                payload: {},
             });
 
-            //运维日历
+            // 运维日历
             yield put({
                 type: 'getOperationData',
-                payload: {}
+                payload: {},
             });
 
-            //加载点状态
+            // 加载点状态
             yield put({
                 type: 'getStatisticsPointStatus',
-                payload: {}
+                payload: {},
             });
-
         },
     },
     reducers: {
         updateRealTimeData(state, { payload }) {
             if (payload && payload.array) {
-                let { warningDetailsDatas } = state;
+                const { warningDetailsDatas } = state;
 
                 if (warningDetailsDatas.DGIMNs) {
-                    let pushdata = {};
+                    const pushdata = {};
                     payload.array.map(item => {
                         if (item.DGIMN == warningDetailsDatas.DGIMNs) {
                             pushdata[item.PollutantCode] = item.MonitorValue;
@@ -485,27 +485,24 @@ export default Model.extend({
                         }
                     });
                     if (pushdata && pushdata.DataGatherCode) {
-                        let array = [];
+                        const array = [];
                         array.push(pushdata);
                         //  let resdata=warningDetailsDatas;
 
-                        let resdata = JSON.parse(JSON.stringify(warningDetailsDatas));
+                        const resdata = JSON.parse(JSON.stringify(warningDetailsDatas));
                         const chartDatas = array.concat(warningDetailsDatas.chartDatas);
                         resdata.chartDatas = chartDatas;
-                        //resdata["change"]=true;
+                        // resdata["change"]=true;
 
                         return {
                             ...state,
                             warningDetailsDatas: resdata,
                         };
                     }
-
                 }
                 return state;
-
             }
-
         },
-    }
+    },
 
 });

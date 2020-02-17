@@ -3,7 +3,7 @@ import moment from 'moment';
 import {
     Card,
     Spin,
-    Row, Col, Select, Input, Button, Tooltip,
+    Row, Col, Select, Input, Button, Tooltip, Modal,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -12,7 +12,8 @@ import { DetailIcon } from '@/utils/icon'
 import {
   routerRedux,
 } from 'dva/router';
-
+import RecordEchartTableOver from '@/components/recordEchartTableOver'
+import ExceptionAlarm from '@/components/ExceptionAlarm/ExceptionAlarm';
 /**
  * 指挥调度组件
  * xpy 2020.02.11
@@ -33,6 +34,8 @@ class Dispatchreport extends Component {
             selectvalue: '',
             UserName: '',
             dgimn: '',
+            Rvisible: false,
+            Evisible: false,
         };
     }
 
@@ -143,6 +146,16 @@ class Dispatchreport extends Component {
           if (Type === 1) {
               this.props.dispatch(routerRedux.push(`/operations/calendar/details/${TaskId}/${DGIMN}`));
           }
+          if (Type === 3) {
+              this.setState({
+                  Rvisible: true,
+              })
+          }
+          if (Type === 2) {
+            this.setState({
+              Evisible: true,
+            })
+          }
     }
 
     /** 查询按钮 */
@@ -172,6 +185,19 @@ class Dispatchreport extends Component {
          });
     }
 
+      // 取消Model
+      onCancel = () => {
+        this.setState({
+          Rvisible: false,
+        });
+      }
+
+      // 取消Model
+      onCancel1 = () => {
+        this.setState({
+          Evisible: false,
+        });
+      }
     /** 渲染数据展示 */
 
     loaddata = () => {
@@ -295,8 +321,35 @@ class Dispatchreport extends Component {
                     }
                 >
                     {this.loaddata()}
-
-
+                    <Modal
+                    destroyOnClose="true"
+                    visible={this.state.Rvisible}
+                    title="报警记录"
+                    width="70%"
+                    footer={null}
+                    onCancel={this.onCancel}
+                    >
+                     <RecordEchartTableOver
+                        initLoadData
+                        style={{ maxHeight: '70vh' }}
+                        DGIMN={this.state.dgimn}
+                        firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+                        lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+                        noticeState={0}
+                        maxHeight={200}
+                            />
+                    </Modal>
+                    <Modal
+                    destroyOnClose="true"
+                    visible={this.state.Evisible}
+                    title="异常记录"
+                    width="70%"
+                    footer={null}
+                    onCancel={this.onCancel1}
+                    >
+                     <ExceptionAlarm
+                      initLoadData DGIMN={this.state.dgimn} Types="1" />
+                    </Modal>
                 </Card>
             </div >
         );
