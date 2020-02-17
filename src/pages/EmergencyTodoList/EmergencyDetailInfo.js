@@ -79,6 +79,7 @@ class EmergencyDetailInfo extends Component {
         });
         this.setState({
             previewVisible: true,
+            previewImage: file.url,
             photoIndex: ImageList,
         });
     }
@@ -333,6 +334,7 @@ class EmergencyDetailInfo extends Component {
     };
 
     getUserIcon = data => {
+      
         const iconList = []
 
         if (data) {
@@ -416,12 +418,13 @@ class EmergencyDetailInfo extends Component {
         let Attachments = ''; // 附件
         let TaskLogList = []; // 任务日志列表
         let RecordTypeInfo = [];
+        debugger;
         if (isExistTask) {
             Attachments = this.props.taskInfo.Datas[0].Attachments;
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
             if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
-                this.props.taskInfo.Datas[0].AlarmList[0].map(item => {
+                this.props.taskInfo.Datas[0].AlarmList.map(item => {
                     if (item !== null) {
                         let AlarmType = '';
                         let AlarmCount = 0;
@@ -562,7 +565,7 @@ class EmergencyDetailInfo extends Component {
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
-                                <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description>
+                                {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
                                 <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}</div></Description>
                                 <Description term="任务内容">{isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null}</Description>
                             </DescriptionList>
@@ -687,6 +690,11 @@ class EmergencyDetailInfo extends Component {
                         this.modalHandleCancel
                     } >
                     <ViewImagesListModal FileUuid={this.state.FileUuid} />
+                </Modal>
+
+
+                <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
+                    <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
                 </Modal>
             </div>
         );

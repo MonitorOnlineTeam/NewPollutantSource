@@ -24,12 +24,18 @@ const { Option } = Select;
   operationsUserList: operations.operationsUserList,
   loading: loading.effects["operations/addTask"],
   autoFormLoading: loading.effects['autoForm/getPageConfig'],
+  recordType:operations.recordType,
+  pointInfoList:operations.pointInfoList,
+  targetInfoList:operations.targetInfoList
+
 }))
 @Form.create()
 class TaskRecord extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      ParentType:'企业'
+    };
     this._SELF_ = {
       configId: "TaskRecord",
       formLayout: {
@@ -54,6 +60,7 @@ class TaskRecord extends Component {
         RolesID: "eec719c2-7c94-4132-be32-39fe57e738c9"
       }
     })
+  
   }
 
   // 派单
@@ -66,12 +73,13 @@ class TaskRecord extends Component {
           type: "operations/addTask",
           payload: {
             taskType: 1,
-            DGIMNs: values.DGIMNs.toString(),
+            DGIMNs: values.taskpoint,
             // DGIMNs: "w120100000004",
             createUserId: user.User_ID,
+            taskFrom: 3,
             // operationsUserId: values.operationsUserId,
             remark: values.remark,
-            taskFrom: values.taskFrom
+            RecordType: values.RecordType
           },
           callback: (res) => {
             this.setState({
@@ -83,6 +91,9 @@ class TaskRecord extends Component {
     });
 
   }
+   
+
+
 
   // 驳回
   rejectTask = (key) => {
@@ -93,6 +104,90 @@ class TaskRecord extends Component {
       }
     })
   }
+
+  // 监控类型选择
+  taskParentTypeChange=(val)=>{
+      this.props.dispatch({
+        type:"operations/getTargetInfoList",
+        payload:{
+          ParentType:val
+        }
+      })
+      let ParentType="企业";
+      if(val!=1)
+      {
+        ParentType="大气站"
+      }
+      this.setState({
+        ParentType
+      });
+  }
+
+   // 监控标选择
+   taskParentChange=(val)=>{
+    this.props.dispatch({
+      type:"operations/getPointInfoList",
+      payload:{
+        EntCode:val
+      }
+    })
+
+
+}
+
+// 站点选择
+taskPointChange=(val)=>{
+  this.props.dispatch({
+    type:"operations/getTaskType",
+    payload:{
+      DGIMN:val
+    }
+  })
+ 
+}
+
+//获取监控标下拉框
+getTargetInfoList=()=>{
+  const {targetInfoList}=this.props;
+  debugger;
+  let res=[];
+  if(targetInfoList)
+  {
+    targetInfoList.map(item=>{
+      res.push(<Option value={item.code}>{item.name}</Option>)
+    })
+  }
+  return res;
+}
+
+//获取站点下拉框
+getPointInfoList=()=>{
+  const {pointInfoList}=this.props;
+  let res=[];
+  if(pointInfoList)
+  {
+    pointInfoList.map(item=>{
+      res.push(<Option value={item.DGIMN}>{item.PointName}</Option>)
+    })
+  }
+  return res;
+}
+
+//获取任务类型下拉框
+getTaskTypeInfo=()=>{
+  const {recordType}=this.props;
+  let res=[];
+  if(recordType)
+  {
+    recordType.map(item=>{
+      res.push(<Option value={item.ID}>{item.TypeName}</Option>)
+    })
+  }
+  return res;
+
+}
+
+
 
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, autoFormLoading } = this.props;
@@ -154,6 +249,8 @@ class TaskRecord extends Component {
                 this.setState({
                   visible: true,
                 })
+
+                
               }}>派单</Button>
             }}
           />
@@ -170,7 +267,7 @@ class TaskRecord extends Component {
           }}
         >
           <Form layout="inline">
-            <Row>
+            {/* <Row>
               <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("DGIMNs", {
                   rules: [
@@ -181,24 +278,79 @@ class TaskRecord extends Component {
                   ]
                 })(
                   <EnterprisePointCascadeMultiSelect rtnValType={"DGIMN"} placeholder="请选择监测点" onChange={(val) => {
+                    debugger;
+                    this.props.dispatch({
+                      type: 'operations/getTaskTypeInfo',
+                      payload:{}
+                    })
                   }} />
+                )}
+              </FormItem>
+            </Row> */}
+
+            <Row>
+            <FormItem {...formLayout} label="监控类型" style={{ width: '100%', marginBottom: 10 }}>
+                {getFieldDecorator("taskParentType", {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择监控类型!',
+                    },
+                  ]
+                })(
+                  <Select placeholder="请选择监控类型" onChange={this.taskParentTypeChange}>
+                    <Option value={1}>企业</Option>
+                    <Option value={2}>大气站</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Row>
+
+            <Row>
+            <FormItem {...formLayout} label={this.state.ParentType} style={{ width: '100%', marginBottom: 10 }}>
+                {getFieldDecorator("taskparent", {
+                  rules: [
+                    {
+                      required: true,
+                      message: `请选择${this.state.ParentType}!`,
+                    },
+                  ]
+                })(
+                  <Select placeholder={`请选择${this.state.ParentType}!`} onChange={this.taskParentChange}>
+                     {this.getTargetInfoList()}
+                  </Select>
                 )}
               </FormItem>
             </Row>
             <Row>
-              <FormItem {...formLayout} label="紧急程度" style={{ width: '100%', marginBottom: 10 }}>
-                {getFieldDecorator("taskFrom", {
+            <FormItem {...formLayout} label="站点信息" style={{ width: '100%', marginBottom: 10 }}>
+                {getFieldDecorator("taskpoint", {
                   rules: [
                     {
                       required: true,
-                      message: '请选择紧急程度!',
+                      message: `请选择站点信息!`,
                     },
                   ]
                 })(
-                  <Select placeholder="请选择紧急程度">
-                    <Option value="1">普通</Option>
-                    <Option value="2">紧急</Option>
-                    <Option value="3">一般</Option>
+                  <Select placeholder={`请选择请选择站点信息!`} onChange={this.taskPointChange}>
+                     {this.getPointInfoList()}
+                  </Select>
+                )}
+              </FormItem>
+            </Row>
+
+            <Row>
+              <FormItem {...formLayout} label="任务类型" style={{ width: '100%', marginBottom: 10 }}>
+                {getFieldDecorator("RecordType", {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择任务类型!',
+                    },
+                  ]
+                })(
+                  <Select placeholder="请选择任务类型">
+                    {this.getTaskTypeInfo()}
                   </Select>
                 )}
               </FormItem>

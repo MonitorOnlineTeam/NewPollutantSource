@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Select, Input, Button, Card, Row, Col, Tag, Modal, Tabs, Statistic, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
-import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
+// import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
+import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -14,8 +15,9 @@ import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
-import CustomIcon from '@/components/CustomIcon'
+import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
+import config from "@/config"
 
 const { TabPane } = Tabs;
 const entZoom = 8;
@@ -72,6 +74,16 @@ class MapView extends Component {
     this.mapEvents = {
       created: m => {
         _thismap = m;
+        if (config.offlineMapScriptSrc) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          Layer.setMap(m);
+        }
         this.setState({
           createMap: true,
         }, () => {
@@ -792,6 +804,7 @@ class MapView extends Component {
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
+            id="mapId"
             // zoom={this.state.zoom}
             mapStyle="amap://styles/fresh"
             // isHotspot={true}
@@ -899,7 +912,7 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              size={{ width: 480, height: this.state.currentPointInfo.MonitorObjectType == "4" ? 380 : 430 }}
+              size={{ width: 480, height: this.state.currentPointInfo.MonitorObjectType == "4" ? 380 : 440 }}
               // size={{ width: 480 }}
               style={{ maxHeight: 524 }}
               closeWhenClickMap={true}
