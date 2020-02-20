@@ -551,11 +551,11 @@ export default Model.extend({
       let realtimeColumns = [];
       if (payload.pollutantTypes == 5 || payload.pollutantTypes == 12) {
         realtimeColumns = realtimeColumns.concat([{
-          field: 'PrimaryPollutant',
-          title: '首要污染物',
-        }, {
           title: 'AQI',
           field: 'AQI',
+        }, {
+          field: 'PrimaryPollutant',
+          title: '首要污染物',
         }])
       }
       if (result.IsSuccess) {
