@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-02-18 15:16:30 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-02-20 16:13:57
+ * @Last Modified time: 2020-02-20 18:10:30
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -474,7 +474,7 @@ class SmokeReportPage extends PureComponent {
       payload: {
         DGIMN: this.props.form.getFieldValue("DGIMN").slice(-1).toString(),
         time: moment(this.props.form.getFieldValue("time")).format("YYYY-MM-DD HH:mm:ss"),
-        dataType: this._SELF_.reportType,
+        dataType: this.props.match.params.reportType,
         pointName: this.state.pointName
       }
     })
@@ -487,7 +487,7 @@ class SmokeReportPage extends PureComponent {
       payload: {
         DGIMN: this.props.form.getFieldValue("DGIMN").slice(-1).toString(),
         time: moment(this.props.form.getFieldValue("time")).format("YYYY-MM-DD HH:mm:ss"),
-        dataType: this._SELF_.reportType,
+        dataType: this.props.match.params.reportType,
         ...payload
       }
     })
