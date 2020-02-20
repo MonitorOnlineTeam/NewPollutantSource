@@ -260,7 +260,7 @@ class OperationRecord extends Component {
           extra={
             <>
               <Select
-                style={{ width: 220 }}
+                style={{ width: 220, marginRight: 10 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
                 value={defaultValue}
@@ -306,7 +306,7 @@ class OperationRecord extends Component {
               :
               ((this.state.configName && currentType) ? <AutoFormTable
                 // (this.state.configName && this.props.RecordType ? <AutoFormTable
-                configId={this.state.configName}
+                configId={this.state.configName || "FormMainInfoPic"}
                 searchParams={searchParams}
                 appendHandleRows={row => {
                   return <Tooltip title="详情">

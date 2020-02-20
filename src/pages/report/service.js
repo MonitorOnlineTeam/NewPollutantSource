@@ -88,3 +88,29 @@ export async function getSummaryYearReport(params) {
   return result === null ? { data: null } : result;
 }
 
+/**
+ * 获取企业及排口
+ */
+export async function getEntAndPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  return result;
+}
+
+/**
+ * 获取企业及排口
+ */
+export async function getSmokeReportData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataListGas', params, null);
+  return result;
+}
+
+/**
+ * 烟气报表导出
+ */
+export async function exportSmokeReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataListGas', params, null);
+  return result;
+}
+
+
+

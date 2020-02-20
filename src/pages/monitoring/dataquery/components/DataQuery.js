@@ -5,6 +5,7 @@ import {
     Card,
     Spin,
     message, Empty, Radio, Row, Col,
+    Button
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -18,6 +19,7 @@ import SdlTable from '@/components/SdlTable'
 @connect(({ loading, dataquery }) => ({
     pollutantlist: dataquery.pollutantlist,
     dataloading: loading.effects['dataquery/queryhistorydatalist'],
+    exportLoading: loading.effects['dataquery/exportHistoryReport'],
     option: dataquery.chartdata,
     selectpoint: dataquery.selectpoint,
     isloading: loading.effects['dataquery/querypollutantlist'],
@@ -298,6 +300,7 @@ class DataQuery extends Component {
                     rowKey={(record, index) => `complete${index}`}
                     dataSource={datatable}
                     columns={columns}
+                    resizable
                     // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
                     Pagination={null}
 
@@ -307,9 +310,17 @@ class DataQuery extends Component {
         );
     }
 
+    exportReport = () => {
+        this.props.dispatch({
+            type: "dataquery/exportHistoryReport",
+            payload: {
+                DGIMNs: this.state.dgimn
+            }
+        })
+    }
+
 
     render() {
-        console.log('---------------------', this.state.format);
         return (
             <div>
                 <Card
@@ -320,14 +331,15 @@ class DataQuery extends Component {
                                 <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
                                     {!this.props.isloading && this.getpollutantSelect()}
                                 </Col>
-                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={9}>
-                                    <RangePicker_ style={{ width: '90%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
+                                    <RangePicker_ style={{ width: '90%', marginRight: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={18} xxl={5}>
-                                    <ButtonGroup_ style={{ width: '100%', margin: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                    <ButtonGroup_ style={{ width: '100%', marginRight: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
                                 </Col>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={3}>
-                                    <Radio.Group style={{ width: '100%', margin: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={5}>
+                                    <Button type="primary" loading={this.props.exportLoading} style={{ marginRight: 10 }} onClick={() => { this.exportReport(); }}>导出</Button>
+                                    <Radio.Group style={{ width: '100%', marginRight: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
                                         this.displayChange(e.target.value)
                                     }}>
                                         <Radio.Button value="chart">图表</Radio.Button>

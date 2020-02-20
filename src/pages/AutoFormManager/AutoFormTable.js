@@ -201,9 +201,9 @@ class AutoFormTable extends PureComponent {
     });
   }
   _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode } = this.props;
+    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode, configId } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
-    const { btnEl, configId, moreBtns } = this._SELF_;
+    const { btnEl, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
       switch (btn.DISPLAYBUTTON) {
         case 'add':
@@ -308,8 +308,7 @@ class AutoFormTable extends PureComponent {
 
   // 更多按钮点击
   moreClick(e) {
-    const { dispatch } = this.props;
-    const { configId } = this._SELF_;
+    const { dispatch, configId } = this.props;
     switch (e.key) {
       // 打印
       case 'printer':
@@ -327,6 +326,17 @@ class AutoFormTable extends PureComponent {
           type: 'autoForm/exportDataExcel',
           payload: {
             configId,
+            IsPaging: false,
+            ConditionWhere: JSON.stringify(
+              {
+                rel: '$and',
+                group: [{
+                  rel: '$and',
+                  group: [
+                    ...this.props.searchParams,
+                  ],
+                }],
+              }),
           },
         })
         break;

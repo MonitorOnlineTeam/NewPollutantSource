@@ -387,17 +387,53 @@ export default {
               routes: [
                 {
                   path: '/report',
-                  redirect: '/report/siteDaily',
+                  redirect: '/report/wry',
+                },
+                // {
+                //   name: 'dateReportPage',
+                //   path: '/report/:reportType',
+                //   component: './report/DateReportPage',
+                // },
+                // {
+                //   name: 'summaryReportPage',
+                //   path: '/report/summary/:reportType',
+                //   component: './report/summaryReportPage',
+                // },
+                {
+                  name: "wryReport",
+                  path: '/report/wry',
+                  // component: "./operations/CalendarPage",
+                  routes: [
+                    {
+                      path: '/report/wry',
+                      redirect: '/report/wry/siteDaily',
+                    },
+                    {
+                      name: 'dateReportPage',
+                      path: '/report/wry/:reportType',
+                      component: './report/DateReportPage',
+                    },
+                    {
+                      name: 'summaryReportPage',
+                      path: '/report/wry/summary/:reportType',
+                      component: './report/summaryReportPage',
+                    },
+                  ]
                 },
                 {
-                  name: 'dateReportPage',
-                  path: '/report/:reportType',
-                  component: './report/DateReportPage',
-                },
-                {
-                  name: 'summaryReportPage',
-                  path: '/report/summary/:reportType',
-                  component: './report/summaryReportPage',
+                  name: 'smokeReportPage',
+                  path: '/report/smoke',
+                  routes: [
+                    {
+                      path: '/report/smoke',
+                      redirect: '/report/smoke/day',
+                    },
+                    {
+                      name: 'smokeReport',
+                      path: '/report/smoke/:reportType',
+                      component: './report/SmokeReportPage',
+                    },
+                  ]
                 },
               ],
             },
@@ -533,7 +569,7 @@ export default {
                   name: "CommandDispatchReport",
                   component: "./operations/CommandDispatchReport"
                 },
-               
+
               ]
             },
             {

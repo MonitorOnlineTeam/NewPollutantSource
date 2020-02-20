@@ -254,6 +254,24 @@ export default Model.extend({
       }
       yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.total });
     },
+
+    // 导出报表
+    *exportHistoryReport({ payload }, { call, put, update, select }) {
+      const { historyparams } = yield select(state => state.dataquery);
+      console.log("historyparams=", historyparams)
+      const postData = {
+        ...historyparams,
+        // ...payload,
+        DGIMNs: historyparams.DGIMN
+      }
+      const result = yield call(services.exportHistoryReport, postData);
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+        message.success("导出成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取数据获取率 - 详情污染物列表
     *getPollutantList({ payload }, { call, put, update }) {
       const result = yield call(services.getDataGainRateDetailPollutantList, payload);

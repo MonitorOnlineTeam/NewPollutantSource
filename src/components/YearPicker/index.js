@@ -24,6 +24,7 @@ class index extends PureComponent {
       <DatePicker
         // value={time}
         mode="year"
+        format="YYYY"
         open={isopen}
         onOpenChange={(status) => {
           if (status) {

@@ -22,7 +22,16 @@ export default Model.extend({
     pollutantTypeList: [],
     dateReportData: [],
     enterpriseList: [],
-    dailySummaryDataList: []
+    dailySummaryDataList: [],
+    // 烟气报表 ----- 开始
+    smokeReportFrom: {
+      current: 1,
+      pageSize: 34,
+      total: 0,
+    },
+    smokeReportData: [],
+    pointName: "",
+    // 烟气报表 ----- 结束
   },
 
   effects: {
@@ -170,6 +179,51 @@ export default Model.extend({
       } else {
         message.error(result.message)
       }
-    }
+    },
+
+    // 获取企业及排口
+    *getEntAndPoint({ payload }, { call, update, put }) {
+      const result = yield call(services.getEntAndPoint, payload);
+      if (result.IsSuccess) {
+        const filterData = result.Datas.filter(item => item.children.length);
+        yield update({
+          entAndPointList: filterData,
+          defaultEntAndPoint: [filterData[0].key, filterData[0].children[0].key],
+          pointName: filterData[0].children[0].title
+        })
+        // 获取数据
+        yield put({
+          type: "getSmokeReportData",
+          payload: {
+            DGIMN: filterData[0].children[0].key,
+            time: moment().format("YYYY-MM-DD HH:mm:ss"),
+            dataType: payload.reportType
+          }
+        })
+      } else {
+        message.error(result.message)
+      }
+    },
+
+    // 获取报表数据
+    *getSmokeReportData({ payload }, { call, update }) {
+      const result = yield call(services.getSmokeReportData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          smokeReportData: result.Datas
+        })
+      } else {
+        message.error(result.message)
+      }
+    },
+    // 烟气报表导出
+    *exportSmokeReport({ payload }, { call, update }) {
+      const result = yield call(services.exportSmokeReport, payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+      } else {
+        message.error(result.message)
+      }
+    },
   },
 });
