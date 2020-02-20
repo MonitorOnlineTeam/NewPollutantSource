@@ -17,7 +17,7 @@ import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningMo
 
 @connect(({ loading, global }) => ({
   fetchingNotices: loading.effects['global/fetchNotices'],
-  notices: global.notices,//数据要用固定格式
+  notices: global.notices, // 数据要用固定格式
   currentUserNoticeCnt: global.currentUserNoticeCnt,
 }))
 
@@ -45,7 +45,7 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   }
 
-  //格式化添加标签和标识icon
+  // 格式化添加标签和标识icon
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length !== 0) {
@@ -91,12 +91,12 @@ export default class GlobalHeaderRight extends PureComponent {
       });
       return groupBy(newNotices, 'type');
     }
-    else {
+    
       return {};
-    }
+    
   }
 
-  //报警总次数
+  // 报警总次数
   getUnreadData = advisesData => {
     const unreadMsg = {};
     Object.entries(advisesData).forEach(([key, value]) => {
@@ -127,7 +127,7 @@ export default class GlobalHeaderRight extends PureComponent {
     const { fetchingNotices, currentUserNoticeCnt, dispatch, notices } = this.props;
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
-    let className = styles.right;
+    const className = styles.right;
     return (
       <div className={`${styles.action} ${styles.account}`}>
         <NoticeIcon
@@ -150,19 +150,19 @@ export default class GlobalHeaderRight extends PureComponent {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: '实时预警-' + item.PointName,
+                    title: `实时预警-${  item.PointName}`,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: '超标记录-' + item.PointName,
+                    title: `超标记录-${  item.PointName}`,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: '异常报警-' + item.PointName,
+                    title: `异常报警-${  item.PointName}`,
                     flag: 'exception',
                   });
                   break;
@@ -201,7 +201,7 @@ export default class GlobalHeaderRight extends PureComponent {
               />
               : this.state.flag === 'exception' ?
                 <ExceptionAlarm
-                  initLoadData DGIMN={this.state.DGIMN} />
+                  initLoadData DGIMN={this.state.DGIMN} Types=""/>
                 :
                 <RealTimeWarningModal
                   style={{ maxHeight: '70vh' }}

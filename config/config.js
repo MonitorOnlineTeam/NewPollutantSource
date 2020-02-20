@@ -226,9 +226,32 @@ export default {
             },
 
             {
+              path: '/SewagePlant',
+              name: 'SewagePlant',
+              routes: [
+                {
+                  path: '/SewagePlant',
+                  redirect: '/platformconfig/monitortarget/AEnterpriseTest',
+                },
+                // 数据上报列表
+                {
+                    name: 'DataReporting',
+                    path: '/SewagePlant/DataReporting/:configId',
+                    component: './platformManager/dataReport/',
+                },
+                  // 数据上报添加或修改
+                {
+                    name: 'DataReportingAdd',
+                    path: '/SewagePlant/DataReportingAdd/:configId/:id',
+                    component: './platformManager/dataReport/components/addDataReport',
+                },
+              ]
+            },
+            {
               path: '/platformconfig',
               name: 'platformconfig',
               routes: [
+                
                 {
                   path: '/platformconfig',
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest',
@@ -379,6 +402,7 @@ export default {
                   path: '/platformconfig/equipmentinfomanage/:configId',
                   component: './OperationSysManager/EquipmentInfoManage/',
                 },
+         
               ],
             },
             {
@@ -435,6 +459,11 @@ export default {
                     },
                   ]
                 },
+                {
+                   name:'statisticsReportDataList',
+                   path:'/report/dataReportList/statisticsReportDataList',
+                   component: './report/StatisticsReportDataList',
+                }
               ],
             },
 

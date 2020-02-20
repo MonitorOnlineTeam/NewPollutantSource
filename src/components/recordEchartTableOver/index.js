@@ -85,7 +85,7 @@ class Index extends Component {
         //         historyparams,
         //     },
         // })
-        debugger
+        console.log('1111');
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         if (this.props.noticeState == 0) {
@@ -415,7 +415,7 @@ class Index extends Component {
                                                 pagination={{
                                                     // showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    pageSize: 10,//this.props.pageSize,
+                                                    pageSize: 10, // this.props.pageSize,
                                                     current: this.props.pageIndex,
                                                     onChange: this.onTableChange,
                                                     total: this.props.OverTotal,
