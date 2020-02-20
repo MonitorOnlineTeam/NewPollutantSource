@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-02-18 15:16:30 
+ * @Author: Jiaqi
+ * @Date: 2020-02-18 15:16:30
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-02-20 18:10:30
+ * @Last Modified time: 2020-02-20 18:27:44
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -58,24 +58,15 @@ class SmokeReportPage extends PureComponent {
         wrapperCol: { span: 17 },
       },
     };
+    this.switchInfo(props.match.params.reportType)
+  }
 
-    // let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
-    // if (format === 'YYYY-MM') {
-    //   timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
-    // } else if (format === 'YYYY') {
-    //   timeEle = (
-    //     <YearPicker
-    //       format={format}
-    //       allowClear={false}
-    //       style={{ width: '100%' }}
-    //       _onPanelChange={v => {
-    //         this.props.form.setFieldsValue({ ReportTime: v });
-    //       }}
-    //     />
-    //   );
-    // }
+  componentDidMount() {
+    this.getEntAndPoint();
+  }
 
-    switch (this._SELF_.reportType) {
+  switchInfo = (reportType) => {
+    switch (reportType) {
       case "day":
         this.title = "烟气排放连续监测小时平均日报表";
         this.format = "YYYY-MM-DD";
@@ -109,10 +100,6 @@ class SmokeReportPage extends PureComponent {
     }
   }
 
-  componentDidMount() {
-    this.getEntAndPoint();
-  }
-
   // 获取企业及排口
   getEntAndPoint = (payload) => {
     this.props.dispatch({
@@ -136,6 +123,7 @@ class SmokeReportPage extends PureComponent {
       this.getSmokeReportData({
         dataType: nextProps.match.params.reportType
       });
+      this.switchInfo(nextProps.match.params.reportType)
     }
     if (this.props.smokeReportData !== nextProps.smokeReportData) {
       const dataLength = nextProps.smokeReportData.length - 1;
@@ -480,7 +468,7 @@ class SmokeReportPage extends PureComponent {
     })
   }
 
-  // 
+  //
   getSmokeReportData = (payload = {}) => {
     this.props.dispatch({
       type: "report/getSmokeReportData",
@@ -499,9 +487,10 @@ class SmokeReportPage extends PureComponent {
   }
 
   render() {
-    const { formLayout, reportType } = this._SELF_;
+    const { formLayout } = this._SELF_;
     const { form: { getFieldDecorator }, smokeReportFrom, entAndPointList, defaultEntAndPoint, smokeReportData, loading, exportLoading } = this.props;
     const { dataSource, columns } = this.state;
+    const reportType = this.props.match.params.reportType
     const _columns = (reportType === "day" || reportType === "month") ? columns.day : columns.quarter
 
     // console.log("columns-", _columns)
