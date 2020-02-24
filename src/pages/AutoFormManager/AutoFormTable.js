@@ -532,6 +532,20 @@ class AutoFormTable extends PureComponent {
       data: {
         ConfigID: configId,
       },
+      onChange: (info) => {
+        if (info.file.status === 'done') {
+          this.loadDataSource();
+          message.success("导入成功");
+          this.setState({
+            visible: false
+          })
+        } else if (info.file.status === 'error') {
+          message.error('上传文件失败！')
+        }
+        // this.setState({
+        //   fileList: info.fileList
+        // })
+      },
       // onChange(info) {
       //   const status = info.file.status;
       //   if (status !== 'uploading') {
