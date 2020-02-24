@@ -215,7 +215,6 @@ export default Model.extend({
     *getEntAndPoint({ payload }, { call, update, put }) {
       const result = yield call(services.getEntAndPoint, payload);
       if (result.IsSuccess) {
-        // const filterData = result.Datas
         const filterData = result.Datas.filter(item => {
           if (item.children.length) {
             let children = item.children.map(itm => {
