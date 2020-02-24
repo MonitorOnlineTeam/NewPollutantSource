@@ -372,8 +372,8 @@ class index extends Component {
                           if (item.wrw) {
                             return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
                               <Checkbox onChange={(e) => {
-                                if (e.target.checked === false && _columns.length < 2) {
-                                  message.warning("最少显示一列");
+                                if (e.target.checked === false && wrwList.length < 2) {
+                                  message.warning("最少显示一个污染物");
                                   return;
                                 }
                                 let newColumns = columns;

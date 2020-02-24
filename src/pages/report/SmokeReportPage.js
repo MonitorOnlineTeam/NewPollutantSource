@@ -463,7 +463,7 @@ class SmokeReportPage extends PureComponent {
         DGIMN: this.props.form.getFieldValue("DGIMN").slice(-1).toString(),
         time: moment(this.props.form.getFieldValue("time")).format("YYYY-MM-DD HH:mm:ss"),
         dataType: this.props.match.params.reportType,
-        pointName: this.state.pointName
+        pointName: this.props.pointName
       }
     })
   }
@@ -518,8 +518,11 @@ class SmokeReportPage extends PureComponent {
                         placeholder="请选择排放源"
                         onChange={(value, selectedOptions) => {
                           console.log("selectedOptions=", selectedOptions)
-                          this.setState({
-                            pointName: selectedOptions.slice(-1).title
+                          this.props.dispatch({
+                            type: "report/updateState",
+                            payload: {
+                              pointName: selectedOptions.slice(-1)[0].title
+                            }
                           })
                         }}
                       />,
