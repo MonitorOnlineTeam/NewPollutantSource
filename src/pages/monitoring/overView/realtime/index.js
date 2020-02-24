@@ -55,9 +55,8 @@ class index extends Component {
           width: width,
           sorter: (a, b) => a[item.field] - b[item.field],
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
-          label: item.title,
-          value: idx + 4,
           show: true,
+          wrw: item.wrw !== undefined ? item.wrw : true,
           render: (text, record) => {
             if (item.field === 'AQI') {
               return AQIPopover(text, record);
@@ -148,8 +147,6 @@ class index extends Component {
           width: 60,
           align: 'center',
           fixed: fixed,
-          label: "序号",
-          value: "0",
           show: true,
           render: (value, record, index) => {
             return index + 1;
@@ -163,8 +160,6 @@ class index extends Component {
           width: 120,
           align: 'center',
           fixed: fixed,
-          label: "状态",
-          value: "1",
           show: true,
           filters: statusFilters,
           filteredValue: filteredInfo.Status || null,
@@ -198,8 +193,6 @@ class index extends Component {
           width: 300,
           key: 'pointName',
           fixed: fixed,
-          label: "监测点",
-          value: "2",
           show: true,
           render: (text, record) => {
             return (
@@ -216,8 +209,6 @@ class index extends Component {
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
-          label: "监测时间",
-          value: "3",
           show: true,
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
@@ -302,6 +293,7 @@ class index extends Component {
     const { dataLoading, columnLoading } = this.props;
     const _columns = columns.filter(item => item.show);
     let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    const wrwList = columns.filter(itm => itm.wrw);
     return (
       <PageHeaderWrapper title="数据一览">
         <Card
@@ -371,37 +363,40 @@ class index extends Component {
                   日均
                 </Radio.Button>
               </Radio.Group>
-              <Popover
-                content={
-                  <Row>
-                    {
-                      columns.map((item, index) => {
-                        return <Col span={6}>
-                          <Checkbox onChange={(e) => {
-                            if (e.target.checked === false && _columns.length < 2) {
-                              message.warning("最少显示一列");
-                              return;
-                            }
-                            let newColumns = columns;
-                            newColumns[index].show = e.target.checked;
-                            this.setState({
-                              columns: newColumns
-                            })
-                          }} checked={item.show}>{item.title}</Checkbox>
-                        </Col>
-                      })
-                    }
-                  </Row>
-                }
-                trigger="click"
-                visible={this.state.visible}
-                onVisibleChange={visible => {
-                  this.setState({ visible });
-                }}
-              >
-                <Button style={{ marginLeft: 10 }} type="primary">自定义列</Button>
-              </Popover>
-
+              {
+                wrwList.length ? <Popover
+                  content={
+                    <Row style={{ maxWidth: 700, minWidth: 300 }}>
+                      {
+                        wrwList.map((item, index) => {
+                          if (item.wrw) {
+                            return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
+                              <Checkbox onChange={(e) => {
+                                if (e.target.checked === false && _columns.length < 2) {
+                                  message.warning("最少显示一列");
+                                  return;
+                                }
+                                let newColumns = columns;
+                                newColumns[index + 4].show = e.target.checked;
+                                this.setState({
+                                  columns: newColumns
+                                })
+                              }} checked={item.show}>{item.title}</Checkbox>
+                            </Col>
+                          }
+                        })
+                      }
+                    </Row>
+                  }
+                  trigger="click"
+                  visible={this.state.visible}
+                  onVisibleChange={visible => {
+                    this.setState({ visible });
+                  }}
+                >
+                  <Button style={{ marginLeft: 10 }} type="primary">污染物</Button>
+                </Popover> : null
+              }
               {currentDataType === 'HourData' && (
                 <TimePicker
                   onChange={(time, timeString) => {
@@ -446,7 +441,7 @@ class index extends Component {
             </>
           }
           extra={
-            < Radio.Group
+            <Radio.Group
               defaultValue="data"
               buttonStyle="solid"
               onChange={e => {

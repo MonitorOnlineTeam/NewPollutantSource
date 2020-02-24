@@ -23,14 +23,14 @@ export default Model.extend({
     dateReportData: [],
     enterpriseList: [],
     dailySummaryDataList: [],
-    statisticsReportDataList:[],
-    EntSewageList:[],
-    StatisticsReportDataWhere:{
-      MonitorTime: moment().add(-1,'month'),
-      EntList:[],
-      PageIndex:1,
-      PageSize:10,
-      total:0
+    statisticsReportDataList: [],
+    EntSewageList: [],
+    StatisticsReportDataWhere: {
+      MonitorTime: moment().add(-1, 'month'),
+      EntList: [],
+      PageIndex: 1,
+      PageSize: 10,
+      total: 0
     },
     // 烟气报表 ----- 开始
     smokeReportFrom: {
@@ -190,21 +190,21 @@ export default Model.extend({
       }
     },
     //数据上报报表
-    *getStatisticsReportDataList({payload},{call,update,select}){
-      const params=yield select(a=>a.report.StatisticsReportDataWhere);
-      const result= yield call(services.getStatisticsReportDataList, params);
-      yield update({statisticsReportDataList:result.Datas,total:result.Total})
+    *getStatisticsReportDataList({ payload }, { call, update, select }) {
+      const params = yield select(a => a.report.StatisticsReportDataWhere);
+      const result = yield call(services.getStatisticsReportDataList, params);
+      yield update({ statisticsReportDataList: result.Datas, total: result.Total })
     },
     //污水处理厂列表
-    *getEntSewageList({payload},{call,update}){
-      const result= yield call(services.getEntSewageList, payload);
-      yield update({EntSewageList:result.Datas})
+    *getEntSewageList({ payload }, { call, update }) {
+      const result = yield call(services.getEntSewageList, payload);
+      yield update({ EntSewageList: result.Datas })
     },
     // 汇总报表导出
-    * getStatisticsReportDataExcel({ payload }, { call, update,select }) {
-      const params=yield select(a=>a.report.StatisticsReportDataWhere);
+    * getStatisticsReportDataExcel({ payload }, { call, update, select }) {
+      const params = yield select(a => a.report.StatisticsReportDataWhere);
 
-      const result = yield call(services.getStatisticsReportDataExcel, {...params,PageIndex:null,PageSize:null});
+      const result = yield call(services.getStatisticsReportDataExcel, { ...params, PageIndex: null, PageSize: null });
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {

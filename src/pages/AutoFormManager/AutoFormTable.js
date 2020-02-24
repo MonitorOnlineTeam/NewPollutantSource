@@ -239,7 +239,20 @@ class AutoFormTable extends PureComponent {
           break;
         // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
         case 'exp':
-          moreBtns.push({ type: 'export', text: '导出' })
+          if (opreationButtons[configId].length === 1) {
+            return <Button
+              style={{ marginRight: 8 }}
+              icon="export"
+              key={btn.DISPLAYBUTTON}
+              type="primary"
+              onClick={() => {
+                this.export();
+              }}
+            >导出
+                         </Button>;
+          } else {
+            moreBtns.push({ type: 'export', text: '导出' })
+          }
           break;
         //   return <Button
         //     icon="export"
@@ -306,6 +319,27 @@ class AutoFormTable extends PureComponent {
     }
   }
 
+  export = () => {
+    const { dispatch, configId, searchParams } = this.props;
+    dispatch({
+      type: 'autoForm/exportDataExcel',
+      payload: {
+        configId,
+        IsPaging: false,
+        ConditionWhere: JSON.stringify(
+          {
+            rel: '$and',
+            group: [{
+              rel: '$and',
+              group: [
+                ...searchParams,
+              ],
+            }],
+          }),
+      },
+    })
+  }
+
   // 更多按钮点击
   moreClick(e) {
     const { dispatch, configId } = this.props;
@@ -322,23 +356,7 @@ class AutoFormTable extends PureComponent {
         break;
       // 导出
       case 'export':
-        dispatch({
-          type: 'autoForm/exportDataExcel',
-          payload: {
-            configId,
-            IsPaging: false,
-            ConditionWhere: JSON.stringify(
-              {
-                rel: '$and',
-                group: [{
-                  rel: '$and',
-                  group: [
-                    ...this.props.searchParams,
-                  ],
-                }],
-              }),
-          },
-        })
+        this.export()
         break;
       default:
         break;
@@ -515,7 +533,7 @@ class AutoFormTable extends PureComponent {
     }
 
 
-    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
+    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth + 100, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
     const rowSelection = checkboxOrRadio ? {
       type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,

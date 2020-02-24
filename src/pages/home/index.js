@@ -309,9 +309,17 @@ class index extends Component {
       this.setState({
         currentMarkersList
       }, () => {
-        setTimeout(() => {
-          _thismap.setFitView();
-        }, 2000)
+        // setTimeout(() => {
+        //   _thismap.setFitView();
+        // }, 2000)
+        const timer = setInterval(() => {
+          if (_thismap) {
+            _thismap.setFitView();
+            clearInterval(timer)
+          }
+        }, 200);
+
+
       })
     }
   }
