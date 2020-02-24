@@ -215,7 +215,19 @@ export default Model.extend({
     *getEntAndPoint({ payload }, { call, update, put }) {
       const result = yield call(services.getEntAndPoint, payload);
       if (result.IsSuccess) {
-        const filterData = result.Datas.filter(item => item.children.length);
+        const filterData = result.Datas.filter(item => {
+          if (item.children.length) {
+            let children = item.children.map(itm => {
+              let obj = itm;
+              delete obj.children;
+              return { ...obj }
+            })
+            return {
+              ...item,
+              children
+            }
+          }
+        })
         yield update({
           entAndPointList: filterData,
           defaultEntAndPoint: [filterData[0].key, filterData[0].children[0].key],
