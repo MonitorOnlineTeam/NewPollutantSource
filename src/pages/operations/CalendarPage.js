@@ -85,13 +85,20 @@ class CalendarPage extends PureComponent {
           href: "",
           title: <div>
             <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
-            {item.SparePartCount ? <Tag color="#f50" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 1) }}>备件更换{item.SparePartCount}个</Tag> : null}
-            {item.ConsumablesCount ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 2) }}>易耗品更换{item.ConsumablesCount}个</Tag> : null}
-            {item.StandardGasCount ? <Tag color="#108ee9" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 3) }}>标气更换{item.StandardGasCount}个</Tag> : null}
-            {item.MaintainCount ? <Tag color="#87d068" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>保养更换{item.MaintainCount}个</Tag> : null}
-            {item.V233 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >日常运维提醒{item.V233}个</Tag> : null}
-            {item.V235 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >校准周期提醒{item.V235}个</Tag> : null}
-            {item.V236 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >校验周期提醒{item.V236}个</Tag> : null}
+            {item.SparePartCount ? <Tag color="#f50" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 1) }}>需更换备件</Tag> : null}
+            {/* {item.SparePartCount}个 */}
+            {item.ConsumablesCount ? <Tag color="#2db7f5" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 2) }}>需更换易耗品</Tag> : null}
+            {/* {item.ConsumablesCount}个 */}
+            {item.StandardGasCount ? <Tag color="#108ee9" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 3) }}>需更换标气</Tag> : null}
+            {/* {item.StandardGasCount}个 */}
+            {item.MaintainCount ? <Tag color="#87d068" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>需保养</Tag> : null}
+            {/* {item.MaintainCount}个 */}
+            {item.V233 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需日常运维</Tag> : null}
+            {/* {item.V233}个 */}
+            {item.V235 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需校准</Tag> : null}
+            {/* {item.V235} */}
+            {item.V236 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需校验</Tag> : null}
+            {/* {item.V236}个 */}
           </div>,
           description: <div style={{ color: "#333" }}>
             {item.PointName}
