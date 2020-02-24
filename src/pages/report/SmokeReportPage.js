@@ -496,18 +496,18 @@ class SmokeReportPage extends PureComponent {
     // console.log("columns-", _columns)
     return (
       <PageHeaderWrapper title={this.title}>
-        <Spin spinning={loading} delay={500}>
+        {/* <Spin spinning={loading} delay={500}> */}
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
                 <Col xxl={5} xl={7} sm={24} lg={9}>
-                  <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="排放源" style={{ width: '100%' }}>
                     {getFieldDecorator('DGIMN', {
                       initialValue: defaultEntAndPoint,
                       rules: [
                         {
                           required: true,
-                          message: '请选择监控目标',
+                          message: '请选择排放源',
                         },
                       ],
                     })(
@@ -515,7 +515,7 @@ class SmokeReportPage extends PureComponent {
                         fieldNames={{ label: 'title', value: 'key', children: 'children' }}
                         options={entAndPointList}
                         showSearch={this.filter}
-                        placeholder="请选择监控目标"
+                        placeholder="请选择排放源"
                         onChange={(value, selectedOptions) => {
                           console.log("selectedOptions=", selectedOptions)
                           this.setState({
@@ -527,13 +527,13 @@ class SmokeReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col xxl={5} xl={7} sm={24} lg={9}>
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="监测日期" style={{ width: '100%' }}>
                     {getFieldDecorator('time', {
                       initialValue: moment(),
                       rules: [
                         {
                           required: true,
-                          message: '请填写统计时间',
+                          message: '请填写监测日期',
                         },
                       ],
                     })(
@@ -548,7 +548,7 @@ class SmokeReportPage extends PureComponent {
                       type="primary"
                       style={{ margin: '0 10px' }}
                       onClick={() => { this.getSmokeReportData() }}
-                    // loading={loading}
+                    loading={loading}
                     >
                       生成统计
                     </Button>
@@ -562,7 +562,7 @@ class SmokeReportPage extends PureComponent {
             </Form>
             <SdlTable
               rowKey={(record, index) => index}
-              // loading={loading}
+              loading={loading}
               size="small"
               columns={_columns}
               dataSource={smokeReportData}
@@ -574,7 +574,7 @@ class SmokeReportPage extends PureComponent {
               footer={() => this.tableFooter}
             />
           </Card>
-        </Spin>
+        {/* </Spin> */}
       </PageHeaderWrapper>
     );
   }

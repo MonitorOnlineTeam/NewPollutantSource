@@ -553,9 +553,11 @@ export default Model.extend({
         realtimeColumns = realtimeColumns.concat([{
           title: 'AQI',
           field: 'AQI',
+          wrw: false,
         }, {
           field: 'PrimaryPollutant',
           title: '首要污染物',
+          wrw: false,
         }])
       }
       if (result.IsSuccess) {

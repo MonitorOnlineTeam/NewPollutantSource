@@ -28,7 +28,6 @@ class Index extends Component {
         };
     }
     render() {
-        console.log('type=', this.state.type)
         return (
             <div id="record">
                 <NavigationTree domId="#record" choice={false} onItemClick={value => {
