@@ -235,15 +235,15 @@ export default {
                 },
                 // 数据上报列表
                 {
-                    name: 'DataReporting',
-                    path: '/SewagePlant/DataReporting/:configId',
-                    component: './platformManager/dataReport/',
+                  name: 'DataReporting',
+                  path: '/SewagePlant/DataReporting/:configId',
+                  component: './platformManager/dataReport/',
                 },
-                  // 数据上报添加或修改
+                // 数据上报添加或修改
                 {
-                    name: 'DataReportingAdd',
-                    path: '/SewagePlant/DataReportingAdd/:configId/:id',
-                    component: './platformManager/dataReport/components/addDataReport',
+                  name: 'DataReportingAdd',
+                  path: '/SewagePlant/DataReportingAdd/:configId/:id',
+                  component: './platformManager/dataReport/components/addDataReport',
                 },
               ]
             },
@@ -251,7 +251,7 @@ export default {
               path: '/platformconfig',
               name: 'platformconfig',
               routes: [
-                
+
                 {
                   path: '/platformconfig',
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest',
@@ -402,7 +402,7 @@ export default {
                   path: '/platformconfig/equipmentinfomanage/:configId',
                   component: './OperationSysManager/EquipmentInfoManage/',
                 },
-         
+
               ],
             },
             {
@@ -460,9 +460,9 @@ export default {
                   ]
                 },
                 {
-                   name:'statisticsReportDataList',
-                   path:'/report/dataReportList/statisticsReportDataList',
-                   component: './report/StatisticsReportDataList',
+                  name: 'statisticsReportDataList',
+                  path: '/report/dataReportList/statisticsReportDataList',
+                  component: './report/StatisticsReportDataList',
                 }
               ],
             },
@@ -911,29 +911,82 @@ export default {
                   path: '/qualityControl',
                   redirect: '/qualityControl/remoteControl',
                 },
-                // 质控仪管理
+                // 质控管理
                 {
-                  name: 'instrumentManage',
-                  path: '/qualityControl/instrumentManage',
-                  component: './qualityControl/instrumentManage',
+                  name: 'qcaManager',
+                  path: '/qualityControl/qcaManager',
+                  routes: [
+                    {
+                      path: '/qualityControl',
+                      redirect: '/qualityControl/qcaManager/maintainRecord',
+                    },
+                    // 质控仪维护记录
+                    {
+                      name: 'maintainRecord',
+                      path: '/qualityControl/qcaManager/maintainRecord',
+                      component: './qualityControl/maintainRecord',
+                    },
+                    // 质控仪管理
+                    {
+                      name: 'instrumentManage',
+                      path: '/qualityControl/qcaManager/instrumentManage',
+                      component: './qualityControl/instrumentManage',
+                    },
+                    // 质控仪 - 添加
+                    {
+                      name: 'instrumentAdd',
+                      path: '/qualityControl/qcaManager/instrumentManage/add',
+                      component: './qualityControl/instrumentManage/AddInstrument',
+                    },
+                    // 质控仪 - 编辑
+                    {
+                      name: 'instrumentEdit',
+                      path: '/qualityControl/qcaManager/instrumentManage/edit/:id',
+                      component: './qualityControl/instrumentManage/AddInstrument',
+                    },
+                    // 质控仪 - 详情
+                    {
+                      name: 'instrumentView',
+                      path: '/qualityControl/qcaManager/instrumentManage/view/:id',
+                      component: './qualityControl/instrumentManage/ViewInstrument',
+                    },
+
+                  ]
                 },
-                // 质控仪 - 添加
+                // 质控记录
                 {
-                  name: 'instrumentAdd',
-                  path: '/qualityControl/instrumentManage/add',
-                  component: './qualityControl/instrumentManage/AddInstrument',
-                },
-                // 质控仪 - 编辑
-                {
-                  name: 'instrumentEdit',
-                  path: '/qualityControl/instrumentManage/edit/:id',
-                  component: './qualityControl/instrumentManage/AddInstrument',
-                },
-                // 质控仪 - 详情
-                {
-                  name: 'instrumentView',
-                  path: '/qualityControl/instrumentManage/view/:id',
-                  component: './qualityControl/instrumentManage/ViewInstrument',
+                  name: 'qcaRecord',
+                  path: '/qualityControl/qcaRecord',
+                  routes: [
+                    {
+                      path: '/qualityControl/qcaRecord',
+                      redirect: '/qualityControl/qcaRecord/operationRecords',
+                    },
+                    // 质控仪操作记录
+                    {
+                      name: 'operationRecords',
+                      path: '/qualityControl/qcaRecord/operationRecords',
+                      component: './qualityControl/operationRecords',
+                    },
+                    // 质控仪参数记录
+                    {
+                      name: 'paramsRecord',
+                      path: '/qualityControl/qcaRecord/paramsRecord',
+                      component: './qualityControl/paramsRecord',
+                    },
+                    //质控仪状态记录
+                    {
+                      name: 'statusRecord',
+                      path: '/qualityControl/qcaRecord/statusRecord',
+                      component: './qualityControl/statusRecord',
+                    },
+                    // 质控报警记录
+                    {
+                      name: 'alarmMessage',
+                      path: '/qualityControl/qcaRecord/alarmMessage',
+                      component: './qualityControl/alarmMessage',
+                    },
+                  ]
                 },
                 //质控仪视频
                 {
@@ -964,36 +1017,6 @@ export default {
                   name: 'realTimeContrast',
                   path: '/qualityControl/realTimeContrast',
                   component: './qualityControl/realTimeContrast',
-                },
-                // 质控仪操作记录
-                {
-                  name: 'operationRecords',
-                  path: '/qualityControl/operationRecords',
-                  component: './qualityControl/operationRecords',
-                },
-                // 质控仪维护记录
-                {
-                  name: 'maintainRecord',
-                  path: '/qualityControl/maintainRecord',
-                  component: './qualityControl/maintainRecord',
-                },
-                // 质控仪参数记录s
-                {
-                  name: 'paramsRecord',
-                  path: '/qualityControl/paramsRecord',
-                  component: './qualityControl/paramsRecord',
-                },
-                //质控仪状态记录
-                {
-                  name: 'statusRecord',
-                  path: '/qualityControl/statusRecord',
-                  component: './qualityControl/statusRecord',
-                },
-                // 质控报警记录
-                {
-                  name: 'alarmMessage',
-                  path: '/qualityControl/alarmMessage',
-                  component: './qualityControl/alarmMessage',
                 },
               ]
             },

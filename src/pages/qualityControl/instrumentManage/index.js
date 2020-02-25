@@ -27,13 +27,13 @@ class InstrumentManage extends Component {
             configId={configId}
             getPageConfig
             onAdd={() => {
-              router.push("/qualityControl/instrumentManage/add");
+              router.push("/qualityControl/qcaManager/instrumentManage/add");
             }}
             onEdit={(record, key) => {
-              router.push(`/qualityControl/instrumentManage/edit/${key}`);
+              router.push(`/qualityControl/qcaManager/instrumentManage/edit/${key}`);
             }}
             onView={(record, key) => {
-              router.push(`/qualityControl/instrumentManage/view/${key}`);
+              router.push(`/qualityControl/qcaManager/instrumentManage/view/${key}`);
             }}
           />
         </Card>
