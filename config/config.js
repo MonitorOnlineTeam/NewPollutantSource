@@ -917,7 +917,7 @@ export default {
                   path: '/qualityControl/qcaManager',
                   routes: [
                     {
-                      path: '/qualityControl',
+                      path: '/qualityControl/qcaManager',
                       redirect: '/qualityControl/qcaManager/maintainRecord',
                     },
                     // 质控仪维护记录
