@@ -229,35 +229,35 @@ export default {
               ],
             },
             //污水处理台
-            {
-              path: '/SewagePlant',
-              name: 'SewagePlant',
-              routes: [
-                {
-                  path: '/SewagePlant',
-                  redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
-                },
-                // 数据上报列表
-                {
-                    name: 'DataReporting',
-                    path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
-                    ///:monitortime/:entcode
-                    component: './platformManager/dataReport/',
-                },
-                // 数据上报添加或修改
-                {
-                    name: 'DataReportingAdd',
-                    path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
-                    component: './platformManager/dataReport/components/addDataReport',
-                },
-                //统计报表
-                {
-                  name:'statisticsReportDataList',
-                  path:'/SewagePlant/dataReportList/statisticsReportDataList',
-                  component: './report/StatisticsReportDataList',
-                }
-              ]
-            },
+            // {
+            //   path: '/SewagePlant',
+            //   name: 'SewagePlant',
+            //   routes: [
+            //     {
+            //       path: '/SewagePlant',
+            //       redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
+            //     },
+            //     // 数据上报列表
+            //     {
+            //         name: 'DataReporting',
+            //         path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+            //         ///:monitortime/:entcode
+            //         component: './platformManager/dataReport/',
+            //     },
+            //     // 数据上报添加或修改
+            //     {
+            //         name: 'DataReportingAdd',
+            //         path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+            //         component: './platformManager/dataReport/components/addDataReport',
+            //     },
+            //     //统计报表
+            //     {
+            //       name:'statisticsReportDataList',
+            //       path:'/SewagePlant/dataReportList/statisticsReportDataList',
+            //       component: './report/StatisticsReportDataList',
+            //     }
+            //   ]
+            // },
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -819,7 +819,39 @@ export default {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
-
+                {
+                  path: '/Intelligentanalysis',
+                  redirect: '/Intelligentanalysis/SewagePlant',
+                },
+                {
+                  path: '/Intelligentanalysis/SewagePlant',
+                  name: 'SewagePlant',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/SewagePlant',
+                      redirect: '/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/1/1',
+                    },
+                    // 数据上报列表
+                    {
+                        name: 'DataReporting',
+                        path: '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                        ///:monitortime/:entcode
+                        component: './platformManager/dataReport/',
+                    },
+                    // 数据上报添加或修改
+                    {
+                        name: 'DataReportingAdd',
+                        path: '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                        component: './platformManager/dataReport/components/addDataReport',
+                    },
+                    //统计报表
+                    {
+                      name:'statisticsReportDataList',
+                      path:'/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
+                      component: './report/StatisticsReportDataList',
+                    }
+                  ]
+                },
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
