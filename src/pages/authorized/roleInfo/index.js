@@ -859,7 +859,7 @@ class RoleIndex extends Component {
                                                         },
                                                     })}
                                                 size="small"
-                                                defaultExpandAllRows rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
+                                                 rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }
 
                                 </div>

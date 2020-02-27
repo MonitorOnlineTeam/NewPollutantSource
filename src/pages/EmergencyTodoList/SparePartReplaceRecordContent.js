@@ -19,7 +19,7 @@ import MonitorContent from '../../components/MonitorContent/index';
 /*
 页面：易耗品更换记录表
 */
-class ConsumablesReplaceRecord extends Component {
+class SparePartReplaceRecordContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -219,4 +219,4 @@ class ConsumablesReplaceRecord extends Component {
     }
 }
 
-export default ConsumablesReplaceRecord;
+export default SparePartReplaceRecordContent;
