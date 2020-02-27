@@ -107,7 +107,10 @@ export default Model.extend({
         
         yield put({
           type: 'setConfigInfo',
-          payload: response.Datas,
+          payload: {
+            GroupRegionState: 0,
+            ...response.Datas
+          },
         });
         yield put({
           type: 'settings/getSetting',

@@ -32,7 +32,7 @@ const iconStyle = {
 }
 
 @Form.create()
-@connect(({ loading, mapView, global }) => ({
+@connect(({ loading, mapView, global, user }) => ({
   allEntAndPointList: mapView.allEntAndPointList,
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
@@ -44,7 +44,8 @@ const iconStyle = {
   pollutantLoading: loading.effects['mapView/getPollutantList'],
   airChartLoading: loading.effects['mapView/getAirChartData'],
   curPointData: mapView.curPointData,
-  noticeList: global.notices
+  noticeList: global.notices,
+  menuFlattenList: user.menuFlattenList,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -65,7 +66,8 @@ class MapView extends Component {
       airVisible: false,
       currentDescItem: {},
       airShowType: undefined,
-      multiple: 4
+      multiple: 4,
+      menuNameList: [],
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -485,7 +487,11 @@ class MapView extends Component {
           clearInterval(timer)
         }
       }, 200);
-
+    }
+    if (this.props.menuFlattenList !== nextProps.menuFlattenList) {
+      this.setState({
+        menuNameList: nextProps.menuFlattenList.map(item => item.name)
+      })
     }
   }
 
@@ -551,7 +557,7 @@ class MapView extends Component {
 
   render() {
     const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData } = this.props;
-    const { currentEntInfo, currentKey } = this.state;
+    const { currentEntInfo, currentKey, menuNameList } = this.state;
     const option = {
       title: {
         text: `24小时趋势图`,
@@ -1052,24 +1058,30 @@ class MapView extends Component {
               //   }, 200);
               // })
             }}>
-              <TabPane tab="历史数据" key="1">
-                <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
-              </TabPane>
-              <TabPane tab="视频管理" key="2">
-                <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
-              </TabPane>
               {
-                this.state.currentPointInfo.PollutantType != "5" &&
+                menuNameList.includes("历史数据") && <TabPane tab="历史数据" key="1">
+                  <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
+                </TabPane>
+              }
+              {
+                menuNameList.includes("视频管理") && <TabPane tab="视频管理" key="2">
+                  <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
+                </TabPane>
+              }
+              {
+                menuNameList.includes("报警记录") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="报警记录" key="3">
                   <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
-              <TabPane tab="异常记录" key="4">
-                <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} />
-              </TabPane>
               {
-                this.state.currentPointInfo.PollutantType != "5" &&
-                <TabPane tab="超标记录" key="5">
+                menuNameList.includes("异常数据") && <TabPane tab="异常数据" key="4">
+                  <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} />
+                </TabPane>
+              }
+              {
+                menuNameList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
+                <TabPane tab="超标数据" key="5">
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }

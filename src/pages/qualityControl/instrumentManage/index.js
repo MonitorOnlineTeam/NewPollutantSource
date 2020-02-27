@@ -20,6 +20,7 @@ class InstrumentManage extends Component {
   }
   render() {
     const { configId } = this.state;
+    console.log("porps=",this.props.match.path)
     return (
       <PageHeaderWrapper>
         <Card>
@@ -27,13 +28,13 @@ class InstrumentManage extends Component {
             configId={configId}
             getPageConfig
             onAdd={() => {
-              router.push("/qualityControl/instrumentManage/add");
+              router.push(`${this.props.match.path}/add`);
             }}
             onEdit={(record, key) => {
-              router.push(`/qualityControl/instrumentManage/edit/${key}`);
+              router.push(`${this.props.match.path}/edit/${key}`);
             }}
             onView={(record, key) => {
-              router.push(`/qualityControl/instrumentManage/view/${key}`);
+              router.push(`${this.props.match.path}/view/${key}`);
             }}
           />
         </Card>

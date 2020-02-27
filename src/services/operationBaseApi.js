@@ -27,8 +27,12 @@ export async function getjzhistoryinfo(params) {
 export async function getOperationLogList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationPageList', params, null);
     return result === null ? {
-      data: null
+        data: null
     } : result;
-  }
+}
 
-
+// 零点量程漂移与校准 - 导出
+export async function exportReport(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportJzHistoryInfo', params, null);
+    return result;
+}

@@ -17,6 +17,7 @@ import BdTestRecordContent from '@/pages/EmergencyTodoList/BdTestRecordContent'
 import SDLTable from '@/components/SdlTable'
 import { routerRedux } from 'dva/router';
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
+import styles from "@/pages/AutoFormManager/index.less"
 
 const { Option } = Select;
 
@@ -31,6 +32,7 @@ const { Option } = Select;
   currentRecordType: operationform.currentRecordType,
   recordTypeList: operationform.recordTypeList,
   currentDate: operationform.currentDate,
+  exportReportLoading: loading.effects['operationform/exportReport'],
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -93,14 +95,7 @@ class OperationRecord extends Component {
         currentRecordType: value
       }
     })
-    setTimeout(() => {
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType()
-        }
-      })
-    }, 0)
+
 
     if (value == '8') {
       this.props.dispatch({
@@ -111,6 +106,15 @@ class OperationRecord extends Component {
           EndTime: this.props.EndTime
         }
       })
+    } else {
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'autoForm/getPageConfig',
+          payload: {
+            configId: this.getRecordType()
+          }
+        })
+      }, 0)
     }
   }
   // onTreeSearch = (val) => {
@@ -228,14 +232,7 @@ class OperationRecord extends Component {
         currentDate: [date[0], date[1]]
       }
     })
-    setTimeout(() => {
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType()
-        }
-      })
-    }, 0)
+
     if (this.props.currentRecordType == '8') {
       this.props.dispatch({
         type: 'operationform/getjzhistoryinfo',
@@ -245,11 +242,32 @@ class OperationRecord extends Component {
           EndTime: date[1].format('YYYY-MM-DD HH:mm:ss')
         }
       })
+    } else {
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'autoForm/getPageConfig',
+          payload: {
+            configId: this.getRecordType()
+          }
+        })
+      }, 0)
     }
   };
 
+  // 零点量程漂移与校准 - 导出报表
+  export = () => {
+    this.props.dispatch({
+      type: "operationform/exportReport",
+      payload: {
+        DGIMN: this.props.DGIMN,
+        BeginTime: this.props.BeginTime,
+        EndTime: this.props.EndTime
+      }
+    })
+  }
+
   render() {
-    const { RecordTypeTree, recordTypeList, currentRecordType } = this.props
+    const { RecordTypeTree, recordTypeList, currentRecordType, exportReportLoading } = this.props
     const { columns, searchParams } = this.state
     const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
     const currentType = currentRecordType || 1;
@@ -260,7 +278,7 @@ class OperationRecord extends Component {
           extra={
             <>
               <Select
-                style={{ width: 220 }}
+                style={{ width: 220, marginRight: 10 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
                 value={defaultValue}
@@ -298,15 +316,29 @@ class OperationRecord extends Component {
         >
           <Card.Grid style={{ width: '100%', height: 'calc(100vh - 270px)', overflow: "auto", ...this.props.style, }}>
             {this.props.currentRecordType == '8' ?
-              <SDLTable
-                dataSource={this.props.JZDatas}
-                columns={columns}
-              >
-              </SDLTable>
+              <>
+                <Row className={styles.buttonWrapper}>
+                  <Button
+                    style={{ marginRight: 8 }}
+                    icon="export"
+                    type="primary"
+                    loading={exportReportLoading}
+                    onClick={() => {
+                      this.export();
+                    }}
+                  >导出
+                         </Button>
+                </Row>
+                <SDLTable
+                  dataSource={this.props.JZDatas}
+                  columns={columns}
+                >
+                </SDLTable>
+              </>
               :
               ((this.state.configName && currentType) ? <AutoFormTable
                 // (this.state.configName && this.props.RecordType ? <AutoFormTable
-                configId={this.state.configName}
+                configId={this.state.configName || "FormMainInfoPic"}
                 searchParams={searchParams}
                 appendHandleRows={row => {
                   return <Tooltip title="详情">

@@ -258,16 +258,26 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.allEntAndPointList !== nextProps.allEntAndPointList) {
-      if (_thismap) {
-        _thismap.setFitView();
-      } else {
-        setTimeout(() => {
+      // if (_thismap) {
+      //   _thismap.setFitView();
+      // } else {
+      //   setTimeout(() => {
+      //     _thismap.setFitView();
+      //     this.setState({
+      //       zoom: _thismap.getZoom()
+      //     })
+      //   }, 2000)
+      // }
+
+      const timer = setInterval(() => {
+        if (_thismap) {
           _thismap.setFitView();
           this.setState({
             zoom: _thismap.getZoom()
           })
-        }, 2000)
-      }
+          clearInterval(timer)
+        }
+      }, 200);
     }
 
     if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
@@ -277,7 +287,12 @@ class index extends Component {
           mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
           zoom: 13
         })
-        _thismap.setFitView();
+        const timer = setInterval(() => {
+          if (_thismap) {
+            _thismap.setFitView();
+            clearInterval(timer)
+          }
+        }, 200);
         // _thismap.setZoomAndCenter(13, [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude])
       }
     }
@@ -294,9 +309,17 @@ class index extends Component {
       this.setState({
         currentMarkersList
       }, () => {
-        setTimeout(() => {
-          _thismap.setFitView();
-        }, 2000)
+        // setTimeout(() => {
+        //   _thismap.setFitView();
+        // }, 2000)
+        const timer = setInterval(() => {
+          if (_thismap) {
+            _thismap.setFitView();
+            clearInterval(timer)
+          }
+        }, 200);
+
+
       })
     }
   }

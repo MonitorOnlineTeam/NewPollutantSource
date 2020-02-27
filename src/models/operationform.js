@@ -7,84 +7,94 @@
  */
 import Model from '@/utils/model';
 import {
-    getrecordtypebymn, getjzhistoryinfo, getOperationLogList
+  getrecordtypebymn, getjzhistoryinfo, getOperationLogList, exportReport
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
 
 export default Model.extend({
-    namespace: 'operationform',
+  namespace: 'operationform',
 
-    state: {
-        RecordTypeTree: [],
-        JZDatas: [],
-        RecordType: '',
-        rangDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
-        PollutantTypes: '',
-        BeginTime: moment(new Date()).add(-3, 'month'),
-        EndTime: moment(new Date()),
-        currentRecordType: null,
-        recordTypeList: [],
-        currentDate: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
+  state: {
+    RecordTypeTree: [],
+    JZDatas: [],
+    RecordType: '',
+    rangDate: [moment(new Date()).add(-3, 'month'), moment(new Date())],
+    PollutantTypes: '',
+    BeginTime: moment(new Date()).add(-3, 'month'),
+    EndTime: moment(new Date()),
+    currentRecordType: null,
+    recordTypeList: [],
+    currentDate: [moment().subtract(3, 'month').startOf("day"), moment().endOf("day")],
+  },
+  subscriptions: {
+    setup({
+      dispatch,
+      history
+    }) {
+      history.listen((location) => {
+      });
     },
-    subscriptions: {
-        setup({
-            dispatch,
-            history
-        }) {
-            history.listen((location) => {
-            });
-        },
-    },
+  },
 
-    effects: {
-        /*【智能运维】获取污染物系统污染物**/
-        * getrecordtypebymn({
-            payload, callback
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(getrecordtypebymn, { ...payload });
-            if (result.IsSuccess) {
-                yield update({
-                    RecordTypeTree: result.Datas,
-                    RecordType: result.Datas && result.Datas[0].key
-                });
-                callback && callback(result)
-            }
-        },
-        /*【智能运维】获取零点量程漂移与校准记录表**/
-        * getjzhistoryinfo({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(getjzhistoryinfo, { ...payload });
-            if (result.IsSuccess) {
-                yield update({
-                    JZDatas: result.Datas
-                });
-            }
-        },
-        // 获取运维日志信息
-        * getOperationLogList({ payload, callback }, { call, put, update, select }) {
-            const postData = {
-                "RecordType": "",
-                "beginTime": moment().format('YYYY-MM-DD 00:00:00'),
-                "endTime": moment().format('YYYY-MM-DD 23:59:59'),
-                ...payload
-            }
-            const result = yield call(getOperationLogList, postData);
-            if (result.IsSuccess) {
-                yield update({
-                    recordTypeList: result.Datas.RecordType,
-                })
-                callback && callback();
-            }
-        },
+  effects: {
+    /*【智能运维】获取污染物系统污染物**/
+    * getrecordtypebymn({
+      payload, callback
+    }, {
+      call,
+      update,
+    }) {
+      const result = yield call(getrecordtypebymn, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          RecordTypeTree: result.Datas,
+          RecordType: result.Datas && result.Datas[0].key
+        });
+        callback && callback(result)
+      }
     },
-    reducers: {
+    /*【智能运维】获取零点量程漂移与校准记录表**/
+    * getjzhistoryinfo({
+      payload
+    }, {
+      call,
+      update,
+    }) {
+      const result = yield call(getjzhistoryinfo, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          JZDatas: result.Datas
+        });
+      }
     },
+    // 获取运维日志信息
+    * getOperationLogList({ payload, callback }, { call, put, update, select }) {
+      const postData = {
+        "RecordType": "",
+        "beginTime": moment().format('YYYY-MM-DD 00:00:00'),
+        "endTime": moment().format('YYYY-MM-DD 23:59:59'),
+        ...payload
+      }
+      const result = yield call(getOperationLogList, postData);
+      if (result.IsSuccess) {
+        yield update({
+          recordTypeList: result.Datas.RecordType,
+        })
+        callback && callback();
+      }
+    },
+    // 获取运维日志信息
+    * exportReport({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(exportReport, payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas);
+        message.success('导出成功')
+      }else{
+        message.error(result.Message);
+      }
+    },
+  },
+  reducers: {
+  },
 });

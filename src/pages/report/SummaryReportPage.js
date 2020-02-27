@@ -62,6 +62,9 @@ class DailySummaryPage extends PureComponent {
     //     "ReportTime": "2019-06-29"
     //   }
     // })
+    if(this.props.match.params.reportType === "daily"){
+      this.props.form.setFieldsValue({"ReportTime": moment().add(-1, "day")})
+    }
     const { defaultSearchForm } = this.SELF;
     // 获取污染物 - 查询条件
     this.props.dispatch({

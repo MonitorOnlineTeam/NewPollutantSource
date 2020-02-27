@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-14 16:47:28
+ * @Last Modified time: 2020-02-19 18:42:52
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -10,48 +10,79 @@ import {
   Table,
 } from 'antd';
 import styles from './index.less'
+import { Resizable } from 'react-resizable';
 
 // const DEFAULT_WIDTH = 180;
+
+
+const ResizeableTitle = props => {
+  const { onResize, width, ...restProps } = props;
+
+  if (!width) {
+    return <th {...restProps} />;
+  }
+
+  return (
+    <Resizable
+      width={width}
+      height={0}
+      onResize={onResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+    >
+      <th {...restProps} />
+    </Resizable>
+  );
+};
 
 class SdlTable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      _props: {}
+      _props: {},
+      columns: props.columns
+    };
+
+    this.components = {
+      header: {
+        cell: ResizeableTitle,
+      },
     };
   }
 
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width || defaultWidth,
+      };
+      return { columns: nextColumns };
+    });
+  };
+
   componentWillReceiveProps(nextProps) {
     if (this.props.dataSource !== nextProps.dataSource) {
-      if (nextProps.dataSource.length > 4 && !nextProps.className) {
-        this.setState({
-          _props: {
-            className: "sdlTable"
-          }
-        })
-      }else{
-        this.setState({
-          _props: {}
-        })
+      let _props = {};
+      if (nextProps.dataSource && nextProps.dataSource.length > 4 && !nextProps.className) {
+        _props.className = "sdlTable"
       }
+      this.setState({
+        _props
+      })
+    }
+    if(this.props.columns !== nextProps.columns) {
+      this.setState({
+        columns: nextProps.columns
+      })
     }
   }
 
   render() {
-    const { columns, defaultWidth } = this.props;
-    const { _props } = this.state;
-    // let _props = {}
-    // if (this.sdlTable && this.sdlTable.props.dataSource && this.sdlTable.props.dataSource.length && this.sdlTable.props.dataSource.length > 5) {
-    //   _props = {
-    //     className: "sdlTable"
-    //   }
-    // }else{
-    //   _props = {}
-    // }
-    // console.log('this.sdlTable=', this.sdlTable)
-    // console.log('_props=', _props)
+    const { defaultWidth, resizable } = this.props;
+    const { _props, columns } = this.state;
+
     // 处理表格长度，防止错位
-    let _columns = (columns || []).map(col => {
+    let _columns = (columns || []).map((col, index) => {
       return {
         render: (text, record) => {
           return text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
@@ -60,6 +91,10 @@ class SdlTable extends PureComponent {
         },
         ...col,
         width: col.width || defaultWidth,
+        onHeaderCell: column => ({
+          width: column.width,
+          onResize: resizable ? this.handleResize(index) : undefined,
+        })
       }
     })
 
@@ -69,6 +104,7 @@ class SdlTable extends PureComponent {
         ref={(table) => { this.sdlTable = table }}
         rowKey={record => record.id || record.ID}
         size="small"
+        components={resizable ? this.components : undefined}
         // className={styles.dataTable}
         rowClassName={
           (record, index, indent) => {
@@ -92,7 +128,8 @@ class SdlTable extends PureComponent {
 }
 
 SdlTable.defaultProps = {
-  defaultWidth: 180
+  defaultWidth: 180,
+  resizable: false
 }
 
 export default SdlTable;

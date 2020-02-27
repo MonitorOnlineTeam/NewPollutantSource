@@ -201,9 +201,9 @@ class AutoFormTable extends PureComponent {
     });
   }
   _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode } = this.props;
+    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode, configId } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
-    const { btnEl, configId, moreBtns } = this._SELF_;
+    const { btnEl, moreBtns } = this._SELF_;
     return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
       switch (btn.DISPLAYBUTTON) {
         case 'add':
@@ -239,7 +239,20 @@ class AutoFormTable extends PureComponent {
           break;
         // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
         case 'exp':
-          moreBtns.push({ type: 'export', text: '导出' })
+          if (opreationButtons[configId].length === 1) {
+            return <Button
+              style={{ marginRight: 8 }}
+              icon="export"
+              key={btn.DISPLAYBUTTON}
+              type="primary"
+              onClick={() => {
+                this.export();
+              }}
+            >导出
+                         </Button>;
+          } else {
+            moreBtns.push({ type: 'export', text: '导出' })
+          }
           break;
         //   return <Button
         //     icon="export"
@@ -306,10 +319,30 @@ class AutoFormTable extends PureComponent {
     }
   }
 
+  export = () => {
+    const { dispatch, configId, searchParams } = this.props;
+    dispatch({
+      type: 'autoForm/exportDataExcel',
+      payload: {
+        configId,
+        IsPaging: false,
+        ConditionWhere: JSON.stringify(
+          {
+            rel: '$and',
+            group: [{
+              rel: '$and',
+              group: [
+                ...searchParams,
+              ],
+            }],
+          }),
+      },
+    })
+  }
+
   // 更多按钮点击
   moreClick(e) {
-    const { dispatch } = this.props;
-    const { configId } = this._SELF_;
+    const { dispatch, configId } = this.props;
     switch (e.key) {
       // 打印
       case 'printer':
@@ -323,12 +356,7 @@ class AutoFormTable extends PureComponent {
         break;
       // 导出
       case 'export':
-        dispatch({
-          type: 'autoForm/exportDataExcel',
-          payload: {
-            configId,
-          },
-        })
+        this.export()
         break;
       default:
         break;
@@ -505,7 +533,7 @@ class AutoFormTable extends PureComponent {
     }
 
 
-    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
+    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth + 100, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
     const rowSelection = checkboxOrRadio ? {
       type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,
@@ -521,6 +549,20 @@ class AutoFormTable extends PureComponent {
       action: config.uploadHost + 'rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
       data: {
         ConfigID: configId,
+      },
+      onChange: (info) => {
+        if (info.file.status === 'done') {
+          this.loadDataSource();
+          message.success("导入成功");
+          this.setState({
+            visible: false
+          })
+        } else if (info.file.status === 'error') {
+          message.error('上传文件失败！')
+        }
+        // this.setState({
+        //   fileList: info.fileList
+        // })
       },
       // onChange(info) {
       //   const status = info.file.status;

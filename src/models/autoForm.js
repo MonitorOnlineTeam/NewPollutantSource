@@ -55,7 +55,7 @@ export default Model.extend({
         for (const key in searchForm) {
           let groupItem = {};
           // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
-          if (searchForm[key] && searchForm[key].value) {
+          if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
             // 是否是moment对象
             const isMoment = moment.isMoment(searchForm[key].value);
             const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);

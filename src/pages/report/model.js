@@ -23,15 +23,24 @@ export default Model.extend({
     dateReportData: [],
     enterpriseList: [],
     dailySummaryDataList: [],
-    statisticsReportDataList:[],
-    EntSewageList:[],
-    StatisticsReportDataWhere:{
-      MonitorTime: moment().add(-1,'month'),
-      EntList:[],
-      PageIndex:1,
-      PageSize:10,
-      total:0
+    statisticsReportDataList: [],
+    EntSewageList: [],
+    StatisticsReportDataWhere: {
+      MonitorTime: moment().add(-1, 'month'),
+      EntList: [],
+      PageIndex: 1,
+      PageSize: 10,
+      total: 0
     },
+    // 烟气报表 ----- 开始
+    smokeReportFrom: {
+      current: 1,
+      pageSize: 34,
+      total: 0,
+    },
+    smokeReportData: [],
+    pointName: "",
+    // 烟气报表 ----- 结束
   },
 
   effects: {
@@ -181,23 +190,79 @@ export default Model.extend({
       }
     },
     //数据上报报表
-    *getStatisticsReportDataList({payload},{call,update,select}){
-       const params=yield select(a=>a.report.StatisticsReportDataWhere);
-       const result= yield call(services.getStatisticsReportDataList, params);
-       yield update({statisticsReportDataList:result.Datas,total:result.Total})
+    *getStatisticsReportDataList({ payload }, { call, update, select }) {
+      const params = yield select(a => a.report.StatisticsReportDataWhere);
+      const result = yield call(services.getStatisticsReportDataList, params);
+      yield update({ statisticsReportDataList: result.Datas, total: result.Total })
     },
     //污水处理厂列表
-    *getEntSewageList({payload},{call,update}){
-      const result= yield call(services.getEntSewageList, payload);
-      yield update({EntSewageList:result.Datas})
-   },
-     // 汇总报表导出
-     * getStatisticsReportDataExcel({ payload }, { call, update,select }) {
-      const params=yield select(a=>a.report.StatisticsReportDataWhere);
-      
-      const result = yield call(services.getStatisticsReportDataExcel, {...params,PageIndex:null,PageSize:null});
+    *getEntSewageList({ payload }, { call, update }) {
+      const result = yield call(services.getEntSewageList, payload);
+      yield update({ EntSewageList: result.Datas })
+    },
+    // 汇总报表导出
+    * getStatisticsReportDataExcel({ payload }, { call, update, select }) {
+      const params = yield select(a => a.report.StatisticsReportDataWhere);
+
+      const result = yield call(services.getStatisticsReportDataExcel, { ...params, PageIndex: null, PageSize: null });
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
+      } else {
+        message.error(result.message)
+      }
+    },
+    // 获取企业及排口
+    *getEntAndPoint({ payload }, { call, update, put }) {
+      const result = yield call(services.getEntAndPoint, payload);
+      if (result.IsSuccess) {
+        const filterData = result.Datas.filter(item => {
+          if (item.children.length) {
+            let children = item.children.map(itm => {
+              let obj = itm;
+              delete obj.children;
+              return { ...obj }
+            })
+            return {
+              ...item,
+              children
+            }
+          }
+        })
+        yield update({
+          entAndPointList: filterData,
+          defaultEntAndPoint: [filterData[0].key, filterData[0].children[0].key],
+          pointName: filterData[0].children[0].title
+        })
+        // 获取数据
+        yield put({
+          type: "getSmokeReportData",
+          payload: {
+            DGIMN: filterData[0].children[0].key,
+            time: moment().format("YYYY-MM-DD HH:mm:ss"),
+            dataType: payload.reportType
+          }
+        })
+      } else {
+        message.error(result.message)
+      }
+    },
+
+    // 获取报表数据
+    *getSmokeReportData({ payload }, { call, update }) {
+      const result = yield call(services.getSmokeReportData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          smokeReportData: result.Datas
+        })
+      } else {
+        message.error(result.message)
+      }
+    },
+    // 烟气报表导出
+    *exportSmokeReport({ payload }, { call, update }) {
+      const result = yield call(services.exportSmokeReport, payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas)
       } else {
         message.error(result.message)
       }

@@ -286,7 +286,7 @@ class ResultContrastPage extends Component {
       // </Form>
       <Row>
         <Col style={{ color: "#524e4e", fontSize: 14 }} span={22}>
-          {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，质控结果为<span style={{ color: color }}>{result}</span>
+    {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，正负误差为{this.props.resultContrastData.qcaResultOffset}，质控结果为<span style={{ color: color }}>{result}</span>
         </Col>
       </Row>
     )

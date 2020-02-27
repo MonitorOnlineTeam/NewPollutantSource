@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { Card, List, Tag, Icon, Button, Popconfirm } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import styles from './ExceptionAlarm.less';
-import UrgentDispatch from "./UrgentDispatch";
 import { routerRedux } from 'dva/router';
+import styles from './ExceptionAlarm.less';
+import UrgentDispatch from './UrgentDispatch';
 import PdButton from './PdButton';
 
 @connect(({
@@ -25,16 +25,47 @@ class ExceptionAlarm extends PureComponent {
 
 
     componentDidMount() {
+        console.log('22222222222222');
         this.reload();
     }
 
     reload = () => {
-        const { dispatch, DGIMN } = this.props;
+        const { dispatch, DGIMN, Types, firsttime, lasttime } = this.props;
+        debugger;
+        let {
+          exceptionAlarm,
+        } = this.props;
+        if (Types !== '1') {
+             exceptionAlarm = {
+               ...exceptionAlarm,
+               beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+               endTime: moment().format('YYYY-MM-DD 23:59:59'),
+             }
+             dispatch({
+               type: 'workbenchmodel/updateState',
+               payload: {
+                 exceptionAlarm,
+               },
+             })
+        } else {
+             exceptionAlarm = {
+               ...exceptionAlarm,
+               beginTime: firsttime,
+                 endTime: lasttime,
+             }
+             dispatch({
+               type: 'workbenchmodel/updateState',
+               payload: {
+                 exceptionAlarm,
+               },
+             })
+        }
         dispatch({
-            type: "workbenchmodel/getExceptionAlarmData",
+            type: 'workbenchmodel/getExceptionAlarmData',
             payload: {
-                DGIMN: DGIMN
-            }
+                DGIMN,
+                Type: Types,
+            },
         })
     }
 
@@ -45,17 +76,16 @@ class ExceptionAlarm extends PureComponent {
         let listData = [];
         const { exceptionAlarm } = this.props;
         const colorArray = {
-            "数据超标": "red",
-            "超标预警": "blue",
-            "数据异常": "gold",
-            "参数异常": "yellow",
-            "逻辑异常": "volcano",
-            "状态异常": "orange"
+            数据超标: 'red',
+            超标预警: 'blue',
+            数据异常: 'gold',
+            参数异常: 'yellow',
+            逻辑异常: 'volcano',
+            状态异常: 'orange',
         };
         listData = exceptionAlarm.tableDatas.map((item, key) => {
-
             console.log(item);
-            //判断报警是否超过4小时
+            // 判断报警是否超过4小时
             const seconds = moment().diff(moment(item.FirstAlarmTime), 'minutes');
             const hour = Math.floor(seconds / 60);
             const minutes = Math.floor(seconds % 60);
@@ -63,10 +93,10 @@ class ExceptionAlarm extends PureComponent {
             const minutesLable = minutes > 0 ? `${minutes}分钟` : '';
 
             const labelDiv = <div style={{ color: `${color}` }}>已发生{hour}小时{minutesLable}</div>;
-            //未响应，按钮是派单;响应了超过4个小时是督办
+            // 未响应，按钮是派单;响应了超过4个小时是督办
             let btnDiv = '';
 
-            if (hour >= 4 || item.State == "0") {
+            if (hour >= 4 || item.State == '0') {
                 btnDiv =
                     <div style={{ marginTop: 43 }}>
                         <PdButton DGIMN={item.DGIMNs} id={item.OperationUserTel}
@@ -77,7 +107,7 @@ class ExceptionAlarm extends PureComponent {
 
             return {
                 // href: 'http://ant.design',
-                key: key,
+                key,
                 title: `${item.PointName}`,
                 avatar: (<Icon type="alert" theme="twoTone" />),
                 description: (
@@ -100,7 +130,7 @@ class ExceptionAlarm extends PureComponent {
                         {labelDiv}
                         {btnDiv}
                     </div>
-                )
+                ),
             };
         });
         return (
@@ -126,10 +156,10 @@ class ExceptionAlarm extends PureComponent {
     render() {
         const { selectpoint } = this.state;
         return (
-            <div style={{maxHeight:"70vh"}}>
+            <div style={{ maxHeight: '70vh' }}>
                 <Card
                     // title="异常报警"
-                    style={{ marginBottom: 10 ,maxHeight:"70vh",overflowY:"auto"}}
+                    style={{ marginBottom: 10, maxHeight: '70vh', overflowY: 'auto' }}
                     bordered={false}
                     // extra={<a href="#">更多>></a>}
                     className={styles.exceptionAlarm}

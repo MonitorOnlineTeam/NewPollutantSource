@@ -24,5 +24,10 @@ export async function exportDataAuditReport(params) {
   return result;
 }
 
+// 导出历史数据报表
+export async function exportHistoryReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataList', params, null);
+  return result;
+}
 
 

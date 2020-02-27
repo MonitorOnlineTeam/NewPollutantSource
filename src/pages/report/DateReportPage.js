@@ -95,6 +95,9 @@ class SiteDailyPage extends PureComponent {
   }
 
   componentDidMount() {
+    if (this.props.match.params.reportType === "siteDaily") {
+      this.props.form.setFieldsValue({ "ReportTime": moment().add(-1, "day") })
+    }
     const { defaultSearchForm } = this.SELF;
     // 获取污染物 - 查询条件
     this.props.dispatch({

@@ -70,6 +70,11 @@ class LogTimeList extends Component {
         this.getOperationLogList(flag)
       })
     }
+    if (this.props.recordTypeList !== nextProps.recordTypeList) {
+      this.setState({
+        recordTypeList: []
+      })
+    }
   }
 
   getStatusColor = (status) => {
@@ -195,7 +200,8 @@ class LogTimeList extends Component {
     const { recordTypeList, timeLineList, timeLineTotal, imageList, style, logForm, loading, currentRecordType } = this.props;
     const { dateValues, current, previewVisible, previewImage } = this.state;
     // let defaultValue = logForm.RecordType || undefined;
-    let defaultValue = currentRecordType || undefined;
+    // let defaultValue = currentRecordType || undefined;
+    // console.log("defaultValue=", defaultValue)
     return (
       <>
         <Card
@@ -203,8 +209,8 @@ class LogTimeList extends Component {
           extra={
             <div>
               <Select
-                value={defaultValue}
-                style={{ width: 220 }}
+                value={currentRecordType}
+                style={{ width: 220, marginRight: 10 }}
                 placeholder="请选择记录表"
                 allowClear
                 onChange={(value) => {
@@ -231,6 +237,7 @@ class LogTimeList extends Component {
                   })
                 }}
               >
+                <Option value={null} key="null">全部</Option>
                 {
                   recordTypeList.map(item => {
                     return <Option value={item.TypeId} key={item.TypeId}>{item.Abbreviation}</Option>
@@ -267,7 +274,7 @@ class LogTimeList extends Component {
                 allowClear={false}
               />
               <Radio.Group defaultValue="log" buttonStyle="solid" onChange={(e) => {
-                if(e.target.value === "operationrecord") {
+                if (e.target.value === "operationrecord") {
                   router.push(`/operations/operationrecord`)
                 }
               }}>
