@@ -40,6 +40,14 @@ function formatter(data, parentPath = '') {
   return [];
 }
 
+function getMenuList(target, init = []) {
+  target.forEach(item => {
+    init.push(item);
+    item.children && getMenuList(item.children, init);
+  });
+  return init;
+};
+
 export default Model.extend({
   namespace: 'user',
 
@@ -87,6 +95,7 @@ export default Model.extend({
             payload: {
               currentUser,
               currentMenu: cMenu,
+              menuFlattenList: getMenuList(cMenu)
             },
           });
         } else {
