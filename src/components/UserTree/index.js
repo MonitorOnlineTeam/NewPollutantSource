@@ -67,10 +67,11 @@ class UserTree extends Component {
     }
     this.getroles();
     this.getdepart();
-    const { dispatch } = this.props;
+    const { dispatch,RoleID } = this.props;
     dispatch({
       type: 'usertree/GetUserList',
       payload: {
+        RolesID:RoleID?RoleID:null,
         callback: model => {
             if (model.length > 0) {
               this.generateList();
@@ -95,20 +96,21 @@ class UserTree extends Component {
       type: 'usertree/getrolestreeandobj',
       payload: {
         Type: '0',
+        RoleID:this.props.RoleID?this.props.RoleID:null
       },
     })
   }
 
   /** 选中角色加载树 */
   onRolesChange=value => {
-    const { dispatch } = this.props;
+    const { dispatch,RoleID } = this.props;
     this.setState({
       Roles: value,
     }, () => {
     dispatch({
         type: 'usertree/GetUserList',
         payload: {
-          RolesID: this.state.Roles,
+          RolesID: this.state.Roles? this.state.Roles:(RoleID?RoleID:null),
           UserGroupID: this.state.Depart,
           UserName: this.state.UserName,
           callback: model => {
@@ -133,14 +135,14 @@ class UserTree extends Component {
 
   /** 选中部门加载树 */
   onDepartChange = value => {
-    const { dispatch } = this.props;
+    const { dispatch,RoleID } = this.props;
     this.setState({
       Depart: value,
     }, () => {
       dispatch({
         type: 'usertree/GetUserList',
         payload: {
-          RolesID: this.state.Roles,
+          RolesID: this.state.Roles? this.state.Roles:(RoleID?RoleID:null),
           UserGroupID: this.state.Depart,
           UserName: this.state.UserName,
           callback: model => {

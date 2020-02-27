@@ -418,28 +418,33 @@ class EmergencyDetailInfo extends Component {
         let Attachments = ''; // 附件
         let TaskLogList = []; // 任务日志列表
         let RecordTypeInfo = [];
-        debugger;
         if (isExistTask) {
             Attachments = this.props.taskInfo.Datas[0].Attachments;
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
+            
             if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
                 this.props.taskInfo.Datas[0].AlarmList.map(item => {
                     if (item !== null) {
+                   
                         let AlarmType = '';
                         let AlarmCount = 0;
-                        item.MsgTypeList.map(item => {
-                            AlarmType += `${item.MsgTypeText},`;
-                            AlarmCount += item.AlarmCount;
-                        });
+                        if(item.MsgTypeList)
+                        {
+                            item.MsgTypeList.map(item => {
+                                AlarmType += `${item.MsgTypeText},`;
+                                AlarmCount += item.AlarmCount;
+                            });
+                        }
                         AlarmList.push({
                             key: item.AlarmSourceType,
-                            FirstAlarmTime: item.FirstAlarmTime,
-                            LastAlarmTime: item.LastAlarmTime,
-                            AlarmMsg: AlarmType !== '' ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
-                            AlarmCount,
+                            FirstAlarmTime: item.FirstTime,
+                            LastAlarmTime: item.AlarmTime,
+                           // AlarmMsg: AlarmType !== '' ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
+                           AlarmMsg:item.AlarmMsg,
+                            AlarmCount:item.AlarmCount,
                             MsgTypeList: item.MsgTypeList,
-                            AlarmType: item.AlarmSourceTypeText,
+                            AlarmType: item.AlarmType,
                         });
                     }
                 });
@@ -489,37 +494,72 @@ class EmergencyDetailInfo extends Component {
             width: '10%',
             dataIndex: 'AlarmType',
             key: 'AlarmType',
+            render:(text,row,index)=>{
+                 switch(text)
+                 {
+                    case "0":
+                        return "数据异常"
+                      break;
+                     case "1":
+                       return "参数异常"
+                     break;
+                     case "2":
+                        return "数据超标"
+                      break;
+                      case "3":
+                        return "状态异常"
+                      break;
+                      case "4":
+                        return "逻辑异常"
+                      break;
+                      case "5":
+                        return "超标预警"
+                      break;
+                      case "6":
+                        return "过期时间报警"
+                      break;
+                      case "7":
+                        return "余量不足报警"
+                      break;
+                      case "8":
+                        return "工作状态异常"
+                      break;
+                      case "9":
+                        return "压力异常报警"
+                      break;
+                 }
+            }
         }, {
-            title: '异常类型',
+            title: '异常描述',
             dataIndex: 'AlarmMsg',
             width: '35%',
             key: 'AlarmMsg',
-            render: (text, row, index) => {
-                if (text !== null && text !== '') {
-                    const types = [];
-                    text.split(',').map(item => {
-                        const dot = types.length + 1 < text.split(',').length ? '，' : '';
-                        types.push(<span><a
-                            href="javascript:;"
-                            onClick={
-                                () => {
-                                    const alarmList = row.MsgTypeList.filter(i => i.MsgTypeText === item);
-                                    this.setState({
-                                        moreAlarmList: alarmList,
-                                        alarmType: row.AlarmType,
-                                        visible: true,
-                                    });
-                                }
-                            }
-                        >{item}
-                        </a>{dot}
-                        </span>);
-                    });
-                    return {
-                        children: types,
-                    };
-                }
-            },
+            // render: (text, row, index) => {
+            //     if (text !== null && text !== '') {
+            //         const types = [];
+            //         text.split(',').map(item => {
+            //             const dot = types.length + 1 < text.split(',').length ? '，' : '';
+            //             types.push(<span><a
+            //                 href="javascript:;"
+            //                 onClick={
+            //                     () => {
+            //                         const alarmList = row.MsgTypeList.filter(i => i.MsgTypeText === item);
+            //                         this.setState({
+            //                             moreAlarmList: alarmList,
+            //                             alarmType: row.AlarmType,
+            //                             visible: true,
+            //                         });
+            //                     }
+            //                 }
+            //             >{item}
+            //             </a>{dot}
+            //             </span>);
+            //         });
+            //         return {
+            //             children: types,
+            //         };
+            //     }
+            // },
         }, {
             title: '报警次数',
             dataIndex: 'AlarmCount',

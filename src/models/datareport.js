@@ -1,6 +1,7 @@
 import Model from '@/utils/model';
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
+import moment from 'moment';
 import {
     getDataReportUserAndEntInfo,
     addDataReport,
@@ -16,6 +17,17 @@ export default Model.extend({
     namespace: 'datareport',
     state: {
       userandentInfo: null,
+      reportwhere:[{
+        Key: 'dbo__T_Bas_DataReporting__MonitorTime',
+        Value: moment().format('YYYY-MM-01 00:00:00'),
+        Where: '$gte',
+     },{
+         Key: 'dbo__T_Bas_DataReporting__MonitorTime',
+         Value: moment().add(1,'month').format('YYYY-MM-01 00:00:00'),
+         Where: '$lt',
+      }],
+      selectEntCode:null,
+      selectmonth:moment()
     },
     subscriptions: {
       setup({ dispatch, history }) {

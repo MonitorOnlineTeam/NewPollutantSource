@@ -130,6 +130,10 @@ export default {
             { path: '/appoperation/appbdtestrecord/:TaskID/:TypeID', component: './AppOperation/AppBdTestRecord' },
             /* CEMS设备异常记录表 */
             { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
+            /* 保养项更换记录表 */
+            { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
+            /* 易耗品更换记录表 */
+            { path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppSparePartReplaceRecord' },
           ],
         },
         {
@@ -224,40 +228,46 @@ export default {
                 },
               ],
             },
-
+            //污水处理台
             {
               path: '/SewagePlant',
               name: 'SewagePlant',
               routes: [
                 {
                   path: '/SewagePlant',
-                  redirect: '/platformconfig/monitortarget/AEnterpriseTest',
+                  redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
                 },
                 // 数据上报列表
                 {
-                  name: 'DataReporting',
-                  path: '/SewagePlant/DataReporting/:configId',
-                  component: './platformManager/dataReport/',
+                    name: 'DataReporting',
+                    path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                    ///:monitortime/:entcode
+                    component: './platformManager/dataReport/',
                 },
                 // 数据上报添加或修改
                 {
-                  name: 'DataReportingAdd',
-                  path: '/SewagePlant/DataReportingAdd/:configId/:id',
-                  component: './platformManager/dataReport/components/addDataReport',
+                    name: 'DataReportingAdd',
+                    path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                    component: './platformManager/dataReport/components/addDataReport',
                 },
+                //统计报表
+                {
+                  name:'statisticsReportDataList',
+                  path:'/SewagePlant/dataReportList/statisticsReportDataList',
+                  component: './report/StatisticsReportDataList',
+                }
               ]
             },
             {
               path: '/platformconfig',
               name: 'platformconfig',
               routes: [
-
                 {
                   path: '/platformconfig',
-                  redirect: '/platformconfig/monitortarget/AEnterpriseTest',
+                  redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
                 },
                 {
-                  // 设备管理
+                  // 设备管理 
                   name: 'equipmentManage',
                   path: '/platformconfig/equipmentManage',
                   component: './platformManager/equipmentManage',

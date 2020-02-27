@@ -162,7 +162,7 @@ export default class MonitorTarget extends Component {
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-        // console.log("this.props=", this.props);
+      //   console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
         if (this.props.loading) {
@@ -230,12 +230,14 @@ export default class MonitorTarget extends Component {
                                         this.editMonitorInfo('', row);
                                     }}><PointIcon />    </a>
                                 </Tooltip>
-                                <Divider type="vertical" />
+
+                                {configId=="Station"?"":<><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {
                                         this.adddischargepermit('', row);
                                     }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
-                                </Tooltip>
+                                </Tooltip></>}
+                               
                             </Fragment>}
                             parentcode="platformconfig"
                             {...this.props}
