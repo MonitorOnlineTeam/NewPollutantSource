@@ -118,9 +118,11 @@ export default class GlobalHeaderRight extends PureComponent {
 
   // 取消Model
   onCancel = () => {
+   
     this.setState({
       visible: false,
     });
+
   }
 
   render() {

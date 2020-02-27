@@ -11,7 +11,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { routerRedux } from 'dva/router';
-// import styles from './style.less';
+import styles from './addDataReport.less';
 import { sdlMessage, handleFormData, getRowCuid } from '@/utils/utils';
 @connect(({ loading, autoForm, datareport }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -151,10 +151,10 @@ export default class addDataReport extends Component {
                 isEdit={isEdit}
                 keysParams={{ 'dbo.T_Bas_DataReporting.ID': id }}
               />
-              <div>
-                <Button key="back" onClick={this.handleCancel}>
+              <div className={styles.footer}>
+                <Button className={styles.button} key="back" onClick={this.handleCancel}>
                     取消
-                </Button> ,
+                </Button>   
                 <Button key="submit" type="primary" 
                 onClick={this.onSubmitForm.bind(this)}>
                   确定
