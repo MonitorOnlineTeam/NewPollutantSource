@@ -30,7 +30,36 @@ class ExceptionAlarm extends PureComponent {
     }
 
     reload = () => {
-        const { dispatch, DGIMN, Types } = this.props;
+        const { dispatch, DGIMN, Types, firsttime, lasttime } = this.props;
+        debugger;
+        let {
+          exceptionAlarm,
+        } = this.props;
+        if (Types !== '1') {
+             exceptionAlarm = {
+               ...exceptionAlarm,
+               beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+               endTime: moment().format('YYYY-MM-DD 23:59:59'),
+             }
+             dispatch({
+               type: 'workbenchmodel/updateState',
+               payload: {
+                 exceptionAlarm,
+               },
+             })
+        } else {
+             exceptionAlarm = {
+               ...exceptionAlarm,
+               beginTime: firsttime,
+                 endTime: lasttime,
+             }
+             dispatch({
+               type: 'workbenchmodel/updateState',
+               payload: {
+                 exceptionAlarm,
+               },
+             })
+        }
         dispatch({
             type: 'workbenchmodel/getExceptionAlarmData',
             payload: {

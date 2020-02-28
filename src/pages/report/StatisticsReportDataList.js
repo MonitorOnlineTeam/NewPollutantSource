@@ -24,6 +24,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
+import { routerRedux } from 'dva/router';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -83,7 +84,6 @@ class StatisticsReportDataList extends PureComponent {
 
   // 报表导出
   export=()=> {
-      debugger;
     const { form,dispatch } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
@@ -115,8 +115,7 @@ class StatisticsReportDataList extends PureComponent {
 
   render() {
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
-    const {form: { getFieldDecorator },loading,statisticsReportDataList,EntSewageList,exportLoading,form,StatisticsReportDataWhere,entloading }=this.props;
-    console.log(statisticsReportDataList);
+    const {form: { getFieldDecorator },loading,statisticsReportDataList,EntSewageList,exportLoading,form,StatisticsReportDataWhere,entloading,dispatch }=this.props;
     const columns=[
         {
         title: '月份',
@@ -134,27 +133,31 @@ class StatisticsReportDataList extends PureComponent {
         dataIndex: 'EntName',
         width: 300,
         fixed: 'left',
-       // render: (text, row, index) => {}   
+        render: (text, row, index) => {
+          return(<span className={style.entClick} onClick={()=>dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting/${row.MonitorTime}/${row.EntCode}`))}>
+            {text}
+          </span>)
+        }   
      },{
-        title: '进口',
+        title: '进口(m³/h)',
         dataIndex: 'Imported',
         width: 200,
         
       //  render: (text, row, index) => {}   
      },{
-        title: '出口',
+        title: '出口(m³/h)',
         dataIndex: 'Exit',
         width: 200,
       //  render: (text, row, index) => {}   
      }
      ,{
-        title: '回口',
+        title: '回口(m³/h)',
         dataIndex: 'BackEntry',
         width: 200,
      //   render: (text, row, index) => {}   
      }
      ,{
-        title: '出污泥含水率(%)',
+        title: '污泥含水率(%)',
         dataIndex: 'SludgeWater',
         width: 200,
       //  render: (text, row, index) => {}   

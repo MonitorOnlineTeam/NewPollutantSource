@@ -29,6 +29,8 @@ import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import moment from 'moment';
 const { confirm } = Modal;
+const { MonthPicker } = DatePicker;
+const FormItem = Form.Item;
 
 @connect(({ loading, autoForm, datareport }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -37,79 +39,134 @@ const { confirm } = Modal;
     tableInfo: autoForm.tableInfo,
     searchForm: autoForm.searchForm,
     routerConfig: autoForm.routerConfig,
-    userandentInfo: datareport.userandentInfo
+    userandentInfo: datareport.userandentInfo,
+    reportwhere: datareport.reportwhere,
+    selectmonth:datareport.selectmonth
 }))
-
+@Form.create({
+})
 export default class MonitorTarget extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.SELF = {
+            formLayout: {
+              labelCol: { span: 7 },
+              wrapperCol: { span: 17 },
+            }
+          }
+      
     }
   
 
     componentDidMount() {
         const { match, dispatch } = this.props;
-        
-        this.reloadPage(match.params.configId);
-      
-    }
-
-    componentWillReceiveProps(nextProps) {
-       
-        if (nextProps.location.pathname != this.props.location.pathname) {
-            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
-        }
-    }
-
-    reloadPage = configId => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
-                configId,
+                configId:match.params.configId,
             },
         })
+        if(match.params.monitortime!=1 && match.params.entcode!=1)
+        {
+            this.updateState(moment(match.params.monitortime),match.params.entcode)
+        }
+     //   this.updateState(moment().add(1,"month"),"0051264")
     }
 
-    
- 
+    componentWillReceiveProps(nextProps) {
+            if (nextProps.location.pathname != this.props.location.pathname) {
+                if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
+            }
+    }
 
- 
-
-    showDeleteConfirm = (id) => {
-        const that = this;
-        const { dispatch,match } = this.props;
-        
-        confirm({
-            title: '确定要删除该条数据吗？',
-            content: '删除后不可恢复',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {
-              
-                
-               // alert();
-                dispatch({
-                    type: 'datareport/deleteDataReport',
-                    payload: {
-                        ID:id,
-                        callback: res => {
-                            that.reloadPage(match.params.configId)
-                        },
-                    },
-                })
+    /**
+     * 更新参数
+     */
+    updateState=(monitotTime,EntCode)=>{
+        const{dispatch,match}=this.props;
+        let where=[{
+            Key: 'dbo__T_Bas_DataReporting__MonitorTime',
+            Value: moment(monitotTime).format('YYYY-MM-01 00:00:00'),
+            Where: '$gte',
+         },{
+             Key: 'dbo__T_Bas_DataReporting__MonitorTime',
+             Value: moment(monitotTime).add(1,'month').format('YYYY-MM-01 00:00:00'),
+             Where: '$lt',
+          }];
+          if(EntCode)
+          {
+            where.push({
+                Key: 'dbo__T_Bas_DataReporting__EntCode',
+                Value: EntCode,
+                Where: '$=',
+             })
+          }
+          debugger;
+        dispatch({
+            type: 'datareport/updateState',
+            payload: {
+                selectEntCode:EntCode,
+                selectmonth:monitotTime,
+                reportwhere:where
             },
-            onCancel() {
+        })
+       const {reportwhere}=this.props;
+     
+    }
 
+    Serach=()=>{
+        const { form,dispatch,match,selectEntCode,reportwhere } = this.props;
+        form.validateFields((err, values) => {
+          if (!err) {
+            this.updateState(values.MonitorTime,selectEntCode);
+            this.reloadPage();
+          }
+        });
+    }
+
+    /**重新加载 */
+    reloadPage=()=>{
+        const {dispatch,reportwhere,match}=this.props;
+        dispatch({
+            type: 'autoForm/getAutoFormData',
+            payload: {
+              configId: match.params.configId,
+              searchParams: reportwhere,
             },
         });
+    }
+    showDeleteConfirm = (row,id) => {
+        const that = this;
+        const { dispatch,match } = this.props;
+        if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
+            confirm({
+                title: '确定要删除该条数据吗？',
+                content: '删除后不可恢复',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    dispatch({
+                        type: 'datareport/deleteDataReport',
+                        payload: {
+                            ID:id,
+                            callback: res => {
+                                that.reloadPage()
+                            },
+                        },
+                    })
+                },
+                onCancel() {
+    
+                },
+            });
+        }
+        else{
+            sdlMessage('只能删除本月的数据', "error")
+        }
+
+      
     }
 
     onRef1 = ref => {
@@ -117,10 +174,8 @@ export default class MonitorTarget extends Component {
     };
 
     render() {
-        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-        // console.log("this.props=", this.props);
-        const searchConditions = searchConfigItems[configId] || []
-        const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
+        const { form: { getFieldDecorator },searchConfigItems, searchForm, tableInfo, match: { params: { configId,monitortime,entcode } }, dispatch,selectmonth,reportwhere } = this.props;
+        const { formLayout } = this.SELF;
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -137,15 +192,43 @@ export default class MonitorTarget extends Component {
             <PageHeaderWrapper>
                 <div className="contentContainer">
                     <Card className={styles.contentContainer}>
-
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        {/* <Button icon="plus" type="primary" >添加</Button> */}
+                    <Row>
+                    <Col xxl={5} xl={7} sm={24} lg={7}>
+                    <FormItem {...formLayout} label="统计月份" style={{ width: '100%' }}>
+                    {getFieldDecorator('MonitorTime', {
+                      initialValue: selectmonth,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请填写统计月份',
+                        },
+                      ],
+                    })(<MonthPicker allowClear={false} style={{ width: '100%' }} />)}
+                  </FormItem>
+                  </Col>
+                  <Col xxl={6} xl={6} lg={8}>
+                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                    <Button
+                      type="primary"
+                      style={{ margin: '0 10px' }}
+                      onClick={this.Serach}
+                    >
+                      查询
+                    </Button>
+                  </FormItem>
+                </Col>
+                <Col style={{position:"absolute",right:50}}>
+               { entcode!=1?
+                <Button onClick={()=>
+                dispatch(routerRedux.push
+                (`/report/dataReportList/statisticsReportDataList`))}>返回</Button>:''}
+                </Col>
+                     </Row>
+                       
                         <AutoFormTable
-                            onRef={this.onRef1}
+                         //   onRef={this.onRef1}
                             style={{ marginTop: 10 }}
+                            searchParams={reportwhere}
                             // columns={columns}
                             scroll={{ y: 600 }}
                             configId={configId}
@@ -156,40 +239,24 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             onAdd={()=>{
-                                dispatch(routerRedux.push(`/SewagePlant/DataReportingAdd/${configId}/${null}`));
+                                dispatch(routerRedux.push(`/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}${entcode}`));
                             }}
-                            // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
-                            // }}
-                            // appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                            //     <Fragment>
-                            //         <Button
-                            //             type="danger"
-                            //             onClick={() => {
-                            //                 this.showConfirm(selectedRowKeys, selectedRows);
-                            //             }}
-                            //             style={{ marginRight: 8 }}
-                            //         >
-                            //             重置密码
-                            //       </Button>
-                            //     </Fragment>
-                            // )}
                             appendHandleRows={row => <Fragment>
                                 <Tooltip title="编辑">
                                     <a onClick={() => {
-                                      
-                                        if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().add(-1,'month').format('YYYY-MM') ){
-                                            dispatch(routerRedux.push(`/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}`));
+                                        if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
+                                            dispatch(routerRedux.push
+                                                (`/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}${entcode}`));
                                         }
                                         else{
-                                            sdlMessage('只能修改上个月的数据', "error")
+                                            sdlMessage('只能修改本月的数据', "error")
                                         }
                                     }}>   <EditIcon /> </a>
                                 </Tooltip>
                                 <Divider type="vertical" />
                                 <Tooltip title="删除">
                                     <a onClick={() => {
-                                        this.showDeleteConfirm(row['dbo.T_Bas_DataReporting.ID']);
+                                        this.showDeleteConfirm(row,row['dbo.T_Bas_DataReporting.ID']);
                                     }}><DelIcon />    </a>
                                 </Tooltip>
                             </Fragment>}

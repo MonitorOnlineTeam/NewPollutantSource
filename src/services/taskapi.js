@@ -269,13 +269,14 @@ export async function GetBdTestRecord(params) {
 }
 // 打回
 export async function RevokeTask(params) {
+  
     const body = {
         taskID: params.taskID,
         revokeReason: params.revokeReason,
         rejectFlag: EnumRejectFlag.Repulse,
         revokeUserId: params.userID
     };
-    const result = await post('/api/rest/PollutantSourceApi/PTaskProcessing/PostRevokeTask', body, null);
+    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/PostRevokeTask', body, null);
     return result === null ? { Datas: null } : result;
 }
 

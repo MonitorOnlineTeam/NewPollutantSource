@@ -219,6 +219,13 @@ class SiteDailyPage extends PureComponent {
         AQIColumn = [{
           title: 'AQI',
           dataIndex: 'AQI',
+        }, {
+          title: '空气质量指数类别',
+          dataIndex: '空气质量指数类别',
+        },
+        {
+          title: '空气质量指数级别',
+          dataIndex: '空气质量指数级别',
         }]
       }
       const _columns = [
