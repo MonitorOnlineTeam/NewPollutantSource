@@ -14,7 +14,7 @@ export default class AppSparePartReplaceRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <SparePartReplaceRecordContent {...match.params} appStyle={{height: 'calc(100vh - 200px)'}} scrolly="none" />
+                <SparePartReplaceRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none" />
             </MapInteractionCSS>
         );
     }

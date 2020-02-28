@@ -285,7 +285,7 @@ class index extends Component {
       if (nextProps.currentEntInfo.Longitude && nextProps.currentEntInfo.Latitude) {
         this.setState({
           mapCenter: [nextProps.currentEntInfo.Longitude, nextProps.currentEntInfo.Latitude],
-          zoom: 13
+          // zoom: 13
         })
         const timer = setInterval(() => {
           if (_thismap) {

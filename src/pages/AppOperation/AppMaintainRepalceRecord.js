@@ -14,7 +14,7 @@ export default class AppMaintainRepalceRecord extends Component {
         const {match}=this.props;
         return (
             <MapInteractionCSS>
-                <MaintainRepalceRecordContent {...match.params} appStyle={{height: 'calc(100vh - 200px)'}} scrolly="none" />
+                <MaintainRepalceRecordContent {...match.params} appStyle={{overflowY:'hidden'}} scrolly="none"  />
             </MapInteractionCSS>
         );
     }
