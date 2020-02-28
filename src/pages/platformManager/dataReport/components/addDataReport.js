@@ -100,7 +100,7 @@ export default class addDataReport extends Component {
                 callback:res=>{
                     if(res.IsSuccess)
                     {
-                      dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting`));
+                      dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting`));
                     }
                 }
                }
@@ -108,7 +108,7 @@ export default class addDataReport extends Component {
           });
     }
     handleCancel=()=>{
-       this.props.dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting`));
+       this.props.dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting`));
     }
     
     render() {
