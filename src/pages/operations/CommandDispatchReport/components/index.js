@@ -236,19 +236,13 @@ class Dispatchreport extends Component {
     /** 渲染数据展示 */
 
     loaddata = () => {
+
+    }
+
+
+    render() {
         const { dataloading, datatable } = this.props;
-        if (dataloading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: 'calc(100vh - 400px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                size="large"
-            />);
-        }
+
         const columns = [
           {
             title: '时间',
@@ -305,21 +299,6 @@ class Dispatchreport extends Component {
                 ),
             },
         ];
-        return (
-            <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
-                <SdlTable
-                    rowKey={(record, index) => `complete${index}`}
-                    dataSource={datatable}
-                    columns={columns}
-                    Pagination={null}
-
-                />
-            </Card.Grid>
-        );
-    }
-
-
-    render() {
          const { getFieldDecorator } = this.props.form;
         const {
           Option,
@@ -387,7 +366,16 @@ class Dispatchreport extends Component {
                                 </Col>
                             </Row>
                         </Form>
-                    {this.loaddata()}
+                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
+                        <SdlTable
+                            loading={dataloading}
+                            rowKey={(record, index) => `complete${index}`}
+                            dataSource={datatable}
+                            columns={columns}
+                            Pagination={null}
+
+                        />
+                   </Card.Grid>
                     <Modal
                     destroyOnClose="true"
                     visible={this.state.Rvisible}
