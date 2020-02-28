@@ -132,7 +132,7 @@ export default {
             { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
             /* 保养项更换记录表 */
             { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
-            /* 易耗品更换记录表 */
+            /* 备件更换记录表 */
             { path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppSparePartReplaceRecord' },
           ],
         },
