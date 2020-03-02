@@ -220,8 +220,9 @@ class MapView extends Component {
             // currentEntInfo: extData.position
           }, () => {
             // this.state.displayType !== 0 &&
-            const isAirOrSite = extData.position.MonitorObjectType != 2 || extData.position.MonitorObjectType != 4;
-            isAirOrSite && newState.displayType == 1 && this.randomMarker(extData.position.children)
+            const isAirOrSite = extData.position.MonitorObjectType == 2 || extData.position.MonitorObjectType == 4;
+            // const isAirOrSite = extData.position.MonitorObjectType == 2 || extData.position.MonitorObjectType == 4;
+            !isAirOrSite && newState.displayType == 1 && this.randomMarker(extData.position.children)
             this.getPointInfo(extData.position.PollutantType, isAirOrSite)
           })
         }
