@@ -239,7 +239,7 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             onAdd={()=>{
-                                dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}${entcode}`));
+                                dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}/${entcode}`));
                             }}
                             appendHandleRows={row => <Fragment>
                                 <Tooltip title="编辑">
