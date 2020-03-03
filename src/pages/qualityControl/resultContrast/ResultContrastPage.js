@@ -400,6 +400,8 @@ class ResultContrastPage extends Component {
     if (standardGasLoading || QCAResultCheckByDGIMNLoading || QCAResultCheckSelectListLoading) {
       return <PageLoading />
     }
+    const echartEle = document.querySelector(".echarts-for-react");
+    const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + "px" : 200 + "px"
     return (
       <>
         <div style={{ marginBottom: 10 }}>
@@ -450,7 +452,7 @@ class ResultContrastPage extends Component {
               notMerge
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns} scroll={{ y: '200px' }} />
+            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns} scroll={{ y: echartsHeight }} />
           }
         </Card>
       </>

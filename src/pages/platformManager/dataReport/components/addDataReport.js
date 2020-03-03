@@ -52,8 +52,7 @@ export default class addDataReport extends Component {
   }
 
     onSubmitForm=()=>{
-        const { dispatch, match, pointDataWhere, form,userandentInfo } = this.props;
-        debugger;
+        const { dispatch, match, pointDataWhere, form,userandentInfo,match: { params: { monitortime,entcode } } } = this.props;
         form.validateFields((err, values) => {
             if (!err) {
               const FormData = handleFormData(values);
@@ -100,7 +99,7 @@ export default class addDataReport extends Component {
                 callback:res=>{
                     if(res.IsSuccess)
                     {
-                      dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting`));
+                      dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/${monitortime}/${entcode}`));
                     }
                 }
                }
@@ -108,7 +107,8 @@ export default class addDataReport extends Component {
           });
     }
     handleCancel=()=>{
-       this.props.dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting`));
+      const {dispatch , match: { params: { monitortime,entcode } }}=this.props;
+      dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/${monitortime}/${entcode}`));
     }
     
     render() {

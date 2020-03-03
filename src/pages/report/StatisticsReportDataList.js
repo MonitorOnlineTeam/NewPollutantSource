@@ -134,7 +134,7 @@ class StatisticsReportDataList extends PureComponent {
         width: 300,
         fixed: 'left',
         render: (text, row, index) => {
-          return(<span className={style.entClick} onClick={()=>dispatch(routerRedux.push(`/SewagePlant/DataReporting/DataReporting/${row.MonitorTime}/${row.EntCode}`))}>
+          return(<span className={style.entClick} onClick={()=>dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/${row.MonitorTime}/${row.EntCode}`))}>
             {text}
           </span>)
         }   

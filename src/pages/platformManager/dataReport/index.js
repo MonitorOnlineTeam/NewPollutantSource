@@ -221,7 +221,7 @@ export default class MonitorTarget extends Component {
                { entcode!=1?
                 <Button onClick={()=>
                 dispatch(routerRedux.push
-                (`/report/dataReportList/statisticsReportDataList`))}>返回</Button>:''}
+                ('/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList'))}>返回</Button>:''}
                 </Col>
                      </Row>
                        
@@ -239,14 +239,14 @@ export default class MonitorTarget extends Component {
                                 })
                             }}
                             onAdd={()=>{
-                                dispatch(routerRedux.push(`/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}${entcode}`));
+                                dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}/${entcode}`));
                             }}
                             appendHandleRows={row => <Fragment>
                                 <Tooltip title="编辑">
                                     <a onClick={() => {
                                         if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
                                             dispatch(routerRedux.push
-                                                (`/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}${entcode}`));
+                                                (`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}/${entcode}`));
                                         }
                                         else{
                                             sdlMessage('只能修改本月的数据', "error")
