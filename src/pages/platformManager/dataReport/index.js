@@ -246,7 +246,7 @@ export default class MonitorTarget extends Component {
                                     <a onClick={() => {
                                         if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
                                             dispatch(routerRedux.push
-                                                (`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}${entcode}`));
+                                                (`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}/${entcode}`));
                                         }
                                         else{
                                             sdlMessage('只能修改本月的数据', "error")
