@@ -10,6 +10,72 @@ import config from '@/config';
 import moment from 'moment'
 import * as services from '@/services/autoformapi';
 
+function getQueryParams(state, payload) {
+  let group = [];
+  const { configId } = payload;
+  const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
+  if (searchForm) {
+    for (const key in searchForm) {
+      let groupItem = {};
+      // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
+      if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
+        // 是否是moment对象
+        const isMoment = moment.isMoment(searchForm[key].value);
+        const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+        if (isArrMoment) {
+          groupItem = [{
+            Key: key,
+            Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
+            Where: "$gte"
+          }, {
+            Key: key,
+            Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
+            Where: "$lte"
+          }]
+          group.push(...groupItem);
+        } else {
+          groupItem = {
+            Key: key,
+            Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
+          };
+          for (const whereKey in state.whereList[configId]) {
+            if (key === whereKey) {
+              groupItem.Where = state.whereList[configId][whereKey];
+            }
+          }
+          group.push(groupItem);
+        }
+      }
+      // } else {
+      //   group = []
+      // }
+    }
+  }
+
+  let postData = {
+    configId: configId,
+    pageIndex: searchForm.current || 1,
+    pageSize: searchForm.pageSize || 10,
+    ...payload.otherParams,
+  };
+  const searchParams = payload.searchParams || [];
+
+  (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
+    // group.length? postData.ConditionWhere = JSON.stringify({
+    rel: '$and',
+    group: [{
+      rel: '$and',
+      group: [
+        ...group,
+        ...searchParams,
+      ],
+    }],
+  }) : '';
+
+  return postData;
+}
+
+
 export default Model.extend({
   namespace: 'autoForm',
   state: {
@@ -46,75 +112,74 @@ export default Model.extend({
     // 获取数据
     * getAutoFormData({ payload }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
-      let group = [];
       const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
-      const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
-      console.log('searchForm=', searchForm)
-      if (searchForm) {
-        for (const key in searchForm) {
-          let groupItem = {};
-          // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
-          if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
-            // 是否是moment对象
-            const isMoment = moment.isMoment(searchForm[key].value);
-            const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
-            if (isArrMoment) {
-              groupItem = [{
-                Key: key,
-                Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
-                Where: "$gte"
-              }, {
-                Key: key,
-                Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
-                Where: "$lte"
-              }]
-              group.push(...groupItem);
-            } else {
-              groupItem = {
-                Key: key,
-                Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
-              };
+      // const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
+      // console.log('searchForm=', searchForm)
+      // if (searchForm) {
+      //   for (const key in searchForm) {
+      //     let groupItem = {};
+      //     // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
+      //     if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
+      //       // 是否是moment对象
+      //       const isMoment = moment.isMoment(searchForm[key].value);
+      //       const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+      //       if (isArrMoment) {
+      //         groupItem = [{
+      //           Key: key,
+      //           Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
+      //           Where: "$gte"
+      //         }, {
+      //           Key: key,
+      //           Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
+      //           Where: "$lte"
+      //         }]
+      //         group.push(...groupItem);
+      //       } else {
+      //         groupItem = {
+      //           Key: key,
+      //           Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
+      //         };
 
-              for (const whereKey in state.whereList[configId]) {
-                if (key === whereKey) {
-                  groupItem.Where = state.whereList[configId][whereKey];
-                }
-              }
-              group.push(groupItem);
-            }
-          }
-          // } else {
-          //   group = []
-          // }
-        }
-      }
-      console.log('group=', group)
+      //         for (const whereKey in state.whereList[configId]) {
+      //           if (key === whereKey) {
+      //             groupItem.Where = state.whereList[configId][whereKey];
+      //           }
+      //         }
+      //         group.push(groupItem);
+      //       }
+      //     }
+      //     // } else {
+      //     //   group = []
+      //     // }
+      //   }
+      // }
+      // console.log('group=', group)
 
-      const postData = {
-        configId: payload.configId,
-        pageIndex: searchForm.current || 1,
-        pageSize: searchForm.pageSize || 10,
-        ...payload.otherParams,
-      };
-      const searchParams = payload.searchParams || [];
+      // const postData = {
+      //   configId: payload.configId,
+      //   pageIndex: searchForm.current || 1,
+      //   pageSize: searchForm.pageSize || 10,
+      //   ...payload.otherParams,
+      // };
+      // const searchParams = payload.searchParams || [];
 
-      (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
-        // group.length? postData.ConditionWhere = JSON.stringify({
-        rel: '$and',
-        group: [{
-          rel: '$and',
-          group: [
-            ...group,
-            ...searchParams,
-          ],
-        }],
-      }) : '';
+      // (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
+      //   // group.length? postData.ConditionWhere = JSON.stringify({
+      //   rel: '$and',
+      //   group: [{
+      //     rel: '$and',
+      //     group: [
+      //       ...group,
+      //       ...searchParams,
+      //     ],
+      //   }],
+      // }) : '';
+
+      let postData = getQueryParams(state, payload);
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
-        // const configId = payload.configId;
-        // const configId = "TestCommonPoint";
 
         yield update({
           // configIdList: {
@@ -402,8 +467,10 @@ export default Model.extend({
     },
 
     // 导出报表
-    * exportDataExcel({ payload }, { call, update }) {
-      const result = yield call(services.exportDataExcel, { ...payload });
+    * exportDataExcel({ payload }, { call, select, update }) {
+      let state = yield select(state => state.autoForm);
+      let postData = getQueryParams(state, payload);
+      const result = yield call(services.exportDataExcel, { ...postData, ...payload });
       if (result.IsSuccess) {
         console.log('suc=', result)
         result.Datas && window.open(result.Datas)
