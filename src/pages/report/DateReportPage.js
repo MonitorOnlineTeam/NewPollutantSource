@@ -368,7 +368,7 @@ class SiteDailyPage extends PureComponent {
           payload: {
             ...values,
             type: reportType === 'siteDaily' ? 0 : reportType === 'monthly' ? 1 : 2,
-            Regions: values.Regions.toString(),
+            // Regions: values.Regions.toString(),
             ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
           },
         });
@@ -435,20 +435,20 @@ class SiteDailyPage extends PureComponent {
         />
       );
     }
-    if (exportLoading) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+    // if (exportLoading) {
+    //   return (
+    //     <Spin
+    //       style={{
+    //         width: '100%',
+    //         height: 'calc(100vh/2)',
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'center',
+    //       }}
+    //       size="large"
+    //     />
+    //   );
+    // }
     return (
       <PageHeaderWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
