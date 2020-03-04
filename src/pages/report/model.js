@@ -13,11 +13,12 @@ export default Model.extend({
       current: 1,
       pageSize: 34,
       total: 0,
-      EntCode: "",
+      DGIMN: [],
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
       ReportTime: moment()
     },
+    entAndPontList: [],
     pollutantList: [],
     pollutantTypeList: [],
     dateReportData: [],
@@ -77,8 +78,8 @@ export default Model.extend({
         // ...payload,
         PollutantSourceType: dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value,
         ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
-        Regions: dateReportForm.Regions && dateReportForm.Regions.value.toString(),
-        EntCode: dateReportForm.EntCode && dateReportForm.EntCode.value,
+        // Regions: dateReportForm.Regions && dateReportForm.Regions.value.toString(),
+        DGIMN: dateReportForm.DGIMN && dateReportForm.DGIMN.value,
         PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
         ...payload
@@ -177,7 +178,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
-        message.error(result.message)
+        message.error(result.Message)
       }
     },
     // 汇总报表导出
@@ -186,7 +187,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
-        message.error(result.message)
+        message.error(result.Message)
       }
     },
     //数据上报报表
@@ -208,7 +209,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
-        message.error(result.message)
+        message.error(result.Message)
       }
     },
     // 获取企业及排口
@@ -243,7 +244,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.message)
+        message.error(result.Message)
       }
     },
 
@@ -255,7 +256,7 @@ export default Model.extend({
           smokeReportData: result.Datas
         })
       } else {
-        message.error(result.message)
+        message.error(result.Message)
       }
     },
     // 烟气报表导出
@@ -264,7 +265,20 @@ export default Model.extend({
       if (result.IsSuccess) {
         window.open(result.Datas)
       } else {
-        message.error(result.message)
+        message.error(result.Message)
+      }
+    },
+
+    // 站点报表 - 获取企业及排口
+    *getPointReportEntAndPointList({ payload, callback }, { call, update }) {
+      const result = yield call(services.getEntAndPoint, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entAndPontList: result.Datas
+        })
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
       }
     },
   },
