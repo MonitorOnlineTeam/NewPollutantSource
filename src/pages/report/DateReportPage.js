@@ -24,6 +24,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
+import CascaderMultiple from "@/components/CascaderMultiple"
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -32,7 +33,7 @@ const { MonthPicker } = DatePicker;
   loading: loading.effects['report/getDateReportData'],
   exportLoading: loading.effects['report/reportExport'],
   entLoading: loading.effects['report/getEnterpriseList'],
-  entAndPointLoading: loading.effects['common/getEnterpriseAndPoint'],
+  entAndPointLoading: loading.effects['report/getPointReportEntAndPointList'],
   pollutantList: report.pollutantList,
   dateReportData: report.dateReportData,
   pollutantTypeList: report.pollutantTypeList,
@@ -40,13 +41,14 @@ const { MonthPicker } = DatePicker;
   dateReportForm: report.dateReportForm,
   regionList: autoForm.regionList,
   configInfo: global.configInfo,
+  entAndPontList: report.entAndPontList,
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
       PollutantSourceType: Form.createFormField(props.dateReportForm.PollutantSourceType),
-      Regions: Form.createFormField(props.dateReportForm.Regions),
-      EntCode: Form.createFormField(props.dateReportForm.EntCode),
+      // Regions: Form.createFormField(props.dateReportForm.Regions),
+      DGIMN: Form.createFormField(props.dateReportForm.DGIMN),
       ReportTime: Form.createFormField(props.dateReportForm.ReportTime),
     };
   },
@@ -105,84 +107,68 @@ class SiteDailyPage extends PureComponent {
       callback: data => {
         const defalutVal = data.Datas[0].pollutantTypeCode;
         this.props.dispatch({
-          type: 'common/getEnterpriseAndPoint',
+          type: "report/getPointReportEntAndPointList",
           payload: {
-            RegionCode: '',
-            PointMark: '2',
+            "PollutantTypes": defalutVal,
+            "RegionCode": "",
+            "Name": "",
+            "Status": [0, 1, 2, 3],
+            "QCAUse": "",
+            "RunState": "",
+            "isFilter": true
           },
-          callback: (sucRes, defaultValue) => {
-            // let RegionCode = [sucRes.Datas[0].value, sucRes.Datas[0].children[0].value, sucRes.Datas[0].children[0].children[0].value];
-            let RegionCode = defaultValue;
-            this.setState({
-              defaultRegionCode: RegionCode,
-            });
-            // 初始化省市区
-            this.props.form.setFieldsValue({ Regions: RegionCode });
-            // 根据省市区获取企业
+          callback: res => {
+            let DGIMN = [];
+            // res.forEach(item => {
+            //   if(item.children.length) {
+            //     DGIMN = [item.children[0].key];
+            //     throw new Error("error")
+            //   }
+            // })
+            for (let i = 0; i < res.length; i++) {
+              if (res[i].children.length) {
+                DGIMN = [res[i].children[0].key];
+                break;
+              }
+            }
+            // console.log("DGIMN=",DGIMN)
+            this.props.form.setFieldsValue({ "DGIMN": DGIMN })
+            // 获取污染物类型 = 表头
             this.props.dispatch({
-              type: 'report/getEnterpriseList',
+              type: 'report/getPollutantList',
               payload: {
-                regionCode: RegionCode,
-                pollutantTypeCode: defalutVal,
-                callback: res => {
-                  res.Datas.length &&
-                    this.setState({
-                      currentEntName: res.Datas[0]['ParentName'],
-                    });
-                  if (!res.Datas.length) {
-                    this.props.dispatch({
-                      type: 'report/updateState',
-                      payload: {
-                        dateReportForm: {
-                          ...this.props.dateReportForm,
-                          total: 0,
-                        },
-                      },
-                    });
-                  }
-                  // 获取污染物类型 = 表头
+                pollutantTypes: defalutVal,
+                callback: () => {
+                  // if (res.Datas.length) {
+                  // 获取表格数据
                   this.props.dispatch({
-                    type: 'report/getPollutantList',
+                    type: 'report/getDateReportData',
                     payload: {
-                      pollutantTypes: defalutVal,
-                      callback: () => {
-                        if (res.Datas.length) {
-                          // 获取表格数据
-                          this.props.dispatch({
-                            type: 'report/getDateReportData',
-                            payload: {
-                              type: this.SELF.actionType,
-                              // "PollutantSourceType": "2",
-                              // "Regions": "130000000,130200000,130201000",
-                              // // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
-                              // "EntCode": "51216eae-8f11-4578-ad63-5127f78f6cca",
-                              // "ReportTime": "2019-06-29"
-                            },
-                          });
-                        } else {
-                          this.props.dispatch({
-                            type: 'report/updateState',
-                            payload: {
-                              dateReportData: [],
-                            },
-                          });
-                        }
-                      },
+                      type: this.SELF.actionType,
                     },
                   });
+                  // } else {
+                  //   this.props.dispatch({
+                  //     type: 'report/updateState',
+                  //     payload: {
+                  //       dateReportData: [],
+                  //     },
+                  //   });
+                  // }
                 },
               },
             });
-          },
-        });
-      },
+          }
+        })
+
+      }
     });
   }
 
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.location.pathname != this.props.location.pathname &&
-      this.props.form.getFieldValue('EntCode')
+      this.props.form.getFieldValue('DGIMN')
     ) {
       // 格式化日期
       const format =
@@ -197,18 +183,30 @@ class SiteDailyPage extends PureComponent {
           this.props.form.getFieldValue('ReportTime') &&
           moment(this.props.form.getFieldValue('ReportTime')).format(format),
       });
-      // 获取表格数据
       this.props.dispatch({
-        type: 'report/getDateReportData',
+        type: "report/updateState",
         payload: {
-          type: nextProps.match.params.reportType,
-          // ...this.props.dateReportForm,
-          PollutantSourceType: this.props.form.getFieldValue('PollutantSourceType'),
-          // "Regions": "130000000,130200000,130201000",
-          EntCode: this.props.form.getFieldValue('EntCode'),
-          // "ReportTime": moment(this.props.dateReportForm).format("YYYY-MM-DD")
-        },
-      });
+          dateReportForm: {
+            ...this.props.dateReportForm,
+            current: 1
+          }
+        }
+      })
+      setTimeout(() => {
+        // 获取表格数据
+        this.props.dispatch({
+          type: 'report/getDateReportData',
+          payload: {
+            type: nextProps.match.params.reportType,
+            // ...this.props.dateReportForm,
+            PollutantSourceType: this.props.form.getFieldValue('PollutantSourceType'),
+            // "Regions": "130000000,130200000,130201000",
+            DGIMN: this.props.form.getFieldValue('DGIMN'),
+            // "ReportTime": moment(this.props.dateReportForm).format("YYYY-MM-DD")
+          },
+        });
+      }, 0)
+
     }
     // if (this.props.pollutantList !== nextProps.pollutantList) {
     if (this.props.dateReportData !== nextProps.dateReportData) {
@@ -325,10 +323,10 @@ class SiteDailyPage extends PureComponent {
         //   return;
         // }
         this.setState({
-          currentDate: values.ReportTime && moment(values.ReportTime).format(format),
-          currentEntName: this.props.enterpriseList.filter(
-            item => item['ParentCode'] == values.EntCode,
-          )[0]['ParentName'],
+          // currentDate: values.ReportTime && moment(values.ReportTime).format(format),
+          // currentEntName: this.props.enterpriseList.filter(
+          //   item => item['ParentCode'] == values.EntCode,
+          // )[0]['ParentName'],
         });
         // 获取污染物类型 = 表头
         this.props.dispatch({
@@ -370,7 +368,7 @@ class SiteDailyPage extends PureComponent {
           payload: {
             ...values,
             type: reportType === 'siteDaily' ? 0 : reportType === 'monthly' ? 1 : 2,
-            Regions: values.Regions.toString(),
+            // Regions: values.Regions.toString(),
             ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
           },
         });
@@ -417,6 +415,7 @@ class SiteDailyPage extends PureComponent {
       enterpriseList,
       entLoading,
       configInfo,
+      entAndPontList,
     } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode, format } = this.state;
@@ -436,27 +435,27 @@ class SiteDailyPage extends PureComponent {
         />
       );
     }
-    if (exportLoading) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+    // if (exportLoading) {
+    //   return (
+    //     <Spin
+    //       style={{
+    //         width: '100%',
+    //         height: 'calc(100vh/2)',
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'center',
+    //       }}
+    //       size="large"
+    //     />
+    //   );
+    // }
     return (
       <PageHeaderWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
-                <Col xxl={3} xl={4} sm={24} lg={7}>
+                <Col xxl={4} xl={4} sm={24} lg={7}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,
@@ -490,55 +489,10 @@ class SiteDailyPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col
-                  xxl={5}
-                  xl={6}
-                  sm={24}
-                  lg={8}
-                  style={{ display: configInfo.GroupRegionState === '1' ? 'block' : 'none' }}
-                >
-                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                    {getFieldDecorator('Regions', {
-                      initialValue: defaultRegionCode,
-                      rules: [
-                        {
-                          required: true,
-                          message: '请选择行政区',
-                        },
-                      ],
-                    })(
-                      <SdlCascader
-                        changeOnSelect={false}
-                        placeholder="请选择行政区"
-                        data={regionList}
-                        allowClear={false}
-                        onChange={val => {
-                          if (!val.length) {
-                            this.props.form.setFieldsValue({
-                              EntCode: undefined,
-                            });
-                          }
-                          // 根据省市区获取企业
-                          dispatch({
-                            type: 'report/getEnterpriseList',
-                            payload: {
-                              regionCode: val.toString(),
-                              pollutantTypeCode: this.props.form.getFieldValue(
-                                'PollutantSourceType',
-                              ),
-                            },
-                          });
-                        }}
-                      />,
-                    )}
-                  </FormItem>
-                </Col>
-                <Col xxl={5} xl={7} sm={24} lg={9}>
+                <Col xxl={7} xl={7} sm={24} lg={9}>
                   <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
-                    {getFieldDecorator('EntCode', {
-                      initialValue: enterpriseList.length
-                        ? enterpriseList[0]['ParentCode']
-                        : undefined,
+                    {getFieldDecorator('DGIMN', {
+                      initialValue: this.props.form.getFieldValue("DGIMN"),
                       rules: [
                         {
                           required: true,
@@ -547,15 +501,11 @@ class SiteDailyPage extends PureComponent {
                       ],
                     })(
                       // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
-                      <Select placeholder="请选择监控目标">
-                        {enterpriseList.map(item => (
-                          <Option value={item['ParentCode']}>{item['ParentName']}</Option>
-                        ))}
-                      </Select>,
+                      <CascaderMultiple options={entAndPontList} {...this.props} />
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={5} xl={7} sm={24} lg={7}>
+                <Col xxl={7} xl={7} sm={24} lg={7}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: defaultSearchForm.ReportTime,
