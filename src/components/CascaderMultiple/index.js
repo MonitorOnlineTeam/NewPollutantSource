@@ -5,7 +5,9 @@ import _ from 'lodash';
 import { connect } from 'dva';
 
 let oldOptions = [];
-@connect()
+@connect(({ common }) => ({
+  entAndPointList: common.entAndPointList,
+}))
 class CascaderMultiple extends Component {
   constructor(props) {
     super(props);
@@ -31,32 +33,48 @@ class CascaderMultiple extends Component {
       }
     })
 
-    if (this.props.loadData) {
-      this.props.dispatch({
-        type: "common/getEntAndPointList",
-        payload: {
-
-        }
-      })
+    if (!this.props.options.length && this.props.pollutantTypes) {
+      this.getDataList(this.props.pollutantTypes)
     }
+
+    if (!this.props.options.length && !this.props.pollutantTypes) {
+      this.getDataList(undefined)
+    }
+  }
+
+
+  getDataList = (pollutantTypes) => {
+    this.props.dispatch({
+      type: "common/getEntAndPointList",
+      payload: {
+        "PollutantTypes": pollutantTypes,
+        "RegionCode": "",
+        "Name": "",
+        "Status": [0, 1, 2, 3],
+        "QCAUse": "",
+        "RunState": "",
+        "isFilter": true
+      }
+    })
   }
 
 
   componentWillReceiveProps(nextProps) {
     if (this.props.options !== nextProps.options) {
       this.oldOptions = nextProps.options;
-      this.setState({ options: nextProps.options });
+      this.setState({ options: nextProps.options, currentChildren: [] });
     }
     if (this.props.value !== nextProps.value) {
       let checkedLabels = [];
       let currentChildren = [];
       let currentIndex = 0;
-      nextProps.options.map((item, index) => {
+      let options = nextProps.options.length ? nextProps.options : nextProps.entAndPointList;
+      options.map((item, index) => {
         if (item.children) {
           item.children.map(itm => {
             nextProps.value.map(val => {
               if (itm.key == val) {
-                checkedLabels.push(itm.title)
+                checkedLabels.push(item.title + "/" + itm.title)
                 // currentChildren = item.children;
                 // currentIndex = index
               }
@@ -64,12 +82,21 @@ class CascaderMultiple extends Component {
           })
         }
       })
-      console.log("checkedLabels=",checkedLabels)
       this.setState({
         checkedValues: nextProps.value,
         checkedLabels: checkedLabels,
         // currentChildren: currentChildren,
         // currentIndex: currentIndex
+      })
+    }
+
+    if (!this.props.options.length && this.props.pollutantTypes !== nextProps.pollutantTypes) {
+      this.getDataList(nextProps.pollutantTypes)
+    }
+    if (this.props.entAndPointList !== nextProps.entAndPointList) {
+      this.oldOptions = nextProps.entAndPointList;
+      this.setState({
+        options: nextProps.entAndPointList
       })
     }
   }
@@ -79,7 +106,7 @@ class CascaderMultiple extends Component {
     const config = [{ showSearch: true, checkable: true }, { showSearch: true, checkable: true }];
     const { currentIndex, currentChildren, checkedValues, checkedLabels, visible, options, inputValue, currentEntLable } = this.state;
     const { style } = this.props;
-    console.log("CascaderMultiple=", this.props)
+
     return (
       <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation() }} style={{ ...style }} >
         {/* <p>[{checkedValues.toString()}]</p> */}
@@ -96,15 +123,24 @@ class CascaderMultiple extends Component {
                 {
                   checkedLabels.map((item, index) => {
                     return (
-                      <li className="ant-select-selection__choice" title={item} style={{ userSelect: "none" }}>
-                        <div className="ant-select-selection__choice__content">{item}</div>
+                      // <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
+                      <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none"}}>
+                        <div className="ant-select-selection__choice__content">
+                          <span style={{maxWidth: "70px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",  }}>{item.split("/")[0]}</span>
+                          <span style={{maxWidth: "80px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", }}>/{item.split("/")[1]}</span>
+                        </div>
                         <span className="ant-select-selection__choice__remove" onClick={(e) => {
                           e.stopPropagation();
+                          let newCurrentChildren = [...this.state.currentChildren];
                           let checkedLabels = [...this.state.checkedLabels];
                           let checkedValues = [...this.state.checkedValues];
+                          // let label = item.split("/")[1];
+                          // newCurrentChildren[index].checked = false;
                           _.remove(checkedLabels, (n) => n == item)
                           _.remove(checkedValues, (n, i) => i == index)
                           this.setState({ checkedValues, checkedLabels })
+                          this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
+                          this.props.onChange && this.props.onChange(checkedValues)
                         }}>
                           <i aria-label="图标: close" className="anticon anticon-close ant-select-remove-icon">
                             <svg viewBox="64 64 896 896" focusable="false" className="" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
@@ -118,7 +154,7 @@ class CascaderMultiple extends Component {
                 }
                 <li className="ant-select-search ant-select-search--inline">
                   <div className="ant-select-search__field__wrap">
-                    <Input autocomplete="off" id="input" value={inputValue} style={{width: inputValue.length * 20, minWidth: 60}} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
+                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
                       let inputValue = e.target.value;
                       let newOptions = [...this.oldOptions];
                       if (e.target.value) {
@@ -128,12 +164,13 @@ class CascaderMultiple extends Component {
                       this.setState({
                         // inputValue: inputValue,
                         options: newOptions,
+                        currentEntLable: newOptions[0].title,
                         currentChildren: newOptions.length ? newOptions[0].children || [] : []
                       })
+
                     }}
                       onChange={(e) => {
                         let newOptions = this.state.options;
-                        console.log('e.target.value=', e.target.value)
                         if (e.target.value == "") {
                           newOptions = this.oldOptions;
                         }
@@ -152,14 +189,13 @@ class CascaderMultiple extends Component {
         </div>
         {
           visible && <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" onClick={(e) => {
-            console.log("click")
           }}>
             <div>
               <ul className="ant-cascader-menu">
                 {
                   options.length ? options.map((item, index) => {
                     return (
-                      <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title="Zhejiang" role="menuitem" onClick={(e) => {
+                      <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title={item.title} role="menuitem" onClick={(e) => {
                         // <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand`} title="Zhejiang" role="menuitem" onClick={(e) => {
                         e.stopPropagation();
                         this.setState({
@@ -191,20 +227,21 @@ class CascaderMultiple extends Component {
               {currentChildren.length ? <ul className="ant-cascader-menu">
                 {
                   currentChildren.map((item, index) => {
-                    return <li className="ant-cascader-menu-item" title="Zhejiang" role="menuitem">
-                      <Checkbox checked={checkedLabels.indexOf(item.title) !== -1} onChange={(e) => {
+                    return <li key={index} className="ant-cascader-menu-item" title={item.title} role="menuitem">
+                      <Checkbox checked={checkedLabels.includes(currentEntLable + "/" + item.title)} onChange={(e) => {
+                        // <Checkbox checked={item.checked} onChange={(e) => {
                         let newCurrentChildren = [...this.state.currentChildren];
                         let checkedLabels = [...this.state.checkedLabels];
                         let checkedValues = [...this.state.checkedValues];
-
+                        let title = currentEntLable + "/" + item.title;
                         if (e.target.checked) {
-                          checkedLabels.push(item.title)
+                          checkedLabels.push(title)
                           checkedValues.push(item.key)
                         } else {
-                          _.remove(checkedLabels, (n) => n == item.title)
+                          _.remove(checkedLabels, (n) => n == title)
                           _.remove(checkedValues, (n) => n == item.key)
                         }
-                        // newCurrentChildren[index].checked = e.target.checked;
+                        newCurrentChildren[index].checked = e.target.checked;
                         // if (newCurrentChildren.filter(itm => itm.checked).length === newCurrentChildren.length) {
                         //   console.log("123123123")
                         //   checkedLabels = [currentEntLable + "(全部)"]
@@ -212,11 +249,12 @@ class CascaderMultiple extends Component {
                         // e.target.checked ? checkedValues.push(item.label) : _.remove(checkedValues, (n) => n == item.label)
                         this.setState({
                           // inputValue: "",
-                          // currentChildren: newCurrentChildren,
+                          currentChildren: newCurrentChildren,
                           checkedLabels: checkedLabels,
                           checkedValues: checkedValues
                         })
-                        this.props.form.setFieldsValue({ [this.props.id]: checkedValues});
+                        this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
+                        this.props.onChange && this.props.onChange(checkedValues)
                         // this.props.form.setFieldsValue({""})
                       }}>{item.title}</Checkbox>
                     </li>

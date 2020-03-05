@@ -32,6 +32,7 @@ import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
 import SdlCheckbox from './SdlCheckbox';
+import CascaderMultiple from "@/components/CascaderMultiple"
 
 const { Option } = Select;
 const { Search } = Input;
@@ -221,7 +222,8 @@ class SearchWrapper extends Component {
               rtnValType: "DGIMN",
             }
           }
-          element = <EnterprisePointCascadeMultiSelect {...props}/>
+          // element = <EnterprisePointCascadeMultiSelect {...props}/>
+          element = <CascaderMultiple {...this.props}/>
           break;
         case '下拉列表框':
         case '下拉多选':

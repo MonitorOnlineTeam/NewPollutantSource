@@ -15,6 +15,7 @@ export default Model.extend({
     imageList: [],
     pollutantCode: [],
     industryTreeList: [],
+    entAndPointList: [],
   },
 
   effects: {
@@ -65,6 +66,30 @@ export default Model.extend({
         });
 
         callback && callback(result.Datas.list, defaultValue);
+      }
+    },
+    // 多选组件 - 获取企业及排口
+    *getEntAndPointList({ payload, callback }, { call, update }) {
+      const result = yield call(services.getEntAndPoint, payload);
+      if (result.IsSuccess) {
+        const filterData = result.Datas.filter(item => {
+          if (item.children.length) {
+            let children = item.children.map(itm => {
+              let obj = itm;
+              delete obj.children;
+              return { ...obj }
+            })
+            return {
+              ...item,
+              children
+            }
+          }
+        })
+        yield update({
+          entAndPointList: filterData,
+        });
+      } else {
+        message.error(result.Message);
       }
     },
 

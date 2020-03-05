@@ -154,7 +154,6 @@ taskPointChange=(val)=>{
 //获取监控标下拉框
 getTargetInfoList=()=>{
   const {targetInfoList}=this.props;
-  debugger;
   let res=[];
   if(targetInfoList)
   {

@@ -478,11 +478,26 @@ class SiteDailyPage extends PureComponent {
                         placeholder="请选择污染物类型"
                         onChange={value => {
                           this.props.dispatch({
-                            type: 'report/getEnterpriseList',
+                            type: "report/getPointReportEntAndPointList",
                             payload: {
-                              regionCode: this.props.form.getFieldValue('Regions'),
-                              pollutantTypeCode: value,
+                              "PollutantTypes": value,
+                              "RegionCode": "",
+                              "Name": "",
+                              "Status": [0, 1, 2, 3],
+                              "QCAUse": "",
+                              "RunState": "",
+                              "isFilter": true
                             },
+                            callback: res => {
+                              let DGIMN = [];
+                              for (let i = 0; i < res.length; i++) {
+                                if (res[i].children.length) {
+                                  DGIMN = [res[i].children[0].key];
+                                  break;
+                                }
+                              }
+                              this.props.form.setFieldsValue({ "DGIMN": DGIMN })
+                            }
                           });
                         }}
                       />,
