@@ -72,8 +72,21 @@ export default Model.extend({
     *getEntAndPointList({ payload, callback }, { call, update }) {
       const result = yield call(services.getEntAndPoint, payload);
       if (result.IsSuccess) {
+        const filterData = result.Datas.filter(item => {
+          if (item.children.length) {
+            let children = item.children.map(itm => {
+              let obj = itm;
+              delete obj.children;
+              return { ...obj }
+            })
+            return {
+              ...item,
+              children
+            }
+          }
+        })
         yield update({
-          entAndPointList: result.Datas,
+          entAndPointList: filterData,
         });
       } else {
         message.error(result.Message);

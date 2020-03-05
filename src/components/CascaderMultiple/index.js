@@ -62,7 +62,7 @@ class CascaderMultiple extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.options !== nextProps.options) {
       this.oldOptions = nextProps.options;
-      this.setState({ options: nextProps.options });
+      this.setState({ options: nextProps.options, currentChildren: [] });
     }
     if (this.props.value !== nextProps.value) {
       let checkedLabels = [];
@@ -123,8 +123,12 @@ class CascaderMultiple extends Component {
                 {
                   checkedLabels.map((item, index) => {
                     return (
-                      <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>
-                        <div className="ant-select-selection__choice__content">{item}</div>
+                      // <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
+                      <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none"}}>
+                        <div className="ant-select-selection__choice__content">
+                          <span style={{maxWidth: "70px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",  }}>{item.split("/")[0]}</span>
+                          <span style={{maxWidth: "80px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", }}>/{item.split("/")[1]}</span>
+                        </div>
                         <span className="ant-select-selection__choice__remove" onClick={(e) => {
                           e.stopPropagation();
                           let newCurrentChildren = [...this.state.currentChildren];
@@ -150,7 +154,7 @@ class CascaderMultiple extends Component {
                 }
                 <li className="ant-select-search ant-select-search--inline">
                   <div className="ant-select-search__field__wrap">
-                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 110 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
+                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
                       let inputValue = e.target.value;
                       let newOptions = [...this.oldOptions];
                       if (e.target.value) {
@@ -191,7 +195,7 @@ class CascaderMultiple extends Component {
                 {
                   options.length ? options.map((item, index) => {
                     return (
-                      <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title="Zhejiang" role="menuitem" onClick={(e) => {
+                      <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title={item.title} role="menuitem" onClick={(e) => {
                         // <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand`} title="Zhejiang" role="menuitem" onClick={(e) => {
                         e.stopPropagation();
                         this.setState({
@@ -223,7 +227,7 @@ class CascaderMultiple extends Component {
               {currentChildren.length ? <ul className="ant-cascader-menu">
                 {
                   currentChildren.map((item, index) => {
-                    return <li key={index} className="ant-cascader-menu-item" title="Zhejiang" role="menuitem">
+                    return <li key={index} className="ant-cascader-menu-item" title={item.title} role="menuitem">
                       <Checkbox checked={checkedLabels.includes(currentEntLable + "/" + item.title)} onChange={(e) => {
                         // <Checkbox checked={item.checked} onChange={(e) => {
                         let newCurrentChildren = [...this.state.currentChildren];
