@@ -30,10 +30,19 @@ module.exports = {
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
   apiHost,
   uploadHost,
+  //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
+  // 外网离线地图配置：
+  offlineMapUrl: {
+    domain: "http://61.50.135.114:50036",
+    srcPath: "/amap-master/amap/js/maps.js"
+  },
+  // 内网离线地图配置：
+  // offlineMapUrl: {
+  //   domain: "http://172.16.9.20:808",
+  //   srcPath: "/amap/js/maps.js"
+  // },
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
-  //http://61.50.135.114:50036/amap-master/amap/js/maps.js
-  offlineMapScriptSrc: "", // 离线地图js配置（空 -> 在线地图，非空 -> 离线地图）
   zoom: 12,
   iconFontUrl: '//at.alicdn.com/t/font_1298443_wayosrtec6l.js',//局域网部署需要1.更换路径： iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',

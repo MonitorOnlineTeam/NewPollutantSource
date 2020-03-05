@@ -30,9 +30,9 @@ export default class APILoader {
   }
 
   getScriptSrc(cfg) {
-    if(config.offlineMapScriptSrc) {
+    if(config.offlineMapUrl.domain) {
       // return 'http://172.16.9.20:808/amap/js/maps.js?v=1.3&key=c0fa7cbef7939ee6e2ce2d940e623e0b';
-      return config.offlineMapScriptSrc;
+      return config.offlineMapUrl.domain + config.offlineMapUrl.srcPath;
     }
     return `${this.protocol}//${cfg.hostAndPath}?v=${cfg.v}&key=${cfg.key}&callback=${cfg.callback}`
   }

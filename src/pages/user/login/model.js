@@ -24,7 +24,11 @@ const Model = {
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+          if(response.Datas.MenuDatas[0].name === "首页"){
+            systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+          }else{
+            systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
+          }
         }
         defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
 

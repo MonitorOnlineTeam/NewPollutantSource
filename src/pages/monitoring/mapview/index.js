@@ -76,12 +76,12 @@ class MapView extends Component {
     this.mapEvents = {
       created: m => {
         _thismap = m;
-        if (config.offlineMapScriptSrc) {
+        if (config.offlineMapUrl.domain) {
           var Layer = new window.AMap.TileLayer({
             zIndex: 2,
             getTileUrl: function (x, y, z) {
               //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
-              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
             }
           });
           Layer.setMap(m);
