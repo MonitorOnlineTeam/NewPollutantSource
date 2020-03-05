@@ -91,11 +91,11 @@ class index extends Component {
       created(m) {
         _thismap = m;
         m.setFitView();
-        if (config.offlineMapScriptSrc) {
+        if (config.offlineMapUrl.domain) {
           var Layer = new window.AMap.TileLayer({
             zIndex: 2,
             getTileUrl: function (x, y, z) {
-              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
             }
           });
           Layer.setMap(m);

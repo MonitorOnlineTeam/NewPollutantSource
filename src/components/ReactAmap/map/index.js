@@ -171,7 +171,9 @@ class BaseMap extends Component {
   createInstance() {
     if (!this.map) {
       const options = this.buildCreateOptions()
-      this.map = new window.AMap.Map(this.mapWrapper, options)
+      if (window.AMap) {
+        this.map = new window.AMap.Map(this.mapWrapper, options)
+      }
       // install map plugins
       this.setPlugins(this.props)
       this.props.onInstanceCreated && this.props.onInstanceCreated()
@@ -297,7 +299,7 @@ class BaseMap extends Component {
       this.pluginMap[name].show()
     } else {
       const { onCreated, ...restOpts } = opts
-      const initOpts = {...defaultOpts[name], ...restOpts}
+      const initOpts = { ...defaultOpts[name], ...restOpts }
       this.map.plugin([`AMap.${name}`], () => {
         this.pluginMap[name] = new window.AMap[name](initOpts)
         this.map.addControl(this.pluginMap[name])
@@ -313,7 +315,7 @@ class BaseMap extends Component {
       // do nothing
     } else {
       const { onCreated, ...restOpts } = opts
-      const initOpts = {...defaultOpts.ControlBar, ...restOpts}
+      const initOpts = { ...defaultOpts.ControlBar, ...restOpts }
       this.map.plugin(['AMap.ControlBar'], () => {
         this.pluginMap.ControlBar = new window.AMap.ControlBar(initOpts)
         this.map.addControl(this.pluginMap.ControlBar)
@@ -326,12 +328,12 @@ class BaseMap extends Component {
 
   render() {
     return (<div style={wrapperStyle}>
-      <div ref={(div)=>{ this.mapWrapper = div }} style={containerStyle}>
-      {
-        this.state.mapLoaded ? null : this.props.loading || null
-      }
+      <div ref={(div) => { this.mapWrapper = div }} style={containerStyle}>
+        {
+          this.state.mapLoaded ? null : this.props.loading || null
+        }
       </div>
-      <div>{ this.state.mapLoaded ? this.renderChildren() : null }</div>
+      <div>{this.state.mapLoaded ? this.renderChildren() : null}</div>
     </div>)
   }
 }

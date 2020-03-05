@@ -36,6 +36,10 @@ class CascaderMultiple extends Component {
     if (!this.props.options.length && this.props.pollutantTypes) {
       this.getDataList(this.props.pollutantTypes)
     }
+
+    if (!this.props.options.length && !this.props.pollutantTypes) {
+      this.getDataList(undefined)
+    }
   }
 
 
@@ -64,7 +68,8 @@ class CascaderMultiple extends Component {
       let checkedLabels = [];
       let currentChildren = [];
       let currentIndex = 0;
-      nextProps.options.map((item, index) => {
+      let options = nextProps.options.length ? nextProps.options : nextProps.entAndPointList;
+      options.map((item, index) => {
         if (item.children) {
           item.children.map(itm => {
             nextProps.value.map(val => {
@@ -89,6 +94,7 @@ class CascaderMultiple extends Component {
       this.getDataList(nextProps.pollutantTypes)
     }
     if (this.props.entAndPointList !== nextProps.entAndPointList) {
+      this.oldOptions = nextProps.entAndPointList;
       this.setState({
         options: nextProps.entAndPointList
       })
@@ -100,6 +106,7 @@ class CascaderMultiple extends Component {
     const config = [{ showSearch: true, checkable: true }, { showSearch: true, checkable: true }];
     const { currentIndex, currentChildren, checkedValues, checkedLabels, visible, options, inputValue, currentEntLable } = this.state;
     const { style } = this.props;
+
     return (
       <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation() }} style={{ ...style }} >
         {/* <p>[{checkedValues.toString()}]</p> */}
@@ -116,7 +123,7 @@ class CascaderMultiple extends Component {
                 {
                   checkedLabels.map((item, index) => {
                     return (
-                      <li className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>
+                      <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>
                         <div className="ant-select-selection__choice__content">{item}</div>
                         <span className="ant-select-selection__choice__remove" onClick={(e) => {
                           e.stopPropagation();
@@ -143,7 +150,7 @@ class CascaderMultiple extends Component {
                 }
                 <li className="ant-select-search ant-select-search--inline">
                   <div className="ant-select-search__field__wrap">
-                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
+                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 110 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
                       let inputValue = e.target.value;
                       let newOptions = [...this.oldOptions];
                       if (e.target.value) {
@@ -184,7 +191,7 @@ class CascaderMultiple extends Component {
                 {
                   options.length ? options.map((item, index) => {
                     return (
-                      <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title="Zhejiang" role="menuitem" onClick={(e) => {
+                      <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title="Zhejiang" role="menuitem" onClick={(e) => {
                         // <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand`} title="Zhejiang" role="menuitem" onClick={(e) => {
                         e.stopPropagation();
                         this.setState({
@@ -216,7 +223,7 @@ class CascaderMultiple extends Component {
               {currentChildren.length ? <ul className="ant-cascader-menu">
                 {
                   currentChildren.map((item, index) => {
-                    return <li className="ant-cascader-menu-item" title="Zhejiang" role="menuitem">
+                    return <li key={index} className="ant-cascader-menu-item" title="Zhejiang" role="menuitem">
                       <Checkbox checked={checkedLabels.includes(currentEntLable + "/" + item.title)} onChange={(e) => {
                         // <Checkbox checked={item.checked} onChange={(e) => {
                         let newCurrentChildren = [...this.state.currentChildren];

@@ -253,12 +253,12 @@ class SdlMap extends PureComponent {
     const events = {
       created: (ins) => {
         thisMap = ins;
-        if (config.offlineMapScriptSrc) {
+        if (config.offlineMapUrl.domain) {
           var Layer = new window.AMap.TileLayer({
             zIndex: 2,
             getTileUrl: function (x, y, z) {
               //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
-              return config.offlineMapScriptSrc.split(":")[1] + '/gaode/' + z + '/' + x + '/' + y + '.png';
+              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
             }
           });
           // console.log("window.AMap=", window.AMap)
@@ -439,7 +439,7 @@ class SdlMap extends PureComponent {
                 <Button style={{ marginLeft: 10 }} onClick={this.drawPolygon} className={styles.ClearButton}>设置区域</Button>
               }
               {
-                !config.offlineMapScriptSrc && <Input
+                !config.offlineMapUrl.domain && <Input
                   placeholder="搜索地址"
                   // defaultValue={this.state.address}
                   value={this.state.address}
