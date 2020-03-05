@@ -206,7 +206,8 @@ class MaintenanceCycle extends Component {
                             {getFieldDecorator('RemindCycle', {
                                 rules: [{
                                     required: true,
-                                    message: '请输入提醒周期',
+                                    pattern: /^[1-9]\d*$/,
+                                    message: '请输入整数的提醒周期',
                                 }],
                                 initialValue: RemindCycle,
                             })(
