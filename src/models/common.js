@@ -15,6 +15,7 @@ export default Model.extend({
     imageList: [],
     pollutantCode: [],
     industryTreeList: [],
+    entAndPointList: [],
   },
 
   effects: {
@@ -65,6 +66,17 @@ export default Model.extend({
         });
 
         callback && callback(result.Datas.list, defaultValue);
+      }
+    },
+    // 多选组件 - 获取企业及排口
+    *getEntAndPointList({ payload, callback }, { call, update }) {
+      const result = yield call(services.getEntAndPoint, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entAndPointList: result.Datas,
+        });
+      } else {
+        message.error(result.Message);
       }
     },
 

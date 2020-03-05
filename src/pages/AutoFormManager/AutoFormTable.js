@@ -321,11 +321,9 @@ class AutoFormTable extends PureComponent {
 
   export = () => {
     const { dispatch, configId, searchParams } = this.props;
-    dispatch({
-      type: 'autoForm/exportDataExcel',
-      payload: {
-        configId,
-        IsPaging: false,
+    let conditionWhere = {};
+    if(searchParams){
+      conditionWhere = {
         ConditionWhere: JSON.stringify(
           {
             rel: '$and',
@@ -336,6 +334,14 @@ class AutoFormTable extends PureComponent {
               ],
             }],
           }),
+      }
+    }
+    dispatch({
+      type: 'autoForm/exportDataExcel',
+      payload: {
+        configId,
+        IsPaging: false,
+        // ...conditionWhere
       },
     })
   }

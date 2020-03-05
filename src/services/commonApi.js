@@ -39,3 +39,8 @@ export async function getIndustryTree(params) {
   return result;
 }
 
+// 获取组件 - 企业及排口
+export async function getEntAndPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  return result;
+}

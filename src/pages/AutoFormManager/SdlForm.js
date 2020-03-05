@@ -151,7 +151,7 @@ class SdlForm extends PureComponent {
 
   // 处理时间控件
   _rtnDateEl = item => {
-    const { dateFormat } = item;
+    const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
     const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {
       // 年月 、 月
@@ -416,7 +416,8 @@ class SdlForm extends PureComponent {
             break;
           case 'AT-GetDate':
             console.log('AT-GetDate=', moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss'))
-            initialValue = moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss')
+            // initialValue = moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss')
+            initialValue = moment()
             break;
           default:
             break;
