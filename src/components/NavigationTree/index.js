@@ -147,7 +147,7 @@ class NavigationTree extends Component {
         QCAUse: QCAUse,
         RunState: state,
         PollutantTypes: this.state.PollutantTypes,
-        isFilter:this.props.isMap
+        isFilter: this.props.isMap
       }
     })
     // panelDataList.splice(0, panelDataList.length)
@@ -173,8 +173,10 @@ class NavigationTree extends Component {
     }
     if (this.props.selKeys !== nextProps.selKeys) {
       this.defaultKey = 0
-      this.clearData()
-      this.tilingData(nextProps.EntAndPoint)
+      if(!this.state.searchValue){
+        this.clearData()
+        this.tilingData(nextProps.EntAndPoint)
+      }
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
 
@@ -206,7 +208,6 @@ class NavigationTree extends Component {
 
   //处理接口返回的企业和排口数据
   generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
-
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -319,7 +320,7 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
-        isFilter:this.props.isMap
+        isFilter: this.props.isMap
       }
     })
   }
@@ -337,7 +338,7 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState,
-        isFilter:this.props.isMap
+        isFilter: this.props.isMap
       }
     })
   }
@@ -393,7 +394,7 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         Status: this.state.screenList,
         RunState: this.state.RunState,
-        isFilter:this.props.isMap
+        isFilter: this.props.isMap
 
       }
     })
@@ -489,7 +490,7 @@ class NavigationTree extends Component {
         Status: typeList,
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
-        isFilter:this.props.isMap
+        isFilter: this.props.isMap
       }
     })
   }

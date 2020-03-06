@@ -31,11 +31,16 @@ module.exports = {
   apiHost,
   uploadHost,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
-  // 外网离线地图配置：
+  // 在线地图配置：
   offlineMapUrl: {
-    domain: "http://61.50.135.114:50036",
+    domain: "",
     srcPath: "/amap-master/amap/js/maps.js"
   },
+  // 外网离线地图配置：
+  // offlineMapUrl: {
+  //   domain: "http://61.50.135.114:50036",
+  //   srcPath: "/amap-master/amap/js/maps.js"
+  // },
   // 内网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://172.16.9.20:808",
