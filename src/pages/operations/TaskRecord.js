@@ -34,7 +34,8 @@ class TaskRecord extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ParentType:'企业'
+      ParentType:'企业',
+    //  EntCode:null,
     };
     this._SELF_ = {
       configId: "TaskRecord",
@@ -119,8 +120,12 @@ class TaskRecord extends Component {
         ParentType="大气站"
       }
       this.setState({
-        ParentType
+        ParentType,
+      //  EntCode:null
+
       });
+
+      this.props.form.setFieldsValue({ "taskparent": undefined,"taskpoint":undefined })
   }
 
    // 监控标选择
@@ -259,7 +264,7 @@ getTaskTypeInfo=()=>{
           visible={this.state.visible}
           width="560px"
           destroyOnClose
-          loading={loading}
+          confirmLoading={loading}
           onOk={this.addTask}
           onCancel={() => {
             this.setState({ visible: false })
@@ -308,6 +313,7 @@ getTaskTypeInfo=()=>{
             <Row>
             <FormItem {...formLayout} label={this.state.ParentType} style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskparent", {
+                 //  initialValue: this.state.EntCode,
                   rules: [
                     {
                       required: true,
@@ -315,23 +321,23 @@ getTaskTypeInfo=()=>{
                     },
                   ]
                 })(
-                  <Select placeholder={`请选择${this.state.ParentType}!`} onChange={this.taskParentChange}>
+                  <Select placeholder={`请选择${this.state.ParentType}`} onChange={this.taskParentChange}>
                      {this.getTargetInfoList()}
                   </Select>
                 )}
               </FormItem>
             </Row>
             <Row>
-            <FormItem {...formLayout} label="站点信息" style={{ width: '100%', marginBottom: 10 }}>
+            <FormItem {...formLayout} label="监测点信息" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskpoint", {
                   rules: [
                     {
                       required: true,
-                      message: `请选择站点信息!`,
+                      message: `请选择监测点信息!`,
                     },
                   ]
                 })(
-                  <Select placeholder={`请选择请选择站点信息!`} onChange={this.taskPointChange}>
+                  <Select placeholder={`请选择请选择监测点信息`} onChange={this.taskPointChange}>
                      {this.getPointInfoList()}
                   </Select>
                 )}
@@ -377,12 +383,12 @@ getTaskTypeInfo=()=>{
             <Row>
               <FormItem {...formLayout} label="描述" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("remark", {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请填写描述',
-                    },
-                  ]
+                  // rules: [
+                  //   {
+                  //     required: true,
+                  //     message: '请填写描述',
+                  //   },
+                  // ]
                 })(
                   <TextArea placeholder="请填写描述" rows={4} />
                 )}

@@ -849,7 +849,14 @@ export default {
                       name:'statisticsReportDataList',
                       path:'/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
                       component: './report/StatisticsReportDataList',
-                    }
+                    },
+                    {
+                      name: 'statisticsReportDataListView',
+                      path: '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList/statisticsReportDataListView/:configId/:monitortime/:entcode',
+                      ///:monitortime/:entcode
+                      component: './platformManager/dataReport/components/dataReportView',
+                  },
+
                   ]
                 },
                 {

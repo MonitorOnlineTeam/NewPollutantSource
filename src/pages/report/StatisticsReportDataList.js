@@ -134,24 +134,24 @@ class StatisticsReportDataList extends PureComponent {
         width: 300,
         fixed: 'left',
         render: (text, row, index) => {
-          return(<span className={style.entClick} onClick={()=>dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/${row.MonitorTime}/${row.EntCode}`))}>
+          return(<span className={style.entClick} onClick={()=>dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList/statisticsReportDataListView/DataReportingView/${row.MonitorTime}/${row.EntCode}`))}>
             {text}
           </span>)
         }   
      },{
-        title: '进口(m³/h)',
+        title: '进水量(万m³)',
         dataIndex: 'Imported',
         width: 200,
         
       //  render: (text, row, index) => {}   
      },{
-        title: '出口(m³/h)',
+        title: '出水量(万m³)',
         dataIndex: 'Exit',
         width: 200,
       //  render: (text, row, index) => {}   
      }
      ,{
-        title: '回口(m³/h)',
+        title: '回水量(万m³)',
         dataIndex: 'BackEntry',
         width: 200,
      //   render: (text, row, index) => {}   

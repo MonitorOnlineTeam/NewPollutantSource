@@ -122,7 +122,7 @@ class LogTimeList extends Component {
           {/* </div> */}
         </Timeline.Item>
       )
-
+  {/* <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p> */}
       item.Nodes.map(node => {
         timelineItems.push(
           <Timeline.Item
@@ -150,7 +150,9 @@ class LogTimeList extends Component {
             </Tag>
                 </>
                 : <><p><span style={{ color: "#40a9ff", marginRight: 10 }}>{node.CreateUser}</span>需要对当前排口进行处理</p>
-                  <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p></>
+                  </>
+
+                        
             }
 
           </Timeline.Item>
@@ -159,7 +161,7 @@ class LogTimeList extends Component {
     })
     return timelineItems;
   }
-
+  
   // 获取运维日志数据
   getOperationLogList = (flag) => {
     const { dateValues, DGIMN, currentRecordType } = this.state;
