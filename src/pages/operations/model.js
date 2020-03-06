@@ -322,7 +322,11 @@ export default Model.extend({
             configId: 'TaskRecord',
           },
         })
+       
         callback && callback(result.Datas);
+      }
+      else{
+        message.error(result.Message);
       }
     },
     // 驳回
