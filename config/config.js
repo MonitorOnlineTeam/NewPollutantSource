@@ -593,6 +593,13 @@ export default {
                   name: "taskRecord",
                   component: "./operations/TaskRecord"
                 },
+
+                {
+                  path: '/operations/taskRecord/details/:TaskID/:DGIMN',
+                  name: "taskRecordDetail",
+                  component: "./EmergencyTodoList/EmergencyDetailInfoLayout"
+                },
+
                 {
                   path: '/operations/:from/recordForm/:typeID/:taskID',
                   name: "recordForm",

@@ -223,7 +223,7 @@ getTaskTypeInfo=()=>{
               reslist.push(
                 <Tooltip title="详情">
                 <a><Icon onClick={()=>this.props.dispatch(routerRedux.push
-                  (`/operations/calendar/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
+                  (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
                    </Tooltip>
               )
               if (text) {
