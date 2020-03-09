@@ -123,12 +123,32 @@ class DailySummaryPage extends PureComponent {
         }
       })
     }
+
+
     if (this.props.dailySummaryDataList !== nextProps.dailySummaryDataList) {
+      let AQIColumn = [];
+      let pollutantSourceType = nextProps.form.getFieldValue("PollutantSourceType");
+      // 汇总日报 - 扬尘和大气站显示AQI
+      if (nextProps.match.params.reportType === "daily" && pollutantSourceType == 5 || pollutantSourceType == 12) {
+        AQIColumn = [{
+          title: 'AQI',
+          dataIndex: 'AQI',
+        }, {
+          title: '空气质量指数类别',
+          dataIndex: '空气质量指数类别',
+        },
+        {
+          title: '空气质量指数级别',
+          dataIndex: '空气质量指数级别',
+        }]
+      }
+
       const _columns = [
         {
           title: "排口名称",
           dataIndex: 'PointName',
         },
+        ...AQIColumn,
         ...nextProps.pollutantList
       ]
       let columns = _columns.map(item => {
