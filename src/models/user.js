@@ -68,6 +68,7 @@ export default Model.extend({
     },
     alarmPushData: [],
     showAlarmState: true,
+    menuNameList: [],
   },
 
   effects: {
@@ -90,12 +91,14 @@ export default Model.extend({
           if (window.location.pathname === '/') {
             router.push(Cookie.get('defaultNavigateUrl'))
           }
+          let menuList = getMenuList(cMenu);
+          let menuNameList = menuList && menuList.length ? menuList.map(item => item.name) : [];
           yield put({
             type: 'saveCurrentUser',
             payload: {
               currentUser,
               currentMenu: cMenu,
-              menuFlattenList: getMenuList(cMenu)
+              menuNameList: menuNameList
             },
           });
         } else {
