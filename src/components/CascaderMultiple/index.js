@@ -38,7 +38,9 @@ class CascaderMultiple extends Component {
       if (!cascaderMultiple.contains(e.target)) {
         this.setState({ visible: false, inputValue: "", options: this.oldOptions })
         let inputEle = document.getElementById('input');
-        inputEle.style.display = "none";
+        if(inputEle && inputEle.style){
+          inputEle.style.display = "none";
+        }
       }
     })
 
