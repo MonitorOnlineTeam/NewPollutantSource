@@ -764,7 +764,8 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ""}
-          {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect
+          {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
+          {false ? <EnterprisePointCascadeMultiSelect
             searchRegion={true}
             onChange={this.regionChange}
             placeholder="请选择区域"

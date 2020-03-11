@@ -223,7 +223,7 @@ getTaskTypeInfo=()=>{
               reslist.push(
                 <Tooltip title="详情">
                 <a><Icon onClick={()=>this.props.dispatch(routerRedux.push
-                  (`/operations/calendar/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
+                  (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
                    </Tooltip>
               )
               if (text) {
@@ -328,16 +328,16 @@ getTaskTypeInfo=()=>{
               </FormItem>
             </Row>
             <Row>
-            <FormItem {...formLayout} label="监测点信息" style={{ width: '100%', marginBottom: 10 }}>
+            <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskpoint", {
                   rules: [
                     {
                       required: true,
-                      message: `请选择监测点信息!`,
+                      message: `请选择监测点!`,
                     },
                   ]
                 })(
-                  <Select placeholder={`请选择请选择监测点信息`} onChange={this.taskPointChange}>
+                  <Select placeholder={`请选择监测点`} onChange={this.taskPointChange}>
                      {this.getPointInfoList()}
                   </Select>
                 )}

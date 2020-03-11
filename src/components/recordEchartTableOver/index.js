@@ -247,7 +247,7 @@ class Index extends Component {
                     break;
                 case 'DayData':
                     if (hisData[1].add(-12, 'month') > hisData[0]) {
-                        message.info('日数据时间间隔不能超过1年个月');
+                        message.info('日数据时间间隔不能超过1年');
                         return;
                     }
                     hisData[1].add(+12, 'month')

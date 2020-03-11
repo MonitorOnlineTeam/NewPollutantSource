@@ -45,7 +45,7 @@ const iconStyle = {
   airChartLoading: loading.effects['mapView/getAirChartData'],
   curPointData: mapView.curPointData,
   noticeList: global.notices,
-  menuFlattenList: user.menuFlattenList,
+  menuNameList: user.menuNameList,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -67,7 +67,6 @@ class MapView extends Component {
       currentDescItem: {},
       airShowType: undefined,
       multiple: 4,
-      menuNameList: [],
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -489,11 +488,7 @@ class MapView extends Component {
         }
       }, 200);
     }
-    if (this.props.menuFlattenList !== nextProps.menuFlattenList) {
-      this.setState({
-        menuNameList: nextProps.menuFlattenList.map(item => item.name)
-      })
-    }
+
   }
 
   // 获取筛选状态图标颜色
@@ -557,8 +552,8 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData } = this.props;
-    const { currentEntInfo, currentKey, menuNameList } = this.state;
+    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData, menuNameList } = this.props;
+    const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
         text: `24小时趋势图`,
