@@ -24,10 +24,12 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
-import CascaderMultiple from "@/components/CascaderMultiple"
+import CascaderMultiple from '@/components/CascaderMultiple'
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
+
 
 @connect(({ loading, report, autoForm, global }) => ({
   loading: loading.effects['report/getDateReportData'],
@@ -74,7 +76,7 @@ class SiteDailyPage extends PureComponent {
           ? 'YYYY-MM'
           : 'YYYY';
     this.state = {
-      format: format,
+      format,
       columns: [],
       currentDate: moment().format(format),
       defaultRegionCode: [],
@@ -97,8 +99,8 @@ class SiteDailyPage extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.props.match.params.reportType === "siteDaily") {
-      this.props.form.setFieldsValue({ "ReportTime": moment().add(-1, "day") })
+    if (this.props.match.params.reportType === 'siteDaily') {
+      this.props.form.setFieldsValue({ ReportTime: moment().add(-1, 'day') })
     }
     const { defaultSearchForm } = this.SELF;
     // 获取污染物 - 查询条件
@@ -107,15 +109,15 @@ class SiteDailyPage extends PureComponent {
       callback: data => {
         const defalutVal = data.Datas[0].pollutantTypeCode;
         this.props.dispatch({
-          type: "report/getPointReportEntAndPointList",
+          type: 'report/getPointReportEntAndPointList',
           payload: {
-            "PollutantTypes": defalutVal,
-            "RegionCode": "",
-            "Name": "",
-            "Status": [0, 1, 2, 3],
-            "QCAUse": "",
-            "RunState": "",
-            "isFilter": true
+            PollutantTypes: defalutVal,
+            RegionCode: '',
+            Name: '',
+            Status: [0, 1, 2, 3],
+            QCAUse: '',
+            RunState: '',
+            isFilter: true,
           },
           callback: res => {
             let DGIMN = [];
@@ -132,7 +134,7 @@ class SiteDailyPage extends PureComponent {
               }
             }
             // console.log("DGIMN=",DGIMN)
-            this.props.form.setFieldsValue({ "DGIMN": DGIMN })
+            this.props.form.setFieldsValue({ DGIMN })
             // 获取污染物类型 = 表头
             this.props.dispatch({
               type: 'report/getPollutantList',
@@ -158,10 +160,9 @@ class SiteDailyPage extends PureComponent {
                 },
               },
             });
-          }
+          },
         })
-
-      }
+      },
     });
   }
 
@@ -178,19 +179,19 @@ class SiteDailyPage extends PureComponent {
             ? 'YYYY-MM'
             : 'YYYY';
       this.setState({
-        format: format,
+        format,
         currentDate:
           this.props.form.getFieldValue('ReportTime') &&
           moment(this.props.form.getFieldValue('ReportTime')).format(format),
       });
       this.props.dispatch({
-        type: "report/updateState",
+        type: 'report/updateState',
         payload: {
           dateReportForm: {
             ...this.props.dateReportForm,
-            current: 1
-          }
-        }
+            current: 1,
+          },
+        },
       })
       setTimeout(() => {
         // 获取表格数据
@@ -206,14 +207,13 @@ class SiteDailyPage extends PureComponent {
           },
         });
       }, 0)
-
     }
     // if (this.props.pollutantList !== nextProps.pollutantList) {
     if (this.props.dateReportData !== nextProps.dateReportData) {
       let AQIColumn = [];
       // 站点日报 - 扬尘和大气站显示AQI
-      let pollutantSourceType = nextProps.form.getFieldValue("PollutantSourceType");
-      if (nextProps.match.params.reportType === "siteDaily" && pollutantSourceType == 5 || pollutantSourceType == 12) {
+      const pollutantSourceType = nextProps.form.getFieldValue('PollutantSourceType');
+      if (nextProps.match.params.reportType === 'siteDaily' && pollutantSourceType == 5 || pollutantSourceType == 12) {
         AQIColumn = [{
           title: 'AQI',
           dataIndex: 'AQI',
@@ -234,8 +234,7 @@ class SiteDailyPage extends PureComponent {
         ...AQIColumn,
         ...nextProps.pollutantList,
       ];
-      let columns = _columns.map(item => {
-        return {
+      const columns = _columns.map(item => ({
           ...item,
           render: (text, row, index) => {
             if (text) {
@@ -244,7 +243,7 @@ class SiteDailyPage extends PureComponent {
               let val = _text[0];
               // const status = _text[_text.length-1];
               const status = _text[1];
-              if (item.dataIndex === "风向") {
+              if (item.dataIndex === '风向') {
                 val = getDirLevel(text)
               }
               // console.log('///=', status)
@@ -253,8 +252,7 @@ class SiteDailyPage extends PureComponent {
             }
             return '-';
           },
-        };
-      });
+        }));
 
       columns.unshift({
         title: '点名称',
@@ -478,15 +476,15 @@ class SiteDailyPage extends PureComponent {
                         placeholder="请选择污染物类型"
                         onChange={value => {
                           this.props.dispatch({
-                            type: "report/getPointReportEntAndPointList",
+                            type: 'report/getPointReportEntAndPointList',
                             payload: {
-                              "PollutantTypes": value,
-                              "RegionCode": "",
-                              "Name": "",
-                              "Status": [0, 1, 2, 3],
-                              "QCAUse": "",
-                              "RunState": "",
-                              "isFilter": true
+                              PollutantTypes: value,
+                              RegionCode: '',
+                              Name: '',
+                              Status: [0, 1, 2, 3],
+                              QCAUse: '',
+                              RunState: '',
+                              isFilter: true,
                             },
                             callback: res => {
                               let DGIMN = [];
@@ -496,8 +494,8 @@ class SiteDailyPage extends PureComponent {
                                   break;
                                 }
                               }
-                              this.props.form.setFieldsValue({ "DGIMN": DGIMN })
-                            }
+                              this.props.form.setFieldsValue({ DGIMN })
+                            },
                           });
                         }}
                       />,
@@ -507,7 +505,7 @@ class SiteDailyPage extends PureComponent {
                 <Col xxl={7} xl={7} sm={24} lg={9}>
                   <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                     {getFieldDecorator('DGIMN', {
-                      initialValue: this.props.form.getFieldValue("DGIMN"),
+                      initialValue: this.props.form.getFieldValue('DGIMN'),
                       rules: [
                         {
                           required: true,
@@ -516,7 +514,7 @@ class SiteDailyPage extends PureComponent {
                       ],
                     })(
                       // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
-                      <CascaderMultiple options={entAndPontList} {...this.props} />
+                      <CascaderMultiple options={entAndPontList} {...this.props} />,
                     )}
                   </FormItem>
                 </Col>
@@ -580,9 +578,9 @@ class SiteDailyPage extends PureComponent {
               scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {
-                  return;
+
                 } else if (index % 2 !== 0 || record.time === '0时') {
-                  return style['light'];
+                  return style.light;
                 }
               }}
               bordered

@@ -70,19 +70,24 @@ import {
     }
 
     reloadPage = () => {
-        const { dispatch, configId } = this.props;
+        const { dispatch, configId,DGIMN} = this.props;
+        const DataWhere = [{
+          Key: '[dbo]__[T_Bas_EquipmentInfo]__PointCode',
+          Value: DGIMN,
+          Where: '$=',
+        },
+      ];
+      
+        this.setState({
+          DataWhere,
+      }, () => {
         dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
-        dispatch({
-            type: 'autoForm/getPageConfig',
-            payload: {
-                configId,
-            },
-        })
+          type: 'autoForm/getPageConfig',
+          payload: {
+              configId,
+          },
+      })
+      })
     }
 
     /** 逻辑删除 */

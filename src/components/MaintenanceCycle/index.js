@@ -202,12 +202,13 @@ class MaintenanceCycle extends Component {
                     <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
                         <FormItem
                             {...formItemLayout}
-                            label="提醒周期(天)">
+                            label={this.state.type == "233" ? "巡检周期(天)" : this.state.type == "235" ? "校准周期(天)" : "校验周期(天)"}
+                        >
                             {getFieldDecorator('RemindCycle', {
                                 rules: [{
                                     required: true,
                                     pattern: /^[1-9]\d*$/,
-                                    message: '请输入整数的提醒周期',
+                                    message: '请输入整数',
                                 }],
                                 initialValue: RemindCycle,
                             })(
@@ -218,11 +219,12 @@ class MaintenanceCycle extends Component {
                     <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                         <FormItem
                             {...formItemLayout}
-                            label="最新一次提醒日期">
+                            label={this.state.type == "233" ? "最新一次巡检日期" : this.state.type == "235" ? "最新一次校准日期" : "最新一次校验日期"}
+                        >
                             {getFieldDecorator('LastRemindDate', {
                                 rules: [{
                                     required: true,
-                                    message: '请输入最新一次提醒日期',
+                                    message: '请输入最新一次日期',
                                 }],
                                 initialValue: LastRemindDate ? moment(LastRemindDate) : null,
                             })(
@@ -264,7 +266,7 @@ class MaintenanceCycle extends Component {
             <div>
                 <Card>
                     <Tabs defaultActiveKey="233" onChange={this.onChange}>
-                        <TabPane tab="日常运维提醒" key="233">
+                        <TabPane tab="日常巡检提醒" key="233">
                             {this.state.type === '233' ? this.getfromData() : ''}
                         </TabPane>
                         {/* <TabPane tab="系统保养周期提醒" key="234">
