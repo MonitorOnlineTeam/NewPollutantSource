@@ -7,7 +7,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import EquipmentInfoManage from './components/index'
-
+import PageLoading from '@/components/PageLoading'
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -38,7 +38,7 @@ import EquipmentInfoManage from './components/index'
         return (
             <div id="EquipmentInfoManage">
                 <PageHeaderWrapper>
-                 {this.state.dgimn&&<EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />}
+                 {this.state.dgimn?<EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />:<PageLoading/>}
                 </PageHeaderWrapper>
                 <NavigationTree domId="#EquipmentInfoManage" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
