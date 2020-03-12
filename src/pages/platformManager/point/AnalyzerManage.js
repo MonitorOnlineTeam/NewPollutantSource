@@ -58,7 +58,6 @@ class AnalyzerManage extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    debugger;
     console.log(this.props.qualityControlTableData);
     if (this.props.qualityControlTableData !== nextProps.qualityControlTableData) {
       this.setState({
@@ -128,7 +127,6 @@ changeChildTable = (parentIndex, key, value, index) => {
 
 /** 保存 */
 onSubmitForm = () => {
-  debugger;
   this.props.form.validateFields((err, fieldsValue) => {
     if (err) {
       return;
@@ -137,7 +135,6 @@ onSubmitForm = () => {
     const {
       dataSource,
     } = this.state;
-    debugger;
     let isErr = false;
     dataSource.map(item => {
       if (!item.Component.length) {
@@ -151,7 +148,6 @@ onSubmitForm = () => {
       }
     })
     if (!isErr) {
-      debugger;
       const postData = {
         DGIMN: this.props.DGIMN,
         MainTable: dataSource,
