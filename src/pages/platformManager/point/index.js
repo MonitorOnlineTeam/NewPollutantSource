@@ -10,7 +10,6 @@ import {
   Spin,
   Select,
   Modal,
-  Tag,
   Divider,
   Dropdown,
   Icon,
@@ -26,6 +25,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import { router } from 'umi'
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
@@ -35,7 +35,7 @@ import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
 import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
-import Maintenancereminder from '../maintenancereminder/index';
+import AnalyzerManage from './AnalyzerManage';
 
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -69,6 +69,7 @@ export default class MonitorPoint extends Component {
       isView: false,
       Mvisible: false,
       PointCode: '',
+      DGIMN: '',
     };
   }
 
@@ -122,7 +123,7 @@ export default class MonitorPoint extends Component {
         }
       }
     } catch (e) {
-      //sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
+      // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
 
     switch (type) {
@@ -170,10 +171,11 @@ export default class MonitorPoint extends Component {
   };
 
   /** 设置运维周期 */
-  showMaintenancereminder = PointCode => {
+  showMaintenancereminder = DGIMN => {
+    console.log(DGIMN);
     this.setState({
       Mvisible: true,
-      PointCode,
+      DGIMN,
     })
   }
 
@@ -230,13 +232,13 @@ export default class MonitorPoint extends Component {
           FormData.PointCode = this.state.selectedPointCode;
         }
 
-        let payload = {
+        const payload = {
           BaseType: match.params.targetType,
           TargetId: match.params.targetId,
-          Point: FormData
+          Point: FormData,
         };
 
-        //console.log("payload=", payload);
+        // console.log("payload=", payload);
 
         dispatch({
           type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
@@ -294,7 +296,9 @@ export default class MonitorPoint extends Component {
     this.getPageConfig(e.target.value);
   }
 
+
   showDeleteConfirm = (PointCode, DGIMN) => {
+    console.log(PointCode);
     const that = this;
     const { dispatch } = this.props;
     // console.log("row=", row);
@@ -312,8 +316,8 @@ export default class MonitorPoint extends Component {
     });
   }
 
-  loadReportList = (re) => {
-    console.log("res=", re)
+  loadReportList = re => {
+    console.log('res=', re)
   }
 
   render() {
@@ -328,7 +332,7 @@ export default class MonitorPoint extends Component {
       pointDataWhere,
       isEdit,
       saveLoadingAdd,
-      saveLoadingEdit
+      saveLoadingEdit,
     } = this.props;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
@@ -388,7 +392,6 @@ export default class MonitorPoint extends Component {
             {
 
 
-
               pointConfigId && (<AutoFormTable
                 style={{ marginTop: 10 }}
                 // columns={columns}
@@ -413,7 +416,7 @@ export default class MonitorPoint extends Component {
                         onClick={() => {
                           this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
                           this.setState({
-                            cuid: getRowCuid(row, "dbo.T_Bas_CommonPoint.Photo")
+                            cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                           })
                         }}
                       >
@@ -442,6 +445,15 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
+                    {
+                     row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
+                     <Tooltip title="设置Cems参数">
+                       <a onClick={() => {
+                         this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
+                       }}><Icon type="tool"/></a>
+                     </Tooltip></> : ''
+                    }
+
                   </Fragment>
                 )}
               />
@@ -458,11 +470,10 @@ export default class MonitorPoint extends Component {
             footer={[
               !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
                 取消
-            </Button> ,
+            </Button>,
                 <Button key="submit" type="primary" loading={!this.state.isEdit ? saveLoadingAdd : saveLoadingEdit} onClick={this.onSubmitForm.bind(this)}>
                   确定
-            </Button>) : ''
-              ,
+            </Button>) : '',
             ]}
           >
             {!this.state.isView ? (
@@ -484,14 +495,14 @@ export default class MonitorPoint extends Component {
               )}
           </Modal>
           <Modal
-            title="设置运维周期"
+            title="设置Cems参数"
             visible={this.state.Mvisible}
             onCancel={this.handleMCancel}
-            width="50%"
+            width="90%"
             destroyOnClose
             footer={false}
           >
-            < Maintenancereminder PointCode={this.state.PointCode} />
+            <AnalyzerManage DGIMN={this.state.DGIMN} />
           </Modal>
         </div>
         {/* </MonitorContent> */}
