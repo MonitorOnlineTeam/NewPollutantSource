@@ -779,7 +779,7 @@ class DepartIndex extends Component {
             searchPlaceholder: '搜索',
             treeDefaultExpandedKeys: ['0'],
             style: {
-                width: 500,
+                width: 400,
                 marginLeft: 16,
             },
             dropdownStyle: {
@@ -1035,6 +1035,7 @@ class DepartIndex extends Component {
                                                 showType="radio"
                                                 // defaultPollutantCode={this.state.pollutantType}
                                                 mode="multiple"
+                                                showAll
                                                 onChange={this.handleSizeChange}
                                             />
                                             <TreeSelect {...tProps} />

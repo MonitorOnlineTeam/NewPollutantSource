@@ -45,7 +45,7 @@ const iconStyle = {
   airChartLoading: loading.effects['mapView/getAirChartData'],
   curPointData: mapView.curPointData,
   noticeList: global.notices,
-  menuNameList: user.menuNameList,
+  menuDescList: user.menuDescList,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -552,7 +552,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData, menuNameList } = this.props;
+    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -1055,28 +1055,28 @@ class MapView extends Component {
               // })
             }}>
               {
-                menuNameList.includes("历史数据") && <TabPane tab="历史数据" key="1">
+                menuDescList.includes("历史数据") && <TabPane tab="历史数据" key="1">
                   <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
                 </TabPane>
               }
               {
-                menuNameList.includes("视频管理") && <TabPane tab="视频管理" key="2">
+                menuDescList.includes("视频预览") && <TabPane tab="视频预览" key="2">
                   <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
                 </TabPane>
               }
               {
-                menuNameList.includes("报警记录") && this.state.currentPointInfo.PollutantType != "5" &&
+                menuDescList.includes("报警记录") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="报警记录" key="3">
                   <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
-                menuNameList.includes("异常数据") && <TabPane tab="异常数据" key="4">
+                menuDescList.includes("异常数据") && <TabPane tab="异常数据" key="4">
                   <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} />
                 </TabPane>
               }
               {
-                menuNameList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
+                menuDescList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="超标数据" key="5">
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} noticeState={1} />
                 </TabPane>

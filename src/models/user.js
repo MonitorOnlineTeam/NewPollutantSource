@@ -69,7 +69,7 @@ export default Model.extend({
     },
     alarmPushData: [],
     showAlarmState: true,
-    menuNameList: [],
+    menuDescList: [],
   },
 
   effects: {
@@ -93,13 +93,14 @@ export default Model.extend({
             router.push(Cookie.get('defaultNavigateUrl'))
           }
           const menuList = getMenuList(cMenu);
-          const menuNameList = menuList && menuList.length ? menuList.map(item => item.name) : [];
+          let filterDescList = (menuList && menuList.length) ? 
+          menuList.filter(item => item.desc.indexOf("ReactPD") > -1) : []
           yield put({
             type: 'saveCurrentUser',
             payload: {
               currentUser,
               currentMenu: cMenu,
-              menuNameList,
+              menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
             },
           });
         } else {

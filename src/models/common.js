@@ -20,10 +20,11 @@ export default Model.extend({
 
   effects: {
     // 获取污染物类型
-    *getPollutantTypeList({ payload = {}, callback }, { update, call }) {
+    *getPollutantTypeList({ payload = {}, showAll, callback }, { update, call }) {
       let { filterPollutantType } = payload;
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
+
         let data = result.Datas;
         if (filterPollutantType !== 'undefined') {
           let thisPollutantType = filterPollutantType && filterPollutantType.split(',');
@@ -32,8 +33,16 @@ export default Model.extend({
               let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
               return flag.length > 0;
             }));
+        }
 
-          // console.log("newPollutantTypelist2=", newPollutantTypelist);
+        // 是否显示全部
+        if (showAll) {
+          data = [{
+            pollutantTypeName: "全部",
+            pollutantTypeCode: data.map(item => item.pollutantTypeCode).toString(),
+          },
+          ...data
+          ]
         }
         let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
         callback && callback(defaultPollutantCode);
