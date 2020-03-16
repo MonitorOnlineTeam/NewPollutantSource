@@ -71,6 +71,30 @@ export async function exportGasReport(params) {
   return result === null ? { data: null } : result;
 }
 
+// 获取综合指数月报
+export async function getMonthComposite(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetMonthComposite', params, null);
+  return result;
+}
+
+// 获取综合指数年报
+export async function getYearComposite(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetYearComposite', params, null);
+  return result;
+}
+
+// 导出综合指数月报
+export async function exportMonthComposite(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportMonthCompositeNum', params, null);
+  return result;
+}
+
+// 导出综合指数年报
+export async function exportYearComposite(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportYearCompositeNum', params, null);
+  return result;
+}
+
 
 
 
