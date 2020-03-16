@@ -93,8 +93,8 @@ export default Model.extend({
             router.push(Cookie.get('defaultNavigateUrl'))
           }
           const menuList = getMenuList(cMenu);
-          let filterDescList = (menuList && menuList.length) ? 
-          menuList.filter(item => item.desc.indexOf("ReactPD") > -1) : []
+          let filterDescList = (menuList && menuList.length) ?
+            menuList.filter(item => { if (item.desc) return item.desc.indexOf("ReactPD") > -1 }) : []
           yield put({
             type: 'saveCurrentUser',
             payload: {
