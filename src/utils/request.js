@@ -67,6 +67,10 @@ function parseJSON(response) {
 
 async function requestMy(url, options) {
   const ssoToken = `${getCookie(configToken.cookieName)}`;
+  console.log(`
+  ${url} - ssToken:
+  ${getCookie(configToken.cookieName)} 
+  `)
   const authHeader = getAuthHeader(ssoToken);
 
   const resp = await fetch(url, { ...options, ...authHeader })
@@ -77,6 +81,11 @@ async function requestMy(url, options) {
       const status = e.name;
 
       if (status === 401) {
+        console.log(`
+        接口401报错：
+        url: ${url}
+        ssToken: ${getCookie(configToken.cookieName)} 
+        `)
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         router.push('/user/login');
