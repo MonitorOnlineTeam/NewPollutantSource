@@ -42,25 +42,23 @@ export default Model.extend({
       let notices = [];
       if (result.IsSuccess) {
         notices = notices.concat(
-          result.Datas.map((item, index) => {
-            return {
+          result.Datas.map((item, index) => ({
               ...item,
               id: item.ID,
               key: item.ID,
               pointname: item.PointName,
               DGIMN: item.DGIMN,
-              pollutantnames: item.PollutantNames, //超标显示时用到此字段
+              pollutantnames: item.PollutantNames, // 超标显示时用到此字段
               firsttime: item.FirstAlarmTime,
               lasttime: item.LastAlarmTime,
               alarmcount: item.AlarmCount,
-              sontype: item.PushType, //推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
+              sontype: item.PushType, // 推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
               type: 'alarm',
               title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
               description: item.Description,
-              exceptiontypes: item.AlarmTypeDescription,//右侧标签用到，可多个
-              orderby: item.PushType === "over" ? 1 : item.PushType === "exception" ? 2 : 3 //排序
-            };
-          }),
+              exceptiontypes: item.AlarmTypeDescription, // 右侧标签用到，可多个
+              orderby: item.PushType === 'over' ? 1 : item.PushType === 'exception' ? 2 : 3, // 排序
+            })),
         );
       }
       yield update({
@@ -98,18 +96,17 @@ export default Model.extend({
       const response = yield call(services.getSystemConfigInfo);
       if (response.IsSuccess) {
         // console.log('ConfigInfo=', response.Datas);
-        try{
+        try {
           mywebsocket.InitWebsocket(response.Datas.WebSocketAddress);
-        }catch(e)
-        {
-          console.log("WebSocketAddress获取失败");
+        } catch (e) {
+          console.log('WebSocketAddress获取失败');
         }
-        
+
         yield put({
           type: 'setConfigInfo',
           payload: {
             GroupRegionState: 0,
-            ...response.Datas
+            ...response.Datas,
           },
         });
         yield put({
@@ -289,11 +286,11 @@ export default Model.extend({
         };
       }
     },
-    //接收消息推送更改Model内存
+    // 接收消息推送更改Model内存
     changeQCANotices(state, { payload }) {
-      let notices = [...state.notices];
+      const notices = [...state.notices];
       // 67: 余量、过期时间报警; 89: 工作状态异常、压力异常报警
-      let changeType = payload.find(t => t.Type == 6 || t.Type == 7) ? 67 : 89;
+      const changeType = payload.find(t => t.Type == 6 || t.Type == 7) ? 67 : 89;
       payload.map(item => {
         // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警
         // 判断过滤条件
@@ -306,17 +303,17 @@ export default Model.extend({
 
         // 有相同数据，每次接收推送消息后数量加1
         if (filterDataIndex >= 0) {
-          let filterObj = notices[filterDataIndex];
+          const filterObj = notices[filterDataIndex];
           notices[filterDataIndex] = {
             ...notices[filterDataIndex],
             alarmcount: filterObj.alarmcount + 1,
             LastAlarmTime: item.Time,
             title: <span>{`${filterObj.pointname}，${PollutantName}报警${filterObj.alarmcount + 1}次`}<br /><span style={{ fontSize: 11 }}>{filterObj.TargetName}</span></span>,
-            description: `从${filterObj.FirstAlarmTime}至${item.Time},${PollutantName}发生了${filterObj.alarmcount + 1}次${filterObj.exceptiontypes}`,//右侧标签用到，可多个
+            description: `从${filterObj.FirstAlarmTime}至${item.Time},${PollutantName}发生了${filterObj.alarmcount + 1}次${filterObj.exceptiontypes}`, // 右侧标签用到，可多个
           }
         } else {
           // 无相同数据，追加推送的新数据
-          let name = changeType === 67 ? item.PollutantName : item.TypeName;
+          const name = changeType === 67 ? item.PollutantName : item.TypeName;
           notices.push({
             FirstAlarmTime: item.Time,
             DGIMN: item.DataGatherCode,
@@ -326,18 +323,18 @@ export default Model.extend({
             PollutantCodes: item.Code,
             alarmcount: 1,
             LastAlarmTime: item.Time,
-            sontype: "exception",
-            type: "alarm",
-            exceptiontypes: item.TypeName + "报警",
+            sontype: 'exception',
+            type: 'alarm',
+            exceptiontypes: `${item.TypeName}报警`,
             title: <span>{`${item.PointName}，${name}报警1次`}<br /><span style={{ fontSize: 11 }}>{item.PointName}</span></span>,
             // description: item.Description,
-            description: `从${item.Time}至${item.Time}，${name}发生了1次报警`,//右侧标签用到，可多个
+            description: `从${item.Time}至${item.Time}，${name}发生了1次报警`, // 右侧标签用到，可多个
           })
         }
       })
       return {
         ...state,
-        notices: notices
+        notices,
       };
     },
     changeAdvises(state, { payload }) {
@@ -405,7 +402,7 @@ export default Model.extend({
         // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
         const obj = JSON.parse(data);
 
-        //console.log('real=', obj)
+        console.log('real=', obj)
         switch (obj.MessageType) {
           case 'RealTimeData':
             // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
@@ -508,8 +505,8 @@ export default Model.extend({
             break;
           case 'QCAAlarmMsg':
             dispatch({
-              type: "qualityControl/volumeWarning",
-              payload: obj.Message
+              type: 'qualityControl/volumeWarning',
+              payload: obj.Message,
             })
             dispatch({
               type: 'changeQCANotices',
