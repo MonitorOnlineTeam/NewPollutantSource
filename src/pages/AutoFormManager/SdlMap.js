@@ -5,7 +5,7 @@ import { Input, Modal, Icon, Button, message } from 'antd'
 import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import styles from './MapContent.less';
 import config from "@/config"
-
+import { connect } from 'dva';
 const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
 
 
@@ -21,6 +21,10 @@ const styleC = {
   left: "-85px",
   color: "#000",
 }
+
+@connect(({ loading, global }) => ({
+  configInfo: global.configInfo,
+}))
 class SdlMap extends PureComponent {
   constructor(props) {
     super(props);
@@ -271,8 +275,8 @@ class SdlMap extends PureComponent {
             window.AMap.plugin('AMap.Autocomplete', function () {
               // 实例化Autocomplete
               var autoOptions = {
-                //city 限定城市，默认全国
-                city: '全国',
+                // city: "110000",
+                city: that.props.configInfo.RegionCode == '0' ? '全国' : that.props.configInfo.RegionCode.substring(0, 6),
                 input: "tipInput"
               }
 

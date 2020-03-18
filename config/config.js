@@ -910,6 +910,12 @@ export default {
                   path: '/Intelligentanalysis/report/:type',
                   component: './dataAnalyze/Report',
                 },
+                // 综合指数报表
+                {
+                  name: 'compositeIndexReport',
+                  path: '/Intelligentanalysis/compositeIndex/:reportType',
+                  component: './dataAnalyze/CompositeIndexReport',
+                },
               ],
             },
             {
