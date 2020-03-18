@@ -48,6 +48,11 @@ export function getAuthHeader(ssoToken) {
 
 const checkStatus = response => {
   if ((response.status >= 200 && response.status < 300) || response.status === 500) {
+    console.log(`
+        接口返回${response.status}：
+        url: ${response.url}
+        ssToken: ${getCookie(configToken.cookieName)} 
+        `)
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -67,6 +72,10 @@ function parseJSON(response) {
 
 async function requestMy(url, options) {
   const ssoToken = `${getCookie(configToken.cookieName)}`;
+  console.log(`
+  ${url} - ssToken:
+  ${getCookie(configToken.cookieName)} 
+  `)
   const authHeader = getAuthHeader(ssoToken);
 
   const resp = await fetch(url, { ...options, ...authHeader })
@@ -77,8 +86,18 @@ async function requestMy(url, options) {
       const status = e.name;
 
       if (status === 401) {
+        console.log(`
+        接口401报错1：
+        url: ${url}
+        ssToken: ${getCookie(configToken.cookieName)} 
+        `)
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
+        console.log(`
+        接口401报错2：
+        url: ${url}
+        ssToken: ${getCookie(configToken.cookieName)} 
+        `)
         router.push('/user/login');
         return;
       }

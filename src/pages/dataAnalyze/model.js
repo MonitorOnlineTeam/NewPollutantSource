@@ -26,6 +26,7 @@ export default Model.extend({
     pollutantlist: [],
     chartAndTableData: [],
     reportTableData: [],
+    compositeIndexDataSource: [],
   },
 
   effects: {
@@ -168,6 +169,30 @@ export default Model.extend({
       if (result.IsSuccess) {
         window.open(result.Datas);
         message.success("导出成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取综合指数报表数据
+    *getCompositeIndexDataSource({ payload, reportType }, { call, put, update }) {
+      const api = reportType === "month" ? services.getMonthComposite : services.getYearComposite;
+      const result = yield call(api, payload);
+      if (result.IsSuccess) {
+        yield update({
+          compositeIndexDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 导出综合指数报表
+    *exportCompositeReport({ payload, reportType }, { call, put, update }) {
+      const api = reportType === "month" ? services.exportMonthComposite : services.exportYearComposite;
+      const result = yield call(api, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open(result.Datas)
       } else {
         message.error(result.Message)
       }
