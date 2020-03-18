@@ -330,7 +330,7 @@ class Index extends Component {
                                     <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
                                         <SdlCascader
                                            style={{ width: '100%' }}
-                                            changeOnSelect={false}
+                                            changeOnSelect
                                             placeholder="请选择行政区"
                                             data={this.props.regionList}
                                             allowClear
