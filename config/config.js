@@ -615,7 +615,11 @@ export default {
                   name: "CommandDispatchReport",
                   component: "./operations/CommandDispatchReport"
                 },
-
+                {
+                  path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                  name: "CommandDispatchReportDetails",
+                  component: "./EmergencyTodoList/EmergencyDetailInfoLayout"
+                },
               ]
             },
             {

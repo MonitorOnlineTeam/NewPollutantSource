@@ -97,7 +97,25 @@ class Index extends Component {
 
       // 根据省市区获取企业
       getentbyrt = val => {
-        console.log(val);
+         if (val.length === 0) {
+            const { dispatch, alarmPushParam } = this.props;
+            dispatch({
+                type: 'user/updateState',
+                payload: {
+                    alarmPushParam: {
+                        ...alarmPushParam,
+                        pageSize: 12,
+                        pageIndex: 1,
+                        entCode: '',
+                    },
+                },
+            });
+            dispatch({
+                type: 'user/getAlarmPushAuthor',
+                payload: {},
+            })
+            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+         } else {
          this.props.dispatch({
             type: 'user/getEnterpriseList',
             payload: {
@@ -112,7 +130,7 @@ class Index extends Component {
                             ...alarmPushParam,
                             pageSize: 12,
                             pageIndex: 1,
-                            entCode: entcode,
+                            entCode: entcode === '' ? '88888' : entcode,
                         },
                     },
                 });
@@ -124,6 +142,7 @@ class Index extends Component {
             },
             },
         })
+    }
     }
 
     // 单个卡片复选框切换
@@ -303,12 +322,26 @@ class Index extends Component {
                                     <Col xs={24} sm={24} md={24} lg={7} xl={8} xxl={5}>
                                         <Search
                                             placeholder="输入字符模糊搜索"
+                                            allowClear
                                             onSearch={value => this.onSearch(value)}
                                             style={{ width: '100%' }}
                                         />
                                     </Col>
+                                    <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
+                                        <SdlCascader
+                                           style={{ width: '100%' }}
+                                            changeOnSelect={false}
+                                            placeholder="请选择行政区"
+                                            data={this.props.regionList}
+                                            allowClear
+                                            onChange={val => {
+                                                this.getentbyrt(val);
+                                            }}
+                                    />
+                                        {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
+                                    </Col>
                                     <Col xs={24} sm={24} md={24} lg={10} xl={7} xxl={5}>
-                                    <Checkbox style={{ marginLeft: 10 }}
+                                    <Checkbox
                                         AlarmTypes="1"
                                         checked={checkedYC}
                                         onChange={this.changeCheckboxGroup}
@@ -325,18 +358,6 @@ class Index extends Component {
                                             onChange={this.changeCheckboxGroup}
                                         >预警</Checkbox>
                                     }
-                                    </Col>
-                                    <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
-                                        <SdlCascader
-                                            changeOnSelect={false}
-                                            placeholder="请选择行政区"
-                                            data={this.props.regionList}
-                                            allowClear
-                                            onChange={val => {
-                                                this.getentbyrt(val);
-                                            }}
-                                    />
-                                        {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
                                     </Col>
                                 </Row>
                             </Card>
