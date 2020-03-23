@@ -309,6 +309,24 @@ class DailySummaryPage extends PureComponent {
     const { form, match: { params: { reportType } } } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
+        let _payload = {};
+        if (values.PollutantSourceType == 5) {
+          let format = "YYYY-MM-DD"
+          if (reportType === "monthly") {
+            format = "YYYY-MM-01 00:00:00"
+          }
+          if (reportType === "annals") {
+            format = "YYYY-01-01 00:00:00"
+          }
+
+          _payload = {
+            DGIMN: values.DGIMN,
+            ReportTime: moment().format("YYYY-MM-DD"),
+            BeginTime: moment(values.airReportTime[0]).format(format),
+            EndTime: moment(values.airReportTime[1]).format(format),
+            airReportTime: undefined
+          }
+        }
         this.props.dispatch({
           type: "report/summaryReportExcel",
           payload: {
@@ -316,6 +334,7 @@ class DailySummaryPage extends PureComponent {
             type: reportType === "daily" ? 0 : (reportType === "monthly" ? 1 : 2),
             Regions: values.Regions.toString(),
             ReportTime: values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
+            ..._payload
           }
         })
       }
@@ -354,7 +373,7 @@ class DailySummaryPage extends PureComponent {
         this.props.form.setFieldsValue({ "ReportTime": v })
       }} />
     }
-   
+
     return (
       <PageHeaderWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
