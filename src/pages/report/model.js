@@ -14,9 +14,10 @@ export default Model.extend({
       pageSize: 34,
       total: 0,
       DGIMN: [],
+      ReportTime: moment(),
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
-      ReportTime: moment()
+      // ReportTime: [moment(), moment()]
     },
     entAndPontList: [],
     pollutantList: [],
@@ -74,11 +75,34 @@ export default Model.extend({
       payload
     }, { call, update, select }) {
       const dateReportForm = yield select(state => state.report.dateReportForm)
+      let _props = {};
+      let startFormat = "YYYY-MM-DD";
+      let endFormat = "YYYY-MM-DD";
+      if (dateReportForm.PollutantSourceType.value == 5) {
+        // let days = moment(dateReportForm.airReportTime.value[1]).daysInMonth();
+        if (payload.type === "monthly") {
+          startFormat = "YYYY-MM-01 00:00:00"
+          endFormat = `YYYY-MM-01 00:00:00`
+        }
+        if (payload.type === "annals") {
+          startFormat = "YYYY-01-01 00:00:00"
+          endFormat = `YYYY-01-01 00:00:00`
+        }
+      }
+      if (dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value == 5) {
+        _props = {
+          BeginTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[0] && moment(dateReportForm.airReportTime.value[0]).format(startFormat),
+          EndTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[1] && moment(dateReportForm.airReportTime.value[1]).format(endFormat),
+          ReportTime: moment().format("YYYY-MM-DD"),
+        }
+      } else {
+        _props = {
+          ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
+        }
+      }
       const postData = {
-        // ...payload,
         PollutantSourceType: dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value,
-        ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
-        // Regions: dateReportForm.Regions && dateReportForm.Regions.value.toString(),
+        ..._props,
         DGIMN: dateReportForm.DGIMN && dateReportForm.DGIMN.value,
         PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
@@ -90,13 +114,19 @@ export default Model.extend({
         let data = [];
         if (result.Datas.length) {
           data = result.Datas.map(item => {
-            return item.Datas.map(itm => {
+            let variate = [];
+            variate = item.Datas.map(itm => {
               return { ...itm, pointName: item.PointName, rowSpan: item.Datas.length + 3 }
-            }).concat([ // 将最大、最小、平均值放入数据源中
-              { ...item.MinVal[0], pointName: item.PointName, time: "最小值" },
-              { ...item.MaxVal[0], pointName: item.PointName, time: "最大值" },
-              { ...item.AvgVal[0], pointName: item.PointName, time: "平均值" },
-            ])
+            })
+            // 大气和扬尘不显示最大最小平均值
+            if (dateReportForm.PollutantSourceType.value != 5 && dateReportForm.PollutantSourceType.value != 12) {
+              variate.concat([ // 将最大、最小、平均值放入数据源中
+                { ...item.MinVal[0], pointName: item.PointName, time: "最小值" },
+                { ...item.MaxVal[0], pointName: item.PointName, time: "最大值" },
+                { ...item.AvgVal[0], pointName: item.PointName, time: "平均值" },
+              ])
+            }
+            return variate;
           }).reduce((acc, cur) => acc.concat(cur))
         }
         // console.log('data=',data)
