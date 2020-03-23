@@ -1,4 +1,4 @@
-import { post,get } from '@/utils/request';
+import { post, get } from '@/utils/request';
 
 // 行政区划
 export async function getEnterpriseAndPoint(params) {
@@ -11,7 +11,7 @@ export async function getPollutantTypeList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
   return result === null ? { data: null } : result;
 }
-
+let websocket = null;
 /**
  * 获取系统配置信息
  * @params {}
@@ -44,3 +44,4 @@ export async function getEntAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
   return result;
 }
+

@@ -4,34 +4,27 @@ import { WaterWave } from '@/pages/dashboard/analysis/components/Charts';
 import ReconnectingWebSocket from './reconnecting-websocket'
 
 // cg add 2018.4.1
-let websocket;
+let websocket = null;
 
-
-export function InitWebsocket(webSocketPushURL){
+export function InitWebsocket(webSocketPushURL) {
 
   try {
-    //  websocket = new ReconnectingWebSocket(`ws://${config.webSocketPushURL.split(',')[0]}/`, `ws://${config.webSocketPushURL.split(',')[1]}/`);
+    //websocket = new ReconnectingWebSocket(`ws://${webSocketPushURL.split(',')[0]}/`, `ws://${webSocketPushURL.split(',')[1]}/`);
     const ip = isInnerIPFn(webSocketPushURL);
     console.log(ip)
     websocket = new WebSocket(`ws://${ip}/`);
+    //websocket = new WebSocket(`ws://${ip}/`);
+    console.log("websocket=", websocket);
     window.websocket = websocket;
   } catch (e) {
     console.log(e);
   }
 }
 
-
 export function listen(callback) {
   try {
     websocket.onopen = event => {
-      const response = Cookie.get('currentUser');
-      if (response) {
-        const user = JSON.parse(response);
-        if (user) {
-          websocket.send(user.UserAccount);
-          // console.log(`onopen:${user.UserAccount}`);
-        }
-      }
+      console.log('open=', true)
     };
 
     websocket.onclose = event => {
@@ -43,17 +36,6 @@ export function listen(callback) {
     };
 
     websocket.onmessage = event => {
-      // setTimeout(() => {
-      //     const response = Cookie.get('currentUser');
-      //     if (response) {
-      //         const user = JSON.parse(response);
-      //         if (user) {
-      //             ws.send(user.UserAccount);
-      //             console.log(`onmessage:${user.UserAccount}`);
-      //         }
-      //     }
-      // }, 30000);
-
       callback(event.data);
     };
   } catch (e) {
@@ -62,7 +44,7 @@ export function listen(callback) {
 }
 
 // /* 判断是否是内网IP */
- function isInnerIPFn(webSocketPushURL) {
+function isInnerIPFn(webSocketPushURL) {
   var returnIP = '';
   const innerIp = webSocketPushURL.split(',')[0];
   const outIp = webSocketPushURL.split(',')[1];
