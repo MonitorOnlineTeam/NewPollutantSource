@@ -180,95 +180,13 @@ expandedRowRender = (record, index, indent, expanded) => {
         }}>删除</a>,
     },
     {
-      title: '名称',
-      dataIndex: 'Name',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
-          {this.props.form.getFieldDecorator(`Name${record.key}`, {
-            rules: [
-              { required: true, message: '请选择' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <Select style={{ width: '100%' }} onChange={value => {
-              this.changeChildTable(index, 'Name', value, idx);
-            }}>
-              {
-                this.props.MainInstrumentName.map(item => <Option disabled={this.state.dataSource[index].Component.find(itm => itm.Name === item.ChildID)} key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)
-              }
-            </Select>,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '编码',
-      dataIndex: 'AnalyzerCode',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`AnalyzerCode${record.key}`, {
-            rules: [
-              { required: true, message: '请输入编码' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <Input
-              onChange={e => { this.changeChildTable(index, 'AnalyzerCode', e.target.value, idx) }}
-            />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '型号',
-      dataIndex: 'DeviceModel',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`DeviceModel${record.key}`, {
-            rules: [
-              { required: true, message: '请输入型号' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <Input
-              onChange={e => { this.changeChildTable(index, 'DeviceModel', e.target.value, idx) }}
-            />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '制造商',
-      dataIndex: 'Manufacturer',
-      width: 200,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`Manufacturer${record.key}`, {
-            rules: [
-              { required: true, message: '请填写制造商' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <Input onChange={e => { this.changeChildTable(index, 'Manufacturer', e.target.value, idx) }} />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '制造商简称',
-      dataIndex: 'ManufacturerAbbreviation',
-      width: 250,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`ManufacturerAbbreviation${record.key}`, {
-            initialValue: text || undefined,
-          })(
-            <Input onChange={e => { this.changeChildTable(index, 'ManufacturerAbbreviation', e.target.value, idx) }} />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '测试项目',
+      title: '分析仪名称',
       dataIndex: 'TestComponent',
       width: 150,
       render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
           {this.props.form.getFieldDecorator(`TestComponent${record.key}`, {
             rules: [
-              { required: true, message: '请选择测试项目' },
+              { required: true, message: '请选择分析仪名称' },
             ],
             initialValue: text || undefined,
           })(
@@ -327,30 +245,6 @@ expandedRowRender = (record, index, indent, expanded) => {
             initialValue: text || undefined,
           })(
             <Input onChange={e => { this.changeChildTable(index, 'MeasurementUnit', e.target.value, idx) }} />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '斜率',
-      dataIndex: 'Slope',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`Slope${record.key}`, {
-            initialValue: text || undefined,
-          })(
-            <InputNumber min={0} onChange={value => { this.changeChildTable(index, 'Slope', value, idx) }} />,
-          )}
-        </FormItem>,
-    },
-    {
-      title: '截距',
-      dataIndex: 'Intercept',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`Intercept${record.key}`, {
-            initialValue: text || undefined,
-          })(
-            <InputNumber min={0} onChange={value => { this.changeChildTable(index, 'Intercept', value, idx) }} />,
           )}
         </FormItem>,
     },
@@ -424,12 +318,12 @@ expandedRowRender = (record, index, indent, expanded) => {
           </FormItem>,
       },
       {
-        title: '供应商',
+        title: '设备生产商',
         dataIndex: 'Manufacturer',
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
             {getFieldDecorator(`Manufacturer${record.key}`, {
               rules: [
-                { required: true, message: '请填写供应商' },
+                { required: true, message: '请填写设备生产商' },
               ],
               initialValue: text || undefined,
             })(
@@ -440,13 +334,13 @@ expandedRowRender = (record, index, indent, expanded) => {
           </FormItem>,
       },
       {
-        title: '供应商编码',
+        title: '规格型号',
         dataIndex: 'ManufacturerCode',
         width: '20%',
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
             {getFieldDecorator(`ManufacturerCode${record.key}`, {
               rules: [
-                { required: true, message: '请填写供应商编码' },
+                { required: true, message: '请填写规格型号' },
               ],
               initialValue: text || undefined,
             })(
