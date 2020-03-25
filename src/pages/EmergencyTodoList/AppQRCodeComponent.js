@@ -28,7 +28,7 @@ export default class AppQRCodeComponent extends Component {
         //判定是移动端访问
         if (!!u.match(/AppleWebKit.*Mobile.*/)) {
             //如果是微信登录
-            if (u.indexOf('MicroMessenger') > -1) {
+            if (u.indexOf('MicroMessenger') > -1 || u.indexOf('QQ/') > -1) {
                 this.setState({
                     isshow: true,
                     mouseIn: true,
@@ -100,7 +100,7 @@ export default class AppQRCodeComponent extends Component {
                         <img class={styles.imgClass} src={ImgSrc} />
                     </div>
                     <div class={styles.tipClassTwo}>
-                        <p>微信中不能下载，请在右上角选择“在浏览器中打开”后重试！</p>
+                        <p>此软件中不能下载，请在右上角选择“在浏览器中打开”后重试！</p>
                     </div>
                     <div class={styles.tipClassTwo}>
                         <Button onClick={() => this.closeModel()}>知道了</Button>

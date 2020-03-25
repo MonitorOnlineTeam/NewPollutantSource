@@ -19,7 +19,7 @@ const GlobalHeaderRight = props => {
   }
   var QRCode = require('qrcode.react');
   //获取当前ip地址和端口号
-  var getIp = window.location.host;
+  var getIp = "http://"+window.location.host;
   return (
     <div className={className}>
       {/* <HeaderSearch
