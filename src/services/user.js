@@ -115,3 +115,11 @@ export async function getEnterpriseList(params) {
   const result = await post(`/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`, {}, null);
   return result === null ? { data: null } : result;
 }
+
+/**
+ * 获取下载手机端二维码信息
+ */
+export async function GetAndroidOrIosSettings(params) {
+  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetAndroidOrIosSettings', params);
+  return result;
+}

@@ -8,7 +8,7 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList,
+  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList, GetAndroidOrIosSettings,
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
@@ -70,6 +70,7 @@ export default Model.extend({
     alarmPushData: [],
     showAlarmState: true,
     menuDescList: [],
+    settingList: [],
   },
 
   effects: {
@@ -251,7 +252,21 @@ export default Model.extend({
         payload.callback && payload.callback(arr.toString())
       }
     },
+    //获取手机端配置信息
+    * GetAndroidOrIosSettings({
+      payload,
+    }, { call, update }) {
+      const result = yield call(GetAndroidOrIosSettings, payload);
+      if (result.IsSuccess) {
+        if (result.Datas) {
+          yield update({
+            settingList: result.Datas,
+          })
+        }
+      }
+    },
   },
+
 
   reducers: {
     saveCurrentUser(state, action) {
