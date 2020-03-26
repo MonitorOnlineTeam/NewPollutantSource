@@ -363,15 +363,15 @@ class CalendarPage extends PureComponent {
 
         // 需日常运维提醒个数
         if (item.M233Total) {
-          listData.push({ color: '#FACD27', content: `需日常运维提醒${item.M233Total}个`, type: 5, date: item.FutureDate, text: "需日常运维提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需日常运维${item.M233Total}个`, type: 5, date: item.FutureDate, text: "需日常运维提醒个数", future: true })
         }
         // 需校准周期提醒个数
         if (item.M235Total) {
-          listData.push({ color: '#FACD27', content: `需校准周期提醒${item.M235Total}个`, type: 6, date: item.FutureDate, text: "需校准周期提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需校准周期${item.M235Total}个`, type: 6, date: item.FutureDate, text: "需校准周期提醒个数", future: true })
         }
         // 需校验周期提醒个数
         if (item.M236Total) {
-          listData.push({ color: '#FACD27', content: `需校验周期提醒${item.M236Total}个`, type: 7, date: item.FutureDate, text: "需校验周期提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需校验周期${item.M236Total}个`, type: 7, date: item.FutureDate, text: "需校验周期提醒个数", future: true })
         }
 
         // 无异常

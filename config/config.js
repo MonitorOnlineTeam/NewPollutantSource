@@ -134,6 +134,8 @@ export default {
             { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
             /* 备件更换记录表 */
             { path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppSparePartReplaceRecord' },
+            /* 手机端二维码 */
+            { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
           ],
         },
         {
@@ -615,7 +617,11 @@ export default {
                   name: "CommandDispatchReport",
                   component: "./operations/CommandDispatchReport"
                 },
-
+                {
+                  path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                  name: "CommandDispatchReportDetails",
+                  component: "./EmergencyTodoList/EmergencyDetailInfoLayout"
+                },
               ]
             },
             {
@@ -840,21 +846,21 @@ export default {
                     },
                     // 数据上报列表
                     {
-                        name: 'DataReporting',
-                        path: '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
-                        ///:monitortime/:entcode
-                        component: './platformManager/dataReport/',
+                      name: 'DataReporting',
+                      path: '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                      ///:monitortime/:entcode
+                      component: './platformManager/dataReport/',
                     },
                     // 数据上报添加或修改
                     {
-                        name: 'DataReportingAdd',
-                        path: '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
-                        component: './platformManager/dataReport/components/addDataReport',
+                      name: 'DataReportingAdd',
+                      path: '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                      component: './platformManager/dataReport/components/addDataReport',
                     },
                     //统计报表
                     {
-                      name:'statisticsReportDataList',
-                      path:'/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
+                      name: 'statisticsReportDataList',
+                      path: '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
                       component: './report/StatisticsReportDataList',
                     },
                     {
@@ -862,7 +868,7 @@ export default {
                       path: '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList/statisticsReportDataListView/:configId/:monitortime/:entcode',
                       ///:monitortime/:entcode
                       component: './platformManager/dataReport/components/dataReportView',
-                  },
+                    },
 
                   ]
                 },
@@ -909,6 +915,12 @@ export default {
                   name: 'report',
                   path: '/Intelligentanalysis/report/:type',
                   component: './dataAnalyze/Report',
+                },
+                // 综合指数报表
+                {
+                  name: 'compositeIndexReport',
+                  path: '/Intelligentanalysis/compositeIndex/:reportType',
+                  component: './dataAnalyze/CompositeIndexReport',
                 },
               ],
             },

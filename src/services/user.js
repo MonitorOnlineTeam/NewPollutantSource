@@ -1,5 +1,5 @@
-import { post, get } from '@/utils/request';
-import request from '@/utils/request';
+import request, { post, get } from '@/utils/request';
+
 
 import Cookie from 'js-cookie';
 
@@ -12,7 +12,7 @@ export async function queryCurrent() {
   return request('/api/currentUser');
 }
 export async function queryNotices() {
-  return [];//request('/api/notices');
+  return [];// request('/api/notices');
 }
 
 /**
@@ -23,7 +23,7 @@ export async function getMenuData() {
   const body = {
     menu_id: '99dbc722-033f-481a-932a-3c6436e17245',
   };
-  const result = await post(`/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID`, body);
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
   // ;
   return result;
 }
@@ -76,28 +76,28 @@ export async function getSystemConfigInfo() {
     : result;
 }
 
-//验证旧密码是否一致
+// 验证旧密码是否一致
 export async function vertifyOldPwd(params) {
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/VertifyOldPwd', params);
 
   return result;
 }
 
-//修改密码
+// 修改密码
 export async function changePwd(params) {
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', params);
 
   return result;
 }
 
-//获取角色或部门报警权限数据
+// 获取角色或部门报警权限数据
 export async function getAlarmPushAuthor(params) {
   const result = await get('/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushAuthor', params);
 
   return result;
 }
 
-//获取角色或部门报警权限数据
+// 获取角色或部门报警权限数据
 export async function insertAlarmPushAuthor(params) {
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmPushAuthor', params);
   return result;
@@ -108,4 +108,18 @@ export async function getAlarmState(params) {
   return result;
 }
 
+/**
+ * 获取企业
+ */
+export async function getEnterpriseList(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`, {}, null);
+  return result === null ? { data: null } : result;
+}
 
+/**
+ * 获取下载手机端二维码信息
+ */
+export async function GetAndroidOrIosSettings(params) {
+  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetAndroidOrIosSettings', params);
+  return result;
+}

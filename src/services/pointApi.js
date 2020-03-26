@@ -167,7 +167,26 @@ export async function deletePoints(params) {
     }
  */
 export async function queryPointForTarget(params) {
-    console.log("params=", params);
     const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
+    return result;
+}
+export async function GetComponent(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetComponent', params, null);
+    return result;
+}
+export async function GetMainInstrumentName(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetMainInstrumentName', params, null);
+    return result;
+}
+export async function GetChildCems(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetChildCems', params, null);
+    return result;
+}
+export async function AddAnalyzer(params) {
+    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/AddAnalyzer', params, null);
+    return result;
+}
+export async function GetAnalyzerListByDGIMN(params) {
+    const result = await post(`/api/rest/PollutantSourceApi/AnalyzerApi/GetAnalyzerListByDGIMN?DGIMN=${params.DGIMN}`, null, null);
     return result;
 }

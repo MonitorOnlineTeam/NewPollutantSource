@@ -8,7 +8,7 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState,
+  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList, GetAndroidOrIosSettings,
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
@@ -46,12 +46,13 @@ function getMenuList(target, init = []) {
     item.children && getMenuList(item.children, init);
   });
   return init;
-};
+}
 
 export default Model.extend({
   namespace: 'user',
 
   state: {
+    enterpriseList: [],
     list: [],
     loading: false,
     currentUser: {},
@@ -68,7 +69,8 @@ export default Model.extend({
     },
     alarmPushData: [],
     showAlarmState: true,
-    menuNameList: [],
+    menuDescList: [],
+    settingList: [],
   },
 
   effects: {
@@ -91,14 +93,15 @@ export default Model.extend({
           if (window.location.pathname === '/') {
             router.push(Cookie.get('defaultNavigateUrl'))
           }
-          let menuList = getMenuList(cMenu);
-          let menuNameList = menuList && menuList.length ? menuList.map(item => item.name) : [];
+          const menuList = getMenuList(cMenu);
+          let filterDescList = (menuList && menuList.length) ?
+            menuList.filter(item => { if (item.desc) return item.desc.indexOf("ReactPD") > -1 }) : []
           yield put({
             type: 'saveCurrentUser',
             payload: {
               currentUser,
               currentMenu: cMenu,
-              menuNameList: menuNameList
+              menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
             },
           });
         } else {
@@ -164,7 +167,7 @@ export default Model.extend({
     *changePwd({ payload }, { put, call, update }) {
       const result = yield call(changePwd, { pwd: payload.pwd });
       if (result.IsSuccess) {
-        sdlMessage("修改成功，请重新登录", 'success');
+        sdlMessage('修改成功，请重新登录', 'success');
         // 退出登录
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
@@ -235,7 +238,35 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    * getEnterpriseList({
+      payload,
+    }, { call, update }) {
+      const result = yield call(getEnterpriseList, payload);
+      const arr = [];
+      if (result.IsSuccess) {
+        if (result.Datas.length) {
+          result.Datas.map(item => {
+            arr.push(item.ParentCode);
+          })
+        }
+        payload.callback && payload.callback(arr.toString())
+      }
+    },
+    //获取手机端配置信息
+    * GetAndroidOrIosSettings({
+      payload,
+    }, { call, update }) {
+      const result = yield call(GetAndroidOrIosSettings, payload);
+      if (result.IsSuccess) {
+        if (result.Datas) {
+          yield update({
+            settingList: result.Datas,
+          })
+        }
+      }
+    },
   },
+
 
   reducers: {
     saveCurrentUser(state, action) {

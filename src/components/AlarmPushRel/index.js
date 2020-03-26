@@ -26,17 +26,20 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
+import SdlCascader from '../../pages/AutoFormManager/SdlCascader'
+
 const { Search } = Input;
 const FormItem = Form.Item;
 
-@connect(({ loading, user }) => ({
-
+@connect(({ loading, user, autoForm, report }) => ({
     loadingGetData: loading.effects['user/getAlarmPushAuthor'],
     loadingInsertData: loading.effects['user/insertAlarmPushAuthor'],
     loadingGetAlarmState: loading.effects['user/getAlarmState'],
     alarmPushParam: user.alarmPushParam,
     alarmPushData: user.alarmPushData,
     showAlarmState: user.showAlarmState,
+    regionList: autoForm.regionList,
+    enterpriseList: user.enterpriseList,
 }))
 
 @Form.create()
@@ -48,7 +51,7 @@ class Index extends Component {
             currentData: [],
             checkedYC: false,
             checkedCB: false,
-            checkedYJ: false
+            checkedYJ: false,
         };
     }
 
@@ -63,47 +66,97 @@ class Index extends Component {
                     ...alarmPushParam,
                     pageSize: 12,
                     pageIndex: 1,
-                    searchContent: "",
+                    searchContent: '',
                     flagType: FlagType,
-                    authorId: RoleIdOrDepId
-                }
-            }
+                    authorId: RoleIdOrDepId,
+                    entCode: '',
+                },
+            },
         });
 
         dispatch({
             type: 'user/getAlarmPushAuthor',
-            payload: {}
+            payload: {},
         })
         // 是否显示预警
         this.props.dispatch({
-            type: "user/getAlarmState",
-            payload: {}
+            type: 'user/getAlarmState',
+            payload: {},
         })
     }
 
-
     componentWillReceiveProps(nextProps) {
-
         if (this.props.alarmPushData != nextProps.alarmPushData) {
             this.setState({
-                currentData: nextProps.alarmPushData
+                currentData: nextProps.alarmPushData,
             }, () => {
-                //this.getdata(this.state.type);
+                // this.getdata(this.state.type);
             });
         }
     }
-    //单个卡片复选框切换
-    onChangeDGINM = (e) => {
-        //console.log("e=", e);
-        let { currentData } = this.state;
-        const target = e.target;
+
+      // 根据省市区获取企业
+      getentbyrt = val => {
+         if (val.length === 0) {
+            const { dispatch, alarmPushParam } = this.props;
+            dispatch({
+                type: 'user/updateState',
+                payload: {
+                    alarmPushParam: {
+                        ...alarmPushParam,
+                        pageSize: 12,
+                        pageIndex: 1,
+                        entCode: '',
+                    },
+                },
+            });
+            dispatch({
+                type: 'user/getAlarmPushAuthor',
+                payload: {},
+            })
+            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+         } else {
+         this.props.dispatch({
+            type: 'user/getEnterpriseList',
+            payload: {
+            regionCode: val.toString(),
+            pollutantTypeCode: '',
+            callback: entcode => {
+                const { dispatch, alarmPushParam } = this.props;
+                dispatch({
+                    type: 'user/updateState',
+                    payload: {
+                        alarmPushParam: {
+                            ...alarmPushParam,
+                            pageSize: 12,
+                            pageIndex: 1,
+                            entCode: entcode === '' ? '88888' : entcode,
+                        },
+                    },
+                });
+                dispatch({
+                    type: 'user/getAlarmPushAuthor',
+                    payload: {},
+                })
+                this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+            },
+            },
+        })
+    }
+    }
+
+    // 单个卡片复选框切换
+    onChangeDGINM = e => {
+        // console.log("e=", e);
+        const { currentData } = this.state;
+        const { target } = e;
 
         currentData.map((item, index) => {
             if (item.DGIMN === target.DGIMN) {
-                //debugger
+                // debugger
                 if (item.AlarmTypes) {
-                    let array = item.AlarmTypes.split(',');
-                    let ind = array.indexOf(target.AlarmTypes);
+                    const array = item.AlarmTypes.split(',');
+                    const ind = array.indexOf(target.AlarmTypes);
                     if (ind !== -1) {
                         !target.checked && array.splice(ind, 1);
                         item.AlarmTypes = array.toString();
@@ -111,44 +164,42 @@ class Index extends Component {
                         target.checked && array.push(target.AlarmTypes);
                         item.AlarmTypes = array.toString();
                     }
-
                 } else {
-                    item.AlarmTypes = target.checked ? target.AlarmTypes : "";
+                    item.AlarmTypes = target.checked ? target.AlarmTypes : '';
                 }
             }
             return item;
         })
-        this.setState({ currentData: currentData });
+        this.setState({ currentData });
 
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
-        //console.log('currentData=', currentData);
+        // console.log('currentData=', currentData);
     }
-    //保存数据
-    saveData = () => {
-        let { RoleIdOrDepId, FlagType } = this.props;
-        let { currentData } = this.state;
-        let data = [];
-        currentData.map((item, index) => {
 
+    // 保存数据
+    saveData = () => {
+        const { RoleIdOrDepId, FlagType } = this.props;
+        const { currentData } = this.state;
+        const data = [];
+        currentData.map((item, index) => {
             data.push({
-                RoleIdOrDepId: RoleIdOrDepId,
-                FlagType: FlagType,
+                RoleIdOrDepId,
+                FlagType,
                 DGIMN: item.DGIMN,
                 AlarmType: item.AlarmTypes,
             });
-
         });
-        //console.log("data=", data);
+        // console.log("data=", data);
 
         this.props.dispatch({
             type: 'user/insertAlarmPushAuthor',
-            payload: data
+            payload: data,
         });
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
     }
-    //分页
-    onChangePagination = (pageIndex, pageSize) => {
 
+    // 分页
+    onChangePagination = (pageIndex, pageSize) => {
         const { dispatch, alarmPushParam } = this.props;
 
         dispatch({
@@ -156,20 +207,21 @@ class Index extends Component {
             payload: {
                 alarmPushParam: {
                     ...alarmPushParam,
-                    pageSize: pageSize,
-                    pageIndex: pageIndex
-                }
-            }
+                    pageSize,
+                    pageIndex,
+                },
+            },
         });
 
         dispatch({
             type: 'user/getAlarmPushAuthor',
-            payload: {}
+            payload: {},
         })
 
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
     }
-    //显示条数
+
+    // 显示条数
     onShowSizeChange = (pageIndex, pageSize) => {
         // debugger
         const { dispatch, alarmPushParam } = this.props;
@@ -179,23 +231,24 @@ class Index extends Component {
             payload: {
                 alarmPushParam: {
                     ...alarmPushParam,
-                    pageSize: pageSize,
-                    pageIndex: pageIndex
-                }
-            }
+                    pageSize,
+                    pageIndex,
+                },
+            },
         });
         dispatch({
             type: 'user/getAlarmPushAuthor',
-            payload: {}
+            payload: {},
         });
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
     }
-    //搜索
-    onSearch = (e) => {
-        //debugger //searchContent
+
+    // 搜索
+    onSearch = e => {
+        // debugger //searchContent
         const { dispatch, alarmPushParam } = this.props;
 
-        //if (e !== alarmPushParam.searchContent) {
+        // if (e !== alarmPushParam.searchContent) {
         dispatch({
             type: 'user/updateState',
             payload: {
@@ -203,34 +256,34 @@ class Index extends Component {
                     ...alarmPushParam,
                     pageSize: 12,
                     pageIndex: 1,
-                    searchContent: e
-                }
-            }
+                    searchContent: e,
+                },
+            },
         });
         dispatch({
             type: 'user/getAlarmPushAuthor',
-            payload: {}
+            payload: {},
         })
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
         // }
     }
-    //重置
+
+    // 重置
     onReset = () => {
         this.onSearch('');
 
-        //this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        // this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
     }
-    //快捷复选
-    changeCheckboxGroup = (e) => {
 
-        let { currentData } = this.state;
-        const target = e.target;
+    // 快捷复选
+    changeCheckboxGroup = e => {
+        const { currentData } = this.state;
+        const { target } = e;
 
         currentData.map((item, index) => {
-
             if (item.AlarmTypes) {
-                let array = item.AlarmTypes.split(',');
-                let ind = array.indexOf(target.AlarmTypes);
+                const array = item.AlarmTypes.split(',');
+                const ind = array.indexOf(target.AlarmTypes);
                 if (ind !== -1) {
                     !target.checked && array.splice(ind, 1);
                     item.AlarmTypes = array.toString();
@@ -238,9 +291,8 @@ class Index extends Component {
                     target.checked && array.push(target.AlarmTypes);
                     item.AlarmTypes = array.toString();
                 }
-
             } else {
-                item.AlarmTypes = target.checked ? target.AlarmTypes : "";
+                item.AlarmTypes = target.checked ? target.AlarmTypes : '';
             }
             return item;
         });
@@ -253,10 +305,11 @@ class Index extends Component {
             this.setState({ checkedYJ: target.checked });
         }
 
-        this.setState({ currentData: currentData });
+        this.setState({ currentData });
     }
+
     render() {
-        const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState,loadingInsertData } = this.props;
+        const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
         const { currentData, checkedYC, checkedCB, checkedYJ } = this.state;
 
         return (
@@ -265,34 +318,48 @@ class Index extends Component {
                     <Row gutter={16}>
                         <Col span={24}>
                             <Card >
-                                <p>
-                                    <Search
-                                        placeholder="输入字符模糊搜索"
-                                        onSearch={value => this.onSearch(value)}
-                                        style={{ width: 300 }}
+                                <Row gutter={10}>
+                                    <Col xs={24} sm={24} md={24} lg={7} xl={8} xxl={5}>
+                                        <Search
+                                            placeholder="输入字符模糊搜索"
+                                            allowClear
+                                            onSearch={value => this.onSearch(value)}
+                                            style={{ width: '100%' }}
+                                        />
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
+                                        <SdlCascader
+                                           style={{ width: '100%' }}
+                                            changeOnSelect
+                                            placeholder="请选择行政区"
+                                            data={this.props.regionList}
+                                            allowClear
+                                            onChange={val => {
+                                                this.getentbyrt(val);
+                                            }}
                                     />
-                                    {/* <Button style={{ marginLeft: 10 }} type="primary">关联</Button> */}
-                                    {/* <Checkbox.Group style={{ marginLeft: 10 }} options={['异常', '超标', '预警']} onChange={this.changeCheckboxGroup} /> */}
-
-                                    <Checkbox style={{ marginLeft: 10 }}
-                                        AlarmTypes={'1'}
+                                        {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={10} xl={7} xxl={5}>
+                                    <Checkbox
+                                        AlarmTypes="1"
                                         checked={checkedYC}
                                         onChange={this.changeCheckboxGroup}
                                     >异常</Checkbox>
                                     <Checkbox
-                                        AlarmTypes={'2'}
+                                        AlarmTypes="2"
                                         checked={checkedCB}
                                         onChange={this.changeCheckboxGroup}
                                     >超标</Checkbox>
                                     {
                                         showAlarmState && <Checkbox
-                                            AlarmTypes={'5'}
+                                            AlarmTypes="5"
                                             checked={checkedYJ}
                                             onChange={this.changeCheckboxGroup}
                                         >预警</Checkbox>
                                     }
-                                    <Button type="primary" onClick={this.onReset}>重置</Button>
-                                </p>
+                                    </Col>
+                                </Row>
                             </Card>
                         </Col>
                     </Row>
@@ -308,49 +375,47 @@ class Index extends Component {
                                     height: 'calc(100vh/2)',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
                                 }}
                                 size="large"
-                            /> : (alarmPushData != null && alarmPushData.length > 0) ? alarmPushData.map((item, index) => {
-                                return <Col span={6}>
-                                    <Card title={
-                                        <span style={{ fontSize: 14 }}>{item.TargetName}</span>
-                                    }
-                                        style={{ marginBottom: 10 }} bordered={false} actions={[
-                                            <>
-                                                <Checkbox
+                            /> : (alarmPushData != null && alarmPushData.length > 0) ? alarmPushData.map((item, index) => <Col span={6}>
+                                <Card title={
+                                    <span style={{ fontSize: 14 }}>{item.TargetName}</span>
+                                }
+                                    style={{ marginBottom: 10 }} bordered={false} actions={[
+                                        <>
+                                            <Checkbox
+                                                DGIMN={item.DGIMN}
+                                                AlarmTypes="1"
+                                                checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('1') > -1)).length > 0}
+                                                onChange={this.onChangeDGINM}
+                                            >异常</Checkbox>
+                                            <Checkbox
+                                                DGIMN={item.DGIMN}
+                                                AlarmTypes="2"
+                                                checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('2') > -1)).length > 0}
+                                                onChange={this.onChangeDGINM}
+                                            >超标</Checkbox>
+                                            {
+                                                showAlarmState && <Checkbox
                                                     DGIMN={item.DGIMN}
-                                                    AlarmTypes={'1'}
-                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('1') > -1)).length > 0}
+                                                    AlarmTypes="5"
+                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
                                                     onChange={this.onChangeDGINM}
-                                                >异常</Checkbox>
-                                                <Checkbox
-                                                    DGIMN={item.DGIMN}
-                                                    AlarmTypes={'2'}
-                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('2') > -1)).length > 0}
-                                                    onChange={this.onChangeDGINM}
-                                                >超标</Checkbox>
-                                                {
-                                                    showAlarmState && <Checkbox
-                                                        DGIMN={item.DGIMN}
-                                                        AlarmTypes={'5'}
-                                                        checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
-                                                        onChange={this.onChangeDGINM}
-                                                    >预警</Checkbox>
-                                                }
+                                                >预警</Checkbox>
+                                            }
 
-                                                {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}
-                                            </>
-                                        ]}>
-                                        <div style={{ height: 50 }}>
-                                            <p style={{ fontWeight: 'bold', fontSize: 14, marginBottom: 3 }}>{`${item.PointName}`}</p>
-                                            <p style={{ color: '#b9cdce' }}>{item.DGIMN}</p>
-                                        </div>
+                                            {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}
+                                        </>,
+                                    ]}>
+                                    <div style={{ height: 50 }}>
+                                        <p style={{ fontWeight: 'bold', fontSize: 14, marginBottom: 3 }}>{`${item.PointName}`}</p>
+                                        <p style={{ color: '#b9cdce' }}>{item.DGIMN}</p>
+                                    </div>
 
-                                        {/* <p style={{ color: '#b9cdce' }}>出口</p> */}
-                                    </Card>
-                                </Col>
-                            }) : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                    {/* <p style={{ color: '#b9cdce' }}>出口</p> */}
+                                </Card>
+                            </Col>) : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                         }
                     </Row>
                 </div >

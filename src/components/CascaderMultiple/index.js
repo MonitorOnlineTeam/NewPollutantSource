@@ -19,9 +19,16 @@ class CascaderMultiple extends Component {
       visible: false,
       options: props.options,
       currentEntLable: "",
+      all: false
     };
 
-    this.oldOptions = props.options;
+    this.oldOptions = [
+      {
+        title: "全部",
+        key: "0",
+      },
+      ...props.options
+    ];
   }
 
 
@@ -29,7 +36,11 @@ class CascaderMultiple extends Component {
     let cascaderMultiple = document.getElementById('cascaderMultiple');
     document.body.addEventListener("click", (e) => {
       if (!cascaderMultiple.contains(e.target)) {
-        this.setState({ visible: false })
+        this.setState({ visible: false, inputValue: "", options: this.oldOptions })
+        let inputEle = document.getElementById('input');
+        if(inputEle && inputEle.style){
+          inputEle.style.display = "none";
+        }
       }
     })
 
@@ -61,8 +72,23 @@ class CascaderMultiple extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.options !== nextProps.options) {
-      this.oldOptions = nextProps.options;
-      this.setState({ options: nextProps.options, currentChildren: [] });
+      this.oldOptions = [
+        {
+          title: "全部",
+          key: "0",
+        },
+        ...nextProps.options,
+      ];
+      this.setState({
+        options: [
+          {
+            title: "全部",
+            key: "0",
+          },
+          ...nextProps.options,
+        ],
+        currentChildren: []
+      });
     }
     if (this.props.value !== nextProps.value) {
       let checkedLabels = [];
@@ -96,7 +122,13 @@ class CascaderMultiple extends Component {
     if (this.props.entAndPointList !== nextProps.entAndPointList) {
       this.oldOptions = nextProps.entAndPointList;
       this.setState({
-        options: nextProps.entAndPointList
+        options: [
+          {
+            title: "全部",
+            key: "0",
+          },
+          ...nextProps.entAndPointList,
+        ],
       })
     }
   }
@@ -104,57 +136,85 @@ class CascaderMultiple extends Component {
 
   render() {
     const config = [{ showSearch: true, checkable: true }, { showSearch: true, checkable: true }];
-    const { currentIndex, currentChildren, checkedValues, checkedLabels, visible, options, inputValue, currentEntLable } = this.state;
+    const { currentIndex, currentChildren, checkedValues, checkedLabels, visible, options, inputValue, currentEntLable, all } = this.state;
     const { style } = this.props;
-
+    const ele = document.querySelector(".ant-select-selection--multiple")
+    let width = 200;
+    let showNum = 2;
+    let showLabel = checkedLabels;
+    if (ele && checkedLabels.length) {
+      width = ele.clientWidth;
+      let index1Length = checkedLabels[1] ? checkedLabels[1].length : 0;
+      showNum = (checkedLabels[0].length + index1Length) * 20 < width * .6 ? 2 : 1
+      showLabel = checkedLabels.length > 1 ? [...checkedLabels.slice(0, showNum), "..."] : [...checkedLabels.slice(0, showNum)]
+    }
     return (
-      <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation() }} style={{ ...style }} >
+      <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style }} >
         {/* <p>[{checkedValues.toString()}]</p> */}
         <div className="ant-select ant-select-enabled" style={{ width: "100%" }} onClick={(e) => {
           e.stopPropagation();
-          document.getElementById('input').focus();
+          let inputEle = document.getElementById('input');
+          inputEle.style.display = "inline";
+          inputEle.focus();
           this.setState({
             visible: true
           })
         }}>
-          <div className="ant-select-selection ant-select-selection--multiple">
+          <div className="ant-select-selection ant-select-selection--multiple" style={{ maxHeight: 64, overflowY: 'auto', marginTop: 4 }}>
             <div className="ant-select-selection__rendered">
               <ul>
                 {
-                  checkedLabels.map((item, index) => {
-                    return (
-                      // <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
-                      <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none"}}>
-                        <div className="ant-select-selection__choice__content">
-                          <span style={{maxWidth: "70px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",  }}>{item.split("/")[0]}</span>
-                          <span style={{maxWidth: "80px", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", }}>/{item.split("/")[1]}</span>
-                        </div>
+                  all ? <li className="ant-select-selection__choice" style={{ userSelect: "none" }}>
+                    <div className="ant-select-selection__choice__content">
+                      全部
+                    </div>
+                    <span className="ant-select-selection__choice__remove" onClick={(e) => {
+                      e.stopPropagation();
+                      this.setState({
+                        all: false,
+                        checkedLabels: [],
+                        checkedValues: [],
+                      })
+                      this.props.form && this.props.form.setFieldsValue({ [this.props.id]: [] });
+                      this.props.onChange && this.props.onChange([])
+                    }}>
+                      <i aria-label="图标: close" className="anticon anticon-close ant-select-remove-icon">
+                        <svg viewBox="64 64 896 896" focusable="false" className="" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                          <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+                        </svg>
+                      </i>
+                    </span>
+                  </li> :
+                    showLabel.map((item, index) => {
+                      return <li key={index} className="ant-select-selection__choice" title={item} style={{ userSelect: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "80%" }}>
+                        {item}
                         <span className="ant-select-selection__choice__remove" onClick={(e) => {
                           e.stopPropagation();
-                          let newCurrentChildren = [...this.state.currentChildren];
-                          let checkedLabels = [...this.state.checkedLabels];
-                          let checkedValues = [...this.state.checkedValues];
-                          // let label = item.split("/")[1];
-                          // newCurrentChildren[index].checked = false;
-                          _.remove(checkedLabels, (n) => n == item)
-                          _.remove(checkedValues, (n, i) => i == index)
-                          this.setState({ checkedValues, checkedLabels })
-                          this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
-                          this.props.onChange && this.props.onChange(checkedValues)
+                          if (item !== "...") {
+                            let newCurrentChildren = [...this.state.currentChildren];
+                            let checkedLabels = [...this.state.checkedLabels];
+                            let checkedValues = [...this.state.checkedValues];
+                            // let label = item.split("/")[1];
+                            // newCurrentChildren[index].checked = false;
+                            _.remove(checkedLabels, (n) => n == item)
+                            _.remove(checkedValues, (n, i) => i == index)
+                            this.setState({ checkedValues, checkedLabels })
+                            this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
+                            this.props.onChange && this.props.onChange(checkedValues)
+                          }
                         }}>
-                          <i aria-label="图标: close" className="anticon anticon-close ant-select-remove-icon">
+                          {item !== "..." && <i aria-label="图标: close" className="anticon anticon-close ant-select-remove-icon">
                             <svg viewBox="64 64 896 896" focusable="false" className="" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
                               <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
                             </svg>
-                          </i>
+                          </i>}
                         </span>
                       </li>
-                    )
-                  })
+                    })
                 }
                 <li className="ant-select-search ant-select-search--inline">
                   <div className="ant-select-search__field__wrap">
-                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60 }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
+                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60, display: "none" }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
                       let inputValue = e.target.value;
                       let newOptions = [...this.oldOptions];
                       if (e.target.value) {
@@ -188,7 +248,7 @@ class CascaderMultiple extends Component {
           </div>
         </div>
         {
-          visible && <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" onClick={(e) => {
+          visible && <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" style={{marginTop: -10}} onClick={(e) => {
           }}>
             <div>
               <ul className="ant-cascader-menu">
@@ -198,13 +258,32 @@ class CascaderMultiple extends Component {
                       <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title={item.title} role="menuitem" onClick={(e) => {
                         // <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand`} title="Zhejiang" role="menuitem" onClick={(e) => {
                         e.stopPropagation();
-                        this.setState({
-                          currentIndex: index,
-                          // inputValue: "",
-                          visible: true,
-                          currentEntLable: item.title,
-                          currentChildren: item.children || []
-                        })
+                        // 全部
+                        if (item.key == 0) {
+                          let checkedLabels = [];
+                          let checkedValues = [];
+                          this.oldOptions.filter(item => {
+                            if (item.key != 0) {
+                              item.children.map(itm => {
+                                checkedLabels.push(item.title + "/" + itm.title)
+                                checkedValues.push(itm.key)
+                              })
+                            }
+                          });
+                          // let checkedLabels = options.filter(item => { if (item.key != 0) return item.title });
+                          // let checkedValues = options.filter(item => { if (item.key != 0) return item.key });
+                          this.setState({ checkedLabels, checkedValues, all: true })
+                          this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
+                          this.props.onChange && this.props.onChange(checkedValues)
+                        } else {
+                          this.setState({
+                            currentIndex: index,
+                            // inputValue: "",
+                            visible: true,
+                            currentEntLable: item.title,
+                            currentChildren: item.children || []
+                          })
+                        }
                       }}>
                         {item.title}
                         {
@@ -234,10 +313,12 @@ class CascaderMultiple extends Component {
                         let checkedLabels = [...this.state.checkedLabels];
                         let checkedValues = [...this.state.checkedValues];
                         let title = currentEntLable + "/" + item.title;
+                        let all = this.state.all;
                         if (e.target.checked) {
                           checkedLabels.push(title)
                           checkedValues.push(item.key)
                         } else {
+                          all = false;
                           _.remove(checkedLabels, (n) => n == title)
                           _.remove(checkedValues, (n) => n == item.key)
                         }
@@ -251,7 +332,8 @@ class CascaderMultiple extends Component {
                           // inputValue: "",
                           currentChildren: newCurrentChildren,
                           checkedLabels: checkedLabels,
-                          checkedValues: checkedValues
+                          checkedValues: checkedValues,
+                          all
                         })
                         this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
                         this.props.onChange && this.props.onChange(checkedValues)

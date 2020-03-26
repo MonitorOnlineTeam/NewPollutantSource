@@ -94,16 +94,16 @@ class ExceptionAlarm extends PureComponent {
 
             const labelDiv = <div style={{ color: `${color}` }}>已发生{hour}小时{minutesLable}</div>;
             // 未响应，按钮是派单;响应了超过4个小时是督办
-            let btnDiv = '';
-
-            if (hour >= 4 || item.State == '0') {
-                btnDiv =
-                    <div style={{ marginTop: 43 }}>
-                        <PdButton DGIMN={item.DGIMNs} id={item.OperationUserTel}
-                            pname={item.PointName} reloadData={() => this.reload()}
-                            exist={item.State} pollutantTypeCode={item.PollutantTypeCode} name={item.OperationUserName} tel={item.OperationUserTel} viewType="workbench" />
-                    </div>
-            }
+            const btnDiv = '';
+            /** 功能没有做先去掉了 xpy 2020-03-12 */
+            // if (hour >= 4 || item.State == '0') {
+            //     btnDiv =
+            //         <div style={{ marginTop: 43 }}>
+            //             <PdButton DGIMN={item.DGIMNs} id={item.OperationUserTel}
+            //                 pname={item.PointName} reloadData={() => this.reload()}
+            //                 exist={item.State} pollutantTypeCode={item.PollutantTypeCode} name={item.OperationUserName} tel={item.OperationUserTel} viewType="workbench" />
+            //         </div>
+            // }
 
             return {
                 // href: 'http://ant.design',

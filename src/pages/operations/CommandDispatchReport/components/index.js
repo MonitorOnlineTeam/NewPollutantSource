@@ -176,7 +176,7 @@ class Dispatchreport extends Component {
           DGIMN,
         } = this.state.dgimn;
           if (Type === 1) {
-              this.props.dispatch(routerRedux.push(`/operations/calendar/details/${TaskId}/${DGIMN}`));
+              this.props.dispatch(routerRedux.push(`/operations/CommandDispatchReport/details/${TaskId}/${DGIMN}`));
           }
           if (Type === 3) {
               this.setState({

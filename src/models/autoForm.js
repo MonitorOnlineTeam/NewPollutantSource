@@ -382,7 +382,6 @@ export default Model.extend({
     * getFormData({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const result = yield call(services.getFormData, { ...payload });
-      debugger;
       if (result.IsSuccess && result.Datas.length) {
         yield update({
           editFormData: {

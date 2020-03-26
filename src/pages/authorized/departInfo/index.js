@@ -159,6 +159,7 @@ class DepartIndex extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            newEntAndPoint: [],
             visibleAlarm: false,
             visible: false,
             visibleUser: false,
@@ -542,6 +543,16 @@ class DepartIndex extends Component {
                 // allKeys: filterArr
             })
         }
+
+        if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
+            this.setState({
+                newEntAndPoint: [{
+                    title: "全部",
+                    // key: '0-0',
+                    children: nextProps.EntAndPoint
+                }]
+            })
+        }
         // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
         //     var list = nextProps.ConfigInfo.SystemPollutantType ? nextProps.ConfigInfo.SystemPollutantType.split(',') : []
         //     var type = list.length > 0 ? list[0] : "";
@@ -612,11 +623,13 @@ class DepartIndex extends Component {
 
     handleDataOK = e => {
         console.log('regioncode=', this.state.checkedKeySel)
+        console.log('DGIMN=', this.state.checkedKeys)
         console.log('selectedRowKeys=', this.state.selectedRowKeys.key)
+        // return;
         this.props.dispatch({
             type: 'departinfo/insertpointfilterbydepid',
             payload: {
-                DGIMN: this.state.checkedKeySel,
+                DGIMN: this.state.checkedKeys,
                 UserGroup_ID: this.state.selectedRowKeys.key,
                 Type: this.state.pollutantType,
                 callback: res => {
@@ -779,7 +792,7 @@ class DepartIndex extends Component {
             searchPlaceholder: '搜索',
             treeDefaultExpandedKeys: ['0'],
             style: {
-                width: 500,
+                width: 400,
                 marginLeft: 16,
             },
             dropdownStyle: {
@@ -1021,7 +1034,7 @@ class DepartIndex extends Component {
                                     //         display: 'flex',
                                     //         alignItems: 'center',
                                     //         justifyContent: 'center'
-                                    //     }}
+                                    //     }}r
                                     //     size="large"
                                     // /> :
                                     <div style={{ height: '600px', overflow: 'hidden' }}>
@@ -1033,8 +1046,9 @@ class DepartIndex extends Component {
                                             <SelectPollutantType
                                                 // style={{ marginLeft: 50, float: 'left' }}
                                                 showType="radio"
-                                                // defaultPollutantCode={this.state.pollutantType}
+                                                defaultPollutantCode={this.state.pollutantType}
                                                 mode="multiple"
+                                                // showAll
                                                 onChange={this.handleSizeChange}
                                             />
                                             <TreeSelect {...tProps} />
@@ -1054,7 +1068,7 @@ class DepartIndex extends Component {
                                                 checkable
                                                 // checkStrictly={false}
                                                 onExpand={this.onExpands}
-                                                treeData={this.props.EntAndPoint}
+                                                treeData={this.state.newEntAndPoint}
                                                 // expandedKeys={this.state.expandedKey}
                                                 // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
@@ -1066,7 +1080,7 @@ class DepartIndex extends Component {
                                             // defaultExpandAll
                                             >
 
-                                                {this.renderDataTreeNodes(this.props.EntAndPoint)}
+                                                {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                                             </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />)
 
 

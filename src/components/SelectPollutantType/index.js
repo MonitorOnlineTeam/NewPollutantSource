@@ -22,13 +22,17 @@ class SelectPollutantType extends PureComponent {
       payload: {
         filterPollutantType: this.props.filterPollutantType//自定义显示污染物类型 wjw
       },
+      showAll: this.props.showAll,
       callback: (defaultPollutantCode) => {
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
       }
     });
   }
+
+
   render() {
-    const { pollutantTypelist, defaultPollutantCode, loading, showType } = this.props;
+    const { pollutantTypelist, defaultPollutantCode, loading, showType, showAll } = this.props;
+
     if (!loading) {
       return (
         <>
