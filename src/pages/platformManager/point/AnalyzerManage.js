@@ -159,7 +159,7 @@ onSubmitForm = () => {
         payload: postData,
       })
     } else {
-      message.error('请添加标气');
+      message.error('请添分析仪');
     }
   })
 }
@@ -220,7 +220,7 @@ expandedRowRender = (record, index, indent, expanded) => {
           {this.props.form.getFieldDecorator(`AnalyzerRangeMin${record.key}`, {
             initialValue: text || undefined,
           })(
-            <InputNumber min={0} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMin', value, idx) }} />,
+            <InputNumber min={-10000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMin', value, idx) }} />,
           )}
         </FormItem>,
     },
@@ -232,7 +232,7 @@ expandedRowRender = (record, index, indent, expanded) => {
           {this.props.form.getFieldDecorator(`AnalyzerRangeMax${record.key}`, {
             initialValue: text || undefined,
           })(
-            <InputNumber min={0} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMax', value, idx) }} />,
+            <InputNumber min={-10000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMax', value, idx) }} />,
           )}
         </FormItem>,
     },
