@@ -11,3 +11,9 @@ export async function getEquipmentByID(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentByID', params, null);
   return result;
 }
+
+// 获取设备管理类型
+export async function getEquipmentCategoryPage(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentCategoryPage', params, null);
+  return result;
+}

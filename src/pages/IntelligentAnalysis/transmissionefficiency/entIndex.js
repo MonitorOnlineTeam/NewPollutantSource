@@ -21,6 +21,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '@/components/SdlTable';
+import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
@@ -79,25 +80,11 @@ export default class EntTransmissionEfficiency extends Component {
         }
         this.getTableData(pagination.current);
     }
-    onDateChange = (value, dateString) => {
-        let endTime = moment(dateString).add(1, 'months').format('YYYY-MM-01 00:00:00');
-
-        // if (moment(dateString).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')) {
-        //     endTime = moment().format('YYYY-MM-DD HH:mm:ss');
-        // }
+    onDateChange = (value, beginTime,endTime) => {
         this.updateState({
-            beginTime: moment(dateString).format('YYYY-MM-01 HH:mm:ss'),
+            beginTime: beginTime,
             endTime: endTime
         });
-        // let endTime = moment(dateString).add(1, 'months').add(-1, 'days').format('YYYY-MM-DD HH:mm:ss');
-
-        // if (moment(dateString).add(1, 'months').add(-1, 'days') > moment()) {
-        //     endTime = moment().format('YYYY-MM-DD HH:mm:ss');
-        // }
-        // this.updateState({
-        //     beginTime: moment(dateString).format('YYYY-MM-01 HH:mm:ss'),
-        //     endTime: endTime
-        // });
         this.getTableData(this.props.pageIndex);
     }
     render() {
@@ -197,7 +184,8 @@ export default class EntTransmissionEfficiency extends Component {
                         extra={
                             <span style={{ color: '#b3b3b3' }}>
                                 时间选择：
-                                <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} />
+                                <DatePickerTool defaultValue={this.state.beginTime} picker="month"  callback={this.onDateChange}/>
+                                {/* <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} /> */}
                             </span>
                         }
                     >

@@ -22,6 +22,9 @@ import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Link from 'umi/link';
 import SdlTable from '@/components/SdlTable';
+
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+
 // import { debug } from 'util';
 // const { MonthPicker } = DatePicker;
 const Option = Select.Option;
@@ -446,14 +449,16 @@ export default class EntPollutantEmissions extends Component {
                                 </Select>
                             </span>
                             <span style={{ color: '#b3b3b3' }}>时间
-                                    <Select
+
+                                <DatePickerTool allowClear={false}  picker="year"  style={{ width: 200, marginLeft: 10 }}  />
+                                    {/* <Select
                                     size="default"
                                     defaultValue={dateYear}
                                     onChange={this.handleChangeDate}
                                     style={{ width: 200, marginLeft: 10 }}
                                 >
                                     {dateChildren}
-                                </Select>
+                                </Select> */}
                             </span>
                         </div>
                     }>

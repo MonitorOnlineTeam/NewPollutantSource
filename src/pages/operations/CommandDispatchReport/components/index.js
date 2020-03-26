@@ -6,7 +6,7 @@ import {
     Row, Col, Select, Input, Button, Tooltip, Modal, Form, Icon,
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
 import { DetailIcon } from '@/utils/icon'
 import {
@@ -86,9 +86,10 @@ class Dispatchreport extends Component {
     }
 
     /** 切换时间 */
-    _handleDateChange = (date, dateString) => {
-        console.log('date', date);
-       if (date.length > 0) {
+    _handleDateChange = (date, dateString,fieldName) => {
+       const {form:{setFieldsValue}}=this.props;
+       if (date && date.length > 0 && date[0]) {
+        setFieldsValue({[fieldName]:date})
         this.setState({ rangeDate: date });
         let {
           queryparams,
@@ -101,6 +102,7 @@ class Dispatchreport extends Component {
        } else {
            this.setState({ rangeDate: [] });
        }
+       setFieldsValue({[fieldName]:date})
     };
 
     /** 展开折叠 */
@@ -240,6 +242,7 @@ class Dispatchreport extends Component {
     }
 
 
+
     render() {
         const { dataloading, datatable } = this.props;
 
@@ -330,7 +333,9 @@ class Dispatchreport extends Component {
                                 <Col md={24} lg={8} sm={24} xs={24}>
                                     <FormItem {...this.formLayout} label="时间" style={{ width: '100%' }}>
                                         {getFieldDecorator('rangeDate')(
-                                            <RangePicker_ style={{ width: '90%', margin: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear showTime={this.state.format} />,
+                                            <RangePicker_ style={{ width: '90%', margin: '5px', textAlign: 'left' }} 
+                                            dateValue={this.state.rangeDate} format={this.state.format} 
+                                            callback={this._handleDateChange} fieldName="rangeDate" allowClear showTime={this.state.format} />,
                                         )}
                                     </FormItem>
                                 </Col>

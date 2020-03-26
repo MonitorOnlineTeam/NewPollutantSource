@@ -9,7 +9,7 @@ import Model from '@/utils/model';
 import {
     getexmodellist, getexceptiondata, getovermodellist, getoverdata
 } from '@/services/recordEchartApi';
-import { formatPollutantPopover } from '@/utils/utils';
+import { formatPollutantPopover,GetDataType } from '@/utils/utils';
 
 export default Model.extend({
     namespace: 'recordEchartTable',
@@ -31,6 +31,7 @@ export default Model.extend({
         //获取异常记录汇总
         * getexmodellist({ payload,
         }, { call, update, put, take }) {
+            payload.dataType=GetDataType(payload.dataType);
             const result = yield call(getexmodellist, payload);
             if (result.IsSuccess) {
                 yield update({
@@ -58,11 +59,13 @@ export default Model.extend({
         }, { call, update, put, take, select }) {
             var size = yield select(state => state.recordEchartTable.pageSize)
             var index = yield select(state => state.recordEchartTable.pageIndex)
+            payload.dataType=GetDataType(payload.dataType);
             const body = {
                 ...payload,
                 pageSize: size,
                 pageIndex: index
             }
+        
             const result = yield call(getexceptiondata, body);
             if (result.IsSuccess) {
                 yield update({
@@ -75,6 +78,7 @@ export default Model.extend({
         //获取超标记录汇总
         * getovermodellist({ payload,
         }, { call, update, put, take }) {
+            payload.dataType=GetDataType(payload.dataType);
             const result = yield call(getovermodellist, payload);
             if (result.IsSuccess) {
                 yield update({
@@ -100,6 +104,7 @@ export default Model.extend({
         }, { call, update, put, take,select }) {
             var size = yield select(state => state.recordEchartTable.pageSize)
             var index = yield select(state => state.recordEchartTable.pageIndex)
+            payload.dataType=GetDataType(payload.dataType);
             const body = {
                 ...payload,
                 pageSize: size,

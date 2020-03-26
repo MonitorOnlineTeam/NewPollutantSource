@@ -23,11 +23,13 @@ export default Model.extend({
         Where: '$gte',
      },{
          Key: 'dbo__T_Bas_DataReporting__MonitorTime',
-         Value: moment().add(1,'month').format('YYYY-MM-01 00:00:00'),
+         Value: moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 00:00:00'),
          Where: '$lt',
       }],
       selectEntCode:null,
-      selectmonth:moment()
+      selectmonth:moment(),
+      beginTime:moment().format('YYYY-MM-01 00:00:00'),
+      endTime:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 00:00:00')
     },
     subscriptions: {
       setup({ dispatch, history }) {

@@ -9,7 +9,7 @@ import React, { Component } from 'react'
 import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Card, Tag } from 'antd';
 import { connect } from 'dva';
 import Center from '@/pages/account/center';
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import moment from 'moment';
 import { router } from 'umi'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
@@ -300,8 +300,8 @@ class OperationRecord extends Component {
                 style={{ width: 350, textAlign: 'left', marginRight: 10, }}
                 dateValue={currentDate}
                 allowClear={false}
-                format={this.state.formats}
-                onChange={this._handleDateChange}
+               // format={this.state.formats}
+                callback={this._handleDateChange}
               />
               <Radio.Group defaultValue="operationrecord" buttonStyle="solid" onChange={(e) => {
                 if (e.target.value === "log") {

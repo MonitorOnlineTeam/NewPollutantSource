@@ -16,7 +16,7 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.12.135:50206/';
+const apiHost = 'http://172.16.12.152:50080/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
@@ -32,20 +32,20 @@ module.exports = {
   uploadHost,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  offlineMapUrl: {
-    domain: '',
-    srcPath: '/amap-master/amap/js/maps.js',
-  },
+  // offlineMapUrl: {
+  //   domain: "",
+  //   srcPath: "/amap-master/amap/js/maps.js"
+  // },
   // 外网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://61.50.135.114:50036",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
   // 内网离线地图配置：
-  // offlineMapUrl: {
-  //   domain: "http://172.16.9.20:808",
-  //   srcPath: "/amap/js/maps.js"
-  // },
+  offlineMapUrl: {
+    domain: "http://172.16.9.20:808",
+    srcPath: "/amap/js/maps.js"
+  },
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,

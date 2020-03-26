@@ -26,7 +26,7 @@ import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
-import RangePicker_ from '../../../components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '../../../components/ButtonGroup'
 import PollutantSelect from '../../../components/PollutantSelect'
 import RecordEchartTableOver from '../../../components/recordEchartTableOver'

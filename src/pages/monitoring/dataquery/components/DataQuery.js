@@ -8,7 +8,7 @@ import {
     Button
 } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
 import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
@@ -42,6 +42,8 @@ class DataQuery extends Component {
             dd: [],
             selectP: '',
             dgimn: '',
+            dateValue:[moment(new Date()).add(-60, 'minutes'), moment(new Date())],
+            dataType:"realtime"
         };
     }
 
@@ -67,89 +69,100 @@ class DataQuery extends Component {
     }
 
     /** 切换时间 */
-    _handleDateChange = (date, dateString) => {
-        let { historyparams } = this.props;
-        // debugger;
-        switch (historyparams.datatype) {
-            case 'realtime':
-                if (date[1].add(-7, 'day') > date[0]) {
-                    message.info('实时数据时间间隔不能超过7天');
-                    return;
-                }
-                date[1].add(7, 'day')
+    // _handleDateChange = (date, dateString) => {
+        
+    //     let { historyparams } = this.props;
+    //     // debugger;
+    //     switch (historyparams.datatype) {
+    //         case 'realtime':
+    //             if (date[1].add(-7, 'day') > date[0]) {
+    //                 message.info('实时数据时间间隔不能超过7天');
+    //                 return;
+    //             }
+    //             date[1].add(7, 'day')
 
-                break;
-            case 'minute':
-                if (date[1].add(-1, 'month') > date[0]) {
-                    message.info('分钟数据时间间隔不能超过1个月');
-                    return;
-                }
-                date[1].add(1, 'month')
-                break;
-            case 'hour':
-                if (date[1].add(-6, 'month') > date[0]) {
-                    message.info('小时数据时间间隔不能超过6个月');
-                    return;
-                }
-                date[1].add(6, 'month')
-                break;
-            case 'day':
-                if (date[1].add(-12, 'month') > date[0]) {
-                    message.info('日数据时间间隔不能超过1年');
-                    return;
-                }
-                date[1].add(12, 'month')
-                break;
-            default:
-                return;
-        }
-        console.log('date=', date);
-        this.setState({ rangeDate: date });
-        historyparams = {
-            ...historyparams,
-            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-        }
-        this.reloaddatalist(historyparams);
-    };
+    //             break;
+    //         case 'minute':
+    //             if (date[1].add(-1, 'month') > date[0]) {
+    //                 message.info('分钟数据时间间隔不能超过1个月');
+    //                 return;
+    //             }
+    //             date[1].add(1, 'month')
+    //             break;
+    //         case 'hour':
+    //             if (date[1].add(-6, 'month') > date[0]) {
+    //                 message.info('小时数据时间间隔不能超过6个月');
+    //                 return;
+    //             }
+    //             date[1].add(6, 'month')
+    //             break;
+    //         case 'day':
+    //             if (date[1].add(-12, 'month') > date[0]) {
+    //                 message.info('日数据时间间隔不能超过1年');
+    //                 return;
+    //             }
+    //             date[1].add(12, 'month')
+    //             break;
+    //         default:
+    //             return;
+    //     }
+    //     console.log('date=', date);
+    //     this.setState({ rangeDate: date });
+    //     historyparams = {
+    //         ...historyparams,
+    //         beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+    //         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    //     }
+    //     this.reloaddatalist(historyparams);
+    // };
 
     /** 数据类型切换 */
-    _handleDateTypeChange = e => {
-        const { rangeDate } = this.state;
-        let formats;
-        let beginTime = moment(new Date()).add(-60, 'minutes');
-        const endTime = moment(new Date());
-        let { historyparams } = this.props;
-        switch (e.target.value) {
-            case 'realtime':
-                beginTime = moment(new Date()).add(-60, 'minutes');
-                formats = 'YYYY-MM-DD HH:mm:ss';
-                break;
-            case 'minute':
-                beginTime = moment(new Date()).add(-1, 'day');
-                formats = 'YYYY-MM-DD HH:mm';
-                break;
-            case 'hour':
-                beginTime = moment(new Date()).add(-1, 'day');
-                formats = 'YYYY-MM-DD HH';
-                break;
-            case 'day':
-                beginTime = moment(new Date()).add(-1, 'month');
-                formats = 'YYYY-MM-DD';
-                break;
-        }
-        this.setState({
-            rangeDate: [beginTime, endTime],
-            format: formats,
-        });
-        historyparams = {
-            ...historyparams,
-            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            datatype: e.target.value,
-        }
-        this.reloaddatalist(historyparams);
+    // _handleDateTypeChange = e => {
+    //     const { rangeDate } = this.state;
+    //     let formats;
+    //     let beginTime = moment(new Date()).add(-60, 'minutes');
+    //     const endTime = moment(new Date());
+    //     let { historyparams } = this.props;
+    //     switch (e.target.value) {
+    //         case 'realtime':
+    //             beginTime = moment(new Date()).add(-60, 'minutes');
+    //             formats = 'YYYY-MM-DD HH:mm:ss';
+    //             break;
+    //         case 'minute':
+    //             beginTime = moment(new Date()).add(-1, 'day');
+    //             formats = 'YYYY-MM-DD HH:mm';
+    //             break;
+    //         case 'hour':
+    //             beginTime = moment(new Date()).add(-1, 'day');
+    //             formats = 'YYYY-MM-DD HH';
+    //             break;
+    //         case 'day':
+    //             beginTime = moment(new Date()).add(-1, 'month');
+    //             formats = 'YYYY-MM-DD';
+    //             break;
+    //     }
+    //     this.setState({
+    //         rangeDate: [beginTime, endTime],
+    //         format: formats,
+    //     });
+    //     historyparams = {
+    //         ...historyparams,
+    //         beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+    //         endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+    //         datatype: e.target.value,
+    //     }
+    //     this.reloaddatalist(historyparams);
+    // }
+
+    /** 数据类型切换 */
+    _handleDateTypeChange=(e)=>{
+        const {historyparams}=this.props;
+        const dataType=e.target.value;
+        this.setState({dataType}); 
+       
+        this.children.onDataTypeChange(dataType);
     }
+
 
     /** 图表转换 */
     displayChange = checked => {
@@ -244,13 +257,15 @@ class DataQuery extends Component {
             dispatch,
         } = this.props;
         let { historyparams } = this.props;
-        const { rangeDate } = this.state;
+        const { rangeDate,dateValue } = this.state;
         historyparams = {
             ...historyparams,
             pollutantCodes: '',
             pollutantNames: '',
-            beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
-            endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
+            // beginTime: rangeDate[0].format('YYYY-MM-DD HH:mm:ss'),
+            // endTime: rangeDate[1].format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: dateValue[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: dateValue[1].format('YYYY-MM-DD HH:mm:ss'),
         }
         dispatch({
             type: 'dataquery/updateState',
@@ -309,7 +324,7 @@ class DataQuery extends Component {
 
         );
     }
-
+   
     exportReport = () => {
         this.props.dispatch({
             type: "dataquery/exportHistoryReport",
@@ -318,9 +333,29 @@ class DataQuery extends Component {
             }
         })
     }
+    /**
+     * 回调获取时间并重新请求数据
+     */
+    dateCallback=(dates,dataType)=>{
+       let { historyparams } = this.props;
+       this.setState({
+          dateValue:dates
+       })
+       historyparams = {
+            ...historyparams,
+            beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+            datatype:dataType
+        }
+        this.reloaddatalist(historyparams);
+    }
 
+    onRef1=(ref)=>{
+        this.children=ref;
+    }
 
     render() {
+        const {dataType,dateValue}=this.state;
         return (
             <div>
                 <Card
@@ -332,7 +367,14 @@ class DataQuery extends Component {
                                     {!this.props.isloading && this.getpollutantSelect()}
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
-                                    <RangePicker_ style={{ width: '90%', marginRight: '5px', textAlign: 'left' }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} allowClear={false} showTime={this.state.format} />
+                                    <RangePicker_ style={{ width: '90%', marginRight: '5px', textAlign: 'left' }} dateValue={dateValue} 
+                                    dataType={dataType}
+                                    format={this.state.format} 
+                                    onRef={this.onRef1}
+                                    isVerification={true}
+                                   // onChange={this._handleDateChange} 
+                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
+                                    allowClear={false} showTime={this.state.format} />
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={18} xxl={5}>
                                     <ButtonGroup_ style={{ width: '100%', marginRight: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />

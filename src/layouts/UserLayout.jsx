@@ -9,6 +9,7 @@ import SelectLang from '@/components/SelectLang';
 import logo from '../../public/sdlicon.png';
 import config from '@/config';
 import styles from './UserLayout.less';
+import Cookie from 'js-cookie';
 
 const UserLayout = props => {
   const {
@@ -19,6 +20,8 @@ const UserLayout = props => {
   } = props;
   useEffect(() => {
     if (dispatch) {
+      Cookie.set(config.cookieName, null);
+      Cookie.set('currentUser', null);
       dispatch({
         type: 'login/getSystemLoginConfigInfo',
         payload: {},
@@ -48,13 +51,13 @@ const UserLayout = props => {
     >
       <div className={styles.container}>
         {
-        
+
           <div className={styles.lang}>
             {
-                configInfo && configInfo.IsShowQRcode === "true" &&
-                <SelectLang />
+              configInfo && configInfo.IsShowQRcode === "true" &&
+              <SelectLang />
             }
-      
+
           </div>
         }
 

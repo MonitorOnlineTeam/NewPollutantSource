@@ -28,6 +28,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import moment from 'moment';
+import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
 const { confirm } = Modal;
 const { MonthPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -41,7 +42,9 @@ const FormItem = Form.Item;
     routerConfig: autoForm.routerConfig,
     userandentInfo: datareport.userandentInfo,
     reportwhere: datareport.reportwhere,
-    selectmonth:datareport.selectmonth
+    selectmonth:datareport.selectmonth,
+    beginTime:datareport.beginTime,
+    endTime:datareport.endTime
 }))
 @Form.create({
 })
@@ -83,15 +86,15 @@ export default class MonitorTarget extends Component {
     /**
      * 更新参数
      */
-    updateState=(monitotTime,EntCode)=>{
+    updateState=(monitotTime,beginTime,endTime,EntCode)=>{
         const{dispatch,match}=this.props;
         let where=[{
             Key: 'dbo__T_Bas_DataReporting__MonitorTime',
-            Value: moment(monitotTime).format('YYYY-MM-01 00:00:00'),
+            Value: beginTime,
             Where: '$gte',
          },{
              Key: 'dbo__T_Bas_DataReporting__MonitorTime',
-             Value: moment(monitotTime).add(1,'month').format('YYYY-MM-01 00:00:00'),
+             Value: endTime,
              Where: '$lt',
           }];
           if(EntCode)
@@ -102,7 +105,6 @@ export default class MonitorTarget extends Component {
                 Where: '$=',
              })
           }
-          debugger;
         dispatch({
             type: 'datareport/updateState',
             payload: {
@@ -111,15 +113,29 @@ export default class MonitorTarget extends Component {
                 reportwhere:where
             },
         })
-       const {reportwhere}=this.props;
-     
+    }
+   /**
+    * 时间控件回调
+    */
+    onDateCallBack=(dates,beginTime,endTime)=>{
+        const {form:{setFieldsValue},dispatch,StatisticsReportDataWhere}=this.props;
+        setFieldsValue({"MonitorTime":dates});
+        dispatch({
+            type: 'datareport/updateState',
+            payload:{
+                beginTime:beginTime,
+                endTime:endTime
+            }
+           
+        })
     }
 
+
     Serach=()=>{
-        const { form,dispatch,match,selectEntCode,reportwhere } = this.props;
+        const { form,dispatch,match,selectEntCode,reportwhere,beginTime,endTime } = this.props;
         form.validateFields((err, values) => {
           if (!err) {
-            this.updateState(values.MonitorTime,selectEntCode);
+            this.updateState(values.MonitorTime,beginTime,endTime,selectEntCode);
             this.reloadPage();
           }
         });
@@ -203,7 +219,7 @@ export default class MonitorTarget extends Component {
                           message: '请填写统计月份',
                         },
                       ],
-                    })(<MonthPicker allowClear={false} style={{ width: '100%' }} />)}
+                    })(<DatePickerTool  callback={this.onDateCallBack} picker="month" allowClear={false} style={{ width: '100%' }}/>)}
                   </FormItem>
                   </Col>
                   <Col xxl={6} xl={6} lg={8}>

@@ -22,7 +22,8 @@ import SdlCascader from '../AutoFormManager/SdlCascader';
 import SearchSelect from '../AutoFormManager/SearchSelect';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
-import YearPicker from '@/components/YearPicker';
+import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
+
 import { getDirLevel } from '@/utils/utils';
 import { routerRedux } from 'dva/router';
 const FormItem = Form.Item;
@@ -43,19 +44,18 @@ const { MonthPicker } = DatePicker;
 class StatisticsReportDataList extends PureComponent {
   constructor(props) {
     super(props);
-
     this.SELF = {
-        formLayout: {
-          labelCol: { span: 7 },
-          wrapperCol: { span: 17 },
-        },
-        defaultSearchForm: {
-          PollutantSourceType: 1,
-          // Regions: ["110000000", "110100000", "110101000"],
-          EntCode: "",
-          ReportTime: moment()
-        },
-      }
+      formLayout: {
+        labelCol: { span: 7 },
+        wrapperCol: { span: 17 },
+      },
+      defaultSearchForm: {
+        PollutantSourceType: 1,
+        // Regions: ["110000000", "110100000", "110101000"],
+        EntCode: "",
+        ReportTime: moment()
+      },
+    }
   }
 
   componentDidMount() {
@@ -101,7 +101,7 @@ class StatisticsReportDataList extends PureComponent {
     this.props.dispatch({
       type: 'report/updateState',
       payload: {
-        dateReportForm: {
+        StatisticsReportDataWhere: {
           ...this.props.StatisticsReportDataWhere,
           PageIndex:current,
         },
@@ -112,6 +112,25 @@ class StatisticsReportDataList extends PureComponent {
       this.statisticsReport();
     }, 0);
   };
+
+  /**
+   * 时间框回调
+   */
+  onDateCallBack=(dates,beginTime,endTime)=>{
+   
+       const {form:{setFieldsValue},dispatch,StatisticsReportDataWhere}=this.props;
+       setFieldsValue({"MonitorTime":dates});
+       dispatch({
+        type: 'report/updateState',
+        payload: {
+          StatisticsReportDataWhere: {
+            ...this.props.StatisticsReportDataWhere,
+            beginTime:beginTime,
+            endTime:endTime
+          },
+        },
+       })
+  }
 
   render() {
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
@@ -217,9 +236,10 @@ class StatisticsReportDataList extends PureComponent {
        // render: (text, row, index) => {}   
      }
     ];
-    let timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
+  //  let timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
+    
+    let timeEle=<DatePickerTool  callback={this.onDateCallBack} picker="month" allowClear={false} style={{ width: '100%' }}/>
     return (
-       
       <PageHeaderWrapper>
           <Spin spinning={exportLoading || entloading} delay={500}> 
           <Card className="contentContainer">
@@ -264,8 +284,9 @@ class StatisticsReportDataList extends PureComponent {
                                     type: 'report/updateState',
                                     payload: {
                                        StatisticsReportDataWhere: {
-                                       ...values,
-                                       PageIndex:1
+                                        ...this.props.StatisticsReportDataWhere,
+                                        ...values,
+                                        PageIndex:1
                                       },
                                     },
                                   });

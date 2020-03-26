@@ -75,6 +75,7 @@
     "path-to-regexp": "^3.0.0",
     "prop-types": "^15.7.2",
     "q": "^1.5.1",
+    "qrcode.react": "^1.0.0",
     "qs": "^6.7.0",
     "react": "^16.8.6",
     "react-amap": "^1.2.8",

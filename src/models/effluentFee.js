@@ -9,6 +9,7 @@ import Model from '@/utils/model';
 import * as services from '@/services/effluentFeeApi';
 import { sdlMessage } from '@/utils/utils';
 
+
 export default Model.extend({
     namespace: 'effluentFee',
     state: {

@@ -7,17 +7,19 @@ import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
-import NoticeIconView from './NoticeIconView';
+import NoticeIconView from './NoticeIconView'
 
 const GlobalHeaderRight = props => {
-  const { theme, layout,configInfo } = props;
+  const { theme, layout, configInfo } = props;
   //console.log("changePwdVisible=",props);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
-
+  var QRCode = require('qrcode.react');
+  //获取当前ip地址和端口号
+  var getIp = "http://"+window.location.host;
   return (
     <div className={className}>
       {/* <HeaderSearch
@@ -58,12 +60,15 @@ const GlobalHeaderRight = props => {
         </a>
       </Tooltip> */}
       {
-        configInfo && configInfo.IsShowQRcode==="true" &&
-        <Popover content={<div><img
+        configInfo && configInfo.IsShowQRcode === "true" &&
+        <Popover content={<div>
+          {/* <img
           width={272}
           alt="logo"
           src={`/api/upload/phoneQRCode.png`}
-        /></div>} title="手机端下载" trigger="hover">
+        /> */}
+          <QRCode value={getIp+"/appoperation/appqrcodemain"} size={200} />
+        </div>} title="手机端下载" trigger="hover">
           <a
             rel="noopener noreferrer"
             className={styles.action}
@@ -72,7 +77,7 @@ const GlobalHeaderRight = props => {
           </a>
         </Popover>
       }
-     
+
       <NoticeIconView />
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
