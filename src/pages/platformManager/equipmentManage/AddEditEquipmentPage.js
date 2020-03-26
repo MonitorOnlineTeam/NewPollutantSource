@@ -24,6 +24,7 @@ import PageLoading from '@/components/PageLoading';
   loading: loading.effects['equipment/getEquipmentByID'],
   btnisloading: loading.effects['autoForm/add'],
    btnisloading1: loading.effects['autoForm/add'],
+   equipmentCategoryType:equipment.equipmentCategoryType
 }))
 class AddEditEquipmentPage extends PureComponent {
   constructor(props) {
@@ -48,6 +49,11 @@ class AddEditEquipmentPage extends PureComponent {
 
   componentDidMount() {
     const { type, routerParams } = this._SELF_;
+    this.props.dispatch({
+      type:"equipment/getEquipmentCategoryPage",
+      payload:{}
+    })
+
     if (type === 'add') {
       this.props.form.resetFields();
       this.props.dispatch({
@@ -86,6 +92,7 @@ class AddEditEquipmentPage extends PureComponent {
     e.preventDefault();
     const { type, routerParams } = this._SELF_;
     const { form, onSubmitForm, dispatch, match: { params } } = this.props;
+    debugger;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const formData = handleFormData(values)
@@ -124,10 +131,20 @@ class AddEditEquipmentPage extends PureComponent {
       }
     })
   }
+  getequipmentCategoryType=()=>{
+     const {equipmentCategoryType}=this.props;
+     let res=[];
+     if(equipmentCategoryType && equipmentCategoryType.length>0)
+     equipmentCategoryType.map(item=>{
+      res.push(<Option key={item.ID} value={item.ID}>{item.EquipmentTypeName}</Option>)
+     })
+     return res;
+  }
 
   render() {
     // const { type } = this.state;
-    const { form, form: { getFieldDecorator }, EquipmentModel, EquipmentType, Manufacturer, Measurement, equipmentData, loading, btnisloading, btnisloading1 } = this.props;
+    const { form, form: { getFieldDecorator }, EquipmentModel, EquipmentType, Manufacturer, Measurement, equipmentData, loading, btnisloading,
+     btnisloading1 } = this.props;
     const { type, formItemLayout } = this._SELF_;
     if (loading && type === 'edit') {
       return <PageLoading />
@@ -144,13 +161,9 @@ class AddEditEquipmentPage extends PureComponent {
                     initialValue: equipmentData.EquipmentType,
                   })(
                     <Select placeholder="请选择设备类别" onChange={val => {
-                      this.changeWhere({
-                        EquipmentType: val,
-                      });
-                      form.setFieldsValue({ Manufacturer: undefined, EquipmentModel: undefined })
                     }}>
                       {
-                        EquipmentType.map(item => <Option key={item} value={item}>{item}</Option>)
+                         this.getequipmentCategoryType()
                       }
                     </Select>,
                   )}
@@ -162,17 +175,7 @@ class AddEditEquipmentPage extends PureComponent {
                     rules: [{ required: true, message: '请选择设备厂商' }],
                     initialValue: equipmentData.Manufacturer,
                   })(
-                    <Select placeholder="请选择设备厂商" onChange={val => {
-                      this.changeWhere({
-                        EquipmentType: form.getFieldValue('EquipmentType'),
-                        Manufacturer: val,
-                      });
-                      form.setFieldsValue({ EquipmentModel: undefined })
-                    }}>
-                      {
-                        Manufacturer.map(item => <Option key={item} value={item}>{item}</Option>)
-                      }
-                    </Select>,
+                     <Input placeholder="设备厂商"/>
                   )}
                 </Form.Item>
               </Col>
@@ -182,17 +185,7 @@ class AddEditEquipmentPage extends PureComponent {
                     rules: [{ required: true, message: '请选择设备型号' }],
                     initialValue: equipmentData.EquipmentModel,
                   })(
-                    <Select placeholder="请选择设备型号" onChange={val => {
-                      this.changeWhere({
-                        EquipmentType: form.getFieldValue('EquipmentType'),
-                        Manufacturer: form.getFieldValue('Manufacturer'),
-                        EquipmentModel: val,
-                      });
-                    }}>
-                      {
-                        EquipmentModel.map(item => <Option key={item} value={item}>{item}</Option>)
-                      }
-                    </Select>,
+                    <Input placeholder="设备型号" />
                   )}
                 </Form.Item>
               </Col>

@@ -18,9 +18,21 @@ export default Model.extend({
     // 测量参数
     Measurement: [],
     // 修改数据
-    equipmentData: {}
+    equipmentData: {},
+    //设备类型
+    equipmentCategoryType:[]
   },
   effects: {
+    *getEquipmentCategoryPage({ payload }, { call, put, update }) {
+      const result = yield call(services.getEquipmentCategoryPage, payload);
+      debugger;
+      if (result.IsSuccess) {
+        yield update({
+          equipmentCategoryType:result.Datas
+        })
+      }
+
+    },
     // 获取级联数据
     *getEquipmentWhere({ payload }, { call, put, update }) {
       const result = yield call(services.getEquipmentWhere, payload);

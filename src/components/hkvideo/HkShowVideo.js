@@ -18,6 +18,7 @@ import styles from './index.less';
 import config from '@/config';
 import HkRealVideoData from './HkRealVideoData';
 import HkHisVideoData from './HkHisVideoData';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
 import {
   InitVideo, clickLogin, clickStartRealPlay, mouseDownPTZControl, mouseUpPTZControl,
@@ -96,7 +97,6 @@ class HkShowVideo extends Component {
         message.info(msg.message);
         const msg2 = clickLogin(loginPara);
         if (msg2 !== null && msg2 !== undefined && msg2.flag) {
-          debugger;
           message.success(msg2.message);
           // 实时视频立即播放
           if (this.state.tabsKey === '1') {
@@ -120,15 +120,15 @@ class HkShowVideo extends Component {
 
   /** 回放操作 */
   playBack = () => {
-    debugger;
+   
     const {
       beginDate,
       endDate,
     } = this.state;
     console.log(this.props.hkvideoListParameters[0].Device_Port);
     this.child.startPlay(
-      moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
-      moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
+      beginDate,
+      endDate,
     );
     if (this.state.IsIE) {
       if (this.props.hkvideoListParameters[0]) {
@@ -337,6 +337,18 @@ class HkShowVideo extends Component {
   handleEndOpenChange = open => {
     this.setState({
       endOpen: open,
+    });
+  }
+
+  /**
+   * 时间回调
+   */
+  dateCallBack=(dates,dataType,fieldName)=>{
+    this.onChange('startValue',dates[0]);
+    this.onChange('endValue',dates[1]);
+    this.setState({
+      beginDate:dates[0],
+      endDate:dates[1],
     });
   }
 
@@ -578,7 +590,7 @@ class HkShowVideo extends Component {
                     <Row>
                       <Col span={24}>
                         <Row>
-                          <Col span={10}>
+                          {/* <Col span={10}>
                             <DatePicker
                               style={{ width: '170px', minWidth: '130px' }}
                               disabledDate={
@@ -614,6 +626,9 @@ class HkShowVideo extends Component {
                                 this.handleEndOpenChange
                               }
                             />
+                          </Col> */}
+                          <Col>
+                             <RangePicker_ callback={(dates,dataType,fieldName)=>this.dateCallBack(dates,dataType,fieldName)} style={{width:'100%'}}  />
                           </Col>
                         </Row>
                       </Col>
@@ -655,8 +670,8 @@ class HkShowVideo extends Component {
                             onRef={this.onRef1}
                             {...this.props}
                             dgimn={this.state.dgimn}
-                            beginDate={moment(this.state.beginDate, 'YYYY-MM-DD HH:mm:ss')}
-                            endDate={moment(this.state.endDate, 'YYYY-MM-DD HH:mm:ss')}
+                            beginDate={this.state.beginDate}
+                            endDate={this.state.endDate}
                           />
                         )}
                       </Col>

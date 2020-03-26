@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
@@ -320,6 +320,7 @@ class AlarmRecord extends Component {
       }
     });
   };
+  
 
   render() {
     const userCookie = Cookie.get('currentUser');
@@ -432,7 +433,11 @@ class AlarmRecord extends Component {
           extra={
             <div>
               {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }} format="YYYY-MM-DD HH:mm" onChange={this._handleDateChange} dateValue={this.state.rangeDate} showTime="YYYY-MM-DD HH:mm" />
+              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
+                  dataType="minute"
+                  dateValue={this.state.rangeDate}
+                  callback={(dates)=>this._handleDateChange(dates)}
+              />
               <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
             </div>
           }

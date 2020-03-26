@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import {
     Card,
     Table,
-    DatePicker,
+    
     Progress,
     Row,
     Popover,
@@ -24,8 +24,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '@/components/SdlTable';
-const { MonthPicker } = DatePicker;
-const { RangePicker } = DatePicker;
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 const { Search } = Input;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
@@ -118,16 +117,18 @@ export default class effluentfeeIndex extends Component {
 
 
     handlePanelChange = (value, mode) => {
-
-        this.updateState({
-            begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
-            end: value[1].format("YYYY-MM-DD HH:mm:ss"),
-        });
-        this.setState({
-            //rangePickerValue: value,
-            rangePickerMode: [mode[0] === 'date' ? 'month' : mode[0], mode[1] === 'date' ? 'month' : mode[1]],
-        });
-        this.getTargetTableData();
+        if(value && value[0])
+        {
+            this.updateState({
+                begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
+                end: value[1].format("YYYY-MM-DD HH:mm:ss"),
+            });
+            // this.setState({
+            //     //rangePickerValue: value,
+            //     rangePickerMode: [mode[0] === 'date' ? 'month' : mode[0], mode[1] === 'date' ? 'month' : mode[1]],
+            // });
+            this.getTargetTableData();
+        }
     };
 
     handleChange = value => {
@@ -507,15 +508,14 @@ export default class effluentfeeIndex extends Component {
                                 />
                                 <span style={{ color: '#b3b3b3' }}>
                                     时间选择：
-                                <RangePicker
+                                <RangePicker_
                                         allowClear={false}
                                         style={{ width: 200 }}
                                         placeholder={['开始时间', '结束时间']}
-                                        format="YYYY-MM"
-                                        value={[moment(begin), moment(end)]}
-                                        mode={this.state.rangePickerMode}
-                                        onChange={this.handleChange}
-                                        onPanelChange={this.handlePanelChange}
+                                         dataType="month"
+                                         dateValue={[moment(begin), moment(end)]}
+                                         mode={this.state.rangePickerMode}
+                                         callback={this.handlePanelChange}
                                     />
                                 </span>
 

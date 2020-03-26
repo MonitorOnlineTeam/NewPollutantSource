@@ -34,7 +34,6 @@ class HkHisVideoData extends Component {
   }
 
   startPlay = (beginDate, endDate) => {
-    debugger;
     const { pageIndex, pageSize } = this.props;
     this.setState(
       {
@@ -96,8 +95,8 @@ class HkHisVideoData extends Component {
         datatype: 'realtime',
         pageIndex: pageIndex === undefined ? 1 : pageIndex,
         pageSize: pageSize === undefined ? 15 : pageSize,
-        beginTime,
-        endTime,
+        beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+        endTime:endTime.format('YYYY-MM-DD HH:mm:ss'),
         isAsc: true,
       },
     });

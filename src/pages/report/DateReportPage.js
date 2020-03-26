@@ -25,6 +25,7 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
 import CascaderMultiple from "@/components/CascaderMultiple"
+import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -67,13 +68,43 @@ const { MonthPicker } = DatePicker;
 class SiteDailyPage extends PureComponent {
   constructor(props) {
     super(props);
-    const format =
-      props.match.params.reportType === 'siteDaily'
-        ? 'YYYY-MM-DD'
-        : props.match.params.reportType === 'monthly'
-          ? 'YYYY-MM'
-          : 'YYYY';
+    // const format =
+    //   props.match.params.reportType === 'siteDaily'
+    //     ? 'YYYY-MM-DD'
+    //     : props.match.params.reportType === 'monthly'
+    //       ? 'YYYY-MM'
+    //       : 'YYYY';
+    // const picker=  props.match.params.reportType === 'siteDaily'
+    //     ? 'dayanddate'
+    //     : props.match.params.reportType === 'monthly'
+    //       ? 'month'
+    //       : 'year';
+    let format;
+    let picker;
+    let beginTime;
+    let endTime;
+    switch(props.match.params.reportType)
+    {
+        case "siteDaily":
+            format= 'YYYY-MM-DD';
+            picker='dayanddate';
+            beginTime=moment().format('YYYY-MM-DD 01:00:00');
+            endTime=moment().add(1,'day').format('YYYY-MM-DD 00:00:00');
+          break;
+        case "monthly":
+            format="YYYY-MM";
+            picker="month";
+            beginTime=moment().format('YYYY-MM-01 01:00:00');
+            endTime=moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+            break;
+          default:
+            format="YYYY";
+            picker="month";
+            beginTime=moment().format('YYYY-01-01 00:00:00');
+            endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+    }
     this.state = {
+      picker:picker,
       format: format,
       columns: [],
       currentDate: moment().format(format),
@@ -101,6 +132,15 @@ class SiteDailyPage extends PureComponent {
       this.props.form.setFieldsValue({ "ReportTime": moment().add(-1, "day") })
     }
     const { defaultSearchForm } = this.SELF;
+    const {dispatch}=this.props;
+    //const {}
+    // dispatch({
+    //   type:'report/updateState',
+    //   payload:{
+    //      beginTime:beginTime,
+
+    //   }
+    // })
     // 获取污染物 - 查询条件
     this.props.dispatch({
       type: 'report/getPollutantTypeList',
@@ -418,23 +458,26 @@ class SiteDailyPage extends PureComponent {
       entAndPontList,
     } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
-    const { currentEntName, currentDate, defaultRegionCode, format } = this.state;
+    const { currentEntName, currentDate, defaultRegionCode, format,picker } = this.state;
 
-    let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
-    if (format === 'YYYY-MM') {
-      timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
-    } else if (format === 'YYYY') {
-      timeEle = (
-        <YearPicker
-          format={format}
-          allowClear={false}
-          style={{ width: '100%' }}
-          _onPanelChange={v => {
-            this.props.form.setFieldsValue({ ReportTime: v });
-          }}
-        />
-      );
-    }
+
+    let timeEle = <DatePickerTool allowClear={false} picker={picker} style={{ width: '100%' }}  />; 
+
+    // let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
+    // if (format === 'YYYY-MM') {
+    //   timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
+    // } else if (format === 'YYYY') {
+    //   timeEle = (
+    //     <YearPicker
+    //       format={format}
+    //       allowClear={false}
+    //       style={{ width: '100%' }}
+    //       _onPanelChange={v => {
+    //         this.props.form.setFieldsValue({ ReportTime: v });
+    //       }}
+    //     />
+    //   );
+    // }
     // if (exportLoading) {
     //   return (
     //     <Spin
