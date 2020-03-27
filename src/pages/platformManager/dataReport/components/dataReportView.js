@@ -91,7 +91,7 @@ export default class DataReportView extends Component {
             Where: '$gte',
          },{
              Key: 'dbo__T_Bas_DataReporting__MonitorTime',
-             Value: moment(monitotTime).add(1,'month').format('YYYY-MM-01 00:00:00'),
+             Value: moment(moment(monitotTime).format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,"second").format('YYYY-MM-DD 00:00:00'),
              Where: '$lt',
           }];
           if(EntCode)
@@ -102,7 +102,6 @@ export default class DataReportView extends Component {
                 Where: '$=',
              })
           }
-          debugger;
         dispatch({
             type: 'datareport/updateState',
             payload: {

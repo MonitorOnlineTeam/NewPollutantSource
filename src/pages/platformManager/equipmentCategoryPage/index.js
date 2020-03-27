@@ -7,7 +7,7 @@ import { connect } from 'dva';
 import { router } from 'umi';
 
 @connect()
-class EquipmentManage extends Component {
+class EquipmentCategoryPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,15 +44,13 @@ class EquipmentManage extends Component {
           <PageHeaderWrapper>
             <Card>
               {
-                DGIMN &&
-                 <AutoFormTable
+                DGIMN && <AutoFormTable
                   configId={configId}
                   searchParams={[{
                     Key: "dbo.T_Bas_Equipment.DGIMN",
                     Value: DGIMN,
                     Where: '$=',
                   },]}
-                 // parentcode="platformconfig"
                   onAdd={() => {
                     router.push(`/platformconfig/equipmentManage/${DGIMN}/${null}`)
                   }}
@@ -70,4 +68,4 @@ class EquipmentManage extends Component {
 }
 
 
-export default EquipmentManage;
+export default EquipmentCategoryPage

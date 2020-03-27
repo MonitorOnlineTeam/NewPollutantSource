@@ -6,7 +6,7 @@ import { router } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ViewImagesModal from './ViewImagesModal'
 import NavigationTree from '@/components/NavigationTree'
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import styles from '../index.less'
 
 const { Option } = Select;
@@ -249,8 +249,8 @@ class LogTimeList extends Component {
               <RangePicker_
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
                 dateValue={dateValues}
-                format={"YYYY-MM-DD"}
-                onChange={(date) => {
+                //format={"YYYY-MM-DD"}
+                callback={(date) => {
                   this.props.dispatch({
                     type: "operations/updateState",
                     payload: {

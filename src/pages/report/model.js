@@ -32,6 +32,9 @@ export default Model.extend({
       EntList: [],
       PageIndex: 1,
       PageSize: 10,
+      beginTime: moment().add(-1, 'month').format('YYYY-MM-01 00:00:00'),
+      endTime:moment(moment().format('YYYY-MM-01 00:00:00')).add(-1,"second").format('YYYY-MM-DD 23:59:59'),
+     // aaa:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,"month").format('YYYY-MM-01 23:59:59'),
       total: 0
     },
     // 烟气报表 ----- 开始
@@ -106,6 +109,8 @@ export default Model.extend({
         DGIMN: dateReportForm.DGIMN && dateReportForm.DGIMN.value,
         PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
+        beginTime:dateReportForm.beginTime,
+        endTime:dateReportForm.endTime,
         ...payload
       }
       let serviceApi = payload.type === "siteDaily" ? services.getSiteDailyDayReport : (payload.type === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
@@ -223,6 +228,7 @@ export default Model.extend({
     //数据上报报表
     *getStatisticsReportDataList({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
+      debugger;
       const result = yield call(services.getStatisticsReportDataList, params);
       yield update({ statisticsReportDataList: result.Datas, total: result.Total })
     },

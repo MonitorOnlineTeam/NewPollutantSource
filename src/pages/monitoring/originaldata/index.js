@@ -26,7 +26,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SdlTable from '@/components/SdlTable';
 import styles from './index.less';
 import NavigationTree from '@/components/NavigationTree'
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 
 @connect(({ loading, originalData }) => ({
     loading: loading.effects['originalData/getOriginalData'],
@@ -34,6 +34,7 @@ import RangePicker_ from '@/components/RangePicker'
     total: originalData.total,
     pageIndex: originalData.pageIndex,
     pageSize: originalData.pageSize,
+    dgimn:originalData.dgimn
 }))
 
 class Index extends Component {
@@ -70,13 +71,14 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'originalData/updateState',
                 payload: {
-                    beginTime: dateString[0],
-                    endTime: dateString[1],
+                    beginTime: date[0]? date[0].format('YYYY-MM-DD HH:mm:ss'):null,
+                    endTime:  date[1]? date[1].format('YYYY-MM-DD HH:mm:ss'):null
                 },
             });
             this.setState({
                 rangeDate: date,
             });
+            if(this.props.dgimn)
             setTimeout(() => {
                 this.reloaddatalist();
             }, 0);
@@ -182,7 +184,11 @@ class Index extends Component {
                         <Card
                             extra={
                                 <div>
-                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format}/>
+                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} 
+                                     dateValue={this.state.rangeDate} format={this.state.format}
+                                     callback={this._handleDateChange}
+                                 //    onChange={this._handleDateChange} 
+                                     showTime={this.state.format}/>
                                 </div>
                             }
                             className="contentContainer"

@@ -13,7 +13,7 @@ import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
 import styles from './index.less';
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
 
 
@@ -162,59 +162,59 @@ class Index extends Component {
     }
 
     // }
-    /** 数据类型切换 */
-    _handleDateTypeChange = e => {
-        let formats;
-        let beginTime = moment(new Date()).add(-60, 'minutes');
-        const endTime = moment(new Date());
-        let { dataType } = this.state
-        switch (e.target.value) {
-            case 'realtime':
-                beginTime = moment(new Date()).add(-60, 'minutes');
-                formats = 'YYYY-MM-DD HH:mm:ss';
-                dataType = 'RealTimeData'
-                break;
-            case 'minute':
-                beginTime = moment(new Date()).add(-1, 'day');
-                formats = 'YYYY-MM-DD HH:mm';
-                dataType = 'MinuteData'
-                break;
-            case 'hour':
-                beginTime = moment(new Date()).add(-1, 'day');
-                formats = 'YYYY-MM-DD HH';
-                dataType = 'HourData'
-                break;
-            case 'day':
-                beginTime = moment(new Date()).add(-1, 'month');
-                formats = 'YYYY-MM-DD';
-                dataType = 'DayData'
-                break;
-        }
-        //
-        this.setState({
-            rangeDate: [beginTime, endTime],
-            format: formats,
-            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            dataType,
-        });
-        this.props.dispatch({
-            type: 'recordEchartTable/updateState',
-            payload: {
-                overData: [],
-                pageIndex: 1,
-            },
-        })
-        this.props.dispatch({
-            type: 'recordEchartTable/getovermodellist',
-            payload: {
-                beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-                endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-                dataType,
-                DGIMN: [this.props.DGIMN],
-            },
-        })
-    }
+    // /** 数据类型切换 */
+    // _handleDateTypeChange = e => {
+    //     let formats;
+    //     let beginTime = moment(new Date()).add(-60, 'minutes');
+    //     const endTime = moment(new Date());
+    //     let { dataType } = this.state
+    //     switch (e.target.value) {
+    //         case 'realtime':
+    //             beginTime = moment(new Date()).add(-60, 'minutes');
+    //             formats = 'YYYY-MM-DD HH:mm:ss';
+    //             dataType = 'RealTimeData'
+    //             break;
+    //         case 'minute':
+    //             beginTime = moment(new Date()).add(-1, 'day');
+    //             formats = 'YYYY-MM-DD HH:mm';
+    //             dataType = 'MinuteData'
+    //             break;
+    //         case 'hour':
+    //             beginTime = moment(new Date()).add(-1, 'day');
+    //             formats = 'YYYY-MM-DD HH';
+    //             dataType = 'HourData'
+    //             break;
+    //         case 'day':
+    //             beginTime = moment(new Date()).add(-1, 'month');
+    //             formats = 'YYYY-MM-DD';
+    //             dataType = 'DayData'
+    //             break;
+    //     }
+    //     //
+    //     this.setState({
+    //         rangeDate: [beginTime, endTime],
+    //         format: formats,
+    //         beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+    //         endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+    //         dataType,
+    //     });
+    //     this.props.dispatch({
+    //         type: 'recordEchartTable/updateState',
+    //         payload: {
+    //             overData: [],
+    //             pageIndex: 1,
+    //         },
+    //     })
+    //     this.props.dispatch({
+    //         type: 'recordEchartTable/getovermodellist',
+    //         payload: {
+    //             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+    //             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+    //             dataType,
+    //             DGIMN: [this.props.DGIMN],
+    //         },
+    //     })
+    // }
 
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
@@ -335,6 +335,48 @@ class Index extends Component {
         }, 0)
     }
 
+
+          /** 数据类型切换 */
+        _handleDateTypeChange=(e)=>{
+            const dataType=e.target.value;
+            this.setState({dataType}); 
+            this.children.onDataTypeChange(dataType);
+        }
+
+
+      /**
+     * 回调获取时间并重新请求数据
+     */
+    dateCallback=(date,dataType)=>{
+    if(!this.props.DGIMN)
+       return;
+        this.setState({
+            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        });
+        this.props.dispatch({
+            type: 'recordEchartTable/updateState',
+            payload: {
+                overData: [],
+                pageIndex: 1,
+            },
+        })
+        this.props.dispatch({
+            type: 'recordEchartTable/getovermodellist',
+            payload: {
+                beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+                endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+                dataType: dataType,
+                DGIMN: [this.props.DGIMN],
+            },
+        })
+     }
+ 
+     onRef1=(ref)=>{
+         this.children=ref;
+     }
+
+
     render() {
         const { column } = this.state
         const option = {
@@ -364,7 +406,16 @@ class Index extends Component {
                 <Card
                     extra={
                         <div>
-                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} />
+                            {/* <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} /> */}
+
+                            <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
+                                    dataType={this.state.dataType}
+                                    format={this.state.format} 
+                                    onRef={this.onRef1}
+                                    isVerification={true}
+                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
+                                    allowClear={false} showTime={this.state.format} />
+
                             {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />}
                         </div>
                     }

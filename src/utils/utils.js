@@ -209,3 +209,27 @@ export const getDirLevel = (dir) => {
 }
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
+
+//格式化数据类型
+export const GetDataType=(dataType)=>{
+  let res=dataType;
+  if(dataType)
+  {
+    switch(dataType)
+    {
+        case "realtime":
+            res="RealTimeData";
+            break;
+        case "minute":
+            res="MinuteData";
+            break;
+        case "hour":
+            res="HourData";
+            break;
+        case "day":
+            res="DayData";
+            break;   
+    }
+  }
+  return res;
+}

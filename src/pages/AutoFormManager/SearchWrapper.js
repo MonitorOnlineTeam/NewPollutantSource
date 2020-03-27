@@ -33,6 +33,7 @@ import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
 import SdlCheckbox from './SdlCheckbox';
 import CascaderMultiple from "@/components/CascaderMultiple"
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 
 const { Option } = Select;
 const { Search } = Input;
@@ -186,13 +187,47 @@ class SearchWrapper extends Component {
   // 时间范围控件
   _rtnRangePickerEl = item => {
     const { dateFormat } = item;
+    const { fieldName } = item;
     const format = dateFormat ? dateFormat.toUpperCase() : "";
+ 
     console.log("format=", format)
-    if (format) {
-      return <RangePicker style={{ width: '100%' }} format={format} />
+    
+    switch(format)
+    {
+       case "YYYY-MM-DD HH:MM:SS":
+            return <RangePicker_ style={{ width: '100%' }} />
+         
+       case "YYYY-MM-DD HH:MM":
+            return <RangePicker_ style={{ width: '100%' }} dataType="minute"/>
+            
+       case "YYYY-MM-DD HH":
+            return <RangePicker_ style={{ width: '100%' }} dataType="hour"/>
+           
+       default:
+            return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}   
+            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} dataType="day"/>
+             
     }
-    return <RangePicker style={{ width: '100%' }} />
+
+    // return <RangePicker_ style={{ width: '100%' }} />
+    // if (format) {
+    //   return <RangePicker style={{ width: '100%' }} format={format} />
+    // }
+    // return <RangePicker style={{ width: '100%' }} />
   }
+
+  /**时间控件回调 */
+  dateCallBack=(dates,type,fieldName)=>{
+      const {form:{setFieldsValue}}=this.props;
+      if(dates[0] && dates[1])
+      setFieldsValue({ [fieldName]:dates });
+      else
+      {
+        setFieldsValue({ [fieldName]:undefined });
+      }
+  }
+
+  
 
   // 渲染FormItem
   _renderFormItem() {
