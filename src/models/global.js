@@ -529,9 +529,6 @@ export default Model.extend({
           }
         }
       });
-      debugger;
-      // socket相关
-
     },
     setup({ history }) {
       history.listen(({ pathname, search }) => {

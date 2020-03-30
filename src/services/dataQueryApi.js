@@ -30,4 +30,22 @@ export async function exportHistoryReport(params) {
   return result;
 }
 
+// 导出历史数据报表
+export async function getAllTypeDataForWryFlag(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataForWryFlag', params, null);
+  return result;
+}
+
+// 修改数据标记
+export async function updateDataWryFlag(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/UpdateDataWryFlag', params, null);
+  return result;
+}
+
+// 数据标记 - 导出
+export async function exportDataFlagReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataForWryFlag', params, null);
+  return result;
+}
+
 

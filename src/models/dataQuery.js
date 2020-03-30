@@ -36,6 +36,8 @@ export default Model.extend({
     },
     pollutantList: [],
     dataAuditDataSource: [],
+    dataFlagDataSource: [],
+    tagTableTotal: 0,
   },
   effects: {
     * querypollutantlist({ payload,
@@ -309,6 +311,39 @@ export default Model.extend({
       const result = yield call(services.exportDataAuditReport, payload);
       if (result.IsSuccess) {
         message.success('导出成功');
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 数据标记 - 获取数据
+    *getAllTypeDataForWryFlag({ payload }, { call, put, update }) {
+      const result = yield call(services.getAllTypeDataForWryFlag, payload);
+      if (result.IsSuccess) {
+        yield update({
+          // dataAuditDataSource: result.Datas,
+          dataFlagDataSource: result.Datas,
+          tagTableTotal: result.Total
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 数据标记 - 修改
+    *updateDataWryFlag({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.updateDataWryFlag, payload);
+      if (result.IsSuccess) {
+        message.success("修改成功")
+        callback && callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 数据标记 - 导出
+    *exportDataFlagReport({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.exportDataFlagReport, {...payload, pageSize: null, pageIndex: null});
+      if (result.IsSuccess) {
+        message.success("导出成功")
         window.open(result.Datas)
       } else {
         message.error(result.Message)

@@ -766,6 +766,11 @@ export default {
                   path: '/dataquerymanager/dataAudit/:type',
                   component: './monitoring/dataquery/DataAuditPage',
                 },
+                {
+                  name: 'dataFlag',
+                  path: '/dataquerymanager/dataFlag',
+                  component: './monitoring/dataquery/DataTagPage',
+                },
               ]
             },
             {
@@ -921,6 +926,12 @@ export default {
                   name: 'compositeIndexReport',
                   path: '/Intelligentanalysis/compositeIndex/:reportType',
                   component: './dataAnalyze/CompositeIndexReport',
+                },
+                // 季度有效数据捕集率
+                {
+                  name: 'quartDataCaptureRate',
+                  path: '/Intelligentanalysis/quartDataCaptureRate',
+                  component: './dataAnalyze/QuartDataCaptureRate',
                 },
               ],
             },
