@@ -134,7 +134,6 @@ export default Model.extend({
     // 接收消息推送更改Model内存
     changeNotices(state, { payload }) {
       try {
-        debugger
         // 不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
         const { Message: data } = message;
@@ -529,7 +528,6 @@ export default Model.extend({
           }
         }
       });
-      debugger;
       // socket相关
 
     },

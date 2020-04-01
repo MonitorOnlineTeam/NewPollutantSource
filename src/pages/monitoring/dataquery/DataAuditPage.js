@@ -4,7 +4,8 @@ import moment from 'moment'
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import NavigationTree from '@/components/NavigationTree'
-import DataAuditTable from "./components/DataAuditTable"
+import DataAuditTable from "./components/DataAuditTable";
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 
 const { RangePicker } = DatePicker;
 
@@ -28,7 +29,7 @@ class DataAuditPage extends Component {
   }
 
   componentDidMount() {
-
+     
   }
 
   getPollutantList = () => {
@@ -80,7 +81,9 @@ class DataAuditPage extends Component {
       })
     }
   }
-
+  onRef1=(ref)=>{
+    this.children=ref;
+  }
   getCardTitle = () => {
     const { pollutantList, exportLoading } = this.props;
     const { pollutantValue, time, dataType, format, isShowFlag } = this.state;
@@ -110,9 +113,10 @@ class DataAuditPage extends Component {
           </Select>
         </Col>
         <Col span={7}>
-          <RangePicker style={{ width: '100%' }} value={time} showTime={dataType === "Hour"} format={format} onChange={(dates) => {
+        <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
             this.setState({
-              time: dates
+              time: dates,
+              dataType:dataType
             })
           }} />
         </Col>
@@ -160,6 +164,7 @@ class DataAuditPage extends Component {
               extra={
                 <>
                   <Radio.Group defaultValue={dataType} style={{ marginRight: 10 }} onChange={(e) => {
+                      this.children.onDataTypeChange(e.target.value);
                     this.setState({
                       dataType: e.target.value,
                       format: e.target.value === "hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD",

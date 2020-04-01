@@ -27,6 +27,8 @@ import moment from 'moment';
 import style from './index.less';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool'; 
+
 
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
@@ -66,42 +68,96 @@ class SmokeReportPage extends PureComponent {
   }
 
   switchInfo = (reportType) => {
+    let beginTime;
+    let endTime;
     switch (reportType) {
       case "day":
         this.title = "烟气排放连续监测小时平均日报表";
         this.format = "YYYY-MM-DD";
-        this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气日排放总量单位：×10⁴m³/d"
+        // this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
+        this.tableFooter = "烟气日排放总量单位：×10⁴m³/d";
+        beginTime=moment().format('YYYY-MM-DD 01:00:00');
+        endTime= moment().add(1,'day').format('YYYY-MM-DD 00:00:00');
+        reportType="dayanddate"
         break;
       case "month":
         this.title = "烟气排放连续监测日平均月报表";
         this.format = "YYYY-MM"
-        this.timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气月排放总量单位：×10⁴m³/月"
+        // this.timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />
+        this.tableFooter = "烟气月排放总量单位：×10⁴m³/月";
+        beginTime=moment().format('YYYY-MM-01 00:00:00');
+        endTime= moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
         break;
       case "quarter":
         this.title = "烟气排放连续监测月平均季报表";
-        this.format = "YYYY-MM"
-        this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气季排放总量单位：×10⁴m³/季度"
+        this.format = "YYYY-MM";
+        // this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
+        this.tableFooter = "烟气季排放总量单位：×10⁴m³/季度";
+        const month=moment().format('MM');
+        if(month>=1 && month<=3)
+        {
+            beginTime=moment().format('YYYY-01-01 00:00:00');
+            endTime= moment().format('YYYY-03-31 23:59:59')
+        }
+        else if(month>=4 && month<=6)
+        {
+            beginTime=moment().format('YYYY-04-01 00:00:00');
+            endTime= moment().format('YYYY-06-30 23:59:59')
+        }
+        else if(month>=7 && month<=9)
+        {
+            beginTime=moment().format('YYYY-07-01 00:00:00');
+            endTime= moment().format('YYYY-09-30 23:59:59')
+        }
+        else if(month>=10 && month<=12)
+        {
+            beginTime=moment().format('YYYY-10-01 00:00:00');
+            endTime= moment().format('YYYY-12-31 23:59:59')
+        }
         break;
       case "year":
         this.title = "烟气排放连续监测月平均年报表";
         this.format = "YYYY-MM"
-        this.timeEle = <YearPicker
-          allowClear={false}
-          style={{ width: '100%' }}
-          _onPanelChange={v => {
-            this.props.form.setFieldsValue({ time: v });
-          }}
-        />
+        // this.timeEle = <YearPicker
+        //   allowClear={false}
+        //   style={{ width: '100%' }}
+        //   _onPanelChange={v => {
+        //     this.props.form.setFieldsValue({ time: v });
+        //   }}
+        // />
+        beginTime=moment().format('YYYY-01-01 00:00:00');
+        endTime= moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
         this.tableFooter = "烟气年排放总量单位：×10⁴m³/a"
         break;
     }
+    this.props.dispatch({
+      type:"report/updateState",
+      payload:{
+       SmokeForm:{
+         beginTime,
+         endTime
+       }
+      }
+   })
+    this.timeEle=<DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange}/>
+  }
+
+  dateOnchange=(dates,beginTime,endTime)=>{
+    this.props.form.setFieldsValue({"time":dates});
+    this.props.dispatch({
+       type:"report/updateState",
+       payload:{
+        SmokeForm:{
+          beginTime,
+          endTime
+        }
+       }
+    })
   }
 
   // 获取企业及排口
   getEntAndPoint = (payload) => {
+
     this.props.dispatch({
       type: "report/getEntAndPoint",
       payload: {
@@ -120,10 +176,11 @@ class SmokeReportPage extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
+    
+      this.switchInfo(nextProps.match.params.reportType);
       this.getSmokeReportData({
         dataType: nextProps.match.params.reportType
       });
-      this.switchInfo(nextProps.match.params.reportType)
     }
     if (this.props.smokeReportData !== nextProps.smokeReportData) {
       const dataLength = nextProps.smokeReportData.length - 1;

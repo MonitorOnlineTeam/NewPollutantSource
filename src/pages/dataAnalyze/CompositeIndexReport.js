@@ -10,12 +10,13 @@ import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import { connect } from 'dva';
+
 import {
   Spin, Card, Form, Row, Col, DatePicker, Button, Icon
 } from 'antd'
 import YearPicker from '@/components/YearPicker';
 import SdlTable from '@/components/SdlTable'
-
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
 
@@ -28,8 +29,26 @@ const { MonthPicker } = DatePicker;
 class CompositeIndexReport extends Component {
   constructor(props) {
     super(props);
+
+    let beginTime;
+    let endTime;
+    switch(props.match.params.reportType)
+    {
+        case "month":
+          beginTime=moment().format('YYYY-MM-01 00:00:00');
+          endTime=moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+          break;
+        case "year":
+          beginTime=moment().format('YYYY-01-01 00:00:00');
+          endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+          break;
+    }
+ 
+
     this.state = {
       time: moment(),
+      beginTime:beginTime,
+      endTime:endTime,
       reportType: props.match.params.reportType,
       format: props.match.params.reportType === "month" ? "YYYY-MM" : "YYYY",
       columns: [
@@ -443,10 +462,13 @@ class CompositeIndexReport extends Component {
   }
 
   getPageData = () => {
+    const {beginTime,endTime}=this.state;
     const time = this.props.form.getFieldValue("time") || this.state.time;
     this.props.dispatch({
       type: "dataAnalyze/getCompositeIndexDataSource",
       payload: {
+        beginTime:beginTime,
+        endTime:endTime,
         Time: moment(time).format("YYYY-MM-DD HH:mm:ss")
       },
       reportType: this.state.reportType
@@ -455,15 +477,27 @@ class CompositeIndexReport extends Component {
 
   // 导出
   exportReport = () => {
+    const {beginTime,endTime}=this.state;
     const time = this.props.form.getFieldValue("time") || this.state.time;
     this.props.dispatch({
       type: "dataAnalyze/exportCompositeReport",
       payload: {
+        beginTime:beginTime,
+        endTime:endTime,
         Time: moment(time).format("YYYY-MM-DD HH:mm:ss")
       },
       reportType: this.state.reportType
     })
   }
+
+  dateOnchange=(dates,beginTime,endTime)=>{
+    const {form:{setFieldsValue}}=this.props;
+    setFieldsValue({"time":dates});
+    this.setState({
+      beginTime,
+      endTime
+    })
+}
 
   render() {
     const { form: { getFieldDecorator }, compositeIndexDataSource, loading, exportLoading } = this.props;
@@ -472,20 +506,23 @@ class CompositeIndexReport extends Component {
     const columns_ = reportType === "month" ? columns : yearColumns;
 
     // 格式化日期
-    let timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
-    if (format === 'YYYY') {
-      timeEle = (
-        <YearPicker
-          format={format}
-          allowClear={false}
-          style={{ width: '100%' }}
-          // disabledDate={(currentDate) => currentDate > moment()}
-          _onPanelChange={v => {
-            this.props.form.setFieldsValue({ time: v });
-          }}
-        />
-      );
-    }
+    let timeEle=<DatePickerTool picker={reportType} allowClear={false} style={{ width: '100%' }} callback={
+      this.dateOnchange
+    } />
+    // let timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
+    // if (format === 'YYYY') {
+    //   timeEle = (
+    //     <YearPicker
+    //       format={format}
+    //       allowClear={false}
+    //       style={{ width: '100%' }}
+    //       // disabledDate={(currentDate) => currentDate > moment()}
+    //       _onPanelChange={v => {
+    //         this.props.form.setFieldsValue({ time: v });
+    //       }}
+    //     />
+    //   );
+    // }
 
     return (
       <PageHeaderWrapper>

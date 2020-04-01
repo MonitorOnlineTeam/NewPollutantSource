@@ -149,7 +149,6 @@ class index extends Component {
   }
   //下拉框改变事件
   selectChange = (values) => {
-    debugger
     this.props.dispatch({
       type: 'qualityControl/updateState',
       payload: {

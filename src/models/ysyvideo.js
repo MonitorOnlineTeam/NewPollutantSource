@@ -245,7 +245,6 @@ export default Model.extend({
             const result = yield call(IsTrueSerialNumber, {
                 ...payload,
             });
-            debugger
             payload.callback(result);
         },
         /** 删除摄像头 */

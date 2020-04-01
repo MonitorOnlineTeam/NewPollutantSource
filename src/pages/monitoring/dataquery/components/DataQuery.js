@@ -159,7 +159,7 @@ class DataQuery extends Component {
         const {historyparams}=this.props;
         const dataType=e.target.value;
         this.setState({dataType}); 
-       
+        
         this.children.onDataTypeChange(dataType);
     }
 
