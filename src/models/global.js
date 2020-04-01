@@ -528,8 +528,6 @@ export default Model.extend({
           }
         }
       });
-      // socket相关
-
     },
     setup({ history }) {
       history.listen(({ pathname, search }) => {
