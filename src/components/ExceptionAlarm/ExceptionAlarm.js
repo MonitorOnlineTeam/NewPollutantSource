@@ -31,7 +31,6 @@ class ExceptionAlarm extends PureComponent {
 
     reload = () => {
         const { dispatch, DGIMN, Types, firsttime, lasttime } = this.props;
-        debugger;
         let {
           exceptionAlarm,
         } = this.props;

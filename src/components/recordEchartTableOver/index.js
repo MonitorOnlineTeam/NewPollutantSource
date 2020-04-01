@@ -410,7 +410,7 @@ class Index extends Component {
 
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
                                     dataType={this.state.dataType}
-                                    format={this.state.format} 
+                                    // format={this.state.format} 
                                     onRef={this.onRef1}
                                     isVerification={true}
                                     callback={(dates,dataType)=>this.dateCallback(dates,dataType)}

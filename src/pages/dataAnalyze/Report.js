@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import { Table, Card, Form, Row, Col, DatePicker, Button, Icon } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import SelectPollutantType from '@/components/SelectPollutantType'
+import SelectPollutantType from '@/components/SelectPollutantType';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import moment from 'moment';
 import { connect } from 'dva';
 
@@ -181,6 +182,8 @@ class Report extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      beginTime:moment().add(-1, "day").format('YYYY-MM-DD 00:00:00'),
+      endTime:moment().add(-1, "day").format('YYYY-MM-DD 23:59:59'),
       time: moment().add(-1, "day"),
       defalutPollutantType: props.match.params.type * 1
     };
@@ -197,9 +200,12 @@ class Report extends PureComponent {
   }
 
   queryReportData = () => {
+    const {beginTime,endTime}=this.state;
     this.props.dispatch({
       type: 'dataAnalyze/getGasReport',
       payload: {
+        beginTime:beginTime,
+        endTime:endTime,
         Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
         PollutantType: this.state.defalutPollutantType
       }
@@ -207,13 +213,25 @@ class Report extends PureComponent {
   }
 
   export = () => {
+    const {beginTime,endTime}=this.state;
     this.props.dispatch({
       type: 'dataAnalyze/exportGasReport',
       payload: {
+        beginTime:beginTime,
+        endTime:endTime,
         Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
         PollutantType: this.state.defalutPollutantType
       }
     })
+  }
+   
+  dateOnchange=(dates,beginTime,endTime)=>{
+      const {form:{setFieldsValue}}=this.props;
+      setFieldsValue({"ReportTime":dates});
+      this.setState({
+        beginTime,
+        endTime
+      })
   }
 
   render() {
@@ -249,7 +267,9 @@ class Report extends PureComponent {
                       message: '请填写统计时间',
                     }],
                   })(
-                    <DatePicker format={"YYYY-MM-DD"} allowClear={false} style={{ width: "100%" }} />
+                    <DatePickerTool  allowClear={false} style={{ width: "100%" }} callback={
+                      this.dateOnchange
+                    } />
                   )}
                 </FormItem>
               </Col>

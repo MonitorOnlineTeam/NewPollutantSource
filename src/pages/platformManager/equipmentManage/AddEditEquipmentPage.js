@@ -92,7 +92,6 @@ class AddEditEquipmentPage extends PureComponent {
     e.preventDefault();
     const { type, routerParams } = this._SELF_;
     const { form, onSubmitForm, dispatch, match: { params } } = this.props;
-    debugger;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const formData = handleFormData(values)

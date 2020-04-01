@@ -137,7 +137,6 @@ class SdlUpload extends Component {
               >
                 {
                   this.props.fileList && this.props.fileList.map(item => {
-                    debugger
                     const nameSplit = item.name.split('.');
                     const postfix = nameSplit[nameSplit.length - 1];
                     if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
