@@ -3,7 +3,7 @@ import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, me
 import { connect } from 'dva';
 import moment from 'moment';
 import { router } from 'umi';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import ViewImagesModal from './ViewImagesModal'
 import NavigationTree from '@/components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
