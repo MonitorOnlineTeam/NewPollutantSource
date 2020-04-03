@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Divider } from 'antd'
 // import styles from './index.less'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import NavigationTree from '@/components/NavigationTree'
@@ -317,7 +317,7 @@ class MultiSiteParamsPage extends PureComponent {
           }}
         />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
@@ -338,7 +338,7 @@ class MultiSiteParamsPage extends PureComponent {
             >
               {chartList.length ? this.pageContent() : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

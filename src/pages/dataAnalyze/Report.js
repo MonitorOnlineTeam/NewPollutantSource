@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Table, Card, Form, Row, Col, DatePicker, Button, Icon } from "antd";
 import SdlTable from '@/components/SdlTable'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SelectPollutantType from '@/components/SelectPollutantType';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import moment from 'moment';
@@ -240,7 +240,7 @@ class Report extends PureComponent {
     const { defalutPollutantType, time } = this.state;
 
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -291,7 +291,7 @@ class Report extends PureComponent {
             }}
           />
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );  
   }
 }
