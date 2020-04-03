@@ -19,7 +19,7 @@ import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
 import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
 const { MonthPicker } = DatePicker;
@@ -177,7 +177,7 @@ export default class EntTransmissionEfficiency extends Component {
             }
         ];
         return (
-            <PageHeaderWrapper title="传输有效率">
+            <BreadcrumbWrapper title="传输有效率">
                 <div className="contentContainer">
                     <Card
                         bordered={false}
@@ -237,7 +237,7 @@ export default class EntTransmissionEfficiency extends Component {
                         </Row>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }
