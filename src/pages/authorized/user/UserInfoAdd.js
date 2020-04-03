@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
 
 const { Search } = Input;
@@ -213,7 +213,7 @@ export default class UserInfoAdd extends Component {
         };
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
-            <PageHeaderWrapper title={`添加 - ${  title}`}>
+            <BreadcrumbWrapper title={`添加 - ${  title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
@@ -391,7 +391,7 @@ export default class UserInfoAdd extends Component {
                     }
 
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }
