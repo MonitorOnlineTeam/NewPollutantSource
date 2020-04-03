@@ -22,7 +22,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 // import MonitorContent from '../../components/MonitorContent/index';
 import AutoFormViewItems from './AutoFormViewItems'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 
 @connect()
 // @Form.create()
@@ -55,7 +55,7 @@ class AutoFormView extends Component {
     return (
       <Fragment>
         {
-          breadcrumb ? <PageHeaderWrapper title="详情">
+          breadcrumb ? <BreadcrumbWrapper title="详情">
             <Card bordered={false} title="详情" extra={
               <Button
                 style={{ float: "right", marginRight: 10 }}
@@ -67,7 +67,7 @@ class AutoFormView extends Component {
             }>
               {this.renderContent()}
             </Card>
-          </PageHeaderWrapper> : <Fragment>
+          </BreadcrumbWrapper> : <Fragment>
               <Card>
                 {this.renderContent()}
               </Card>

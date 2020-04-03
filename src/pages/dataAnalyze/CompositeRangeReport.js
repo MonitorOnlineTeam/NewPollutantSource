@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import { connect } from 'dva';
 import {
@@ -231,7 +231,7 @@ class CompositeRangeReport extends Component {
     const { time, columns } = this.state;
 
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -274,7 +274,7 @@ class CompositeRangeReport extends Component {
             <SdlTable columns={columns} dataSource={compositeRangeDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600 }} />
           </Card>
         </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

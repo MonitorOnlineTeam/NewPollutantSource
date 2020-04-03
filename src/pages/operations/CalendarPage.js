@@ -10,7 +10,7 @@ import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal } from
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable'
 import styles from './index.less'
 
@@ -497,7 +497,7 @@ class CalendarPage extends PureComponent {
     const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
-      <PageHeaderWrapper title="运维日历">
+      <BreadcrumbWrapper title="运维日历">
         <div className={styles.calendarWrapper}>
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>
@@ -600,7 +600,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }
