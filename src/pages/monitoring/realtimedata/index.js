@@ -6,7 +6,7 @@
  * @Description: 实时数据
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree';
 import DataQuery from '../dataquery/components/DataQuery';
 import { Layout, Card, Col, Badge, Button, Avatar, Spin } from 'antd';
@@ -390,7 +390,7 @@ class Index extends Component {
         }
         return (
             <div id="realtimedata">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                     <div style={{ overflowX: 'hidden' }}>
                         <Layout className={this.state.contentstyle} hasSider={true}>
                             <Content><Card className='contentContainer' >
@@ -416,7 +416,7 @@ class Index extends Component {
                         </Layout>
                     </div>
 
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree domId="#realtimedata" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)

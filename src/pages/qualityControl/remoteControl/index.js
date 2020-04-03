@@ -6,7 +6,7 @@
  * @desc: 远程质控根页面
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Button, Input, Select, Alert, InputNumber, Tabs, Form, Row, Col, Divider, Result } from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
@@ -81,7 +81,7 @@ class index extends Component {
           }
         }} />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             {
               // 有质控仪
               (this.state.initLoadSuccess && this.state.QCAMN) &&
@@ -109,7 +109,7 @@ class index extends Component {
                 <PageLoading />
               </Card>
             } */}
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

@@ -3,7 +3,7 @@ import {
     Card, Spin,
 } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import EquipmentInfoManage from './components/index'
@@ -37,9 +37,9 @@ import PageLoading from '@/components/PageLoading'
 
         return (
             <div id="EquipmentInfoManage">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  {this.state.dgimn?<EquipmentInfoManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />:<PageLoading/>}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree domId="#EquipmentInfoManage" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)

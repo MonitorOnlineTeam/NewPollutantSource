@@ -19,7 +19,7 @@ import moment from 'moment';
 import styles from './index.less';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import Link from 'umi/link';
 import SdlTable from '@/components/SdlTable';
 
@@ -426,7 +426,7 @@ export default class EntPollutantEmissions extends Component {
 
         return (
 
-            <PageHeaderWrapper title="月度排放量统计">
+            <BreadcrumbWrapper title="月度排放量统计">
                 <div className={styles.cardTitle}
                 // style={{
                 //     height: 'calc(100vh - 248px)'
@@ -503,7 +503,7 @@ export default class EntPollutantEmissions extends Component {
                         </Modal>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

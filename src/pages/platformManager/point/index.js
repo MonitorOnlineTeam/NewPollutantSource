@@ -21,7 +21,7 @@ import {
   Tooltip,
 } from 'antd';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -352,7 +352,7 @@ export default class MonitorPoint extends Component {
     }
 
     return (
-      <PageHeaderWrapper title="监测点维护">
+      <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
           <Card
             title={
@@ -506,7 +506,7 @@ export default class MonitorPoint extends Component {
           </Modal>
         </div>
         {/* </MonitorContent> */}
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

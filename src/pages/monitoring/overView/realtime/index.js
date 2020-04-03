@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Table, Row, Col, Radio, Popover, Badge, Icon, Input, Tag, TimePicker, DatePicker, Popconfirm, Button, Checkbox, message } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
@@ -295,7 +295,7 @@ class index extends Component {
     let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
     return (
-      <PageHeaderWrapper title="数据一览">
+      <BreadcrumbWrapper title="数据一览">
         <Card
           title={
             <>
@@ -468,7 +468,7 @@ class index extends Component {
             onChange={this.handleChange}
           />
         </Card >
-      </PageHeaderWrapper >
+      </BreadcrumbWrapper >
     );
   }
 }

@@ -6,7 +6,7 @@
  * @desc: 结果统计页面
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Row, Col } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
@@ -205,7 +205,7 @@ class index extends Component {
     const { currentEntName, currentDate, dateValue } = this.state;
     const tableTitle = currentEntName ? `${currentEntName} - 企业详情` : "企业详情";
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className="contentContainer" style={{ overflowX: "hidden" }}>
           <Card className={styles.cardShowTitle} style={{ marginBottom: 10 }} title={
             <RangePicker_ dateValue={dateValue}   dataType='day' style={{ width: 400 }} callback={(date) => {
@@ -259,7 +259,7 @@ class index extends Component {
             </Card>
           </Row>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

@@ -3,7 +3,7 @@ import {
     Card, Spin,
 } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import UserTree from '../../../components/UserTree'
 import CertificateManage from './components/index'
@@ -37,9 +37,9 @@ import CertificateManage from './components/index'
 
         return (
             <div id = "CertificateManage" >
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  {this.state.UserId&&<CertificateManage UserID={this.state.UserId} configId={configId} {...this.props} />}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <UserTree RoleID="eec719c2-7c94-4132-be32-39fe57e738c9" domId="#CertificateManage" onItemClick={value => {
                             if (value.length > 0) {
                             this.changeDgimn(value[0].UserID)

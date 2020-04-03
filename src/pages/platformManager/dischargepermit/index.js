@@ -8,7 +8,7 @@ import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
 import { handleFormData } from '@/utils/utils';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import {
   DelIcon, EditIcon,
 } from '@/utils/icon';
@@ -171,7 +171,7 @@ import {
             />);
         }
         return (
-                <PageHeaderWrapper title="排污许可证维护">
+                <BreadcrumbWrapper title="排污许可证维护">
                     <Card title={
               <span>
                 {EntName}
@@ -264,7 +264,7 @@ import {
                               <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
                         </Modal>
                     </Card>
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
         );
     }
 }

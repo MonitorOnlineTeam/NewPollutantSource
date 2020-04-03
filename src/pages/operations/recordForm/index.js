@@ -12,7 +12,7 @@ import {
 import { PointIcon, Right } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import BdTestRecordContent from '@/pages/EmergencyTodoList/BdTestRecordContent'
 import CompleteExtractionRecordContent from '@/pages/EmergencyTodoList/CompleteExtractionRecordContent'
 import ConsumablesReplaceRecordContent from '@/pages/EmergencyTodoList/ConsumablesReplaceRecordContent'
@@ -88,7 +88,7 @@ class Index extends Component {
     }
     render() {
         return (
-            <PageHeaderWrapper breadcrumb={[]} title="记录单详情">
+            <BreadcrumbWrapper breadcrumb={[]} title="记录单详情">
                 <div width="70%" style={{ backgroundColor: '#fff' }}>
                     <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={() => {
                         router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
@@ -100,7 +100,7 @@ class Index extends Component {
                 </div>
                 {this.getrecordForm()}
                 {/* <JzRecordContent TaskID={this.props.match.params.taskID} />  */}
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }
