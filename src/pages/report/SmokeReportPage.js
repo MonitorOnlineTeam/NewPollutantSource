@@ -6,7 +6,7 @@
  * @desc
  */
 import React, { PureComponent } from 'react'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import {
   Table,
   Form,
@@ -552,7 +552,7 @@ class SmokeReportPage extends PureComponent {
 
     // console.log("columns-", _columns)
     return (
-      <PageHeaderWrapper title={this.title}>
+      <BreadcrumbWrapper title={this.title}>
         {/* <Spin spinning={loading} delay={500}> */}
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -635,7 +635,7 @@ class SmokeReportPage extends PureComponent {
             />
           </Card>
         {/* </Spin> */}
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

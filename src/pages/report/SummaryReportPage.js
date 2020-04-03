@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin } from 'antd'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment'
 import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
@@ -496,7 +496,7 @@ class DailySummaryPage extends PureComponent {
 
 
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -637,7 +637,7 @@ class DailySummaryPage extends PureComponent {
             />
           </Card>
         </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

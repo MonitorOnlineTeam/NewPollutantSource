@@ -8,7 +8,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message } from 'antd'
 // import styles from './index.less'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import NavigationTree from '@/components/NavigationTree'
@@ -412,7 +412,7 @@ class SiteParamsPage extends PureComponent {
           }}
         />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
@@ -439,7 +439,7 @@ class SiteParamsPage extends PureComponent {
             >
               {this.pageContent()}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

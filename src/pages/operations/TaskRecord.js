@@ -11,7 +11,7 @@ import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, 
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import { routerRedux } from 'dva/router';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import EnterprisePointCascadeMultiSelect from '@/components/EnterprisePointCascadeMultiSelect'
@@ -209,7 +209,7 @@ getTaskTypeInfo=()=>{
       />);
     }
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card className="contentContainer">
           <SearchWrapper configId={configId} />
           <AutoFormTable
@@ -396,7 +396,7 @@ getTaskTypeInfo=()=>{
             </Row>
           </Form>
         </Modal>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }
