@@ -270,7 +270,7 @@ class SiteDailyPage extends PureComponent {
       let AQIColumn = [];
       // 站点日报 - 扬尘和大气站显示AQI
       let pollutantSourceType = nextProps.form.getFieldValue("PollutantSourceType");
-      if (nextProps.match.params.reportType === "siteDaily" && pollutantSourceType == 5 || pollutantSourceType == 12) {
+      if (pollutantSourceType == 5 || pollutantSourceType == 12) {
         AQIColumn = [{
           title: 'AQI',
           dataIndex: 'AQI',
@@ -317,32 +317,6 @@ class SiteDailyPage extends PureComponent {
         title: '点名称',
         // width: 150,
         dataIndex: 'pointName',
-        // render: (text, row, index) => {
-        //   // if (index === 0) {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: row.rowSpan,
-        //   //     },
-        //   //   };
-        //   //   // } else if (row.time === "0时") {
-        //   // } else if (text !== nextProps.dateReportData[index - 1].pointName) {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: row.rowSpan,
-        //   //     },
-        //   //   };
-        //   // } else {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: 0,
-        //   //     },
-        //   //   };
-        //   // }
-        //   return text;
-        // }
       });
       this.setState({
         columns,
@@ -481,6 +455,24 @@ class SiteDailyPage extends PureComponent {
     });
   }
 
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          PollutantSourceType: 1,
+          current: 1,
+          pageSize: 34,
+          total: 0,
+          DGIMN: [],
+          ReportTime: moment().add(-1, 'day'),
+          beginTime: null,
+          endTime: null
+        },
+      },
+    });
+  }
+
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
@@ -539,20 +531,16 @@ class SiteDailyPage extends PureComponent {
     //     />
     //   );
     // }
-    if (exportLoading) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+    let pageSize = dateReportForm.pageSize;
+    if (getFieldValue("PollutantSourceType") == 5) {
+      if (reportType === "siteDaily") {
+        pageSize = 24
+      } else if (reportType === "monthly") {
+        pageSize = 31
+      } else {
+        pageSize = 12
+      }
+    };
     return (
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
@@ -672,8 +660,8 @@ class SiteDailyPage extends PureComponent {
                     <Button
                       type="primary"
                       style={{ margin: '0 10px' }}
+                      loading={loading}
                       onClick={() => {
-                        console.log("222222")
                         const { dateReportForm, dispatch } = this.props;
                         const { beginTime, endTime } = this.state;
                         dispatch({
@@ -728,7 +716,7 @@ class SiteDailyPage extends PureComponent {
               pagination={{
                 // showSizeChanger: true,
                 showQuickJumper: true,
-                pageSize: dateReportForm.pageSize,
+                pageSize: pageSize,
                 current: dateReportForm.current,
                 onChange: this.onTableChange,
                 total: dateReportForm.total,
