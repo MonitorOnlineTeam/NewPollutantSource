@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-03-27 15:20:58 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-03-27 15:37:25
+ * @Last Modified time: 2020-04-04 08:45:33
  * @Desc: 季度有效数据捕集率页面
  */
 import React, { Component } from 'react';
@@ -66,7 +66,7 @@ class QuartDataCaptureRate extends Component {
           dataIndex: 'EffectiveNumber',
         },
         {
-          title: "传输有效率",
+          title: "有效数据捕集率",
           dataIndex: 'TransmissionEffectiveRate',
           key: 'TransmissionEffectiveRate',
           // sorter: true,
@@ -190,7 +190,7 @@ class QuartDataCaptureRate extends Component {
                     borderRadius: '20%',
                     cursor: 'pointer',
                     marginRight: 3
-                  }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                  }} /> <span style={{ cursor: 'pointer' }}> 有效数据捕集率达标</span>
                   <div style={{
                     width: 20,
                     height: 9,
@@ -200,7 +200,7 @@ class QuartDataCaptureRate extends Component {
                     cursor: 'pointer',
                     marginLeft: 100,
                     marginRight: 3
-                  }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                  }} /><span style={{ cursor: 'pointer' }}> 有效数据捕集率未达标</span>
                 </div>
               </Col>
             </Row>
