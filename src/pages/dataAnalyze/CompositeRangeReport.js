@@ -28,7 +28,7 @@ class CompositeRangeReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: [moment().subtract(2, "day"), moment()],
+      time: [moment().subtract(8, "day"), moment()],
       reportType: props.match.params.reportType,
       format: props.match.params.reportType === "month" ? "YYYY-MM" : "YYYY",
       columns: [
