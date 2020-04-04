@@ -38,7 +38,7 @@ class CascaderMultiple extends Component {
       if (!cascaderMultiple.contains(e.target)) {
         this.setState({ visible: false, inputValue: "", options: this.oldOptions })
         let inputEle = document.getElementById('input');
-        if(inputEle && inputEle.style){
+        if (inputEle && inputEle.style) {
           inputEle.style.display = "none";
         }
       }
@@ -149,7 +149,7 @@ class CascaderMultiple extends Component {
       showLabel = checkedLabels.length > 1 ? [...checkedLabels.slice(0, showNum), "..."] : [...checkedLabels.slice(0, showNum)]
     }
     return (
-      <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style }} >
+      <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style, maxHeight: 40 }}>
         {/* <p>[{checkedValues.toString()}]</p> */}
         <div className="ant-select ant-select-enabled" style={{ width: "100%" }} onClick={(e) => {
           e.stopPropagation();
@@ -248,7 +248,8 @@ class CascaderMultiple extends Component {
           </div>
         </div>
         {
-          visible && <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" style={{marginTop: -10}} onClick={(e) => {
+          visible &&
+          <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" style={{ marginTop: -10 }} onClick={(e) => {
           }}>
             <div>
               <ul className="ant-cascader-menu">

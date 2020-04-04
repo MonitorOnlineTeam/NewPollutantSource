@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-11 11:27:07
+ * @Last Modified time: 2020-04-04 14:03:27
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -242,6 +242,7 @@ class SearchWrapper extends Component {
       let { placeholder } = item;
       const { fieldName } = item;
       const { labelText } = item;
+      let zIndex = 1;
 
       // 判断类型
       switch (item.type) {
@@ -251,6 +252,7 @@ class SearchWrapper extends Component {
           break;
         case '监测点':
           placeholder = placeholder || inputPlaceholder;
+          zIndex = 2;
           let props = {};
           if (item.DF_NAME === "DGIMN") {
             props = {
@@ -319,7 +321,7 @@ class SearchWrapper extends Component {
       return (
         element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
-          <FormItem {...formLayout} label={labelText} style={{ width: '100%', zIndex: 1 }}>
+          <FormItem {...formLayout} label={labelText} style={{ width: '100%', zIndex: zIndex }}>
             {getFieldDecorator(`${fieldName}`, {})(
               element
             )}
