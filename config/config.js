@@ -932,6 +932,12 @@ export default {
                   path: '/Intelligentanalysis/compositeIndex/:reportType',
                   component: './dataAnalyze/CompositeIndexReport',
                 },
+                // 综合指数范围报表
+                {
+                  name: 'compositeIndexRangeReport',
+                  path: '/Intelligentanalysis/compositeIndexRange',
+                  component: './dataAnalyze/CompositeRangeReport',
+                },
                 // 季度有效数据捕集率
                 {
                   name: 'quartDataCaptureRate',

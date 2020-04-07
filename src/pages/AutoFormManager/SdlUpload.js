@@ -78,7 +78,7 @@ class SdlUpload extends Component {
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
     const props = {
-      action: `${config.uploadHost}/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
         if (info.file.status === 'done') {
@@ -137,7 +137,6 @@ class SdlUpload extends Component {
               >
                 {
                   this.props.fileList && this.props.fileList.map(item => {
-                    debugger
                     const nameSplit = item.name.split('.');
                     const postfix = nameSplit[nameSplit.length - 1];
                     if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')

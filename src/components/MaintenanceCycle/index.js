@@ -137,7 +137,6 @@ class MaintenanceCycle extends Component {
     getdata = type => {
         const { dispatch, PointCode } = this.props;
         const { DGIMN } = this.state;
-        debugger
         if (DGIMN) {
             dispatch({
                 type: 'maintenances/GetMaintenanceReminder',

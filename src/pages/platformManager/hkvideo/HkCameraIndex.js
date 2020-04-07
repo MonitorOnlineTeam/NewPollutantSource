@@ -3,7 +3,7 @@ import { routerRedux } from 'dva/router';
 import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Tooltip, Popconfirm, Form } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import Add from './components/AddVideoInfo';
 import Update from './components/UpdateVideoInfo';
 import InfoList from './components/VideoInfoList';
@@ -158,7 +158,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
         ];
 
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div className={styles.cardTitle}>
                     <Card bordered={false} title={videoListParameters.pointname} style={{ width: '100%' }}>
                         <Form layout="inline" style={{ marginBottom: 10 }}>
@@ -219,7 +219,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
 
         );
     }

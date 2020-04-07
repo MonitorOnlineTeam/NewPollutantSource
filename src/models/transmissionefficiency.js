@@ -52,6 +52,7 @@ export default Model.extend({
                 PageSize: pageSize,
                 TERSort: transmissionEffectiveRate,
                 PageIndex: payload.pageIndex,
+                ...payload
             };
             const response = yield call(getEntMonthsTransmissionEfficiency, { ...body });
             if (response.IsSuccess) {

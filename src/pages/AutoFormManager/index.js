@@ -13,7 +13,7 @@ import {
 import styles from './index.less';
 import MonitorContent from '../../components/MonitorContent/index';
 import { routerRedux } from 'dva/router';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva';
 import SdlTable from './AutoFormTable';
 import SearchWrapper from './SearchWrapper';
@@ -88,7 +88,7 @@ export default class AutoFormIndex extends Component {
       //     { Name: 'AutoForm', Url: '' }
       //   ]
       // }>
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className={styles.cardTitle}>
           <Card>
             <SearchWrapper
@@ -146,7 +146,7 @@ export default class AutoFormIndex extends Component {
             />
           </Card>
         </div>
-        </PageHeaderWrapper>
+        </BreadcrumbWrapper>
       // </MonitorContent>
     );
   }

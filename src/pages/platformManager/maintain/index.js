@@ -22,7 +22,7 @@ import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 const { confirm } = Modal;
@@ -86,7 +86,7 @@ export default class Maintain extends Component {
             />);
         }
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div className="contentContainer">
                     <Card>
 
@@ -147,7 +147,7 @@ export default class Maintain extends Component {
                         </AutoFormTable>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

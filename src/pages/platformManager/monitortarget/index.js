@@ -21,9 +21,10 @@ import styles from './style.less';
 import { PointIcon, DelIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
+import { router } from "umi"
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 
@@ -78,8 +79,13 @@ export default class MonitorTarget extends Component {
         const target = this.getTargetIds(row);
         const { targetId } = target;
         const { targetName } = target;
-
-        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`))
+        router.push({
+            pathname: `/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`,
+            query: {
+                tabName: '维护点信息',
+            },
+        });
+        // this.props.dispatch(routerRedux.push())
     }
 
     adddischargepermit = (key, row) => {
@@ -88,7 +94,12 @@ export default class MonitorTarget extends Component {
         const { targetId } = target;
         const { targetName } = target;
         const configId = 'PDPermit';
-        this.props.dispatch(routerRedux.push(`/platformconfig/monitortarget/AEnterpriseTest/${targetType}/dischargepermit/${configId}/${targetId}/${targetName}`))
+        router.push({
+            pathname: `/platformconfig/monitortarget/AEnterpriseTest/${targetType}/dischargepermit/${configId}/${targetId}/${targetName}`,
+            query: {
+                tabName: '排污许可证',
+            },
+        });
     }
 
     getTargetIds = row => {
@@ -162,7 +173,7 @@ export default class MonitorTarget extends Component {
 
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-      //   console.log("this.props=", this.props);
+        //   console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
         if (this.props.loading) {
@@ -178,7 +189,7 @@ export default class MonitorTarget extends Component {
             />);
         }
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div className="contentContainer">
                     <Card className={styles.contentContainer}>
 
@@ -231,21 +242,21 @@ export default class MonitorTarget extends Component {
                                     }}><PointIcon />    </a>
                                 </Tooltip>
 
-                                {configId=="Station"?"":<><Divider type="vertical" />
-                                <Tooltip title="排污许可证">
-                                    <a onClick={() => {
-                                        this.adddischargepermit('', row);
-                                    }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
-                                </Tooltip></>}
-                               
+                                {configId == "Station" ? "" : <><Divider type="vertical" />
+                                    <Tooltip title="排污许可证">
+                                        <a onClick={() => {
+                                            this.adddischargepermit('', row);
+                                        }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
+                                    </Tooltip></>}
+
                             </Fragment>}
-                            parentcode="platformconfig"
+                            parentcode="platformconfig/monitortarget"
                             {...this.props}
                         >
                         </AutoFormTable>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

@@ -95,6 +95,17 @@ export async function exportYearComposite(params) {
   return result;
 }
 
+// 综合指数范围报表
+export async function queryCompositeRangeData(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetTimeSlotComposite', params, null);
+  return result;
+}
+// 导出综合指数范围报表
+export async function exportRangeCompositeReport(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeSlotCompositeNum', params, null);
+  return result;
+}
+
 
 
 

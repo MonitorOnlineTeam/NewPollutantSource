@@ -7,7 +7,7 @@ import {
     Form,
     message
 } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { routerRedux } from 'dva/router';
@@ -123,7 +123,7 @@ export default class addDataReport extends Component {
        isEdit=true;
     }
         return (
-        <PageHeaderWrapper title="数据上报添加"> 
+        <BreadcrumbWrapper title="数据上报添加"> 
         <Card 
            title={
             <span>
@@ -161,6 +161,6 @@ export default class addDataReport extends Component {
                  </Button>
             </div>
         </Card>
-          </PageHeaderWrapper>)
+          </BreadcrumbWrapper>)
     }
 }

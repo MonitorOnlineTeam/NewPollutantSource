@@ -8,13 +8,14 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message } from 'antd'
 // import styles from './index.less'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import NavigationTree from '@/components/NavigationTree'
 import moment from 'moment'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { getDirLevel } from "@/utils/utils"
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools'
 
@@ -188,9 +189,10 @@ class SiteParamsPage extends PureComponent {
           </Select>
         </Col>
         <Col span={8}>
-          <RangePicker style={{ width: '100%' }} defaultValue={time} showTime={dataType === "Hour"} format={format} onChange={(dates) => {
+          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
             this.setState({
-              time: dates
+              time: dates,
+              dataType:dataType
             })
           }} />
         </Col>
@@ -379,6 +381,10 @@ class SiteParamsPage extends PureComponent {
     </>
   }
 
+  onRef1=(ref)=>{
+    this.children=ref;
+}
+
   render() {
     const { showType, columns, defalutPollutantType } = this.state;
     const { siteParamsData: { timeList, tableList, chartList } } = this.props;
@@ -406,12 +412,13 @@ class SiteParamsPage extends PureComponent {
           }}
         />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
                 <>
                   <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                     this.children.onDataTypeChange(e.target.value);
                     this.setState({
                       dataType: e.target.value,
                       format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
@@ -432,7 +439,7 @@ class SiteParamsPage extends PureComponent {
             >
               {this.pageContent()}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

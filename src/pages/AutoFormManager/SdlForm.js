@@ -359,7 +359,7 @@ class SdlForm extends PureComponent {
           if (item.type === '上传') {
             // let uploadElement = null;
             const props = {
-              action: `${config.uploadHost}rest/PollutantSourceApi/UploadApi/PostFiles`,
+              action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
               onChange: (info) => {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid })

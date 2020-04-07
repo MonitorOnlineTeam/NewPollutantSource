@@ -449,7 +449,6 @@ export default Model.extend({
     //  获取质控报警列表
     * GetQCAAlarmMsgList({ payload, otherParams }, { call, put, update, select }) {
       const paramsQCAAlarmMsgList = yield select(state => state.qualityControl.paramsQCAAlarmMsgList);
-      debugger
       const result = yield call(services.GetQCAAlarmMsgList, paramsQCAAlarmMsgList);
       if (result.IsSuccess) {
         yield update({

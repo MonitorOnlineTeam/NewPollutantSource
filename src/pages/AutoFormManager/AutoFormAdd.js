@@ -22,7 +22,7 @@ import cuid from 'cuid';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 // import MonitorContent from '../../components/MonitorContent/index';
 import SdlForm from "./SdlForm"
 
@@ -123,7 +123,7 @@ class AutoFormAdd extends Component {
       <Fragment>
         {
           breadcrumb ?
-            <PageHeaderWrapper title="添加">
+            <BreadcrumbWrapper title="添加">
               {/* // <MonitorContent breadCrumbList={
             //   [
             //     { Name: '首页', Url: '/' },
@@ -134,7 +134,7 @@ class AutoFormAdd extends Component {
             // }
             // > */}
               {this._renderForm()}
-            </PageHeaderWrapper> :
+            </BreadcrumbWrapper> :
             // </MonitorContent> :
             <Fragment>
               {this._renderForm()}

@@ -6,7 +6,7 @@
  * @Description: 数据获取率
  */
 import React, { PureComponent } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Row, Select, Col, DatePicker, Button, Form, Input, Alert, Icon, Modal, message } from "antd"
 import SdlTable from '@/components/SdlTable';
 import { connect } from "dva";
@@ -152,7 +152,7 @@ class DataGainRatePage extends PureComponent {
           }}
         />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card
               className="contentContainer"
             // title={this.cardTitle()}
@@ -167,7 +167,7 @@ class DataGainRatePage extends PureComponent {
               </p> */}
               <SdlTable loading={loading} dataSource={dataGainRateTableData} columns={columns} defaultWidth={100} pagination={{ pageSize: 20 }} />
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
           <Modal
             title="查看详情"
             destroyOnClose

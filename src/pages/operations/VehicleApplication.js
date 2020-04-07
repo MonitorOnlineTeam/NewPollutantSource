@@ -14,7 +14,7 @@ import {
 import Cookie from 'js-cookie';
 import { connect } from 'dva';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable'
 import ApplicationModal from './vehicle/ApplicationModal'
 import AutoFormTable from "@/pages/AutoFormManager/AutoFormTable"
@@ -76,7 +76,7 @@ class VehicleApplication extends Component {
       />);
     }
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card style={{ height: 'calc(100vh - 200px)' }}>
           <SearchWrapper
             configId={configId}
@@ -156,7 +156,7 @@ class VehicleApplication extends Component {
           />
         </Card>
         {applicationModalVisible && <ApplicationModal />}
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

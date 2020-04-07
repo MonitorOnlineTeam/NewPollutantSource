@@ -734,6 +734,7 @@ class NavigationTree extends Component {
           width={400}
           mask={false}
           zIndex={1}
+          getContainer={false}
           style={{
             marginTop: 64
           }}

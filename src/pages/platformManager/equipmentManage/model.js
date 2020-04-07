@@ -25,7 +25,6 @@ export default Model.extend({
   effects: {
     *getEquipmentCategoryPage({ payload }, { call, put, update }) {
       const result = yield call(services.getEquipmentCategoryPage, payload);
-      debugger;
       if (result.IsSuccess) {
         yield update({
           equipmentCategoryType:result.Datas

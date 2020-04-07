@@ -14,10 +14,21 @@ export default Model.extend({
       pageSize: 34,
       total: 0,
       DGIMN: [],
-      ReportTime: moment(),
+      ReportTime: moment().add(-1,'day'),
+      beginTime:null,
+      endTime:null
+
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
       // ReportTime: [moment(), moment()]
+    },
+    summaryForm:{
+      beginTime:null,
+      endTime:null
+    },
+    SmokeForm:{
+      beginTime:null,
+      endTime:null
     },
     entAndPontList: [],
     pollutantList: [],
@@ -78,39 +89,41 @@ export default Model.extend({
       payload
     }, { call, update, select }) {
       const dateReportForm = yield select(state => state.report.dateReportForm)
-      let _props = {};
-      let startFormat = "YYYY-MM-DD";
-      let endFormat = "YYYY-MM-DD";
-      if (dateReportForm.PollutantSourceType.value == 5) {
-        // let days = moment(dateReportForm.airReportTime.value[1]).daysInMonth();
-        if (payload.type === "monthly") {
-          startFormat = "YYYY-MM-01 00:00:00"
-          endFormat = `YYYY-MM-01 00:00:00`
-        }
-        if (payload.type === "annals") {
-          startFormat = "YYYY-01-01 00:00:00"
-          endFormat = `YYYY-01-01 00:00:00`
-        }
-      }
-      if (dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value == 5) {
-        _props = {
-          BeginTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[0] && moment(dateReportForm.airReportTime.value[0]).format(startFormat),
-          EndTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[1] && moment(dateReportForm.airReportTime.value[1]).format(endFormat),
-          ReportTime: moment().format("YYYY-MM-DD"),
-        }
-      } else {
-        _props = {
-          ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
-        }
-      }
+      
+      // let _props = {};
+      // let startFormat = "YYYY-MM-DD";
+      // let endFormat = "YYYY-MM-DD";
+      // if (dateReportForm.PollutantSourceType.value == 5) {
+      //   // let days = moment(dateReportForm.airReportTime.value[1]).daysInMonth();
+      //   if (payload.type === "monthly") {
+      //     startFormat = "YYYY-MM-01 00:00:00"
+      //     endFormat = `YYYY-MM-01 00:00:00`
+      //   }
+      //   if (payload.type === "annals") {
+      //     startFormat = "YYYY-01-01 00:00:00"
+      //     endFormat = `YYYY-01-01 00:00:00`
+      //   }
+      // }
+      // if (dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value == 5) {
+      //   _props = {
+      //     BeginTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[0] && moment(dateReportForm.airReportTime.value[0]).format(startFormat),
+      //     EndTime: dateReportForm.airReportTime && dateReportForm.airReportTime.value[1] && moment(dateReportForm.airReportTime.value[1]).format(endFormat),
+      //     ReportTime: moment().format("YYYY-MM-DD"),
+      //   }
+      // } else {
+      //   _props = {
+      //     ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
+      //   }
+      // }
+      
       const postData = {
         PollutantSourceType: dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value,
-        ..._props,
+        //..._props,
         DGIMN: dateReportForm.DGIMN && dateReportForm.DGIMN.value,
         PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
-        beginTime:dateReportForm.beginTime,
-        endTime:dateReportForm.endTime,
+        BeginTime:dateReportForm.beginTime,
+        EndTime:dateReportForm.endTime,
         ...payload
       }
       let serviceApi = payload.type === "siteDaily" ? services.getSiteDailyDayReport : (payload.type === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
@@ -190,9 +203,12 @@ export default Model.extend({
     // 获取汇总日报数据
     * getDailySummaryDataList({
       payload
-    }, { call, update }) {
+    }, { call, update,select }) {
+      const summaryForm = yield select(state => state.report.summaryForm);
       let serviceApi = payload.type === "daily" ? services.getDailySummaryList : (payload.type === "monthly" ? services.getSummaryMonthReport : services.getSummaryYearReport)
-      const result = yield call(serviceApi, payload);
+      const result = yield call(serviceApi, {...payload,
+      BeginTime:summaryForm.beginTime,
+      EndTime: summaryForm.endTime});
       if (result.IsSuccess) {
         let data = [];
         if (result.Datas.length) {
@@ -208,8 +224,13 @@ export default Model.extend({
       }
     },
     // 报表导出
-    * reportExport({ payload }, { call, update }) {
-      const result = yield call(services.reportExcel, payload);
+    * reportExport({ payload }, { call, update,select }) {
+      
+      const dateReportForm = yield select(state => state.report.dateReportForm)
+      const result = yield call(services.reportExcel, 
+                        {...payload,
+                        BeginTime:dateReportForm.beginTime,
+                        EndTime:dateReportForm.endTime});
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
@@ -217,8 +238,11 @@ export default Model.extend({
       }
     },
     // 汇总报表导出
-    * summaryReportExcel({ payload }, { call, update }) {
-      const result = yield call(services.summaryReportExcel, payload);
+    * summaryReportExcel({ payload }, { call, update ,select}) {
+      const summaryForm = yield select(state => state.report.summaryForm)
+      const result = yield call(services.summaryReportExcel,    {...payload,
+        BeginTime:summaryForm.beginTime,
+        EndTime:summaryForm.endTime});
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
@@ -228,7 +252,6 @@ export default Model.extend({
     //数据上报报表
     *getStatisticsReportDataList({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
-      debugger;
       const result = yield call(services.getStatisticsReportDataList, params);
       yield update({ statisticsReportDataList: result.Datas, total: result.Total })
     },
@@ -285,8 +308,10 @@ export default Model.extend({
     },
 
     // 获取报表数据
-    *getSmokeReportData({ payload }, { call, update }) {
-      const result = yield call(services.getSmokeReportData, payload);
+    *getSmokeReportData({ payload }, { call, update,select }) {
+      const SmokeForm = yield select(a => a.report.SmokeForm);
+      const result = yield call(services.getSmokeReportData,
+         {...payload,BeginTime:SmokeForm.beginTime,EndTime:SmokeForm.endTime});
       if (result.IsSuccess) {
         yield update({
           smokeReportData: result.Datas
@@ -296,8 +321,10 @@ export default Model.extend({
       }
     },
     // 烟气报表导出
-    *exportSmokeReport({ payload }, { call, update }) {
-      const result = yield call(services.exportSmokeReport, payload);
+    *exportSmokeReport({ payload }, { call, update,select }) {
+      const SmokeForm = yield select(a => a.report.SmokeForm);
+      const result = yield call(services.exportSmokeReport, 
+        {...payload,BeginTime:SmokeForm.beginTime,EndTime:SmokeForm.endTime});
       if (result.IsSuccess) {
         window.open(result.Datas)
       } else {

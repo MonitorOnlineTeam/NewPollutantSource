@@ -6,7 +6,7 @@
  * @desc: 质控状态记录页面
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTree'
 import { Form, Card, DatePicker, Row, Col, Select, Button, Radio, Popover, Icon } from 'antd'
 import SdlTable from '@/components/SdlTable'
@@ -194,7 +194,7 @@ class Index extends Component {
           }
         }} />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card className="contentContainer"
               title={
                 <Form>
@@ -265,7 +265,7 @@ class Index extends Component {
                 }}
               />
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

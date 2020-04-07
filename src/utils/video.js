@@ -220,7 +220,6 @@ export function clickCapturePic(cameraNo) {
 // PTZ控制 9为自动，1,2,3,4,5,6,7,8为方向PTZ
 let g_bPTZAuto = false;
 export function mouseDownPTZControl(iPTZIndex) {
-    debugger;
     const oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
     const bZeroChannel = false;
     let iPTZSpeed = 4;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
 import { connect } from 'dva';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker'
 import LogTimeList from './components/LogTimeList'
@@ -35,11 +35,11 @@ class LogPage extends Component {
           }
         }} />
         <div id="contentWrapper" className={styles.operationLogWrapper}>
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             {
               this.state.DGIMN && <LogTimeList DGIMN={this.state.DGIMN} type={this.state.type} />
             }
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

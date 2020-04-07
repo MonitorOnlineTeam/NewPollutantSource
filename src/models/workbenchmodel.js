@@ -374,7 +374,6 @@ export default Model.extend({
                 pageIndex: warningDetailsDatas.pageIndex,
                 pageSize: warningDetailsDatas.pageSize,
             };
-            debugger
             const response = yield call(queryhistorydatalist, body);
             yield update({
                 warningDetailsDatas: {
