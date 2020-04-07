@@ -6,7 +6,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
-import { airLevel, AQIPopover, IAQIPopover } from '../tools';
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools';
 import { router } from 'umi';
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../index.less';
@@ -41,7 +41,7 @@ class index extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
       let fixed = false;
-      let width = 180;
+      let width = 200;
       if (nextProps.realtimeColumns.length > 5) {
         fixed = true;
       } else {
@@ -288,7 +288,7 @@ class index extends Component {
   };
 
   render() {
-    const { currentDataType, columns, realTimeDataView, time, dayTime } = this.state;
+    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading } = this.props;
     const _columns = columns.filter(item => item.show);
@@ -377,7 +377,8 @@ class index extends Component {
                                   return;
                                 }
                                 let newColumns = columns;
-                                newColumns[index + 4].show = e.target.checked;
+                                let num = pollutantCode == 5 ? 6 : 4;
+                                newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns
                                 })
