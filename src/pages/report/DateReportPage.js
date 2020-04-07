@@ -547,7 +547,7 @@ class SiteDailyPage extends PureComponent {
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
-                <Col xxl={4} xl={4} sm={24} lg={7}>
+                <Col md={4} xs={24}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,
@@ -596,7 +596,7 @@ class SiteDailyPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={7} xl={7} sm={24} lg={9}>
+                <Col md={7} xs={24}>
                   <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                     {getFieldDecorator('DGIMN', {
                       initialValue: this.props.form.getFieldValue("DGIMN"),
@@ -615,7 +615,7 @@ class SiteDailyPage extends PureComponent {
 
                 {
                   getFieldValue("PollutantSourceType") == 5 ?
-                    <Col xxl={7} xl={7} sm={24} lg={7}>
+                    <Col md={7} xs={24}>
                       <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                         {getFieldDecorator('airReportTime', {
                           initialValue: [moment(dateReportForm.beginTime), moment(dateReportForm.endTime)],
@@ -628,7 +628,7 @@ class SiteDailyPage extends PureComponent {
                         })(airTimeEle)}
                       </FormItem>
                     </Col>
-                    : <Col xl={6} sm={24} md={12}>
+                    : <Col md={6} xs={24}>
                       <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                         {getFieldDecorator("ReportTime", {
                           initialValue: defaultSearchForm.ReportTime,
@@ -655,8 +655,8 @@ class SiteDailyPage extends PureComponent {
                     })(timeEle)}
                   </FormItem>
                 </Col> */}
-                <Col xxl={6} xl={6} lg={8}>
-                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                <Col md={6} xs={24}>
+                  <FormItem label="" style={{ width: '100%' }}>
                     <Button
                       type="primary"
                       style={{ margin: '0 10px' }}
