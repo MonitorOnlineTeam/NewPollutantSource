@@ -104,7 +104,7 @@ class Login extends Component {
             />
             <Password
               name="password"
-              placeholder={`请输入密码！`}
+              placeholder={`请输入密码`}
               rules={[
                 {
                   required: true,
