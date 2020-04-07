@@ -563,7 +563,7 @@ class CompositeIndexReport extends Component {
                 </Col>
               </Row>
             </Form>
-            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600 }} />
+            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600, y: 'calc(100vh - 380px)' }} />
           </Card>
         </Spin>
       </BreadcrumbWrapper>
