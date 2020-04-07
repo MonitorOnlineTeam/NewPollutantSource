@@ -54,11 +54,11 @@ class QuartDataCaptureRate extends Component {
           dataIndex: 'EnterpriseName',
         },
         {
-          title: "应传个数",
+          title: "应捕集个数",
           dataIndex: 'ShouldNumber',
         },
         {
-          title: "实传个数",
+          title: "实捕集个数",
           dataIndex: 'TransmissionNumber',
         },
         {
