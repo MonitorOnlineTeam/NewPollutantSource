@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import config from '@/config'
+import defaultSettings from '../../../config/defaultSettings'
 
 class index extends Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class index extends Component {
     this.state = {};
   }
   render() {
-    if (config.isShowTabs) {
+    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
       return <>{this.props.children}</>
     }
     return (
