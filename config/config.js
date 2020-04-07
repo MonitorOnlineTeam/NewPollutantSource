@@ -340,6 +340,11 @@ export default {
                   component: './platformManager/manualupload',
                 },
                 {
+                  name: 'manualuploadauto',
+                  path: '/platformconfig/manualuploadauto/',
+                  component: './platformManager/manualuploadauto',
+                },
+                {
                   name: 'maintenancedatabase',
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',

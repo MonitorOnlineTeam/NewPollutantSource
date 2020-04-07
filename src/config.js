@@ -79,7 +79,9 @@ module.exports = {
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 60,
   // 手工数据上传地址
-  templateUploadUrl: `${apiHost}/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+  templateUploadUrl: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+   // 手工自动数据上传地址
+  templateUploadUrlAuto: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto`,
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

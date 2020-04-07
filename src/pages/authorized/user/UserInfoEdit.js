@@ -135,10 +135,11 @@ export default class UserInfoEdit extends Component {
     };
 
     onChecks = checkedKeys => {
+        var that=this;
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
-            if (this.state.leafTreeDatas.indexOf(item) != -1) {
+            if (that.state.leafTreeDatas.indexOf(item) != -1) {
                 leafTree.push(item);
             }
         });
@@ -150,12 +151,14 @@ export default class UserInfoEdit extends Component {
     };
 
     renderTreeNodes = data =>
+
         data.map(item => {
-            if (item.children.length == 0) {
-                if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
-                    this.state.leafTreeDatas.push(item.key);
-                }
-            }
+            this.state.leafTreeDatas.push(item.key);
+            // if (item.children.length == 0) {
+            //     if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+            //         this.state.leafTreeDatas.push(item.key);
+            //     }
+            // }
             if (item.children) {
                 return (
                     <TreeNode title={item.title} key={item.key} dataRef={item}>
