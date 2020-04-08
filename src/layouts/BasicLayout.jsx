@@ -83,7 +83,7 @@ class BasicLayout extends Component {
       const treeElement = activeElement ? activeElement.getElementsByClassName("ant-drawer-open") : [];
       const tabElement = document.querySelector(".ant-tabs-card-bar");
       if (treeElement.length) {
-        tabElement ? tabElement.style.marginRight = "400px" : undefined;
+        tabElement ? tabElement.style.marginRight = "350px" : undefined;
       } else {
         tabElement ? tabElement.style.marginRight = 0 : undefined;
       }

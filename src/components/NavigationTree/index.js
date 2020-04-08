@@ -92,7 +92,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'pointName',
-          width: '60%',
+          width: '40%',
           render: (text, record) => {
             return <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}</span></div>
           }
@@ -100,7 +100,7 @@ class NavigationTree extends Component {
         {
           title: 'Age',
           dataIndex: 'Status',
-          width: 100,
+          width: "20%",
           align: "left",
           render: (text, record) => {
             return (
@@ -124,13 +124,13 @@ class NavigationTree extends Component {
     const dom = document.querySelector(this.props.domId);
     if (dom) {
       if (floats === "topmenu") {
-        dom.style.marginLeft = "400px";
+        dom.style.marginLeft = "350px";
         dom.style.marginRight = 0;
       } else {
-        dom.style.marginRight = "400px";
+        dom.style.marginRight = "350px";
         dom.style.marginLeft = 0;
         document.querySelector(".ant-tabs-card-bar").style.marginLeft = 0;
-        document.querySelector(".ant-tabs-card-bar").style.marginRight = "400px";
+        document.querySelector(".ant-tabs-card-bar").style.marginRight = "350px";
       }
     }
     const { dispatch, EntAndPoint } = this.props;
@@ -376,8 +376,8 @@ class NavigationTree extends Component {
     }, () => {
       const dom = document.querySelector(domId)
       if (dom) {
-        const left = this.state.visible ? "400px" : "0";
-        dom.style.width = this.state.visible ? 'calc(100% - 400px)' : "100%"
+        const left = this.state.visible ? "350px" : "0";
+        dom.style.width = this.state.visible ? 'calc(100% - 350px)' : "100%"
         if (floats === "topmenu") {
           dom.style.marginLeft = left
         }else{
@@ -701,7 +701,7 @@ class NavigationTree extends Component {
         if (item.Type == "0") {
           return (
             <TreeNode style={{ width: "100%" }} title={
-              <div style={{ width: "271px" }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7 }} /> : ""}</div>
+              <div style={{  }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute" }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -710,7 +710,7 @@ class NavigationTree extends Component {
         } else if (item.Type == "1") {
           return <TreeNode style={{ width: "100%" }} title={
             <div style={{ width: "253px" }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7, marginRight: 10,  position: "absolute" }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
                 </div>
@@ -741,7 +741,7 @@ class NavigationTree extends Component {
           closable={false}
           onClose={this.onClose}
           visible={this.state.visible}
-          width={400}
+          width={350}
           mask={false}
           zIndex={1}
           getContainer={(Setting.layout === "sidemenu" && config.isShowTabs) ? false : 'body'}
@@ -784,9 +784,9 @@ class NavigationTree extends Component {
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
-            style={{ marginTop: 10, width: '67%' }}
+            style={{ marginTop: 10, width: '60%' }}
           />
-          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer", width: '28%' }} onChange={this.onRadioChange}>
+          <Radio.Group defaultValue={this.props.IsTree ? "tree" : "panel"} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: "pointer", width: '35%' }} onChange={this.onRadioChange}>
             <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
@@ -794,8 +794,8 @@ class NavigationTree extends Component {
           <div visible={true} style={{
             position: "absolute",
             top: "30%",
-            right: floats == "leftmenu" ? "400px" : null,
-            left: floats == "topmenu" ? "400px" : null,
+            right: floats == "leftmenu" ? "350px" : null,
+            left: floats == "topmenu" ? "350px" : null,
             display: "flex",
             width: "18px",
             height: "48px",
@@ -826,7 +826,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={this.props.QCAUse == undefined ? { marginTop: "5%", maxHeight: 'calc(100vh - 330px)', overflow: 'auto', width: "100%" } : { marginTop: "5%", maxHeight: 'calc(100vh - 240px)', overflow: 'auto', width: "100%" }}
+                style={this.props.QCAUse == undefined ? { marginTop: "5%", maxHeight: 'calc(100vh - 290px)', overflow: "hidden", overflowY: 'auto', width: "100%" } : { marginTop: "5%", maxHeight: 'calc(100vh - 240px)', overflow: 'auto', width: "100%" }}
                 // onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
@@ -847,8 +847,8 @@ class NavigationTree extends Component {
                     justifyContent: 'center'
                   }}
                   size="large"
-                /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', width: "100%", cursor: "pointer", maxHeight: 'calc(100vh - 330px)', }}
+                /> : <div> {this.props.EntAndPoint.length ? <Table  rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto',cursor: "pointer", maxHeight: 'calc(100vh - 290px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 
