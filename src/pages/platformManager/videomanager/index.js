@@ -39,11 +39,10 @@ class Index extends Component {
     render() {
         const { pollutantType, dgimn } = this.state;
         const { configInfo } = this.props;
-        console.log('configInfo=', configInfo);
         return (
-            <div id="record">
+            <div id="videomanager">
                 {/* selKeys="31011537961003" */}
-                <NavigationTree domId="#record" choice={false} onItemClick={value => {
+                <NavigationTree domId="#videomanager" choice={false} onItemClick={value => {
                     console.log(value);
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.setState({

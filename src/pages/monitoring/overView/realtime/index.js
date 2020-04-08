@@ -377,7 +377,7 @@ class index extends Component {
                                   return;
                                 }
                                 let newColumns = columns;
-                                let num = pollutantCode == 5 ? 6 : 4;
+                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 6 : 4;
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns
