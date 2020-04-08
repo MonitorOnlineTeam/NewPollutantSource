@@ -173,10 +173,10 @@ class Index extends Component {
 
     render() {
         return (
-            <div id="alarmrecord">
+            <div id="originaldata">
                 <BreadcrumbWrapper>
                     <div className={styles.cardTitle}>
-                        <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
+                        <NavigationTree domId="#originaldata" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                                 this.changeDgimn(value[0].key)
                             }

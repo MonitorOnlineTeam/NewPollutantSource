@@ -160,6 +160,7 @@ class DataTagPage extends Component {
           checkpPol={defalutPollutantType}
           polShow
           // choice
+          domId="#dataFlag"
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
               this.setState({
@@ -172,7 +173,7 @@ class DataTagPage extends Component {
             }
           }}
         />
-        <div id="contentWrapper">
+        <div id="dataFlag">
           <BreadcrumbWrapper>
             <Card
               className="contentContainer"

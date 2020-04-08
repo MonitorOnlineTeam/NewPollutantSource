@@ -189,10 +189,10 @@ class SiteParamsPage extends PureComponent {
           </Select>
         </Col>
         <Col span={8}>
-          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
+          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
             this.setState({
               time: dates,
-              dataType:dataType
+              dataType: dataType
             })
           }} />
         </Col>
@@ -381,9 +381,9 @@ class SiteParamsPage extends PureComponent {
     </>
   }
 
-  onRef1=(ref)=>{
-    this.children=ref;
-}
+  onRef1 = (ref) => {
+    this.children = ref;
+  }
 
   render() {
     const { showType, columns, defalutPollutantType } = this.state;
@@ -395,6 +395,7 @@ class SiteParamsPage extends PureComponent {
           checkpPol={defalutPollutantType}
           polShow
           // choice
+          domId="#siteParamsPage"
           onItemClick={value => {
             if (value.length) {
               let DGIMNs = value.find(item => {
@@ -411,14 +412,14 @@ class SiteParamsPage extends PureComponent {
             }
           }}
         />
-        <div id="contentWrapper">
+        <div id="siteParamsPage">
           <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
                 <>
                   <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-                     this.children.onDataTypeChange(e.target.value);
+                    this.children.onDataTypeChange(e.target.value);
                     this.setState({
                       dataType: e.target.value,
                       format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
