@@ -32,22 +32,20 @@ module.exports = {
   uploadHost,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  offlineMapUrl: {
-    domain: "",
-    srcPath: "/amap-master/amap/js/maps.js"
-  },
+  // offlineMapUrl: {
+  //   domain: "",
+  //   srcPath: "/amap-master/amap/js/maps.js"
+  // },
   // 外网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://61.50.135.114:50036",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
   // 内网离线地图配置：
-  // offlineMapUrl: {
-  //   domain: "http://172.16.9.20:808",
-  //   srcPath: "/amap/js/maps.js"
-  // },
-  // 多标签显示
-  isShowTabs: true,
+  offlineMapUrl: {
+    domain: "http://172.16.9.20:808",
+    srcPath: "/amap/js/maps.js"
+  },
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
