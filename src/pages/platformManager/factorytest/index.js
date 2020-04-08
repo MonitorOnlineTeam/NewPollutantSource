@@ -239,7 +239,7 @@ export default class factorytest extends Component {
             if (option) {
                 return (<Card style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}><ReactEcharts
                     theme="light"
-                    option={dgimn ? option : null}
+                    option={option}
                     lazyUpdate
                     notMerge
                     id="rightLine"
@@ -253,7 +253,7 @@ export default class factorytest extends Component {
             <Card style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
-                    dataSource={dgimn ? datatable : []}
+                    dataSource={datatable}
                     columns={columns}
                     resizable
                     // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
