@@ -269,7 +269,7 @@ export default {
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
                 },
                 {
-                  // 设备管理 
+                  // 设备管理
                   name: 'equipmentManage',
                   path: '/platformconfig/equipmentManage',
                   component: './platformManager/equipmentManage',
@@ -638,7 +638,7 @@ export default {
               routes: [
                 {
                   path: '/rolesmanager',
-                  redirect: '/rolesmanager/user',
+                  redirect: '/rolesmanager/user/userinfoindex/UserInfo',
                 },
                 {
                   name: 'user',
@@ -738,7 +738,7 @@ export default {
                 },
                 {
                   name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord',
+                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
                 },
               ]

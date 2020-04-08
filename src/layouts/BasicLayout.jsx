@@ -17,6 +17,32 @@ import { Tabs, Dropdown, Menu, Icon } from 'antd'
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
+import routerConfig from "../../config/config"
+
+
+
+
+function formatter(routes, parentPath = { path: "" }) {
+  const fixedParentPath = parentPath.path.replace(/\/{1,}/g, '/');
+  let result = [];
+  routes.forEach(item => {
+    if (item.path) {
+      result.push({
+        path: `${item.path}`.replace(/\/{1,}/g, '/'),
+        redirect: !!item.redirect
+      });
+    }
+    if (item.routes) {
+      result = result.concat(
+        formatter(item.routes, item.path ? {
+          path: `${item.path}`,
+          redirect: !!item.redirect
+        } : parentPath),
+      );
+    }
+  });
+  return _.uniq(result.filter(item => !!item));
+}
 
 const { TabPane } = Tabs;
 class BasicLayout extends Component {
@@ -40,12 +66,11 @@ class BasicLayout extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname != this.props.location.pathname && config.isShowTabs) {
-
+    if (nextProps.location.pathname != this.props.location.pathname && nextProps.unfoldMenuList.length && config.isShowTabs) {
       this._updatePanesAndActiveKey(nextProps)
     }
 
-    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList && config.isShowTabs) {
+    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList  && config.isShowTabs) {
       this._updatePanesAndActiveKey(nextProps)
     }
   }
@@ -66,42 +91,6 @@ class BasicLayout extends Component {
         // 二级页面路由和父路由不能匹配上，匹配configId
         return menuPath.indexOf(currentPath.split("/").pop()) > -1;
       }
-      //  else {
-      //   let parentcode;
-      //   // 匹配 parentcode
-      //   if (location.pathname.match(/(\S*)\/autoformmanager/)) {
-      //     parentcode = _.toUpper(location.pathname.match(/(\S*)\/autoformmanager/)[1])
-      //   } else if (location.pathname.match(/(\S*)\/AutoFormManager/)) {
-      //     parentcode = _.toUpper(location.pathname.match(/(\S*)\/AutoFormManager/)[1])
-      //   }
-      //   console.log("parentcode=", parentcode)
-      //   console.log("menuPath=", menu.path)
-      //   if (menuPath.indexOf(parentcode) > -1) {
-      //     debugger
-      //     return menuPath.indexOf(parentcode) > -1
-      //   }
-      // }
-
-
-      // 匹配 parentcode
-      // if (location.pathname.match(/(\S*)\/autoformmanager/)) {
-      //   if (itemPath.indexOf(_.toUpper(location.pathname.match(/(\S*)\/autoformmanager/)[1])) > -1) {
-      //     return _.toUpper(item.path).indexOf(_.toUpper(location.pathname.match(/(\S*)\/autoformmanager/)[1])) > -1
-      //   }
-      // }
-      // else if (itemPath.indexOf(_.toUpper(location.pathname.match(/(\S*)\/autoformmanager/)[1])) > -1) {
-      //   return _.toUpper(item.path).indexOf(_.toUpper(location.pathname.match(/(\S*)\/autoformmanager/)[1])) > -1
-      // }
-      // console.log("location=", parentcode)
-
-
-
-      // else if (item.path.indexOf(location.pathname.split("/")[3]) > -1) {
-      //   // 二级页面路由和父路由不能匹配上，匹配configId
-      //   return item.path.indexOf(location.pathname.split("/")[3]) > -1;
-      // } else if(item.path.indexOf(location.pathname.split("/")[2]) > -1){
-      //   return item.path.indexOf(location.pathname.split("/")[2]) > -1;
-      // }
     }) || {};
     return matchPathObj
   }
@@ -109,7 +98,7 @@ class BasicLayout extends Component {
   // 更新Tab
   _updatePanesAndActiveKey = (props) => {
     const { location, unfoldMenuList, children, history } = props;
-    console.log("_updatePanesAndActiveKey=", props)
+    // console.log("_updatePanesAndActiveKey=", props)
     let _unfoldMenuList = _.cloneDeep(unfoldMenuList);
 
     let currentPathObj = _unfoldMenuList.find(item => {
@@ -301,11 +290,9 @@ class BasicLayout extends Component {
               onEdit={this.onTabsEdit}
               className={styles.pageTabs}
               tabBarExtraContent={panes.length > 1 ? operations : ""}
-            // tabBarStyle={{backgroundColor: "red"}}
             >
               {
                 this.state.panes.map(pane => (
-                  // <TabPane tab={<div>{pane.tab}</div>} key={pane.key} closable={panes.length != 1} notData >
                   <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1} notData >
                     {pane.content}
                   </TabPane>
