@@ -340,6 +340,11 @@ export default {
                   component: './platformManager/manualupload',
                 },
                 {
+                  name: 'manualuploadauto',
+                  path: '/platformconfig/manualuploadauto/',
+                  component: './platformManager/manualuploadauto',
+                },
+                {
                   name: 'maintenancedatabase',
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
@@ -930,6 +935,12 @@ export default {
                   name: 'compositeIndexReport',
                   path: '/Intelligentanalysis/compositeIndex/:reportType',
                   component: './dataAnalyze/CompositeIndexReport',
+                },
+                // 综合指数范围报表
+                {
+                  name: 'compositeIndexRangeReport',
+                  path: '/Intelligentanalysis/compositeIndexRange',
+                  component: './dataAnalyze/CompositeRangeReport',
                 },
                 // 季度有效数据捕集率
                 {

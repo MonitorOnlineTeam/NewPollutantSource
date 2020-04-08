@@ -28,7 +28,7 @@ import {
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import { Right } from '@/utils/icon';
@@ -653,7 +653,7 @@ class RoleIndex extends Component {
                     //     ]
                     // }
                     // >
-                    <PageHeaderWrapper>
+                    <BreadcrumbWrapper>
                         <Card bordered={false} >
                             <Button type="primary"
                                 onClick={this.showModal}
@@ -878,7 +878,7 @@ class RoleIndex extends Component {
                             </Modal>
                         </div>
                         {/* </MonitorContent> */}
-                    </PageHeaderWrapper>
+                    </BreadcrumbWrapper>
                 }
             </Fragment>
         );

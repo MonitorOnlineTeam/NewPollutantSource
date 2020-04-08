@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
 import moment from 'moment'
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTree'
 import DataTagTable from "./components/DataTagTable"
 
@@ -173,7 +173,7 @@ class DataTagPage extends Component {
           }}
         />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card
               className="contentContainer"
               title={this.getCardTitle()}
@@ -219,7 +219,7 @@ class DataTagPage extends Component {
                 }}
               />
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

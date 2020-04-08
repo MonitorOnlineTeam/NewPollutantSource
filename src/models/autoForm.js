@@ -411,7 +411,7 @@ export default Model.extend({
         }));
         yield update({
           detailConfigInfo: {
-            ...state.detailData,
+            ...state.detailConfigInfo,
             [payload.configId]: detailFormItems,
           },
         })

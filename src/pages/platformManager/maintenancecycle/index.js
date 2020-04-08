@@ -11,7 +11,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './style.less';
 import NavigationTree from '@/components/NavigationTree'
 // import RecordEchartTable from '@/components/recordEchartTable'
@@ -47,9 +47,9 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                     {dgimn && <MaintenanceCycle DGIMN={dgimn} ></MaintenanceCycle>}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
 
             </div>
         );

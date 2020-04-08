@@ -27,6 +27,7 @@ export default Model.extend({
     chartAndTableData: [],
     reportTableData: [],
     compositeIndexDataSource: [],
+    compositeRangeDataSource: [],
   },
 
   effects: {
@@ -197,5 +198,27 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取综合指数范围报表数据
+    *queryCompositeRangeData({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.queryCompositeRangeData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          compositeRangeDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 导出综合指数报表
+    *exportRangeCompositeReport({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.exportRangeCompositeReport, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    
   }
 });

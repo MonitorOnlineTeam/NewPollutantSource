@@ -20,7 +20,6 @@ export async function getDataReportUserAndEntInfo(params) {
 
   // 数据上报或修改
 export async function addDataReport(params) {
-   debugger;
     const body = params;
     const result = post(
       '/api/rest/PollutantSourceApi/DataReportApi/AddDataReport',
@@ -36,7 +35,6 @@ export async function addDataReport(params) {
 
     // 删除数据上报
 export async function deleteDataReport(params) {
-  debugger;
    const body = params;
    const result = post(
      '/api/rest/PollutantSourceApi/DataReportApi/DeleteDataReport',

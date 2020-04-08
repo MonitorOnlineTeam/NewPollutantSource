@@ -6,12 +6,12 @@
  * @desc: 结果统计页面
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Row, Col } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import RangePicker_ from '@/components/RangePicker'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import moment from 'moment';
 import styles from '../index.less';
 
@@ -187,35 +187,39 @@ class index extends Component {
   // 获取企业详情
   getEntDataList = () => {
     const { entIndex, currentDate } = this.state;
-    this.props.dispatch({
-      type: "qualityControl/QCAResultStaticByEntCode",
-      payload: {
-        EntCode: this.props.entRate.entCode[entIndex],
-        BeginTime: currentDate.length ? currentDate[0] : undefined,
-        EndTime: currentDate.length ? currentDate[1] : undefined,
-      }
-    })
+    if(entIndex)
+    {
+      this.props.dispatch({
+        type: "qualityControl/QCAResultStaticByEntCode",
+        payload: {
+          EntCode: this.props.entRate.entCode[entIndex],
+          BeginTime: currentDate.length ? currentDate[0] : undefined,
+          EndTime: currentDate.length ? currentDate[1] : undefined,
+        }
+      })
+    }
+
   }
 
   render() {
     const { currentEntName, currentDate, dateValue } = this.state;
     const tableTitle = currentEntName ? `${currentEntName} - 企业详情` : "企业详情";
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className="contentContainer" style={{ overflowX: "hidden" }}>
           <Card className={styles.cardShowTitle} style={{ marginBottom: 10 }} title={
-            <RangePicker_ dateValue={dateValue} style={{ width: 400 }} onChange={(date, dateString) => {
-              console.log('date=', date)
-              console.log('dateString=', dateString)
-              this.setState({
-                currentDate: dateString,
-                dateValue: date,
-              }, () => {
-                // 获取结果统计数据
-                this.getResultStaticData();
-                // 刷新table
-                this.getEntDataList();
-              })
+            <RangePicker_ dateValue={dateValue}   dataType='day' style={{ width: 400 }} callback={(date) => {
+              
+                this.setState({
+                  currentDate: [date[0]?date[0].format("YYYY-MM-DD HH:mm:ss"):null,date[1]?date[1].format("YYYY-MM-DD HH:mm:ss"):null],
+                  dateValue: date,
+                }, () => {
+                  // 获取结果统计数据
+                  this.getResultStaticData();
+                  // 刷新table
+                  this.getEntDataList();
+                })
+              
             }} />
           }></Card>
           <Row gutter={16}>
@@ -255,7 +259,7 @@ class index extends Component {
             </Card>
           </Row>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

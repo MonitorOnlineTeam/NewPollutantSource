@@ -23,7 +23,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -304,9 +304,9 @@ class Index extends Component {
                     })
                 }
             }} />
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <RecordEchartTableOver  DGIMN={this.state.dgimn} noticeState={1}  />
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
 
         </div>
         );

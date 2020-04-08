@@ -61,7 +61,7 @@ class NewRangePicker extends Component {
      * 获取格式化的时间
      */
     getFormatDate=(beginTime,endTime,Type)=>{
-        // debugger;
+        //验证、回调、form中的字段名
         const {isVerification,callback,fieldName}=this.props;
         let dataType=Type || this.props.dataType;
         if(!beginTime || !endTime)
@@ -110,6 +110,7 @@ class NewRangePicker extends Component {
                 // 
                 break;
                 case "hour":
+                case "Hour":
                     if(beginTime==1 || endTime==1)
                     {
                         beginTime=moment(moment(new Date()).add(-1, 'day').format("YYYY-MM-DD HH:00:00"));
@@ -130,6 +131,7 @@ class NewRangePicker extends Component {
                     }
                     break;
                 case "day":
+                case "Day":
                     if(beginTime==1 || endTime==1)
                     {
                         beginTime=moment(moment(new Date()).add(-1, 'month').format("YYYY-MM-DD 00:00:00"));
@@ -186,6 +188,7 @@ class NewRangePicker extends Component {
                         }
 
         }
+      
         callback && callback([beginTime,endTime],dataType,fieldName);
         return [beginTime,endTime];
     }
@@ -235,7 +238,6 @@ class NewRangePicker extends Component {
               // value={this.props.dateValue}
                 value={this.state.dateValue}
                // onChange={this.props.onChange}
-              
                 onOk={this.props.onOk}
                 ranges={this.state.ranges}
                 format={this.props.format}

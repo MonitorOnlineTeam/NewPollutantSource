@@ -17,7 +17,7 @@ import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 
@@ -100,7 +100,7 @@ export default class MonitorTarget extends Component {
             />);
         }
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 {/* <MonitorContent breadCrumbList={
                 [
                     { Name: '首页', Url: '/' },
@@ -147,7 +147,7 @@ export default class MonitorTarget extends Component {
                     </Card>
                 </div>
                 {/* </MonitorContent> */}
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

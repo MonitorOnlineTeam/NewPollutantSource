@@ -14,7 +14,7 @@ import {
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
@@ -147,7 +147,7 @@ class YsyCameraIndex extends Component {
       );
     }
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className={styles.cardTitle}>
           <Card title={<span>{match.params.Pointname}<Button
                   style={{ marginLeft: 10 }}
@@ -229,7 +229,7 @@ class YsyCameraIndex extends Component {
             <SdlForm configId="VideoCamera" form={this.props.form} noLoad hideBtns />
           </Modal>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

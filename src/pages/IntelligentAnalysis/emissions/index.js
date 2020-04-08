@@ -19,7 +19,7 @@ import moment from 'moment';
 import styles from './index.less';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import Link from 'umi/link';
 import SdlTable from '@/components/SdlTable';
 
@@ -158,28 +158,28 @@ export default class EntPollutantEmissions extends Component {
         // }
         // this.getEntsTableData(pagination.current);
     }
-    handleChangeDate = (value) => {
-        let Year = moment().get('year');
-        let Month = moment().get('month') + 1;
-        let beginTime = moment(`${value}-01-01 00:00:00`);
+    handleChangeDate = (value,beginTime,endTime) => {
+        let Year = moment(value).get('year');
+        let Month = moment(value).get('month') + 1;
+    //    let beginTime = moment(`${value}-01-01 00:00:00`);
         if (Month < 10) {
             Month = '0' + Month
         }
         // 本年份
-        if ((+value) === Year) {
+        if (moment().get('year')=== Year) {
             this.updateState({
-                beginTime: beginTime.format('YYYY-MM-01 HH:mm:ss'),
-                endTime: beginTime.add(1, 'years').format('YYYY-01-01 00:00:00'),
+                beginTime: beginTime,
+                endTime: endTime,
                 selectedDate: `${Year}-${Month}-01 00:00:00`,
                 clickDate: `${Year}-${Month}-01 00:00:00`,
                 enttableDatas: []
             });
         } else {
             this.updateState({
-                beginTime: beginTime.format('YYYY-MM-01 HH:mm:ss'),
-                endTime: beginTime.add(1, 'years').format('YYYY-01-01 00:00:00'),
-                selectedDate: `${value}-01-01 00:00:00`,// beginTime.format('YYYY-01-01 HH:mm:ss'),
-                clickDate: `${value}-01-01 00:00:00`,
+                beginTime: beginTime,
+                endTime: endTime,
+                selectedDate: `${Year}-01-01 00:00:00`,// beginTime.format('YYYY-01-01 HH:mm:ss'),
+                clickDate: `${Year}-01-01 00:00:00`,
                 enttableDatas: []
             });
         }
@@ -426,7 +426,7 @@ export default class EntPollutantEmissions extends Component {
 
         return (
 
-            <PageHeaderWrapper title="月度排放量统计">
+            <BreadcrumbWrapper title="月度排放量统计">
                 <div className={styles.cardTitle}
                 // style={{
                 //     height: 'calc(100vh - 248px)'
@@ -450,7 +450,7 @@ export default class EntPollutantEmissions extends Component {
                             </span>
                             <span style={{ color: '#b3b3b3' }}>时间
 
-                                <DatePickerTool allowClear={false}  picker="year"  style={{ width: 200, marginLeft: 10 }}  />
+                                <DatePickerTool allowClear={false}  picker="year"  defaultValue={moment()}  style={{ width: 200, marginLeft: 10 }} callback={this.handleChangeDate} />
                                     {/* <Select
                                     size="default"
                                     defaultValue={dateYear}
@@ -503,7 +503,7 @@ export default class EntPollutantEmissions extends Component {
                         </Modal>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

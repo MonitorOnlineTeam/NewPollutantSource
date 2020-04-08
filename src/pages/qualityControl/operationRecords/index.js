@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import { Card, Modal, Tooltip, Icon } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import ResultContrastPage from '../resultContrast/ResultContrastPage'
@@ -36,7 +36,7 @@ class index extends Component {
     const { configId } = this._SELF_;
     const { dateValue, DGIMN, pointName, entName, PollutantCode, QCType, QCExecuType, QCTime, StopTime, StandardPollutantName, QCAMN } = this.state;
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card className="contentContainer">
           <SearchWrapper
             configId={configId}
@@ -90,7 +90,7 @@ class index extends Component {
               QCExecuType={QCExecuType} QCTime={QCTime} QCAMN={QCAMN} StopTime={StopTime} StandardPollutantName={StandardPollutantName} />
           }
         </Modal>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

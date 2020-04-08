@@ -109,7 +109,6 @@ class RealTimeWarningModal extends Component {
  */
     showModal = (name, mn, pollutantCode, pollutantName, SuggestValue) => {
         console.log('this.props1=', this.props)
-        debugger
         this.getPollutantList(mn);
         this.updateState({
             SuggestValue: SuggestValue,

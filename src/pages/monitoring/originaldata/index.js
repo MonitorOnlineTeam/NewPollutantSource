@@ -22,7 +22,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
 import styles from './index.less';
 import NavigationTree from '@/components/NavigationTree'
@@ -174,7 +174,7 @@ class Index extends Component {
     render() {
         return (
             <div id="alarmrecord">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                     <div className={styles.cardTitle}>
                         <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
@@ -197,7 +197,7 @@ class Index extends Component {
                             {this.loaddata()}
                         </Card>
                     </div>
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
             </div>
         );
     }

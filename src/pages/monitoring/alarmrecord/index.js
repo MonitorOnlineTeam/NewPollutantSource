@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import NavigationTree from '../../../components/NavigationTree'
 import AlarmRecord from './components/AlarmRecord'
@@ -27,9 +27,9 @@ class Index extends Component {
     render() {
         return (
             <div id="alarmrecord">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  <AlarmRecord DGIMN={this.state.dgimn} EntCode={this.state.EntCode}/>
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key, value[0].EntCode)

@@ -13,6 +13,7 @@ import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
 import Center from '@/pages/account/center';
 import global from '@/global.less'
+import config from '@/config'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
@@ -734,6 +735,7 @@ class NavigationTree extends Component {
           width={400}
           mask={false}
           zIndex={1}
+          getContainer={Setting.layout === "sidemenu" && config.isShowTabs ? false : true}
           style={{
             marginTop: 64
           }}

@@ -18,7 +18,7 @@ import {
     Col,
 } from 'antd';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 
 @connect(({ userinfo, loading }) => ({
     UserRolesName: userinfo.UserRolesName,
@@ -47,7 +47,7 @@ class UserInfoView extends Component {
     render() {
         return (
             <Fragment>
-                <PageHeaderWrapper title="详情">
+                <BreadcrumbWrapper title="详情">
                     <Card bordered={false} title="详情" extra={
                         <Button
                             style={{ float: "right", marginRight: 10 }}
@@ -66,7 +66,7 @@ class UserInfoView extends Component {
                             ]}
                         />
                     </Card>
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
             </Fragment>
         );
     }

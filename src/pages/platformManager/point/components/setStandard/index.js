@@ -22,7 +22,7 @@ import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
 import SdlTable from '@/components/SdlTable';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { EditIcon } from '@/utils/icon'
 
 @connect(({ loading, standardlibrary, autoForm }) => ({
@@ -321,7 +321,7 @@ class UseStandardLibrary extends Component {
       PollutantListByDGIMN
     } = this.props;
     return (
-      <PageHeaderWrapper title="监测点维护-设置标准">
+      <BreadcrumbWrapper title="监测点维护-设置标准">
 
         <Card
           bordered={false}
@@ -442,7 +442,7 @@ class UseStandardLibrary extends Component {
             {<PollutantView StandardLibraryID={this.state.StandardLibraryID} />}
           </Modal>
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

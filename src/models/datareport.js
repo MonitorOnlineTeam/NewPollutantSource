@@ -38,7 +38,6 @@ export default Model.extend({
     },
     effects: {
         *getDataReportUserAndEntInfo({ payload }, { call, update }) {
-          debugger;
             const result = yield call(getDataReportUserAndEntInfo, {
               ...payload,
             });

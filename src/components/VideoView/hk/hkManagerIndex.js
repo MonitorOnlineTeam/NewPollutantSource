@@ -10,7 +10,7 @@ import { routerRedux } from 'dva/router';
 import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Tooltip, Popconfirm, Form } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import Add from './AddVideoInfo';
 import Update from './UpdateVideoInfo';
 import InfoList from './VideoInfoList';
