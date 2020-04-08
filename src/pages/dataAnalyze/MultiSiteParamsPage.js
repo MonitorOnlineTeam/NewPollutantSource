@@ -246,10 +246,10 @@ class MultiSiteParamsPage extends PureComponent {
           </Select>
         </Col>
         <Col span={8}>
-        <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
+          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
             this.setState({
               time: dates,
-              dataType:dataType
+              dataType: dataType
             })
           }} />
         </Col>
@@ -288,9 +288,9 @@ class MultiSiteParamsPage extends PureComponent {
       </Card.Grid>
     )
   }
-  
-  onRef1=(ref)=>{
-    this.children=ref;
+
+  onRef1 = (ref) => {
+    this.children = ref;
   }
 
   render() {
@@ -303,6 +303,7 @@ class MultiSiteParamsPage extends PureComponent {
           checkpPol={defalutPollutantType}
           polShow
           choice
+          domId="#multiSiteParamsPage"
           onItemClick={value => {
             if (value.length) {
               let DGIMNsList = value.filter(item => item.IsEnt === false)
@@ -316,7 +317,7 @@ class MultiSiteParamsPage extends PureComponent {
             }
           }}
         />
-        <div id="contentWrapper">
+        <div id="multiSiteParamsPage">
           <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
