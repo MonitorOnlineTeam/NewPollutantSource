@@ -419,7 +419,11 @@ export default {
                   path: '/platformconfig/equipmentinfomanage/:configId',
                   component: './OperationSysManager/EquipmentInfoManage/',
                 },
-
+                {
+                  name: 'factorytest',
+                  path: '/platformconfig/factorytest',
+                  component: './platformManager/factorytest',
+                },
               ],
             },
             {
