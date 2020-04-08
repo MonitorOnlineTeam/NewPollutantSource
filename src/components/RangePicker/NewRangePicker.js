@@ -61,7 +61,7 @@ class NewRangePicker extends Component {
      * 获取格式化的时间
      */
     getFormatDate=(beginTime,endTime,Type)=>{
-        debugger;
+        // debugger;
         const {isVerification,callback,fieldName}=this.props;
         let dataType=Type || this.props.dataType;
         if(!beginTime || !endTime)
