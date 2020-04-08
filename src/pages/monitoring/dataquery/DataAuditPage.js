@@ -146,6 +146,7 @@ class DataAuditPage extends Component {
           checkpPol={defalutPollutantType}
           polShow
           // choice
+          domId="#dataAudit"
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
               this.setState({
@@ -156,7 +157,7 @@ class DataAuditPage extends Component {
             }
           }}
         />
-        <div id="contentWrapper">
+        <div id="dataAudit">
           <BreadcrumbWrapper>
             <Card
               className="contentContainer"
