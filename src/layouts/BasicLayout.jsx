@@ -67,12 +67,26 @@ class BasicLayout extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname && nextProps.unfoldMenuList.length && config.isShowTabs) {
-      document.querySelector(".ant-tabs-card-bar").style.marginRight = 0;
       this._updatePanesAndActiveKey(nextProps)
+
     }
 
     if (nextProps.unfoldMenuList !== this.props.unfoldMenuList && config.isShowTabs) {
       this._updatePanesAndActiveKey(nextProps)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // 处理tab样式
+    if (this.state.activeKey !== prevState.activeKey) {
+      const activeElement = document.getElementsByClassName("ant-tabs-tabpane-active")[0];
+      const treeElement = activeElement.getElementsByClassName("ant-drawer-open");
+
+      if (treeElement.length) {
+        document.querySelector(".ant-tabs-card-bar").style.marginRight = "400px";
+      } else {
+        document.querySelector(".ant-tabs-card-bar").style.marginRight = 0;
+      }
     }
   }
 
@@ -126,7 +140,6 @@ class BasicLayout extends Component {
       // 从地址栏中获取tabName
       currentPathObj.name = location.query.tabName
     }
-
 
     const panes = [...this.state.panes];
     const pane = {
