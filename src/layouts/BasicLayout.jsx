@@ -80,12 +80,12 @@ class BasicLayout extends Component {
     // 处理tab样式
     if (this.state.activeKey !== prevState.activeKey) {
       const activeElement = document.getElementsByClassName("ant-tabs-tabpane-active")[0];
-      const treeElement = activeElement.getElementsByClassName("ant-drawer-open");
-
+      const treeElement = activeElement ? activeElement.getElementsByClassName("ant-drawer-open") : [];
+      const tabElement = document.querySelector(".ant-tabs-card-bar");
       if (treeElement.length) {
-        document.querySelector(".ant-tabs-card-bar").style.marginRight = "400px";
+        tabElement ? tabElement.style.marginRight = "400px" : undefined;
       } else {
-        document.querySelector(".ant-tabs-card-bar").style.marginRight = 0;
+        tabElement ? tabElement.style.marginRight = 0 : undefined;
       }
     }
   }

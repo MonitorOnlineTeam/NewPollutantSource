@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Table, Row, Col, Radio, Popover, Badge, Icon, Input, Tag, TimePicker, DatePicker, Popconfirm, Button, Checkbox, message } from 'antd';
+import { Card, Table, Row, Col, Radio, Popover, Select, Badge, Icon, Input, Tag, TimePicker, DatePicker, Popconfirm, Button, Checkbox, message } from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import { getDirLevel } from '@/utils/utils';
 
 const CheckboxGroup = Checkbox.Group;
+const Option = Select.Option;
 
 @connect(({ loading, overview, global, common }) => ({
   noticeList: global.notices,
@@ -31,7 +32,7 @@ class index extends Component {
       currentDataType: 'MinuteData',
       realTimeDataView: [],
       filteredInfo: null,
-      time: moment(new Date()).add(-1, 'hour'),
+      time: moment(new Date()).add(-1, 'hour').format("YYYY-MM-DD HH:00:00"),
       dayTime: moment(new Date()).add(-1, 'day'),
     };
   }
@@ -287,6 +288,17 @@ class index extends Component {
     }
   };
 
+  getHourTimeOptions = () => {
+    let options = [];
+    let currentTime = moment().format("YYYY-MM-DD")
+    let nextDayTime = moment().add(1, "day").format("YYYY-MM-DD")
+    for (var i = 1; i < 24; i++) {
+      let label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
+      options.push(<Option value={`${currentTime} ${i}:00:00`}>{label}</Option>)
+    }
+    return options.concat(<Option value={`${nextDayTime} 00:00:00`}>00:00:00</Option>);
+  }
+
   render() {
     const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
@@ -294,6 +306,7 @@ class index extends Component {
     const _columns = columns.filter(item => item.show);
     let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
+
     return (
       <BreadcrumbWrapper title="数据一览">
         <Card
@@ -399,8 +412,27 @@ class index extends Component {
                 </Popover> : null
               }
               {currentDataType === 'HourData' && (
-                <TimePicker
-                  onChange={(time, timeString) => {
+                // <TimePicker
+                //   onChange={(time, timeString) => {
+                //     this.setState(
+                //       {
+                //         time: time,
+                //       },
+                //       () => {
+                //         this.getRealTimeDataView();
+                //       },
+                //     );
+                //   }}
+                //   style={{ width: 150, marginLeft: 20 }}
+                //   defaultValue={time}
+                //   format="HH:00:00"
+                // />
+                <Select
+                  style={{ width: 150, marginLeft: 20 }}
+                  placeholder="请选择事件"
+                  defaultValue={time}
+                  suffixIcon={<Icon type="clock-circle" />}
+                  onChange={(time) => {
                     this.setState(
                       {
                         time: time,
@@ -410,10 +442,9 @@ class index extends Component {
                       },
                     );
                   }}
-                  style={{ width: 150, marginLeft: 20 }}
-                  defaultValue={time}
-                  format="HH:00:00"
-                />
+                >
+                  {this.getHourTimeOptions()}
+                </Select>
               )}
               {currentDataType === 'DayData' && (
                 <DatePicker
