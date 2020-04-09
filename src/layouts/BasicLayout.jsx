@@ -70,7 +70,7 @@ class BasicLayout extends Component {
       this._updatePanesAndActiveKey(nextProps)
     }
 
-    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList  && config.isShowTabs) {
+    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList && config.isShowTabs) {
       this._updatePanesAndActiveKey(nextProps)
     }
   }
@@ -155,8 +155,8 @@ class BasicLayout extends Component {
 
     if (action === "remove") {
       panes = panes.filter(item => item.key !== targetKey)
+      this.setState({ activeKey: [...panes].pop().key, panes }, () => { router.push(this.state.activeKey) });
     }
-    this.setState({ activeKey: [...panes].pop().key, panes }, () => { router.push(this.state.activeKey) });
   }
 
   // tab右侧更多菜单
@@ -293,7 +293,7 @@ class BasicLayout extends Component {
             >
               {
                 this.state.panes.map(pane => (
-                  <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1} notData >
+                  <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1}>
                     {pane.content}
                   </TabPane>
                 ))

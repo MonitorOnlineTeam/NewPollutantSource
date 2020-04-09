@@ -17,7 +17,7 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { getDirLevel } from "@/utils/utils"
-import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools'
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools'
 
 const { RangePicker } = DatePicker;
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
