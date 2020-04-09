@@ -83,9 +83,6 @@ class PdButton extends Component {
     //判断是派单还是督办按钮
     getbutton = () => {
         let { operationUserInfo, existTask, superviseloading, paloading } = this.props;
-        if (operationUserInfo && operationUserInfo.pollutantTypeCode !== "2") {
-            return '';
-        }
         if (operationUserInfo) {
             //如果有任务是督办
             if (existTask) {
