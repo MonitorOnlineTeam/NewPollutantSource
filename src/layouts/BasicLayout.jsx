@@ -67,6 +67,7 @@ class BasicLayout extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname && nextProps.unfoldMenuList.length && config.isShowTabs) {
+      document.querySelector(".ant-tabs-card-bar").style.marginRight = 0;
       this._updatePanesAndActiveKey(nextProps)
     }
 
