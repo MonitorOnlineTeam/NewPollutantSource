@@ -125,10 +125,12 @@ class NavigationTree extends Component {
     if (dom) {
       if (floats === "topmenu") {
         dom.style.marginLeft = "400px";
-        dom.style.marginRight = 0
+        dom.style.marginRight = 0;
       } else {
         dom.style.marginRight = "400px";
-        dom.style.marginLeft = 0
+        dom.style.marginLeft = 0;
+        document.querySelector(".ant-tabs-card-bar").style.marginLeft = 0;
+        document.querySelector(".ant-tabs-card-bar").style.marginRight = "400px";
       }
     }
     const { dispatch, EntAndPoint } = this.props;
@@ -174,7 +176,7 @@ class NavigationTree extends Component {
     }
     if (this.props.selKeys !== nextProps.selKeys) {
       this.defaultKey = 0
-      if(!this.state.searchValue){
+      if (!this.state.searchValue) {
         this.clearData()
         this.tilingData(nextProps.EntAndPoint)
       }
@@ -375,8 +377,15 @@ class NavigationTree extends Component {
       if (dom) {
         const left = this.state.visible ? "400px" : "0";
         dom.style.width = this.state.visible ? 'calc(100% - 400px)' : "100%"
-        floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
+        if (floats === "topmenu") {
+          dom.style.marginLeft = left
+        }else{
+          dom.style.marginRight = left
+          document.querySelector(".ant-tabs-card-bar").style.marginRight = left;
+        }
+        // floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
         dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
+        document.querySelector(".ant-tabs-card-bar").style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
       }
     });
   };
