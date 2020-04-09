@@ -443,10 +443,10 @@ class index extends Component {
           }
           extra={
             <Radio.Group
-              defaultValue="data"
+              value="data"
               buttonStyle="solid"
               onChange={e => {
-                e.target.value === 'map' && router.push('/monitoring/mapview');
+                e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据一览 - 地图');
               }}
             >
               <Radio.Button value="data">数据</Radio.Button>
