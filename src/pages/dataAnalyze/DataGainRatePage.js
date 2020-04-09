@@ -136,6 +136,7 @@ class DataGainRatePage extends PureComponent {
           choice
           checkpPol="5"
           polShow
+          domId="#dataGainRatePage"
           onItemClick={value => {
             if (value.length) {
               let DGIMNsList = value.filter(item => item.IsEnt === false);
@@ -151,7 +152,7 @@ class DataGainRatePage extends PureComponent {
             }
           }}
         />
-        <div id="contentWrapper">
+        <div id="dataGainRatePage">
           <BreadcrumbWrapper>
             <Card
               className="contentContainer"

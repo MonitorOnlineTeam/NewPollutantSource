@@ -6,7 +6,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
-import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools';
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../index.less';
@@ -377,7 +377,7 @@ class index extends Component {
                                   return;
                                 }
                                 let newColumns = columns;
-                                let num = pollutantCode == 5 ? 6 : 4;
+                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 6 : 4;
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns
