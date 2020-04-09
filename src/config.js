@@ -16,12 +16,12 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://220.171.32.30:8180/';
+const apiHost = 'http://localhost:52198/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
 const webSocketPush = '172.16.12.135:60204,111.53.101.207:1501';
-
+const GBSVideoApiUrl = 'http://121.40.50.44:10000/';
 module.exports = {
   // name: '污染源智能分析平台',
   // logindesc: 'SDL 您身边的环境污染分析专家',
@@ -30,6 +30,7 @@ module.exports = {
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
   apiHost,
   uploadHost,
+  GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
   // offlineMapUrl: {
@@ -41,10 +42,14 @@ module.exports = {
   //   domain: "http://61.50.135.114:50036",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
-  // 内网离线地图配置：
+  // 内网离线地图配置(兵团)：
+  // offlineMapUrl: {
+  //   domain: 'http://10.66.1.72:8184',
+  //   srcPath: '/amap-master/amap/js/maps.js',
+  // },
   offlineMapUrl: {
     domain: '',
-    srcPath: '/amap/js/maps.js',
+    srcPath: '/amap-master/amap/js/maps.js',
   },
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
