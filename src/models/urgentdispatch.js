@@ -85,7 +85,7 @@ export default Model.extend({
                 if(payload.reloadData)
                 {
                     //刷新方法
-                    payload.reloadData();   
+                    payload.reloadData(payload.dgimn);   
                 }
             } else {
                 message.error('派单失败!');

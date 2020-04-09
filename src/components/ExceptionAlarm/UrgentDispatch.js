@@ -21,7 +21,9 @@ class UrgentDispatch extends Component {
                 dgimn: DGIMN,
                 personId: operationUserInfo.operationUserID,
                 remark: this.props.form.getFieldValue('remark'),
-                reloadData:() => this.props.reloadData()
+                reloadData:(DGIMN) =>{
+                    this.props.reloadData(DGIMN)
+                } 
             }
         })
         this.props.onCancel();

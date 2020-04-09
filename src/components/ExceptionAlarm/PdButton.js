@@ -140,10 +140,9 @@ class PdButton extends Component {
                 pointName={operationUserInfo ? operationUserInfo.pointName : null}
                 operationUserName={operationUserInfo ? operationUserInfo.operationUserName : null}
                 operationtel={operationUserInfo ? operationUserInfo.operationtel : null}
-                reloadData={() => this.reloadData()}
+                reloadData={() => this.reloadData(DGIMN)}
             />
         </span>);
     }
 }
-
 export default PdButton;
