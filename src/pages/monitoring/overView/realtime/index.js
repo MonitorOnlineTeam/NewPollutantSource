@@ -6,7 +6,7 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
-import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools';
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../index.less';
