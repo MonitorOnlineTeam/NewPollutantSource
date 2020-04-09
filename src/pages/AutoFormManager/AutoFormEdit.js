@@ -16,7 +16,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
 import MonitorContent from '../../components/MonitorContent/index';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from "./SdlForm"
 
 const FormItem = Form.Item;
@@ -147,10 +147,10 @@ class AutoFormEdit extends Component {
             //   ]
             // }
             // >
-            <PageHeaderWrapper title="编辑">
+            <BreadcrumbWrapper title="编辑">
               {this._renderForm()}
               {/* </MonitorContent> : */}
-            </PageHeaderWrapper> :
+            </BreadcrumbWrapper> :
             <Fragment>
               {this._renderForm()}
             </Fragment>

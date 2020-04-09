@@ -10,7 +10,7 @@ import {
 } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import AlarmRecordDetails from './AlarmRecordDetails';
@@ -78,7 +78,7 @@ class AlarmverifyRecord extends Component {
                     <AutoFormTable
                         style={{ marginTop: 10 }}
                         configId={configId}
-                        parentcode="null"
+                        parentcode="alarmmanager/alarmverifyrecord"
                         {...this.props}
                         appendHandleRows={row => (
                             <Fragment>

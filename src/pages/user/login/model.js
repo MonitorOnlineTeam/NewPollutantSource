@@ -30,9 +30,9 @@ const Model = {
             systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
           }
         }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
+        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
 
-
+        
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
         Cookie.set('defaultNavigateUrl', defaultNavigateUrl);

@@ -27,7 +27,7 @@ import {
     Transfer, Switch, Tag, Tree, Radio, Tooltip,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -822,7 +822,7 @@ class DepartIndex extends Component {
                     //     ]
                     // }
                     // >
-                    <PageHeaderWrapper>
+                    <BreadcrumbWrapper>
                         <Card bordered={false} >
                             <Button type="primary"
                                 onClick={this.showModal}
@@ -1104,7 +1104,7 @@ class DepartIndex extends Component {
                             </Modal>
                         </div>
                         {/* </MonitorContent> */}
-                    </PageHeaderWrapper>
+                    </BreadcrumbWrapper>
                 }
             </Fragment>
         );

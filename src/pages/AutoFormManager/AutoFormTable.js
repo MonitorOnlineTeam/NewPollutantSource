@@ -552,7 +552,10 @@ class AutoFormTable extends PureComponent {
     const props = {
       name: 'file',
       multiple: true,
-      action: config.uploadHost + 'rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      action: '/api/rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
       data: {
         ConfigID: configId,
       },

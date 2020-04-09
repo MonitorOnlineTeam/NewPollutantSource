@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import { Card, Modal, Tooltip, Icon } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import YsyShowVideo from '@/components/QCAVideo/QCAYsyShowVideo.js'
@@ -29,7 +29,7 @@ class MaintainRecord extends Component {
     const { configId } = this._SELF_;
     const { VideoNo, startTime } = this.state;
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card className="contentContainer">
           <SearchWrapper
             configId={configId}
@@ -69,7 +69,7 @@ class MaintainRecord extends Component {
             VideoNo && <YsyShowVideo VideoNo={VideoNo} defaultActiveKey="2" showModal={true} startTime={startTime} endTime={moment().format("YYYY-MM-DD 23:59:59")}/>
           }
         </Modal>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

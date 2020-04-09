@@ -6,7 +6,7 @@
  * @Desc: 季度有效数据捕集率页面
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import {
   Card,
   Table,
@@ -54,11 +54,11 @@ class QuartDataCaptureRate extends Component {
           dataIndex: 'EnterpriseName',
         },
         {
-          title: "应传个数",
+          title: "应捕集个数",
           dataIndex: 'ShouldNumber',
         },
         {
-          title: "实传个数",
+          title: "实捕集个数",
           dataIndex: 'TransmissionNumber',
         },
         {
@@ -142,7 +142,7 @@ class QuartDataCaptureRate extends Component {
     const { columns, dataSource, yearValue, currQuarter } = this.state;
     const { tableDatas, loading } = this.props;
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className="contentContainer">
           <Card
             bordered={false}
@@ -225,7 +225,7 @@ class QuartDataCaptureRate extends Component {
             </Row>
           </Card>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

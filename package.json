@@ -61,6 +61,7 @@
     "echarts-for-react": "^2.0.15-beta.0",
     "gg-editor": "^2.0.4",
     "hash.js": "^1.1.7",
+    "html2canvas": "^1.0.0-rc.5",
     "i": "^0.3.6",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",

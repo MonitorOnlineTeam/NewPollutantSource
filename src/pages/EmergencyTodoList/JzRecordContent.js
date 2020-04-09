@@ -149,7 +149,6 @@ class JzRecordContent extends Component {
     render() {
         const appStyle = this.props.appStyle;
         let style = null;
-        debugger
         if (appStyle) {
             style = appStyle;
         }

@@ -71,6 +71,7 @@ export default Model.extend({
     showAlarmState: true,
     menuDescList: [],
     settingList: [],
+    unfoldMenuList: [],
   },
 
   effects: {
@@ -101,6 +102,7 @@ export default Model.extend({
             payload: {
               currentUser,
               currentMenu: cMenu,
+              unfoldMenuList: [...menuList],
               menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
             },
           });

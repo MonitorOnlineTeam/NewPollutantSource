@@ -27,7 +27,7 @@ import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
 import SdlTable from '@/components/SdlTable';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { EditIcon } from '@/utils/icon'
 
 @connect(({ loading, standardLibrary, autoForm }) => ({

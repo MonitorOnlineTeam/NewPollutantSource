@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../../components/NavigationTree'
 import HkShowVideo from '../../../../components/hkvideo/HkShowVideo'
 
@@ -26,9 +26,9 @@ class Index extends Component {
         console.log('qweqweqweqw')
         return (
             <div id="hkvideo">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  <HkShowVideo DGIMN={this.state.dgimn} />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree domId="#hkvideo" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)

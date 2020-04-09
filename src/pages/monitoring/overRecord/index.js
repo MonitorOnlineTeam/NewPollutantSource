@@ -23,7 +23,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -295,18 +295,18 @@ class Index extends Component {
 
     render() {
         return (
-            <div id="record">
+            <div id="overrecord">
                 {/* selKeys="010000a8900016" */}
-            <NavigationTree  domId="#record" choice={false} onItemClick={value => {
+            <NavigationTree  domId="#overrecord" choice={false} onItemClick={value => {
                 if (value.length > 0 && !value[0].IsEnt) {
                     this.setState({
                         dgimn:value[0].key
                     })
                 }
             }} />
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <RecordEchartTableOver  DGIMN={this.state.dgimn} noticeState={1}  />
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
 
         </div>
         );

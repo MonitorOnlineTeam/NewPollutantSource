@@ -28,7 +28,7 @@ import {
   InputNumber,
   Tooltip,
 } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import SdlTable from '../../AutoFormManager/AutoFormTable';
@@ -149,7 +149,7 @@ export default class UserInfoIndex extends Component {
       );
     }
     return (
-      <PageHeaderWrapper title="用户管理">
+      <BreadcrumbWrapper title="用户管理">
         <div className={styles.cardTitle}>
           <Card>
             <SearchWrapper
@@ -171,7 +171,7 @@ export default class UserInfoIndex extends Component {
               style={{ marginTop: 10 }}
               configId={configId}
               onAdd={() => {
-                dispatch(routerRedux.push('/rolesmanager/user/userinfoadd'));
+                dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
               }}
               rowChange={(key, row) => {
                 this.setState({
@@ -199,7 +199,7 @@ export default class UserInfoIndex extends Component {
                         onClick={() => {
                           dispatch(
                             routerRedux.push(
-                              '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'],
+                              '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 编辑",
                             ),
                           );
                         }}
@@ -213,7 +213,7 @@ export default class UserInfoIndex extends Component {
                         onClick={() => {
                           dispatch(
                             routerRedux.push(
-                              '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'],
+                              '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 详情",
                             ),
                           );
                         }}
@@ -248,7 +248,7 @@ export default class UserInfoIndex extends Component {
             ></SdlTable>
           </Card>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

@@ -3,7 +3,7 @@ import {
     Card, Spin,
 } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import styles from './index.less';
@@ -65,7 +65,7 @@ import styles from './index.less';
             />);
         }
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div className={styles.cardTitle}>
                     <Card>
                         <SearchWrapper
@@ -80,7 +80,7 @@ import styles from './index.less';
                         </SdlTable>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

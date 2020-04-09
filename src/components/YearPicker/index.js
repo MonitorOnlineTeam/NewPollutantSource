@@ -19,7 +19,6 @@ class index extends PureComponent {
 
   render() {
     const { isopen, time } = this.state;
-    console.log("props=", this.props)
     return (
       <DatePicker
         // value={time}

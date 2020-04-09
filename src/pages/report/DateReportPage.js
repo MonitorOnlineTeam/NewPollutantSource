@@ -17,7 +17,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import style from './index.less';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlCascader from '../AutoFormManager/SdlCascader';
 import SearchSelect from '../AutoFormManager/SearchSelect';
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -25,7 +25,8 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
 import CascaderMultiple from "@/components/CascaderMultiple"
-import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -51,6 +52,7 @@ const { MonthPicker } = DatePicker;
       // Regions: Form.createFormField(props.dateReportForm.Regions),
       DGIMN: Form.createFormField(props.dateReportForm.DGIMN),
       ReportTime: Form.createFormField(props.dateReportForm.ReportTime),
+      airReportTime: Form.createFormField(props.dateReportForm.airReportTime),
     };
   },
   onFieldsChange(props, fields) {
@@ -68,47 +70,12 @@ const { MonthPicker } = DatePicker;
 class SiteDailyPage extends PureComponent {
   constructor(props) {
     super(props);
-    // const format =
-    //   props.match.params.reportType === 'siteDaily'
-    //     ? 'YYYY-MM-DD'
-    //     : props.match.params.reportType === 'monthly'
-    //       ? 'YYYY-MM'
-    //       : 'YYYY';
-    // const picker=  props.match.params.reportType === 'siteDaily'
-    //     ? 'dayanddate'
-    //     : props.match.params.reportType === 'monthly'
-    //       ? 'month'
-    //       : 'year';
-    let format;
-    let picker;
-    let beginTime;
-    let endTime;
-    switch(props.match.params.reportType)
-    {
-        case "siteDaily":
-            format= 'YYYY-MM-DD';
-            picker='dayanddate';
-            beginTime=moment().format('YYYY-MM-DD 01:00:00');
-            endTime=moment().add(1,'day').format('YYYY-MM-DD 00:00:00');
-          break;
-        case "monthly":
-            format="YYYY-MM";
-            picker="month";
-            beginTime=moment().format('YYYY-MM-01 01:00:00');
-            endTime=moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
-            break;
-          default:
-            format="YYYY";
-            picker="month";
-            beginTime=moment().format('YYYY-01-01 00:00:00');
-            endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
-    }
     this.state = {
-      picker:picker,
-      format: format,
       columns: [],
-      currentDate: moment().format(format),
+      currentDate: moment().add(-1, 'day'),
       defaultRegionCode: [],
+      beginTime: null,
+      endTime: null
     };
     this.SELF = {
       formLayout: {
@@ -118,13 +85,60 @@ class SiteDailyPage extends PureComponent {
       actionType: props.match.params.reportType,
       defaultSearchForm: {
         PollutantSourceType: 1,
-        // Regions: ["110000000", "110100000", "110101000"],
         EntCode: '',
-        ReportTime: moment(),
+        ReportTime: moment().add(-1, 'day'),
       },
     };
     this.statisticsReport = this.statisticsReport.bind(this);
     this.export = this.export.bind(this);
+  }
+
+  pageBegin = (requestdata, nextProps) => {
+    let beginTime;
+    let endTime;
+    let reportType = this.props.match.params.reportType;
+    if (requestdata)
+      reportType = nextProps.match.params.reportType;
+    switch (reportType) {
+      case "siteDaily":
+        beginTime = moment().add(-1, 'day').format('YYYY-MM-DD 01:00:00');
+        endTime = moment().format('YYYY-MM-DD 00:00:00');
+        break;
+      case "monthly":
+        beginTime = moment().format('YYYY-MM-01 00:00:00');
+        endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        break;
+      default:
+        beginTime = moment().format('YYYY-01-01 00:00:00');
+        endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+    }
+    const { dateReportForm, dispatch } = this.props;
+    dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          ...dateReportForm,
+          beginTime: beginTime,
+          endTime: endTime
+        }
+      }
+    })
+    if (requestdata) {
+      setTimeout(() => {
+        // 获取表格数据
+        this.props.dispatch({
+          type: 'report/getDateReportData',
+          payload: {
+            type: reportType,
+            // ...this.props.dateReportForm,
+            PollutantSourceType: this.props.form.getFieldValue('PollutantSourceType'),
+            // "Regions": "130000000,130200000,130201000",
+            DGIMN: this.props.form.getFieldValue('DGIMN'),
+            // "ReportTime": moment(this.props.dateReportForm).format("YYYY-MM-DD")
+          },
+        });
+      }, 0)
+    }
   }
 
   componentDidMount() {
@@ -132,15 +146,19 @@ class SiteDailyPage extends PureComponent {
       this.props.form.setFieldsValue({ "ReportTime": moment().add(-1, "day") })
     }
     const { defaultSearchForm } = this.SELF;
-    const {dispatch}=this.props;
-    //const {}
+    //const {dispatch,dateReportForm}=this.props;
+    // const {beginTime,endTime}=this.state;
     // dispatch({
     //   type:'report/updateState',
     //   payload:{
-    //      beginTime:beginTime,
-
+    //     dateReportForm:{
+    //       ...dateReportForm,
+    //       beginTime:beginTime,
+    //       endTime:endTime
+    //     }
     //   }
     // })
+    this.pageBegin();
     // 获取污染物 - 查询条件
     this.props.dispatch({
       type: 'report/getPollutantTypeList',
@@ -210,50 +228,49 @@ class SiteDailyPage extends PureComponent {
       nextProps.location.pathname != this.props.location.pathname &&
       this.props.form.getFieldValue('DGIMN')
     ) {
-      // 格式化日期
-      const format =
-        nextProps.match.params.reportType === 'siteDaily'
-          ? 'YYYY-MM-DD'
-          : nextProps.match.params.reportType === 'monthly'
-            ? 'YYYY-MM'
-            : 'YYYY';
-      this.setState({
-        format: format,
-        currentDate:
-          this.props.form.getFieldValue('ReportTime') &&
-          moment(this.props.form.getFieldValue('ReportTime')).format(format),
-      });
-      this.props.dispatch({
-        type: "report/updateState",
-        payload: {
-          dateReportForm: {
-            ...this.props.dateReportForm,
-            current: 1
-          }
-        }
-      })
-      setTimeout(() => {
-        // 获取表格数据
-        this.props.dispatch({
-          type: 'report/getDateReportData',
-          payload: {
-            type: nextProps.match.params.reportType,
-            // ...this.props.dateReportForm,
-            PollutantSourceType: this.props.form.getFieldValue('PollutantSourceType'),
-            // "Regions": "130000000,130200000,130201000",
-            DGIMN: this.props.form.getFieldValue('DGIMN'),
-            // "ReportTime": moment(this.props.dateReportForm).format("YYYY-MM-DD")
-          },
-        });
-      }, 0)
-
+      // // 格式化日期
+      // let beginTime;
+      // let endTime;
+      // switch(this.props.match.params.reportType)
+      // {
+      //     case "siteDaily":
+      //         beginTime=moment().format('YYYY-MM-DD 01:00:00');
+      //         endTime=moment().add(1,'day').format('YYYY-MM-DD 00:00:00');
+      //       break;
+      //     case "monthly":
+      //         beginTime=moment().format('YYYY-MM-01 01:00:00');
+      //         endTime=moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+      //         break;
+      //       default:
+      //         beginTime=moment().format('YYYY-01-01 00:00:00');
+      //         endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
+      // }
+      // this.setState({
+      //   beginTime,
+      //   endTime,
+      //   currentDate:
+      //     this.props.form.getFieldValue('ReportTime') &&
+      //     moment(this.props.form.getFieldValue('ReportTime')),
+      // })
+      // this.props.dispatch({
+      //   type: "report/updateState",
+      //   payload: {
+      //     dateReportForm: {
+      //       ...this.props.dateReportForm,
+      //       beginTime,
+      //       endTime,
+      //       current: 1
+      //     }
+      //   }
+      // })
+      this.pageBegin(true, nextProps);
     }
     // if (this.props.pollutantList !== nextProps.pollutantList) {
     if (this.props.dateReportData !== nextProps.dateReportData) {
       let AQIColumn = [];
       // 站点日报 - 扬尘和大气站显示AQI
       let pollutantSourceType = nextProps.form.getFieldValue("PollutantSourceType");
-      if (nextProps.match.params.reportType === "siteDaily" && pollutantSourceType == 5 || pollutantSourceType == 12) {
+      if (pollutantSourceType == 5 || pollutantSourceType == 12) {
         AQIColumn = [{
           title: 'AQI',
           dataIndex: 'AQI',
@@ -300,32 +317,6 @@ class SiteDailyPage extends PureComponent {
         title: '点名称',
         // width: 150,
         dataIndex: 'pointName',
-        // render: (text, row, index) => {
-        //   // if (index === 0) {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: row.rowSpan,
-        //   //     },
-        //   //   };
-        //   //   // } else if (row.time === "0时") {
-        //   // } else if (text !== nextProps.dateReportData[index - 1].pointName) {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: row.rowSpan,
-        //   //     },
-        //   //   };
-        //   // } else {
-        //   //   return {
-        //   //     children: <a href="javascript:;">{text}</a>,
-        //   //     props: {
-        //   //       rowSpan: 0,
-        //   //     },
-        //   //   };
-        //   // }
-        //   return text;
-        // }
       });
       this.setState({
         columns,
@@ -334,11 +325,9 @@ class SiteDailyPage extends PureComponent {
   }
 
   statisticsReport() {
-    const { form, match } = this.props;
-    const { format } = this.state;
+    const { form, match, dateReportForm } = this.props;
     // const { uid, configId, isEdit, keysParams } = this._SELF_;
     // const format = match.params.reportType === "daily" ? "YYYY-MM-DD" : (match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
-
     form.validateFields((err, values) => {
       if (!err) {
         //         EntCode: undefined
@@ -438,9 +427,55 @@ class SiteDailyPage extends PureComponent {
     }, 0);
   };
 
+  dateOnchange = (dates, beginTime, endTime) => {
+    this.props.form.setFieldsValue({ "ReportTime": dates });
+    this.setState({
+      beginTime,
+      endTime
+    })
+  }
+
+
+  rangeOnchange = (dates) => {
+    this.props.form.setFieldsValue({ "airReportTime": dates });
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          ...this.props.dateReportForm,
+          airReportTime: dates,
+          beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+          endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
+        },
+      },
+    });
+    this.setState({
+      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          PollutantSourceType: 1,
+          current: 1,
+          pageSize: 34,
+          total: 0,
+          DGIMN: [],
+          ReportTime: moment().add(-1, 'day'),
+          beginTime: null,
+          endTime: null
+        },
+      },
+    });
+  }
+
   render() {
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator, getFieldValue },
       entAndPointLoading,
       dateReportForm,
       exportLoading,
@@ -458,10 +493,28 @@ class SiteDailyPage extends PureComponent {
       entAndPontList,
     } = this.props;
     const { formLayout, defaultSearchForm } = this.SELF;
-    const { currentEntName, currentDate, defaultRegionCode, format,picker } = this.state;
+    const { currentEntName, currentDate, defaultRegionCode } = this.state;
 
 
-    let timeEle = <DatePickerTool allowClear={false} picker={picker} style={{ width: '100%' }}  />; 
+    const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
+    let dateType = "";
+    let mode;
+    switch (reportType) {
+      case "monthly":
+        dateType = "month";
+        mode = ['month', 'month'];
+        break;
+      case "annals":
+        dateType = "year";
+        mode = ['year', 'year'];
+        break;
+      default:
+        dateType = "daySelecthour";
+        mode = [];
+        break;
+    }
+    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />;
+    let airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(dateReportForm.beginTime), moment(dateReportForm.endTime)]} />
 
     // let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
     // if (format === 'YYYY-MM') {
@@ -478,27 +531,23 @@ class SiteDailyPage extends PureComponent {
     //     />
     //   );
     // }
-    // if (exportLoading) {
-    //   return (
-    //     <Spin
-    //       style={{
-    //         width: '100%',
-    //         height: 'calc(100vh/2)',
-    //         display: 'flex',
-    //         alignItems: 'center',
-    //         justifyContent: 'center',
-    //       }}
-    //       size="large"
-    //     />
-    //   );
-    // }
+    let pageSize = dateReportForm.pageSize;
+    if (getFieldValue("PollutantSourceType") == 5) {
+      if (reportType === "siteDaily") {
+        pageSize = 24
+      } else if (reportType === "monthly") {
+        pageSize = 31
+      } else {
+        pageSize = 12
+      }
+    };
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
-                <Col xxl={4} xl={4} sm={24} lg={7}>
+                <Col md={4} xs={24}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,
@@ -547,7 +596,7 @@ class SiteDailyPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={7} xl={7} sm={24} lg={9}>
+                <Col md={7} xs={24}>
                   <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                     {getFieldDecorator('DGIMN', {
                       initialValue: this.props.form.getFieldValue("DGIMN"),
@@ -563,7 +612,37 @@ class SiteDailyPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={7} xl={7} sm={24} lg={7}>
+
+                {
+                  getFieldValue("PollutantSourceType") == 5 ?
+                    <Col md={7} xs={24}>
+                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                        {getFieldDecorator('airReportTime', {
+                          initialValue: [moment(dateReportForm.beginTime), moment(dateReportForm.endTime)],
+                          rules: [
+                            {
+                              required: true,
+                              message: '请填写统计时间',
+                            },
+                          ],
+                        })(airTimeEle)}
+                      </FormItem>
+                    </Col>
+                    : <Col md={6} xs={24}>
+                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                        {getFieldDecorator("ReportTime", {
+                          initialValue: defaultSearchForm.ReportTime,
+                          rules: [{
+                            required: true,
+                            message: '请填写统计时间',
+                          }],
+                        })(
+                          timeEle
+                        )}
+                      </FormItem>
+                    </Col>
+                }
+                {/* <Col xxl={7} xl={7} sm={24} lg={7}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: defaultSearchForm.ReportTime,
@@ -575,18 +654,23 @@ class SiteDailyPage extends PureComponent {
                       ],
                     })(timeEle)}
                   </FormItem>
-                </Col>
-                <Col xxl={6} xl={6} lg={8}>
-                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                </Col> */}
+                <Col md={6} xs={24}>
+                  <FormItem label="" style={{ width: '100%' }}>
                     <Button
                       type="primary"
                       style={{ margin: '0 10px' }}
+                      loading={loading}
                       onClick={() => {
-                        this.props.dispatch({
+                        const { dateReportForm, dispatch } = this.props;
+                        const { beginTime, endTime } = this.state;
+                        dispatch({
                           type: 'report/updateState',
                           payload: {
                             dateReportForm: {
-                              ...this.props.dateReportForm,
+                              ...dateReportForm,
+                              beginTime,
+                              endTime,
                               current: 1,
                             },
                           },
@@ -632,7 +716,7 @@ class SiteDailyPage extends PureComponent {
               pagination={{
                 // showSizeChanger: true,
                 showQuickJumper: true,
-                pageSize: dateReportForm.pageSize,
+                pageSize: pageSize,
                 current: dateReportForm.current,
                 onChange: this.onTableChange,
                 total: dateReportForm.total,
@@ -640,7 +724,7 @@ class SiteDailyPage extends PureComponent {
             />
           </Card>
         </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

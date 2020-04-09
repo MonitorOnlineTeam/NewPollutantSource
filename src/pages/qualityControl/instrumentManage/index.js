@@ -6,7 +6,7 @@
  * @desc: 质控仪管理
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card } from 'antd';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { router } from 'umi';
@@ -22,7 +22,7 @@ class InstrumentManage extends Component {
     const { configId } = this.state;
     console.log("porps=",this.props.match.path)
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card>
           <AutoFormTable
             configId={configId}
@@ -38,7 +38,7 @@ class InstrumentManage extends Component {
             }}
           />
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

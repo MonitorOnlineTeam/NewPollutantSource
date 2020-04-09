@@ -7,7 +7,7 @@
  */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import InfiniteScroll from 'react-infinite-scroller';
 import {
     Table,
@@ -517,7 +517,7 @@ class dataList extends PureComponent {
         let scrollXWidth = columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
 
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div style={{ width: '100%', height: 'calc(100vh - 40px - 100px - 60px)', marginTop: 20 }} className={styles.standardList}>
                     <Card
                         bordered={false}
@@ -580,7 +580,7 @@ class dataList extends PureComponent {
                         />
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

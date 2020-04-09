@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import {
   Icon,
@@ -21,7 +21,7 @@ class Index extends Component {
         const title = '视频预览';
         return (
             <div id="ysyvideo">
-                <PageHeaderWrapper title={<span>{title}<Button
+                <BreadcrumbWrapper title={<span>{title}<Button
                   style={{ marginLeft: 10 }}
                   onClick={() => {
                     history.go(-1);
@@ -33,7 +33,7 @@ class Index extends Component {
                   返回上级
                 </Button></span>}>
                  <YsyShowVideo DGIMN={this.props.match.params.pointcode} initLoadData />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
             </div>
         );
     }

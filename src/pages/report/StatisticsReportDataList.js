@@ -17,7 +17,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import style from './index.less';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlCascader from '../AutoFormManager/SdlCascader';
 import SearchSelect from '../AutoFormManager/SearchSelect';
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -240,7 +240,7 @@ class StatisticsReportDataList extends PureComponent {
     
     let timeEle=<DatePickerTool  callback={this.onDateCallBack} picker="month" allowClear={false} style={{ width: '100%' }}/>
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
           <Spin spinning={exportLoading || entloading} delay={500}> 
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -342,7 +342,7 @@ class StatisticsReportDataList extends PureComponent {
             />
           </Card>
           </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

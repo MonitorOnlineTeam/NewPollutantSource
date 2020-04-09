@@ -8,7 +8,7 @@ import { message } from 'antd';
 import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN } from '@/services/pointApi';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -29,6 +29,13 @@ export default Model.extend({
             yield take('common/getPollutantTypeList/@@end');
             const dd = yield select(state => state.common);
             payload.callback(dd.defaultPollutantCode);
+        },
+        *factoryTest({ payload }, { call, put, update, select, take }) {
+            const result = yield call(factoryTest, { DGIMN: payload.DGIMN });
+            if (!result.IsSuccess) {
+                sdlMessage(result.Message, 'error');
+            }
+            payload.callback(result.IsSuccess);
         },
         *addPoint({ payload }, { call, put, update, select }) {
             // ;
@@ -152,20 +159,20 @@ export default Model.extend({
                 qualityControlTableData = result.Datas.map((item, index) => {
                     let Component = [];
                     Component = item.Component.map((itm, idx) => ({
-                      ...itm,
-                      key: `${index}${idx}`,
+                        ...itm,
+                        key: `${index}${idx}`,
                     }))
                     return {
-                      ...item,
-                      key: index,
-                      Component: [
-                        ...Component,
-                      ],
+                        ...item,
+                        key: index,
+                        Component: [
+                            ...Component,
+                        ],
                     }
-                  })
-                  yield update({
+                })
+                yield update({
                     qualityControlTableData,
-                  })
+                })
             } else {
                 sdlMessage(result.Message, 'error');
             }

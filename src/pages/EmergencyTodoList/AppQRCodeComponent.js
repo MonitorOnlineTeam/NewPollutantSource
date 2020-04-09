@@ -35,7 +35,6 @@ export default class AppQRCodeComponent extends Component {
                 })
             }
             else {
-                debugger
                 if (this.state.text === "Android下载") {
                     //这个是安卓操作系统
                     window.location.href = this.props.settingList.DownLoadPath;

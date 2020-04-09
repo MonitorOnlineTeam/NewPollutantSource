@@ -196,8 +196,8 @@ export default class GlobalHeaderRight extends PureComponent {
                 initLoadData
                 style={{ maxHeight: '70vh' }}
                 DGIMN={this.state.DGIMN}
-                firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
-                lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+                firsttime={moment(moment().format('YYYY-MM-DD 01:00:00'))}
+                lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
                 noticeState={0}
                 maxHeight={200}
               />
@@ -208,8 +208,8 @@ export default class GlobalHeaderRight extends PureComponent {
                 <RealTimeWarningModal
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
-                  firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
-                  lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+                  firsttime={moment(moment().format('YYYY-MM-DD 00:00:01'))}
+                  lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
                 />
           }
         </Modal>

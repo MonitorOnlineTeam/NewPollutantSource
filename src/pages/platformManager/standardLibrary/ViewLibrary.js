@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import { Card, Button, Icon } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 
@@ -22,7 +22,7 @@ class ViewLibrary extends Component {
   render() {
     const { configId, tableConfigId } = this.state;
     return (
-      <PageHeaderWrapper title="标准库详情">
+      <BreadcrumbWrapper title="标准库详情">
         <Card
           title="详情"
           className="contentContainer"
@@ -53,7 +53,7 @@ class ViewLibrary extends Component {
             />
           </Card>
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

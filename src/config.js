@@ -33,24 +33,21 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  // offlineMapUrl: {
-  //   domain: "",
-  //   srcPath: "/amap-master/amap/js/maps.js"
-  // },
+  offlineMapUrl: {
+    domain: "",
+    srcPath: "/amap-master/amap/js/maps.js"
+  },
   // 外网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://61.50.135.114:50036",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
-  // 内网离线地图配置(兵团)：
+  // 内网离线地图配置：
   // offlineMapUrl: {
-  //   domain: 'http://10.66.1.72:8184',
-  //   srcPath: '/amap-master/amap/js/maps.js',
+  //   domain: "http://172.16.9.20:808",
+  //   srcPath: "/amap/js/maps.js"
   // },
-  offlineMapUrl: {
-    domain: '',
-    srcPath: '/amap-master/amap/js/maps.js',
-  },
+  isShowTabs: true,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
@@ -82,7 +79,9 @@ module.exports = {
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 60,
   // 手工数据上传地址
-  templateUploadUrl: `${apiHost}/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+  templateUploadUrl: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+   // 手工自动数据上传地址
+  templateUploadUrlAuto: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto`,
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

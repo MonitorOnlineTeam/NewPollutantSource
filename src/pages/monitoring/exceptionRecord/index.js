@@ -13,46 +13,10 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import NavigationTree from '../../../components/NavigationTree'
 import RecordEchartTable from '../../../components/recordEchartTable'
-
-const data = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
-  
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '住址',
-      dataIndex: 'address',
-      key: 'address',
-    },
-  ];
-// @connect(({ loading, exceptionrecord }) => ({
-   
-// }))
 
 class Index extends Component {
     constructor(props) {
@@ -72,9 +36,9 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                     <RecordEchartTable  DGIMN={this.state.dgimn}    />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 
             </div>
             // <Table

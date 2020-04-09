@@ -15,7 +15,7 @@ import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
 import config from '@/config';
-
+import  RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 /*
@@ -242,14 +242,14 @@ class QCAYsyShowVideo extends Component {
   };
 
   /** 时间控件 */
-  onChange = (value, dateString) => {
+  onChange = (value) => {
     this.setState({
       stoptime: '',
     });
-    if (value.length > 1) {
+    if (value.length > 1 && value[0]) {
       this.setState({
-        startdateString: dateString[0],
-        enddateString: dateString[1],
+        startdateString: value[0].format('YYYY-MM-DD HH:mm:ss'),
+        enddateString: value[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     } else {
       this.setState({
@@ -417,14 +417,24 @@ class QCAYsyShowVideo extends Component {
                 <TabPane tab="历史" key="2">
                   <Row>
                     <Col className={styles.gutterleft} span={24}>
-                      <RangePicker
+                      {/* <RangePicker
                         defaultValue={this.state.startdateString ? [moment(this.state.startdateString), moment(this.state.enddateString)] : undefined}
                         style={{ width: '350px' }}
                         showTime={{ format: 'HH:mm:ss' }}
                         format="YYYY-MM-DD HH:mm:ss"
                         placeholder={['开始时间', '结束时间']}
                         onChange={this.onChange}
+                      /> */}
+                      <RangePicker_
+                        defaultValue={this.state.startdateString ? [moment(this.state.startdateString), moment(this.state.enddateString)] : undefined}
+                        style={{ width: '350px' }}
+                        // showTime={{ format: 'HH:mm:ss' }}
+                        // format="YYYY-MM-DD HH:mm:ss"
+                        dataType='realtime'
+                        placeholder={['开始时间', '结束时间']}
+                        callback={this.onChange}
                       />
+
                     </Col>
                   </Row>
                   <Divider dashed />

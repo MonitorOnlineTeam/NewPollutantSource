@@ -195,13 +195,16 @@ class SearchWrapper extends Component {
     switch(format)
     {
        case "YYYY-MM-DD HH:MM:SS":
-            return <RangePicker_ style={{ width: '100%' }} />
+            return <RangePicker_ fieldName={fieldName}   
+            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} />
          
        case "YYYY-MM-DD HH:MM":
-            return <RangePicker_ style={{ width: '100%' }} dataType="minute"/>
+            return <RangePicker_ fieldName={fieldName}   
+            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} dataType="minute"/>
             
        case "YYYY-MM-DD HH":
-            return <RangePicker_ style={{ width: '100%' }} dataType="hour"/>
+            return <RangePicker_ fieldName={fieldName}   
+            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} dataType="hour"/>
            
        default:
             return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}   
@@ -277,6 +280,7 @@ class SearchWrapper extends Component {
           );
           break;
         case "多选下拉搜索树":
+        case "三级行政区下拉框":
           placeholder = placeholder || selectPlaceholder;
           element = (
             <SdlCascader

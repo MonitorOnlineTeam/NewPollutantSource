@@ -13,7 +13,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './index.less';
 import NavigationTree from '@/components/NavigationTree'
 import RecordEchartTable from './compoments'
@@ -72,9 +72,9 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                     <RecordEchartTable  DGIMN={this.state.dgimn}    />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 
             </div>
             // <Table

@@ -206,7 +206,6 @@ export default Model.extend({
     },
     /** 获取历史视频数据 */
     *queryhistorydatalisthis({ payload }, { call, update, select }) {
-      debugger;
       const res = yield call(queryhistorydatalist, {
         ...payload,
       });

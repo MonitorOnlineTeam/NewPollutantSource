@@ -24,7 +24,7 @@ import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import moment from 'moment';
@@ -188,7 +188,7 @@ export default class DataReportView extends Component {
             />);
         }
         return (
-            <PageHeaderWrapper>
+            <BreadcrumbWrapper>
                 <div className="contentContainer">
                     <Card className={styles.contentContainer}>
                     <Row>
@@ -265,7 +265,7 @@ export default class DataReportView extends Component {
                         </AutoFormTable>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

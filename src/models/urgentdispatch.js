@@ -9,7 +9,7 @@ export default Model.extend({
     namespace: 'urgentdispatch',
     state: {
         operationUserInfo: null,
-        existTask:null,
+        existTask:false,
         dgimn:null,
     },
     effects: {
@@ -27,18 +27,10 @@ export default Model.extend({
             });
             yield take('queryoperationTaskInfo/@@end');
             const result = yield call(queryoperationInfo, payload);
-            if (result.requstresult === '1') {
                 yield update({
-                    operationUserInfo: result.data,
+                    operationUserInfo: result,
                     dgimn:payload.dgimn
                 });
-            } else {
-                yield update({
-                    operationUserInfo: null,
-                    dgimn:null
-                });
-            }
-           
         },
         
         * queryoperationTaskInfo({
@@ -48,13 +40,13 @@ export default Model.extend({
             update,
         }) {
             const result = yield call(queryoperationTaskInfo, payload);
-            if (result.requstresult === '1') {
+            if (result) {
                 yield update({
-                    existTask: result.data
+                    existTask: true
                 });
             } else {
                 yield update({
-                    existTask: null,
+                    existTask: false,
                 });
             }
         },
@@ -70,7 +62,7 @@ export default Model.extend({
                 DGIMN: payload.DGIMN
             };
             const res = yield call(queryurge, body);
-            if (res == 1) {
+            if (res) {
                 message.success('催办成功!');
             } else {
                 message.error('催办失败!');
@@ -88,13 +80,12 @@ export default Model.extend({
                 remark: payload.remark
             };
             const res = yield call(addtaskinfo, body);
-            if (res == 1) {
+            if (res) {
                 message.success('派单成功!');
-
                 if(payload.reloadData)
                 {
                     //刷新方法
-                    payload.reloadData();   
+                    payload.reloadData(payload.dgimn);   
                 }
             } else {
                 message.error('派单失败!');

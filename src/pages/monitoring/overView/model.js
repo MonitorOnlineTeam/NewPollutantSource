@@ -581,7 +581,6 @@ export default Model.extend({
         payload.message.map(item => {
           newRealTimeDataView.map((itm, idx) => {
             if (item.DGIMN == itm.DGIMN && itm[item.PollutantCode] != undefined) {
-              debugger;
               // console.log("code=", newRealTimeDataView[idx][item.PollutantCode])
               // console.log("newCode=", item.MonitorValue)
               // console.log("MonitorTime=", newRealTimeDataView[idx]["MonitorTime"])

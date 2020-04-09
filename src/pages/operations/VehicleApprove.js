@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { ShenpiIcon } from '@/utils/icon';
 import SdlTable from '@/components/SdlTable'
 import ApproveModal from './vehicle/ApproveModal'
@@ -59,7 +59,7 @@ class VehicleApprove extends Component {
     const { approveModalVisible } = this.props;
     const { configId } = this._SELF_;
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card style={{ height: 'calc(100vh - 200px)' }}>
           <SearchWrapper
             configId={configId}
@@ -130,7 +130,7 @@ class VehicleApprove extends Component {
           />
         </Card>
         {approveModalVisible && <ApproveModal />}
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

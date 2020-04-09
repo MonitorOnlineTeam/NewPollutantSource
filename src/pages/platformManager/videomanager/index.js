@@ -11,7 +11,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './style.less';
 import NavigationTree from '@/components/NavigationTree'
 // import RecordEchartTable from '@/components/recordEchartTable'
@@ -39,11 +39,10 @@ class Index extends Component {
     render() {
         const { pollutantType, dgimn } = this.state;
         const { configInfo } = this.props;
-        console.log('configInfo=', configInfo);
         return (
-            <div id="record">
+            <div id="videomanager">
                 {/* selKeys="31011537961003" */}
-                <NavigationTree domId="#record" choice={false} onItemClick={value => {
+                <NavigationTree domId="#videomanager" choice={false} onItemClick={value => {
                     console.log(value);
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.setState({
@@ -52,9 +51,9 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                 {dgimn && (configInfo.VideoType == 0 ? <HkCameraIndex DGIMN={dgimn}></HkCameraIndex> : <YSYManagerIndex DGIMN={dgimn}></YSYManagerIndex>)}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
 
             </div>
         );
