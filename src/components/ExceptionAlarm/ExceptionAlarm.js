@@ -25,11 +25,18 @@ class ExceptionAlarm extends PureComponent {
 
 
     componentDidMount() {
-        this.reload();
+        const { DGIMN } = this.props;
+        this.reload(DGIMN);
     }
 
-    reload = () => {
-        const { dispatch, DGIMN, Types, firsttime, lasttime } = this.props;
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.DGIMN && this.props.DGIMN != nextProps.DGIMN) {
+            this.reload(nextProps.DGIMN);
+        }
+    }
+
+    reload = (DGIMN) => {
+        const { dispatch, Types, firsttime, lasttime } = this.props;
         let {
             exceptionAlarm,
         } = this.props;
@@ -66,9 +73,6 @@ class ExceptionAlarm extends PureComponent {
             },
         })
     }
-    pageChange = (pageindex, pagesize) => {
-        debugger
-    }
 
     /**
  * 智能质控_渲染异常报警数据列表
@@ -85,7 +89,6 @@ class ExceptionAlarm extends PureComponent {
             状态异常: 'orange',
         };
         if (exceptionAlarm.tableDatas && exceptionAlarm.tableDatas[0]) {
-            debugger
             listData = exceptionAlarm.tableDatas[0].AlarmMsg.map((item, key) => {
                 // 判断报警是否超过4小时
                 const seconds = moment().diff(moment(item.FirstTime), 'minutes');
@@ -96,15 +99,7 @@ class ExceptionAlarm extends PureComponent {
 
                 const labelDiv = <div style={{ color: `${color}` }}>已发生{hour}小时{minutesLable}</div>;
                 // 未响应，按钮是派单;响应了超过4个小时是督办
-                const btnDiv = '';
-                /** 功能没有做先去掉了 xpy 2020-03-12 */
                 // if (hour >= 4 || item.State == '0') {
-                //     btnDiv =
-                //         <div style={{ marginTop: 43 }}>
-                //             <PdButton DGIMN={item.DGIMNs} id={item.OperationUserTel}
-                //                 pname={item.PointName} reloadData={() => this.reload()}
-                //                 exist={item.State} pollutantTypeCode={item.PollutantTypeCode} name={item.OperationUserName} tel={item.OperationUserTel} viewType="workbench" />
-                //         </div>
                 // }
 
                 return {
@@ -116,9 +111,6 @@ class ExceptionAlarm extends PureComponent {
                         <div>
                             <div>
                                 {
-                                    // item.ExceptionTypes.split(',').map((itemss, keyss) => (
-                                    //     <Tag key={keyss} color={`${colorArray[itemss]}`}>{itemss}</Tag>
-                                    // ))
                                     <Tag color={`${colorArray[item.AlarmTypeText]}`}>{item.AlarmTypeText}</Tag>
                                 }
                             </div>
@@ -131,7 +123,6 @@ class ExceptionAlarm extends PureComponent {
                     extra: (
                         <div style={{ marginTop: 30, marginRight: 70, textAlign: 'center' }}>
                             {labelDiv}
-                            {btnDiv}
                         </div>
                     ),
                 };
@@ -144,7 +135,6 @@ class ExceptionAlarm extends PureComponent {
                 dataSource={listData}
                 size="large"
                 pagination={{
-                    onChange: this.pageChange(),
                     pageSize: exceptionAlarm.pageSize,
                 }}
                 renderItem={(item, key) => (
@@ -168,10 +158,16 @@ class ExceptionAlarm extends PureComponent {
         return (
             <div style={{ maxHeight: '70vh' }}>
                 <Card
-                    // title="异常报警"
-                    style={{ marginBottom: 10, maxHeight: '70vh', overflowY: 'auto' }}
+                    bodyStyle={{ paddingTop: 0, paddingBottom: 0, marginBottom: 10 }}
                     bordered={false}
-                    // extra={<a href="#">更多>></a>}
+                >
+                    <PdButton DGIMN={this.props.DGIMN}
+                        reloadData={() => this.reload()}
+                    />
+                </Card>
+                <Card
+                    style={{ marginBottom: 10, maxHeight: '65vh', overflowY: 'auto' }}
+                    bordered={false}
                     className={styles.exceptionAlarm}
                     loading={this.props.loadingExceptionAlarm}
                 >

@@ -10,7 +10,9 @@ import logo from '../../public/sdlicon.png';
 import config from '@/config';
 import styles from './UserLayout.less';
 import Cookie from 'js-cookie';
-
+var QRCode = require('qrcode.react');
+//获取当前ip地址和端口号
+var getIp = "http://"+window.location.host;
 const UserLayout = props => {
   const {
     dispatch,
@@ -85,11 +87,12 @@ const UserLayout = props => {
           <Popover
             content={
               <div>
-                <img
+                {/* <img
                   width={272}
                   alt="logo"
                   src={`/api/upload/phoneQRCode.png`}
-                />
+                /> */}
+                  <QRCode value={getIp+"/appoperation/appqrcodemain"} size={200} />
               </div>
             }
             title="手机端下载" trigger="hover">

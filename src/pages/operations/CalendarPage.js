@@ -93,7 +93,7 @@ class CalendarPage extends PureComponent {
             {/* {item.StandardGasCount}个 */}
             {item.MaintainCount ? <Tag color="#87d068" style={{ cursor: 'pointer' }} onClick={(e) => { this.onTagClick(e, item, 4) }}>需保养</Tag> : null}
             {/* {item.MaintainCount}个 */}
-            {item.V233 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需日常运维</Tag> : null}
+            {item.V233 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需日常巡检</Tag> : null}
             {/* {item.V233}个 */}
             {item.V235 ? <Tag color="#FACD27" style={{ cursor: 'pointer' }} >需校准</Tag> : null}
             {/* {item.V235} */}
@@ -363,15 +363,15 @@ class CalendarPage extends PureComponent {
 
         // 需日常运维提醒个数
         if (item.M233Total) {
-          listData.push({ color: '#FACD27', content: `需日常运维${item.M233Total}个`, type: 5, date: item.FutureDate, text: "需日常运维提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需日常巡检${item.M233Total}个`, type: 5, date: item.FutureDate, text: "需日常巡检监测点个数", future: true })
         }
         // 需校准周期提醒个数
         if (item.M235Total) {
-          listData.push({ color: '#FACD27', content: `需校准周期${item.M235Total}个`, type: 6, date: item.FutureDate, text: "需校准周期提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需校准${item.M235Total}个`, type: 6, date: item.FutureDate, text: "需校准监测点个数", future: true })
         }
         // 需校验周期提醒个数
         if (item.M236Total) {
-          listData.push({ color: '#FACD27', content: `需校验周期${item.M236Total}个`, type: 7, date: item.FutureDate, text: "需校验周期提醒个数", future: true })
+          listData.push({ color: '#FACD27', content: `需校验${item.M236Total}个`, type: 7, date: item.FutureDate, text: "需校验监测点个数", future: true })
         }
 
         // 无异常

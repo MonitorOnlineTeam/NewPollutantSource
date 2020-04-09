@@ -83,7 +83,7 @@ export default Model.extend({
                         align: 'left',
                         width: 150,
                         key: 'MonitorTime',
-                        sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
+                        // sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
                     }];
                     let pollutantcols = [];
                     let width = 100;
