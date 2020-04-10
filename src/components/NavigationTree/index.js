@@ -369,6 +369,7 @@ class NavigationTree extends Component {
   //配置抽屉及动画效果左右区分
   changeState = () => {
     const { domId } = this.props;
+    const tabsElement = document.querySelector(".ant-tabs-card-bar");
     this.setState({
       visible: !this.state.visible,
       right: this.state.right === "caret-right" ? "caret-left" : "caret-right"
@@ -381,11 +382,11 @@ class NavigationTree extends Component {
           dom.style.marginLeft = left
         }else{
           dom.style.marginRight = left
-          document.querySelector(".ant-tabs-card-bar").style.marginRight = left;
+          tabsElement ? tabsElement.style.marginRight = left : undefined
         }
         // floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
         dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
-        document.querySelector(".ant-tabs-card-bar").style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
+        tabsElement ? tabsElement.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out' : undefined
       }
     });
   };
@@ -731,7 +732,6 @@ class NavigationTree extends Component {
 
       });
     const SelectPollutantProps = this.props.defaultPollutant === "undefined" ? {} : { mode: "multiple" }
-
     return (
       <div >
 
@@ -744,7 +744,7 @@ class NavigationTree extends Component {
           width={400}
           mask={false}
           zIndex={1}
-          getContainer={Setting.layout === "sidemenu" && config.isShowTabs ? false : true}
+          getContainer={(Setting.layout === "sidemenu" && config.isShowTabs) ? false : 'body'}
           style={{
             marginTop: 64
           }}

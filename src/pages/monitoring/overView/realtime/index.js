@@ -32,7 +32,8 @@ class index extends Component {
       currentDataType: 'MinuteData',
       realTimeDataView: [],
       filteredInfo: null,
-      time: moment(new Date()).add(-1, 'hour').format("YYYY-MM-DD HH:00:00"),
+      currentHour: moment().hour(),
+      time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format("YYYY-MM-DD HH:00:00") : moment(new Date()).format("YYYY-MM-DD HH:00:00"),
       dayTime: moment(new Date()).add(-1, 'day'),
     };
   }
@@ -290,11 +291,11 @@ class index extends Component {
 
   getHourTimeOptions = () => {
     let options = [];
-    let currentTime = moment().format("YYYY-MM-DD")
-    let nextDayTime = moment().add(1, "day").format("YYYY-MM-DD")
+    let currentTime = moment().hour() > 1 ? moment().format("YYYY-MM-DD") : moment().add(-1, "day").format("YYYY-MM-DD")
+    let nextDayTime = moment().hour() > 1 ? moment().add(1, "day").format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")
     for (var i = 1; i < 24; i++) {
       let label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
-      options.push(<Option value={`${currentTime} ${i}:00:00`}>{label}</Option>)
+      options.push(<Option value={`${currentTime} ${label}`}>{label}</Option>)
     }
     return options.concat(<Option value={`${nextDayTime} 00:00:00`}>00:00:00</Option>);
   }
