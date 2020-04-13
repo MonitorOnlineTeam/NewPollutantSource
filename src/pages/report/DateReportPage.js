@@ -25,8 +25,8 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
 import CascaderMultiple from "@/components/CascaderMultiple"
-import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
-import  RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -112,13 +112,11 @@ class SiteDailyPage extends PureComponent {
         beginTime = moment().format('YYYY-01-01 00:00:00');
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
     }
-    const {dateReportForm,dispatch}=this.props;
-
     this.setState({
       beginTime:beginTime,
       endTime:endTime
     })
-
+    const { dateReportForm, dispatch } = this.props;
     dispatch({
       type: 'report/updateState',
       payload: {
@@ -129,9 +127,7 @@ class SiteDailyPage extends PureComponent {
         }
       }
     })
-
-    if(requestdata)
-    {
+    if (requestdata) {
       setTimeout(() => {
         // 获取表格数据
         this.props.dispatch({
@@ -443,29 +439,47 @@ class SiteDailyPage extends PureComponent {
     })
   }
 
-  
-  rangeOnchange=(dates)=>{
-    this.props.form.setFieldsValue({"airReportTime":dates});
+
+  rangeOnchange = (dates) => {
+    this.props.form.setFieldsValue({ "airReportTime": dates });
     this.props.dispatch({
       type: 'report/updateState',
       payload: {
         dateReportForm: {
           ...this.props.dateReportForm,
           airReportTime: dates,
-          beginTime:dates[0].format('YYYY-MM-DD HH:mm:ss'),
-          endTime:dates[1].format('YYYY-MM-DD HH:mm:ss')
+          beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+          endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
         },
       },
     });
     this.setState({
-     beginTime:dates[0].format('YYYY-MM-DD HH:mm:ss'),
-     endTime:dates[1].format('YYYY-MM-DD HH:mm:ss')
+      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
     });
- }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'report/updateState',
+      payload: {
+        dateReportForm: {
+          PollutantSourceType: 1,
+          current: 1,
+          pageSize: 34,
+          total: 0,
+          DGIMN: [],
+          ReportTime: moment().add(-1, 'day'),
+          beginTime: null,
+          endTime: null
+        },
+      },
+    });
+  }
 
   render() {
     const {
-      form: { getFieldDecorator,getFieldValue },
+      form: { getFieldDecorator, getFieldValue },
       entAndPointLoading,
       dateReportForm,
       exportLoading,
@@ -485,26 +499,26 @@ class SiteDailyPage extends PureComponent {
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
 
+
     const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
-    let dateType="";
+    let dateType = "";
     let mode;
-    switch(reportType)
-    {
+    switch (reportType) {
       case "monthly":
-        dateType="month";
-        mode=['month', 'month'];
+        dateType = "month";
+        mode = ['month', 'month'];
         break;
       case "annals":
-        dateType="year";
-        mode=['year', 'year'];
+        dateType = "year";
+        mode = ['year', 'year'];
         break;
       default:
-        dateType="daySelecthour";
-        mode=[];
+        dateType = "daySelecthour";
+        mode = [];
         break;
     }
-    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange}  />; 
-    let airTimeEle=<RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(dateReportForm.beginTime), moment(dateReportForm.endTime)]} />
+    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />;
+    let airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(dateReportForm.beginTime), moment(dateReportForm.endTime)]} />
 
     // let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
     // if (format === 'YYYY-MM') {
@@ -521,20 +535,16 @@ class SiteDailyPage extends PureComponent {
     //     />
     //   );
     // }
-    if (exportLoading) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+    let pageSize = dateReportForm.pageSize;
+    if (getFieldValue("PollutantSourceType") == 5) {
+      if (reportType === "siteDaily") {
+        pageSize = 24
+      } else if (reportType === "monthly") {
+        pageSize = 31
+      } else {
+        pageSize = 12
+      }
+    };
     return (
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
@@ -609,10 +619,10 @@ class SiteDailyPage extends PureComponent {
 
                 {
                   getFieldValue("PollutantSourceType") == 5 ?
-                    <Col xxl={7} xl={7} sm={24} lg={7}>
+                    <Col md={7} xs={24}>
                       <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                         {getFieldDecorator('airReportTime', {
-                          initialValue: [moment( dateReportForm.beginTime), moment(dateReportForm.endTime)],
+                          initialValue: [moment(dateReportForm.beginTime), moment(dateReportForm.endTime)],
                           rules: [
                             {
                               required: true,
