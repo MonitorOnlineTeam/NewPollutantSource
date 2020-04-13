@@ -22,7 +22,7 @@ import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 const { Search } = Input;
@@ -494,7 +494,7 @@ export default class effluentfeeIndex extends Component {
 
 
         return (
-            <PageHeaderWrapper title="排污税统计">
+            <BreadcrumbWrapper title="排污税统计">
                 <div className="contentContainer">
                     <Card
                         bordered={false}
@@ -552,7 +552,7 @@ export default class effluentfeeIndex extends Component {
                         </Row>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

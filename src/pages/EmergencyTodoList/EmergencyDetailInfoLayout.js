@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 // import "react-image-lightbox/style.css";
 import EmergencyDetailInfo from './EmergencyDetailInfo';
 
@@ -60,9 +60,9 @@ class EmergencyDetailInfoLayout extends Component {
         return (
             //breadCrumbList={this.renderBreadCrumb()}
             <div>
-                <PageHeaderWrapper title="任务单详情">
+                <BreadcrumbWrapper title="任务单详情">
                     <EmergencyDetailInfo {...match.params} history={this.props.history} />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
             </div>
         );
     }

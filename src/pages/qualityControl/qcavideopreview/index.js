@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTree/index.js'
 import YsyShowVideo from '@/components/QCAVideo/QCAYsyShowVideo.js'
 
@@ -30,9 +30,9 @@ class Index extends Component {
                             this.changeDgimn(value[0].VideoNo)
                             }
                         }} />
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                 {this.state.VideoNo&&<YsyShowVideo VideoNo={this.state.VideoNo} />}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
 
             </div>
         );

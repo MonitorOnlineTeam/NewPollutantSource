@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
 import moment from 'moment'
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTree'
 import DataAuditTable from "./components/DataAuditTable";
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -146,6 +146,7 @@ class DataAuditPage extends Component {
           checkpPol={defalutPollutantType}
           polShow
           // choice
+          domId="#dataAudit"
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
               this.setState({
@@ -156,8 +157,8 @@ class DataAuditPage extends Component {
             }
           }}
         />
-        <div id="contentWrapper">
-          <PageHeaderWrapper>
+        <div id="dataAudit">
+          <BreadcrumbWrapper>
             <Card
               className="contentContainer"
               title={this.getCardTitle()}
@@ -195,7 +196,7 @@ class DataAuditPage extends Component {
               />
               {/* </Spin> */}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

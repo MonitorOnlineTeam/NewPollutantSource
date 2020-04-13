@@ -12,7 +12,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree'
 import OperationRecord from '@/components/OperationRecord'
 
@@ -38,9 +38,9 @@ class Index extends Component {
                         })
                     }
                 }} />
-                <PageHeaderWrapper title="运维记录">
+                <BreadcrumbWrapper title="运维记录">
                     {this.state.dgimn && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} />}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
 
             </div>
         );

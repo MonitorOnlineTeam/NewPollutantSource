@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Card, Tag, Modal, Form } from 'antd';
 import NavigationTree from '@/components/NavigationTree'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { connect } from 'dva';
 import { router } from 'umi';
@@ -41,7 +41,7 @@ class EquipmentCategoryPage extends Component {
           }
         }} />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             <Card>
               {
                 DGIMN && <AutoFormTable
@@ -60,7 +60,7 @@ class EquipmentCategoryPage extends Component {
                 />
               }
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

@@ -19,9 +19,10 @@ import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
 import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import { router } from "umi"
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
@@ -170,14 +171,22 @@ export default class EntTransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    return (
-                        <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`}> 查看详情 </Link>
-                    );
+                    return <a onClick={()=>{
+                      router.push({
+                        pathname: `/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`,
+                        query: {
+                          tabName: "传输有效率 - 详情"
+                        }
+                      })
+                    }}>查看详情</a>
+                    // return (
+                    //     <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}?tabName=`}> 查看详情 </Link>
+                    // );
                 }
             }
         ];
         return (
-            <PageHeaderWrapper title="传输有效率">
+            <BreadcrumbWrapper title="传输有效率">
                 <div className="contentContainer">
                     <Card
                         bordered={false}
@@ -215,7 +224,7 @@ export default class EntTransmissionEfficiency extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <SdlTable 
+                            <SdlTable
                                 rowKey={(record, index) => `complete${index}`}
                                 loading={this.props.loading}
                                 columns={columns}
@@ -237,7 +246,7 @@ export default class EntTransmissionEfficiency extends Component {
                         </Row>
                     </Card>
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }

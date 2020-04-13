@@ -1,4 +1,4 @@
-import { Icon, Tooltip, Popover, } from 'antd';
+import { Icon, Tooltip, Popover } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -11,15 +11,15 @@ import NoticeIconView from './NoticeIconView'
 
 const GlobalHeaderRight = props => {
   const { theme, layout, configInfo } = props;
-  //console.log("changePwdVisible=",props);
+  // console.log("changePwdVisible=",props);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
-  var QRCode = require('qrcode.react');
-  //获取当前ip地址和端口号
-  var getIp = "http://"+window.location.host;
+  const QRCode = require('qrcode.react');
+  // 获取当前ip地址和端口号
+  const getIp = `http://${window.location.host}`;
   return (
     <div className={className}>
       {/* <HeaderSearch
@@ -60,14 +60,14 @@ const GlobalHeaderRight = props => {
         </a>
       </Tooltip> */}
       {
-        configInfo && configInfo.IsShowQRcode === "true" &&
+        configInfo && configInfo.IsShowQRcode === 'true' &&
         <Popover content={<div>
           {/* <img
           width={272}
           alt="logo"
           src={`/api/upload/phoneQRCode.png`}
         /> */}
-          <QRCode value={getIp+"/appoperation/appqrcodemain"} size={200} />
+          <QRCode value={`${getIp}/appoperation/appqrcodemain`} size={200} />
         </div>} title="手机端下载" trigger="hover">
           <a
             rel="noopener noreferrer"
@@ -78,6 +78,7 @@ const GlobalHeaderRight = props => {
         </Popover>
       }
 
+      {/** 污水处理厂权限去掉铃铛 */}
       <NoticeIconView />
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}

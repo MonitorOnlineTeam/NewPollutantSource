@@ -3,7 +3,7 @@ import {
   Card, Spin, Divider, Tooltip, Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import styles from './index.less';
@@ -80,7 +80,7 @@ class Index extends Component {
       />);
     }
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <div className={styles.cardTitle}>
           <Card>
             <SearchWrapper
@@ -113,7 +113,7 @@ class Index extends Component {
             </AutoFormTable>
           </Card>
         </div>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

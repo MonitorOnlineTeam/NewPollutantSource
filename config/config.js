@@ -269,7 +269,7 @@ export default {
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
                 },
                 {
-                  // 设备管理 
+                  // 设备管理
                   name: 'equipmentManage',
                   path: '/platformconfig/equipmentManage',
                   component: './platformManager/equipmentManage',
@@ -338,6 +338,11 @@ export default {
                   name: 'manualupload',
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
+                },
+                {
+                  name: 'manualuploadauto',
+                  path: '/platformconfig/manualuploadauto/',
+                  component: './platformManager/manualuploadauto',
                 },
                 {
                   name: 'maintenancedatabase',
@@ -414,7 +419,11 @@ export default {
                   path: '/platformconfig/equipmentinfomanage/:configId',
                   component: './OperationSysManager/EquipmentInfoManage/',
                 },
-
+                {
+                  name: 'factorytest',
+                  path: '/platformconfig/factorytest',
+                  component: './platformManager/factorytest',
+                },
               ],
             },
             {
@@ -633,7 +642,7 @@ export default {
               routes: [
                 {
                   path: '/rolesmanager',
-                  redirect: '/rolesmanager/user',
+                  redirect: '/rolesmanager/user/userinfoindex/UserInfo',
                 },
                 {
                   name: 'user',
@@ -733,7 +742,7 @@ export default {
                 },
                 {
                   name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord',
+                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
                 },
               ]
@@ -926,6 +935,12 @@ export default {
                   name: 'compositeIndexReport',
                   path: '/Intelligentanalysis/compositeIndex/:reportType',
                   component: './dataAnalyze/CompositeIndexReport',
+                },
+                // 综合指数范围报表
+                {
+                  name: 'compositeIndexRangeReport',
+                  path: '/Intelligentanalysis/compositeIndexRange',
+                  component: './dataAnalyze/CompositeRangeReport',
                 },
                 // 季度有效数据捕集率
                 {

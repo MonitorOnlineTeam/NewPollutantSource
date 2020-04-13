@@ -16,12 +16,12 @@
 // // 文件上传地址
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
-const apiHost = 'http://172.16.12.152:50080/';
+const apiHost = 'http://localhost:52198/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
 const webSocketPush = '172.16.12.135:60204,111.53.101.207:1501';
-
+const GBSVideoApiUrl = 'http://121.40.50.44:10000/';
 module.exports = {
   // name: '污染源智能分析平台',
   // logindesc: 'SDL 您身边的环境污染分析专家',
@@ -30,22 +30,24 @@ module.exports = {
   amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
   apiHost,
   uploadHost,
+  GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  // offlineMapUrl: {
-  //   domain: "",
-  //   srcPath: "/amap-master/amap/js/maps.js"
-  // },
+  offlineMapUrl: {
+    domain: "",
+    srcPath: "/amap-master/amap/js/maps.js"
+  },
   // 外网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://61.50.135.114:50036",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
   // 内网离线地图配置：
-  offlineMapUrl: {
-    domain: "http://172.16.9.20:808",
-    srcPath: "/amap/js/maps.js"
-  },
+  // offlineMapUrl: {
+  //   domain: "http://172.16.9.20:808",
+  //   srcPath: "/amap/js/maps.js"
+  // },
+  isShowTabs: true,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271',
   zoom: 12,
@@ -77,7 +79,9 @@ module.exports = {
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 60,
   // 手工数据上传地址
-  templateUploadUrl: `${apiHost}/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+  templateUploadUrl: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+   // 手工自动数据上传地址
+  templateUploadUrlAuto: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto`,
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

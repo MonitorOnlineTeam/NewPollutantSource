@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Divider } from 'antd'
 // import styles from './index.less'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import NavigationTree from '@/components/NavigationTree'
@@ -246,10 +246,10 @@ class MultiSiteParamsPage extends PureComponent {
           </Select>
         </Col>
         <Col span={8}>
-        <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
+          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
             this.setState({
               time: dates,
-              dataType:dataType
+              dataType: dataType
             })
           }} />
         </Col>
@@ -288,9 +288,9 @@ class MultiSiteParamsPage extends PureComponent {
       </Card.Grid>
     )
   }
-  
-  onRef1=(ref)=>{
-    this.children=ref;
+
+  onRef1 = (ref) => {
+    this.children = ref;
   }
 
   render() {
@@ -303,6 +303,7 @@ class MultiSiteParamsPage extends PureComponent {
           checkpPol={defalutPollutantType}
           polShow
           choice
+          domId="#multiSiteParamsPage"
           onItemClick={value => {
             if (value.length) {
               let DGIMNsList = value.filter(item => item.IsEnt === false)
@@ -316,8 +317,8 @@ class MultiSiteParamsPage extends PureComponent {
             }
           }}
         />
-        <div id="contentWrapper">
-          <PageHeaderWrapper>
+        <div id="multiSiteParamsPage">
+          <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
@@ -338,7 +339,7 @@ class MultiSiteParamsPage extends PureComponent {
             >
               {chartList.length ? this.pageContent() : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

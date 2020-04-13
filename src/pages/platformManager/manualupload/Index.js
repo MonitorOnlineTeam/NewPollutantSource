@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree'
 import ContentList from './components/ContentList'
 import moment from "moment";
@@ -62,9 +62,9 @@ class Index extends Component {
         const { DGIMN } = this.state;
         return (
             <div id="manualupload">
-                <PageHeaderWrapper >
+                <BreadcrumbWrapper >
                     <ContentList DGIMN={DGIMN} />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree runState='0' domId="#manualupload" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)

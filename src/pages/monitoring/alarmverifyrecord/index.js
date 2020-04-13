@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AlarmverifyRecord from './components/AlarmverifyRecord'
 
 /**
@@ -15,9 +15,9 @@ class Index extends Component {
     render() {
         return (
             <div id="dataquery">
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  <AlarmverifyRecord configId="ExceptionVerify" />
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
             </div>
         );
     }

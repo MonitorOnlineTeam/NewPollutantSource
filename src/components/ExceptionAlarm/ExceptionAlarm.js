@@ -25,39 +25,45 @@ class ExceptionAlarm extends PureComponent {
 
 
     componentDidMount() {
-        console.log('22222222222222');
-        this.reload();
+        const { DGIMN } = this.props;
+        this.reload(DGIMN);
     }
 
-    reload = () => {
-        const { dispatch, DGIMN, Types, firsttime, lasttime } = this.props;
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.DGIMN && this.props.DGIMN != nextProps.DGIMN) {
+            this.reload(nextProps.DGIMN);
+        }
+    }
+
+    reload = (DGIMN) => {
+        const { dispatch, Types, firsttime, lasttime } = this.props;
         let {
-          exceptionAlarm,
+            exceptionAlarm,
         } = this.props;
         if (Types !== '1') {
-             exceptionAlarm = {
-               ...exceptionAlarm,
-               beginTime: moment().format('YYYY-MM-DD 00:00:00'),
-               endTime: moment().format('YYYY-MM-DD 23:59:59'),
-             }
-             dispatch({
-               type: 'workbenchmodel/updateState',
-               payload: {
-                 exceptionAlarm,
-               },
-             })
+            exceptionAlarm = {
+                ...exceptionAlarm,
+                beginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+                endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            }
+            dispatch({
+                type: 'workbenchmodel/updateState',
+                payload: {
+                    exceptionAlarm,
+                },
+            })
         } else {
-             exceptionAlarm = {
-               ...exceptionAlarm,
-               beginTime: firsttime,
-                 endTime: lasttime,
-             }
-             dispatch({
-               type: 'workbenchmodel/updateState',
-               payload: {
-                 exceptionAlarm,
-               },
-             })
+            exceptionAlarm = {
+                ...exceptionAlarm,
+                beginTime: firsttime,
+                endTime: lasttime,
+            }
+            dispatch({
+                type: 'workbenchmodel/updateState',
+                payload: {
+                    exceptionAlarm,
+                },
+            })
         }
         dispatch({
             type: 'workbenchmodel/getExceptionAlarmData',
@@ -82,60 +88,55 @@ class ExceptionAlarm extends PureComponent {
             逻辑异常: 'volcano',
             状态异常: 'orange',
         };
-        listData = exceptionAlarm.tableDatas.map((item, key) => {
-            console.log(item);
-            // 判断报警是否超过4小时
-            const seconds = moment().diff(moment(item.FirstAlarmTime), 'minutes');
-            const hour = Math.floor(seconds / 60);
-            const minutes = Math.floor(seconds % 60);
-            const color = hour >= 4 ? 'red' : 'rgb(129,203,237)';
-            const minutesLable = minutes > 0 ? `${minutes}分钟` : '';
+        if (exceptionAlarm.tableDatas && exceptionAlarm.tableDatas[0]) {
+            listData = exceptionAlarm.tableDatas[0].AlarmMsg.map((item, key) => {
+                // 判断报警是否超过4小时
+                const seconds = moment().diff(moment(item.FirstTime), 'minutes');
+                const hour = Math.floor(seconds / 60);
+                const minutes = Math.floor(seconds % 60);
+                const color = hour >= 4 ? 'red' : 'rgb(129,203,237)';
+                const minutesLable = minutes > 0 ? `${minutes}分钟` : '';
 
-            const labelDiv = <div style={{ color: `${color}` }}>已发生{hour}小时{minutesLable}</div>;
-            // 未响应，按钮是派单;响应了超过4个小时是督办
-            const btnDiv = '';
-            /** 功能没有做先去掉了 xpy 2020-03-12 */
-            // if (hour >= 4 || item.State == '0') {
-            //     btnDiv =
-            //         <div style={{ marginTop: 43 }}>
-            //             <PdButton DGIMN={item.DGIMNs} id={item.OperationUserTel}
-            //                 pname={item.PointName} reloadData={() => this.reload()}
-            //                 exist={item.State} pollutantTypeCode={item.PollutantTypeCode} name={item.OperationUserName} tel={item.OperationUserTel} viewType="workbench" />
-            //         </div>
-            // }
+                const labelDiv = <div style={{ color: `${color}` }}>已发生{hour}小时{minutesLable}</div>;
+                // 未响应，按钮是派单;响应了超过4个小时是督办
+                // if (hour >= 4 || item.State == '0') {
+                // }
 
-            return {
-                // href: 'http://ant.design',
-                key,
-                title: `${item.PointName}`,
-                avatar: (<Icon type="alert" theme="twoTone" />),
-                description: (
-                    <div>
+                return {
+                    // href: 'http://ant.design',
+                    key,
+                    // title: `${item.PointName}`,
+                    avatar: (<Icon type="alert" theme="twoTone" />),
+                    description: (
                         <div>
-                            {
-                                item.ExceptionTypes.split(',').map((itemss, keyss) => (
-                                    <Tag key={keyss} color={`${colorArray[itemss]}`}>{itemss}</Tag>
-                                ))
-                            }
+                            <div>
+                                {
+                                    <Tag color={`${colorArray[item.AlarmTypeText]}`}>{item.AlarmTypeText}</Tag>
+                                }
+                            </div>
+                            <div style={{ marginTop: 10 }}>
+                                <div>{item.AlarmMsg}</div>
+                            </div>
                         </div>
-                        <div style={{ marginTop: 10 }}>
-                            <div>{item.LastAlarmMsg}</div>
+                    ),
+                    content: '',
+                    extra: (
+                        <div style={{ marginTop: 30, marginRight: 70, textAlign: 'center' }}>
+                            {labelDiv}
                         </div>
-                    </div>
-                ),
-                content: '',
-                extra: (
-                    <div style={{ marginTop: 30, marginRight: 70, textAlign: 'center' }}>
-                        {labelDiv}
-                        {btnDiv}
-                    </div>
-                ),
-            };
-        });
+                    ),
+                };
+            });
+        }
+
         return (
             <List
                 itemLayout="vertical"
                 dataSource={listData}
+                size="large"
+                pagination={{
+                    pageSize: exceptionAlarm.pageSize,
+                }}
                 renderItem={(item, key) => (
                     <List.Item
                         key={key}
@@ -157,10 +158,16 @@ class ExceptionAlarm extends PureComponent {
         return (
             <div style={{ maxHeight: '70vh' }}>
                 <Card
-                    // title="异常报警"
-                    style={{ marginBottom: 10, maxHeight: '70vh', overflowY: 'auto' }}
+                    bodyStyle={{ paddingTop: 0, paddingBottom: 0, marginBottom: 10 }}
                     bordered={false}
-                    // extra={<a href="#">更多>></a>}
+                >
+                    <PdButton DGIMN={this.props.DGIMN}
+                        reloadData={() => this.reload()}
+                    />
+                </Card>
+                <Card
+                    style={{ marginBottom: 10, maxHeight: '65vh', overflowY: 'auto' }}
+                    bordered={false}
                     className={styles.exceptionAlarm}
                     loading={this.props.loadingExceptionAlarm}
                 >

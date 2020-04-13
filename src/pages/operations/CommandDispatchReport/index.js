@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree'
 import CommandDispatchReport from './components/index'
 import PageLoading from '@/components/PageLoading'
@@ -25,9 +25,9 @@ class Index extends Component {
     render() {
         return (
             < div id = "CommandDispatchReport" >
-                <PageHeaderWrapper>
+                <BreadcrumbWrapper>
                  {this.state.dgimn ? <CommandDispatchReport DGIMN={this.state.dgimn} initLoadData/> : <PageLoading/>}
-                </PageHeaderWrapper>
+                </BreadcrumbWrapper>
                 <NavigationTree domId="#CommandDispatchReport" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)

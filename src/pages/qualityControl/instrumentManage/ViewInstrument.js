@@ -6,7 +6,7 @@
  * @desc: 质控仪详情
  */
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Form, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon } from 'antd';
 import { connect } from 'dva';
 import PageLoading from '@/components/PageLoading'
@@ -167,7 +167,7 @@ class ViewInstrument extends Component {
       return <PageLoading />
     }
     return (
-      <PageHeaderWrapper title="质控仪详情">
+      <BreadcrumbWrapper title="质控仪详情">
         <Card>
           <Form layout='horizontal'>
             <Row>
@@ -237,7 +237,7 @@ class ViewInstrument extends Component {
             </Divider>
           </Row>
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

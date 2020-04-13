@@ -5,6 +5,7 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import LoginComponents from './components/Login';
 import styles from './style.less';
+
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
 
 @connect(({ userLogin, loading }) => ({
@@ -13,19 +14,22 @@ const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
 }))
 class Login extends Component {
   loginForm = undefined;
+
   state = {
     type: 'account',
     autoLogin: true,
   };
+
   changeAutoLogin = e => {
     this.setState({
       autoLogin: e.target.checked,
     });
   };
+
   handleSubmit = (err, values) => {
     const { type } = this.state;
-    //;
-    console.log("values=", values);
+    // ;
+    console.log('values=', values);
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
@@ -34,11 +38,13 @@ class Login extends Component {
       });
     }
   };
+
   onTabChange = type => {
     this.setState({
       type,
     });
   };
+
   onGetCaptcha = () =>
     new Promise((resolve, reject) => {
       if (!this.loginForm) {
@@ -59,6 +65,7 @@ class Login extends Component {
         }
       });
     });
+
   renderMessage = content => (
     <Alert
       style={{
@@ -86,7 +93,7 @@ class Login extends Component {
         >
           <Tab
             key="account"
-            tab={'账户密码登录'}
+            tab="账户密码登录"
           >
             {status === 'error' &&
               loginType === 'account' &&
@@ -94,21 +101,21 @@ class Login extends Component {
               this.renderMessage(message)}
             <UserName
               name="userName"
-              placeholder={`请输入用户名`}
+              placeholder="请输入用户名"
               rules={[
                 {
                   required: true,
-                  message: '请输入用户名！',
+                  message: '请输入用户名',
                 },
               ]}
             />
             <Password
               name="password"
-              placeholder={`请输入密码！`}
+              placeholder="请输入密码"
               rules={[
                 {
                   required: true,
-                  message: `请输入密码!`,
+                  message: '请输入密码',
                 },
               ]}
               onPressEnter={() =>

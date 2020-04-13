@@ -7,7 +7,7 @@
  */
 import React, { PureComponent } from 'react'
 import { Table, Card, Tag, Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Divider, Button } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva'
 import { handleFormData } from '@/utils/utils'
 import { router } from 'umi';
@@ -149,7 +149,7 @@ class AddEditEquipmentPage extends PureComponent {
       return <PageLoading />
     }
     return (
-      <PageHeaderWrapper title={type === 'add' ? '添加' : '编辑'}>
+      <BreadcrumbWrapper title={type === 'add' ? '添加' : '编辑'}>
         <Card>
           <Form {...formItemLayout} onSubmit={this.submitForm}>
             <Row>
@@ -246,7 +246,7 @@ class AddEditEquipmentPage extends PureComponent {
             </Row>
           </Form>
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

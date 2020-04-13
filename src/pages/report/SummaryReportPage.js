@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin } from 'antd'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment'
 import style from './index.less'
 import SdlCascader from '../AutoFormManager/SdlCascader'
@@ -45,8 +45,8 @@ class DailySummaryPage extends PureComponent {
     };
     this.SELF = {
       formLayout: {
-        labelCol: { span: 6 },
-        wrapperCol: { span: 18 },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 17 },
       },
       defaultSearchForm: {
         PollutantSourceType: 1,
@@ -499,12 +499,12 @@ class DailySummaryPage extends PureComponent {
 
 
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col xl={5} sm={24} md={12}>
+                <Col sm={24} md={5}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator("PollutantSourceType", {
                       // initialValue: defaultSearchForm.PollutantSourceType,
@@ -563,7 +563,7 @@ class DailySummaryPage extends PureComponent {
                 </Col>
                 {
                   // 大气站显示监控目标
-                  <Col xl={6} sm={24} md={12} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
+                  <Col sm={24} md={6} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
@@ -581,7 +581,7 @@ class DailySummaryPage extends PureComponent {
                 }
                 {
                   getFieldValue("PollutantSourceType") == 5 ?
-                    <Col xxl={7} xl={7} sm={24} lg={7}>
+                    <Col sm={24} md={6}>
                       <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                         {getFieldDecorator('airReportTime', {
                           initialValue: [moment( summaryForm.beginTime), moment(summaryForm.endTime)],
@@ -594,7 +594,7 @@ class DailySummaryPage extends PureComponent {
                         })(airTimeEle)}
                       </FormItem>
                     </Col>
-                    : <Col xl={6} sm={24} md={12}>
+                    : <Col sm={24} md={6}>
                       <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                         {getFieldDecorator("ReportTime", {
                           initialValue: defaultSearchForm.ReportTime,
@@ -608,8 +608,8 @@ class DailySummaryPage extends PureComponent {
                       </FormItem>
                     </Col>
                 }
-                <Col xl={6} md={12}>
-                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+                <Col md={6} sm={24}>
+                  <FormItem label="" style={{ width: '100%' }}>
                     {/* {getFieldDecorator("", {})( */}
                     <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
                     <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
@@ -640,7 +640,7 @@ class DailySummaryPage extends PureComponent {
             />
           </Card>
         </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

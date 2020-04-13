@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import { connect } from 'dva';
 
@@ -525,7 +525,7 @@ class CompositeIndexReport extends Component {
     // }
 
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -563,10 +563,10 @@ class CompositeIndexReport extends Component {
                 </Col>
               </Row>
             </Form>
-            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600 }} />
+            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600, y: 'calc(100vh - 380px)' }} />
           </Card>
         </Spin>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

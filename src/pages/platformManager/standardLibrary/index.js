@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card } from 'antd';
 import { connect } from 'dva'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
@@ -37,7 +37,7 @@ class index extends Component {
 
   render() {
     return (
-      <PageHeaderWrapper>
+      <BreadcrumbWrapper>
         <Card>
           <SearchWrapper
             configId={this._SELF_.configId}
@@ -48,18 +48,33 @@ class index extends Component {
               this.onDelete(record, key);
             }}
             onAdd={() => {
-              router.push("/platformconfig/StandardLibrary/addLibrary")
+              router.push({
+                pathname: "/platformconfig/StandardLibrary/addLibrary",
+                query: {
+                  tabName: '标准库管理 - 添加',
+                }
+              })
             }}
             onEdit={(record, key) => {
               const cuid = getRowCuid(record, "dbo.T_Base_StandardLibrary.AttachmentID")
-              router.push(`/platformconfig/StandardLibrary/editLibrary/${key}/${cuid}`)
+              router.push({
+                pathname: `/platformconfig/StandardLibrary/editLibrary/${key}/${cuid}`,
+                query: {
+                  tabName: '标准库管理 - 编辑',
+                }
+              })
             }}
             onView={(record, key) => {
-              router.push(`/platformconfig/StandardLibrary/viewLibrary/${key}`)
+              router.push({
+                pathname: `/platformconfig/StandardLibrary/viewLibrary/${key}`,
+                query: {
+                  tabName: '标准库管理 - 详情',
+                }
+              })
             }}
           />
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }

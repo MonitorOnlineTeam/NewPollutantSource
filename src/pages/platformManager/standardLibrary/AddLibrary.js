@@ -26,7 +26,7 @@ import {
   Icon,
 } from 'antd';
 import NavigationTree from '@/components/NavigationTree'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable'
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload'
@@ -321,7 +321,7 @@ class AddLibrary extends Component {
     const { dataSource, columns, cuid, fileList } = this.state;
 
     return (
-      <PageHeaderWrapper title={title}>
+      <BreadcrumbWrapper title={title}>
         <Card title="标准库维护" className="contentContainer">
           <Form {...formItemLayout}>
             <Row>
@@ -437,7 +437,7 @@ class AddLibrary extends Component {
             </Row>
           </Form>
         </Card>
-      </PageHeaderWrapper>
+      </BreadcrumbWrapper>
     )
   }
 }

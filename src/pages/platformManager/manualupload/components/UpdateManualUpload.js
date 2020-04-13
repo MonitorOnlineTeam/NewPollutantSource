@@ -38,18 +38,17 @@ export default class UpdateManualUpload extends Component {
     }
     //根据污染物编号获取单位
     pollutantChange = (value) => {
-        const { addSelectPollutantData ,item} = this.props;
+        const { addSelectPollutantData, item } = this.props;
         if (value) {
             let PollutantCode = '';
             let unit = '';
             PollutantCode = value.split('--')[0]
             if (item) {
-                unit=item.Unit;
+                unit = item.Unit;
             }
-            else
-            {
-                   //测试
-                   addSelectPollutantData.filter(n => n.PollutantCode == PollutantCode).map((item) => {
+            else {
+                //测试
+                addSelectPollutantData.filter(n => n.PollutantCode == PollutantCode).map((item) => {
                     unit = item.Unit
                 })
             }
@@ -107,10 +106,10 @@ export default class UpdateManualUpload extends Component {
                                     initialValue: isExists ? item.PollutantName : '',
                                     rules: [
                                         {
-                                          required: true,
-                                          message: '请选择污染物名称!',
+                                            required: true,
+                                            message: '请选择污染物名称!',
                                         },
-                                      ],
+                                    ],
                                 })(
                                     <Select
                                         placeholder="请选择污染物名称"
@@ -137,10 +136,10 @@ export default class UpdateManualUpload extends Component {
                                         initialValue: isExists ? moment(item.MonitorTime === null ? Date.now() : item.MonitorTime) : '',
                                         rules: [
                                             {
-                                              required: true,
-                                              message: '请选择监测时间!',
+                                                required: true,
+                                                message: '请选择监测时间!',
                                             },
-                                          ],
+                                        ],
                                     })(
                                         <DatePicker disabled={isExists} showTime format="YYYY-MM-DD HH:mm:ss" />
                                     )}
@@ -154,10 +153,10 @@ export default class UpdateManualUpload extends Component {
                                     initialValue: isExists ? item.MonitorValue.split('.')[0] + '.000' : '',
                                     rules: [
                                         {
-                                          required: true,
-                                          message: '请选择浓度!',
+                                            required: true,
+                                            message: '请选择浓度!',
                                         },
-                                      ],
+                                    ],
                                 })(
 
                                     <Input type="number" placeholder="请输入浓度" addonAfter={unit} />

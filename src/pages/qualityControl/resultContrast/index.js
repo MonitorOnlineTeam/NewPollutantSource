@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, Alert, Row, Col, Select, Button } from 'antd'
 import { connect } from 'dva'
 import moment from 'moment';
@@ -26,9 +26,9 @@ class index extends Component {
           }
         }} />
         <div id="contentWrapper">
-          <PageHeaderWrapper>
+          <BreadcrumbWrapper>
             {this.state.DGIMN && <ResultContrastPage DGIMN={this.state.DGIMN} flag={true}/>}
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

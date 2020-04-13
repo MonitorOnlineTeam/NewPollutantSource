@@ -8,7 +8,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message } from 'antd'
 // import styles from './index.less'
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import NavigationTree from '@/components/NavigationTree'
@@ -17,7 +17,7 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { getDirLevel } from "@/utils/utils"
-import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overview/tools'
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools'
 
 const { RangePicker } = DatePicker;
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
@@ -189,10 +189,10 @@ class SiteParamsPage extends PureComponent {
           </Select>
         </Col>
         <Col span={8}>
-          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
+          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
             this.setState({
               time: dates,
-              dataType:dataType
+              dataType: dataType
             })
           }} />
         </Col>
@@ -381,9 +381,9 @@ class SiteParamsPage extends PureComponent {
     </>
   }
 
-  onRef1=(ref)=>{
-    this.children=ref;
-}
+  onRef1 = (ref) => {
+    this.children = ref;
+  }
 
   render() {
     const { showType, columns, defalutPollutantType } = this.state;
@@ -395,6 +395,7 @@ class SiteParamsPage extends PureComponent {
           checkpPol={defalutPollutantType}
           polShow
           // choice
+          domId="#siteParamsPage"
           onItemClick={value => {
             if (value.length) {
               let DGIMNs = value.find(item => {
@@ -411,14 +412,14 @@ class SiteParamsPage extends PureComponent {
             }
           }}
         />
-        <div id="contentWrapper">
-          <PageHeaderWrapper>
+        <div id="siteParamsPage">
+          <BreadcrumbWrapper>
             <Card
               title={this.cardTitle()}
               extra={
                 <>
                   <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-                     this.children.onDataTypeChange(e.target.value);
+                    this.children.onDataTypeChange(e.target.value);
                     this.setState({
                       dataType: e.target.value,
                       format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
@@ -439,7 +440,7 @@ class SiteParamsPage extends PureComponent {
             >
               {this.pageContent()}
             </Card>
-          </PageHeaderWrapper>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

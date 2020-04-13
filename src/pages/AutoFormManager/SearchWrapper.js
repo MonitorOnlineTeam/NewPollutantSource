@@ -280,6 +280,7 @@ class SearchWrapper extends Component {
           );
           break;
         case "多选下拉搜索树":
+        case "三级行政区下拉框":
           placeholder = placeholder || selectPlaceholder;
           element = (
             <SdlCascader

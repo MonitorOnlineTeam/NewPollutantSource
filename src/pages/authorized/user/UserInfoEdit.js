@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
 
 const { Search } = Input;
@@ -135,10 +135,11 @@ export default class UserInfoEdit extends Component {
     };
 
     onChecks = checkedKeys => {
+        var that=this;
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
-            if (this.state.leafTreeDatas.indexOf(item) != -1) {
+            if (that.state.leafTreeDatas.indexOf(item) != -1) {
                 leafTree.push(item);
             }
         });
@@ -150,12 +151,14 @@ export default class UserInfoEdit extends Component {
     };
 
     renderTreeNodes = data =>
+
         data.map(item => {
-            if (item.children.length == 0) {
-                if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
-                    this.state.leafTreeDatas.push(item.key);
-                }
-            }
+            this.state.leafTreeDatas.push(item.key);
+            // if (item.children.length == 0) {
+            //     if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+            //         this.state.leafTreeDatas.push(item.key);
+            //     }
+            // }
             if (item.children) {
                 return (
                     <TreeNode title={item.title} key={item.key} dataRef={item}>
@@ -259,7 +262,7 @@ export default class UserInfoEdit extends Component {
         };
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
-            <PageHeaderWrapper title={`编辑 - ${title}`}>
+            <BreadcrumbWrapper title={`编辑 - ${title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
@@ -428,7 +431,7 @@ export default class UserInfoEdit extends Component {
                     }
 
                 </div>
-            </PageHeaderWrapper>
+            </BreadcrumbWrapper>
         );
     }
 }
