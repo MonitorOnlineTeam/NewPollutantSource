@@ -82,7 +82,10 @@ class DailySummaryPage extends PureComponent {
             endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
     }
     const {dispatch}=this.props;
-    
+    this.setState({
+      beginTime:beginTime,
+      endTime:endTime
+    })
     dispatch({
       type:'report/updateState',
       payload:{
