@@ -303,24 +303,24 @@ class DataQuery extends Component {
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '100%', height: 'calc(100vh - 400px)', padding: 20 }}
+                    style={{ width: '100%', height: '100%', padding: 20 }}
                 /></Card.Grid>);
             }
 
             return (<div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>);
         }
         return (
-            <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
+            // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
                     dataSource={datatable}
                     columns={columns}
                     resizable
                     // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
-                    Pagination={null}
+                    pagination={{pageSize: 20}}
 
                 />
-            </Card.Grid>
+            // </Card.Grid>
 
         );
     }

@@ -89,10 +89,6 @@ class AlarmRecord extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    console.log('nextProps.DGIMN=', nextProps.DGIMN);
-    console.log('this.props.DGIMN=', this.props.DGIMN);
-    console.log('nextProps.lasttime=', nextProps.lasttime);
-    console.log('nextProps.firsttime=', nextProps.firsttime);
     const { DGIMN, lasttime, firsttime } = this.props;
     if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
       // 如果传入参数有变化，则重新加载数据
@@ -443,7 +439,7 @@ class AlarmRecord extends Component {
           }
 
         >
-          <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', overflow: 'auto', ...this.props.style }}>
+          {/* <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', overflow: 'auto', ...this.props.style }}> */}
             <SdlTable
               loading={this.props.dataloading}
               columns={columns}
@@ -479,7 +475,7 @@ class AlarmRecord extends Component {
                 },
               })}
             />
-          </Card.Grid>
+          {/* </Card.Grid> */}
 
           <Modal
             title="核实单详情"
