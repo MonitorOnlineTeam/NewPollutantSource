@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import styles from './index.less'
 import { Resizable } from 'react-resizable';
+import { connect } from 'dva'
 
 // const DEFAULT_WIDTH = 180;
 
@@ -34,12 +35,16 @@ const ResizeableTitle = props => {
   );
 };
 
+@connect(({ global }) => ({
+  clientHeight: global.clientHeight,
+}))
 class SdlTable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       _props: {},
-      columns: props.columns
+      columns: props.columns,
+      computeHeight: null,
     };
 
     this.components = {
@@ -48,6 +53,32 @@ class SdlTable extends PureComponent {
       },
     };
   }
+
+  getOffsetTop = (obj) => {
+    let offsetCountTop = obj.offsetTop;
+    let parent = obj.offsetParent;
+    while (parent !== null) {
+      offsetCountTop += parent.offsetTop;
+      parent = parent.offsetParent;
+    }
+    return offsetCountTop;
+  }
+
+  componentDidMount() {
+    // 动态计算表格纵向位置
+    setTimeout(() => {
+      // let fr=this.refs.polytableframe;
+      if (!this._calledComponentWillUnmount) {
+        // let otherHeight = this.props.pagination ? 136 : 100;
+        this.setState({
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+        }, () => {
+          console.log("computeHeight=", this.state.computeHeight)
+        });
+      }
+    }, 50);
+  }
+
 
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
@@ -70,7 +101,7 @@ class SdlTable extends PureComponent {
         _props
       })
     }
-    if(this.props.columns !== nextProps.columns) {
+    if (this.props.columns !== nextProps.columns) {
       this.setState({
         columns: nextProps.columns
       })
@@ -78,9 +109,11 @@ class SdlTable extends PureComponent {
   }
 
   render() {
-    const { defaultWidth, resizable } = this.props;
+    const { defaultWidth, resizable, clientHeight } = this.props;
     const { _props, columns } = this.state;
 
+    let fixedHeight = this.state.computeHeight;
+    let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight : "");
     // 处理表格长度，防止错位
     let _columns = (columns || []).map((col, index) => {
       return {
@@ -100,29 +133,32 @@ class SdlTable extends PureComponent {
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
-      <Table
-        ref={(table) => { this.sdlTable = table }}
-        rowKey={record => record.id || record.ID}
-        size="small"
-        components={resizable ? this.components : undefined}
-        // className={styles.dataTable}
-        rowClassName={
-          (record, index, indent) => {
-            if (index === 0) {
-              return;
-            }
-            if (index % 2 !== 0) {
-              return 'light';
+      <div ref={el => this.sdlTableFrame = el}>
+        <Table
+          ref={(table) => { this.sdlTable = table }}
+          rowKey={record => record.id || record.ID}
+          size="small"
+          components={resizable ? this.components : undefined}
+          // className={styles.dataTable}
+          rowClassName={
+            (record, index, indent) => {
+              if (index === 0) {
+                return;
+              }
+              if (index % 2 !== 0) {
+                return 'light';
+              }
             }
           }
-        }
-        bordered
-        {...this.props}
-        defaultWidth={80}
-        scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: this.props.scroll && this.props.scroll.y && this.props.scroll.y }}
-        columns={_columns}
-        {..._props}
-      />
+          bordered
+          {...this.props}
+          defaultWidth={80}
+          scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollYHeight }}
+          columns={_columns}
+          pagination={{ pageSize: 20 }}
+          {..._props}
+        />
+      </div>
     );
   }
 }

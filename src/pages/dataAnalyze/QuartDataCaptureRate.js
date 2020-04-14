@@ -143,7 +143,7 @@ class QuartDataCaptureRate extends Component {
     const { tableDatas, loading } = this.props;
     return (
       <BreadcrumbWrapper>
-        <div className="contentContainer">
+        {/* <div className="contentContainer"> */}
           <Card
             bordered={false}
             extra={
@@ -211,7 +211,7 @@ class QuartDataCaptureRate extends Component {
                 bordered={false}
                 onChange={this.handleTableChange}
                 dataSource={tableDatas}
-                scroll={{ y: 'calc(100vh - 450px)' }}
+                // scroll={{ y: 'calc(100vh - 450px)' }}
                 pagination={{
                   // showSizeChanger: true,
                   // showQuickJumper: true,
@@ -224,7 +224,7 @@ class QuartDataCaptureRate extends Component {
               />
             </Row>
           </Card>
-        </div>
+        {/* </div> */}
       </BreadcrumbWrapper>
     );
   }

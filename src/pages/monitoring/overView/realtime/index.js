@@ -486,10 +486,9 @@ class index extends Component {
             </Radio.Group >
           }
         >
-          <Table
-            style={{
-              // marginTop: 20,
-              paddingBottom: 10,
+          <SdlTable
+            rowClassName={(record, index, indent) => {
+              return;
             }}
             loading={dataLoading || columnLoading}
             size="middle"
@@ -497,7 +496,7 @@ class index extends Component {
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
+            scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card >

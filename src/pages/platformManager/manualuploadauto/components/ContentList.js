@@ -453,13 +453,15 @@ export default class ContentList extends Component {
                             />
                         </Form.Item>
                     </Form>
-                } style={{ height: 'calc(100vh - 200px)' }} bordered={false}>
+                }
+                // style={{ height: 'calc(100vh - 200px)' }} 
+                bordered={false}>
 
                 <SdlTable
                     loading={this.props.loading}
                     columns={columnsSelect}
                     dataSource={!DGIMN ? null : uploaddata}
-                    scroll={{ y: 'calc(100vh - 450px)' }}
+                    // scroll={{ y: 'calc(100vh - 450px)' }}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,

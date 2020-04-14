@@ -708,7 +708,7 @@ class SiteDailyPage extends PureComponent {
               columns={this.state.columns}
               dataSource={dateReportData}
               // defaultWidth={80}
-              scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
+              // scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {
                   return;

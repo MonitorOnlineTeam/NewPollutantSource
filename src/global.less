@@ -4,7 +4,7 @@ html,
 body,
 #root {
   height: 100%;
-  // overflow-y: hidden;
+   overflow-y: hidden;
 }
 
 // a:visited {
@@ -60,11 +60,18 @@ ol {
     z-index: 1;
   }
 
+
   .ant-layout {
     .ant-pro-basicLayout-content {
       margin-bottom: 0;
+      // margin: 8px;
       // padding-top: 64px;
     }
+
+    .ant-pro-page-header-wrap-children-content {
+      margin: 14px 10px 0;
+    }
+
 
     // table没有数据时，隐藏表头滚动条
     .ant-table-empty .ant-table-body {
@@ -72,7 +79,9 @@ ol {
       overflow-y: hidden !important;
     }
   }
-  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane, .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
+
+  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content>.ant-tabs-tabpane,
+  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content>.ant-tabs-tabpane {
     transition: opacity 0.45s !important;
   }
 }
@@ -82,7 +91,7 @@ a:hover {
 }
 
 .contentContainer {
-  height: calc(100vh - 190px);
+  height: calc(100vh - 170px);
   overflow-y: auto;
 }
 
@@ -234,9 +243,45 @@ a:hover {
   color: rgba(0, 0, 0, 0.8);
 }
 
-#root .cascader_multiple{
-  &:focus{
+#root .cascader_multiple {
+  &:focus {
     border-color: transparent;
     box-shadow: none;
+  }
+}
+
+#sideMenuTabsLayout {
+  margin: -24px -24px 0px;
+  padding: 10px;
+
+  .ant-tabs-card-content {
+    height: calc(100vh - 128px);
+    // background: #fff;
+    overflow-y: auto;
+
+    .ant-tabs-tabpane-active {
+      .ant-card, .contentContainer {
+      // .ant-card-body {
+        height: calc(100vh - 128px);
+        
+        .ant-card-grid {
+          box-shadow: none;
+          height: auto;
+        }
+      }
+    }
+  }
+}
+
+#sideMenuLayout {
+  .ant-pro-page-header-wrap-children-content {
+    height: calc(100vh - 170px);
+    background: #fff;
+    overflow-y: auto;
+
+    .ant-card-body {
+      box-shadow: none;
+      border: none;
+    }
   }
 }
