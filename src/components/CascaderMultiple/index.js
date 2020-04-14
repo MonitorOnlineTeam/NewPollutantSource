@@ -12,12 +12,12 @@ class CascaderMultiple extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputValue: "",
-      currentChildren: [],
+      inputValue: "", // 搜索时input值
+      currentChildren: [], // 当前选中的children
       checkedValues: [],
       checkedLabels: [],
       visible: false,
-      options: props.options,
+      options: props.options || [],
       currentEntLable: "",
       all: false
     };
@@ -27,7 +27,7 @@ class CascaderMultiple extends Component {
         title: "全部",
         key: "0",
       },
-      ...props.options
+      ...props.options || []
     ];
   }
 
@@ -44,12 +44,8 @@ class CascaderMultiple extends Component {
       }
     })
 
-    if (!this.props.options.length && this.props.pollutantTypes) {
+    if (!this.props.options) {
       this.getDataList(this.props.pollutantTypes)
-    }
-
-    if (!this.props.options.length && !this.props.pollutantTypes) {
-      this.getDataList(undefined)
     }
   }
 
@@ -79,6 +75,17 @@ class CascaderMultiple extends Component {
         },
         ...nextProps.options,
       ];
+
+      // 计算全部长度
+      let checkedValues = [];
+      nextProps.options.filter(item => {
+        if (item.key != 0) {
+          item.children.map(itm => {
+            checkedValues.push(itm.key)
+          })
+        }
+      });
+
       this.setState({
         options: [
           {
@@ -87,14 +94,17 @@ class CascaderMultiple extends Component {
           },
           ...nextProps.options,
         ],
-        currentChildren: []
+        currentChildren: [],
+        allLength: checkedValues.length
       });
+
+
     }
     if (this.props.value !== nextProps.value) {
       let checkedLabels = [];
       let currentChildren = [];
       let currentIndex = 0;
-      let options = nextProps.options.length ? nextProps.options : nextProps.entAndPointList;
+      let options = nextProps.options ? nextProps.options : nextProps.entAndPointList;
       options.map((item, index) => {
         if (item.children) {
           item.children.map(itm => {
@@ -111,15 +121,26 @@ class CascaderMultiple extends Component {
       this.setState({
         checkedValues: nextProps.value,
         checkedLabels: checkedLabels,
+        all: this.state.allLength === nextProps.value.length
         // currentChildren: currentChildren,
         // currentIndex: currentIndex
       })
     }
 
-    if (!this.props.options.length && this.props.pollutantTypes !== nextProps.pollutantTypes) {
+    if (this.props.options && this.props.pollutantTypes !== nextProps.pollutantTypes) {
       this.getDataList(nextProps.pollutantTypes)
     }
     if (this.props.entAndPointList !== nextProps.entAndPointList) {
+       // 计算全部长度
+       let checkedValues = [];
+       nextProps.entAndPointList.filter(item => {
+         if (item.key != 0) {
+           item.children.map(itm => {
+             checkedValues.push(itm.key)
+           })
+         }
+       });
+
       this.oldOptions = nextProps.entAndPointList;
       this.setState({
         options: [
@@ -129,13 +150,13 @@ class CascaderMultiple extends Component {
           },
           ...nextProps.entAndPointList,
         ],
+        allLength: checkedValues.length
       })
     }
   }
 
 
   render() {
-    const config = [{ showSearch: true, checkable: true }, { showSearch: true, checkable: true }];
     const { currentIndex, currentChildren, checkedValues, checkedLabels, visible, options, inputValue, currentEntLable, all } = this.state;
     const { style } = this.props;
     const ele = document.querySelector(".ant-select-selection--multiple")
@@ -354,7 +375,7 @@ class CascaderMultiple extends Component {
 }
 
 CascaderMultiple.defaultProps = {
-  options: []
+  // options: []
 }
 
 export default CascaderMultiple;

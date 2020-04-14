@@ -113,8 +113,8 @@ class SiteDailyPage extends PureComponent {
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
     }
     this.setState({
-      beginTime:beginTime,
-      endTime:endTime
+      beginTime: beginTime,
+      endTime: endTime
     })
     const { dateReportForm, dispatch } = this.props;
     dispatch({
