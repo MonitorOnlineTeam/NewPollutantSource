@@ -122,15 +122,16 @@ class NavigationTree extends Component {
 
   componentDidMount() {
     const dom = document.querySelector(this.props.domId);
+    const tabsCardElement = document.querySelector(".ant-tabs-card-bar");
     if (dom) {
       if (floats === "topmenu") {
-        dom.style.marginLeft = "350px";
+        dom.style.marginLeft = "320px";
         dom.style.marginRight = 0;
       } else {
-        dom.style.marginRight = "350px";
+        dom.style.marginRight = "320px";
         dom.style.marginLeft = 0;
-        document.querySelector(".ant-tabs-card-bar").style.marginLeft = 0;
-        document.querySelector(".ant-tabs-card-bar").style.marginRight = "350px";
+        tabsCardElement ? tabsCardElement.style.marginLeft = 0 : undefined;
+        tabsCardElement ? tabsCardElement.style.marginRight = "320px" : undefined;
       }
     }
     const { dispatch, EntAndPoint } = this.props;
@@ -376,11 +377,11 @@ class NavigationTree extends Component {
     }, () => {
       const dom = document.querySelector(domId)
       if (dom) {
-        const left = this.state.visible ? "350px" : "0";
-        dom.style.width = this.state.visible ? 'calc(100% - 350px)' : "100%"
+        const left = this.state.visible ? "320px" : "0";
+        dom.style.width = this.state.visible ? 'calc(100% - 320px)' : "100%"
         if (floats === "topmenu") {
           dom.style.marginLeft = left
-        }else{
+        } else {
           dom.style.marginRight = left
           tabsElement ? tabsElement.style.marginRight = left : undefined
         }
@@ -701,7 +702,7 @@ class NavigationTree extends Component {
         if (item.Type == "0") {
           return (
             <TreeNode style={{ width: "100%" }} title={
-              <div style={{  }}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute" }} /> : ""}</div>
+              <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute", right: 10 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -709,8 +710,8 @@ class NavigationTree extends Component {
 
         } else if (item.Type == "1") {
           return <TreeNode style={{ width: "100%" }} title={
-            <div style={{ width: "253px" }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7, marginRight: 10,  position: "absolute" }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+            <div style={{ width: "253px", position: "relative" }}>
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute", right: 10 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
                 </div>
@@ -741,10 +742,11 @@ class NavigationTree extends Component {
           closable={false}
           onClose={this.onClose}
           visible={this.state.visible}
-          width={350}
+          width={320}
           mask={false}
           zIndex={1}
           getContainer={(Setting.layout === "sidemenu" && config.isShowTabs) ? false : 'body'}
+          bodyStyle={{ padding: "18px 8px" }}
           style={{
             marginTop: 64
           }}
@@ -794,8 +796,8 @@ class NavigationTree extends Component {
           <div visible={true} style={{
             position: "absolute",
             top: "30%",
-            right: floats == "leftmenu" ? "350px" : null,
-            left: floats == "topmenu" ? "350px" : null,
+            right: floats == "leftmenu" ? "320px" : null,
+            left: floats == "topmenu" ? "320px" : null,
             display: "flex",
             width: "18px",
             height: "48px",
@@ -847,8 +849,8 @@ class NavigationTree extends Component {
                     justifyContent: 'center'
                   }}
                   size="large"
-                /> : <div> {this.props.EntAndPoint.length ? <Table  rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto',cursor: "pointer", maxHeight: 'calc(100vh - 290px)', }}
+                /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                  style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', cursor: "pointer", maxHeight: 'calc(100vh - 290px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 
