@@ -10,9 +10,7 @@ import logo from '../../public/sdlicon.png';
 import config from '@/config';
 import styles from './UserLayout.less';
 import Cookie from 'js-cookie';
-var QRCode = require('qrcode.react');
-//获取当前ip地址和端口号
-var getIp = "http://"+window.location.host;
+
 const UserLayout = props => {
   const {
     dispatch,
@@ -28,6 +26,11 @@ const UserLayout = props => {
         type: 'login/getSystemLoginConfigInfo',
         payload: {},
       });
+      dispatch({
+        type: 'login/IfSpecial',
+        payload: {},
+      });
+
     }
   }, []);
   const { routes = [] } = route;
@@ -36,10 +39,22 @@ const UserLayout = props => {
     location = {
       pathname: configInfo && configInfo.SystemName,
     },
-    configInfo
+    configInfo,
+    appFlag
   } = props;
   const { breadcrumb } = getMenuData(routes);
   const title = configInfo ? `登录 - ${configInfo.SystemName}` : "登录";
+
+  var QRCode = require('qrcode.react');
+  //获取当前ip地址和端口号
+  var getIp = "";
+  if (appFlag) {
+    getIp = appFlag;
+  }
+  else {
+    getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
+  }
+
   return (
     <DocumentTitle
       // title={getPageTitle({
@@ -92,7 +107,7 @@ const UserLayout = props => {
                   alt="logo"
                   src={`/api/upload/phoneQRCode.png`}
                 /> */}
-                  <QRCode value={getIp+"/appoperation/appqrcodemain"} size={200} />
+                <QRCode value={getIp} size={200} />
               </div>
             }
             title="手机端下载" trigger="hover">
@@ -108,4 +123,4 @@ const UserLayout = props => {
   );
 };
 
-export default connect(({ settings, login }) => ({ ...settings, configInfo: login.configInfo }))(UserLayout);
+export default connect(({ settings, login }) => ({ ...settings, configInfo: login.configInfo, appFlag: login.appFlag }))(UserLayout);
