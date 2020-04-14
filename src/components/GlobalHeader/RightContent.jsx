@@ -10,16 +10,24 @@ import config from '@/config';
 import NoticeIconView from './NoticeIconView'
 
 const GlobalHeaderRight = props => {
-  const { theme, layout, configInfo } = props;
+  const { theme, layout, configInfo, appFlag } = props;
   // console.log("changePwdVisible=",props);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
-  const QRCode = require('qrcode.react');
-  // 获取当前ip地址和端口号
-  const getIp = `http://${window.location.host}`;
+
+  var QRCode = require('qrcode.react');
+  //获取当前ip地址和端口号
+  var getIp = "";
+  if (appFlag) {
+    getIp = appFlag;
+  }
+  else {
+    getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
+  }
+
   return (
     <div className={className}>
       {/* <HeaderSearch
@@ -67,7 +75,7 @@ const GlobalHeaderRight = props => {
           alt="logo"
           src={`/api/upload/phoneQRCode.png`}
         /> */}
-          <QRCode value={`${getIp}/appoperation/appqrcodemain`} size={200} />
+          <QRCode value={getIp} size={200} />
         </div>} title="手机端下载" trigger="hover">
           <a
             rel="noopener noreferrer"
@@ -86,7 +94,8 @@ const GlobalHeaderRight = props => {
   );
 };
 
-export default connect(({ settings }) => ({
+export default connect(({ settings, login }) => ({
   theme: settings.navTheme,
   layout: settings.layout,
+  appFlag: login.appFlag
 }))(GlobalHeaderRight);
