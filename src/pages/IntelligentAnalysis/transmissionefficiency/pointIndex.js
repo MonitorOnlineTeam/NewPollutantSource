@@ -264,17 +264,17 @@ export default class TransmissionEfficiency extends Component {
                         title={<span>
                             {entName}
                             <Button
-                              style={{ marginLeft: 10 }}
-                              onClick={() => {
-                                history.go(-1);
-                              }}
-                              type="link"
-                              size="small"
+                                style={{ marginLeft: 10 }}
+                                onClick={() => {
+                                    history.go(-1);
+                                }}
+                                type="link"
+                                size="small"
                             >
-                              <Icon type="rollback" />
+                                <Icon type="rollback" />
                               返回上级
                             </Button>
-                          </span>}
+                        </span>}
                         bordered={false}
                         style={{ height: 'auto' }}
                         extra={
@@ -284,55 +284,49 @@ export default class TransmissionEfficiency extends Component {
                             </span>
                         }
                     >
-                        <Row>
-                            <Col span={24}>
-                                <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#52c41a',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginRight: 3
-                                    }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#f5222d',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginLeft: 100,
-                                        marginRight: 3
-                                    }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
-                                    <Badge style={{ marginLeft: 100, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <SdlTable
-                                rowKey={(record, index) => `complete${index}`}
-                                loading={this.props.loading}
-                                columns={columns}
-                                bordered={false}
-                                onChange={this.handleTableChange}
-                                size="small"// small middle
-                                dataSource={this.props.tableDatas}
-                                scroll={{ y: 'calc(100vh - 430px)' }}
-                                // scroll={{ y: 550 }}
+                        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                            <div style={{
+                                width: 20,
+                                height: 9,
+                                backgroundColor: '#52c41a',
+                                display: 'inline-block',
+                                borderRadius: '20%',
+                                cursor: 'pointer',
+                                marginRight: 3
+                            }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                            <div style={{
+                                width: 20,
+                                height: 9,
+                                backgroundColor: '#f5222d',
+                                display: 'inline-block',
+                                borderRadius: '20%',
+                                cursor: 'pointer',
+                                marginLeft: 100,
+                                marginRight: 3
+                            }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                            <Badge style={{ marginLeft: 100, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
+                        </div>
+                        <SdlTable
+                            rowKey={(record, index) => `complete${index}`}
+                            loading={this.props.loading}
+                            columns={columns}
+                            bordered={false}
+                            onChange={this.handleTableChange}
+                            size="small"// small middle
+                            dataSource={this.props.tableDatas}
+                            // scroll={{ y: 'calc(100vh - 430px)' }}
+                            // scroll={{ y: 550 }}
 
-                                pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    sorter: true,
-                                    'total': this.props.total,
-                                    'pageSize': this.props.pageSize,
-                                    'current': this.props.pageIndex,
-                                    pageSizeOptions: ['10', '20', '30', '40', '50']
-                                }}
-                            />
-                        </Row>
+                            pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                sorter: true,
+                                'total': this.props.total,
+                                'pageSize': this.props.pageSize,
+                                'current': this.props.pageIndex,
+                                pageSizeOptions: ['10', '20', '30', '40', '50']
+                            }}
+                        />
                     </Card>
                 </Row>
             </BreadcrumbWrapper >

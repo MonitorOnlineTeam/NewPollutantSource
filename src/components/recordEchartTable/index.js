@@ -407,7 +407,7 @@ class Index extends Component {
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', paddingBottom: 0, overflow: 'auto', ...this.props.style }}>
+                    <Card.Grid style={{ width: '100%', paddingBottom: 0, overflow: 'auto', ...this.props.style }}>
                         {
                             this.props.exmodellistLoading ? <Spin
                                 style={{
