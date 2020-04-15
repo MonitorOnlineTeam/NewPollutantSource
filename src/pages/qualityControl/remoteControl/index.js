@@ -96,7 +96,7 @@ class index extends Component {
                   title="暂无数据"
                   subTitle="请先去添加质控仪！"
                   extra={
-                    <Button type="primary" onClick={() => router.push('/qualityControl/instrumentManage/add')}>
+                    <Button type="primary" onClick={() => router.push('/qualityControl/qcaManager/instrumentManage/add?tabName=质控仪 - 添加')}>
                       添加质控仪
                   </Button>
                   }
