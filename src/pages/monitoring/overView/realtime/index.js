@@ -337,11 +337,11 @@ class index extends Component {
       </>
     } else {
       return <>
-        {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+        {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
           <Radio.Button key={2} value="MinuteData">
             分钟
           </Radio.Button>
-        )}
+        )} */}
         <Radio.Button key={3} value="HourData">
           小时
                   </Radio.Button>
@@ -433,11 +433,11 @@ class index extends Component {
                   this.getOptionByDateType()
                   :
                   <>
-                    {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+                    {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
                       <Radio.Button key={2} value="MinuteData">
                         分钟
                       </Radio.Button>
-                    )}
+                    )} */}
                     <Radio.Button key={3} value="HourData">
                       小时
                   </Radio.Button>

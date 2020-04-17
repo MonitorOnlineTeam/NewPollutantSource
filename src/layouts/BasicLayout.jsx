@@ -142,7 +142,7 @@ class BasicLayout extends Component {
     let _unfoldMenuList = _.cloneDeep(unfoldMenuList);
 
     let currentPathObj = _unfoldMenuList.find(item => {
-      return item.path === location.pathname
+      return item.path.split("?")[0] === location.pathname
     }) || {};
 
 
