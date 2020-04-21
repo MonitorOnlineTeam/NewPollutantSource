@@ -315,7 +315,7 @@ class index extends Component {
                   dataSource={paramsTableData}
                   columns={columns}
                   loading={loading}
-                  scroll={{ y: 'calc(100vh - 410px)' }}
+             //     scroll={{ y: 'calc(100vh - 410px)' }}
                   pagination={{
                     // showSizeChanger: true,
                     showQuickJumper: true,

@@ -35,8 +35,9 @@ const ResizeableTitle = props => {
   );
 };
 
-@connect(({ global }) => ({
+@connect(({ global, loading }) => ({
   clientHeight: global.clientHeight,
+  autoFormTableLoading: loading.effects['autoForm/getPageConfig'],
 }))
 class SdlTable extends PureComponent {
   constructor(props) {
@@ -100,11 +101,28 @@ class SdlTable extends PureComponent {
       this.setState({
         _props
       })
+         
     }
     if (this.props.columns !== nextProps.columns) {
       this.setState({
         columns: nextProps.columns
       })
+    }
+    
+    if(this.props.loading !== nextProps.loading && nextProps.loading === false){
+      this.setState({
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+      }, () => {
+        console.log("computeHeight=", this.state.computeHeight)
+      });
+    }
+
+    if(this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false){
+      this.setState({
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+      }, () => {
+        console.log("computeHeight=", this.state.computeHeight)
+      });
     }
   }
 

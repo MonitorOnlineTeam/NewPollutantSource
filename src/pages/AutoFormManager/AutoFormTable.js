@@ -76,6 +76,7 @@ class AutoFormTable extends PureComponent {
   }
 
   loadDataSource(params) {
+    debugger;
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {
@@ -375,7 +376,7 @@ class AutoFormTable extends PureComponent {
     const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
-    const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
+    const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
     const parentCode = match && match.params && match.params.parentcode || parentcode;
     // 计算长度
     const _columns = (columns || []).map(col => {

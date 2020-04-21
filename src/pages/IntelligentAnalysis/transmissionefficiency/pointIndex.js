@@ -333,7 +333,7 @@ export default class TransmissionEfficiency extends Component {
                             size="small"// small middle
                             dataSource={this.props.tableDatas}
                             // scroll={{ y: 'calc(100vh - 430px)' }}
-                            // scroll={{ y: 550 }}
+                             scroll={{ y: 550 }}
 
                             pagination={{
                                 showSizeChanger: true,

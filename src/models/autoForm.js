@@ -55,7 +55,7 @@ function getQueryParams(state, payload) {
   let postData = {
     configId: configId,
     pageIndex: searchForm.current || 1,
-    pageSize: searchForm.pageSize || 10,
+    pageSize: searchForm.pageSize || 20,
     ...payload.otherParams,
   };
   const searchParams = payload.searchParams || [];

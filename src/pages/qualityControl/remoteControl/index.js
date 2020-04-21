@@ -48,7 +48,7 @@ class index extends Component {
     const { loading } = this.props;
     return (
       <>
-        <NavigationTree QCAUse="1" onItemClick={value => {
+        <NavigationTree QCAUse="1" domId="#remoteControl" onItemClick={value => {
           this.setState({
             initLoadSuccess: true
           })
@@ -80,7 +80,7 @@ class index extends Component {
             })
           }
         }} />
-        <div id="contentWrapper">
+        <div id="remoteControl">
           <BreadcrumbWrapper>
             {
               // 有质控仪

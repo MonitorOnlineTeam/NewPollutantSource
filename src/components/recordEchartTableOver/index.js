@@ -85,7 +85,6 @@ class Index extends Component {
         //         historyparams,
         //     },
         // })
-        console.log('1111');
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         if (this.props.noticeState == 0) {
@@ -420,7 +419,7 @@ class Index extends Component {
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', overflow: 'auto', ...this.props.style }}>
+                    {/* <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', overflow: 'auto', ...this.props.style }}> */}
                         {
                             this.props.overmodellistLoading ? <Spin
                                 style={{
@@ -479,7 +478,7 @@ class Index extends Component {
                                 }</div>
                         }
 
-                    </Card.Grid>
+                    {/* </Card.Grid> */}
                 </Card>
             </div>
         );

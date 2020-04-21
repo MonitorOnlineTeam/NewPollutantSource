@@ -255,7 +255,9 @@ class index extends Component {
           </Row>
           <Row style={{ marginTop: 10 }}>
             <Card title={tableTitle}>
-              <SdlTable dataSource={this.props.entStaticDataList} columns={columns} scroll={{ y: 'calc(100vh - 900px)' }} />
+              <SdlTable dataSource={this.props.entStaticDataList} columns={columns} 
+             // scroll={{ y: 'calc(100vh - 900px)' }} 
+              />
             </Card>
           </Row>
         </div>

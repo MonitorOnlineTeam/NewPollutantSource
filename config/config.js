@@ -1056,6 +1056,12 @@ export default {
                       path: '/qualityControl/qcaRecord',
                       redirect: '/qualityControl/qcaRecord/operationRecords',
                     },
+                    // 质控纪要
+                    {
+                      name: 'playback',
+                      path: '/qualityControl/qcaRecord/playback',
+                      component: './qualityControl/playback',
+                    },
                     // 质控仪操作记录
                     {
                       name: 'operationRecords',

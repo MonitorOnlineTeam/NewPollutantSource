@@ -6,6 +6,8 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import { router } from 'umi'
 import { getRowCuid } from '@/utils/utils'
+import styles from './index.less';
+import PageLoading from "@/components/PageLoading"
 
 @connect()
 class index extends Component {
@@ -38,6 +40,7 @@ class index extends Component {
   render() {
     return (
       <BreadcrumbWrapper>
+      
         <Card>
           <SearchWrapper
             configId={this._SELF_.configId}
@@ -74,6 +77,7 @@ class index extends Component {
             }}
           />
         </Card>
+       
       </BreadcrumbWrapper>
     );
   }

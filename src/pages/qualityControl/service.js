@@ -136,3 +136,18 @@ export async function getQCAResult(params) {
   const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAResultByQCAMN', params, null);
   return result;
 }
+
+// 获取质控记录时间轴
+export async function getQCATimelineRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQCARecord', params, null);
+  return result;
+}
+
+
+// 根据时间轴获取质控流程图
+export async function getQCADataForRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQCADataForRecord', params, null);
+  return result;
+}
+
+

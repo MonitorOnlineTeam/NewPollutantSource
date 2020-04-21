@@ -347,7 +347,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                    pagination={true}
+                  //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
                     visible={standardlibraryModal}

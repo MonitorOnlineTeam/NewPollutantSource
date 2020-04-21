@@ -40,7 +40,7 @@ ol {
 
 .sdlTable {
   .ant-table-body {
-    min-height: 200px;
+    min-height: 150px;
   }
 }
 
@@ -260,10 +260,10 @@ a:hover {
     overflow-y: auto;
 
     .ant-tabs-tabpane-active {
-      .ant-card, .contentContainer {
+      .ant-card:not(.antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maincard):not(.ant-card-type-inner), .contentContainer {
       // .ant-card-body {
         height: calc(100vh - 128px);
-        
+
         .ant-card-grid {
           box-shadow: none;
           height: auto;
@@ -279,7 +279,7 @@ a:hover {
     background: #fff;
     overflow-y: auto;
 
-    .ant-card-body {
+    .ant-card-body,.ant-card-bordered {
       box-shadow: none;
       border: none;
     }
