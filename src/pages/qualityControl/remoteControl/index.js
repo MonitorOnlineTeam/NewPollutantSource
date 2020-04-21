@@ -48,7 +48,7 @@ class index extends Component {
     const { loading } = this.props;
     return (
       <>
-        <NavigationTree QCAUse="1" onItemClick={value => {
+        <NavigationTree QCAUse="1" domId="#remoteControl" onItemClick={value => {
           this.setState({
             initLoadSuccess: true
           })
@@ -80,7 +80,7 @@ class index extends Component {
             })
           }
         }} />
-        <div id="contentWrapper">
+        <div id="remoteControl">
           <BreadcrumbWrapper>
             {
               // 有质控仪
@@ -96,7 +96,7 @@ class index extends Component {
                   title="暂无数据"
                   subTitle="请先去添加质控仪！"
                   extra={
-                    <Button type="primary" onClick={() => router.push('/qualityControl/instrumentManage/add')}>
+                    <Button type="primary" onClick={() => router.push('/qualityControl/qcaManager/instrumentManage/add?tabName=质控仪 - 添加')}>
                       添加质控仪
                   </Button>
                   }
