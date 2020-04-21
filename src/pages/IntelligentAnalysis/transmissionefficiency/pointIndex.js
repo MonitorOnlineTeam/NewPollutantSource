@@ -57,14 +57,18 @@ export default class TransmissionEfficiency extends Component {
         });
     }
     getTableData = (pageIndex) => {
-        const { entcode } = this.props.match.params;
-        this.props.dispatch({
-            type: pageUrl.getData,
-            payload: {
-                entcode: entcode,
-                pageIndex: pageIndex,
-            },
-        });
+        debugger
+        const { entcode } = this.props;
+        if (entcode) {
+            this.props.dispatch({
+                type: pageUrl.getData,
+                payload: {
+                    entcode: entcode,
+                    pageIndex: pageIndex,
+                },
+            });
+        }
+
     }
     handleTableChange = (pagination, filters, sorter) => {
         if (sorter.order) {
@@ -238,7 +242,7 @@ export default class TransmissionEfficiency extends Component {
                 }
             },
         ];
-        const entName = this.props.match.params.entname;
+        const entName = this.props.entname;
         let tableTitle = "";
         let Crumbs = [
             { Name: '智能质控', Url: '' }
@@ -258,12 +262,13 @@ export default class TransmissionEfficiency extends Component {
         }
 
         return (
-            <BreadcrumbWrapper title="传输有效率-详情">
+            // <BreadcrumbWrapper title="传输有效率-详情">
+            <div>
                 <Row className={styles.cardTitle}>
                     <Card
                         title={<span>
                             {entName}
-                            <Button
+                            {/* <Button
                                 style={{ marginLeft: 10 }}
                                 onClick={() => {
                                     history.go(-1);
@@ -273,39 +278,52 @@ export default class TransmissionEfficiency extends Component {
                             >
                                 <Icon type="rollback" />
                               返回上级
-                            </Button>
+                            </Button> */}
                         </span>}
                         bordered={false}
                         style={{ height: 'auto' }}
                         extra={
-                            <span style={{ color: '#b3b3b3' }}>
-                                时间选择：
+                            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                                <div style={{
+                                    width: 20,
+                                    height: 9,
+                                    backgroundColor: '#52c41a',
+                                    display: 'inline-block',
+                                    borderRadius: '20%',
+                                    cursor: 'pointer',
+                                    marginRight: 3
+                                }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                                <div style={{
+                                    width: 20,
+                                    height: 9,
+                                    backgroundColor: '#f5222d',
+                                    display: 'inline-block',
+                                    borderRadius: '20%',
+                                    cursor: 'pointer',
+                                    marginLeft: 60,
+                                    marginRight: 3
+                                }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                                <Badge style={{ marginLeft: 60, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
+                                <div
+                                    style={{
+                                        display: 'inline-block',
+                                        borderRadius: '20%',
+                                        marginLeft: 60,
+                                        marginRight: 3
+                                    }}
+                                >
+                                    <span style={{ color: '#b3b3b3' }}>
+                                        时间选择：
                                 <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} />
-                            </span>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
+
                         }
                     >
-                        <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                            <div style={{
-                                width: 20,
-                                height: 9,
-                                backgroundColor: '#52c41a',
-                                display: 'inline-block',
-                                borderRadius: '20%',
-                                cursor: 'pointer',
-                                marginRight: 3
-                            }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
-                            <div style={{
-                                width: 20,
-                                height: 9,
-                                backgroundColor: '#f5222d',
-                                display: 'inline-block',
-                                borderRadius: '20%',
-                                cursor: 'pointer',
-                                marginLeft: 100,
-                                marginRight: 3
-                            }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
-                            <Badge style={{ marginLeft: 100, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
-                        </div>
                         <SdlTable
                             rowKey={(record, index) => `complete${index}`}
                             loading={this.props.loading}
@@ -329,7 +347,8 @@ export default class TransmissionEfficiency extends Component {
                         />
                     </Card>
                 </Row>
-            </BreadcrumbWrapper >
+            </div>
+            /* </BreadcrumbWrapper > */
         );
     }
 }
