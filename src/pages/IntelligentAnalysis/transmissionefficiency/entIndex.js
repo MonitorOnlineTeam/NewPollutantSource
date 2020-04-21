@@ -201,7 +201,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <Card
                     bordered={false}
                     extra={
-                        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                        <div>
                             <div style={{
                                 width: 20,
                                 height: 9,

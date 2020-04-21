@@ -420,7 +420,7 @@ class AddLibrary extends Component {
                 dataSource={dataSource}
                 columns={columns}
                 refresh={this.state.id}
-                scroll={{ y: "calc(100vh - 790px)" }}
+                // scroll={{ y: "calc(100vh - 790px)" }}
                 pagination={false}
               />
             </Card>

@@ -219,7 +219,7 @@ class Index extends Component {
                                         <SdlTable
                                             // loading={this.props.exceptionDataLoading}
                                             // style={{ width: "400px", height: "500px" }}
-                                            scroll={{ y:  160 }}
+                                            // scroll={{ y:  160 }}
                                             style={{ maxHeight: '200px',marginTop:20 }}
                                             columns={columns}
                                             dataSource={dataSource}

@@ -281,7 +281,8 @@ class index extends Component {
             notMerge
             id="rightLine"
             style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-          /> : <SdlTable dataSource={tableData} columns={columns} scroll={{ y: '200px' }} />
+          /> : <SdlTable dataSource={tableData} columns={columns}  />
+          // scroll={{ y: '200px' }}
         }
       </Card>
     );

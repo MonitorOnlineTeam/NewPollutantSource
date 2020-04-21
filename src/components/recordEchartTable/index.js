@@ -251,7 +251,7 @@ class Index extends Component {
     //                 pageIndex: 1,
     //             },
     //         })
-           
+
     //         this.props.dispatch({
     //             type: 'recordEchartTable/getexmodellist',
     //             payload: {
@@ -320,21 +320,21 @@ class Index extends Component {
             })
         }, 0)
     }
-        /** 数据类型切换 */
-        _handleDateTypeChange=(e)=>{
-            const dataType=e.target.value;
-            this.setState({dataType}); 
-            this.children.onDataTypeChange(dataType);
-        }
+    /** 数据类型切换 */
+    _handleDateTypeChange = (e) => {
+        const dataType = e.target.value;
+        this.setState({ dataType });
+        this.children.onDataTypeChange(dataType);
+    }
 
 
-      /**
-     * 回调获取时间并重新请求数据
-     */
-    dateCallback=(dates,dataType)=>{
-    if(!this.props.DGIMN)
-       return;
-    this.setState({
+    /**
+   * 回调获取时间并重新请求数据
+   */
+    dateCallback = (dates, dataType) => {
+        if (!this.props.DGIMN)
+            return;
+        this.setState({
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
         });
@@ -354,11 +354,11 @@ class Index extends Component {
                 DGIMN: [this.props.DGIMN],
             },
         })
-     }
- 
-     onRef1=(ref)=>{
-         this.children=ref;
-     }
+    }
+
+    onRef1 = (ref) => {
+        this.children = ref;
+    }
 
 
     render() {
@@ -367,11 +367,11 @@ class Index extends Component {
             legend: {},
             tooltip: {},
             grid: {
-                x: 50,
+                x: 30,
                 y: 25,
-                x2: 30,
+                x2: 1,
                 y2: 35
-              },
+            },
             dataset: {
                 dimensions: this.props.exlist,
                 // ['product', '2012', '2013', '2017', '2018'],
@@ -402,31 +402,31 @@ class Index extends Component {
 
 
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
-                                    dataType={this.state.dataType}
-                                    format={this.state.format} 
-                                    onRef={this.onRef1}
-                                    isVerification={true}
-                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
-                                    allowClear={false} showTime={this.state.format} />
+                                dataType={this.state.dataType}
+                                format={this.state.format}
+                                onRef={this.onRef1}
+                                isVerification={true}
+                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                allowClear={false} showTime={this.state.format} />
 
                             <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', paddingBottom: 0, overflow: 'auto', ...this.props.style }}>
-                        {
-                            this.props.exmodellistLoading ? <Spin
-                                style={{
-                                    width: '100%',
-                                    height: 'calc(100vh/2)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                                size="large"
-                            /> :
-                                <div> 
-                                    {
+                    {/* <Card.Grid style={{ width: '100%', paddingBottom: 0, overflow: 'auto', ...this.props.style }}> */}
+                    {
+                        this.props.exmodellistLoading ? <Spin
+                            style={{
+                                width: '100%',
+                                height: 'calc(100vh/2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                            size="large"
+                        /> :
+                            <div>
+                                {
                                     this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
                                         <ReactEcharts
@@ -436,10 +436,11 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%',
-                                            height: 'calc(100vh - 500px)',
-                                            maxHeight:300
-                                           // height:130
+                                            style={{
+                                                width: '100%',
+                                                height: 'calc(100vh - 520px)',
+                                                maxHeight: 280
+                                                // height:130
                                             }}
                                         />
                                         {
@@ -475,9 +476,9 @@ class Index extends Component {
                                         }
                                     </div>
                                 }</div>
-                        }
+                    }
 
-                    </Card.Grid>
+                    {/* </Card.Grid> */}
                 </Card>
             </div>
         );

@@ -322,7 +322,7 @@ class StatisticsReportDataList extends PureComponent {
               columns={columns}
               dataSource={statisticsReportDataList}
               defaultWidth={80}
-              scroll={{ y: 'calc(100vh - 65px - 100px - 320px)',x:3100 }}
+              // scroll={{ y: 'calc(100vh - 65px - 100px - 320px)',x:3100 }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {
                   return;

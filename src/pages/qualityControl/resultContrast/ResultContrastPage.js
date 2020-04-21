@@ -452,7 +452,8 @@ class ResultContrastPage extends Component {
               notMerge
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns} scroll={{ y: echartsHeight }} />
+            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns}  />
+            // scroll={{ y: echartsHeight }}
           }
         </Card>
       </>

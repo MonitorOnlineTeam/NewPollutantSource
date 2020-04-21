@@ -266,7 +266,7 @@ export default class TransmissionEfficiency extends Component {
             <div>
                 <Row className={styles.cardTitle}>
                     <Card
-                        title={<span>
+                        title={<div style={{marginBottom: 20 }}>
                             {entName}
                             {/* <Button
                                 style={{ marginLeft: 10 }}
@@ -279,11 +279,11 @@ export default class TransmissionEfficiency extends Component {
                                 <Icon type="rollback" />
                               返回上级
                             </Button> */}
-                        </span>}
+                        </div>}
                         bordered={false}
                         style={{ height: 'auto' }}
                         extra={
-                            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                            <div style={{marginBottom: 20 }}>
                                 <div style={{
                                     width: 20,
                                     height: 9,
@@ -300,15 +300,15 @@ export default class TransmissionEfficiency extends Component {
                                     display: 'inline-block',
                                     borderRadius: '20%',
                                     cursor: 'pointer',
-                                    marginLeft: 60,
+                                    marginLeft: 35,
                                     marginRight: 3
                                 }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
-                                <Badge style={{ marginLeft: 60, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
+                                <Badge style={{ marginLeft: 35, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
                                 <div
                                     style={{
                                         display: 'inline-block',
                                         borderRadius: '20%',
-                                        marginLeft: 60,
+                                        marginLeft: 35,
                                         marginRight: 3
                                     }}
                                 >
@@ -333,7 +333,7 @@ export default class TransmissionEfficiency extends Component {
                             size="small"// small middle
                             dataSource={this.props.tableDatas}
                             // scroll={{ y: 'calc(100vh - 430px)' }}
-                             scroll={{ y: 550 }}
+                            //  scroll={{ y: 550 }}
 
                             pagination={{
                                 showSizeChanger: true,

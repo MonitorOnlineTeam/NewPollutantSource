@@ -226,10 +226,10 @@ export default class EntPollutantEmissions extends Component {
                 data: ['排放总量']
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
+                x: 30,
+                y: 35,
+                x2: 1,
+                y2: 35
             },
             xAxis: [
                 {
@@ -462,27 +462,31 @@ export default class EntPollutantEmissions extends Component {
                             </span>
                         </div>
                     }>
-                        <Row>
+                      
                             <ReactEcharts
                                 option={this.getOption()}
                                 lazyUpdate={true}
-                                style={{   width: '100%',height: 'calc(100vh - 780px)', minHeight: '200px' }}
+                                style={{
+                                    width: '100%',
+                                    height: 'calc(100vh - 520px)',
+                                    maxHeight: 280
+
+                                }}
                                 className="echarts-for-echarts"
                                 onChartReady={this.onChartReadyCallback}
                                 onEvents={{ 'click': this.onChartClick }}
                                 theme="my_theme" />
-                        </Row>
-                        <Divider />
-                        <Row style={styles.cardTitle.cardBg}>
+                   
+                    
+                        {/* <Row style={styles.cardTitle.cardBg}> */}
                             <SdlTable title={() => `${moment(this.props.clickDate).format('YYYY-MM')}月排放量${currFlag === 1 ? '企业' : '排口'}统计`} style={{}}
                                 rowKey={(record, index) => `complete${index}`}
                                 loading={currFlag === 1 ? loadingEntsTable : loadingPointsTable}
                                 columns={columns}
-
                                 dataSource={currFlag === 1 ? enttableDatas : pointTableDatas}
-                              //  scroll={{ y: 'calc(100vh - 650px)' }}
+                           scroll={{ y: 'calc(100vh - 545px)' }}
                             />
-                        </Row>
+                        {/* </Row> */}
 
                         <Modal
                             title={`${moment(this.props.clickDate).format('YYYY-MM')}月排放量详情`}
