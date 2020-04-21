@@ -15,7 +15,7 @@ export default Model.extend({
     state: {
         tableDatas: [],
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 20,
         total: 0,
         beginTime: moment().startOf('day').format("YYYY-MM-DD HH:mm:ss"),
         endTime: moment().format("YYYY-MM-DD HH:mm:ss"),

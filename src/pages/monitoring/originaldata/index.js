@@ -108,7 +108,7 @@ class Index extends Component {
             payload: {
                 dgimn,
                 pageIndex: 1,
-                pageSize: 10,
+                pageSize: 20,
                 total: 0,
             },
         })
@@ -157,7 +157,7 @@ class Index extends Component {
             dataSource={tableDatas}
             columns={columns}
             loading={loading}
-            scroll={{ y: 'calc(100vh - 410px)' }}
+        //    scroll={{ y: 'calc(100vh - 410px)' }}
             pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,

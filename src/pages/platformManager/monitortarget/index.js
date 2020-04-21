@@ -201,7 +201,7 @@ export default class MonitorTarget extends Component {
                             onRef={this.onRef1}
                             style={{ marginTop: 10 }}
                             // columns={columns}
-                            scroll={{ y: 600 }}
+                            //scroll={{ y: 600 }}
                             configId={configId}
                             rowChange={(key, row) => {
                                 console.log('key=', key);

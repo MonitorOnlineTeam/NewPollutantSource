@@ -496,7 +496,7 @@ class index extends Component {
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-            scroll={{ x: scrollXWidth }}
+           // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card >

@@ -81,8 +81,8 @@ class Index extends Component {
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.setState({
-            // beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-            // endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         }, () => {
             this.props.initLoadData && this.getLoadData(this.props);
         })
@@ -366,6 +366,12 @@ class Index extends Component {
         const option = {
             legend: {},
             tooltip: {},
+            grid: {
+                x: 50,
+                y: 25,
+                x2: 30,
+                y2: 35
+              },
             dataset: {
                 dimensions: this.props.exlist,
                 // ['product', '2012', '2013', '2017', '2018'],
@@ -419,7 +425,8 @@ class Index extends Component {
                                 }}
                                 size="large"
                             /> :
-                                <div> {
+                                <div> 
+                                    {
                                     this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
                                         <ReactEcharts
@@ -429,9 +436,12 @@ class Index extends Component {
                                             notMerge
                                             id="rightLine"
                                             onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '250px' }}
+                                            style={{ width: '100%',
+                                            height: 'calc(100vh - 500px)',
+                                            maxHeight:300
+                                           // height:130
+                                            }}
                                         />
-
                                         {
                                             // this.props.exceptionDataLoading ? <Spin
                                             //     style={{
@@ -454,7 +464,7 @@ class Index extends Component {
                                                 pagination={{
                                                     // showSizeChanger: true,
                                                     showQuickJumper: true,
-                                                    pageSize: 10,//this.props.pageSize,
+                                                    pageSize: 20,//this.props.pageSize,
                                                     current: this.props.pageIndex,
                                                     onChange: this.onTableChange,
                                                     total: this.props.ExceptionTotal,

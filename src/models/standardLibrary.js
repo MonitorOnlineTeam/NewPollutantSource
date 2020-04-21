@@ -38,7 +38,7 @@ export default Model.extend({
     pollutantList: [],
     total: 0,
     loading: false,
-    pageSize: 10,
+    pageSize: 20,
     pageIndex: 1,
     reason: null,
     editstandardlibrary: null,

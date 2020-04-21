@@ -534,7 +534,7 @@ export default class effluentfeeIndex extends Component {
                                     dataSource={dataSource}
                                     // expandedRowRender={dataFlag === 1 ? expandedRowRender : false}
                                     onExpand={this.onExpand}
-                                    scroll={{ y: 'calc(100vh - 450px)' }}
+                                 //   scroll={{ y: 'calc(100vh - 450px)' }}
                                     title={() => entName}
                                     // scroll={{ y: 550 }}
                                     pagination={{
@@ -542,8 +542,8 @@ export default class effluentfeeIndex extends Component {
                                         showQuickJumper: true,
                                         sorter: true,
                                         'total': this.props.total,
-                                        'pageSize': this.props.pageSize,
-                                        'current': this.props.pageIndex,
+                                        'pageSize': this.props.pageSize || 20,
+                                        'current': this.props.pageIndex || 1,
                                         pageSizeOptions: ['10', '20', '30', '40', '50']
                                     }}
                                 />

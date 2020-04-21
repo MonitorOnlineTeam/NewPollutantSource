@@ -48,7 +48,7 @@ class AlarmRecord extends Component {
     this.state = {
       rangeDate: [firsttime, lasttime],
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
       // 参数改变让页面刷新
       firsttime,
       lasttime,
@@ -101,7 +101,7 @@ class AlarmRecord extends Component {
         overdataparams = {
           ...overdataparams,
           pageIndex: 1,
-          pageSize: 10,
+          pageSize: 20,
           DGIMN: nextProps.DGIMN,
           beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
           endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
@@ -146,7 +146,7 @@ class AlarmRecord extends Component {
       ...params,
       pollutantCode: '',
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 20,
     }
     dispatch({
       type: 'alarmrecord/updateState',
@@ -176,7 +176,7 @@ class AlarmRecord extends Component {
       beginTime: date[0] && formatMoment(date[0]),
       endTime: date[0] && formatMoment(date[1]),
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 20,
     }
     this.setState({
       rangeDate: date,
@@ -211,7 +211,7 @@ class AlarmRecord extends Component {
       ...overdataparams,
       pollutantCode: value,
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 20,
     }
     this.reloaddatalist(overdataparams);
   };
@@ -453,7 +453,7 @@ class AlarmRecord extends Component {
                   // showSizeChanger: true,
                   showQuickJumper: true,
                   total: this.props.total,
-                  pageSize: 10,//this.props.overdataparams.pageSize,
+                  pageSize: 20,//this.props.overdataparams.pageSize,
                   current: this.props.overdataparams.pageIndex,
                   onChange: this.onChange,
                   onShowSizeChange: this.onShowSizeChange,

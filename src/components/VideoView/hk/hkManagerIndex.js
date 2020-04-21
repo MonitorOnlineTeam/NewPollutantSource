@@ -15,6 +15,7 @@ import Add from './AddVideoInfo';
 import Update from './UpdateVideoInfo';
 import InfoList from './VideoInfoList';
 import styles from './style.less';
+import SdlTable from '@/components/SdlTable';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 
 @connect(({ loading, hkvideo }) => ({
@@ -202,7 +203,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                                 </Col >
                             </Row>
                         </Form>
-                        <Table
+                        <SdlTable
                             columns={columns}
                             pagination={false}
                             dataSource={videoListParameters.list}
@@ -210,17 +211,17 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                             loading={this.props.effects['hkvideo/hkvideourl']}
                             className={styles.dataTable}
                             size="middle"
-                            scroll={{ y: 'calc(100vh - 360px)' }}
-                            rowClassName={
-                                (record, index, indent) => {
-                                    if (index === 0) {
-                                        return;
-                                    }
-                                    if (index % 2 !== 0) {
-                                        return 'light';
-                                    }
-                                }
-                            }
+                            //scroll={{ y: 'calc(100vh - 360px)' }}
+                            // rowClassName={
+                            //     (record, index, indent) => {
+                            //         if (index === 0) {
+                            //             return;
+                            //         }
+                            //         if (index % 2 !== 0) {
+                            //             return 'light';
+                            //         }
+                            //     }
+                            // }
                         />
                      <Modal
                             footer={this.state.footer}

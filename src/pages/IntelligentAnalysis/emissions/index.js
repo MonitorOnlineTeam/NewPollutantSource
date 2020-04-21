@@ -466,7 +466,7 @@ export default class EntPollutantEmissions extends Component {
                             <ReactEcharts
                                 option={this.getOption()}
                                 lazyUpdate={true}
-                                style={{ height: '300px', width: '100%' }}
+                                style={{   width: '100%',height: 'calc(100vh - 780px)', minHeight: '200px' }}
                                 className="echarts-for-echarts"
                                 onChartReady={this.onChartReadyCallback}
                                 onEvents={{ 'click': this.onChartClick }}
@@ -480,7 +480,7 @@ export default class EntPollutantEmissions extends Component {
                                 columns={columns}
 
                                 dataSource={currFlag === 1 ? enttableDatas : pointTableDatas}
-                                scroll={{ y: 'calc(100vh - 650px)' }}
+                              //  scroll={{ y: 'calc(100vh - 650px)' }}
                             />
                         </Row>
 
@@ -497,7 +497,7 @@ export default class EntPollutantEmissions extends Component {
                                 loading={this.props.loadingDays}
                                 columns={columnsDays}
                                 dataSource={pointDaysDatas}
-                                scroll={{ y: 'calc(100vh - 400px)' }}
+                                //scroll={{ y: 'calc(100vh - 400px)' }}
 
                             />
                         </Modal>

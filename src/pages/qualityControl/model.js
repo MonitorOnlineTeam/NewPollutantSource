@@ -68,7 +68,7 @@ export default Model.extend({
       BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
-      PageSize: 10,
+      PageSize: 20,
       total: 0,
     },
     paramsChartData: {
