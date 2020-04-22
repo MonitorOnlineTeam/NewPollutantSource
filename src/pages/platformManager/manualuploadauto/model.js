@@ -39,7 +39,7 @@ export default Model.extend({
             BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
             EndTime: moment().format('YYYY-MM-DD 23:59:59'),
             pageIndex: 1,
-            pageSize: 24,
+            pageSize: 20,
             PointName: '',
             isAsc: true,
             dataType: 'HourData',
@@ -47,7 +47,7 @@ export default Model.extend({
         },
         columns: [],
         columnsSelect: [],
-        pageCount:["24","48","72","96"],
+        pageCount:["20","30","40","50"],
     },
     effects: {
         //上传附件

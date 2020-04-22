@@ -191,13 +191,12 @@ export default class effluentfeeIndex extends Component {
     getEntColumns = (columnsType) => {
         const { tableColumnsData, pollutantColumns } = this.props;
         const { dataFlag } = this.state;
-
         let entColumns = [
             {
                 title: (<span style={{ fontWeight: 'bold' }}>监控目标</span>),
                 dataIndex: 'TargetName',
                 key: 'TargetName',
-                width: '15%',
+                width: 300,
                 align: 'left',
                 render: (text, record) => {
                     return text;
@@ -210,7 +209,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>监控目标</span>),
                     dataIndex: 'TargetName',
                     key: 'TargetName',
-                    width: '15%',
+                    width: 300,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -223,7 +222,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>排口</span>),
                     dataIndex: 'PointName',
                     key: 'PointName',
-                    width: '15%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -240,6 +239,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'EffluentFeeValue',
                 key: 'EffluentFeeValue',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -255,6 +255,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'UltralowEmissionIncentives',
                 key: 'UltralowEmissionIncentives',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -270,6 +271,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'PayableTax',
                 key: 'PayableTax',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -288,6 +290,7 @@ export default class effluentfeeIndex extends Component {
                     dataIndex: 'opts',
                     key: 'opts',
                     align: 'center',
+                    width: 200,
                     render: (text, record) => {
                         if (dataFlag === 1) {
                             return (
@@ -302,6 +305,7 @@ export default class effluentfeeIndex extends Component {
                 }
             );
         }
+console.log(entColumns)
 
         return entColumns;
     }
@@ -372,7 +376,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>排口</span>),
                     dataIndex: 'PointName',
                     key: 'PointName',
-                    width: '20%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -382,7 +386,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>SO2（t）</span>),
                     dataIndex: 'EmissionsValue_01',
                     key: 'EmissionsValue_01',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -392,7 +396,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>SO2排污税（元）</span>),
                     dataIndex: 'EffluentFeeValue_01',
                     key: 'EffluentFeeValue_01',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -402,7 +406,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>NOX（t）</span>),
                     dataIndex: 'EmissionsValue_02',
                     key: 'EmissionsValue_02',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -412,7 +416,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>NOX排污税（元）</span>),
                     dataIndex: 'EffluentFeeValue_02',
                     key: 'EffluentFeeValue_02',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -422,7 +426,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>合计环保税</span>),
                     dataIndex: 'EffluentFeeValue',
                     key: 'EffluentFeeValue',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;

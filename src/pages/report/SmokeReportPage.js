@@ -629,7 +629,7 @@ class SmokeReportPage extends PureComponent {
               pagination={false}
               // rowClassName={""}
               // defaultWidth={80}
-              // scroll={{ y: 'calc(100vh - 440px)', x: 'calc(2400px)' }}
+               scroll={{ y: 'calc(100vh - 400px)'}}
               bordered
               footer={() => this.tableFooter}
             />

@@ -63,7 +63,7 @@ export default class ContentList extends Component {
                             ...{
                                 DGIMNs: nextPropsDGIMN,
                                 pageIndex: 1,
-                                pageSize: 24,
+                                pageSize: 20,
                                 BeginTime: moment().subtract(3, 'day').format('YYYY-MM-DD 00:00:00'),
                                 EndTime: moment().format('YYYY-MM-DD 23:59:59'),
                                 dataType,
@@ -357,15 +357,6 @@ export default class ContentList extends Component {
     //数据类型切换
     handleChange = (dataType) => {
         const { dispatch } = this.props;
-        let pageCount = [];
-        switch (dataType) {
-            case "HourData":
-                pageCount = ["24", "48", "72", "96"];
-                break;
-            case "DayData":
-                pageCount = ["10", "20", "30", "40"];
-                break;
-        }
         this.setState({
             dataType
         })
@@ -375,12 +366,9 @@ export default class ContentList extends Component {
                 manualUploadautoParameters: {
                     ...this.props.manualUploadautoParameters,
                     ...{
-                        pageIndex: 1,
-                        pageSize: dataType == "HourData" ? 24 : 10,
                         dataType
                     }
                 },
-                pageCount
             }
         });
         dispatch({

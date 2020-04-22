@@ -41,10 +41,10 @@ export default Model.extend({
             const result = yield call(services.getEffluentFeeTableColumns);
             if (result.IsSuccess) {
                 if (result.Datas && result.Datas.length > 0) {
-
                     let data = result.Datas;
                     let _pollutantColumns = [];
                     data.map((item) => {
+                        var length = item.PollutantName.length * 25 + 25
                         _pollutantColumns.push(
                             {
                                 title: (<span style={{ fontWeight: 'bold' }}>{item.PollutantName}(t)</span>),
@@ -52,6 +52,7 @@ export default Model.extend({
                                 key: `DischargeVolume_${item.PollutantCode}`,
                                 // width: '30%',
                                 align: 'right',
+                          
                                 render: (text, record) => {
                                     if (text) {
                                         return `${(text / 1000).toFixed(6)}`
@@ -64,6 +65,7 @@ export default Model.extend({
                                 dataIndex: `EffluentFeeValue_${item.PollutantCode}`,
                                 key: `EffluentFeeValue_${item.PollutantCode}`,
                                 align: 'right',
+                          
                                 render: (text, record) => {
                                     // if (text) {
                                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />

@@ -224,12 +224,18 @@ export default Model.extend({
             trigger: 'axis',
           },
           legend: {
+            orient: 'vertical',
+            x: 'right',      //可设定图例在左、右、居中
+            y: 'top',     //可设定图例在上、下、居中
+            padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
             data: _historyparams.pollutantNames.split(','),
           },
           toolbox: {
+            right: 40,
             show: true,
             feature: {
-              saveAsImage: {},
+              saveAsImage: {
+              },
             },
           },
           xAxis: {
@@ -341,7 +347,7 @@ export default Model.extend({
     },
     // 数据标记 - 导出
     *exportDataFlagReport({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.exportDataFlagReport, {...payload, pageSize: null, pageIndex: null});
+      const result = yield call(services.exportDataFlagReport, { ...payload, pageSize: null, pageIndex: null });
       if (result.IsSuccess) {
         message.success("导出成功")
         window.open(result.Datas)

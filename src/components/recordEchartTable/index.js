@@ -364,11 +364,17 @@ class Index extends Component {
     render() {
         const { column } = this.state
         const option = {
-            legend: {},
+            legend: {
+                orient: 'vertical',
+                x: 'right',      //可设定图例在左、右、居中
+                y: 'top',     //可设定图例在上、下、居中
+                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+
+            },
             tooltip: {},
             grid: {
-                x: 30,
-                y: 25,
+                x: 35,
+                y: 10,
                 x2: 1,
                 y2: 35
             },

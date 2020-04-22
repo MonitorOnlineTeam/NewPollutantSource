@@ -297,14 +297,18 @@ class DataQuery extends Component {
 
         if (displayType === 'chart') {
             if (option) {
-                return (<Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}><ReactEcharts
+                return (
+                // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
+                    <ReactEcharts
                     theme="light"
                     option={option}
                     lazyUpdate
                     notMerge
                     id="rightLine"
-                    style={{ width: '100%', height: '100%', padding: 20 }}
-                /></Card.Grid>);
+                    style={{ width: '100%', height: 'calc(100vh - 300px)'}}
+                />
+                // /* </Card.Grid> */
+                );
             }
 
             return (<div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>);

@@ -70,9 +70,9 @@ class SdlTable extends PureComponent {
     setTimeout(() => {
       // let fr=this.refs.polytableframe;
       if (!this._calledComponentWillUnmount) {
-        // let otherHeight = this.props.pagination ? 136 : 100;
+        // let otherHeight = this.props.pagination ? 136 : 96;
         this.setState({
-          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 96
         }, () => {
           console.log("computeHeight=", this.state.computeHeight)
         });
@@ -111,7 +111,7 @@ class SdlTable extends PureComponent {
     
     if(this.props.loading !== nextProps.loading && nextProps.loading === false){
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 96
       }, () => {
         console.log("computeHeight=", this.state.computeHeight)
       });
@@ -119,7 +119,7 @@ class SdlTable extends PureComponent {
 
     if(this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false){
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 140
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 96
       }, () => {
         console.log("computeHeight=", this.state.computeHeight)
       });
