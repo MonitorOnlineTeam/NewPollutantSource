@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import {
     Card,
     Table,
-    
+
     Progress,
     Row,
     Popover,
@@ -117,8 +117,7 @@ export default class effluentfeeIndex extends Component {
 
 
     handlePanelChange = (value, mode) => {
-        if(value && value[0])
-        {
+        if (value && value[0]) {
             this.updateState({
                 begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
                 end: value[1].format("YYYY-MM-DD HH:mm:ss"),
@@ -143,13 +142,21 @@ export default class effluentfeeIndex extends Component {
     };
 
     queryPointData = (record) => {
+
         const { dataFlag } = this.state;
-        const { point, dispatch } = this.props;
+        const { point, dispatch, begin, end } = this.props;
         this.setState({
             dataFlag: 2,
             entName: record.TargetName,
             targetId: record.TargetId
         });
+        let beginDate = "";
+        let endDate = "";
+        //判断是否为日期格式如果为日期格式则证明是子月份
+        if (isNaN(record.TargetName) && !isNaN(Date.parse(record.TargetName))) {
+            beginDate = moment(record.TargetName).format('YYYY-MM-01 00:00:00');
+            endDate = moment(record.TargetName).add(1, 'months').add(-1, 's').format('YYYY-MM-DD HH:mm:ss');
+        }
         this.updateState({
             point: {
                 ...point,
@@ -158,7 +165,9 @@ export default class effluentfeeIndex extends Component {
                     pageIndex: 1,
                     pageSize: 20
                 }
-            }
+            },
+            begin: beginDate ? beginDate : begin,
+            end: endDate ? endDate : end,
         });
 
         dispatch({
@@ -305,7 +314,7 @@ export default class effluentfeeIndex extends Component {
                 }
             );
         }
-console.log(entColumns)
+        console.log(entColumns)
 
         return entColumns;
     }
@@ -516,10 +525,10 @@ console.log(entColumns)
                                         allowClear={false}
                                         style={{ width: 200 }}
                                         placeholder={['开始时间', '结束时间']}
-                                         dataType="month"
-                                         dateValue={[moment(begin), moment(end)]}
-                                         mode={this.state.rangePickerMode}
-                                         callback={this.handlePanelChange}
+                                        dataType="month"
+                                        dateValue={[moment(begin), moment(end)]}
+                                        mode={this.state.rangePickerMode}
+                                        callback={this.handlePanelChange}
                                     />
                                 </span>
 
@@ -538,7 +547,7 @@ console.log(entColumns)
                                     dataSource={dataSource}
                                     // expandedRowRender={dataFlag === 1 ? expandedRowRender : false}
                                     onExpand={this.onExpand}
-                                 //   scroll={{ y: 'calc(100vh - 450px)' }}
+                                    //   scroll={{ y: 'calc(100vh - 450px)' }}
                                     title={() => entName}
                                     // scroll={{ y: 550 }}
                                     pagination={{

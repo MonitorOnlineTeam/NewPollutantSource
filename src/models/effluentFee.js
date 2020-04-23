@@ -123,6 +123,7 @@ export default Model.extend({
                             let m = {
                                 ['key']: index + '_' + ind,
                                 [`TargetName`]: moment(chl.DataDate).format('YYYY-MM'),
+                                [`TargetId`]: chl.TargetId,
                                 [`EffluentFeeValue`]: chl.EffluentFeeValue,
                                 [`UltralowEmissionIncentives`]: chl.UltralowEmissionIncentives,
                                 [`PayableTax`]: chl.PayableTax
@@ -179,7 +180,7 @@ export default Model.extend({
                 if (result.Datas && result.Datas.length > 0) {
 
                     let data = result.Datas;
-
+debugger
                     data.map((item) => {
                         let pData = item.PollutantData;
                         pData.map((p) => {

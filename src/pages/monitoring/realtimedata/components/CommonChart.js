@@ -168,7 +168,7 @@ class CommonChart extends Component {
                             flag = pollutantParam.dataparam.split('§')[0];
                         }
                         res.push(<TabPane tab={
-                            <Card size="small" className={styles.maincard} bordered={false} >
+                            <div size="small" className={styles.maincard} bordered={false} >
                                 <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
                                 <p >浓度：<span style={{ color: flag === "0" ? "red" : flag === "1" ? "#ffbe00e3" : "" }} className={styles.cardfonttype}>{pollutantParam.value}</span>
                                     {
@@ -180,7 +180,7 @@ class CommonChart extends Component {
                                 </p>
                                 <p>单位：<span>{item.Unit}</span></p>
                                 <p>标准值:{item.StandardValueStr}</p>
-                            </Card>} key={key}>
+                            </div>} key={key}>
                         </TabPane>)
 
                     }
@@ -198,7 +198,7 @@ class CommonChart extends Component {
         const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo } = this.props;
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
-                <div className={styles.maintabs} style={{ padding: 10 }}>
+                <div className={styles.maintabs}>
                     {/* <p>刷新时间：{paramsInfo && dataInfo && paramsInfo[0].MonitorTime ? paramsInfo[0].MonitorTime : dataInfo && dataInfo.time}</p> */}
                     <Tabs onChange={this.pollutantClick}>
                         {this.getLastestData()}

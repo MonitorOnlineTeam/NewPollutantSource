@@ -233,7 +233,7 @@ export default class EntPollutantEmissions extends Component {
             //     data: ['排放总量']
             // },
             grid: {
-                x: 35,
+                x: 50,
                 y: 30,
                 x2: 1,
                 y2: 35
