@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Row, Col } from 'antd';
+import { Card, Row, Col, Spin } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
@@ -44,6 +44,8 @@ const columns = [
 @connect(({ loading, qualityControl }) => ({
   entRate: qualityControl.entRate,
   entStaticDataList: qualityControl.entStaticDataList,
+  loading: loading.effects["qualityControl/QCAResultStatic"],
+  tableLoading: loading.effects["qualityControl/QCAResultStaticByEntCode"]
 }))
 class index extends Component {
   constructor(props) {
@@ -57,7 +59,7 @@ class index extends Component {
   }
 
   componentDidMount() {
-    this.getResultStaticData('did');
+    // this.getResultStaticData('did');
   }
 
   // 获取图表统计数据
@@ -71,10 +73,10 @@ class index extends Component {
       },
       searchType: type,
       callback: (res) => {
-        if (type === "did") {
-          if (res.entName.length && res.entCode.length)
-            this.onChartClick({ name: res.entName[0], dataIndex: 0 })
-        }
+        // if (type === "did") {
+        if (res.entName.length && res.entCode.length)
+          this.onChartClick({ name: res.entName[0], dataIndex: 0 })
+        // }
       }
     })
   }
@@ -187,79 +189,82 @@ class index extends Component {
   // 获取企业详情
   getEntDataList = () => {
     const { entIndex, currentDate } = this.state;
-    if(entIndex)
-    {
-      this.props.dispatch({
-        type: "qualityControl/QCAResultStaticByEntCode",
-        payload: {
-          EntCode: this.props.entRate.entCode[entIndex],
-          BeginTime: currentDate.length ? currentDate[0] : undefined,
-          EndTime: currentDate.length ? currentDate[1] : undefined,
-        }
-      })
-    }
+    // if(entIndex)
+    // {
+    this.props.dispatch({
+      type: "qualityControl/QCAResultStaticByEntCode",
+      payload: {
+        EntCode: this.props.entRate.entCode[entIndex],
+        BeginTime: currentDate.length ? currentDate[0] : undefined,
+        EndTime: currentDate.length ? currentDate[1] : undefined,
+      }
+    })
+    // }
 
   }
 
   render() {
     const { currentEntName, currentDate, dateValue } = this.state;
+    const { loading, tableLoading } = this.props;
     const tableTitle = currentEntName ? `${currentEntName} - 企业详情` : "企业详情";
     return (
       <BreadcrumbWrapper>
         <div className="contentContainer" style={{ overflowX: "hidden" }}>
           <Card className={styles.cardShowTitle} style={{ marginBottom: 10 }} title={
-            <RangePicker_ dateValue={dateValue}   dataType='day' style={{ width: 400 }} callback={(date) => {
-              
-                this.setState({
-                  currentDate: [date[0]?date[0].format("YYYY-MM-DD HH:mm:ss"):null,date[1]?date[1].format("YYYY-MM-DD HH:mm:ss"):null],
-                  dateValue: date,
-                }, () => {
-                  // 获取结果统计数据
-                  this.getResultStaticData();
-                  // 刷新table
-                  this.getEntDataList();
-                })
-              
+            <RangePicker_ dateValue={dateValue} dataType='day' style={{ width: 400 }} callback={(date) => {
+
+              this.setState({
+                currentDate: [date[0] ? date[0].format("YYYY-MM-DD HH:mm:ss") : null, date[1] ? date[1].format("YYYY-MM-DD HH:mm:ss") : null],
+                dateValue: date,
+              }, () => {
+                // 获取结果统计数据
+                this.getResultStaticData();
+                // 刷新table
+                // this.getEntDataList();
+              })
+
             }} />
           }></Card>
-          <Row gutter={16}>
-            <Col span={18}>
-              <Card title="企业排行">
-                <ReactEcharts
-                  theme="light"
-                  // option={() => { this.lightOption() }}
-                  option={this.lightOption()}
-                  lazyUpdate
-                  notMerge
-                  id="rightLine"
-                  onEvents={{
-                    'click': this.onChartClick,
-                  }}
-                  style={{ width: '100%', height: 'calc(100vh - 772px)', minHeight: '200px' }}
+          <Spin spinning={loading || tableLoading}>
+            <Row gutter={16}>
+              <Col span={18}>
+                <Card title="企业排行">
+                  <ReactEcharts
+                    theme="light"
+                    // option={() => { this.lightOption() }}
+                    option={this.lightOption()}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    onEvents={{
+                      'click': this.onChartClick,
+                    }}
+                    style={{ width: '100%', height: 'calc(100vh - 772px)', minHeight: '200px' }}
+                  />
+                </Card>
+              </Col>
+              <Col span={6}>
+                <Card title="合格率总览">
+                  <ReactEcharts
+                    theme="pie"
+                    option={this.pieOption()}
+                    lazyUpdate
+                    notMerge
+                    // id="rightLine"
+                    // onEvents={this.onclick}
+                    style={{ width: '100%', height: 'calc(100vh - 772px)', minHeight: '200px' }}
+                  />
+                </Card>
+              </Col>
+            </Row>
+            <Row style={{ marginTop: 10 }}>
+              <Card title={tableTitle}>
+                <SdlTable dataSource={this.props.entStaticDataList} columns={columns}
+                // scroll={{ y: 'calc(100vh - 900px)' }}
                 />
               </Card>
-            </Col>
-            <Col span={6}>
-              <Card title="合格率总览">
-                <ReactEcharts
-                  theme="pie"
-                  option={this.pieOption()}
-                  lazyUpdate
-                  notMerge
-                  // id="rightLine"
-                  // onEvents={this.onclick}
-                  style={{ width: '100%', height: 'calc(100vh - 772px)', minHeight: '200px' }}
-                />
-              </Card>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 10 }}>
-            <Card title={tableTitle}>
-              <SdlTable dataSource={this.props.entStaticDataList} columns={columns} 
-             // scroll={{ y: 'calc(100vh - 900px)' }} 
-              />
-            </Card>
-          </Row>
+            </Row>
+          </Spin>
         </div>
       </BreadcrumbWrapper>
     );

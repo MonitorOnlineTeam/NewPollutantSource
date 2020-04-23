@@ -17,6 +17,7 @@ import config from '@/config'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
+import $ from 'jquery'
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -183,8 +184,54 @@ class NavigationTree extends Component {
       }
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
     }
-
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.EntAndPointLoading !== this.props.EntAndPointLoading && this.props.EntAndPointLoading === false) {
+      // let offsetTop = $(".ant-tree-treenode-selected").offset().top;
+      // let height = $(".ant-tree").height();
+      // console.log("offsetTop=", offsetTop)
+      // console.log("height=", height)
+      // if (offsetTop > height) {
+      //   const scrollTop = offsetTop - height;
+      //   $(".ant-tree").scrollTop(scrollTop)
+      // }
+      this.controlsScrollBarOffsetTop()
+    }
+
+    if (prevState.treeVis !== this.state.treeVis) {
+      this.state.treeVis === true ? this.controlsScrollBarOffsetTop() : this.controlsScrollBarOffsetTop2()
+    }
+  }
+
+
+  // 控制节点滚动条位置
+  controlsScrollBarOffsetTop = () => {
+    // 选中元素的scrollTop
+    let selEleOffsetTop = $(".ant-tree-treenode-selected").offset().top;
+    let treeScrollTop = $(".ant-tree").scrollTop();
+    debugger
+    // 树高度
+    let treeHeight = $(".ant-tree").height();
+    if (selEleOffsetTop - 176 > treeHeight) {
+      const scrollTop = selEleOffsetTop - treeHeight + 176;
+      $(".ant-tree").scrollTop(scrollTop)
+    }
+  }
+
+  // 控制面板滚动条位置
+  controlsScrollBarOffsetTop2 = () => {
+    // 选中元素的scrollTop
+    let selEleOffsetTop = $(".clickRowStyl").offset().top;
+    // table容器高度
+    let tableHeight = $(".ant-table-wrapper").height();
+    if (selEleOffsetTop - 176 > tableHeight) {
+      const scrollTop = selEleOffsetTop - tableHeight + 176;
+      $(".ant-table-wrapper").scrollTop(scrollTop)
+    }
+  }
+
+
   //清除面板数据
   clearData = () => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
@@ -386,8 +433,8 @@ class NavigationTree extends Component {
           tabsElement ? tabsElement.style.marginRight = left : undefined
         }
         // floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
-        dom.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out'
-        tabsElement ? tabsElement.style.transition = 'all .5s ease-in-out, box-shadow .5s ease-in-out' : undefined
+        dom.style.transition = 'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)';
+        tabsElement ? tabsElement.style.transition = 'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)' : undefined
       }
     });
   };
@@ -685,7 +732,7 @@ class NavigationTree extends Component {
     const { configInfo } = this.props;
     //渲染数据及企业排口图标和运行状态
     const loop = data =>
-      data.map(item => {
+      data.map((item, idx) => {
         const index = item.title.indexOf(searchValue);
         const beforeStr = item.title.substr(0, index);
         const afterStr = item.title.substr(index + searchValue.length);
@@ -701,7 +748,7 @@ class NavigationTree extends Component {
             );
         if (item.Type == "0") {
           return (
-            <TreeNode style={{ width: "100%" }} title={
+            <TreeNode style={{ width: "100%" }} data-index={idx} title={
               <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute", right: 10 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
@@ -820,6 +867,7 @@ class NavigationTree extends Component {
                 }}
                 size="large"
               /> : <div>{this.props.EntAndPoint.length ? <Tree
+                data-id="mytree"
                 selectable={!this.props.choice}
                 defaultExpandAll
                 checkable={this.props.choice}
@@ -849,7 +897,7 @@ class NavigationTree extends Component {
                     justifyContent: 'center'
                   }}
                   size="large"
-                /> : <div> {this.props.EntAndPoint.length ? <Table rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                /> : <div> {this.props.EntAndPoint.length ? <Table id="treeTable" rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
                   style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', cursor: "pointer", maxHeight: 'calc(100vh - 290px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}

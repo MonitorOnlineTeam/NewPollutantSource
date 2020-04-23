@@ -328,7 +328,8 @@ class BasicLayout extends Component {
               onChange={this.onChange}
               onEdit={this.onTabsEdit}
               className={styles.pageTabs}
-              tabBarStyle={{ marginBottom: 4 }}
+              tabBarStyle={{ marginBottom: 3 }}
+              tabBarGutter={0}
               tabBarExtraContent={panes.length > 1 ? operations : ""}
             >
               {

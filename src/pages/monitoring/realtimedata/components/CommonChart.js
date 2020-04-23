@@ -196,7 +196,6 @@ class CommonChart extends Component {
     }
     render() {
         const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo } = this.props;
-        console.log("paramsInfo1111=", paramsInfo);
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
                 <div className={styles.maintabs} style={{ padding: 10 }}>

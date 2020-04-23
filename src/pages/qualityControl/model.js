@@ -279,9 +279,9 @@ export default Model.extend({
             entResult,
           },
         })
-        if (!searchType) {
-          message.success('操作成功')
-        }
+        // if (!searchType) {
+        //   message.success('操作成功')
+        // }
         callback && callback(result.Datas)
       } else {
         message.error(result.Message)
