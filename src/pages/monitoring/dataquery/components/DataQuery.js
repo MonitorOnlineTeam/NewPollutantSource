@@ -5,7 +5,7 @@ import {
     Card,
     Spin,
     message, Empty, Radio, Row, Col,
-    Button,Form,
+    Button, Form,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -73,7 +73,6 @@ class DataQuery extends Component {
     // _handleDateChange = (date, dateString) => {
 
     //     let { historyparams } = this.props;
-    //     // debugger;
     //     switch (historyparams.datatype) {
     //         case 'realtime':
     //             if (date[1].add(-7, 'day') > date[0]) {
@@ -361,41 +360,51 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue } = this.state;
+        const { pointName } = this.props;
+        debugger
         return (
             <div>
                 <Card
                     // className={!this.props.style ? 'contentContainer' : null}
                     title={
-                        <Form layout="inline">
-                            <Form.Item>
-                                {!this.props.isloading && this.getpollutantSelect()}
-                            </Form.Item>
-                            <Form.Item>
-                                <RangePicker_ style={{width:325, textAlign: 'left' }} dateValue={dateValue}
-                                    dataType={dataType}
-                                    format={this.state.format}
-                                    onRef={this.onRef1}
-                                    isVerification={true}
-                                    // onChange={this._handleDateChange} 
-                                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                                    allowClear={false} showTime={this.state.format} />
-                            </Form.Item>
+                        <div>
+                            <div>
+                                {pointName}
+                            </div>
+                            <div style={{ marginTop: 10 }}>
+                                <Form layout="inline">
+                                    <Form.Item>
+                                        {!this.props.isloading && this.getpollutantSelect()}
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <RangePicker_ style={{ width: 325, textAlign: 'left' }} dateValue={dateValue}
+                                            dataType={dataType}
+                                            format={this.state.format}
+                                            onRef={this.onRef1}
+                                            isVerification={true}
+                                            // onChange={this._handleDateChange} 
+                                            callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                            allowClear={false} showTime={this.state.format} />
+                                    </Form.Item>
 
-                            <Form.Item>
-                                <ButtonGroup_ style={{ width: '100%' }} checked="realtime" onChange={this._handleDateTypeChange} />
-                            </Form.Item>
-                            <Form.Item>
-                                <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
-                            </Form.Item>
-                            <Form.Item>
-                                <Radio.Group style={{ width: '100%' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
-                                    this.displayChange(e.target.value)
-                                }}>
-                                    <Radio.Button value="chart">图表</Radio.Button>
-                                    <Radio.Button value="data">数据</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item>
-                        </Form>
+                                    <Form.Item>
+                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Radio.Group style={{ width: '100%' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                            this.displayChange(e.target.value)
+                                        }}>
+                                            <Radio.Button value="chart">图表</Radio.Button>
+                                            <Radio.Button value="data">数据</Radio.Button>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                </Form>
+                            </div>
+                        </div>
+
                     }
                 >
                     {this.loaddata()}

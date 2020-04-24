@@ -307,7 +307,7 @@ class LogTimeList extends Component {
                       {this.renderTimeLineItem()}
                     </Timeline>
                   </div>
-                  <div style={{ width: "100%", marginTop: 20, marginBottom: -6 }}>
+                  <div style={{ width: "100%", marginTop: 10 }}>
                     <Pagination
                       style={{ float: "right" }}
                       showQuickJumper

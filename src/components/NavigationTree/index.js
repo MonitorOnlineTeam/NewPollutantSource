@@ -314,7 +314,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0], IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
+        var rtnKey = [{ key: nowKey[0],pointName:node.title, IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
         console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -632,7 +632,7 @@ class NavigationTree extends Component {
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode, QCAType: list[0].QCAType, VideoNo: list[0].VideoNo })
+        rtnList.push({ key: item,pointName:list[0].title, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode, QCAType: list[0].QCAType, VideoNo: list[0].VideoNo })
       }
     })
     //向外部返回选中的数据
