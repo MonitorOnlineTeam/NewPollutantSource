@@ -193,11 +193,7 @@ a:hover {
 
 :global {
 
-  // 多选下拉样式
-  .ant-select-selection--multiple{
-    height: 32px;
-    overflow: hidden;
-  }
+
 
   // 菜单选中样式
   .ant-menu-dark .ant-menu-item:hover,
@@ -251,6 +247,17 @@ a:hover {
 
   .ant-layout {
 
+    // 多选下拉样式
+    .ant-form-item-control {
+      // line-height: normal;
+    }
+
+    .ant-select-selection--multiple {
+      height: 32px;
+      overflow: hidden;
+      margin-bottom: -10px
+    }
+
     // 面包屑样式 - start
     .ant-page-header {
       padding: 10px 14px;
@@ -259,7 +266,7 @@ a:hover {
       .ant-page-header-heading {
         float: left;
         margin-top: 1px;
-        margin-right: 24px;
+        margin-right: 6px;
         margin-left: 6px;
       }
     }
@@ -357,6 +364,7 @@ a:hover {
     height: calc(100vh - 116px);
 
     .ant-tabs-tabpane-active {
+
       .ant-card:not(.notAdaptive):not(.antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maincard):not(.ant-card-type-inner),
       .contentContainer {
         height: calc(100vh - 116px);
@@ -372,7 +380,8 @@ a:hover {
 
 }
 
-#sideMenuLayout {
+#basicLayout,
+#notBreadcrumbLayout {
   .ant-pro-page-header-wrap-children-content {
     height: calc(100vh - 126px);
     background: #fff;
@@ -389,5 +398,19 @@ a:hover {
 
   .contentContainer {
     height: calc(100vh - 126px);
+  }
+}
+
+#notBreadcrumbLayout {
+  .ant-pro-page-header-wrap-children-content {
+    height: calc(100vh - 82px);
+  }
+
+  .contentContainer {
+    height: calc(100vh - 82px);
+  }
+
+  .hideBreadcrumb {
+    display: none;
   }
 }
