@@ -72,7 +72,7 @@ class SdlTable extends PureComponent {
       if (!this._calledComponentWillUnmount) {
         // let otherHeight = this.props.pagination ? 136 : 96;
         this.setState({
-          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 96
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
         }, () => {
           console.log("computeHeight=", this.state.computeHeight)
         });
@@ -111,7 +111,7 @@ class SdlTable extends PureComponent {
 
     if(this.props.loading !== nextProps.loading && nextProps.loading === false){
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 120
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
         console.log("computeHeight=", this.state.computeHeight)
       });
@@ -119,7 +119,7 @@ class SdlTable extends PureComponent {
 
     if(this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false){
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 120
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
         console.log("computeHeight=", this.state.computeHeight)
       });
@@ -127,11 +127,13 @@ class SdlTable extends PureComponent {
   }
 
   render() {
-    const { defaultWidth, resizable, clientHeight } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination } = this.props;
     const { _props, columns } = this.state;
 
     let fixedHeight = this.state.computeHeight;
     let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight : "");
+    // 没有分页高度 + 40
+    let scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
     let _columns = (columns || []).map((col, index) => {
       return {
@@ -154,6 +156,7 @@ class SdlTable extends PureComponent {
       <div ref={el => this.sdlTableFrame = el}>
         <Table
           ref={(table) => { this.sdlTable = table }}
+          id="sdlTable"
           rowKey={record => record.id || record.ID}
           size="small"
           components={resizable ? this.components : undefined}
@@ -168,11 +171,11 @@ class SdlTable extends PureComponent {
               }
             }
           }
-          bordered
+          // bordered
           pagination={{ pageSize: 20 }}
           {...this.props}
           defaultWidth={80}
-          scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollYHeight }}
+          scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollY }}
           columns={_columns}
           {..._props}
         />

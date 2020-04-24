@@ -207,15 +207,16 @@ class NavigationTree extends Component {
 
   // 控制节点滚动条位置
   controlsScrollBarOffsetTop = () => {
-    // 选中元素的scrollTop
-    let selEleOffsetTop = $(".ant-tree-treenode-selected").offset().top;
-    let treeScrollTop = $(".ant-tree").scrollTop();
-    debugger
-    // 树高度
-    let treeHeight = $(".ant-tree").height();
-    if (selEleOffsetTop - 176 > treeHeight) {
-      const scrollTop = selEleOffsetTop - treeHeight + 176;
-      $(".ant-tree").scrollTop(scrollTop)
+    if ($(".ant-tree-treenode-selected") && $(".ant-tree-treenode-selected").length) {
+      // 选中元素的scrollTop
+      let selEleOffsetTop = $(".ant-tree-treenode-selected").offset().top;
+      let treeScrollTop = $(".ant-tree").scrollTop();
+      // 树高度
+      let treeHeight = $(".ant-tree").height();
+      if (selEleOffsetTop - 176 > treeHeight) {
+        const scrollTop = selEleOffsetTop - treeHeight + 176;
+        $(".ant-tree").scrollTop(scrollTop)
+      }
     }
   }
 

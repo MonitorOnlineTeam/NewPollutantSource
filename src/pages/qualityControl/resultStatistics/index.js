@@ -210,7 +210,7 @@ class index extends Component {
     return (
       <BreadcrumbWrapper>
         <div className="contentContainer" style={{ overflowX: "hidden" }}>
-          <Card className={styles.cardShowTitle} style={{ marginBottom: 10 }} title={
+          <Card className={`notAdaptive ${styles.cardShowTitle}`} style={{ marginBottom: 10 }} title={
             <RangePicker_ dateValue={dateValue} dataType='day' style={{ width: 400 }} callback={(date) => {
 
               this.setState({
@@ -228,7 +228,7 @@ class index extends Component {
           <Spin spinning={loading || tableLoading}>
             <Row gutter={16}>
               <Col span={18}>
-                <Card title="企业排行">
+                <Card title="企业排行" className="notAdaptive">
                   <ReactEcharts
                     theme="light"
                     // option={() => { this.lightOption() }}
@@ -244,7 +244,7 @@ class index extends Component {
                 </Card>
               </Col>
               <Col span={6}>
-                <Card title="合格率总览">
+                <Card title="合格率总览" className="notAdaptive">
                   <ReactEcharts
                     theme="pie"
                     option={this.pieOption()}
@@ -258,7 +258,7 @@ class index extends Component {
               </Col>
             </Row>
             <Row style={{ marginTop: 10 }}>
-              <Card title={tableTitle}>
+              <Card title={tableTitle} className="notAdaptive">
                 <SdlTable dataSource={this.props.entStaticDataList} columns={columns}
                 // scroll={{ y: 'calc(100vh - 900px)' }}
                 />
