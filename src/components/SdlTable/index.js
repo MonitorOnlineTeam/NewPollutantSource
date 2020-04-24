@@ -92,6 +92,28 @@ class SdlTable extends PureComponent {
     });
   };
 
+  getInitialColWidth = (col) => {
+    const title = col.title;
+    if (col.title.constructor === String) {
+      if (title.indexOf('时间') != -1) {
+        return 180;
+      } else if (title.indexOf('状态') != -1) {
+        return col.width || 150;
+      } else if (title.indexOf('类型') != -1 || title.indexOf('AQI') != -1 || title.indexOf('风向') != -1 || title.indexOf('次数') != -1) {
+        return 100;
+      } else if (title == '行政区') {
+        return col.width || 200;
+      } else if (title == '企业名称') {
+        return col.width || 240;
+      } else {
+        return col.width || this.props.defaultWidth;
+      }
+    } else {
+      return col.width || this.props.defaultWidth;
+    }
+
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.dataSource !== nextProps.dataSource) {
       let _props = {};
@@ -109,7 +131,7 @@ class SdlTable extends PureComponent {
       })
     }
 
-    if(this.props.loading !== nextProps.loading && nextProps.loading === false){
+    if (this.props.loading !== nextProps.loading && nextProps.loading === false) {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
@@ -117,7 +139,7 @@ class SdlTable extends PureComponent {
       });
     }
 
-    if(this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false){
+    if (this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false) {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
@@ -143,7 +165,7 @@ class SdlTable extends PureComponent {
           </div>
         },
         ...col,
-        width: col.width || defaultWidth,
+        width: this.getInitialColWidth(col),
         onHeaderCell: column => ({
           width: column.width,
           onResize: resizable ? this.handleResize(index) : undefined,
@@ -171,7 +193,7 @@ class SdlTable extends PureComponent {
               }
             }
           }
-          // bordered
+          bordered
           pagination={{ pageSize: 20 }}
           {...this.props}
           defaultWidth={80}
@@ -185,7 +207,7 @@ class SdlTable extends PureComponent {
 }
 
 SdlTable.defaultProps = {
-  defaultWidth: 180,
+  defaultWidth: 150,
   resizable: false
 }
 
