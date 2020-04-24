@@ -230,14 +230,15 @@ class Index extends Component {
                         <Card
                             extra={
                                 <div>
-                                    数据类型：
                                     <Select
                                         mode="multiple"
-                                        style={{ width: '280px' }}
+                                        style={{ width: 280 }}
                                         placeholder="请选择数据类型"
                                         filterOption={true}
                                         allowClear={true}
                                         maxTagCount={2}
+                                        maxTagTextLength={5}
+                                        maxTagPlaceholder="..."
                                         onChange={this.SelectHandleChange}
                                         defaultValue={dataType}
                                     >
@@ -248,7 +249,7 @@ class Index extends Component {
                                         <Option value="other" disabled={disabledOthers}>其它</Option>
                                     </Select>
 
-                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10,marginLeft: 10  }}
+                                    <RangePicker_ style={{ marginRight: 10,marginLeft: 10  }}
                                         dateValue={this.state.rangeDate} format={this.state.format}
                                         callback={this._handleDateChange}
                                         //    onChange={this._handleDateChange} 
