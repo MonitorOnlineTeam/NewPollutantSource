@@ -279,10 +279,12 @@ class SiteDailyPage extends PureComponent {
           title: 'AQI',
           dataIndex: 'AQI',
         }, {
+          title: '首要污染物',
+          dataIndex: '首要污染物',
+        }, {
           title: '空气质量指数类别',
           dataIndex: '空气质量指数类别',
-        },
-        {
+        }, {
           title: '空气质量指数级别',
           dataIndex: '空气质量指数级别',
         }]
