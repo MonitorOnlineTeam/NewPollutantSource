@@ -312,7 +312,10 @@ class SiteDailyPage extends PureComponent {
               }
               // console.log('///=', status)
               // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
-              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              if(val) {
+                return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              }
+              return '-';
             }
             return '-';
           },

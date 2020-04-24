@@ -305,7 +305,10 @@ class DailySummaryPage extends PureComponent {
               if (item.dataIndex === "风向") {
                 val = getDirLevel(text)
               }
-              return status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val
+              if(val) {
+                return status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val
+              }
+              return '-';
             }
             return "-"
           }
