@@ -76,7 +76,6 @@ class AutoFormTable extends PureComponent {
   }
 
   loadDataSource(params) {
-    debugger;
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {

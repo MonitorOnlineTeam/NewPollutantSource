@@ -109,7 +109,7 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
                 dataIndex: 'TransmissionRate',
                 key: 'TransmissionRate',
-                width: '20%',
+                width: '15%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.AvgTransmissionRate <= text) {
@@ -125,7 +125,7 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
                 dataIndex: 'EffectiveRate',
                 key: 'EffectiveRate',
-                width: '20%',
+                width: '15%',
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
@@ -143,7 +143,7 @@ export default class EntTransmissionEfficiency extends Component {
                 dataIndex: 'TransmissionEffectiveRate',
                 key: 'TransmissionEffectiveRate',
                 // width: '250px',
-                width: '20%',
+                width: '30%',
                 // align: 'center',
                 sorter: true,
                 render: (text, record) => {

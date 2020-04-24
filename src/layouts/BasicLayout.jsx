@@ -320,7 +320,7 @@ class BasicLayout extends Component {
           {...settings}
         >
           {
-            config.isShowTabs && defaultSettings.layout === "sidemenu" ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px' }}><Tabs
+            config.isShowTabs && defaultSettings.layout === "sidemenu" ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs
               type="editable-card"
               size="small"
               hideAdd
@@ -335,7 +335,7 @@ class BasicLayout extends Component {
               {
                 this.state.panes.map(pane => (
                   <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1}>
-                    {pane.content}
+                    {pane.content} 
                   </TabPane>
                 ))
               }
