@@ -41,10 +41,12 @@ const { confirm } = Modal;
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const { RangePicker, MonthPicker } = DatePicker;
-@connect(({ loading, autoForm }) => ({
+
+@connect(({ loading, autoForm, global }) => ({
   searchForm: autoForm.searchForm,
   searchConfigItems: autoForm.searchConfigItems,
-  whereList: autoForm.whereList
+  whereList: autoForm.whereList,
+  clientHeight: global.clientHeight,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -111,29 +113,28 @@ class SearchWrapper extends Component {
   }
 
   onSubmitForm() {
-    console.log(":resultConfigId=",this.props.resultConfigId)
-    const {resultConfigId, configId, searchForm, whereList, dispatch, searchParams} = this.props;
+    const { resultConfigId, configId, searchForm, whereList, dispatch, searchParams } = this.props;
     // TODO 主要用于 关联表业务  查询条件configId 与 列表configId不一样的问题  参考 维护监测点页面需求
-    if(resultConfigId){
+    if (resultConfigId) {
       dispatch({
         type: "autoForm/updateState",
-        payload:{
-          searchForm:{
+        payload: {
+          searchForm: {
             ...searchForm,
-            [resultConfigId]:{
+            [resultConfigId]: {
               ...searchForm[configId]
             }
           },
-          whereList:{
+          whereList: {
             ...whereList,
-            [resultConfigId]:{
+            [resultConfigId]: {
               ...whereList[configId]
             }
           }
         }
       })
     }
-    setTimeout(()=>{
+    setTimeout(() => {
       dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
@@ -189,27 +190,26 @@ class SearchWrapper extends Component {
     const { dateFormat } = item;
     const { fieldName } = item;
     const format = dateFormat ? dateFormat.toUpperCase() : "";
- 
+
     console.log("format=", format)
-    
-    switch(format)
-    {
-       case "YYYY-MM-DD HH:MM:SS":
-            return <RangePicker_ fieldName={fieldName}   
-            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} />
-         
-       case "YYYY-MM-DD HH:MM":
-            return <RangePicker_ fieldName={fieldName}   
-            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} dataType="minute"/>
-            
-       case "YYYY-MM-DD HH":
-            return <RangePicker_ fieldName={fieldName}   
-            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} style={{ width: '100%' }} dataType="hour"/>
-           
-       default:
-            return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}   
-            callback={(dates,type,fieldName)=>this.dateCallBack(dates,type,fieldName)} dataType="day"/>
-             
+
+    switch (format) {
+      case "YYYY-MM-DD HH:MM:SS":
+        return <RangePicker_ fieldName={fieldName}
+          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
+
+      case "YYYY-MM-DD HH:MM":
+        return <RangePicker_ fieldName={fieldName}
+          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
+
+      case "YYYY-MM-DD HH":
+        return <RangePicker_ fieldName={fieldName}
+          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
+
+      default:
+        return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
+          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
+
     }
 
     // return <RangePicker_ style={{ width: '100%' }} />
@@ -220,17 +220,16 @@ class SearchWrapper extends Component {
   }
 
   /**时间控件回调 */
-  dateCallBack=(dates,type,fieldName)=>{
-      const {form:{setFieldsValue}}=this.props;
-      if(dates[0] && dates[1])
-      setFieldsValue({ [fieldName]:dates });
-      else
-      {
-        setFieldsValue({ [fieldName]:undefined });
-      }
+  dateCallBack = (dates, type, fieldName) => {
+    const { form: { setFieldsValue } } = this.props;
+    if (dates[0] && dates[1])
+      setFieldsValue({ [fieldName]: dates });
+    else {
+      setFieldsValue({ [fieldName]: undefined });
+    }
   }
 
-  
+
 
   // 渲染FormItem
   _renderFormItem() {
@@ -263,7 +262,7 @@ class SearchWrapper extends Component {
             }
           }
           // element = <EnterprisePointCascadeMultiSelect {...props}/>
-          element = <CascaderMultiple {...this.props}/>
+          element = <CascaderMultiple {...this.props} />
           break;
         case '下拉列表框':
         case '下拉多选':
@@ -339,7 +338,29 @@ class SearchWrapper extends Component {
   _handleExpand() {
     this.setState({
       expand: !this.state.expand
+    }, () => {
+      // 展开、收起重新计算table高度
+      let tableElement = document.getElementsByClassName("ant-table-wrapper");
+      if (tableElement.length) {
+        let tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
+        let scrollYHeight = this.props.clientHeight - tableOffsetTop;
+        let tableBodyEle = document.getElementById("sdlTable").getElementsByClassName("ant-table-body");
+        if(tableBodyEle && tableBodyEle.length) {
+          tableBodyEle[0].style.maxHeight = scrollYHeight + "px";
+        }
+      }
     });
+
+  }
+
+  getOffsetTop = (obj) => {
+    let offsetCountTop = obj.offsetTop;
+    let parent = obj.offsetParent;
+    while (parent !== null) {
+      offsetCountTop += parent.offsetTop;
+      parent = parent.offsetParent;
+    }
+    return offsetCountTop;
   }
 
   render() {
@@ -425,7 +446,7 @@ SearchWrapper.propTypes = {
   onSubmitForm: PropTypes.func,
   // formLayout布局
   formLayout: PropTypes.object,
-  // 
+  //
   resultConfigId: PropTypes.string,
 };
 

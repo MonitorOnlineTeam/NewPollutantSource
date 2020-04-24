@@ -270,6 +270,9 @@ class SdlForm extends PureComponent {
           element = this._rtnDateEl(item);
           break;
         case '单选':
+          if (item.value && !initialValue && !isEdit) {
+            initialValue = item.value[0].key
+          }
           element = (
             <SdlRadio
               data={item.value}

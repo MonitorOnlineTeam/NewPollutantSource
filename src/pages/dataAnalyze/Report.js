@@ -244,7 +244,7 @@ class Report extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col xl={5} sm={24} md={12}>
+              <Col xl={6} sm={24} md={12}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     // initialValue: defaultSearchForm.PollutantSourceType,
@@ -258,7 +258,7 @@ class Report extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col xl={7} sm={24} md={12}>
+              <Col xl={8} sm={24} md={12}>
                 <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                   {getFieldDecorator("ReportTime", {
                     initialValue: time,
@@ -273,7 +273,7 @@ class Report extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col xl={6} md={12}>
+              <Col xl={10} md={12}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                   <Button type="primary" loading={searchLoading} style={{ marginRight: 10 }} onClick={this.queryReportData}>生成统计</Button>
                   <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}><Icon type="export" />导出</Button>
