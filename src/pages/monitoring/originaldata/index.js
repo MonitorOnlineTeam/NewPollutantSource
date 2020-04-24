@@ -34,7 +34,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
     total: originalData.total,
     pageIndex: originalData.pageIndex,
     pageSize: originalData.pageSize,
-    dgimn:originalData.dgimn
+    dgimn: originalData.dgimn,
+    dataType: originalData.dataType,
 }))
 
 class Index extends Component {
@@ -43,6 +44,9 @@ class Index extends Component {
         this.state = {
             rangeDate: [moment().startOf('day'), moment(new Date())],
             format: 'YYYY-MM-DD HH:mm:ss',
+            dataType: [],
+            disabledFourDataTypes: false,
+            disabledOthers: false,
         };
         this.onTableChange = this.onTableChange.bind(this);
     }
@@ -71,17 +75,17 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'originalData/updateState',
                 payload: {
-                    beginTime: date[0]? date[0].format('YYYY-MM-DD HH:mm:ss'):null,
-                    endTime:  date[1]? date[1].format('YYYY-MM-DD HH:mm:ss'):null
+                    beginTime: date[0] ? date[0].format('YYYY-MM-DD HH:mm:ss') : null,
+                    endTime: date[1] ? date[1].format('YYYY-MM-DD HH:mm:ss') : null
                 },
             });
             this.setState({
                 rangeDate: date,
             });
-            if(this.props.dgimn)
-            setTimeout(() => {
-                this.reloaddatalist();
-            }, 0);
+            if (this.props.dgimn)
+                setTimeout(() => {
+                    this.reloaddatalist();
+                }, 0);
         }
     };
 
@@ -115,6 +119,47 @@ class Index extends Component {
         setTimeout(() => {
             this.reloaddatalist();
         }, 0);
+    }
+
+    //下拉数据类型事件
+    SelectHandleChange = (value) => {
+        const { dispatch } = this.props;
+        const { disabledFourDataTypes, disabledOthers } = this.state;
+        let disDisabledFourDataTypes = false;
+        let disDisabledOthers = false;
+        if (value.length !== 0) {
+            if (value.indexOf('other') !== -1) {
+                disDisabledFourDataTypes = true;
+            }
+            else {
+                disDisabledOthers = true;
+            }
+        }
+        this.setState({
+            dataType: value,
+            disabledFourDataTypes: disDisabledFourDataTypes,
+            disabledOthers: disDisabledOthers,
+        })
+        var dataTypeList = '';
+        if (value) {
+            value.map((item) => {
+                var code = item;
+                if (code) {
+                    dataTypeList += code + ','
+                }
+            })
+            dataTypeList = dataTypeList.substr(0, dataTypeList.length - 1);
+            dispatch({
+                type: 'originalData/updateState',
+                payload: {
+                    dataType: dataTypeList
+                }
+            });
+        }
+        setTimeout(() => {
+            this.reloaddatalist();
+        }, 0);
+
     }
 
     // 分页页数change
@@ -157,7 +202,7 @@ class Index extends Component {
             dataSource={tableDatas}
             columns={columns}
             loading={loading}
-        //    scroll={{ y: 'calc(100vh - 410px)' }}
+            //    scroll={{ y: 'calc(100vh - 410px)' }}
             pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
@@ -172,6 +217,7 @@ class Index extends Component {
     }
 
     render() {
+        const { dataType, disabledFourDataTypes, disabledOthers } = this.state;
         return (
             <div id="originaldata">
                 <BreadcrumbWrapper>
@@ -184,11 +230,29 @@ class Index extends Component {
                         <Card
                             extra={
                                 <div>
-                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} 
-                                     dateValue={this.state.rangeDate} format={this.state.format}
-                                     callback={this._handleDateChange}
-                                 //    onChange={this._handleDateChange} 
-                                     showTime={this.state.format}/>
+                                    数据类型：
+                                    <Select
+                                        mode="multiple"
+                                        style={{ width: '280px' }}
+                                        placeholder="请选择数据类型"
+                                        filterOption={true}
+                                        allowClear={true}
+                                        maxTagCount={2}
+                                        onChange={this.SelectHandleChange}
+                                        defaultValue={dataType}
+                                    >
+                                        <Option value="2011" disabled={disabledFourDataTypes}>实时数据</Option>
+                                        <Option value="2051" disabled={disabledFourDataTypes}>分钟数据</Option>
+                                        <Option value="2061" disabled={disabledFourDataTypes}>小时数据</Option>
+                                        <Option value="2031" disabled={disabledFourDataTypes}>日数据</Option>
+                                        <Option value="other" disabled={disabledOthers}>其它</Option>
+                                    </Select>
+
+                                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10,marginLeft: 10  }}
+                                        dateValue={this.state.rangeDate} format={this.state.format}
+                                        callback={this._handleDateChange}
+                                        //    onChange={this._handleDateChange} 
+                                        showTime={this.state.format} />
                                 </div>
                             }
                             className="contentContainer"
