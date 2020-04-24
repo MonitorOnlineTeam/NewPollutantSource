@@ -114,17 +114,17 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
     render() {
         const { videoListParameters } = this.props;
         const columns = [
-            { title: '设备名称', dataIndex: 'VedioDevice_Name', key: 'VedioDevice_Name', width: '10%' },
-            { title: '相机名称', dataIndex: 'VedioCamera_Name', key: 'VedioCamera_Name', width: '10%' },
-            { title: 'IP', dataIndex: 'IP', key: 'IP', width: '14%' },
-            { title: '端口', dataIndex: 'Device_Port', key: 'Device_Port', width: '14%' },
-            { title: '用户名', dataIndex: 'User_Name', key: 'User_Name', width: '14%' },
-            { title: '密码', dataIndex: 'User_Pwd', key: 'User_Pwd', width: '14%' },
-            { title: '通道号', dataIndex: 'VedioCamera_No', key: 'VedioCamera_No', width: '10%' },
+            { title: '设备名称', dataIndex: 'VedioDevice_Name', key: 'VedioDevice_Name', width: 100 },
+            { title: '相机名称', dataIndex: 'VedioCamera_Name', key: 'VedioCamera_Name', width: 100 },
+            { title: 'IP', dataIndex: 'IP', key: 'IP', width: 150 },
+            { title: '端口', dataIndex: 'Device_Port', key: 'Device_Port', width: 100 },
+            { title: '用户名', dataIndex: 'User_Name', key: 'User_Name', width: 100 },
+            { title: '密码', dataIndex: 'User_Pwd', key: 'User_Pwd', width: 100 },
+            { title: '通道号', dataIndex: 'VedioCamera_No', key: 'VedioCamera_No', width: 100 },
             {
                 title: '操作',
                 key: 'action',
-                width: '14%',
+                width: 200,
                 render: (text, record, index) => (
                     <span>
                      <Tooltip title="详情">
@@ -210,7 +210,6 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                             rowKey="VedioCamera_ID"
                             loading={this.props.effects['hkvideo/hkvideourl']}
                             className={styles.dataTable}
-                            size="middle"
                             //scroll={{ y: 'calc(100vh - 360px)' }}
                             // rowClassName={
                             //     (record, index, indent) => {

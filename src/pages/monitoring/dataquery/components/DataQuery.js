@@ -5,13 +5,14 @@ import {
     Card,
     Spin,
     message, Empty, Radio, Row, Col,
-    Button
+    Button,Form,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
 import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
+@Form.create()
 /**
  * 数据查询组件
  * xpy 2019.07.26
@@ -42,8 +43,8 @@ class DataQuery extends Component {
             dd: [],
             selectP: '',
             dgimn: '',
-            dateValue:[moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-            dataType:"realtime"
+            dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
+            dataType: "realtime"
         };
     }
 
@@ -70,7 +71,7 @@ class DataQuery extends Component {
 
     /** 切换时间 */
     // _handleDateChange = (date, dateString) => {
-        
+
     //     let { historyparams } = this.props;
     //     // debugger;
     //     switch (historyparams.datatype) {
@@ -155,11 +156,11 @@ class DataQuery extends Component {
     // }
 
     /** 数据类型切换 */
-    _handleDateTypeChange=(e)=>{
-        const {historyparams}=this.props;
-        const dataType=e.target.value;
-        this.setState({dataType}); 
-        
+    _handleDateTypeChange = (e) => {
+        const { historyparams } = this.props;
+        const dataType = e.target.value;
+        this.setState({ dataType });
+
         this.children.onDataTypeChange(dataType);
     }
 
@@ -190,12 +191,12 @@ class DataQuery extends Component {
             mode="multiple"
             optionDatas={pollutantlist}
             defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-            style={{ width: '80%', margin: '5px' }}
             onChange={this.handlePollutantChange}
             placeholder="请选择污染物"
             maxTagCount={2}
             maxTagTextLength={5}
             maxTagPlaceholder="..."
+            style={{ width: 160 }}
         />);
     }
 
@@ -257,7 +258,7 @@ class DataQuery extends Component {
             dispatch,
         } = this.props;
         let { historyparams } = this.props;
-        const { rangeDate,dateValue } = this.state;
+        const { rangeDate, dateValue } = this.state;
         historyparams = {
             ...historyparams,
             pollutantCodes: '',
@@ -298,16 +299,16 @@ class DataQuery extends Component {
         if (displayType === 'chart') {
             if (option) {
                 return (
-                // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
+                    // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
                     <ReactEcharts
-                    theme="light"
-                    option={option}
-                    lazyUpdate
-                    notMerge
-                    id="rightLine"
-                    style={{ width: '100%', height: 'calc(100vh - 300px)'}}
-                />
-                // /* </Card.Grid> */
+                        theme="light"
+                        option={option}
+                        lazyUpdate
+                        notMerge
+                        id="rightLine"
+                        style={{ width: '100%', height: 'calc(100vh - 250px)' }}
+                    />
+                    // /* </Card.Grid> */
                 );
             }
 
@@ -315,20 +316,20 @@ class DataQuery extends Component {
         }
         return (
             // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
-                <SdlTable
-                    rowKey={(record, index) => `complete${index}`}
-                    dataSource={datatable}
-                    columns={columns}
-                    resizable
-                    // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
-                    pagination={{pageSize: 20}}
+            <SdlTable
+                rowKey={(record, index) => `complete${index}`}
+                dataSource={datatable}
+                columns={columns}
+                resizable
+                // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
+                pagination={{ pageSize: 20 }}
 
-                />
+            />
             // </Card.Grid>
 
         );
     }
-   
+
     exportReport = () => {
         this.props.dispatch({
             type: "dataquery/exportHistoryReport",
@@ -340,60 +341,61 @@ class DataQuery extends Component {
     /**
      * 回调获取时间并重新请求数据
      */
-    dateCallback=(dates,dataType)=>{
-       let { historyparams } = this.props;
-       this.setState({
-          dateValue:dates
-       })
-       historyparams = {
+    dateCallback = (dates, dataType) => {
+        let { historyparams } = this.props;
+        this.setState({
+            dateValue: dates
+        })
+        historyparams = {
             ...historyparams,
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
-            datatype:dataType
+            datatype: dataType
         }
         this.reloaddatalist(historyparams);
     }
 
-    onRef1=(ref)=>{
-        this.children=ref;
+    onRef1 = (ref) => {
+        this.children = ref;
     }
 
     render() {
-        const {dataType,dateValue}=this.state;
+        const { dataType, dateValue } = this.state;
         return (
             <div>
                 <Card
                     // className={!this.props.style ? 'contentContainer' : null}
                     title={
-                        <div>
-                            <Row>
-                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
-                                    {!this.props.isloading && this.getpollutantSelect()}
-                                </Col>
-                                <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={7}>
-                                    <RangePicker_ style={{ width: '90%', marginRight: '5px', textAlign: 'left' }} dateValue={dateValue} 
+                        <Form layout="inline">
+                            <Form.Item>
+                                {!this.props.isloading && this.getpollutantSelect()}
+                            </Form.Item>
+                            <Form.Item>
+                                <RangePicker_ style={{width:325, textAlign: 'left' }} dateValue={dateValue}
                                     dataType={dataType}
-                                    format={this.state.format} 
+                                    format={this.state.format}
                                     onRef={this.onRef1}
                                     isVerification={true}
-                                   // onChange={this._handleDateChange} 
-                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
+                                    // onChange={this._handleDateChange} 
+                                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                     allowClear={false} showTime={this.state.format} />
-                                </Col>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={18} xxl={5}>
-                                    <ButtonGroup_ style={{ width: '100%', marginRight: '5px' }} checked="realtime" onChange={this._handleDateTypeChange} />
-                                </Col>
-                                <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={5}>
-                                    <Button type="primary" loading={this.props.exportLoading} style={{ marginRight: 10 }} onClick={() => { this.exportReport(); }}>导出</Button>
-                                    <Radio.Group style={{ width: '100%', marginRight: '5px' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
-                                        this.displayChange(e.target.value)
-                                    }}>
-                                        <Radio.Button value="chart">图表</Radio.Button>
-                                        <Radio.Button value="data">数据</Radio.Button>
-                                    </Radio.Group>
-                                </Col>
-                            </Row>
-                        </div>
+                            </Form.Item>
+
+                            <Form.Item>
+                                <ButtonGroup_ style={{ width: '100%' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
+                            </Form.Item>
+                            <Form.Item>
+                                <Radio.Group style={{ width: '100%' }} defaultValue="chart" buttonStyle="solid" onChange={e => {
+                                    this.displayChange(e.target.value)
+                                }}>
+                                    <Radio.Button value="chart">图表</Radio.Button>
+                                    <Radio.Button value="data">数据</Radio.Button>
+                                </Radio.Group>
+                            </Form.Item>
+                        </Form>
                     }
                 >
                     {this.loaddata()}
