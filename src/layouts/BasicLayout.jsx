@@ -18,6 +18,7 @@ import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
 import routerConfig from "../../config/config"
+import webConfig from "../../public/webConfig"
 
 
 
@@ -335,14 +336,12 @@ class BasicLayout extends Component {
               {
                 this.state.panes.map(pane => (
                   <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1}>
-                    {pane.content} 
+                    {pane.content}
                   </TabPane>
                 ))
               }
-              {/* </Tabs></div> : (defaultSettings.layout === "sidemenu" ? <div id="sideMenuLayout">{children}</div> : children) */}
-            </Tabs></div> : <div id="sideMenuLayout">{children}</div>
-            // <div style={{ margin: '-24px -24px 0px', padding: '24px 24px 0 24px', overflowY: 'auto' }}>
-            // </div>
+            </Tabs></div> :
+              (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
           }
 
 

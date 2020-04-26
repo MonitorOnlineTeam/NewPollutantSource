@@ -279,10 +279,12 @@ class SiteDailyPage extends PureComponent {
           title: 'AQI',
           dataIndex: 'AQI',
         }, {
+          title: '首要污染物',
+          dataIndex: '首要污染物',
+        }, {
           title: '空气质量指数类别',
           dataIndex: '空气质量指数类别',
-        },
-        {
+        }, {
           title: '空气质量指数级别',
           dataIndex: '空气质量指数级别',
         }]
@@ -310,7 +312,10 @@ class SiteDailyPage extends PureComponent {
               }
               // console.log('///=', status)
               // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
-              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              if(val) {
+                return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              }
+              return '-';
             }
             return '-';
           },

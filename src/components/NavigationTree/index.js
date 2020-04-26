@@ -197,6 +197,7 @@ class NavigationTree extends Component {
       //   $(".ant-tree").scrollTop(scrollTop)
       // }
       this.controlsScrollBarOffsetTop()
+      this.controlsScrollBarOffsetTop2()
     }
 
     if (prevState.treeVis !== this.state.treeVis) {
@@ -214,7 +215,8 @@ class NavigationTree extends Component {
       // 树高度
       let treeHeight = $(".ant-tree").height();
       if (selEleOffsetTop - 176 > treeHeight) {
-        const scrollTop = selEleOffsetTop - treeHeight + 176;
+        const scrollTop = selEleOffsetTop - treeHeight + (treeHeight / 4.5);
+        // const scrollTop = selEleOffsetTop - treeHeight + 176;
         $(".ant-tree").scrollTop(scrollTop)
       }
     }
@@ -222,13 +224,15 @@ class NavigationTree extends Component {
 
   // 控制面板滚动条位置
   controlsScrollBarOffsetTop2 = () => {
-    // 选中元素的scrollTop
-    let selEleOffsetTop = $(".clickRowStyl").offset().top;
-    // table容器高度
-    let tableHeight = $(".ant-table-wrapper").height();
-    if (selEleOffsetTop - 176 > tableHeight) {
-      const scrollTop = selEleOffsetTop - tableHeight + 176;
-      $(".ant-table-wrapper").scrollTop(scrollTop)
+    if ($(".clickRowStyl") && $(".clickRowStyl").length) {
+      // 选中元素的scrollTop
+      let selEleOffsetTop = $(".clickRowStyl").offset().top;
+      // table容器高度
+      let tableHeight = $(".ant-table-wrapper").height();
+      if (selEleOffsetTop - 176 > tableHeight) {
+        const scrollTop = selEleOffsetTop - tableHeight + (tableHeight / 4.5);
+        $(".ant-table-wrapper").scrollTop(scrollTop)
+      }
     }
   }
 
