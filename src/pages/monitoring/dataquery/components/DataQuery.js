@@ -305,7 +305,7 @@ class DataQuery extends Component {
                         lazyUpdate
                         notMerge
                         id="rightLine"
-                        style={{ width: '100%', height: 'calc(100vh - 250px)' }}
+                        style={{ width: '100%', height: 'calc(100vh - 300px)' }}
                     />
                     // /* </Card.Grid> */
                 );
@@ -361,7 +361,6 @@ class DataQuery extends Component {
     render() {
         const { dataType, dateValue } = this.state;
         const { pointName } = this.props;
-        debugger
         return (
             <div>
                 <Card
