@@ -36,18 +36,19 @@ export default Model.extend({
         manualUploadautoParameters: {
             DGIMNs: '',
             PollutantCode: '',
-            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
-            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+            BeginTime: moment().add(-2, 'days').format('YYYY-MM-DD 01:00:00'),
+            EndTime: moment().format('YYYY-MM-DD 00:00:00'),
             pageIndex: 1,
-            pageSize: 20,
+            pageSize: 24,
             PointName: '',
             isAsc: true,
-            dataType: 'HourData',
+            dataType: 'daySelecthour',
             flag: true,
+            IsSupplyData: true,
         },
         columns: [],
         columnsSelect: [],
-        pageCount:["20","30","40","50"],
+        pageCount: ["24", "48", "72", "96"],
     },
     effects: {
         //上传附件
@@ -74,48 +75,48 @@ export default Model.extend({
             update,
             select,
         }) {
-                const result = yield call(GetPollutantByPoint, payload);
-                if (result.IsSuccess) {
-                    let columns = [];
-                    columns = [{
-                        title: '监测时间',
-                        dataIndex: 'MonitorTime',
-                        align: 'left',
-                        width: 150,
-                        key: 'MonitorTime',
-                        // sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
-                    }];
-                    let pollutantcols = [];
-                    let width = 100;
-                    if (result.Datas.length > 6)
-                        width = (window.screen.availWidth - 200 - 120) / result.Datas.length;
-                    if (width < 200) {
-                        width = 200;
-                    }
-                    result.Datas.map((item) => {
-                        let pName = item.Unit ? item.PollutantName + "(" + item.Unit + ")" : item.PollutantName;
-                        pollutantcols = pollutantcols.concat({
-                            title: pName,
-                            dataIndex: item.PollutantCode,
-                            key: item.PollutantCode,
-                            align: 'center',
-                            width,
-                            render: (value, record, index) => {
-                                let text = value;
-                                if (item.PollutantName === "风向") {
-                                    text = getDirLevel(text)
-                                }
-                                return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
-                            }
-                        });
-                    })
-                    columns = columns.concat(pollutantcols);
-                    yield update({
-                        selectdata: result.Datas,
-                        columns,
-                        columnsSelect: columns,
-                    });
+            const result = yield call(GetPollutantByPoint, payload);
+            if (result.IsSuccess) {
+                let columns = [];
+                columns = [{
+                    title: '监测时间',
+                    dataIndex: 'MonitorTime',
+                    align: 'left',
+                    width: 150,
+                    key: 'MonitorTime',
+                    // sorter: (a, b) => Date.parse(a.MonitorTime) - Date.parse(b.MonitorTime),
+                }];
+                let pollutantcols = [];
+                let width = 100;
+                if (result.Datas.length > 6)
+                    width = (window.screen.availWidth - 200 - 120) / result.Datas.length;
+                if (width < 200) {
+                    width = 200;
                 }
+                result.Datas.map((item) => {
+                    let pName = item.Unit ? item.PollutantName + "(" + item.Unit + ")" : item.PollutantName;
+                    pollutantcols = pollutantcols.concat({
+                        title: pName,
+                        dataIndex: item.PollutantCode,
+                        key: item.PollutantCode,
+                        align: 'center',
+                        width,
+                        render: (value, record, index) => {
+                            let text = value;
+                            if (item.PollutantName === "风向") {
+                                text = getDirLevel(text)
+                            }
+                            return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+                        }
+                    });
+                })
+                columns = columns.concat(pollutantcols);
+                yield update({
+                    selectdata: result.Datas,
+                    columns,
+                    columnsSelect: columns,
+                });
+            }
         },
         //根据排口获取污染物添加页面
         * addGetPollutantByPoint({
@@ -141,6 +142,7 @@ export default Model.extend({
             select,
         }) {
             const { manualUploadautoParameters } = yield select(a => a.manualuploadauto);
+            debugger
             const result = yield call(GetManualSupplementList, { ...manualUploadautoParameters });
             if (result.IsSuccess) {
                 if (manualUploadautoParameters.flag) {

@@ -37,8 +37,8 @@ class Index extends Component {
                         ...{
                             PageIndex: 1,
                             PageSize: 10,
-                            BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
-                            EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+                            // BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
+                            // EndTime: moment().format('YYYY-MM-DD 23:59:59'),
                             PollutantCode: '',
                             DGIMN
                         }
