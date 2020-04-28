@@ -271,7 +271,8 @@ class CompositeRangeReport extends Component {
                 </Col>
               </Row>
             </Form>
-            <SdlTable columns={columns} dataSource={compositeRangeDataSource} pagination={false} defaultWidth={150} scroll={{ x: 2600,y: 'calc(100vh - 380px)' }} />
+            <SdlTable columns={columns} dataSource={compositeRangeDataSource} pagination={false} defaultWidth={100}  />
+            {/* scroll={{ x: 2600,y: 'calc(100vh - 380px)' }} */}
           </Card>
         </Spin>
       </BreadcrumbWrapper>

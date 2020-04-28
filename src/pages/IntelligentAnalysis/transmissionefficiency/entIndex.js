@@ -13,7 +13,8 @@ import {
     Popover,
     Col,
     Icon,
-    Badge
+    Badge,
+    Modal
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -21,7 +22,8 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
-import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import PointIndex from './pointIndex';
 import { router } from "umi"
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
@@ -45,7 +47,10 @@ export default class EntTransmissionEfficiency extends Component {
 
         this.state = {
             beginTime: moment(moment().format('YYYY-MM')),
-            endTime: ''
+            endTime: '',
+            EnterpriseCode: '',
+            EnterpriseName: '',
+            visible: false,
         };
     }
     componentWillMount() {
@@ -81,7 +86,7 @@ export default class EntTransmissionEfficiency extends Component {
         }
         this.getTableData(pagination.current);
     }
-    onDateChange = (value, beginTime,endTime) => {
+    onDateChange = (value, beginTime, endTime) => {
         this.updateState({
             beginTime: beginTime,
             endTime: endTime
@@ -104,7 +109,7 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
                 dataIndex: 'TransmissionRate',
                 key: 'TransmissionRate',
-                width: '25%',
+                width: '15%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.AvgTransmissionRate <= text) {
@@ -120,7 +125,7 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
                 dataIndex: 'EffectiveRate',
                 key: 'EffectiveRate',
-                width: '25%',
+                width: '15%',
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
@@ -138,7 +143,7 @@ export default class EntTransmissionEfficiency extends Component {
                 dataIndex: 'TransmissionEffectiveRate',
                 key: 'TransmissionEffectiveRate',
                 // width: '250px',
-                width: '10%',
+                width: '30%',
                 // align: 'center',
                 sorter: true,
                 render: (text, record) => {
@@ -171,13 +176,18 @@ export default class EntTransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    return <a onClick={()=>{
-                      router.push({
-                        pathname: `/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`,
-                        query: {
-                          tabName: "传输有效率 - 详情"
-                        }
-                      })
+                    return <a onClick={() => {
+                        this.setState({
+                            visible: true,
+                            EnterpriseCode: record.EnterpriseCode,
+                            EnterpriseName: record.EnterpriseName,
+                        })
+                        // router.push({
+                        //     pathname: `/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`,
+                        //     query: {
+                        //         tabName: "传输有效率 - 详情"
+                        //     }
+                        // })
                     }}>查看详情</a>
                     // return (
                     //     <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}?tabName=`}> 查看详情 </Link>
@@ -187,65 +197,84 @@ export default class EntTransmissionEfficiency extends Component {
         ];
         return (
             <BreadcrumbWrapper title="传输有效率">
-                <div className="contentContainer">
-                    <Card
-                        bordered={false}
-                        extra={
-                            <span style={{ color: '#b3b3b3' }}>
-                                时间选择：
-                                <DatePickerTool defaultValue={this.state.beginTime} picker="month"  callback={this.onDateChange}/>
-                                {/* <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} /> */}
-                            </span>
-                        }
-                    >
-                        <Row>
-                            <Col span={24}>
-                                <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#52c41a',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginRight: 3
-                                    }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#f5222d',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginLeft: 100,
-                                        marginRight: 3
-                                    }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <SdlTable
-                                rowKey={(record, index) => `complete${index}`}
-                                loading={this.props.loading}
-                                columns={columns}
-                                bordered={false}
-                                onChange={this.handleTableChange}
-                                dataSource={this.props.tableDatas}
-                                scroll={{ y: 'calc(100vh - 450px)' }}
-                                // scroll={{ y: 550 }}
-                                pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    sorter: true,
-                                    'total': this.props.total,
-                                    'pageSize': this.props.pageSize,
-                                    'current': this.props.pageIndex,
-                                    pageSizeOptions: ['10', '20', '30', '40', '50']
+                {/* <div className="contentContainer"> */}
+                <Card
+                    bordered={false}
+                    extra={
+                        <div>
+                            <div style={{
+                                width: 20,
+                                height: 9,
+                                backgroundColor: '#52c41a',
+                                display: 'inline-block',
+                                borderRadius: '20%',
+                                cursor: 'pointer',
+                                marginRight: 3
+                            }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                            <div style={{
+                                width: 20,
+                                height: 9,
+                                backgroundColor: '#f5222d',
+                                display: 'inline-block',
+                                borderRadius: '20%',
+                                cursor: 'pointer',
+                                marginLeft: 60,
+                                marginRight: 3
+                            }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                            <div
+                                style={{
+                                    display: 'inline-block',
+                                    borderRadius: '20%',
+                                    marginLeft: 60,
+                                    marginRight: 3
                                 }}
-                            />
-                        </Row>
-                    </Card>
-                </div>
+                            >
+                                <span style={{ color: '#b3b3b3' }}>
+                                    时间选择：
+                                <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
+                                    {/* <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} /> */}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                    }
+                >
+                    <SdlTable
+                        rowKey={(record, index) => `complete${index}`}
+                        loading={this.props.loading}
+                        columns={columns}
+                        bordered={false}
+                        onChange={this.handleTableChange}
+                        dataSource={this.props.tableDatas}
+                        // scroll={{ y: 'calc(100vh - 450px)' }}
+                        // scroll={{ y: 550 }}
+                        pagination={{
+                            showSizeChanger: true,
+                            showQuickJumper: true,
+                            sorter: true,
+                            'total': this.props.total,
+                            'pageSize': this.props.pageSize,
+                            'current': this.props.pageIndex,
+                            pageSizeOptions: ['10', '20', '30', '40', '50']
+                        }}
+                    />
+
+                    <Modal
+                        title="传输有效率 - 详情"
+                        destroyOnClose
+                        footer={[]}
+                        visible={this.state.visible}
+                        width={"90%"}
+                        // style={{ height: "90vh" }}
+                        onCancel={() => { this.setState({ visible: false }) }}
+                    >
+                        <PointIndex entcode={this.state.EnterpriseCode} entname={this.state.EnterpriseName} ></PointIndex>
+                    </Modal>
+
+                </Card>
+                {/* </div> */}
             </BreadcrumbWrapper>
         );
     }

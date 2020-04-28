@@ -4,7 +4,7 @@ html,
 body,
 #root {
   height: 100%;
-  // overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 // a:visited {
@@ -40,11 +40,12 @@ ol {
 
 .sdlTable {
   .ant-table-body {
-    min-height: 200px;
+    // min-height: 100px;
   }
 }
 
 :global {
+
   .react-resizable {
     position: relative;
     background-clip: padding-box;
@@ -60,20 +61,42 @@ ol {
     z-index: 1;
   }
 
+
   .ant-layout {
     .ant-pro-basicLayout-content {
       margin-bottom: 0;
+      // margin: 8px;
       // padding-top: 64px;
     }
+
+    .ant-pro-page-header-wrap-children-content {
+      margin: 14px 10px 0;
+    }
+
 
     // table没有数据时，隐藏表头滚动条
     .ant-table-empty .ant-table-body {
       overflow-x: hidden !important;
       overflow-y: hidden !important;
     }
+
+    // .ant-card-body{
+    //   padding-bottom: 0;
+    // }
+    .ant-table-pagination.ant-pagination {
+      margin-bottom: 0;
+    }
   }
-  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane, .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
+
+  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content>.ant-tabs-tabpane,
+  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content>.ant-tabs-tabpane {
     transition: opacity 0.45s !important;
+  }
+
+  .ant-pro-sider-menu-logo+.ant-menu-light {
+    height: calc(100vh - 64px);
+    overflow: hidden;
+    overflow-y: auto;
   }
 }
 
@@ -81,10 +104,10 @@ a:hover {
   text-decoration: none !important;
 }
 
-.contentContainer {
-  height: calc(100vh - 190px);
-  overflow-y: auto;
-}
+// .contentContainer {
+//   height: calc(100vh - 170px);
+//   overflow-y: auto;
+// }
 
 .center {
   display: flex !important;
@@ -117,7 +140,7 @@ a:hover {
 /*滚动条颜色*/
 @scrollbar-thumb-color: #d6d4d4;
 /*滚动条大小*/
-@scrollbar-width: 9px;
+@scrollbar-width: 6px;
 
 .fixedHeader {
   position: fixed;
@@ -170,6 +193,8 @@ a:hover {
 
 :global {
 
+
+
   // 菜单选中样式
   .ant-menu-dark .ant-menu-item:hover,
   .ant-menu-dark .ant-menu-item-active,
@@ -218,6 +243,79 @@ a:hover {
   .amap-info .amap_markers_pop_window::after {
     display: none
   }
+
+
+  .ant-layout {
+
+    // 多选下拉样式
+    .ant-form-item-control {
+      // line-height: normal;
+    }
+
+    .ant-select-selection--multiple {
+      height: 32px;
+      overflow: hidden;
+      margin-bottom: -10px
+    }
+
+    // 面包屑样式 - start
+    .ant-page-header {
+      padding: 10px 14px;
+      min-height: 44px;
+
+      .ant-page-header-heading {
+        float: left;
+        margin-top: 1px;
+        margin-right: 6px;
+        margin-left: 6px;
+      }
+    }
+
+    .ant-breadcrumb {
+      display: inline-block;
+    }
+
+    .ant-page-header .ant-breadcrumb {
+      margin-top: 2px;
+    }
+
+    .ant-breadcrumb-separator {
+      margin: 0 4px;
+    }
+
+    // 面包屑样式 - end
+
+    // tab标签样式
+    .ant-tabs-extra-content {
+      line-height: 34px;
+    }
+
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-container {
+      height: 34px;
+    }
+
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab {
+      height: 34px;
+      margin: 0;
+      margin-right: 1px;
+      line-height: 34px;
+    }
+
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
+      height: 33px;
+      color: #2F54EB;
+      background: #fff;
+      border-color: #e8e8e8;
+      border-bottom: 1px solid #fff;
+    }
+
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x {
+      width: 16px;
+      height: 14px;
+      margin-right: -5px;
+      // margin-top: 2px;
+    }
+  }
 }
 
 // 车辆轨迹样式
@@ -234,9 +332,85 @@ a:hover {
   color: rgba(0, 0, 0, 0.8);
 }
 
-#root .cascader_multiple{
-  &:focus{
+#root .cascader_multiple {
+  &:focus {
     border-color: transparent;
     box-shadow: none;
+  }
+}
+
+// .notAdaptive {
+//   .ant-card-body {
+//     padding-bottom: 0 !important;
+//     margin-bottom: 10px;
+//   }
+// }
+
+#sideMenuTabsLayout {
+  margin: -24px -24px 0px;
+  padding: 10px;
+
+  .ant-card-body {
+    padding-bottom: 10px;
+  }
+
+  .ant-card-bordered {
+    box-shadow: none;
+    border: none;
+    padding-bottom: 0;
+  }
+
+  .ant-tabs-card-content {
+    height: calc(100vh - 116px);
+
+    .ant-tabs-tabpane-active {
+
+      .ant-card:not(.notAdaptive):not(.antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maincard):not(.ant-card-type-inner),
+      .contentContainer {
+        height: calc(100vh - 116px);
+        overflow-y: auto;
+
+        .ant-card-grid {
+          box-shadow: none;
+          height: auto;
+        }
+      }
+    }
+  }
+
+}
+
+#basicLayout,
+#notBreadcrumbLayout {
+  .ant-pro-page-header-wrap-children-content {
+    height: calc(100vh - 126px);
+    background: #fff;
+    overflow-y: auto;
+
+    .ant-card-body,
+    .ant-card-bordered {
+      box-shadow: none;
+      border: none;
+      padding-bottom: 0;
+      padding-top: 10px;
+    }
+  }
+
+  .contentContainer {
+    height: calc(100vh - 126px);
+  }
+}
+
+#notBreadcrumbLayout {
+  .ant-pro-page-header-wrap-children-content {
+    height: calc(100vh - 82px);
+  }
+
+  .contentContainer {
+    height: calc(100vh - 82px);
+  }
+
+  .hideBreadcrumb {
+    display: none;
   }
 }

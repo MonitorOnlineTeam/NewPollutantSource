@@ -472,7 +472,7 @@ export default class ContentList extends Component {
                     loading={this.props.loading}
                     columns={columns}
                     dataSource={!DGIMN ? null : uploaddata}
-                    scroll={{ y: 'calc(100vh - 450px)' }}
+                  //  scroll={{ y: 'calc(100vh - 450px)' }}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,

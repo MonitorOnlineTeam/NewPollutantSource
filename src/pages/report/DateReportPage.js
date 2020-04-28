@@ -112,6 +112,10 @@ class SiteDailyPage extends PureComponent {
         beginTime = moment().format('YYYY-01-01 00:00:00');
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
     }
+    this.setState({
+      beginTime: beginTime,
+      endTime: endTime
+    })
     const { dateReportForm, dispatch } = this.props;
     dispatch({
       type: 'report/updateState',
@@ -275,10 +279,12 @@ class SiteDailyPage extends PureComponent {
           title: 'AQI',
           dataIndex: 'AQI',
         }, {
+          title: '首要污染物',
+          dataIndex: '首要污染物',
+        }, {
           title: '空气质量指数类别',
           dataIndex: '空气质量指数类别',
-        },
-        {
+        }, {
           title: '空气质量指数级别',
           dataIndex: '空气质量指数级别',
         }]
@@ -306,7 +312,10 @@ class SiteDailyPage extends PureComponent {
               }
               // console.log('///=', status)
               // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
-              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              if(val) {
+                return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
+              }
+              return '-';
             }
             return '-';
           },
@@ -704,7 +713,7 @@ class SiteDailyPage extends PureComponent {
               columns={this.state.columns}
               dataSource={dateReportData}
               // defaultWidth={80}
-              scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
+              // scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {
                   return;

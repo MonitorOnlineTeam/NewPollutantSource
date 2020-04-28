@@ -21,3 +21,12 @@ export async function getSystemLoginConfigInfo() {
    
     return result;
   }
+
+  /**
+ * 手机端下载特殊情况
+ * @params {}
+ */
+export async function IfSpecial() {
+  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/IfSpecial');
+  return result;
+}

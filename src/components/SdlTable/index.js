@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import styles from './index.less'
 import { Resizable } from 'react-resizable';
+import { connect } from 'dva'
 
 // const DEFAULT_WIDTH = 180;
 
@@ -34,12 +35,17 @@ const ResizeableTitle = props => {
   );
 };
 
+@connect(({ global, loading }) => ({
+  clientHeight: global.clientHeight,
+  autoFormTableLoading: loading.effects['autoForm/getPageConfig'],
+}))
 class SdlTable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       _props: {},
-      columns: props.columns
+      columns: props.columns,
+      computeHeight: null,
     };
 
     this.components = {
@@ -48,6 +54,32 @@ class SdlTable extends PureComponent {
       },
     };
   }
+
+  getOffsetTop = (obj) => {
+    let offsetCountTop = obj.offsetTop;
+    let parent = obj.offsetParent;
+    while (parent !== null) {
+      offsetCountTop += parent.offsetTop;
+      parent = parent.offsetParent;
+    }
+    return offsetCountTop;
+  }
+
+  componentDidMount() {
+    // 动态计算表格纵向位置
+    setTimeout(() => {
+      // let fr=this.refs.polytableframe;
+      if (!this._calledComponentWillUnmount) {
+        // let otherHeight = this.props.pagination ? 136 : 96;
+        this.setState({
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+        }, () => {
+          console.log("computeHeight=", this.state.computeHeight)
+        });
+      }
+    }, 50);
+  }
+
 
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
@@ -60,6 +92,28 @@ class SdlTable extends PureComponent {
     });
   };
 
+  getInitialColWidth = (col) => {
+    const title = col.title;
+    if (col.title.constructor === String) {
+      if (title.indexOf('时间') != -1) {
+        return 180;
+      } else if (title.indexOf('状态') != -1) {
+        return col.width || 150;
+      } else if (title.indexOf('类型') != -1 || title.indexOf('AQI') != -1 || title.indexOf('风向') != -1 || title.indexOf('次数') != -1) {
+        return 100;
+      } else if (title == '行政区') {
+        return col.width || 200;
+      } else if (title == '企业名称') {
+        return col.width || 240;
+      } else {
+        return col.width || this.props.defaultWidth;
+      }
+    } else {
+      return col.width || this.props.defaultWidth;
+    }
+
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.dataSource !== nextProps.dataSource) {
       let _props = {};
@@ -69,18 +123,39 @@ class SdlTable extends PureComponent {
       this.setState({
         _props
       })
+
     }
-    if(this.props.columns !== nextProps.columns) {
+    if (this.props.columns !== nextProps.columns) {
       this.setState({
         columns: nextProps.columns
       })
     }
+
+    if (this.props.loading !== nextProps.loading && nextProps.loading === false) {
+      this.setState({
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+      }, () => {
+        console.log("computeHeight=", this.state.computeHeight)
+      });
+    }
+
+    if (this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false) {
+      this.setState({
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+      }, () => {
+        console.log("computeHeight=", this.state.computeHeight)
+      });
+    }
   }
 
   render() {
-    const { defaultWidth, resizable } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination } = this.props;
     const { _props, columns } = this.state;
 
+    let fixedHeight = this.state.computeHeight;
+    let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight : "");
+    // 没有分页高度 + 40
+    let scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
     let _columns = (columns || []).map((col, index) => {
       return {
@@ -90,7 +165,7 @@ class SdlTable extends PureComponent {
           </div>
         },
         ...col,
-        width: col.width || defaultWidth,
+        width: this.getInitialColWidth(col),
         onHeaderCell: column => ({
           width: column.width,
           onResize: resizable ? this.handleResize(index) : undefined,
@@ -100,35 +175,39 @@ class SdlTable extends PureComponent {
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
-      <Table
-        ref={(table) => { this.sdlTable = table }}
-        rowKey={record => record.id || record.ID}
-        size="small"
-        components={resizable ? this.components : undefined}
-        // className={styles.dataTable}
-        rowClassName={
-          (record, index, indent) => {
-            if (index === 0) {
-              return;
-            }
-            if (index % 2 !== 0) {
-              return 'light';
+      <div ref={el => this.sdlTableFrame = el}>
+        <Table
+          ref={(table) => { this.sdlTable = table }}
+          id="sdlTable"
+          rowKey={record => record.id || record.ID}
+          size="small"
+          components={resizable ? this.components : undefined}
+          // className={styles.dataTable}
+          rowClassName={
+            (record, index, indent) => {
+              if (index === 0) {
+                return;
+              }
+              if (index % 2 !== 0) {
+                return 'light';
+              }
             }
           }
-        }
-        bordered
-        {...this.props}
-        defaultWidth={80}
-        scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: this.props.scroll && this.props.scroll.y && this.props.scroll.y }}
-        columns={_columns}
-        {..._props}
-      />
+          bordered
+          pagination={{ pageSize: 20 }}
+          {...this.props}
+          defaultWidth={80}
+          scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollY }}
+          columns={_columns}
+          {..._props}
+        />
+      </div>
     );
   }
 }
 
 SdlTable.defaultProps = {
-  defaultWidth: 180,
+  defaultWidth: 150,
   resizable: false
 }
 

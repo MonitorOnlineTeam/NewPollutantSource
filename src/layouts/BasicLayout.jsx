@@ -18,6 +18,7 @@ import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
 import routerConfig from "../../config/config"
+import webConfig from "../../public/webConfig"
 
 
 
@@ -54,6 +55,7 @@ class BasicLayout extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.onWindowResize)
     const { dispatch } = this.props;
     dispatch({
       type: 'global/getSystemConfigInfo',
@@ -63,15 +65,36 @@ class BasicLayout extends Component {
       type: 'user/fetchCurrent',
       payload: {},
     });
+    dispatch({
+      type: "global/updateState",
+      payload: {
+        clientHeight: document.body.clientHeight
+      },
+    })
+
+    const contentElement = document.querySelector(".ant-pro-basicLayout-content");
+
+    if (config.isShowTabs && defaultSettings.layout === "sidemenu" && contentElement) {
+      contentElement.style.margin = "8px"
+    }
+  }
+
+  onWindowResize = () => {
+    this.props.dispatch({
+      type: "global/updateState",
+      payload: {
+        clientHeight: document.body.clientHeight
+      },
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname != this.props.location.pathname && nextProps.unfoldMenuList.length && config.isShowTabs) {
+    if (nextProps.location.pathname != this.props.location.pathname && nextProps.unfoldMenuList.length && config.isShowTabs && defaultSettings.layout === "sidemenu") {
       this._updatePanesAndActiveKey(nextProps)
 
     }
 
-    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList && config.isShowTabs) {
+    if (nextProps.unfoldMenuList !== this.props.unfoldMenuList && config.isShowTabs && defaultSettings.layout === "sidemenu") {
       this._updatePanesAndActiveKey(nextProps)
     }
   }
@@ -83,9 +106,12 @@ class BasicLayout extends Component {
       const treeElement = activeElement ? activeElement.getElementsByClassName("ant-drawer-open") : [];
       const tabElement = document.querySelector(".ant-tabs-card-bar");
       if (treeElement.length) {
-        tabElement ? tabElement.style.marginRight = "400px" : undefined;
+        tabElement ? tabElement.style.marginRight = "320px" : undefined;
       } else {
         tabElement ? tabElement.style.marginRight = 0 : undefined;
+      }
+      if (document.querySelector(".ant-pro-basicLayout-content")) {
+        // document.querySelector(".ant-pro-basicLayout-content").style.margin = "8px"
       }
     }
   }
@@ -117,7 +143,7 @@ class BasicLayout extends Component {
     let _unfoldMenuList = _.cloneDeep(unfoldMenuList);
 
     let currentPathObj = _unfoldMenuList.find(item => {
-      return item.path === location.pathname
+      return item.path.split("?")[0] === location.pathname
     }) || {};
 
 
@@ -295,7 +321,7 @@ class BasicLayout extends Component {
           {...settings}
         >
           {
-            config.isShowTabs && defaultSettings.layout === "sidemenu" ? <Tabs
+            config.isShowTabs && defaultSettings.layout === "sidemenu" ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs
               type="editable-card"
               size="small"
               hideAdd
@@ -303,6 +329,8 @@ class BasicLayout extends Component {
               onChange={this.onChange}
               onEdit={this.onTabsEdit}
               className={styles.pageTabs}
+              tabBarStyle={{ marginBottom: 3 }}
+              tabBarGutter={0}
               tabBarExtraContent={panes.length > 1 ? operations : ""}
             >
               {
@@ -312,10 +340,8 @@ class BasicLayout extends Component {
                   </TabPane>
                 ))
               }
-            </Tabs> :
-              <div style={{ margin: '-24px -24px 0px', padding: '24px 24px 0 24px', overflowY: 'auto' }}>
-                {children}
-              </div>
+            </Tabs></div> :
+              (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
           }
 
 

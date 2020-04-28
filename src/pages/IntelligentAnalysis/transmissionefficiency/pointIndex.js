@@ -57,14 +57,18 @@ export default class TransmissionEfficiency extends Component {
         });
     }
     getTableData = (pageIndex) => {
-        const { entcode } = this.props.match.params;
-        this.props.dispatch({
-            type: pageUrl.getData,
-            payload: {
-                entcode: entcode,
-                pageIndex: pageIndex,
-            },
-        });
+        debugger
+        const { entcode } = this.props;
+        if (entcode) {
+            this.props.dispatch({
+                type: pageUrl.getData,
+                payload: {
+                    entcode: entcode,
+                    pageIndex: pageIndex,
+                },
+            });
+        }
+
     }
     handleTableChange = (pagination, filters, sorter) => {
         if (sorter.order) {
@@ -238,7 +242,7 @@ export default class TransmissionEfficiency extends Component {
                 }
             },
         ];
-        const entName = this.props.match.params.entname;
+        const entName = this.props.entname;
         let tableTitle = "";
         let Crumbs = [
             { Name: '智能质控', Url: '' }
@@ -258,84 +262,93 @@ export default class TransmissionEfficiency extends Component {
         }
 
         return (
-            <BreadcrumbWrapper title="传输有效率-详情">
+            // <BreadcrumbWrapper title="传输有效率-详情">
+            <div>
                 <Row className={styles.cardTitle}>
                     <Card
-                        title={<span>
+                        title={<div style={{marginBottom: 20 }}>
                             {entName}
-                            <Button
-                              style={{ marginLeft: 10 }}
-                              onClick={() => {
-                                history.go(-1);
-                              }}
-                              type="link"
-                              size="small"
+                            {/* <Button
+                                style={{ marginLeft: 10 }}
+                                onClick={() => {
+                                    history.go(-1);
+                                }}
+                                type="link"
+                                size="small"
                             >
-                              <Icon type="rollback" />
+                                <Icon type="rollback" />
                               返回上级
-                            </Button>
-                          </span>}
+                            </Button> */}
+                        </div>}
                         bordered={false}
                         style={{ height: 'auto' }}
                         extra={
-                            <span style={{ color: '#b3b3b3' }}>
-                                时间选择：
+                            <div style={{marginBottom: 20 }}>
+                                <div style={{
+                                    width: 20,
+                                    height: 9,
+                                    backgroundColor: '#52c41a',
+                                    display: 'inline-block',
+                                    borderRadius: '20%',
+                                    cursor: 'pointer',
+                                    marginRight: 3
+                                }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                                <div style={{
+                                    width: 20,
+                                    height: 9,
+                                    backgroundColor: '#f5222d',
+                                    display: 'inline-block',
+                                    borderRadius: '20%',
+                                    cursor: 'pointer',
+                                    marginLeft: 35,
+                                    marginRight: 3
+                                }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                                <Badge style={{ marginLeft: 35, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
+                                <div
+                                    style={{
+                                        display: 'inline-block',
+                                        borderRadius: '20%',
+                                        marginLeft: 35,
+                                        marginRight: 3
+                                    }}
+                                >
+                                    <span style={{ color: '#b3b3b3' }}>
+                                        时间选择：
                                 <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} />
-                            </span>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
+
                         }
                     >
-                        <Row>
-                            <Col span={24}>
-                                <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#52c41a',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginRight: 3
-                                    }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
-                                    <div style={{
-                                        width: 20,
-                                        height: 9,
-                                        backgroundColor: '#f5222d',
-                                        display: 'inline-block',
-                                        borderRadius: '20%',
-                                        cursor: 'pointer',
-                                        marginLeft: 100,
-                                        marginRight: 3
-                                    }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
-                                    <Badge style={{ marginLeft: 100, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <SdlTable
-                                rowKey={(record, index) => `complete${index}`}
-                                loading={this.props.loading}
-                                columns={columns}
-                                bordered={false}
-                                onChange={this.handleTableChange}
-                                size="small"// small middle
-                                dataSource={this.props.tableDatas}
-                                scroll={{ y: 'calc(100vh - 430px)' }}
-                                // scroll={{ y: 550 }}
+                        <SdlTable
+                            rowKey={(record, index) => `complete${index}`}
+                            loading={this.props.loading}
+                            columns={columns}
+                            bordered={false}
+                            onChange={this.handleTableChange}
+                            size="small"// small middle
+                            dataSource={this.props.tableDatas}
+                            // scroll={{ y: 'calc(100vh - 430px)' }}
+                            //  scroll={{ y: 550 }}
 
-                                pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    sorter: true,
-                                    'total': this.props.total,
-                                    'pageSize': this.props.pageSize,
-                                    'current': this.props.pageIndex,
-                                    pageSizeOptions: ['10', '20', '30', '40', '50']
-                                }}
-                            />
-                        </Row>
+                            pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                sorter: true,
+                                'total': this.props.total,
+                                'pageSize': this.props.pageSize,
+                                'current': this.props.pageIndex,
+                                pageSizeOptions: ['10', '20', '30', '40', '50']
+                            }}
+                        />
                     </Card>
                 </Row>
-            </BreadcrumbWrapper >
+            </div>
+            /* </BreadcrumbWrapper > */
         );
     }
 }

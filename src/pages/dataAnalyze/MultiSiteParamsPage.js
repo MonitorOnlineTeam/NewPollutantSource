@@ -232,6 +232,9 @@ class MultiSiteParamsPage extends PureComponent {
             style={{ width: '100%' }}
             value={pollutantValue}
             placeholder="请选择污染物"
+            maxTagCount={2}
+            maxTagTextLength={5}
+            maxTagPlaceholder="..."
             onChange={(value) => {
               this.setState({
                 pollutantValue: value
@@ -268,7 +271,8 @@ class MultiSiteParamsPage extends PureComponent {
       return <PageLoading />
     }
     return (
-      <Card.Grid style={{ height: "calc(100vh - 190px - 66px)", width: "100%", overflowY: "auto" }}>
+      // <Card.Grid style={{ height: "calc(100vh - 190px - 66px)", width: "100%", overflowY: "auto" }}>
+      <>
         {
           chartList.map(item => {
             return <>
@@ -285,7 +289,8 @@ class MultiSiteParamsPage extends PureComponent {
             </>
           })
         }
-      </Card.Grid>
+      {/* </Card.Grid> */}
+      </>
     )
   }
 

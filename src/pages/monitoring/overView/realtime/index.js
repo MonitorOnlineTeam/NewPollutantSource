@@ -16,6 +16,8 @@ import { getDirLevel } from '@/utils/utils';
 
 const CheckboxGroup = Checkbox.Group;
 const Option = Select.Option;
+const DateTypeList = ["RealTimeData", "MinuteData", "HourData", "DayData"]
+
 
 @connect(({ loading, overview, global, common }) => ({
   noticeList: global.notices,
@@ -27,9 +29,10 @@ const Option = Select.Option;
 class index extends Component {
   constructor(props) {
     super(props);
+    this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
     this.state = {
       columns: [],
-      currentDataType: 'MinuteData',
+      currentDataType: 'HourData',
       realTimeDataView: [],
       filteredInfo: null,
       currentHour: moment().hour(),
@@ -289,6 +292,8 @@ class index extends Component {
     }
   };
 
+  // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
+  // 1-23之间：currentTime - 当天；nextDayTime - 第二天
   getHourTimeOptions = () => {
     let options = [];
     let currentTime = moment().hour() > 1 ? moment().format("YYYY-MM-DD") : moment().add(-1, "day").format("YYYY-MM-DD")
@@ -300,6 +305,53 @@ class index extends Component {
     return options.concat(<Option value={`${nextDayTime} 00:00:00`}>00:00:00</Option>);
   }
 
+  // 根据地址栏参数，判断显示时间类别
+  getOptionByDateType = () => {
+    const pollutantCode = this.state.pollutantCode;
+    if (this.config[pollutantCode]) {
+      const dateTypeList = this.config[pollutantCode].split(",")
+      //   this.setState({
+      //     currentDataType
+      //   })
+      return <>
+        {
+          dateTypeList.includes("1") && <Radio.Button key={1} value="RealTimeData">
+            实时
+        </Radio.Button>
+        }
+        {(dateTypeList.includes("2") && this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+          <Radio.Button key={2} value="MinuteData">
+            分钟
+          </Radio.Button>
+        )}
+        {
+          dateTypeList.includes("3") && <Radio.Button key={3} value="HourData">
+            小时
+        </Radio.Button>
+        }
+        {
+          dateTypeList.includes("4") && <Radio.Button key={4} value="DayData">
+            日均
+        </Radio.Button>
+        }
+      </>
+    } else {
+      return <>
+        {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+          <Radio.Button key={2} value="MinuteData">
+            分钟
+          </Radio.Button>
+        )} */}
+        <Radio.Button key={3} value="HourData">
+          小时
+                  </Radio.Button>
+        <Radio.Button key={4} value="DayData">
+          日均
+                  </Radio.Button>
+      </>
+    }
+  }
+
   render() {
     const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
@@ -307,6 +359,7 @@ class index extends Component {
     const _columns = columns.filter(item => item.show);
     let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
+
 
     return (
       <BreadcrumbWrapper title="数据一览">
@@ -318,22 +371,36 @@ class index extends Component {
                 showType="radio"
                 onChange={e => {
                   this.getPageData(e.target.value);
-                  if (e.target.value == 5 || e.target.value == 12) {
+                  let dataType = this.state.currentDataType;
+                  // 如果有config，切换时默认选择第一个
+                  if (this.config && this.config[e.target.value]) {
+                    const dateTypeList = this.config[e.target.value].split(",")
                     this.setState({
-                      currentDataType: 'HourData',
-                      filteredInfo: null,
-                    });
-                    this.props.dispatch({
-                      type: 'overview/updateState',
-                      payload: {
-                        dataType: 'HourData',
-                      },
-                    });
+                      currentDataType: DateTypeList[dateTypeList[0] - 1]
+                    })
+                    dataType = DateTypeList[dateTypeList[0] - 1];
+                  } else {
+                    if (e.target.value == 5 || e.target.value == 12) {
+                      this.setState({
+                        currentDataType: 'HourData',
+                        filteredInfo: null,
+                      });
+                      dataType = "HourData";
+                    }
                   }
+
+                  // 更新model - dataType 用来接收实时数据
+                  this.props.dispatch({
+                    type: 'overview/updateState',
+                    payload: {
+                      dataType
+                    },
+                  });
                   // this.setState({
                   //   currentDataType: e.target.value
                   // })
-                }}
+                }
+                }
                 initCallback={defaultPollutantCode => {
                   this.getPageData(defaultPollutantCode);
                 }}
@@ -362,20 +429,22 @@ class index extends Component {
                   );
                 }}
               >
-                {/* <Radio.Button key={1} value="RealTimeData">
-                  实时
-                </Radio.Button> */}
-                {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
-                  <Radio.Button key={2} value="MinuteData">
-                    分钟
+                {this.config ?
+                  this.getOptionByDateType()
+                  :
+                  <>
+                    {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+                      <Radio.Button key={2} value="MinuteData">
+                        分钟
+                      </Radio.Button>
+                    )} */}
+                    <Radio.Button key={3} value="HourData">
+                      小时
                   </Radio.Button>
-                )}
-                <Radio.Button key={3} value="HourData">
-                  小时
-                </Radio.Button>
-                <Radio.Button key={4} value="DayData">
-                  日均
-                </Radio.Button>
+                    <Radio.Button key={4} value="DayData">
+                      日均
+                  </Radio.Button>
+                  </>}
               </Radio.Group>
               {
                 wrwList.length ? <Popover
@@ -430,7 +499,7 @@ class index extends Component {
                 // />
                 <Select
                   style={{ width: 150, marginLeft: 20 }}
-                  placeholder="请选择事件"
+                  placeholder="请选择时间"
                   defaultValue={time}
                   suffixIcon={<Icon type="clock-circle" />}
                   onChange={(time) => {
@@ -486,10 +555,9 @@ class index extends Component {
             </Radio.Group >
           }
         >
-          <Table
-            style={{
-              // marginTop: 20,
-              paddingBottom: 10,
+          <SdlTable
+            rowClassName={(record, index, indent) => {
+              return;
             }}
             loading={dataLoading || columnLoading}
             size="middle"
@@ -497,7 +565,7 @@ class index extends Component {
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-            scroll={{ x: scrollXWidth, y: 'calc(100vh - 65px - 100px - 200px)' }}
+           // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card >

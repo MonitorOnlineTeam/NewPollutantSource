@@ -143,12 +143,35 @@ class QuartDataCaptureRate extends Component {
     const { tableDatas, loading } = this.props;
     return (
       <BreadcrumbWrapper>
-        <div className="contentContainer">
-          <Card
-            bordered={false}
-            extra={
-              <div style={{ color: '#b3b3b3', display: 'flex', alignItems: 'center' }}>
-                <div style={{ width: 90 }}>时间选择：</div>
+        {/* <div className="contentContainer"> */}
+        <Card
+          bordered={false}
+          extra={
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <div style={{
+                width: 20,
+                height: 9,
+                backgroundColor: '#52c41a',
+                display: 'inline-block',
+                borderRadius: '20%',
+                cursor: 'pointer',
+                marginRight: 3
+              }} /> <span style={{ cursor: 'pointer' }}> 有效数据捕集率达标</span>
+              <div style={{
+                width: 20,
+                height: 9,
+                backgroundColor: '#f5222d',
+                display: 'inline-block',
+                borderRadius: '20%',
+                cursor: 'pointer',
+                marginLeft: 60,
+                marginRight: 3
+              }} /><span style={{ cursor: 'pointer' }}> 有效数据捕集率未达标</span>
+
+              <span style={{ color: '#b3b3b3', marginLeft: 20 }}>
+                时间选择：
+                  </span>
+              <div style={{ display: 'inline-block' }}>
                 <InputGroup compact>
                   <YearPicker
                     allowClear={false}
@@ -177,54 +200,28 @@ class QuartDataCaptureRate extends Component {
                   </Select>
                 </InputGroup>
               </div>
-            }
-          >
-            <Row>
-              <Col span={24}>
-                <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                  <div style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#52c41a',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginRight: 3
-                  }} /> <span style={{ cursor: 'pointer' }}> 有效数据捕集率达标</span>
-                  <div style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#f5222d',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginLeft: 100,
-                    marginRight: 3
-                  }} /><span style={{ cursor: 'pointer' }}> 有效数据捕集率未达标</span>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <SdlTable
-                loading={loading}
-                columns={columns}
-                bordered={false}
-                onChange={this.handleTableChange}
-                dataSource={tableDatas}
-                scroll={{ y: 'calc(100vh - 450px)' }}
-                pagination={{
-                  // showSizeChanger: true,
-                  // showQuickJumper: true,
-                  sorter: true,
-                  'total': this.props.total,
-                  'pageSize': this.props.pageSize,
-                  'current': this.props.pageIndex,
-                  // pageSizeOptions: ['10', '20', '30', '40', '50']
-                }}
-              />
-            </Row>
-          </Card>
-        </div>
+            </div>
+          }
+        >
+          <SdlTable
+            loading={loading}
+            columns={columns}
+            bordered={false}
+            onChange={this.handleTableChange}
+            dataSource={tableDatas}
+            // scroll={{ y: 'calc(100vh - 450px)' }}
+            pagination={{
+              // showSizeChanger: true,
+              // showQuickJumper: true,
+              sorter: true,
+              'total': this.props.total,
+              'pageSize': this.props.pageSize,
+              'current': this.props.pageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50']
+            }}
+          />
+        </Card>
+        {/* </div> */}
       </BreadcrumbWrapper>
     );
   }

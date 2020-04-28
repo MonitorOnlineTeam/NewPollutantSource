@@ -22,6 +22,7 @@ import { getAttachmentDataSource } from './utils'
 import { getRowCuid } from '@/utils/utils';
 import config from '@/config'
 import styles from './index.less';
+import SdlTable from '@/components/SdlTable'
 
 const { confirm } = Modal;
 
@@ -374,7 +375,7 @@ class AutoFormTable extends PureComponent {
     const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
-    const { pageSize = 10, current = 1, total = 0 } = searchForm[configId] || {}
+    const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
     const parentCode = match && match.params && match.params.parentcode || parentcode;
     // 计算长度
     const _columns = (columns || []).map(col => {
@@ -617,27 +618,27 @@ class AutoFormTable extends PureComponent {
           } */}
 
         </Row>
-        <Table
+        <SdlTable
           rowKey={(record, index) => {
             if (keys[configId]) {
               // return record[keys[configId][0]];
               return `${current}-${index}`
             }
           }}
-          size="small"
+          // size="small"
           loading={this.props.loading}
           // className={styles.dataTable}
           dataSource={dataSource}
-          rowClassName={
-            (record, index, indent) => {
-              if (index === 0) {
-                return;
-              }
-              if (index % 2 !== 0) {
-                return 'light';
-              }
-            }
-          }
+          // rowClassName={
+          //   (record, index, indent) => {
+          //     if (index === 0) {
+          //       return;
+          //     }
+          //     if (index % 2 !== 0) {
+          //       return 'light';
+          //     }
+          //   }
+          // }
           onChange={this._handleTableChange}
           rowSelection={rowSelection}
           onRow={(record, index) => ({
@@ -671,7 +672,7 @@ class AutoFormTable extends PureComponent {
           }}
           {...this.props}
           // scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll.y || 'calc(100vh - 390px)' }}
-          scroll={scroll}
+          // scroll={scroll}
           columns={_columns}
         />
         <Modal

@@ -85,7 +85,6 @@ class Index extends Component {
         //         historyparams,
         //     },
         // })
-        console.log('1111');
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         if (this.props.noticeState == 0) {
@@ -336,20 +335,20 @@ class Index extends Component {
     }
 
 
-          /** 数据类型切换 */
-        _handleDateTypeChange=(e)=>{
-            const dataType=e.target.value;
-            this.setState({dataType}); 
-            this.children.onDataTypeChange(dataType);
-        }
+    /** 数据类型切换 */
+    _handleDateTypeChange = (e) => {
+        const dataType = e.target.value;
+        this.setState({ dataType });
+        this.children.onDataTypeChange(dataType);
+    }
 
 
-      /**
-     * 回调获取时间并重新请求数据
-     */
-    dateCallback=(date,dataType)=>{
-    if(!this.props.DGIMN)
-       return;
+    /**
+   * 回调获取时间并重新请求数据
+   */
+    dateCallback = (date, dataType) => {
+        if (!this.props.DGIMN)
+            return;
         this.setState({
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -370,17 +369,29 @@ class Index extends Component {
                 DGIMN: [this.props.DGIMN],
             },
         })
-     }
- 
-     onRef1=(ref)=>{
-         this.children=ref;
-     }
+    }
+
+    onRef1 = (ref) => {
+        this.children = ref;
+    }
 
 
     render() {
         const { column } = this.state
         const option = {
-            legend: {},
+            legend: {
+                orient: 'vertical',
+                x: 'right',      //可设定图例在左、右、居中
+                y: 'top',     //可设定图例在上、下、居中
+                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+
+            },
+            grid: {
+                x: 35,
+                y: 10,
+                x2: 1,
+                y2: 35
+            },
             tooltip: {},
             dataset: {
                 dimensions: this.props.overlist,
@@ -395,7 +406,14 @@ class Index extends Component {
                 // [{ "product": "实测烟尘", "连续值异常": "2" }, { "product": "流速", "连续值异常": "2" }, { "product": "流量", "连续值异常": "2" }, { "product": "烟气温度", "连续值异常": "2" }]
             },
             xAxis: { type: 'category', triggerEvent: true },
-            yAxis: { triggerEvent: true },
+            yAxis: {
+                triggerEvent: true, splitLine: {
+                    show: true,
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                },
+            },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
             series: this.props.overcount,
@@ -409,77 +427,81 @@ class Index extends Component {
                             {/* <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} /> */}
 
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
-                                    dataType={this.state.dataType}
-                                    // format={this.state.format} 
-                                    onRef={this.onRef1}
-                                    isVerification={true}
-                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
-                                    allowClear={false} showTime={this.state.format} />
+                                dataType={this.state.dataType}
+                                // format={this.state.format} 
+                                onRef={this.onRef1}
+                                isVerification={true}
+                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                allowClear={false} showTime={this.state.format} />
 
                             {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', overflow: 'auto', ...this.props.style }}>
-                        {
-                            this.props.overmodellistLoading ? <Spin
-                                style={{
-                                    width: '100%',
-                                    height: 'calc(100vh/2)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                                size="large"
-                            /> :
-                                <div> {
-                                    this.props.overmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                    {/* <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', overflow: 'auto', ...this.props.style }}> */}
+                    {
+                        this.props.overmodellistLoading ? <Spin
+                            style={{
+                                width: '100%',
+                                height: 'calc(100vh/2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                            size="large"
+                        /> :
+                            <div> {
+                                this.props.overmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
-                                        <ReactEcharts
-                                            theme="light"
-                                            option={option}
-                                            lazyUpdate
-                                            notMerge
-                                            id="rightLine"
-                                            onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '200px' }}
-                                        />
+                                    <ReactEcharts
+                                        theme="light"
+                                        option={option}
+                                        lazyUpdate
+                                        notMerge
+                                        id="rightLine"
+                                        onEvents={this.onclick}
+                                        style={{
+                                            width: '100%',
+                                            height: 'calc(100vh - 520px)',
+                                            maxHeight: 280
+                                        }}
+                                    />
 
-                                        {
-                                            // this.props.overDataLoading ? <Spin
-                                            //     style={{
-                                            //         width: '100%',
-                                            //         height: 'calc(100vh/2)',
-                                            //         display: 'flex',
-                                            //         alignItems: 'center',
-                                            //         justifyContent: 'center'
-                                            //     }}
-                                            //     size="large"
-                                            // /> :
-                                            //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                            <SdlTable
-                                                loading={this.props.overDataLoading}
-                                                // scroll={{ y: this.props.maxHeight || 300 }}
-                                                style={{ paddingBottom: 0 }}
-                                                columns={column}
-                                                dataSource={this.props.overfirstData}
-                                                pagination={{
-                                                    // showSizeChanger: true,
-                                                    showQuickJumper: true,
-                                                    pageSize: 10, // this.props.pageSize,
-                                                    current: this.props.pageIndex,
-                                                    onChange: this.onTableChange,
-                                                    total: this.props.OverTotal,
-                                                }}
-                                            >
-                                            </SdlTable>
-                                            // </div>
-                                        }
-                                    </div>
-                                }</div>
-                        }
+                                    {
+                                        // this.props.overDataLoading ? <Spin
+                                        //     style={{
+                                        //         width: '100%',
+                                        //         height: 'calc(100vh/2)',
+                                        //         display: 'flex',
+                                        //         alignItems: 'center',
+                                        //         justifyContent: 'center'
+                                        //     }}
+                                        //     size="large"
+                                        // /> :
+                                        //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                        <SdlTable
+                                            loading={this.props.overDataLoading}
+                                            // scroll={{ y: this.props.maxHeight || 300 }}
+                                            style={{ paddingBottom: 0 }}
+                                            columns={column}
+                                            dataSource={this.props.overfirstData}
+                                            pagination={{
+                                                // showSizeChanger: true,
+                                                showQuickJumper: true,
+                                                pageSize: 20, // this.props.pageSize,
+                                                current: this.props.pageIndex,
+                                                onChange: this.onTableChange,
+                                                total: this.props.OverTotal,
+                                            }}
+                                        >
+                                        </SdlTable>
+                                        // </div>
+                                    }
+                                </div>
+                            }</div>
+                    }
 
-                    </Card.Grid>
+                    {/* </Card.Grid> */}
                 </Card>
             </div>
         );

@@ -13,12 +13,14 @@ class Index extends Component {
         super(props);
         this.state = {
             dgimn: '',
+            pointName: '',
         };
     }
 
-    changeDgimn=dgimn => {
+    changeDgimn = value => {
         this.setState({
-            dgimn,
+            dgimn: value[0].key,
+            pointName: value[0].pointName,
         })
     }
 
@@ -26,13 +28,13 @@ class Index extends Component {
         return (
             <div id="dataquery">
                 <BreadcrumbWrapper>
-                 {this.state.dgimn ? <DataQuery DGIMN={this.state.dgimn} initLoadData/> : <PageLoading/>}
+                    {this.state.dgimn ? <DataQuery DGIMN={this.state.dgimn} pointName={this.state.pointName} initLoadData /> : <PageLoading />}
                 </BreadcrumbWrapper>
                 <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
-                            if (value.length > 0 && !value[0].IsEnt) {
-                            this.changeDgimn(value[0].key)
-                            }
-                        }} />
+                    if (value.length > 0 && !value[0].IsEnt) {
+                        this.changeDgimn(value)
+                    }
+                }} />
             </div>
         );
     }

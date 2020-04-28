@@ -68,7 +68,7 @@ export default Model.extend({
       BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
-      PageSize: 10,
+      PageSize: 20,
       total: 0,
     },
     paramsChartData: {
@@ -93,6 +93,28 @@ export default Model.extend({
     standardValueUtin: null, // 单位
     realtimeStabilizationTime: {},
     QCAResult: "0", // 质控结果
+    // 远程质控回放页面
+    playbackPageDate: {
+      qualityControlName: null, // 质控仪名称
+      gasData: {  // 气瓶信息
+        N2Info: {},
+        NOxInfo: {},
+        SO2Info: {},
+        O2Info: {},
+      },
+      cemsList: [{}, {}, {}, {}], // CEMS列表
+      QCStatus: undefined, // 质控仪状态
+      totalFlow: undefined, // 总流量
+      valveStatus: {},
+      standardValue: undefined, // 配比标气浓度,
+      standardValueUtin: null, // 单位
+      p1Pressure: {},
+      p2Pressure: {},
+      thisTime: null,
+    },
+    oldPlaybackPageDate: {},
+    QCPlaybackTimeLine: [],
+    QCAFlowChartAllData: [],
   },
   effects: {
     // 获取企业及排口
@@ -257,9 +279,9 @@ export default Model.extend({
             entResult,
           },
         })
-        if (!searchType) {
-          message.success('操作成功')
-        }
+        // if (!searchType) {
+        //   message.success('操作成功')
+        // }
         callback && callback(result.Datas)
       } else {
         message.error(result.Message)
@@ -513,7 +535,8 @@ export default Model.extend({
       }
     },
     // 获取质控流程图基础数据
-    *getCemsAndStandGasState({ payload }, { call, put, update }) {
+    *getCemsAndStandGasState({ payload, pageType }, { call, put, update, select }) {
+      const playbackPageDate = yield select(state => state.qualityControl.playbackPageDate);
       const result = yield call(services.getCemsAndStandGasState, payload);
       if (result.IsSuccess) {
         let gasData = {};
@@ -548,16 +571,53 @@ export default Model.extend({
             })
           }
         }
-        yield update({
-          gasData: gasData,
-          cemsList: cemsList,
-          qualityControlName: result.Datas.Center,
-          DeviceStatus: result.Datas.DeviceStatus
-        })
+        if (pageType === "playback") {
+          yield update({
+            playbackPageDate: {
+              ...playbackPageDate,
+              gasData: gasData,
+              cemsList: cemsList,
+              qualityControlName: result.Datas.Center,
+              DeviceStatus: result.Datas.DeviceStatus
+            },
+            oldPlaybackPageDate: {
+              ...playbackPageDate,
+              gasData: gasData,
+              cemsList: cemsList,
+              qualityControlName: result.Datas.Center,
+              DeviceStatus: result.Datas.DeviceStatus
+            }
+          })
+        } else {
+          yield update({
+            gasData: gasData,
+            cemsList: cemsList,
+            qualityControlName: result.Datas.Center,
+            DeviceStatus: result.Datas.DeviceStatus
+          })
+        }
       } else {
         message.error(result.Message)
       }
-    }
+    },
+    // 获取质控记录时间轴
+    *getQCATimelineRecord({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getQCATimelineRecord, payload);
+      if (result.IsSuccess) {
+        yield update({
+          QCPlaybackTimeLine: result.Datas,
+        })
+      }
+    },
+    // 根据时间轴获取质控流程图
+    *getQCADataForRecord({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getQCADataForRecord, payload);
+      if (result.IsSuccess) {
+        yield update({
+          QCAFlowChartAllData: result.Datas
+        })
+      }
+    },
   },
   reducers: {
     // 质控仪流程图 - 状态
@@ -772,6 +832,55 @@ export default Model.extend({
         p1Pressure: {},
         QCStatus: undefined,  // 质控仪状态}
         ...payload
+      }
+    },
+
+    // 更新流程图数据
+    updateFlowChartData(state, { payload }) {
+      let n2 = payload.gasData.find(item => item.PollutantCode === "065")
+      let NOx = payload.gasData.find(item => item.PollutantCode === "03")
+      let SO2 = payload.gasData.find(item => item.PollutantCode === "02")
+      let O2 = payload.gasData.find(item => item.PollutantCode === "s01")
+      let gasData = {
+        N2Info: {
+          ...state.playbackPageDate.gasData.N2Info,
+          ...n2
+        },
+        NOxInfo: {
+          ...state.playbackPageDate.gasData.NOxInfo,
+          ...NOx
+        },
+        SO2Info: {
+          ...state.playbackPageDate.gasData.SO2Info,
+          ...SO2
+        },
+        O2Info: {
+          ...state.playbackPageDate.gasData.O2Info,
+          ...O2
+        },
+      }
+      let cemsList = [...state.playbackPageDate.cemsList];
+
+      // 处理CEMS数据
+      if (payload.cemsList) {
+        payload.cemsList.map(item => {
+          cemsList[item.MNHall - 1] = item
+        })
+      }
+
+      return {
+        ...state,
+        playbackPageDate: {
+          ...state.playbackPageDate,
+          totalFlow: payload.totalFlow,
+          valveStatus: payload.valveStatus,
+          standardValue: payload.standardValue,
+          p1Pressure: payload.p1Pressure,
+          p2Pressure: payload.p2Pressure,
+          gasData,
+          cemsList,
+          thisTime: payload.thisTime,
+        }
       }
     }
   }

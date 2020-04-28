@@ -158,15 +158,15 @@ export default class EntPollutantEmissions extends Component {
         // }
         // this.getEntsTableData(pagination.current);
     }
-    handleChangeDate = (value,beginTime,endTime) => {
+    handleChangeDate = (value, beginTime, endTime) => {
         let Year = moment(value).get('year');
         let Month = moment(value).get('month') + 1;
-    //    let beginTime = moment(`${value}-01-01 00:00:00`);
+        //    let beginTime = moment(`${value}-01-01 00:00:00`);
         if (Month < 10) {
             Month = '0' + Month
         }
         // 本年份
-        if (moment().get('year')=== Year) {
+        if (moment().get('year') === Year) {
             this.updateState({
                 beginTime: beginTime,
                 endTime: endTime,
@@ -208,9 +208,9 @@ export default class EntPollutantEmissions extends Component {
         }
 
         let option = {
-            title: {
-                text: `${currFlag === 1 ? '' : entName}`
-            },
+            // title: {
+            //     text: `${currFlag === 1 ? '' : entName}`
+            // },
             color: ['rgb(91,176,255)'],
             tooltip: {
                 trigger: 'axis',
@@ -223,13 +223,20 @@ export default class EntPollutantEmissions extends Component {
                 }
             },
             legend: {
-                data: ['排放总量']
+                orient: 'vertical',
+                x: 'right',      //可设定图例在左、右、居中
+                y: 'top',     //可设定图例在上、下、居中
+                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+
             },
+            // legend: {
+            //     data: ['排放总量']
+            // },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
+                x: 50,
+                y: 30,
+                x2: 1,
+                y2: 35
             },
             xAxis: [
                 {
@@ -243,7 +250,13 @@ export default class EntPollutantEmissions extends Component {
             yAxis: [
                 {
                     type: 'value',
-                    name: '单位：(t)'
+                    name: '单位：(t)',
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
                 }
             ],
             series: [
@@ -450,8 +463,8 @@ export default class EntPollutantEmissions extends Component {
                             </span>
                             <span style={{ color: '#b3b3b3' }}>时间
 
-                                <DatePickerTool allowClear={false}  picker="year"  defaultValue={moment()}  style={{ width: 200, marginLeft: 10 }} callback={this.handleChangeDate} />
-                                    {/* <Select
+                                <DatePickerTool allowClear={false} picker="year" defaultValue={moment()} style={{ width: 200, marginLeft: 10 }} callback={this.handleChangeDate} />
+                                {/* <Select
                                     size="default"
                                     defaultValue={dateYear}
                                     onChange={this.handleChangeDate}
@@ -462,27 +475,31 @@ export default class EntPollutantEmissions extends Component {
                             </span>
                         </div>
                     }>
-                        <Row>
-                            <ReactEcharts
-                                option={this.getOption()}
-                                lazyUpdate={true}
-                                style={{ height: '300px', width: '100%' }}
-                                className="echarts-for-echarts"
-                                onChartReady={this.onChartReadyCallback}
-                                onEvents={{ 'click': this.onChartClick }}
-                                theme="my_theme" />
-                        </Row>
-                        <Divider />
-                        <Row style={styles.cardTitle.cardBg}>
-                            <SdlTable title={() => `${moment(this.props.clickDate).format('YYYY-MM')}月排放量${currFlag === 1 ? '企业' : '排口'}统计`} style={{}}
-                                rowKey={(record, index) => `complete${index}`}
-                                loading={currFlag === 1 ? loadingEntsTable : loadingPointsTable}
-                                columns={columns}
 
-                                dataSource={currFlag === 1 ? enttableDatas : pointTableDatas}
-                                scroll={{ y: 'calc(100vh - 650px)' }}
-                            />
-                        </Row>
+                        <ReactEcharts
+                            option={this.getOption()}
+                            lazyUpdate={true}
+                            style={{
+                                width: '100%',
+                                height: 'calc(100vh - 520px)',
+                                maxHeight: 280
+
+                            }}
+                            className="echarts-for-echarts"
+                            onChartReady={this.onChartReadyCallback}
+                            onEvents={{ 'click': this.onChartClick }}
+                            theme="my_theme" />
+
+
+                        {/* <Row style={styles.cardTitle.cardBg}> */}
+                        <SdlTable title={() => `${entName}${moment(this.props.clickDate).format('YYYY-MM')}月排放量${currFlag === 1 ? '企业' : '排口'}统计`} style={{}}
+                            rowKey={(record, index) => `complete${index}`}
+                            loading={currFlag === 1 ? loadingEntsTable : loadingPointsTable}
+                            columns={columns}
+                            dataSource={currFlag === 1 ? enttableDatas : pointTableDatas}
+                            scroll={{ y: 'calc(100vh - 500px)' }}
+                        />
+                        {/* </Row> */}
 
                         <Modal
                             title={`${moment(this.props.clickDate).format('YYYY-MM')}月排放量详情`}
@@ -497,7 +514,7 @@ export default class EntPollutantEmissions extends Component {
                                 loading={this.props.loadingDays}
                                 columns={columnsDays}
                                 dataSource={pointDaysDatas}
-                                scroll={{ y: 'calc(100vh - 400px)' }}
+                            //scroll={{ y: 'calc(100vh - 400px)' }}
 
                             />
                         </Modal>

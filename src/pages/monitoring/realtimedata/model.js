@@ -728,26 +728,46 @@ export default Model.extend({
                         trigger: 'axis',
                     },
                     legend: {
+                        orient: 'vertical',
+                        x: 'right',      //可设定图例在左、右、居中
+                        y: 'top',     //可设定图例在上、下、居中
+                        padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
                         data: historyparams.pollutantNames.split(','),
                     },
                     toolbox: {
+                        right: 40,
                         show: true,
                         feature: {
-                            saveAsImage: {},
+                            saveAsImage: {
+                            },
                         },
                     },
                     xAxis: {
                         type: 'category',
                         name: '时间',
-                        boundaryGap: false,
                         data: xAxis,
+                        boundaryGap: false,
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
                     },
                     yAxis: {
                         type: 'value',
+
                         name: "浓度值" + unit,
                         axisLabel: {
                             formatter: '{value}',
                         },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
+
                     },
                     grid: {
                         x: 60,
@@ -989,11 +1009,17 @@ export default Model.extend({
                 };
                 newChartInfo.legend = {
                     data: legendData,
+                    orient: 'vertical',
+                    x: 'right',      //可设定图例在左、右、居中
+                    y: 'top',     //可设定图例在上、下、居中
+                    padding: [40, 40, 0, 40],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
                 };
                 newChartInfo.toolbox = {
+                    right: 40,
                     show: true,
                     feature: {
-                        saveAsImage: {},
+                        saveAsImage: {
+                        },
                     },
                 };
                 newChartInfo.xAxis = {
@@ -1001,12 +1027,24 @@ export default Model.extend({
                     name: '时间',
                     boundaryGap: false,
                     data: xAxisdata,
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
                 };
                 newChartInfo.yAxis = {
                     type: 'value',
                     name: '浓度值' + unit,
                     axisLabel: {
                         formatter: '{value}',
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
                     },
                 };
                 newChartInfo.grid = {

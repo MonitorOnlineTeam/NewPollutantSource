@@ -81,8 +81,8 @@ class Index extends Component {
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.setState({
-            // beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-            // endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         }, () => {
             this.props.initLoadData && this.getLoadData(this.props);
         })
@@ -251,7 +251,7 @@ class Index extends Component {
     //                 pageIndex: 1,
     //             },
     //         })
-           
+
     //         this.props.dispatch({
     //             type: 'recordEchartTable/getexmodellist',
     //             payload: {
@@ -320,21 +320,21 @@ class Index extends Component {
             })
         }, 0)
     }
-        /** 数据类型切换 */
-        _handleDateTypeChange=(e)=>{
-            const dataType=e.target.value;
-            this.setState({dataType}); 
-            this.children.onDataTypeChange(dataType);
-        }
+    /** 数据类型切换 */
+    _handleDateTypeChange = (e) => {
+        const dataType = e.target.value;
+        this.setState({ dataType });
+        this.children.onDataTypeChange(dataType);
+    }
 
 
-      /**
-     * 回调获取时间并重新请求数据
-     */
-    dateCallback=(dates,dataType)=>{
-    if(!this.props.DGIMN)
-       return;
-    this.setState({
+    /**
+   * 回调获取时间并重新请求数据
+   */
+    dateCallback = (dates, dataType) => {
+        if (!this.props.DGIMN)
+            return;
+        this.setState({
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
         });
@@ -354,18 +354,30 @@ class Index extends Component {
                 DGIMN: [this.props.DGIMN],
             },
         })
-     }
- 
-     onRef1=(ref)=>{
-         this.children=ref;
-     }
+    }
+
+    onRef1 = (ref) => {
+        this.children = ref;
+    }
 
 
     render() {
         const { column } = this.state
         const option = {
-            legend: {},
+            legend: {
+                orient: 'vertical',
+                x: 'right',      //可设定图例在左、右、居中
+                y: 'top',     //可设定图例在上、下、居中
+                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+
+            },
             tooltip: {},
+            grid: {
+                x: 35,
+                y: 10,
+                x2: 1,
+                y2: 35
+            },
             dataset: {
                 dimensions: this.props.exlist,
                 // ['product', '2012', '2013', '2017', '2018'],
@@ -378,8 +390,26 @@ class Index extends Component {
                 // ]
                 // [{ "product": "实测烟尘", "连续值异常": "2" }, { "product": "流速", "连续值异常": "2" }, { "product": "流量", "连续值异常": "2" }, { "product": "烟气温度", "连续值异常": "2" }]
             },
-            xAxis: { type: 'category', triggerEvent: true },
-            yAxis: { triggerEvent: true },
+            xAxis: {
+                type: 'category',
+                triggerEvent: true,
+                // splitLine: {
+                //     show: true,
+                //     lineStyle: {
+                //         type: 'dashed'
+                //     }
+                // },
+            },
+            yAxis: {
+                triggerEvent: true,
+                type: 'value',
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                },
+            },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
             series: this.props.excount,
@@ -392,22 +422,19 @@ class Index extends Component {
                     extra={
                         <div>
                             {/* <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} allowClear={false} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} /> */}
-
-
-
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
-                                    dataType={this.state.dataType}
-                                    format={this.state.format} 
-                                    onRef={this.onRef1}
-                                    isVerification={true}
-                                    callback={(dates,dataType)=>this.dateCallback(dates,dataType)}
-                                    allowClear={false} showTime={this.state.format} />
+                                dataType={this.state.dataType}
+                                format={this.state.format}
+                                onRef={this.onRef1}
+                                isVerification={true}
+                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                allowClear={false} showTime={this.state.format} />
 
                             <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />
                         </div>
                     }
                 >
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 260px)', paddingBottom: 0, overflow: 'auto', ...this.props.style }}>
+                    {/* <Card.Grid style={{ width: '100%', ...this.props.style }}> */}
                         {
                             this.props.exmodellistLoading ? <Spin
                                 style={{
@@ -419,55 +446,59 @@ class Index extends Component {
                                 }}
                                 size="large"
                             /> :
-                                <div> {
-                                    this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                                <div>
+                                    {
+                                        this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
-                                        <ReactEcharts
-                                            theme="light"
-                                            option={option}
-                                            lazyUpdate
-                                            notMerge
-                                            id="rightLine"
-                                            onEvents={this.onclick}
-                                            style={{ width: '100%', height: 'calc(100vh - 700px)', minHeight: '250px' }}
-                                        />
-
-                                        {
-                                            // this.props.exceptionDataLoading ? <Spin
-                                            //     style={{
-                                            //         width: '100%',
-                                            //         height: 'calc(100vh/2)',
-                                            //         display: 'flex',
-                                            //         alignItems: 'center',
-                                            //         justifyContent: 'center'
-                                            //     }}
-                                            //     size="large"
-                                            // /> :
-                                            //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                            <SdlTable
-                                                loading={this.props.exceptionDataLoading}
-                                                // style={{ width: "400px", height: "500px" }}
-                                                // scroll={{ y: 'calc(100vh - 1400px)' }}
-                                                style={{ paddingBottom: 0 }}
-                                                columns={column}
-                                                dataSource={this.props.exfirstData}
-                                                pagination={{
-                                                    // showSizeChanger: true,
-                                                    showQuickJumper: true,
-                                                    pageSize: 10,//this.props.pageSize,
-                                                    current: this.props.pageIndex,
-                                                    onChange: this.onTableChange,
-                                                    total: this.props.ExceptionTotal,
+                                            <ReactEcharts
+                                                theme="light"
+                                                option={option}
+                                                lazyUpdate
+                                                notMerge
+                                                id="rightLine"
+                                                onEvents={this.onclick}
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'calc(100vh - 520px)',
+                                                    maxHeight: 280
+                                                    // height:130
                                                 }}
-                                            >
-                                            </SdlTable>
-                                            // </div>
-                                        }
-                                    </div>
-                                }</div>
+                                            />
+                                            {
+                                                // this.props.exceptionDataLoading ? <Spin
+                                                //     style={{
+                                                //         width: '100%',
+                                                //         height: 'calc(100vh/2)',
+                                                //         display: 'flex',
+                                                //         alignItems: 'center',
+                                                //         justifyContent: 'center'
+                                                //     }}
+                                                //     size="large"
+                                                // /> :
+                                                //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                                <SdlTable
+                                                    loading={this.props.exceptionDataLoading}
+                                                    // style={{ width: "400px", height: "500px" }}
+                                                    style={{ paddingBottom: 0 }}
+                                                    columns={column}
+                                                    dataSource={this.props.exfirstData}
+                                                    pagination={{
+                                                        // showSizeChanger: true,
+                                                        showQuickJumper: true,
+                                                        pageSize: 20,//this.props.pageSize,
+                                                        current: this.props.pageIndex,
+                                                        onChange: this.onTableChange,
+                                                        total: this.props.ExceptionTotal,
+                                                    }}
+                                                >
+                                                </SdlTable>
+                                                // </div>
+                                            }
+                                        </div>
+                                    }</div>
                         }
 
-                    </Card.Grid>
+                    {/* </Card.Grid> */}
                 </Card>
             </div>
         );

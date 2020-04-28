@@ -999,7 +999,7 @@ class MapView extends Component {
             />
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
-            <Radio.Group defaultValue="map" buttonStyle="solid" onChange={e => {
+          <Radio.Group value="map" buttonStyle="solid" onChange={e => {
               e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
@@ -1056,7 +1056,7 @@ class MapView extends Component {
             }}>
               {
                 menuDescList.includes("历史数据") && <TabPane tab="历史数据" key="1">
-                  <DataQuery DGIMN={currentKey} initLoadData style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
+                  <DataQuery DGIMN={currentKey} initLoadData chartHeight='calc(100vh - 427px)' style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
                 </TabPane>
               }
               {
@@ -1067,18 +1067,18 @@ class MapView extends Component {
               {
                 menuDescList.includes("报警记录") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="报警记录" key="3">
-                  <AlarmRecord DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
+                  <AlarmRecord DGIMN={currentKey} initLoadData dataHeight='calc(100vh - 450px)' style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
                 menuDescList.includes("异常数据") && <TabPane tab="异常数据" key="4">
-                  <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} />
+                  <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: "70vh" }} maxHeight={150} />
                 </TabPane>
               }
               {
                 menuDescList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="超标数据" key="5">
-                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} maxHeight={150} noticeState={1} />
+                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{maxHeight: "70vh"  }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }
             </Tabs>

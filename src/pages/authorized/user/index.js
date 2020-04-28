@@ -31,7 +31,7 @@ import {
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import SdlTable from '../../AutoFormManager/AutoFormTable';
+import AutoFormTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
@@ -150,7 +150,7 @@ export default class UserInfoIndex extends Component {
     }
     return (
       <BreadcrumbWrapper title="用户管理">
-        <div className={styles.cardTitle}>
+        {/* <div className={styles.cardTitle}> */}
           <Card>
             <SearchWrapper
               // formItemList={searchConditions}
@@ -167,7 +167,7 @@ export default class UserInfoIndex extends Component {
             //   }
             // ]}
             ></SearchWrapper>
-            <SdlTable
+            <AutoFormTable
               style={{ marginTop: 10 }}
               configId={configId}
               onAdd={() => {
@@ -245,9 +245,9 @@ export default class UserInfoIndex extends Component {
             //   }
             // ]}
             // dataSource={dataSource}
-            ></SdlTable>
+            />
           </Card>
-        </div>
+        {/* </div> */}
       </BreadcrumbWrapper>
     );
   }

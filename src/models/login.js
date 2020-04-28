@@ -3,6 +3,7 @@ import { routerRedux } from 'dva/router';
 import {
 
   getSystemLoginConfigInfo,
+  IfSpecial,
 } from '@/services/login';
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
@@ -11,7 +12,8 @@ const LoginModel = {
   namespace: 'login',
   state: {
     status: undefined,
-    configInfo: null
+    configInfo: null,
+    appFlag: '',
   },
   effects: {
     *logout(_, { put }) {
@@ -38,6 +40,13 @@ const LoginModel = {
       // const { configInfo } = yield select(m => m.login);
       // console.log("setConfigInfo=", configInfo);
     },
+    *IfSpecial({ payload }, { call, put, select }) {
+      const response = yield call(IfSpecial);
+      yield put({
+        type: 'setAppFlagInfo',
+        payload: response.Datas,
+      });
+    },
   },
 
   reducers: {
@@ -46,6 +55,9 @@ const LoginModel = {
     },
     setConfigInfo(state, { payload }) {
       return { ...state, configInfo: { ...payload } };
+    },
+    setAppFlagInfo(state, { payload }) {
+      return { ...state, appFlag: payload };
     },
   },
 };

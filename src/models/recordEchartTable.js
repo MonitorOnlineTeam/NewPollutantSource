@@ -25,7 +25,7 @@ export default Model.extend({
         exfirstData: [],
         overfirstData: [],
         pageIndex: 1,
-        pageSize: 15
+        pageSize: 20
     },
     effects: {
         //获取异常记录汇总

@@ -79,8 +79,16 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
+    homePage:"1"
   },
   effects: {
+    *getHomePage({payload},{call,update}){
+      const result = yield call(services.getHomePage, payload);
+      if(result.IsSuccess)
+      {
+        yield update({homePage:result.Datas});
+      }
+    },
     // 获取企业及排口信息
     *getAllEntAndPoint({ payload }, {
       call, update
@@ -237,6 +245,7 @@ export default Model.extend({
           dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
           dyhwdata.push(ele.Emissions.toFixed(2));
         });
+        debugger;
         yield update({
           AllMonthEmissionsByPollutant: {
             ...AllMonthEmissionsByPollutant,

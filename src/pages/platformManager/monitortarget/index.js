@@ -190,72 +190,70 @@ export default class MonitorTarget extends Component {
         }
         return (
             <BreadcrumbWrapper>
-                <div className="contentContainer">
-                    <Card className={styles.contentContainer}>
+                <Card className={styles.contentContainer}>
 
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <AutoFormTable
-                            onRef={this.onRef1}
-                            style={{ marginTop: 10 }}
-                            // columns={columns}
-                            scroll={{ y: 600 }}
-                            configId={configId}
-                            rowChange={(key, row) => {
-                                console.log('key=', key);
-                                this.setState({
-                                    key, row,
-                                })
-                            }}
-                            // onAdd={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
-                            // }}
-                            // onEdit={()=>{
-                            //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
-                            // }}
-                            // appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                            //     <Fragment>
-                            //         <Button
-                            //             type="danger"
-                            //             onClick={() => {
-                            //                 this.showConfirm(selectedRowKeys, selectedRows);
-                            //             }}
-                            //             style={{ marginRight: 8 }}
-                            //         >
-                            //             重置密码
-                            //       </Button>
-                            //     </Fragment>
-                            // )}
-                            appendHandleRows={row => <Fragment>
-                                <Divider type="vertical" />
-                                <Tooltip title="删除">
+                    <SearchWrapper
+                        onSubmitForm={form => this.loadReportList(form)}
+                        configId={configId}
+                    ></SearchWrapper>
+                    <AutoFormTable
+                        onRef={this.onRef1}
+                        style={{ marginTop: 10 }}
+                        // columns={columns}
+                        //scroll={{ y: 600 }}
+                        configId={configId}
+                        rowChange={(key, row) => {
+                            console.log('key=', key);
+                            this.setState({
+                                key, row,
+                            })
+                        }}
+                        // onAdd={()=>{
+                        //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
+                        // }}
+                        // onEdit={()=>{
+                        //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/edit`));
+                        // }}
+                        // appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                        //     <Fragment>
+                        //         <Button
+                        //             type="danger"
+                        //             onClick={() => {
+                        //                 this.showConfirm(selectedRowKeys, selectedRows);
+                        //             }}
+                        //             style={{ marginRight: 8 }}
+                        //         >
+                        //             重置密码
+                        //       </Button>
+                        //     </Fragment>
+                        // )}
+                        appendHandleRows={row => <Fragment>
+                            <Divider type="vertical" />
+                            <Tooltip title="删除">
+                                <a onClick={() => {
+                                    this.showDeleteConfirm(row);
+                                }}><DelIcon />    </a>
+                            </Tooltip>
+                            <Divider type="vertical" />
+                            <Tooltip title="维护点信息">
+                                <a onClick={() => {
+                                    this.editMonitorInfo('', row);
+                                }}><PointIcon />    </a>
+                            </Tooltip>
+
+                            {configId == "Station" ? "" : <><Divider type="vertical" />
+                                <Tooltip title="排污许可证">
                                     <a onClick={() => {
-                                        this.showDeleteConfirm(row);
-                                    }}><DelIcon />    </a>
-                                </Tooltip>
-                                <Divider type="vertical" />
-                                <Tooltip title="维护点信息">
-                                    <a onClick={() => {
-                                        this.editMonitorInfo('', row);
-                                    }}><PointIcon />    </a>
-                                </Tooltip>
+                                        this.adddischargepermit('', row);
+                                    }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
+                                </Tooltip></>}
 
-                                {configId == "Station" ? "" : <><Divider type="vertical" />
-                                    <Tooltip title="排污许可证">
-                                        <a onClick={() => {
-                                            this.adddischargepermit('', row);
-                                        }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
-                                    </Tooltip></>}
-
-                            </Fragment>}
-                            parentcode="platformconfig/monitortarget"
-                            {...this.props}
-                        >
-                        </AutoFormTable>
-                    </Card>
-                </div>
+                        </Fragment>}
+                        parentcode="platformconfig/monitortarget"
+                        {...this.props}
+                    >
+                    </AutoFormTable>
+                </Card>
             </BreadcrumbWrapper>
         );
     }

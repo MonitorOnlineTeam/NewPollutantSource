@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import {
     Card,
     Table,
-    
+
     Progress,
     Row,
     Popover,
@@ -117,8 +117,7 @@ export default class effluentfeeIndex extends Component {
 
 
     handlePanelChange = (value, mode) => {
-        if(value && value[0])
-        {
+        if (value && value[0]) {
             this.updateState({
                 begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
                 end: value[1].format("YYYY-MM-DD HH:mm:ss"),
@@ -143,13 +142,21 @@ export default class effluentfeeIndex extends Component {
     };
 
     queryPointData = (record) => {
+
         const { dataFlag } = this.state;
-        const { point, dispatch } = this.props;
+        const { point, dispatch, begin, end } = this.props;
         this.setState({
             dataFlag: 2,
             entName: record.TargetName,
             targetId: record.TargetId
         });
+        let beginDate = "";
+        let endDate = "";
+        //判断是否为日期格式如果为日期格式则证明是子月份
+        if (isNaN(record.TargetName) && !isNaN(Date.parse(record.TargetName))) {
+            beginDate = moment(record.TargetName).format('YYYY-MM-01 00:00:00');
+            endDate = moment(record.TargetName).add(1, 'months').add(-1, 's').format('YYYY-MM-DD HH:mm:ss');
+        }
         this.updateState({
             point: {
                 ...point,
@@ -158,7 +165,9 @@ export default class effluentfeeIndex extends Component {
                     pageIndex: 1,
                     pageSize: 20
                 }
-            }
+            },
+            begin: beginDate ? beginDate : begin,
+            end: endDate ? endDate : end,
         });
 
         dispatch({
@@ -191,13 +200,12 @@ export default class effluentfeeIndex extends Component {
     getEntColumns = (columnsType) => {
         const { tableColumnsData, pollutantColumns } = this.props;
         const { dataFlag } = this.state;
-
         let entColumns = [
             {
                 title: (<span style={{ fontWeight: 'bold' }}>监控目标</span>),
                 dataIndex: 'TargetName',
                 key: 'TargetName',
-                width: '15%',
+                width: 300,
                 align: 'left',
                 render: (text, record) => {
                     return text;
@@ -210,7 +218,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>监控目标</span>),
                     dataIndex: 'TargetName',
                     key: 'TargetName',
-                    width: '15%',
+                    width: 300,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -223,7 +231,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>排口</span>),
                     dataIndex: 'PointName',
                     key: 'PointName',
-                    width: '15%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -240,6 +248,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'EffluentFeeValue',
                 key: 'EffluentFeeValue',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -255,6 +264,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'UltralowEmissionIncentives',
                 key: 'UltralowEmissionIncentives',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -270,6 +280,7 @@ export default class effluentfeeIndex extends Component {
                 dataIndex: 'PayableTax',
                 key: 'PayableTax',
                 align: 'right',
+                width: 200,
                 render: (text, record) => {
                     // if (text) {
                     //     return <Statistic valueStyle={{ fontSize: 14 }} value={text} precision={2} prefix={'￥'} />
@@ -288,6 +299,7 @@ export default class effluentfeeIndex extends Component {
                     dataIndex: 'opts',
                     key: 'opts',
                     align: 'center',
+                    width: 200,
                     render: (text, record) => {
                         if (dataFlag === 1) {
                             return (
@@ -302,6 +314,7 @@ export default class effluentfeeIndex extends Component {
                 }
             );
         }
+        console.log(entColumns)
 
         return entColumns;
     }
@@ -372,7 +385,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>排口</span>),
                     dataIndex: 'PointName',
                     key: 'PointName',
-                    width: '20%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -382,7 +395,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>SO2（t）</span>),
                     dataIndex: 'EmissionsValue_01',
                     key: 'EmissionsValue_01',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -392,7 +405,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>SO2排污税（元）</span>),
                     dataIndex: 'EffluentFeeValue_01',
                     key: 'EffluentFeeValue_01',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -402,7 +415,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>NOX（t）</span>),
                     dataIndex: 'EmissionsValue_02',
                     key: 'EmissionsValue_02',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -412,7 +425,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>NOX排污税（元）</span>),
                     dataIndex: 'EffluentFeeValue_02',
                     key: 'EffluentFeeValue_02',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -422,7 +435,7 @@ export default class effluentfeeIndex extends Component {
                     title: (<span style={{ fontWeight: 'bold' }}>合计环保税</span>),
                     dataIndex: 'EffluentFeeValue',
                     key: 'EffluentFeeValue',
-                    // width: '30%',
+                    width: 200,
                     align: 'left',
                     render: (text, record) => {
                         return text;
@@ -512,10 +525,10 @@ export default class effluentfeeIndex extends Component {
                                         allowClear={false}
                                         style={{ width: 200 }}
                                         placeholder={['开始时间', '结束时间']}
-                                         dataType="month"
-                                         dateValue={[moment(begin), moment(end)]}
-                                         mode={this.state.rangePickerMode}
-                                         callback={this.handlePanelChange}
+                                        dataType="month"
+                                        dateValue={[moment(begin), moment(end)]}
+                                        mode={this.state.rangePickerMode}
+                                        callback={this.handlePanelChange}
                                     />
                                 </span>
 
@@ -534,7 +547,7 @@ export default class effluentfeeIndex extends Component {
                                     dataSource={dataSource}
                                     // expandedRowRender={dataFlag === 1 ? expandedRowRender : false}
                                     onExpand={this.onExpand}
-                                    scroll={{ y: 'calc(100vh - 450px)' }}
+                                    //   scroll={{ y: 'calc(100vh - 450px)' }}
                                     title={() => entName}
                                     // scroll={{ y: 550 }}
                                     pagination={{
@@ -542,8 +555,8 @@ export default class effluentfeeIndex extends Component {
                                         showQuickJumper: true,
                                         sorter: true,
                                         'total': this.props.total,
-                                        'pageSize': this.props.pageSize,
-                                        'current': this.props.pageIndex,
+                                        'pageSize': this.props.pageSize || 20,
+                                        'current': this.props.pageIndex || 1,
                                         pageSizeOptions: ['10', '20', '30', '40', '50']
                                     }}
                                 />

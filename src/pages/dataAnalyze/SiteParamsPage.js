@@ -168,40 +168,37 @@ class SiteParamsPage extends PureComponent {
     const { pollutantValue, time, dataType, format } = this.state;
     // const format = dataType === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
     return (
-      <Row gutter={16}>
-        <Col span={8}>
-          <Select
-            mode="multiple"
-            style={{ width: '100%' }}
-            value={pollutantValue}
-            placeholder="请选择污染物"
-            onChange={(value) => {
-              this.setState({
-                pollutantValue: value
-              })
-            }}
-          >
-            {
-              pollutantList.map((item, index) => {
-                return <Option key={item.PollutantCode}>{item.PollutantName}</Option>
-              })
-            }
-          </Select>
-        </Col>
-        <Col span={8}>
-          <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
+      <>
+        <Select
+          mode="multiple"
+          style={{ width: '25%',marginRight: '10px'}}
+          value={pollutantValue}
+          placeholder="请选择污染物"
+          maxTagCount={2}
+          maxTagTextLength={5}
+          maxTagPlaceholder="..."
+          onChange={(value) => {
             this.setState({
-              time: dates,
-              dataType: dataType
+              pollutantValue: value
             })
-          }} />
-        </Col>
-        <Col span={8}>
-          <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-          <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
+          }}
+        >
+          {
+            pollutantList.map((item, index) => {
+              return <Option key={item.PollutantCode}>{item.PollutantName}</Option>
+            })
+          }
+        </Select>
 
-        </Col>
-      </Row>
+        <RangePicker_ style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
+          this.setState({
+            time: dates,
+            dataType: dataType
+          })
+        }} />
+        <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+        <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
+      </>
     )
   }
 
@@ -376,7 +373,7 @@ class SiteParamsPage extends PureComponent {
           className="echarts-for-echarts"
           theme="my_theme"
         /> :
-        <SdlTable columns={columns} dataSource={tableList} pagination={true} />) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <SdlTable columns={columns} dataSource={tableList} pagination={false} />) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
     </>
   }

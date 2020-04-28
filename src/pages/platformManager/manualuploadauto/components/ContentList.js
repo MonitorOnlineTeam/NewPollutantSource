@@ -2,8 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import RangePicker_ from '@/components/RangePicker'
-import UpdateManualUpload from './UpdateManualUpload';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { routerRedux } from 'dva/router';
 import styles from './ContentList.less';
 import { downloadFile } from '@/utils/utils';
@@ -44,14 +43,13 @@ export default class ContentList extends Component {
             fileList: [],
             visible: false,
             uid: cuid(),
-            width: 1000,
             uploadLoading: false,
-            dataType: "HourData",
+            format: "YYYY-MM-DD HH",
+
         };
     }
     componentWillReceiveProps = nextProps => {
         const { DGIMN, dispatch } = this.props;
-        const { dataType } = this.state;
         let nextPropsDGIMN = nextProps.DGIMN;
         if (nextPropsDGIMN) {
             if (nextPropsDGIMN !== DGIMN) {
@@ -64,43 +62,40 @@ export default class ContentList extends Component {
                                 DGIMNs: nextPropsDGIMN,
                                 pageIndex: 1,
                                 pageSize: 24,
-                                BeginTime: moment().subtract(3, 'day').format('YYYY-MM-DD 00:00:00'),
-                                EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-                                dataType,
                                 flag: true,
                             }
                         }
                     }
                 });
-                dispatch({
-                    type: 'manualuploadauto/GetManualSupplementList',
-                    payload: {
-                    }
-                });
+                this.GetManualSupplementList()
             }
         }
     }
-
-    //日期改变事件
-    _handleDateChange = (date, dateString) => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'manualuploadauto/updateState',
-            payload: {
-                manualUploadautoParameters: {
-                    ...this.props.manualUploadautoParameters,
-                    ...{
-                        BeginTime: date.length === 0 ? null : date[0].format('YYYY-MM-DD 00:00:00'),
-                        EndTime: date.length === 0 ? null : date[1].format('YYYY-MM-DD 23:59:59'),
+    /**
+  * 回调获取时间并重新请求数据
+  */
+    dateCallback = (dates, dataType) => {
+        let { dispatch, manualUploadautoParameters } = this.props;
+        if (manualUploadautoParameters.DGIMNs) {
+            dispatch({
+                type: 'manualuploadauto/updateState',
+                payload: {
+                    manualUploadautoParameters: {
+                        ...this.props.manualUploadautoParameters,
+                        ...{
+                            BeginTime: dates[0].format('YYYY-MM-DD HH:00:00'),
+                            EndTime: dates[1].format('YYYY-MM-DD HH:00:00'),
+                        }
                     }
                 }
-            }
-        });
-        this.GetManualSupplementList()
-    };
+            });
+            this.GetManualSupplementList()
+        }
+
+    }
+
     //下拉污染物事件
     SelectHandleChange = (value) => {
-        debugger
         const { dispatch, columns } = this.props;
         var pName = '';
         let columnsNew = [];
@@ -127,7 +122,7 @@ export default class ContentList extends Component {
                     columnsSelect: columnsNew
                 }
             });
-            this.GetManualSupplementList()
+
         }
         else {
             dispatch({
@@ -142,9 +137,8 @@ export default class ContentList extends Component {
                     columnsSelect: columns
                 }
             });
-            this.GetManualSupplementList()
         }
-
+        this.GetManualSupplementList()
     }
     //获取下拉污染物数据
     SelectOptions = () => {
@@ -159,13 +153,16 @@ export default class ContentList extends Component {
     //创建并获取模板
     Template = () => {
         //获取模板地址
-        const { dispatch, addSelectPollutantData } = this.props;
+        const { dispatch, addSelectPollutantData, manualUploadautoParameters } = this.props;
         if (addSelectPollutantData) {
             dispatch({
                 type: 'manualuploadauto/getUploadTemplate',
                 payload: {
                     PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
-                    DGIMN: this.props.DGIMN,
+                    DGIMN: manualUploadautoParameters.DGIMNs,
+                    BeginTime: manualUploadautoParameters.BeginTime,
+                    EndTime: manualUploadautoParameters.EndTime,
+                    DataType: manualUploadautoParameters.dataType,
                     callback: (data) => {
                         downloadFile(data);
                     }
@@ -216,105 +213,12 @@ export default class ContentList extends Component {
             }
         });
     }
-    //取消Model
-    onCancel = () => {
-        this.setState({
-            visible: false
-        });
-    }
-    //表单提交
-    handleSubmit = (e) => {
-        const { dispatch, form } = this.props;
-        const { data } = this.state;
-        let PollutantCode = '';
-        form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                dispatch({
-                    type: 'manualuploadauto/UpdateManualSupplementData',
-                    payload: {
-                        PollutantCode: data ? data.PollutantCode : values.PollutantCode.split('--')[0],
-                        MonitorTime: values.MonitorTime.format('YYYY-MM-DD HH:mm:ss'),
-                        AvgValue: values.AvgValue,
-                        DGIMN: values.DGIMN,
-                        Flag: data ? "update" : "add",
-                        callback: () => {
-                            this.GetManualSupplementList();
-                        }
-                    },
-                });
-                this.onCancel();
-            }
-        });
-    }
 
-    //添加弹出层
-    updateModel = (record) => {
-        if (this.props.DGIMN) {
-            //修改
-            if (record) {
-                this.setState({
-                    visible: true,
-                    title: '编辑信息',
-                    width: 1000,
-                    data: record,
-                });
-            }
-            else {
-                this.setState({
-                    visible: true,
-                    title: '添加信息',
-                    data: null,
-                });
-            }
-        }
-        else {
-            message.info("请选择监测点！")
-        }
-    }
-    // 编辑数据
-    updateData = () => {
-        this.child.handleSubmit();
-        this.GetManualSupplementList();
-    }
-    //删除
-    deletemanualuploadData = (record) => {
-        confirm({
-            title: '确定要删除吗?',
-            okText: '是',
-            okType: 'primary',
-            cancelText: '否',
-            onOk: () => this.delete(record),
-            onCancel() {
-            },
-        });
-    };
-    //删除实现
-    delete = (record) => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'manualuploadauto/DeleteUploadFiles',
-            payload: {
-                DGIMN: record.DGIMN,
-                pollutantCode: record.PollutantCode,
-                monitorTime: (moment(record.MonitorTime)).format('YYYY-MM-DD HH:mm:ss'),
-                callback: (reason) => {
-                    switch (reason) {
-                        case 1:
-                            return (message.success("删除成功！"))
-                        default:
-                            return (message.error("删除失败！"))
-                    }
-                }
-            },
-        });
-        this.GetManualSupplementList();
-
-    }
     //上传文件
     upload = () => {
         var that = this;
-        const { uid, dataType } = this.state;
-        const { DGIMN } = this.props;
+        const { uid } = this.state;
+        const { manualUploadautoParameters } = this.props;
         const props = {
             action: config.templateUploadUrlAuto,
             onChange(info) {
@@ -338,8 +242,8 @@ export default class ContentList extends Component {
             accept: ".xls,.xlsx",
             showUploadList: false,
             data: {
-                DGIMN,
-                dataType,
+                DGIMN: manualUploadautoParameters.DGIMNs,
+                dataType: manualUploadautoParameters.dataType,
                 FileUuid: uid,
                 FileActualType: "0",
                 ssoToken: Cookie.get(config.cookieName)
@@ -354,20 +258,26 @@ export default class ContentList extends Component {
 
         )
     }
+
     //数据类型切换
     handleChange = (dataType) => {
-        const { dispatch } = this.props;
-        let pageCount = [];
-        switch (dataType) {
-            case "HourData":
-                pageCount = ["24", "48", "72", "96"];
-                break;
-            case "DayData":
-                pageCount = ["10", "20", "30", "40"];
-                break;
+        const { dispatch, manualUploadautoParameters } = this.props;
+        let format = '';
+        let beginTime = "";
+        let endTime = "";
+
+        if (dataType === 'daySelecthour') {
+            format = "YYYY-MM-DD HH";
+            beginTime = moment(manualUploadautoParameters.BeginTime).format("YYYY-MM-DD 01:00:00");
+            endTime = moment(manualUploadautoParameters.EndTime).format("YYYY-MM-DD 00:00:00");
+        }
+        else {
+            format = "YYYY-MM-DD";
+            beginTime = moment(manualUploadautoParameters.BeginTime).format("YYYY-MM-DD 00:00:00");
+            endTime = moment(manualUploadautoParameters.EndTime).format("YYYY-MM-DD 00:00:00");
         }
         this.setState({
-            dataType
+            format,
         })
         dispatch({
             type: 'manualuploadauto/updateState',
@@ -375,28 +285,23 @@ export default class ContentList extends Component {
                 manualUploadautoParameters: {
                     ...this.props.manualUploadautoParameters,
                     ...{
-                        pageIndex: 1,
-                        pageSize: dataType == "HourData" ? 24 : 10,
-                        dataType
+                        dataType,
+                        BeginTime: beginTime,
+                        EndTime: endTime
                     }
                 },
-                pageCount
             }
         });
-        dispatch({
-            type: 'manualuploadauto/GetManualSupplementList',
-            payload: {
-            }
-        });
+        this.GetManualSupplementList();
     }
     render() {
-        const { manualUploadautoParameters, DGIMN, columnsSelect, pageCount } = this.props;
-        const { dataType } = this.state;
-        let dateValues = [];
+        const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
+        const { format } = this.state;
+        let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
-            dateValues = [moment(manualUploadautoParameters.BeginTime), moment(manualUploadautoParameters.EndTime)];
+            dateValue = [moment(manualUploadautoParameters.BeginTime), moment(manualUploadautoParameters.EndTime)];
         }
-
+        let dataType = manualUploadautoParameters.dataType;
         var uploaddata = [];
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
@@ -412,12 +317,17 @@ export default class ContentList extends Component {
                     <Form layout="inline">
                         <Form.Item>
                             <Select defaultValue={dataType} style={{ width: 120 }} onChange={this.handleChange}>
-                                <Option value="HourData">小时数据</Option>
-                                <Option value="DayData">日数据</Option>
+                                <Option value="daySelecthour">小时数据</Option>
+                                <Option value="day">日数据</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                            监测时间:  <RangePicker_ onChange={this._handleDateChange} format={'YYYY-MM-DD'} dateValue={dateValues} />
+                            <RangePicker_ style={{ width: 325, textAlign: 'left' }} dateValue={dateValue}
+                                dataType={dataType}
+                                format={format}
+                                isVerification={true}
+                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                allowClear={false} showTime={format} />
                         </Form.Item>
                         <Form.Item>
                             <Select
@@ -426,7 +336,6 @@ export default class ContentList extends Component {
                                 placeholder="请选择污染物"
                                 filterOption={true}
                                 allowClear={true}
-
                                 maxTagCount={2}
                                 onChange={this.SelectHandleChange}
                             >
@@ -434,11 +343,6 @@ export default class ContentList extends Component {
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                            {/* <Button style={{ marginRight: 5 }}
-                                onClick={() => this.updateModel()}
-                            >
-                                添加
-                            </Button> */}
                             {this.upload()}
                             <Spin
                                 delay={500}
@@ -453,13 +357,13 @@ export default class ContentList extends Component {
                             />
                         </Form.Item>
                     </Form>
-                } style={{ height: 'calc(100vh - 200px)' }} bordered={false}>
-
+                }
+                bordered={false}>
                 <SdlTable
                     loading={this.props.loading}
                     columns={columnsSelect}
-                    dataSource={!DGIMN ? null : uploaddata}
-                    scroll={{ y: 'calc(100vh - 450px)' }}
+                    dataSource={!manualUploadautoParameters.DGIMNs ? null : uploaddata}
+                    // scroll={{ y: 'calc(100vh - 450px)' }}
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
@@ -471,23 +375,6 @@ export default class ContentList extends Component {
                         pageSizeOptions: pageCount
                     }}
                 />
-                <Modal
-                    destroyOnClose="true"
-                    visible={this.state.visible}
-                    title={this.state.title}
-                    width={this.state.width}
-                    onCancel={this.onCancel}
-                    onOk={this.handleSubmit}
-                >
-                    {
-                        <UpdateManualUpload
-                            onCancels={this.onCancel}
-                            DGIMN={DGIMN}
-                            item={this.state.data}
-                            form={this.props.form}
-                        />
-                    }
-                </Modal>
             </Card>
         );
     }
