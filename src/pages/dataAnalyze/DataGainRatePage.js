@@ -176,7 +176,7 @@ class DataGainRatePage extends PureComponent {
             visible={this.state.visible}
             onOk={this.handleOk}
             width={"90%"}
-            style={{ height: "90vh" }}
+            // style={{ height: "90vh" }}
             onCancel={() => { this.setState({ visible: false }) }}
           >
             <DataDetailPage DGIMN={this.state.DGIMN} time={[moment(this.state.recordTime).add(-23, "hour"), moment(this.state.recordTime)]} dataType={"hour"} />

@@ -280,13 +280,13 @@ class DataQuery extends Component {
     /** 渲染数据展示 */
 
     loaddata = () => {
-        const { dataloading, option, datatable, columns } = this.props;
+        const { dataloading, option, datatable, columns, chartHeight } = this.props;
         const { displayType } = this.state;
         if (dataloading) {
             return (<Spin
                 style={{
                     width: '100%',
-                    height: 'calc(100vh - 400px)',
+                    height: chartHeight ? chartHeight : 'calc(100vh - 400px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -305,7 +305,7 @@ class DataQuery extends Component {
                         lazyUpdate
                         notMerge
                         id="rightLine"
-                        style={{ width: '100%', height: 'calc(100vh - 300px)' }}
+                        style={{ width: '100%', height: chartHeight ? chartHeight : 'calc(100vh - 300px)' }}
                     />
                     // /* </Card.Grid> */
                 );

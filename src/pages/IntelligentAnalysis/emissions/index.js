@@ -250,7 +250,13 @@ export default class EntPollutantEmissions extends Component {
             yAxis: [
                 {
                     type: 'value',
-                    name: '单位：(t)'
+                    name: '单位：(t)',
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
                 }
             ],
             series: [

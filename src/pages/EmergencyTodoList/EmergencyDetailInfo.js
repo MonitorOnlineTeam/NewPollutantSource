@@ -712,7 +712,7 @@ class EmergencyDetailInfo extends Component {
                     footer={null}
                     title={this.state.alarmType}
                     width="70%"
-                    height="70%"
+                    // height="70%"
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                 >

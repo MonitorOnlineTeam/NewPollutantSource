@@ -316,12 +316,13 @@ class AlarmRecord extends Component {
       }
     });
   };
-  
+
 
   render() {
     const userCookie = Cookie.get('currentUser');
     const UserName = JSON.parse(userCookie).User_Name;
     const { selectedRowKeys } = this.state;
+    const { dataHeight } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -341,12 +342,14 @@ class AlarmRecord extends Component {
     },
     {
       title: '报警类型',
+      width: 100,
       dataIndex: 'AlarmTypeName',
       key: 'AlarmTypeName',
 
     },
     {
       title: '污染物',
+      width: 100,
       dataIndex: 'PollutantName',
       key: 'PollutantName',
 
@@ -354,6 +357,7 @@ class AlarmRecord extends Component {
 
     {
       title: '报警次数',
+      width: 100,
       dataIndex: 'AlarmCount',
       key: 'AlarmCount',
 
@@ -366,6 +370,7 @@ class AlarmRecord extends Component {
     // },
     {
       title: '核实状态',
+      width: 100,
       dataIndex: 'State',
       key: 'State',
 
@@ -411,18 +416,18 @@ class AlarmRecord extends Component {
         span: 14,
       },
     };
-    if (isloading) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
-    }
+    // if (isloading) {
+    //   return (<Spin
+    //     style={{
+    //       width: '100%',
+    //       height:'calc(100vh/2)',
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       justifyContent: 'center',
+    //     }}
+    //     size="large"
+    //   />);
+    // }
     return (
       <div className={Styles.check}>
         <Card
@@ -430,52 +435,51 @@ class AlarmRecord extends Component {
             <div>
               {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
               <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
-                  dataType="minute"
-                  dateValue={this.state.rangeDate}
-                  callback={(dates)=>this._handleDateChange(dates)}
+                dataType="minute"
+                dateValue={this.state.rangeDate}
+                callback={(dates) => this._handleDateChange(dates)}
               />
               <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
             </div>
           }
 
         >
-          {/* <Card.Grid style={{ width: '100%', height: 'calc(100vh - 290px)', overflow: 'auto', ...this.props.style }}> */}
-            <SdlTable
-              loading={this.props.dataloading}
-              columns={columns}
-              dataSource={this.props.data}
-              rowKey="ID"
-              rowSelection={rowSelection}
-              // scroll={{ y: 'calc(100vh - 450px)' }}
-              pagination={
-                {
-                  size: 'small',
-                  // showSizeChanger: true,
-                  showQuickJumper: true,
-                  total: this.props.total,
-                  pageSize: 20,//this.props.overdataparams.pageSize,
-                  current: this.props.overdataparams.pageIndex,
-                  onChange: this.onChange,
-                  onShowSizeChange: this.onShowSizeChange,
-                  pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-                }
+          <Card.Grid style={{ width: '100%', ...this.props.style }}>
+          <SdlTable
+            loading={this.props.dataloading}
+            columns={columns}
+            dataSource={this.props.data}
+            rowKey="ID"
+            rowSelection={rowSelection}
+            pagination={
+              {
+                size: 'small',
+                // showSizeChanger: true,
+                showQuickJumper: true,
+                total: this.props.total,
+                pageSize: 20,//this.props.overdataparams.pageSize,
+                current: this.props.overdataparams.pageIndex,
+                onChange: this.onChange,
+                onShowSizeChange: this.onShowSizeChange,
+                pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
               }
-              onRow={(record, index) => ({
-                onClick: event => {
-                  const { selectedRowKeys } = this.state;
-                  let keys = selectedRowKeys;
-                  if (selectedRowKeys.some(item => item === record.ID)) {
-                    keys = keys.filter(item => item !== record.ID)
-                  } else if (record.State !== '1') {
-                    keys.push(record.ID);
-                  }
-                  this.setState({
-                    selectedRowKeys: keys,
-                  })
-                },
-              })}
-            />
-          {/* </Card.Grid> */}
+            }
+            onRow={(record, index) => ({
+              onClick: event => {
+                const { selectedRowKeys } = this.state;
+                let keys = selectedRowKeys;
+                if (selectedRowKeys.some(item => item === record.ID)) {
+                  keys = keys.filter(item => item !== record.ID)
+                } else if (record.State !== '1') {
+                  keys.push(record.ID);
+                }
+                this.setState({
+                  selectedRowKeys: keys,
+                })
+              },
+            })}
+          />
+          </Card.Grid>
 
           <Modal
             title="核实单详情"

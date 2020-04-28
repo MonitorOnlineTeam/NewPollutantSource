@@ -267,7 +267,7 @@ export default class EntTransmissionEfficiency extends Component {
                         footer={[]}
                         visible={this.state.visible}
                         width={"90%"}
-                        style={{ height: "90vh" }}
+                        // style={{ height: "90vh" }}
                         onCancel={() => { this.setState({ visible: false }) }}
                     >
                         <PointIndex entcode={this.state.EnterpriseCode} entname={this.state.EnterpriseName} ></PointIndex>

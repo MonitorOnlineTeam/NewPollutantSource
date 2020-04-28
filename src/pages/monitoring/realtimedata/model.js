@@ -738,22 +738,36 @@ export default Model.extend({
                         right: 40,
                         show: true,
                         feature: {
-                          saveAsImage: {
-                          },
+                            saveAsImage: {
+                            },
                         },
-                      },
+                    },
                     xAxis: {
                         type: 'category',
                         name: '时间',
-                        boundaryGap: false,
                         data: xAxis,
+                        boundaryGap: false,
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
                     },
                     yAxis: {
                         type: 'value',
+
                         name: "浓度值" + unit,
                         axisLabel: {
                             formatter: '{value}',
                         },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
+
                     },
                     grid: {
                         x: 60,
@@ -1004,8 +1018,8 @@ export default Model.extend({
                     right: 40,
                     show: true,
                     feature: {
-                      saveAsImage: {
-                      },
+                        saveAsImage: {
+                        },
                     },
                 };
                 newChartInfo.xAxis = {
@@ -1013,12 +1027,24 @@ export default Model.extend({
                     name: '时间',
                     boundaryGap: false,
                     data: xAxisdata,
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
                 };
                 newChartInfo.yAxis = {
                     type: 'value',
                     name: '浓度值' + unit,
                     axisLabel: {
                         formatter: '{value}',
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed'
+                        }
                     },
                 };
                 newChartInfo.grid = {

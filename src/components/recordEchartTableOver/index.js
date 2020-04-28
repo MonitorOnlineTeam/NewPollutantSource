@@ -406,7 +406,14 @@ class Index extends Component {
                 // [{ "product": "实测烟尘", "连续值异常": "2" }, { "product": "流速", "连续值异常": "2" }, { "product": "流量", "连续值异常": "2" }, { "product": "烟气温度", "连续值异常": "2" }]
             },
             xAxis: { type: 'category', triggerEvent: true },
-            yAxis: { triggerEvent: true },
+            yAxis: {
+                triggerEvent: true, splitLine: {
+                    show: true,
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                },
+            },
             // Declare several bar series, each will be mapped
             // to a column of dataset.source by default.
             series: this.props.overcount,

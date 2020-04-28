@@ -243,6 +243,12 @@ export default Model.extend({
             name: '时间',
             boundaryGap: false,
             data: xAxis,
+            splitLine: {
+              show: true,
+              lineStyle: {
+                  type: 'dashed'
+              }
+          },
           },
           yAxis: {
             type: 'value',
@@ -250,6 +256,12 @@ export default Model.extend({
             axisLabel: {
               formatter: '{value}',
             },
+            splitLine: {
+              show: true,
+              lineStyle: {
+                  type: 'dashed'
+              }
+          },
           },
           grid: {
             x: 60,

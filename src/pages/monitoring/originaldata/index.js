@@ -185,14 +185,14 @@ class Index extends Component {
                 title: '发送时间',
                 dataIndex: 'SendTime',
                 key: 'SendTime',
-                width: '18%',
+                width: 200,
                 align: 'center',
             },
             {
                 title: '原始数据包值',
                 dataIndex: 'OriginalValue',
                 key: 'OriginalValue',
-                width: '80%',
+                width: 800,
                 align: 'left',
             },
         ];
