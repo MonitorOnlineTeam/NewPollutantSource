@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { CascadeMultiSelect } from 'uxcore';
 import { Input, Select, Checkbox, Empty } from 'antd';
 import _ from 'lodash';
 import { connect } from 'dva';
+import config from '@/config';
+import defaultSettings from '../../../config/defaultSettings'
 
 let oldOptions = [];
 @connect(({ common }) => ({
   entAndPointList: common.entAndPointList,
 }))
-class CascaderMultiple extends Component {
+class CascaderMultiple extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +35,11 @@ class CascaderMultiple extends Component {
 
 
   componentDidMount() {
-    let cascaderMultiple = document.getElementById('cascaderMultiple');
+    let activeElement = document;
+    if(config.isShowTabs && defaultSettings.layout === "sidemenu"){
+      activeElement = document.getElementsByClassName("ant-tabs-tabpane-active")[0];
+    }
+    let cascaderMultiple = activeElement.getElementsByClassName('cascaderMultiple')[0];
     document.body.addEventListener("click", (e) => {
       if (!cascaderMultiple.contains(e.target)) {
         this.setState({ visible: false, inputValue: "", options: this.oldOptions })
@@ -61,50 +67,78 @@ class CascaderMultiple extends Component {
         "QCAUse": "",
         "RunState": "",
         "isFilter": true
+      },
+      callback: res => {
+        const entAndPointList = res;
+        // 计算全部长度
+        let checkedValues = [];
+        entAndPointList.filter(item => {
+          if (item.key != 0) {
+            item.children.map(itm => {
+              checkedValues.push(itm.key)
+            })
+          }
+        });
+
+        this.oldOptions = [
+          {
+            title: "全部",
+            key: "0",
+          },
+          ...entAndPointList,
+        ];
+
+
+        let checkedLabels = [];
+        entAndPointList.map((item, index) => {
+          if (item.children) {
+            item.children.map(itm => {
+              this.props.value && this.props.value.map(val => {
+                if (itm.key == val) {
+                  checkedLabels.push(item.title + "/" + itm.title)
+                  // currentChildren = item.children;
+                  // currentIndex = index
+                }
+              })
+            })
+          }
+        })
+
+        this.setState({
+          options: [
+            {
+              title: "全部",
+              key: "0",
+            },
+            ...entAndPointList,
+          ],
+          allLength: checkedValues.length,
+          checkedValues: this.props.value,
+          checkedLabels: checkedLabels,
+          all: this.props.value ? checkedValues.length === this.props.value.length : false
+        })
+
+
+        // this.setState({
+        //   checkedValues: nextProps.value,
+        //   checkedLabels: checkedLabels,
+        //   all: this.state.allLength === nextProps.value.length
+        //   // currentChildren: currentChildren,
+        //   // currentIndex: currentIndex
+        // })
       }
     })
   }
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.options !== nextProps.options) {
-      this.oldOptions = [
-        {
-          title: "全部",
-          key: "0",
-        },
-        ...nextProps.options,
-      ];
 
-      // 计算全部长度
-      let checkedValues = [];
-      nextProps.options.filter(item => {
-        if (item.key != 0) {
-          item.children.map(itm => {
-            checkedValues.push(itm.key)
-          })
-        }
-      });
-
-      this.setState({
-        options: [
-          {
-            title: "全部",
-            key: "0",
-          },
-          ...nextProps.options,
-        ],
-        currentChildren: [],
-        allLength: checkedValues.length
-      });
-
-
-    }
     if (this.props.value !== nextProps.value) {
       let checkedLabels = [];
       let currentChildren = [];
       let currentIndex = 0;
-      let options = nextProps.options ? nextProps.options : nextProps.entAndPointList;
+      // let options = nextProps.options ? nextProps.options : nextProps.entAndPointList;
+      let options = this.state.options;
       options.map((item, index) => {
         if (item.children) {
           item.children.map(itm => {
@@ -127,32 +161,41 @@ class CascaderMultiple extends Component {
       })
     }
 
-    if (this.props.options && this.props.pollutantTypes !== nextProps.pollutantTypes) {
+    // 传入的污染物类型发生变化，重新请求数据
+    if (this.props.pollutantTypes !== nextProps.pollutantTypes) {
       this.getDataList(nextProps.pollutantTypes)
     }
-    if (this.props.entAndPointList !== nextProps.entAndPointList) {
-       // 计算全部长度
-       let checkedValues = [];
-       nextProps.entAndPointList.filter(item => {
-         if (item.key != 0) {
-           item.children.map(itm => {
-             checkedValues.push(itm.key)
-           })
-         }
-       });
 
-      this.oldOptions = nextProps.entAndPointList;
-      this.setState({
-        options: [
-          {
-            title: "全部",
-            key: "0",
-          },
-          ...nextProps.entAndPointList,
-        ],
-        allLength: checkedValues.length
-      })
-    }
+    // if (this.props.entAndPointList !== nextProps.entAndPointList) {
+    //   // 计算全部长度
+    //   let checkedValues = [];
+    //   nextProps.entAndPointList.filter(item => {
+    //     if (item.key != 0) {
+    //       item.children.map(itm => {
+    //         checkedValues.push(itm.key)
+    //       })
+    //     }
+    //   });
+
+    //   // this.oldOptions = nextProps.entAndPointList;
+    //   this.oldOptions = [
+    //     {
+    //       title: "全部",
+    //       key: "0",
+    //     },
+    //     ...nextProps.entAndPointList,
+    //   ];
+    //   this.setState({
+    //     options: [
+    //       {
+    //         title: "全部",
+    //         key: "0",
+    //       },
+    //       ...nextProps.entAndPointList,
+    //     ],
+    //     allLength: checkedValues.length
+    //   })
+    // }
   }
 
 
@@ -170,7 +213,7 @@ class CascaderMultiple extends Component {
       showLabel = checkedLabels.length > 1 ? [...checkedLabels.slice(0, showNum), "..."] : [...checkedLabels.slice(0, showNum)]
     }
     return (
-      <div id="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style, maxHeight: 40 }}>
+      <div className="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style, maxHeight: 40 }}>
         {/* <p>[{checkedValues.toString()}]</p> */}
         <div className="ant-select ant-select-enabled" style={{ width: "100%" }} onClick={(e) => {
           e.stopPropagation();
@@ -269,8 +312,8 @@ class CascaderMultiple extends Component {
           </div>
         </div>
         {
-          visible &&
-          <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" style={{ marginTop: -10 }} onClick={(e) => {
+          // visible &&
+          <div className="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" style={{ marginTop: -4, display: visible ? "block" : "none" }} onClick={(e) => {
           }}>
             <div>
               <ul className="ant-cascader-menu">
@@ -319,17 +362,17 @@ class CascaderMultiple extends Component {
                         }
                       </li>
                     )
-                  }) : <li class="ant-cascader-menu-item ant-cascader-menu-item-disabled" title="" role="menuitem">
+                  }) : <li className="ant-cascader-menu-item ant-cascader-menu-item-disabled" title="" role="menuitem">
                       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </li>
                 }
               </ul>
-
-              {currentChildren.length ? <ul className="ant-cascader-menu">
+              <ul className="ant-cascader-menu" style={{ display: currentChildren.length ? "inline-block" : "none" }}>
                 {
-                  currentChildren.map((item, index) => {
-                    return <li key={index} className="ant-cascader-menu-item" title={item.title} role="menuitem">
-                      <Checkbox checked={checkedLabels.includes(currentEntLable + "/" + item.title)} onChange={(e) => {
+                  currentChildren.length ? currentChildren.map((item, index) => {
+                    return <li key={item.key} className={`ant-cascader-menu-item`} title={item.title} role="menuitem">
+                      <Checkbox key={item.key} checked={checkedLabels.includes(currentEntLable + "/" + item.title)} onChange={(e) => {
+                        e.stopPropagation()
                         // <Checkbox checked={item.checked} onChange={(e) => {
                         let newCurrentChildren = [...this.state.currentChildren];
                         let checkedLabels = [...this.state.checkedLabels];
@@ -355,6 +398,7 @@ class CascaderMultiple extends Component {
                           currentChildren: newCurrentChildren,
                           checkedLabels: checkedLabels,
                           checkedValues: checkedValues,
+                          visible: true,
                           all
                         })
                         this.props.form && this.props.form.setFieldsValue({ [this.props.id]: checkedValues });
@@ -362,10 +406,9 @@ class CascaderMultiple extends Component {
                         // this.props.form.setFieldsValue({""})
                       }}>{item.title}</Checkbox>
                     </li>
-                  })
+                  }) : ""
                 }
-              </ul> : ""
-              }
+              </ul>
             </div>
           </div>
         }

@@ -455,12 +455,12 @@ export default {
                     },
                     {
                       name: 'dateReportPage',
-                      path: '/report/wry/:reportType',
+                      path: '/report/wry/siteReport',
                       component: './report/DateReportPage',
                     },
                     {
                       name: 'summaryReportPage',
-                      path: '/report/wry/summary/:reportType',
+                      path: '/report/wry/summary',
                       component: './report/summaryReportPage',
                     },
                   ]
