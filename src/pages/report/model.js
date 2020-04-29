@@ -14,21 +14,18 @@ export default Model.extend({
       pageSize: 34,
       total: 0,
       DGIMN: [],
-      ReportTime: moment().add(-1,'day'),
-      beginTime:null,
-      endTime:null
+      ReportTime: moment().add(-1, 'day'),
+      beginTime: null,
+      endTime: null,
+      reportType: { value: "siteDaily" }
 
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
       // ReportTime: [moment(), moment()]
     },
-    summaryForm:{
-      beginTime:null,
-      endTime:null
-    },
-    SmokeForm:{
-      beginTime:null,
-      endTime:null
+    SmokeForm: {
+      beginTime: null,
+      endTime: null
     },
     entAndPontList: [],
     pollutantList: [],
@@ -44,8 +41,8 @@ export default Model.extend({
       PageIndex: 1,
       PageSize: 10,
       beginTime: moment().add(-1, 'month').format('YYYY-MM-01 00:00:00'),
-      endTime:moment(moment().format('YYYY-MM-01 00:00:00')).add(-1,"second").format('YYYY-MM-DD 23:59:59'),
-     // aaa:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,"month").format('YYYY-MM-01 23:59:59'),
+      endTime: moment(moment().format('YYYY-MM-01 00:00:00')).add(-1, "second").format('YYYY-MM-DD 23:59:59'),
+      // aaa:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,"month").format('YYYY-MM-01 23:59:59'),
       total: 0
     },
     // 烟气报表 ----- 开始
@@ -86,10 +83,10 @@ export default Model.extend({
     },
     // 获取站点日报数据
     * getDateReportData({
-      payload
+      payload, reportType
     }, { call, update, select }) {
       const dateReportForm = yield select(state => state.report.dateReportForm)
-      
+
       // let _props = {};
       // let startFormat = "YYYY-MM-DD";
       // let endFormat = "YYYY-MM-DD";
@@ -115,18 +112,12 @@ export default Model.extend({
       //     ReportTime: dateReportForm.ReportTime && moment(dateReportForm.ReportTime.value).format("YYYY-MM-DD"),
       //   }
       // }
-      
       const postData = {
-        PollutantSourceType: dateReportForm.PollutantSourceType && dateReportForm.PollutantSourceType.value,
-        //..._props,
-        DGIMN: dateReportForm.DGIMN && dateReportForm.DGIMN.value,
         PageIndex: dateReportForm.current && dateReportForm.current,
         IsPage: 1,
-        BeginTime:dateReportForm.beginTime,
-        EndTime:dateReportForm.endTime,
         ...payload
       }
-      let serviceApi = payload.type === "siteDaily" ? services.getSiteDailyDayReport : (payload.type === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
+      let serviceApi = reportType === "siteDaily" ? services.getSiteDailyDayReport : (reportType === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
       const result = yield call(serviceApi, postData);
       if (result.IsSuccess) {
         let data = [];
@@ -202,13 +193,15 @@ export default Model.extend({
     },
     // 获取汇总日报数据
     * getDailySummaryDataList({
-      payload
-    }, { call, update,select }) {
-      const summaryForm = yield select(state => state.report.summaryForm);
-      let serviceApi = payload.type === "daily" ? services.getDailySummaryList : (payload.type === "monthly" ? services.getSummaryMonthReport : services.getSummaryYearReport)
-      const result = yield call(serviceApi, {...payload,
-      BeginTime:summaryForm.beginTime,
-      EndTime: summaryForm.endTime});
+      payload, reportType
+    }, { call, update, select }) {
+      // const summaryForm = yield select(state => state.report.summaryForm);
+      let serviceApi = reportType === "daily" ? services.getDailySummaryList : (reportType === "monthly" ? services.getSummaryMonthReport : services.getSummaryYearReport)
+      const result = yield call(serviceApi, {
+        ...payload,
+        // BeginTime: summaryForm.beginTime,
+        // EndTime: summaryForm.endTime
+      });
       if (result.IsSuccess) {
         let data = [];
         if (result.Datas.length) {
@@ -224,13 +217,10 @@ export default Model.extend({
       }
     },
     // 报表导出
-    * reportExport({ payload }, { call, update,select }) {
-      
+    * reportExport({ payload }, { call, update, select }) {
+
       const dateReportForm = yield select(state => state.report.dateReportForm)
-      const result = yield call(services.reportExcel, 
-                        {...payload,
-                        BeginTime:dateReportForm.beginTime,
-                        EndTime:dateReportForm.endTime});
+      const result = yield call(services.reportExcel, payload);
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
@@ -238,11 +228,9 @@ export default Model.extend({
       }
     },
     // 汇总报表导出
-    * summaryReportExcel({ payload }, { call, update ,select}) {
+    * summaryReportExcel({ payload }, { call, update, select }) {
       const summaryForm = yield select(state => state.report.summaryForm)
-      const result = yield call(services.summaryReportExcel,    {...payload,
-        BeginTime:summaryForm.beginTime,
-        EndTime:summaryForm.endTime});
+      const result = yield call(services.summaryReportExcel, payload);
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
@@ -308,10 +296,10 @@ export default Model.extend({
     },
 
     // 获取报表数据
-    *getSmokeReportData({ payload }, { call, update,select }) {
+    *getSmokeReportData({ payload }, { call, update, select }) {
       const SmokeForm = yield select(a => a.report.SmokeForm);
       const result = yield call(services.getSmokeReportData,
-         {...payload,BeginTime:SmokeForm.beginTime,EndTime:SmokeForm.endTime});
+        { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
       if (result.IsSuccess) {
         yield update({
           smokeReportData: result.Datas
@@ -321,10 +309,10 @@ export default Model.extend({
       }
     },
     // 烟气报表导出
-    *exportSmokeReport({ payload }, { call, update,select }) {
+    *exportSmokeReport({ payload }, { call, update, select }) {
       const SmokeForm = yield select(a => a.report.SmokeForm);
-      const result = yield call(services.exportSmokeReport, 
-        {...payload,BeginTime:SmokeForm.beginTime,EndTime:SmokeForm.endTime});
+      const result = yield call(services.exportSmokeReport,
+        { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
       if (result.IsSuccess) {
         window.open(result.Datas)
       } else {
