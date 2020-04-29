@@ -193,6 +193,32 @@ a:hover {
 
 :global {
 
+  .ant-table-middle>.ant-table-title,
+  .ant-table-middle>.ant-table-footer {
+    padding: 10px 8px !important;
+  }
+
+  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th{
+    padding: 5px !important;
+  }
+  
+  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td,
+  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td {
+    padding: 8px !important;
+  }
 
 
   // 菜单选中样式
@@ -203,6 +229,10 @@ a:hover {
   .ant-menu-dark .ant-menu-submenu-title:hover {
     font-weight: 900;
     // border-bottom: 2px solid #1890FF;
+  }
+
+  .ant-table{
+    font-size: 13px !important;
   }
 
   .ant-menu-dark .ant-menu-submenu-selected {
@@ -369,7 +399,7 @@ a:hover {
       .contentContainer {
         height: calc(100vh - 116px);
         overflow-y: auto;
-
+        overflow-x: hidden;
         .ant-card-grid {
           box-shadow: none;
           height: auto;
