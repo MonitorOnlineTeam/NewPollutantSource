@@ -464,8 +464,8 @@ class SummaryReportPage extends PureComponent {
                   }
                 }
               }
-              bordered
-              pagination={true}
+              // bordered
+              // pagination={true}
             />
           </Card>
         </Spin>
