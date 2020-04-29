@@ -19,7 +19,7 @@ export async function uploadfiles(params) {
  * @params {"DGIMN":""}
  */
 export async function GetPollutantByPoint(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMN', params, null);
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAuto', params, null);
   return result;
 }
 /**

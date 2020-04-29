@@ -244,6 +244,8 @@ export default class ContentList extends Component {
             data: {
                 DGIMN: manualUploadautoParameters.DGIMNs,
                 dataType: manualUploadautoParameters.dataType,
+                BeginTime:manualUploadautoParameters.BeginTime,
+                EndTime:manualUploadautoParameters.EndTime,
                 FileUuid: uid,
                 FileActualType: "0",
                 ssoToken: Cookie.get(config.cookieName)
@@ -296,6 +298,7 @@ export default class ContentList extends Component {
     }
     render() {
         const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
+        console.log("sssssssssssss",columnsSelect);
         const { format } = this.state;
         let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
@@ -360,6 +363,7 @@ export default class ContentList extends Component {
                 }
                 bordered={false}>
                 <SdlTable
+                    rowKey={(record,index) => index}
                     loading={this.props.loading}
                     columns={columnsSelect}
                     dataSource={!manualUploadautoParameters.DGIMNs ? null : uploaddata}

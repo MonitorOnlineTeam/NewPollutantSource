@@ -247,7 +247,7 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
+      dataList.push({ key, title: node.title, entName: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -314,8 +314,7 @@ class NavigationTree extends Component {
           expandedKeys: nowExpandKey
         })
         var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0],pointName:node.title, IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
-        console.log('rtnKey=', rtnKey)
+        var rtnKey = [{ key: nowKey[0], pointName: node.title, entName: node.EntName, IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
       }
@@ -632,7 +631,7 @@ class NavigationTree extends Component {
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
-        rtnList.push({ key: item,pointName:list[0].title, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode, QCAType: list[0].QCAType, VideoNo: list[0].VideoNo })
+        rtnList.push({ key: item, pointName: list[0].title, entName: list[0].entName, IsEnt: isEnt, Type: type, EntCode: list[0].EntCode, QCAType: list[0].QCAType, VideoNo: list[0].VideoNo })
       }
     })
     //向外部返回选中的数据
