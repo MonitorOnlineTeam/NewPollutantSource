@@ -19,6 +19,7 @@ class Index extends Component {
     }
 
     changeDgimn = value => {
+        debugger
         this.setState({
             dgimn: value[0].key,
             pointName: value[0].pointName,
