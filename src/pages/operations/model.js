@@ -54,9 +54,9 @@ export default Model.extend({
     speedList: [],
     recordingTimeList: [],
     railData: null,
-    recordType:[],
-    targetInfoList:[],
-    pointInfoList:[],
+    recordType: [],
+    targetInfoList: [],
+    pointInfoList: [],
     // 指挥调度报表
      datatable: [],
        total: 0,
@@ -153,7 +153,7 @@ export default Model.extend({
               uid: index,
               name: item,
               status: 'done',
-              url: config.imgaddress + item,
+              url: `/upload/${item}`,
             }))
           yield update({
             imageListVisible: true,
@@ -322,10 +322,9 @@ export default Model.extend({
             configId: 'TaskRecord',
           },
         })
-       
+
         callback && callback(result.Datas);
-      }
-      else{
+      } else {
         message.error(result.Message);
       }
     },
@@ -395,23 +394,23 @@ export default Model.extend({
         *getTaskType({ payload }, { call, update }) {
           const result = yield call(services.getTaskType, payload);
             yield update({
-              recordType: result.Datas
+              recordType: result.Datas,
             })
           },
         // 获取监控标列表
         *getTargetInfoList({ payload }, { call, update }) {
           const result = yield call(services.getTargetInfoList, payload);
             yield update({
-              targetInfoList: result.Datas
+              targetInfoList: result.Datas,
             })
-          },      
+          },
        // 获取站点列表
         *getPointInfoList({ payload }, { call, update }) {
           const result = yield call(services.getPointInfoList, payload);
             yield update({
-              pointInfoList: result.Datas
+              pointInfoList: result.Datas,
             })
-          },      
+          },
       /** 获取指挥调度数据 */
     * getcommanddispatchreport({
       payload,

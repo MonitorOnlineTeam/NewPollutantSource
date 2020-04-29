@@ -21,6 +21,7 @@ const apiHost = 'http://localhost:52198/';
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
 const webSocketPush = '172.16.12.135:60204,111.53.101.207:1501';
+// GBS国标视频接口地址
 const GBSVideoApiUrl = 'http://121.40.50.44:10000/';
 module.exports = {
   // name: '污染源智能分析平台',
@@ -34,12 +35,12 @@ module.exports = {
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
   offlineMapUrl: {
-    domain: "",
-    srcPath: "/amap-master/amap/js/maps.js"
+    domain: '',
+    srcPath: '/amap-master/amap/js/maps.js',
   },
-  // 外网离线地图配置：
+  // 离线地图配置：
   // offlineMapUrl: {
-  //   domain: "http://61.50.135.114:50036",
+  //   domain: "http://10.66.1.72:8184",
   //   srcPath: "/amap-master/amap/js/maps.js"
   // },
   // 内网离线地图配置：
@@ -79,9 +80,9 @@ module.exports = {
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 60,
   // 手工数据上传地址
-  templateUploadUrl: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles`,
+  templateUploadUrl: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
    // 手工自动数据上传地址
-  templateUploadUrlAuto: `/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto`,
+  templateUploadUrlAuto: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%
