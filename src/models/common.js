@@ -114,7 +114,8 @@ export default Model.extend({
               name: item,
               status: 'done',
               url: `/upload/${item}`,
-            }));
+            }
+          });
           yield update({
             imageListVisible: true,
           });
