@@ -143,7 +143,6 @@ class NavigationTree extends Component {
       RunState: state,
       QCAUse: QCAUse
     })
-    console.log('qca=', QCAUse)
 
     dispatch({
       type: 'navigationtree/getentandpoint',
@@ -247,7 +246,7 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, entName: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
+      dataList.push({ key, title: node.title,entName:node.IsEnt?node.title:node.EntName, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -306,7 +305,6 @@ class NavigationTree extends Component {
             nowExpandKey = this.props.overallexpkeys
           }
         }
-        console.log("nowkeyss", nowKey)
         this.setState({
           selectedKeys: nowKey,
           checkedKeys: nowKey,
@@ -359,8 +357,6 @@ class NavigationTree extends Component {
     if (value == "") {
       value = this.props.ConfigInfo.SystemPollutantType
     }
-    console.log("values!!!=", this.props.choice)
-    console.log("values222=", this.props.checkpPol)
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
     })
@@ -479,7 +475,6 @@ class NavigationTree extends Component {
   };
   //复选框选中
   onCheck = checkedKeys => {
-    console.log("checked", checkedKeys)
     this.setState({ checkedKeys });
     this.returnData(checkedKeys)
   };
@@ -625,7 +620,6 @@ class NavigationTree extends Component {
   returnData = (data) => {
     //处理选中的数据格式
     const rtnList = [];
-    console.log('dataaaa', data)
     data.map(item => {
       var list = dataList.filter(m => m.key == item)
       if (list) {
@@ -635,7 +629,6 @@ class NavigationTree extends Component {
       }
     })
     //向外部返回选中的数据
-    console.log('rtnlist=', rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (rtnList.length == 0) {
