@@ -557,6 +557,7 @@ export default Model.extend({
         }, {
           field: 'PrimaryPollutant',
           title: '首要污染物',
+          width: 120,
           wrw: false,
         }])
       }
