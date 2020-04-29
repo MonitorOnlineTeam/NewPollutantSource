@@ -120,6 +120,7 @@ class DataAuditTable extends Component {
             title: '监测点名称',
             dataIndex: 'PointName',
             key: 'PointName',
+            width: 150,
             fixed: "left",
           },
           {
@@ -155,7 +156,7 @@ class DataAuditTable extends Component {
             } type="warning" showIcon style={{ marginBottom: 10 }} />)
         }
 
-        <SdlTable columns={columns} {...this.props} />
+        <SdlTable columns={columns} {...this.props} defaultWidth={70} />
       </>
     );
   }
