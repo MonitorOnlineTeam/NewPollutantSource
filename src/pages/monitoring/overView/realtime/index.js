@@ -55,9 +55,10 @@ class index extends Component {
       }
       let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
         return {
-          title: item.title,
+          title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
           dataIndex: item.field,
-          width: width,
+          // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
+          width: item.width || undefined,
           sorter: (a, b) => a[item.field] - b[item.field],
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
           show: true,
@@ -161,8 +162,8 @@ class index extends Component {
           title: '状态',
           dataIndex: 'Status',
           key: 'Status',
-          // width: 80,
-          width: 120,
+          width: 70,
+          // width: 120,
           align: 'center',
           fixed: fixed,
           show: true,
@@ -195,11 +196,19 @@ class index extends Component {
           title: '监测点',
           dataIndex: 'pointName',
           // width: 160,
-          width: 300,
+          width: 220,
+          // ellipsis: true,
           key: 'pointName',
           fixed: fixed,
           show: true,
           render: (text, record) => {
+            if (this.state.pollutantCode == 5) {
+              return (
+                <span>
+                  {text}
+                </span>
+              );
+            }
             return (
               <span>
                 {record.abbreviation} - {text}
@@ -210,7 +219,7 @@ class index extends Component {
         {
           title: '监测时间',
           // width: 150,
-          width: 200,
+          width: 10,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
@@ -559,13 +568,14 @@ class index extends Component {
             rowClassName={(record, index, indent) => {
               return;
             }}
+            defaultWidth={80}
             loading={dataLoading || columnLoading}
             size="middle"
             bordered={true}
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-           // scroll={{ x: scrollXWidth }}
+            // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card >
