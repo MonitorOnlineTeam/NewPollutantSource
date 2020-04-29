@@ -14,7 +14,10 @@ const { Option } = Select;
 class SelectPollutantType extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      pollutantTypelist: [],
+      defaultPollutantCode: undefined
+    };
   }
   componentDidMount() {
     this.props.dispatch({
@@ -23,16 +26,21 @@ class SelectPollutantType extends PureComponent {
         filterPollutantType: this.props.filterPollutantType//自定义显示污染物类型 wjw
       },
       showAll: this.props.showAll,
-      callback: (defaultPollutantCode) => {
+      callback: (data) => {
+        let defaultPollutantCode =  data[0] && data[0]['pollutantTypeCode'];
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
+        this.setState({ 
+          pollutantTypelist: data,
+          defaultPollutantCode: defaultPollutantCode
+        })
       }
     });
   }
 
 
   render() {
-    const { pollutantTypelist, defaultPollutantCode, loading, showType, showAll } = this.props;
-
+    const { loading, showType, showAll } = this.props;
+    const { pollutantTypelist, defaultPollutantCode, } = this.state;
     if (!loading) {
       return (
         <>
