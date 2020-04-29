@@ -1061,7 +1061,7 @@ class MapView extends Component {
               }
               {
                 menuDescList.includes("视频预览") && <TabPane tab="视频预览" key="2">
-                  <YsyShowVideo DGIMN={currentKey} initLoadData style={{ overflowY: "auto", maxHeight: modalHeight }} />
+                  <YsyShowVideo DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
               {

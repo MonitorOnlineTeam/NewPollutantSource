@@ -360,7 +360,7 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue } = this.state;
-        const { pointName } = this.props;
+        const { pointName, entName } = this.props;
         return (
             <div>
                 <Card
@@ -368,7 +368,7 @@ class DataQuery extends Component {
                     title={
                         <div>
                             <div>
-                                {pointName}
+                                {entName + "-" + pointName}
                             </div>
                             <div style={{ marginTop: 10 }}>
                                 <Form layout="inline">
