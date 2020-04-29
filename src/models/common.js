@@ -45,7 +45,7 @@ export default Model.extend({
           ]
         }
         let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
-        callback && callback(defaultPollutantCode);
+        callback && callback(data);
         yield update({
           pollutantTypelist: data,
           defaultPollutantCode: defaultPollutantCode,
@@ -94,9 +94,10 @@ export default Model.extend({
             }
           }
         })
-        yield update({
-          entAndPointList: filterData,
-        });
+        callback && callback(filterData)
+        // yield update({
+        //   entAndPointList: filterData,
+        // });
       } else {
         message.error(result.Message);
       }
