@@ -21,16 +21,15 @@ export default Model.extend({
   effects: {
     // 获取污染物类型
     *getPollutantTypeList({ payload = {}, showAll, callback }, { update, call }) {
-      let { filterPollutantType } = payload;
+      const { filterPollutantType } = payload;
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
-
         let data = result.Datas;
         if (filterPollutantType !== 'undefined') {
-          let thisPollutantType = filterPollutantType && filterPollutantType.split(',');
+          const thisPollutantType = filterPollutantType && filterPollutantType.split(',');
           thisPollutantType &&
             (data = data.filter(item => {
-              let flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
+              const flag = thisPollutantType.filter(m => m == item.pollutantTypeCode);
               return flag.length > 0;
             }));
         }
@@ -38,17 +37,17 @@ export default Model.extend({
         // 是否显示全部
         if (showAll) {
           data = [{
-            pollutantTypeName: "全部",
+            pollutantTypeName: '全部',
             pollutantTypeCode: data.map(item => item.pollutantTypeCode).toString(),
           },
-          ...data
+          ...data,
           ]
         }
-        let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
+        const defaultPollutantCode = data[0] && data[0].pollutantTypeCode;
         callback && callback(defaultPollutantCode);
         yield update({
           pollutantTypelist: data,
-          defaultPollutantCode: defaultPollutantCode,
+          defaultPollutantCode,
         });
       }
     },
@@ -60,7 +59,7 @@ export default Model.extend({
         if (level !== result.Datas.level) {
           yield update({ level: result.Datas.level });
         }
-        let defaultValue = [];
+        const defaultValue = [];
         function factorial(data) {
           // if (n == 1) return n;
           if (data && data.children) {
@@ -83,14 +82,14 @@ export default Model.extend({
       if (result.IsSuccess) {
         const filterData = result.Datas.filter(item => {
           if (item.children.length) {
-            let children = item.children.map(itm => {
-              let obj = itm;
+            const children = item.children.map(itm => {
+              const obj = itm;
               delete obj.children;
               return { ...obj }
             })
             return {
               ...item,
-              children
+              children,
             }
           }
         })
@@ -108,14 +107,12 @@ export default Model.extend({
       if (result.IsSuccess) {
         let imageList = [];
         if (result.Datas) {
-          imageList = result.Datas.map((item, index) => {
-            return {
+          imageList = result.Datas.map((item, index) => ({
               uid: index,
               name: item,
               status: 'done',
-              url: config.imgaddress + item,
-            };
-          });
+              url: `/upload/${item}`,
+            }));
           yield update({
             imageListVisible: true,
           });
@@ -124,7 +121,7 @@ export default Model.extend({
           message.error('暂无数据');
         }
         yield update({
-          imageList: imageList,
+          imageList,
         });
       }
     },
