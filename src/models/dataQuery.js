@@ -40,7 +40,7 @@ export default Model.extend({
     tagTableTotal: 0,
   },
   effects: {
-    * querypollutantlist({ payload,
+    * querypollutantlist({ payload, callback
     }, { call, update, put, take, select }) {
       const body = {
         DGIMNs: payload.dgimn,
@@ -53,19 +53,22 @@ export default Model.extend({
         if (!payload.overdata) {
           historyparams = {
             ...historyparams,
-            pollutantCodes: result[0].PollutantCode,
-            pollutantNames: result[0].PollutantName,
+            pollutantCodes: result.map(item => item.PollutantCode).toString(),
+            pollutantNames: result.map(item => item.PollutantName).toString(),
             unit: result[0].Unit,
             DGIMN: payload.dgimn,
           }
           yield update({
             historyparams,
           });
-          yield put({
-            type: 'queryhistorydatalist',
-            payload,
-          });
-          yield take('queryhistorydatalist/@@end');
+          callback && callback(historyparams)
+          if (!payload.notLoad) {
+            yield put({
+              type: 'queryhistorydatalist',
+              payload,
+            });
+            yield take('queryhistorydatalist/@@end');
+          }
         }
       } else {
         yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0, DGIMN: payload.dgimn });
@@ -157,11 +160,11 @@ export default Model.extend({
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
           pollutantcols = pollutantcols.concat({
-            title: `${item.PollutantName}(${item.Unit})`,
+            title: <>{item.PollutantName}<br />({item.Unit})</>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
-            width,
+            // width,
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === "风向") {
@@ -176,7 +179,7 @@ export default Model.extend({
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           width: 150,
-          fixed: 'left',
+          // fixed: 'left',
           align: 'center',
         }];
         columns = columns.concat(pollutantcols);
@@ -188,7 +191,7 @@ export default Model.extend({
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
-            width,
+            // width,
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === "风向") {
@@ -202,7 +205,7 @@ export default Model.extend({
           title: '时间',
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          width: 160,
+          width: 150,
           align: 'center',
         }];
         columns = columns.concat(pollutantcols);
@@ -246,9 +249,9 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                  type: 'dashed'
+                type: 'dashed'
               }
-          },
+            },
           },
           yAxis: {
             type: 'value',
@@ -259,9 +262,9 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                  type: 'dashed'
+                type: 'dashed'
               }
-          },
+            },
           },
           grid: {
             x: 60,
