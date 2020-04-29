@@ -45,14 +45,14 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = false;
+      let fixed = this.state.pollutantCode == 5;
       let width = 200;
-      if (nextProps.realtimeColumns.length > 5) {
-        fixed = true;
-      } else {
-        // 计算宽度
-        width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
-      }
+      // if (nextProps.realtimeColumns.length > 5) {
+      //   fixed = true;
+      // } else {
+      //   // 计算宽度
+      //   width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
+      // }
       let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
         return {
           title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
