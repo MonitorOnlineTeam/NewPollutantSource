@@ -254,6 +254,7 @@ class DateReportPage extends PureComponent {
 
   // 分页
   onTableChange = (current, pageSize) => {
+    const getFieldValue = this.props.form.getFieldValue;
     this.props.dispatch({
       type: 'report/updateState',
       payload: {
@@ -265,12 +266,7 @@ class DateReportPage extends PureComponent {
     });
     setTimeout(() => {
       // 获取表格数据
-      this.props.dispatch({
-        type: 'report/getDateReportData',
-        payload: {
-          type: this.props.match.params.reportType,
-        },
-      });
+      this.statisticsReport()
     }, 0);
   };
 
@@ -393,7 +389,7 @@ class DateReportPage extends PureComponent {
                 </Col>
                 <Col xxl={7} md={8} xs={24}>
                   <FormItem
-                     {...formLayout}
+                    {...formLayout}
                     label="监控目标"
                     style={{ width: '100%' }}
                   >
@@ -452,6 +448,15 @@ class DateReportPage extends PureComponent {
                       ],
                     })(
                       <Select onChange={(value) => {
+                        this.props.dispatch({
+                          type: 'report/updateState',
+                          payload: {
+                            dateReportForm: {
+                              ...this.props.dateReportForm,
+                              current: 1,
+                            },
+                          },
+                        });
                         this.changeReportType(value)
                       }}>
                         <Option key="siteDaily">站点日报</Option>
