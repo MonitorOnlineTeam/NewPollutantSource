@@ -23,6 +23,7 @@ import { getRowCuid } from '@/utils/utils';
 import config from '@/config'
 import styles from './index.less';
 import SdlTable from '@/components/SdlTable'
+import defaultSettings from '../../../config/defaultSettings'
 
 const { confirm } = Modal;
 
@@ -393,7 +394,7 @@ class AutoFormTable extends PureComponent {
       }
       return {
         ...col,
-        width: col.width || DEFAULT_WIDTH,
+        width: col.width,
         render: (text, record) => {
           text = text ? text + "" : text;
           const type = col.formatType;
@@ -443,7 +444,8 @@ class AutoFormTable extends PureComponent {
     // console.log("showHandle=",showHandle)
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
-      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48) ? 'right' : ''
+      let leftMenuWidth = config.isShowTabs && defaultSettings.layout === "sidemenu" ? 255 : 0
+      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) ? 'right' : ''
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',
@@ -540,7 +542,6 @@ class AutoFormTable extends PureComponent {
     }
 
 
-    const scroll = { x: (this.props.scroll && this.props.scroll.x) || scrollXWidth + 100, y: (this.props.scroll && this.props.scroll.y) || 'calc(100vh - 390px)' }
     const rowSelection = checkboxOrRadio ? {
       type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
       selections: true,
