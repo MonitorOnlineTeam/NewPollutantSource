@@ -13,6 +13,7 @@ import styles from '../index.less';
 import _ from 'lodash';
 import moment from 'moment';
 import { getDirLevel } from '@/utils/utils';
+import $ from 'jquery'
 
 const CheckboxGroup = Checkbox.Group;
 const Option = Select.Option;
@@ -45,7 +46,8 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = this.state.pollutantCode == 5;
+      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
+      debugger
       let width = 200;
       // if (nextProps.realtimeColumns.length > 5) {
       //   fixed = true;
