@@ -378,6 +378,7 @@ class index extends Component {
               <SelectPollutantType
                 style={{ float: 'left', marginRight: 20 }}
                 showType="radio"
+                value={this.state.pollutantCode}
                 onChange={e => {
                   this.getPageData(e.target.value);
                   let dataType = this.state.currentDataType;
