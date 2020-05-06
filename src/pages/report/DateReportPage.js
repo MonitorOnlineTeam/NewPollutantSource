@@ -246,6 +246,7 @@ class DateReportPage extends PureComponent {
             DGIMN: values.DGIMN,
             BeginTime: this.state.beginTime,
             EndTime: this.state.endTime,
+            Type:values.reportType
           },
         });
       }
