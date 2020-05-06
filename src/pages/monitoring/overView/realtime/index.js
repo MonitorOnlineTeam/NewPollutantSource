@@ -46,7 +46,7 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
+      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160 + 70) > $(".sdlTable").width();
       debugger
       let width = 200;
       // if (nextProps.realtimeColumns.length > 5) {
@@ -61,7 +61,7 @@ class index extends Component {
           dataIndex: item.field,
           // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
           width: item.width || undefined,
-          sorter: (a, b) => a[item.field] - b[item.field],
+          sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
           show: true,
           wrw: item.wrw !== undefined ? item.wrw : true,
@@ -71,6 +71,9 @@ class index extends Component {
             }
             if (record[item.field + '_Value'] !== undefined) {
               return IAQIPopover(text, record, item.field);
+            }
+            if (item.title === "空气质量") {
+              return text ? <span style={{ color: record['AQI_Color'] }}>{text}</span> : "-"
             }
             // 风向转换
             if (item.name === '风向') {
