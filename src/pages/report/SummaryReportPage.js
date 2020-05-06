@@ -317,6 +317,21 @@ class SummaryReportPage extends PureComponent {
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
+                <Col md={5} xs={24}>
+                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+                    {getFieldDecorator('reportType', {
+                      initialValue: "daily",
+                    })(
+                      <Select onChange={(value) => {
+                        this.changeReportType(value)
+                      }}>
+                        <Option key="daily">汇总日报</Option>
+                        <Option key="monthly">汇总月报</Option>
+                        <Option key="annals">汇总年报</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
                 <Col sm={24} md={3}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator("PollutantSourceType", {
@@ -422,21 +437,7 @@ class SummaryReportPage extends PureComponent {
                       </FormItem>
                     </Col>
                 }
-                <Col md={5} xs={24}>
-                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
-                    {getFieldDecorator('reportType', {
-                      initialValue: "daily",
-                    })(
-                      <Select onChange={(value) => {
-                        this.changeReportType(value)
-                      }}>
-                        <Option key="daily">汇总日报</Option>
-                        <Option key="monthly">汇总月报</Option>
-                        <Option key="annals">汇总年报</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
+
                 <Col md={5} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 10 }}>
                     {/* {getFieldDecorator("", {})( */}
@@ -464,8 +465,8 @@ class SummaryReportPage extends PureComponent {
                   }
                 }
               }
-              // bordered
-              // pagination={true}
+            // bordered
+            // pagination={true}
             />
           </Card>
         </Spin>

@@ -344,6 +344,36 @@ class DateReportPage extends PureComponent {
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
+                <Col xxl={4} md={6} xs={24}>
+                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+                    {getFieldDecorator('reportType', {
+                      initialValue: "siteDaily",
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择报表类型',
+                        },
+                      ],
+                    })(
+                      <Select onChange={(value) => {
+                        this.props.dispatch({
+                          type: 'report/updateState',
+                          payload: {
+                            dateReportForm: {
+                              ...this.props.dateReportForm,
+                              current: 1,
+                            },
+                          },
+                        });
+                        this.changeReportType(value)
+                      }}>
+                        <Option key="siteDaily">站点日报</Option>
+                        <Option key="monthly">站点月报</Option>
+                        <Option key="annals">站点年报</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
                 <Col xxl={4} md={4} xs={24}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
@@ -436,36 +466,6 @@ class DateReportPage extends PureComponent {
                       </FormItem>
                     </Col>
                 }
-                <Col xxl={4} md={6} xs={24}>
-                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
-                    {getFieldDecorator('reportType', {
-                      initialValue: "siteDaily",
-                      rules: [
-                        {
-                          required: true,
-                          message: '请选择报表类型',
-                        },
-                      ],
-                    })(
-                      <Select onChange={(value) => {
-                        this.props.dispatch({
-                          type: 'report/updateState',
-                          payload: {
-                            dateReportForm: {
-                              ...this.props.dateReportForm,
-                              current: 1,
-                            },
-                          },
-                        });
-                        this.changeReportType(value)
-                      }}>
-                        <Option key="siteDaily">站点日报</Option>
-                        <Option key="monthly">站点月报</Option>
-                        <Option key="annals">站点年报</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
                 <Col xxl={4} md={10} xs={24}>
                   <FormItem label="" style={{ width: '100%' }}>
                     <Button
