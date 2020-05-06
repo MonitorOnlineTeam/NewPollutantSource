@@ -555,6 +555,11 @@ export default Model.extend({
           field: 'AQI',
           wrw: false,
         }, {
+          field: 'AirQuality',
+          title: '空气质量',
+          width: 70,
+          wrw: false,
+        }, {
           field: 'PrimaryPollutant',
           title: '首要污染物',
           width: 120,
