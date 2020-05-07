@@ -48,14 +48,15 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: 'IsumYear',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            //陈老让先去掉 2020-05-07 lzp
+            // {
+            //   title: '同比',
+            //   dataIndex: 'IsumYear',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -69,14 +70,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '01Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '01Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -90,14 +91,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '02Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '02Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -111,14 +112,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '03Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '03Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -132,14 +133,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '05Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '05Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -153,14 +154,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '07Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '07Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
         {
@@ -174,14 +175,14 @@ class CompositeRangeReport extends Component {
                 return text !== undefined ? text : '-'
               }
             },
-            {
-              title: '同比',
-              dataIndex: '08Year',
-              width: 150,
-              render: (text, record) => {
-                return text !== undefined ? text : '-'
-              }
-            },
+            // {
+            //   title: '同比',
+            //   dataIndex: '08Year',
+            //   width: 150,
+            //   render: (text, record) => {
+            //     return text !== undefined ? text : '-'
+            //   }
+            // },
           ]
         },
       ],
