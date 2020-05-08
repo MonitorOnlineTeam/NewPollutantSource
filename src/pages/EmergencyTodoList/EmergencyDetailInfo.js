@@ -17,6 +17,7 @@ import { get, post, authorpost } from '@/utils/request';
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
 import ViewImagesListModal from '../../components/ImgView'
 // import "react-image-lightbox/style.css";
+import config from '@/config'
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -105,7 +106,8 @@ class EmergencyDetailInfo extends Component {
         console.log('data111=', data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                if (types == '2') {
+                // 新疆兵团只要任务图片
+                if (types === '2' && !config.XinJiang) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);

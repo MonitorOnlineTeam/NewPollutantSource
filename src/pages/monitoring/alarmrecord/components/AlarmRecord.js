@@ -71,9 +71,9 @@ class AlarmRecord extends Component {
         beginTime: firsttime ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss') : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
         endTime: lasttime ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss') : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
       }
-      console.log("firsttime=", firsttime);
-      console.log("lasttime=", lasttime);
-      console.log("this.props.DGIMN=", this.props.DGIMN);
+      console.log('firsttime=', firsttime);
+      console.log('lasttime=', lasttime);
+      console.log('this.props.DGIMN=', this.props.DGIMN);
       if (firsttime && lasttime) {
         this.setState({
           rangeDate: [firsttime, lasttime],
@@ -288,7 +288,10 @@ class AlarmRecord extends Component {
   handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
     form.validateFields((err, values) => {
+
+      debugger;
       if (!err) {
+        debugger;
         const formData = handleFormData(values, this.state.uid);
         formData.VerifyPerSon = formData.VerifyPerSon1;
         formData.VerifyTime = formData.VerifyTime1;
@@ -437,7 +440,7 @@ class AlarmRecord extends Component {
               <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
                 dataType="minute"
                 dateValue={this.state.rangeDate}
-                callback={(dates) => this._handleDateChange(dates)}
+                callback={dates => this._handleDateChange(dates)}
               />
               <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />处置</Button>
             </div>
@@ -457,7 +460,7 @@ class AlarmRecord extends Component {
                 // showSizeChanger: true,
                 showQuickJumper: true,
                 total: this.props.total,
-                pageSize: 20,//this.props.overdataparams.pageSize,
+                pageSize: 20, // this.props.overdataparams.pageSize,
                 current: this.props.overdataparams.pageIndex,
                 onChange: this.onChange,
                 onShowSizeChange: this.onShowSizeChange,
