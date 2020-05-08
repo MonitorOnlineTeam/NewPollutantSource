@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree'
 import DataQuery from './components/DataQuery'
+import DataQueryOld from './components/DataQueryOld'
 import PageLoading from '@/components/PageLoading'
 /**
  * 数据查询页面
@@ -32,7 +33,14 @@ class Index extends Component {
         return (
             <div id="dataquery">
                 <BreadcrumbWrapper>
-                    {this.state.dgimn ? <DataQuery DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> : <PageLoading />}
+                    {
+                        this.state.dgimn ?
+                            (
+                                this.props.location.query.type == 1 ? <DataQueryOld DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
+                                    <DataQuery DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData />
+                            )
+                            : <PageLoading />
+                    }
                 </BreadcrumbWrapper>
                 <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {

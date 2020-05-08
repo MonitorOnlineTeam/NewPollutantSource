@@ -47,7 +47,6 @@ class index extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
       let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160 + 70) > $(".sdlTable").width();
-      debugger
       let width = 200;
       // if (nextProps.realtimeColumns.length > 5) {
       //   fixed = true;
@@ -59,6 +58,7 @@ class index extends Component {
         return {
           title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
           dataIndex: item.field,
+          name: item.name,
           // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
           width: item.width || undefined,
           sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
@@ -475,12 +475,12 @@ class index extends Component {
                                   return;
                                 }
                                 let newColumns = columns;
-                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 6 : 4;
+                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns
                                 })
-                              }} checked={item.show}>{item.title}</Checkbox>
+                              }} checked={item.show}>{item.name}</Checkbox>
                             </Col>
                           }
                         })

@@ -150,13 +150,16 @@ class DateReportPage extends PureComponent {
           dataIndex: 'AQI',
         }, {
           title: '首要污染物',
-          dataIndex: '首要污染物',
+          dataIndex: '首要污染物 ',
+          width: 120,
         }, {
-          title: '空气质量指数类别',
+          title: '指数类别',
           dataIndex: '空气质量指数类别',
+          width: 80,
         }, {
-          title: '空气质量指数级别',
+          title: '指数级别',
           dataIndex: '空气质量指数级别',
+          width: 80,
         }]
       }
       const _columns = [
@@ -190,7 +193,7 @@ class DateReportPage extends PureComponent {
 
       columns.unshift({
         title: '点名称',
-        // width: 150,
+        width: 150,
         dataIndex: 'pointName',
       });
       this.setState({
@@ -510,7 +513,7 @@ class DateReportPage extends PureComponent {
               size="small"
               columns={this.state.columns}
               dataSource={dateReportData}
-              // defaultWidth={80}
+              defaultWidth={80}
               // scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {

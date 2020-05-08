@@ -65,7 +65,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         const columns = result.Datas.map(item => {
           return {
-            title: item.title,
+            title: <>{item.name}<br />({item.unit})</>,
             dataIndex: item.name
           }
         })

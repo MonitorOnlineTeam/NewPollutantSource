@@ -285,8 +285,8 @@ export default Model.extend({
       console.log("historyparams=", historyparams)
       const postData = {
         ...historyparams,
-        // ...payload,
-        DGIMNs: historyparams.DGIMN
+        DGIMNs: historyparams.DGIMN,
+        ...payload,
       }
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {

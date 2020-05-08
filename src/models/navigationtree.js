@@ -42,7 +42,7 @@ export default Model.extend({
         },
         /*获取企业+排口**/
         * getentandpoint({
-            payload
+            payload, callback
         }, {
             call,
             update,
@@ -69,8 +69,10 @@ export default Model.extend({
             }
             const result = yield call(getentandpoint, { ...payload });
             if (result.IsSuccess) {
+                const EntAndPoint = payload.isFilter ? result.Datas : result.Datas.filter(item => item.children.length);
+                callback && callback(EntAndPoint)
                 yield update({
-                    EntAndPoint: payload.isFilter ? result.Datas : result.Datas.filter(item => item.children.length)
+                    EntAndPoint: EntAndPoint
                 });
             }
         },

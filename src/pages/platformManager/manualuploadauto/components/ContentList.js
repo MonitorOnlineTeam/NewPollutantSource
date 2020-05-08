@@ -298,15 +298,43 @@ export default class ContentList extends Component {
         });
         this.GetManualSupplementList();
     }
+    //统计AQI按钮确认框
+     confirm=()=> {
+        const { dispatch ,manualUploadautoParameters} = this.props;
+        Modal.confirm({
+            title: '提示',
+            content: '确认清除'+manualUploadautoParameters.BeginTime+'-'+manualUploadautoParameters.EndTime+'范围内的AQI并重新计算吗?',
+            okText: '确认',
+            cancelText: '取消',
+            width:500,
+            onOk:() => {
+                this.StatisticsAQI()
+            },
+            onCancel:()=>{
+                console.log('false')
+            }
+          });
+      }
+
     //统计AQI
     StatisticsAQI = e => {
-        const { dispatch } = this.props;
-        dispatch({
+        const { dispatch ,manualUploadautoParameters} = this.props;
+        let t1= moment(manualUploadautoParameters.BeginTime);
+        let t2 = moment(manualUploadautoParameters.EndTime);
+        var dayNum=t2.diff(t1,'day')+1;
+        console.log(dayNum)  
+        if(dayNum>15)
+        {
+            message.error("日期范围不能超过15天!");
+        }else
+        {
+            dispatch({
             type: 'manualuploadauto/CalculationAQIData',
             payload: {
             }
-        });
-
+            });
+            // console.log('yes')
+        }
         this.setState({
             visible: false,
         });
@@ -380,7 +408,7 @@ export default class ContentList extends Component {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Button onClick={() => this.StatisticsAQI()}>
+                            <Button onClick={this.confirm}>
                                 统计AQI
                             </Button>
                         </Form.Item>
@@ -405,14 +433,7 @@ export default class ContentList extends Component {
                         pageSizeOptions: pageCount
                     }}
                 />
-                <Modal
-                    title="统计AQI"
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                >
-                    <p>确认清除当前选择范围内的AQI并重新计算？</p>
-                </Modal>
+             
             </Card>
         );
     }
