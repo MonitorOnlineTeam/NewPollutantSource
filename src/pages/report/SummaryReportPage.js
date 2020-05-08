@@ -199,7 +199,7 @@ class SummaryReportPage extends PureComponent {
                   "DGIMN": values.PollutantSourceType == "5" ? values.DGIMN : null,
                   "type": match.params.reportType,
                   "PollutantSourceType": values.PollutantSourceType,
-                  "Regions": values.Regions.toString(),
+                  "Regions": '', //values.Regions.toString(),
                   "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
                   BeginTime: this.state.beginTime,
                   EndTime: this.state.endTime
@@ -252,7 +252,7 @@ class SummaryReportPage extends PureComponent {
           payload: {
             "DGIMN": values.PollutantSourceType == "5" ? values.DGIMN : null,
             "PollutantSourceType": values.PollutantSourceType,
-            "Regions": values.Regions.toString(),
+            "Regions": '',//values.Regions.toString(),
             "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
             BeginTime: this.state.beginTime,
             EndTime: this.state.endTime

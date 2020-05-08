@@ -11,7 +11,7 @@ export default Model.extend({
     dateReportForm: {
       PollutantSourceType: 1,
       current: 1,
-      pageSize: 34,
+      pageSize: 24,
       total: 0,
       DGIMN: [],
       ReportTime: moment().add(-1, 'day'),
