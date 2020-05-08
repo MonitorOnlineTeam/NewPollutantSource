@@ -121,13 +121,13 @@ class DataAuditTable extends Component {
             dataIndex: 'PointName',
             key: 'PointName',
             width: 150,
-            fixed: "left",
+            // fixed: "left",
           },
           {
             title: '时间',
             dataIndex: 'MonitorTime',
             key: 'MonitorTime',
-            fixed: "left",
+            // fixed: "left",
             render: (text, record) => {
               return this.props.dataType === "hour" ? moment(text).format("YYYY-MM-DD HH") + "时" : moment(text).format("YYYY-MM-DD")
             }
