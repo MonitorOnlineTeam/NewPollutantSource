@@ -178,7 +178,7 @@ class DataQuery extends Component {
       type: 'dataquery/queryhistorydatalist',
       payload: {
         ...payload,
-        dataType: this.state.dataType
+        datatype: this.state.dataType
       },
     });
   }
@@ -254,7 +254,8 @@ class DataQuery extends Component {
     this.props.dispatch({
       type: "dataquery/exportHistoryReport",
       payload: {
-        DGIMNs: this.state.dgimn
+        DGIMNs: this.state.dgimn,
+        datatype: this.state.dataType
       }
     })
   }
