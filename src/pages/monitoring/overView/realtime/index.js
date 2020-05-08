@@ -11,8 +11,9 @@ import { router } from 'umi';
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
-import { getDirLevel } from '@/utils/utils';
+
 import $ from 'jquery'
+import styles from '../index.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -45,16 +46,15 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160 + 70) > $(".sdlTable").width();
-      let width = 200;
+      const fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160 + 70) > $('.sdlTable').width();
+      const width = 200;
       // if (nextProps.realtimeColumns.length > 5) {
       //   fixed = true;
       // } else {
       //   // 计算宽度
       //   width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
       // }
-      let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
-        return {
+      const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
           title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
           dataIndex: item.field,
           name: item.name,
@@ -65,22 +65,20 @@ class index extends Component {
           show: true,
           wrw: item.wrw !== undefined ? item.wrw : true,
           render: (text, record) => {
-            console.log('record', record);
             if (item.field === 'AQI') {
               return AQIPopover(text, record);
             }
             if (record[`${item.field}_Value`] !== undefined) {
               return IAQIPopover(text, record, item.field);
             }
-            if (item.title === "空气质量") {
-              return text ? <span style={{ color: record['AQI_Color'] }}>{text}</span> : "-"
+            if (item.title === '空气质量') {
+              return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
             }
             // 风向转换
             if (item.name === '风向') {
               const _text = text ? `${getDirLevel(text)}` : '-';
               return formatPollutantPopover(_text, record[`${item.field}_params`]);
             }
-
             return formatPollutantPopover(text, record[`${item.field}_params`]);
           },
         }));
@@ -213,7 +211,8 @@ class index extends Component {
               <span>
                 {record.abbreviation} - {text}
               </span>
-            ),
+            );
+          },
         },
         {
           title: '监测时间',
@@ -463,8 +462,8 @@ class index extends Component {
                                   message.warning('最少显示一个污染物');
                                   return;
                                 }
-                                let newColumns = columns;
-                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+                                const newColumns = columns;
+                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns,
