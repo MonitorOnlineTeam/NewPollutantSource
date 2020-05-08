@@ -45,21 +45,21 @@ class SelectTime extends Component {
         startFormat = "00:00";
         endFormat = "59:59";
         startTimeObj = {
-          day:  day > 10 ? day : "0" + day,
+          day:  day >= 10 ? day : "0" + day,
         }
         break;
       case "hour":
         startFormat = "00:00";
         endFormat = "59:59";
         startTimeObj = {
-          day: day > 10 ? day : "0" + day,
+          day: day >= 10 ? day : "0" + day,
         }
         break;
       case "day":
         startFormat = "00:00:00";
         endFormat = "59:59:59";
         startTimeObj = {
-          month: moment().format("MM") > 10 ? moment().format("MM") : moment().format("MM"),
+          month: moment().format("MM") >= 10 ? moment().format("MM") : moment().format("MM"),
         }
         break;
     }
@@ -67,7 +67,7 @@ class SelectTime extends Component {
       startFormat, endFormat,
       startTimeObj: {
         year: moment().format("YYYY"),
-        month: moment().format("MM") + 1 > 10 ? moment().format("MM") : "0" + moment().format("MM") + 1,
+        month: moment().format("MM") + 1 >= 10 ? moment().format("MM") : "0" + moment().format("MM") + 1,
         day: moment().format("DD"),
         hour: moment().format("HH"),
         daysInMonthList: [],
@@ -94,11 +94,11 @@ class SelectTime extends Component {
     }
     // 月
     for (let i = 1; i <= 12; i++) {
-      monthList.push(i > 10 ? i : "0" + i)
+      monthList.push(i >= 10 ? i : "0" + i)
     }
     // 小时
     for (let i = 1; i <= 24; i++) {
-      i === 24 ? hoursList.push("00") : hoursList.push(i > 10 ? i : "0" + i)
+      i === 24 ? hoursList.push("00") : hoursList.push(i >= 10 ? i : "0" + i)
     }
 
     this.initTime()
@@ -122,7 +122,7 @@ class SelectTime extends Component {
     let days = moment(time, "YYYY-MM").daysInMonth();
     let dayList = [];
     for (let i = 1; i <= days; i++) {
-      dayList.push(i > 10 ? i : "0" + i)
+      dayList.push(i >= 10 ? i : "0" + i)
     }
 
     let key = type === 1 ? "startTimeObj" : "endTimeObj";
