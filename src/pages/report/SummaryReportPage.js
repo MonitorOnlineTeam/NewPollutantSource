@@ -258,7 +258,8 @@ class SummaryReportPage extends PureComponent {
             "Regions": '',//values.Regions.toString(),
             "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
             BeginTime: this.state.beginTime,
-            EndTime: this.state.endTime
+            EndTime: this.state.endTime,
+            Type:values.reportType
           }
         })
       }
@@ -347,7 +348,7 @@ class SummaryReportPage extends PureComponent {
                     })(
                       <SelectPollutantType placeholder="请选择污染物类型" onChange={value => {
                         //   this.getAirDefaultTime()
-                        value == 5 && this.props.dispatch({
+                        this.props.dispatch({
                           type: 'report/getPointReportEntAndPointList',
                           payload: {
                             PollutantTypes: value,
