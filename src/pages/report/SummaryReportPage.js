@@ -367,6 +367,7 @@ class SummaryReportPage extends PureComponent {
                               }
                             }
                             this.props.form.setFieldsValue({ DGIMN: DGIMN })
+                            this.statisticsReport()
                           },
                         });
                       }} />
