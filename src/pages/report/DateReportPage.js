@@ -330,7 +330,7 @@ class DateReportPage extends PureComponent {
 
     // 处理分页
     let pageSize = dateReportForm.pageSize;
-    if (getFieldValue("PollutantSourceType") == 5) {
+    // if (getFieldValue("PollutantSourceType") == 5) {
       if (reportType === "siteDaily") {
         pageSize = 24
       } else if (reportType === "monthly") {
@@ -338,7 +338,7 @@ class DateReportPage extends PureComponent {
       } else {
         pageSize = 12
       }
-    };
+    // };
     return (
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>

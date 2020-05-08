@@ -371,7 +371,7 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}> */}
-                <Col xl={6} sm={24} md={12} style={{ display: "none" }}>
+                {/* <Col xl={6} sm={24} md={12} style={{ display: "none" }}>
                   <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                     {getFieldDecorator("Regions", {
                       // initialValue: defaultSearchForm.Regions,
@@ -388,7 +388,7 @@ class SummaryReportPage extends PureComponent {
                       />
                     )}
                   </FormItem>
-                </Col>
+                </Col> */}
                 {
                   getFieldValue("PollutantSourceType") == 5 &&
                   // 大气站显示监控目标
@@ -439,7 +439,7 @@ class SummaryReportPage extends PureComponent {
                 }
 
                 <Col md={5} sm={24}>
-                  <FormItem label="" style={{ width: '100%', marginLeft: 10 }}>
+                  <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
                     {/* {getFieldDecorator("", {})( */}
                     <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
                     <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>

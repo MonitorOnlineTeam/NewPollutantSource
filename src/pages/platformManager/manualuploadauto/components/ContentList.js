@@ -253,7 +253,7 @@ export default class ContentList extends Component {
         };
         return (
             <Upload {...props} >
-                <Button >
+                <Button type="primary" >
                     <Icon type="upload" /> 文件导入
                 </Button>
             </Upload>
@@ -289,7 +289,9 @@ export default class ContentList extends Component {
                     ...{
                         Type,
                         BeginTime: beginTime,
-                        EndTime: endTime
+                        EndTime: endTime,
+                        pageIndex: 1,
+                        pageSize: 24,
                     }
                 },
             }
@@ -306,15 +308,15 @@ export default class ContentList extends Component {
         });
 
         this.setState({
-          visible: false,
+            visible: false,
         });
-      };
-      //关闭Modal
-      handleCancel = e => {
+    };
+    //关闭Modal
+    handleCancel = e => {
         this.setState({
-          visible: false,
+            visible: false,
         });
-      };
+    };
     render() {
         const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
         const { format } = this.state;
@@ -330,7 +332,7 @@ export default class ContentList extends Component {
         return (
             <Card
                 extra={
-                    <Button type="primary" onClick={() => this.Template()}>
+                    <Button onClick={() => this.Template()}>
                         <Icon type="download" />模板下载
                     </Button>
                 }
@@ -350,7 +352,7 @@ export default class ContentList extends Component {
                                 callback={(dates, Type) => this.dateCallback(dates, Type)}
                                 allowClear={false} showTime={format} />
                         </Form.Item>
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Select
                                 mode="multiple"
                                 style={{ width: '280px' }}
@@ -362,7 +364,7 @@ export default class ContentList extends Component {
                             >
                                 {this.SelectOptions()}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item>
                             {this.upload()}
                             <Spin
