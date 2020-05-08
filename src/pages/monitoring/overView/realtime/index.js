@@ -11,13 +11,8 @@ import { router } from 'umi';
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
-<<<<<<< HEAD
-import styles from '../index.less';
-
-=======
 import { getDirLevel } from '@/utils/utils';
 import $ from 'jquery'
->>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -206,9 +201,6 @@ class index extends Component {
           key: 'pointName',
           fixed,
           show: true,
-<<<<<<< HEAD
-          render: (text, record) => (
-=======
           render: (text, record) => {
             if (this.state.pollutantCode == 5) {
               return (
@@ -218,7 +210,6 @@ class index extends Component {
               );
             }
             return (
->>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
               <span>
                 {record.abbreviation} - {text}
               </span>
@@ -472,13 +463,8 @@ class index extends Component {
                                   message.warning('最少显示一个污染物');
                                   return;
                                 }
-<<<<<<< HEAD
-                                const newColumns = columns;
-                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 6 : 4;
-=======
                                 let newColumns = columns;
                                 let num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
->>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns,
