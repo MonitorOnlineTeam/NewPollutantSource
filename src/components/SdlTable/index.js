@@ -74,7 +74,7 @@ class SdlTable extends PureComponent {
         this.setState({
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
         }, () => {
-          console.log("computeHeight=", this.state.computeHeight)
+          // console.log("computeHeight=", this.state.computeHeight)
         });
       }
     }, 50);
@@ -137,7 +137,6 @@ class SdlTable extends PureComponent {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
-        console.log("computeHeight=", this.state.computeHeight)
       });
     }
 
@@ -145,7 +144,6 @@ class SdlTable extends PureComponent {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
-        console.log("computeHeight=", this.state.computeHeight)
       });
     }
   }
