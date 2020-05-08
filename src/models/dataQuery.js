@@ -9,6 +9,7 @@ import {
   from '../services/baseapi';
 import * as services from '../services/dataQueryApi'
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'dataquery',
@@ -26,8 +27,8 @@ export default Model.extend({
       DGIMNs: null,
       pageIndex: null,
       pageSize: null,
-      beginTime: null,
-      endTime: null,
+      beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -78,7 +79,7 @@ export default Model.extend({
       payload, from
     }, { select, call, update }) {
       const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-      let _historyparams = { ...historyparams };
+      let _historyparams = { ...historyparams, ...payload };
       if (!from && (!pollutantlist[0] || !historyparams.pollutantCodes)) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
         return;
