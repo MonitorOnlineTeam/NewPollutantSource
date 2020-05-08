@@ -11,8 +11,13 @@ import { router } from 'umi';
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
+<<<<<<< HEAD
 import styles from '../index.less';
 
+=======
+import { getDirLevel } from '@/utils/utils';
+import $ from 'jquery'
+>>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -45,20 +50,22 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = false;
+      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160 + 70) > $(".sdlTable").width();
       let width = 200;
-      if (nextProps.realtimeColumns.length > 5) {
-        fixed = true;
-      } else {
-        // 计算宽度
-        width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
-      }
-      const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
-
-          title: item.title,
+      // if (nextProps.realtimeColumns.length > 5) {
+      //   fixed = true;
+      // } else {
+      //   // 计算宽度
+      //   width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
+      // }
+      let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
+        return {
+          title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
           dataIndex: item.field,
-          width,
-          sorter: (a, b) => a[item.field] - b[item.field],
+          name: item.name,
+          // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
+          width: item.width || undefined,
+          sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
           show: true,
           wrw: item.wrw !== undefined ? item.wrw : true,
@@ -69,6 +76,9 @@ class index extends Component {
             }
             if (record[`${item.field}_Value`] !== undefined) {
               return IAQIPopover(text, record, item.field);
+            }
+            if (item.title === "空气质量") {
+              return text ? <span style={{ color: record['AQI_Color'] }}>{text}</span> : "-"
             }
             // 风向转换
             if (item.name === '风向') {
@@ -158,8 +168,8 @@ class index extends Component {
           title: '状态',
           dataIndex: 'Status',
           key: 'Status',
-          // width: 80,
-          width: 120,
+          width: 70,
+          // width: 120,
           align: 'center',
           fixed,
           show: true,
@@ -191,11 +201,24 @@ class index extends Component {
           title: '监测点',
           dataIndex: 'pointName',
           // width: 160,
-          width: 300,
+          width: 220,
+          // ellipsis: true,
           key: 'pointName',
           fixed,
           show: true,
+<<<<<<< HEAD
           render: (text, record) => (
+=======
+          render: (text, record) => {
+            if (this.state.pollutantCode == 5) {
+              return (
+                <span>
+                  {text}
+                </span>
+              );
+            }
+            return (
+>>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
               <span>
                 {record.abbreviation} - {text}
               </span>
@@ -204,7 +227,7 @@ class index extends Component {
         {
           title: '监测时间',
           // width: 150,
-          width: 200,
+          width: 10,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed,
@@ -360,6 +383,7 @@ class index extends Component {
               <SelectPollutantType
                 style={{ float: 'left', marginRight: 20 }}
                 showType="radio"
+                value={this.state.pollutantCode}
                 onChange={e => {
                   this.getPageData(e.target.value);
                   let dataType = this.state.currentDataType;
@@ -448,13 +472,18 @@ class index extends Component {
                                   message.warning('最少显示一个污染物');
                                   return;
                                 }
+<<<<<<< HEAD
                                 const newColumns = columns;
                                 const num = (pollutantCode == 5 || pollutantCode == 12) ? 6 : 4;
+=======
+                                let newColumns = columns;
+                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+>>>>>>> a49affbbcf6508636bb2714b2cc288f96357d3f3
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
                                   columns: newColumns,
                                 })
-                              }} checked={item.show}>{item.title}</Checkbox>
+                              }} checked={item.show}>{item.name}</Checkbox>
                             </Col>
                           }
                         })
@@ -548,13 +577,14 @@ class index extends Component {
             rowClassName={(record, index, indent) => {
 
             }}
+            defaultWidth={80}
             loading={dataLoading || columnLoading}
             size="middle"
             bordered
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-           // scroll={{ x: scrollXWidth }}
+            // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card >

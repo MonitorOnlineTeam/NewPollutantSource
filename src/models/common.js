@@ -43,11 +43,11 @@ export default Model.extend({
           ...data,
           ]
         }
-        const defaultPollutantCode = data[0] && data[0].pollutantTypeCode;
-        callback && callback(defaultPollutantCode);
+        let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
+        callback && callback(data);
         yield update({
           pollutantTypelist: data,
-          defaultPollutantCode,
+          defaultPollutantCode: defaultPollutantCode,
         });
       }
     },
@@ -59,7 +59,7 @@ export default Model.extend({
         if (level !== result.Datas.level) {
           yield update({ level: result.Datas.level });
         }
-        const defaultValue = [];
+        let defaultValue = [];
         function factorial(data) {
           // if (n == 1) return n;
           if (data && data.children) {
@@ -82,20 +82,21 @@ export default Model.extend({
       if (result.IsSuccess) {
         const filterData = result.Datas.filter(item => {
           if (item.children.length) {
-            const children = item.children.map(itm => {
-              const obj = itm;
+            let children = item.children.map(itm => {
+              let obj = itm;
               delete obj.children;
               return { ...obj }
             })
             return {
               ...item,
-              children,
+              children
             }
           }
         })
-        yield update({
-          entAndPointList: filterData,
-        });
+        callback && callback(filterData)
+        // yield update({
+        //   entAndPointList: filterData,
+        // });
       } else {
         message.error(result.Message);
       }
@@ -107,12 +108,14 @@ export default Model.extend({
       if (result.IsSuccess) {
         let imageList = [];
         if (result.Datas) {
-          imageList = result.Datas.map((item, index) => ({
+          imageList = result.Datas.map((item, index) => {
+            return {
               uid: index,
               name: item,
               status: 'done',
               url: `/upload/${item}`,
-            }));
+            }
+          });
           yield update({
             imageListVisible: true,
           });

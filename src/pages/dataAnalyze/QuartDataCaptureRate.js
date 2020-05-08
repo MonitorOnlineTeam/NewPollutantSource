@@ -52,23 +52,28 @@ class QuartDataCaptureRate extends Component {
         {
           title: "企业名称",
           dataIndex: 'EnterpriseName',
+          width: "25%"
         },
         {
           title: "应捕集个数",
           dataIndex: 'ShouldNumber',
+          width: "10%"
         },
         {
           title: "实捕集个数",
           dataIndex: 'TransmissionNumber',
+          width: "10%"
         },
         {
           title: "有效个数",
           dataIndex: 'EffectiveNumber',
+          width: "10%"
         },
         {
           title: "有效数据捕集率",
           dataIndex: 'TransmissionEffectiveRate',
           key: 'TransmissionEffectiveRate',
+          width: "30%",
           // sorter: true,
           render: (text, record) => {
             // 红色：#f5222d 绿色：#52c41a

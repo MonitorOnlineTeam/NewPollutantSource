@@ -18,6 +18,8 @@ import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import config from "@/config"
+import defaultSettings from '../../../../config/defaultSettings.js'
+
 
 const { TabPane } = Tabs;
 const entZoom = 8;
@@ -712,9 +714,13 @@ class MapView extends Component {
     let AQIColor = curPointData.AQI_Color;
 
     const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
+    let mapWrapperStyle = {};
+    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
+      mapWrapperStyle = { marginTop: 4 }
+    }
     return (
       //QCAUse="1"
-      <div className={styles.mapWrapper}>
+      <div className={styles.mapWrapper} style={mapWrapperStyle}>
         <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
             // if (!val[0].isEnt) {
@@ -999,7 +1005,7 @@ class MapView extends Component {
             />
           </Map>
           <div style={{ position: 'absolute', right: 100, top: 20 }}>
-          <Radio.Group value="map" buttonStyle="solid" onChange={e => {
+            <Radio.Group value="map" buttonStyle="solid" onChange={e => {
               e.target.value === 'data' && router.push('/monitoring/mapview/realtimeDataView')
             }}>
               <Radio.Button value="data">数据</Radio.Button>
@@ -1078,7 +1084,7 @@ class MapView extends Component {
               {
                 menuDescList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
                 <TabPane tab="超标数据" key="5">
-                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{maxHeight: "70vh"  }} maxHeight={150} noticeState={1} />
+                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: "70vh" }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }
             </Tabs>

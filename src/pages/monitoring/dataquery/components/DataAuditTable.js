@@ -120,13 +120,14 @@ class DataAuditTable extends Component {
             title: '监测点名称',
             dataIndex: 'PointName',
             key: 'PointName',
-            fixed: "left",
+            width: 150,
+            // fixed: "left",
           },
           {
             title: '时间',
             dataIndex: 'MonitorTime',
             key: 'MonitorTime',
-            fixed: "left",
+            // fixed: "left",
             render: (text, record) => {
               return this.props.dataType === "hour" ? moment(text).format("YYYY-MM-DD HH") + "时" : moment(text).format("YYYY-MM-DD")
             }
@@ -155,7 +156,7 @@ class DataAuditTable extends Component {
             } type="warning" showIcon style={{ marginBottom: 10 }} />)
         }
 
-        <SdlTable columns={columns} {...this.props} />
+        <SdlTable columns={columns} {...this.props} defaultWidth={70} />
       </>
     );
   }

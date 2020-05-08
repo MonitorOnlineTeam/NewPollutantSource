@@ -9,6 +9,7 @@ import {
   from '../services/baseapi';
 import * as services from '../services/dataQueryApi'
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'dataquery',
@@ -26,8 +27,8 @@ export default Model.extend({
       DGIMNs: null,
       pageIndex: null,
       pageSize: null,
-      beginTime: null,
-      endTime: null,
+      beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -40,7 +41,7 @@ export default Model.extend({
     tagTableTotal: 0,
   },
   effects: {
-    * querypollutantlist({ payload,
+    * querypollutantlist({ payload, callback
     }, { call, update, put, take, select }) {
       const body = {
         DGIMNs: payload.dgimn,
@@ -53,19 +54,22 @@ export default Model.extend({
         if (!payload.overdata) {
           historyparams = {
             ...historyparams,
-            pollutantCodes: result[0].PollutantCode,
-            pollutantNames: result[0].PollutantName,
+            pollutantCodes: result.map(item => item.PollutantCode).toString(),
+            pollutantNames: result.map(item => item.PollutantName).toString(),
             unit: result[0].Unit,
             DGIMN: payload.dgimn,
           }
           yield update({
             historyparams,
           });
-          yield put({
-            type: 'queryhistorydatalist',
-            payload,
-          });
-          yield take('queryhistorydatalist/@@end');
+          callback && callback(historyparams)
+          if (!payload.notLoad) {
+            yield put({
+              type: 'queryhistorydatalist',
+              payload,
+            });
+            yield take('queryhistorydatalist/@@end');
+          }
         }
       } else {
         yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0, DGIMN: payload.dgimn });
@@ -75,7 +79,7 @@ export default Model.extend({
       payload, from
     }, { select, call, update }) {
       const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
-      let _historyparams = { ...historyparams };
+      let _historyparams = { ...historyparams, ...payload };
       if (!from && (!pollutantlist[0] || !historyparams.pollutantCodes)) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
         return;
@@ -157,11 +161,11 @@ export default Model.extend({
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
           pollutantcols = pollutantcols.concat({
-            title: `${item.PollutantName}(${item.Unit})`,
+            title: <>{item.PollutantName}<br />({item.Unit})</>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
-            width,
+            // width,
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === "风向") {
@@ -176,7 +180,7 @@ export default Model.extend({
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           width: 150,
-          fixed: 'left',
+          // fixed: 'left',
           align: 'center',
         }];
         columns = columns.concat(pollutantcols);
@@ -188,7 +192,7 @@ export default Model.extend({
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
-            width,
+            // width,
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === "风向") {
@@ -202,7 +206,7 @@ export default Model.extend({
           title: '时间',
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          width: 160,
+          width: 150,
           align: 'center',
         }];
         columns = columns.concat(pollutantcols);
@@ -246,9 +250,9 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                  type: 'dashed'
+                type: 'dashed'
               }
-          },
+            },
           },
           yAxis: {
             type: 'value',
@@ -259,9 +263,9 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                  type: 'dashed'
+                type: 'dashed'
               }
-          },
+            },
           },
           grid: {
             x: 60,
@@ -281,8 +285,8 @@ export default Model.extend({
       console.log("historyparams=", historyparams)
       const postData = {
         ...historyparams,
-        // ...payload,
-        DGIMNs: historyparams.DGIMN
+        DGIMNs: historyparams.DGIMN,
+        ...payload,
       }
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {

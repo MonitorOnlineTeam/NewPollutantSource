@@ -25,7 +25,7 @@ const { Option } = Select;
 const { Search } = Input;
 const { TreeNode } = Tree;
 const children = [];
-const dataList = [];
+// const dataList = [];
 let floats = Setting.layout
 floats = floats === "sidemenu" ? "leftmenu" : floats;
 const styleTrue = { border: "1px solid", borderRadius: 4, padding: 3, borderColor: "#1990fc", cursor: "pointer" }
@@ -54,6 +54,8 @@ class NavigationTree extends Component {
     super(props);
     this.defaultKey = 0;
     this.state = {
+      EntAndPoint: [],
+      dataList: [],
       visible: true,
       Name: "",
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : (this.props.defaultPollutant === "undefined" ? "undefined" : ""),
@@ -143,7 +145,6 @@ class NavigationTree extends Component {
       RunState: state,
       QCAUse: QCAUse
     })
-    console.log('qca=', QCAUse)
 
     dispatch({
       type: 'navigationtree/getentandpoint',
@@ -153,6 +154,9 @@ class NavigationTree extends Component {
         RunState: state,
         PollutantTypes: this.state.PollutantTypes,
         isFilter: this.props.isMap
+      },
+      callback: (data) => {
+        this.loadCallback(data)
       }
     })
     // panelDataList.splice(0, panelDataList.length)
@@ -167,15 +171,25 @@ class NavigationTree extends Component {
 
   }
 
+  loadCallback = (data) => {
+    this.setState({
+      EntAndPoint: data
+    }, () => {
+      this.clearData()
+      this.tilingData(data)
+      this.generateList(data)
+    })
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.PollutantType !== nextProps.PollutantType) {
       nextProps.PollutantType.map(m => children.push(<Option key={m.pollutantTypeCode}>{m.pollutantTypeName}</Option>));
     }
-    if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
-      this.clearData()
-      this.tilingData(nextProps.EntAndPoint)
-      this.generateList(nextProps.EntAndPoint)
-    }
+    // if (this.state.EntAndPoint !== nextProps.EntAndPoint) {
+    //   this.clearData()
+    //   this.tilingData(nextProps.EntAndPoint)
+    //   this.generateList(nextProps.EntAndPoint)
+    // }
     if (this.props.selKeys !== nextProps.selKeys) {
       this.defaultKey = 0
       if (!this.state.searchValue) {
@@ -203,21 +217,28 @@ class NavigationTree extends Component {
     if (prevState.treeVis !== this.state.treeVis) {
       this.state.treeVis === true ? this.controlsScrollBarOffsetTop() : this.controlsScrollBarOffsetTop2()
     }
+
   }
 
 
   // 控制节点滚动条位置
   controlsScrollBarOffsetTop = () => {
-    if ($(".ant-tree-treenode-selected") && $(".ant-tree-treenode-selected").length) {
+    let selectedTreeNode = $(".ant-tree-treenode-selected");
+    let treeElement = $(".ant-tree");
+    if(Setting.layout === "sidemenu" && config.isShowTabs){
+      selectedTreeNode = $(".ant-tabs-tabpane-active .ant-tree-treenode-selected")
+      treeElement = $(".ant-tabs-tabpane-active .ant-tree")
+    }
+    if (selectedTreeNode && selectedTreeNode.length) {
       // 选中元素的scrollTop
-      let selEleOffsetTop = $(".ant-tree-treenode-selected").offset().top;
-      let treeScrollTop = $(".ant-tree").scrollTop();
+      let selEleOffsetTop = selectedTreeNode.offset().top;
+      let treeScrollTop = treeElement.scrollTop();
       // 树高度
-      let treeHeight = $(".ant-tree").height();
+      let treeHeight = treeElement.height();
       if (selEleOffsetTop - 176 > treeHeight) {
         const scrollTop = selEleOffsetTop - treeHeight + (treeHeight / 4.5);
         // const scrollTop = selEleOffsetTop - treeHeight + 176;
-        $(".ant-tree").scrollTop(scrollTop)
+        treeElement.scrollTop(scrollTop)
       }
     }
   }
@@ -240,14 +261,14 @@ class NavigationTree extends Component {
   //清除面板数据
   clearData = () => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    dataList.splice(0, dataList.length)
+    this.state.dataList.splice(0, this.state.dataList.length)
   }
   //面板数据
-  tilingData = (data = this.props.EntAndPoint) => {
+  tilingData = (data = this.state.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      dataList.push({ key, title: node.title, entName: node.title, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
+      this.state.dataList.push({ key, title: node.title, entName: node.IsEnt ? node.title : node.EntName, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
       if (node.IsEnt == 0) {
         var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type };
         // var ddd=panelDataList.filter(item=>item.key==key);
@@ -263,7 +284,7 @@ class NavigationTree extends Component {
   }
 
   //处理接口返回的企业和排口数据
-  generateList = (data = this.props.EntAndPoint, selKeys, overAll) => {
+  generateList = (data = this.state.EntAndPoint, selKeys, overAll) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -289,7 +310,7 @@ class NavigationTree extends Component {
         var nowExpandKey = [node.EntCode]
         if (selKeys || this.props.selKeys) {
           nowKey = [selKeys || this.props.selKeys];
-          nowExpandKey = [this.getParentKey(nowKey[0], this.props.EntAndPoint)]
+          nowExpandKey = [this.getParentKey(nowKey[0], this.state.EntAndPoint)]
           if (overAll || this.props.overAll) {
             this.props.dispatch({
               type: "navigationtree/updateState",
@@ -300,20 +321,19 @@ class NavigationTree extends Component {
             })//根据传入的状态判断是否更新全局
           }
         } else if (this.props.overallselkeys.length != 0) {
-          var state = !!dataList.find(m => m.key == this.props.overallselkeys[0].toString())
+          var state = !!this.state.dataList.find(m => m.key == this.props.overallselkeys[0].toString())
           if (state) {
             nowKey = this.props.overallselkeys
             nowExpandKey = this.props.overallexpkeys
           }
         }
-        console.log("nowkeyss", nowKey)
         this.setState({
           selectedKeys: nowKey,
           checkedKeys: nowKey,
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var pollutantType = dataList.find(m => m.key == nowKey[0].toString()) ? dataList.find(m => m.key == nowKey[0].toString()).Type : "";
+        var pollutantType = this.state.dataList.find(m => m.key == nowKey[0].toString()) ? this.state.dataList.find(m => m.key == nowKey[0].toString()).Type : "";
         var rtnKey = [{ key: nowKey[0], pointName: node.title, entName: node.EntName, IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
@@ -324,7 +344,7 @@ class NavigationTree extends Component {
       }
     }
   };
-  // generateList(this.props.EntAndPoint);
+  // generateList(this.state.EntAndPoint);
   //获取当前传入的key的父节点
   getParentKey = (key, tree) => {
     let parentKey;
@@ -359,8 +379,6 @@ class NavigationTree extends Component {
     if (value == "") {
       value = this.props.ConfigInfo.SystemPollutantType
     }
-    console.log("values!!!=", this.props.choice)
-    console.log("values222=", this.props.checkpPol)
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
     })
@@ -376,6 +394,9 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
         isFilter: this.props.isMap
+      },
+      callback: (data) => {
+        this.loadCallback(data)
       }
     })
   }
@@ -394,6 +415,9 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap
+      },
+      callback: (data) => {
+        this.loadCallback(data)
       }
     })
   }
@@ -402,10 +426,10 @@ class NavigationTree extends Component {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.tilingData()
     const { value } = e.target;
-    const expandedKeys = dataList
+    const expandedKeys = this.state.dataList
       .map(item => {
         if (item.title.indexOf(value) > -1) {
-          return this.getParentKey(item.key, this.props.EntAndPoint);
+          return this.getParentKey(item.key, this.state.EntAndPoint);
         }
         return null;
       })
@@ -459,6 +483,9 @@ class NavigationTree extends Component {
         RunState: this.state.RunState,
         isFilter: this.props.isMap
 
+      },
+      callback: (data) => {
+        this.loadCallback(data)
       }
     })
   }
@@ -479,7 +506,6 @@ class NavigationTree extends Component {
   };
   //复选框选中
   onCheck = checkedKeys => {
-    console.log("checked", checkedKeys)
     this.setState({ checkedKeys });
     this.returnData(checkedKeys)
   };
@@ -554,6 +580,9 @@ class NavigationTree extends Component {
         QCAUse: this.state.QCAUse,
         RunState: this.state.RunState,
         isFilter: this.props.isMap
+      },
+      callback: (data) => {
+        this.loadCallback(data)
       }
     })
   }
@@ -609,7 +638,7 @@ class NavigationTree extends Component {
             list.splice(index, 1);
         })
       } else {
-        var parentKey = this.getParentKey(selectedKeys[0], this.props.EntAndPoint)
+        var parentKey = this.getParentKey(selectedKeys[0], this.state.EntAndPoint)
         children = children.concat(parentKey)
         children.map(item => {
           var index = list.indexOf(item)
@@ -625,9 +654,8 @@ class NavigationTree extends Component {
   returnData = (data) => {
     //处理选中的数据格式
     const rtnList = [];
-    console.log('dataaaa', data)
     data.map(item => {
-      var list = dataList.filter(m => m.key == item)
+      var list = this.state.dataList.filter(m => m.key == item)
       if (list) {
         var isEnt = list[0].IsEnt == 1 ? true : false
         var type = list[0].Type
@@ -635,7 +663,6 @@ class NavigationTree extends Component {
       }
     })
     //向外部返回选中的数据
-    console.log('rtnlist=', rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (rtnList.length == 0) {
@@ -753,7 +780,7 @@ class NavigationTree extends Component {
         if (item.Type == "0") {
           return (
             <TreeNode style={{ width: "100%" }} data-index={idx} title={
-              <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute", right: 10 }} /> : ""}</div>
+              <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 5, marginRight: 10, position: "absolute", right: 10 }} /> : ""}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -762,9 +789,9 @@ class NavigationTree extends Component {
         } else if (item.Type == "1") {
           return <TreeNode style={{ width: "100%" }} title={
             <div style={{ width: "253px", position: "relative" }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 7, marginRight: 10, position: "absolute", right: 10 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: "absolute", right: 10 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
-                  <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: -40, float: 'right', color: "red" }} />
+                  <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: "red" }} />
                 </div>
                 : ""}
             </div>
@@ -870,7 +897,7 @@ class NavigationTree extends Component {
                   justifyContent: 'center'
                 }}
                 size="large"
-              /> : <div>{this.props.EntAndPoint.length ? <Tree
+              /> : <div>{this.state.EntAndPoint.length ? <Tree
                 data-id="mytree"
                 selectable={!this.props.choice}
                 defaultExpandAll
@@ -885,7 +912,7 @@ class NavigationTree extends Component {
                 // expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
               >
-                {loop(this.props.EntAndPoint)}
+                {loop(this.state.EntAndPoint)}
               </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }
@@ -901,7 +928,7 @@ class NavigationTree extends Component {
                     justifyContent: 'center'
                   }}
                   size="large"
-                /> : <div> {this.props.EntAndPoint.length ? <Table id="treeTable" rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                /> : <div> {this.state.EntAndPoint.length ? <Table id="treeTable" rowKey={"tabKey"} columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
                   style={{ marginTop: "5%", maxHeight: 730, overflow: 'auto', cursor: "pointer", maxHeight: 'calc(100vh - 290px)', }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}

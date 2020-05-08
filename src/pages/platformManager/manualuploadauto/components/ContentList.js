@@ -59,7 +59,7 @@ export default class ContentList extends Component {
                         manualUploadautoParameters: {
                             ...this.props.manualUploadautoParameters,
                             ...{
-                                DGIMNs: nextPropsDGIMN,
+                                DGIMN: nextPropsDGIMN,
                                 pageIndex: 1,
                                 pageSize: 24,
                                 flag: true,
@@ -74,9 +74,9 @@ export default class ContentList extends Component {
     /**
   * 回调获取时间并重新请求数据
   */
-    dateCallback = (dates, dataType) => {
+    dateCallback = (dates, Type) => {
         let { dispatch, manualUploadautoParameters } = this.props;
-        if (manualUploadautoParameters.DGIMNs) {
+        if (manualUploadautoParameters.DGIMN) {
             dispatch({
                 type: 'manualuploadauto/updateState',
                 payload: {
@@ -159,10 +159,10 @@ export default class ContentList extends Component {
                 type: 'manualuploadauto/getUploadTemplate',
                 payload: {
                     PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
-                    DGIMN: manualUploadautoParameters.DGIMNs,
+                    DGIMN: manualUploadautoParameters.DGIMN,
                     BeginTime: manualUploadautoParameters.BeginTime,
                     EndTime: manualUploadautoParameters.EndTime,
-                    DataType: manualUploadautoParameters.dataType,
+                    Type: manualUploadautoParameters.Type,
                     callback: (data) => {
                         downloadFile(data);
                     }
@@ -242,10 +242,10 @@ export default class ContentList extends Component {
             accept: ".xls,.xlsx",
             showUploadList: false,
             data: {
-                DGIMN: manualUploadautoParameters.DGIMNs,
-                dataType: manualUploadautoParameters.dataType,
-                BeginTime:manualUploadautoParameters.BeginTime,
-                EndTime:manualUploadautoParameters.EndTime,
+                DGIMN: manualUploadautoParameters.DGIMN,
+                dataType: manualUploadautoParameters.Type,
+                BeginTime: manualUploadautoParameters.BeginTime,
+                EndTime: manualUploadautoParameters.EndTime,
                 FileUuid: uid,
                 FileActualType: "0",
                 ssoToken: Cookie.get(config.cookieName)
@@ -253,7 +253,7 @@ export default class ContentList extends Component {
         };
         return (
             <Upload {...props} >
-                <Button >
+                <Button type="primary" >
                     <Icon type="upload" /> 文件导入
                 </Button>
             </Upload>
@@ -262,13 +262,13 @@ export default class ContentList extends Component {
     }
 
     //数据类型切换
-    handleChange = (dataType) => {
+    handleChange = (Type) => {
         const { dispatch, manualUploadautoParameters } = this.props;
         let format = '';
         let beginTime = "";
         let endTime = "";
 
-        if (dataType === 'daySelecthour') {
+        if (Type === 'daySelecthour') {
             format = "YYYY-MM-DD HH";
             beginTime = moment(manualUploadautoParameters.BeginTime).format("YYYY-MM-DD 01:00:00");
             endTime = moment(manualUploadautoParameters.EndTime).format("YYYY-MM-DD 00:00:00");
@@ -287,24 +287,72 @@ export default class ContentList extends Component {
                 manualUploadautoParameters: {
                     ...this.props.manualUploadautoParameters,
                     ...{
-                        dataType,
+                        Type,
                         BeginTime: beginTime,
-                        EndTime: endTime
+                        EndTime: endTime,
+                        pageIndex: 1,
+                        pageSize: 24,
                     }
                 },
             }
         });
         this.GetManualSupplementList();
     }
+    //统计AQI按钮确认框
+     confirm=()=> {
+        const { dispatch ,manualUploadautoParameters} = this.props;
+        Modal.confirm({
+            title: '提示',
+            content: '确认清除'+manualUploadautoParameters.BeginTime+'-'+manualUploadautoParameters.EndTime+'范围内的AQI并重新计算吗?',
+            okText: '确认',
+            cancelText: '取消',
+            width:500,
+            onOk:() => {
+                this.StatisticsAQI()
+            },
+            onCancel:()=>{
+                console.log('false')
+            }
+          });
+      }
+
+    //统计AQI
+    StatisticsAQI = e => {
+        const { dispatch ,manualUploadautoParameters} = this.props;
+        let t1= moment(manualUploadautoParameters.BeginTime);
+        let t2 = moment(manualUploadautoParameters.EndTime);
+        var dayNum=t2.diff(t1,'day')+1;
+        console.log(dayNum)  
+        if(dayNum>15)
+        {
+            message.error("日期范围不能超过15天!");
+        }else
+        {
+            dispatch({
+            type: 'manualuploadauto/CalculationAQIData',
+            payload: {
+            }
+            });
+            // console.log('yes')
+        }
+        this.setState({
+            visible: false,
+        });
+    };
+    //关闭Modal
+    handleCancel = e => {
+        this.setState({
+            visible: false,
+        });
+    };
     render() {
         const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
-        console.log("sssssssssssss",columnsSelect);
         const { format } = this.state;
         let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
             dateValue = [moment(manualUploadautoParameters.BeginTime), moment(manualUploadautoParameters.EndTime)];
         }
-        let dataType = manualUploadautoParameters.dataType;
+        let Type = manualUploadautoParameters.Type;
         var uploaddata = [];
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
@@ -312,27 +360,27 @@ export default class ContentList extends Component {
         return (
             <Card
                 extra={
-                    <Button type="primary" onClick={() => this.Template()}>
+                    <Button onClick={() => this.Template()}>
                         <Icon type="download" />模板下载
                     </Button>
                 }
                 title={
                     <Form layout="inline">
                         <Form.Item>
-                            <Select defaultValue={dataType} style={{ width: 120 }} onChange={this.handleChange}>
+                            <Select defaultValue={Type} style={{ width: 120 }} onChange={this.handleChange}>
                                 <Option value="daySelecthour">小时数据</Option>
                                 <Option value="day">日数据</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item>
                             <RangePicker_ style={{ width: 325, textAlign: 'left' }} dateValue={dateValue}
-                                dataType={dataType}
+                                dataType={Type}
                                 format={format}
                                 isVerification={true}
-                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                callback={(dates, Type) => this.dateCallback(dates, Type)}
                                 allowClear={false} showTime={format} />
                         </Form.Item>
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Select
                                 mode="multiple"
                                 style={{ width: '280px' }}
@@ -344,7 +392,7 @@ export default class ContentList extends Component {
                             >
                                 {this.SelectOptions()}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item>
                             {this.upload()}
                             <Spin
@@ -359,14 +407,20 @@ export default class ContentList extends Component {
                                 }}
                             />
                         </Form.Item>
+                        <Form.Item>
+                            <Button onClick={this.confirm}>
+                                统计AQI
+                            </Button>
+                        </Form.Item>
+
                     </Form>
                 }
                 bordered={false}>
                 <SdlTable
-                    rowKey={(record,index) => index}
+                    rowKey={(record, index) => index}
                     loading={this.props.loading}
                     columns={columnsSelect}
-                    dataSource={!manualUploadautoParameters.DGIMNs ? null : uploaddata}
+                    dataSource={!manualUploadautoParameters.DGIMN ? null : uploaddata}
                     // scroll={{ y: 'calc(100vh - 450px)' }}
                     pagination={{
                         showSizeChanger: true,
@@ -379,6 +433,7 @@ export default class ContentList extends Component {
                         pageSizeOptions: pageCount
                     }}
                 />
+             
             </Card>
         );
     }

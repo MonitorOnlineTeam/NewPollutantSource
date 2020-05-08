@@ -63,3 +63,12 @@ export async function UpdateManualSupplementData(params) {
   const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/UpdateManualSupplementAuto', params, null);
   return result;
 }
+
+/**
+ * 统计AQI
+ * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
+ */
+export async function CalculationAQIData(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/CalculationAQIData', params, null);
+  return result;
+}

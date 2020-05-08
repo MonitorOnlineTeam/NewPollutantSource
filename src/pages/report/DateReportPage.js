@@ -45,104 +45,31 @@ const { MonthPicker } = DatePicker;
   configInfo: global.configInfo,
   entAndPontList: report.entAndPontList,
 }))
-@Form.create({
-  mapPropsToFields(props) {
-    return {
-      PollutantSourceType: Form.createFormField(props.dateReportForm.PollutantSourceType),
-      // Regions: Form.createFormField(props.dateReportForm.Regions),
-      DGIMN: Form.createFormField(props.dateReportForm.DGIMN),
-      ReportTime: Form.createFormField(props.dateReportForm.ReportTime),
-      airReportTime: Form.createFormField(props.dateReportForm.airReportTime),
-    };
-  },
-  onFieldsChange(props, fields) {
-    props.dispatch({
-      type: 'report/updateState',
-      payload: {
-        dateReportForm: {
-          ...props.dateReportForm,
-          ...fields,
-        },
-      },
-    });
-  },
-})
-class SiteDailyPage extends PureComponent {
+@Form.create()
+class DateReportPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       columns: [],
       currentDate: moment().add(-1, 'day'),
       defaultRegionCode: [],
-      beginTime: null,
-      endTime: null
+      beginTime: moment().add(-1, 'day').format('YYYY-MM-DD 01:00:00'),
+      endTime: moment().format('YYYY-MM-DD 00:00:00')
     };
     this.SELF = {
       formLayout: {
         labelCol: { span: 7 },
         wrapperCol: { span: 17 },
       },
-      actionType: props.match.params.reportType,
       defaultSearchForm: {
         PollutantSourceType: 1,
         EntCode: '',
         ReportTime: moment().add(-1, 'day'),
+        airReportTime: [moment().add(-1, 'day'), moment()]
       },
     };
     this.statisticsReport = this.statisticsReport.bind(this);
     this.export = this.export.bind(this);
-  }
-
-  pageBegin = (requestdata, nextProps) => {
-    let beginTime;
-    let endTime;
-    let reportType = this.props.match.params.reportType;
-    if (requestdata)
-      reportType = nextProps.match.params.reportType;
-    switch (reportType) {
-      case "siteDaily":
-        beginTime = moment().add(-1, 'day').format('YYYY-MM-DD 01:00:00');
-        endTime = moment().format('YYYY-MM-DD 00:00:00');
-        break;
-      case "monthly":
-        beginTime = moment().format('YYYY-MM-01 00:00:00');
-        endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        break;
-      default:
-        beginTime = moment().format('YYYY-01-01 00:00:00');
-        endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-    }
-    this.setState({
-      beginTime: beginTime,
-      endTime: endTime
-    })
-    const { dateReportForm, dispatch } = this.props;
-    dispatch({
-      type: 'report/updateState',
-      payload: {
-        dateReportForm: {
-          ...dateReportForm,
-          beginTime: beginTime,
-          endTime: endTime
-        }
-      }
-    })
-    if (requestdata) {
-      setTimeout(() => {
-        // 获取表格数据
-        this.props.dispatch({
-          type: 'report/getDateReportData',
-          payload: {
-            type: reportType,
-            // ...this.props.dateReportForm,
-            PollutantSourceType: this.props.form.getFieldValue('PollutantSourceType'),
-            // "Regions": "130000000,130200000,130201000",
-            DGIMN: this.props.form.getFieldValue('DGIMN'),
-            // "ReportTime": moment(this.props.dateReportForm).format("YYYY-MM-DD")
-          },
-        });
-      }, 0)
-    }
   }
 
   componentDidMount() {
@@ -150,19 +77,6 @@ class SiteDailyPage extends PureComponent {
       this.props.form.setFieldsValue({ "ReportTime": moment().add(-1, "day") })
     }
     const { defaultSearchForm } = this.SELF;
-    //const {dispatch,dateReportForm}=this.props;
-    // const {beginTime,endTime}=this.state;
-    // dispatch({
-    //   type:'report/updateState',
-    //   payload:{
-    //     dateReportForm:{
-    //       ...dateReportForm,
-    //       beginTime:beginTime,
-    //       endTime:endTime
-    //     }
-    //   }
-    // })
-    this.pageBegin();
     // 获取污染物 - 查询条件
     this.props.dispatch({
       type: 'report/getPollutantTypeList',
@@ -181,12 +95,6 @@ class SiteDailyPage extends PureComponent {
           },
           callback: res => {
             let DGIMN = [];
-            // res.forEach(item => {
-            //   if(item.children.length) {
-            //     DGIMN = [item.children[0].key];
-            //     throw new Error("error")
-            //   }
-            // })
             for (let i = 0; i < res.length; i++) {
               if (res[i].children.length) {
                 DGIMN = [res[i].children[0].key];
@@ -195,31 +103,7 @@ class SiteDailyPage extends PureComponent {
             }
             // console.log("DGIMN=",DGIMN)
             this.props.form.setFieldsValue({ "DGIMN": DGIMN })
-            // 获取污染物类型 = 表头
-            this.props.dispatch({
-              type: 'report/getPollutantList',
-              payload: {
-                pollutantTypes: defalutVal,
-                callback: () => {
-                  // if (res.Datas.length) {
-                  // 获取表格数据
-                  this.props.dispatch({
-                    type: 'report/getDateReportData',
-                    payload: {
-                      type: this.SELF.actionType,
-                    },
-                  });
-                  // } else {
-                  //   this.props.dispatch({
-                  //     type: 'report/updateState',
-                  //     payload: {
-                  //       dateReportData: [],
-                  //     },
-                  //   });
-                  // }
-                },
-              },
-            });
+            this.statisticsReport()
           }
         })
 
@@ -227,49 +111,35 @@ class SiteDailyPage extends PureComponent {
     });
   }
 
+  statisticsReport() {
+    const { form, match, dateReportForm } = this.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        // 获取污染物类型 = 表头
+        this.props.dispatch({
+          type: 'report/getPollutantList',
+          payload: {
+            pollutantTypes: values.PollutantSourceType,
+            callback: () => {
+              // 获取表格数据
+              this.props.dispatch({
+                type: 'report/getDateReportData',
+                payload: {
+                  PollutantSourceType: values.PollutantSourceType,
+                  DGIMN: values.DGIMN,
+                  BeginTime: this.state.beginTime,
+                  EndTime: this.state.endTime,
+                },
+                reportType: values.reportType
+              });
+            },
+          },
+        });
+      }
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.location.pathname != this.props.location.pathname &&
-      this.props.form.getFieldValue('DGIMN')
-    ) {
-      // // 格式化日期
-      // let beginTime;
-      // let endTime;
-      // switch(this.props.match.params.reportType)
-      // {
-      //     case "siteDaily":
-      //         beginTime=moment().format('YYYY-MM-DD 01:00:00');
-      //         endTime=moment().add(1,'day').format('YYYY-MM-DD 00:00:00');
-      //       break;
-      //     case "monthly":
-      //         beginTime=moment().format('YYYY-MM-01 01:00:00');
-      //         endTime=moment(moment().format('YYYY-MM-01 00:00:00')).add(1,'month').add(-1,'second').format('YYYY-MM-DD 23:59:59');
-      //         break;
-      //       default:
-      //         beginTime=moment().format('YYYY-01-01 00:00:00');
-      //         endTime=moment(moment().format('YYYY-01-01 00:00:00')).add(1,'year').add(-1,'second').format('YYYY-MM-DD 23:59:59');
-      // }
-      // this.setState({
-      //   beginTime,
-      //   endTime,
-      //   currentDate:
-      //     this.props.form.getFieldValue('ReportTime') &&
-      //     moment(this.props.form.getFieldValue('ReportTime')),
-      // })
-      // this.props.dispatch({
-      //   type: "report/updateState",
-      //   payload: {
-      //     dateReportForm: {
-      //       ...this.props.dateReportForm,
-      //       beginTime,
-      //       endTime,
-      //       current: 1
-      //     }
-      //   }
-      // })
-      this.pageBegin(true, nextProps);
-    }
-    // if (this.props.pollutantList !== nextProps.pollutantList) {
     if (this.props.dateReportData !== nextProps.dateReportData) {
       let AQIColumn = [];
       // 站点日报 - 扬尘和大气站显示AQI
@@ -281,12 +151,15 @@ class SiteDailyPage extends PureComponent {
         }, {
           title: '首要污染物',
           dataIndex: '首要污染物',
+          width: 120,
         }, {
-          title: '空气质量指数类别',
+          title: '指数类别',
           dataIndex: '空气质量指数类别',
+          width: 80,
         }, {
-          title: '空气质量指数级别',
+          title: '指数级别',
           dataIndex: '空气质量指数级别',
+          width: 80,
         }]
       }
       const _columns = [
@@ -303,16 +176,12 @@ class SiteDailyPage extends PureComponent {
           render: (text, row, index) => {
             if (text) {
               const _text = text.split('|');
-              // console.log('_text=', _text)
               let val = _text[0];
-              // const status = _text[_text.length-1];
               const status = _text[1];
               if (item.dataIndex === "风向") {
                 val = getDirLevel(text)
               }
-              // console.log('///=', status)
-              // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
-              if(val) {
+              if (val) {
                 return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
               }
               return '-';
@@ -324,7 +193,7 @@ class SiteDailyPage extends PureComponent {
 
       columns.unshift({
         title: '点名称',
-        // width: 150,
+        width: 150,
         dataIndex: 'pointName',
       });
       this.setState({
@@ -333,62 +202,33 @@ class SiteDailyPage extends PureComponent {
     }
   }
 
-  statisticsReport() {
-    const { form, match, dateReportForm } = this.props;
-    // const { uid, configId, isEdit, keysParams } = this._SELF_;
-    // const format = match.params.reportType === "daily" ? "YYYY-MM-DD" : (match.params.reportType === "monthly" ? "YYYY-MM" : "YYYY");
-    form.validateFields((err, values) => {
-      if (!err) {
-        //         EntCode: undefined
-        // PollutantSourceType: undefined
-        // Regions: undefined
-        // ReportTime: undefined
-        // console.log('value=',values)
-        // if(!values.PollutantSourceType){
-        //   message.error("请选择污染物类型！");
-        //   return;
-        // }
-        // if(!values.EntCode){
-        //   message.error("请选择省市区！");
-        //   return;
-        // }
-        // if(!values.Regions){
-        //   message.error("请选择企业！");
-        //   return;
-        // }
-        // if(!values.ReportTime){
-        //   message.error("请填写统计时间！");
-        //   return;
-        // }
-        this.setState({
-          // currentDate: values.ReportTime && moment(values.ReportTime).format(format),
-          // currentEntName: this.props.enterpriseList.filter(
-          //   item => item['ParentCode'] == values.EntCode,
-          // )[0]['ParentName'],
-        });
-        // 获取污染物类型 = 表头
-        this.props.dispatch({
-          type: 'report/getPollutantList',
-          payload: {
-            pollutantTypes: values.PollutantSourceType,
-            callback: () => {
-              // 获取表格数据
-              this.props.dispatch({
-                type: 'report/getDateReportData',
-                payload: {
-                  // pageIndex: 1,
-                  type: match.params.reportType,
-                  // "PollutantSourceType": values.PollutantSourceType,
-                  // // "Regions": values.Regions.toString(),
-                  // "EntCode": values.EntCode,
-                  // "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD")
-                },
-              });
-            },
-          },
-        });
-      }
-    });
+  changeReportType = (reportType) => {
+    const pollutantType = this.props.form.getFieldValue("PollutantSourceType")
+    let reportTime = this.props.form.getFieldValue("ReportTime");
+    let beginTime, endTime;
+
+    let time = pollutantType != 5 ? reportTime : moment();
+    switch (reportType) {
+      case "siteDaily":
+        beginTime = moment(time).format('YYYY-MM-DD 01:00:00');
+        endTime = moment(time).add(1, "day").format('YYYY-MM-DD 00:00:00');
+        break;
+      case "monthly":
+        beginTime = moment(time).format('YYYY-MM-01 00:00:00');
+        endTime = moment(moment(time).format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        break;
+      default:
+        beginTime = moment(time).format('YYYY-01-01 00:00:00');
+        endTime = moment(moment(time).format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+    }
+    // 大气站重置时间
+    if (pollutantType == 5) {
+      this.props.form.setFieldsValue({ "airReportTime": [moment(beginTime), moment(endTime)] })
+    }
+    this.setState({
+      beginTime: beginTime,
+      endTime: endTime
+    }, () => { this.statisticsReport() })
   }
 
   // 报表导出
@@ -404,10 +244,12 @@ class SiteDailyPage extends PureComponent {
         this.props.dispatch({
           type: 'report/reportExport',
           payload: {
-            ...values,
-            type: reportType === 'siteDaily' ? 0 : reportType === 'monthly' ? 1 : 2,
-            // Regions: values.Regions.toString(),
             ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
+            PollutantSourceType: values.PollutantSourceType,
+            DGIMN: values.DGIMN,
+            BeginTime: this.state.beginTime,
+            EndTime: this.state.endTime,
+            Type: values.reportType
           },
         });
       }
@@ -416,6 +258,7 @@ class SiteDailyPage extends PureComponent {
 
   // 分页
   onTableChange = (current, pageSize) => {
+    const getFieldValue = this.props.form.getFieldValue;
     this.props.dispatch({
       type: 'report/updateState',
       payload: {
@@ -427,12 +270,7 @@ class SiteDailyPage extends PureComponent {
     });
     setTimeout(() => {
       // 获取表格数据
-      this.props.dispatch({
-        type: 'report/getDateReportData',
-        payload: {
-          type: this.props.match.params.reportType,
-        },
-      });
+      this.statisticsReport()
     }, 0);
   };
 
@@ -444,41 +282,11 @@ class SiteDailyPage extends PureComponent {
     })
   }
 
-
   rangeOnchange = (dates) => {
     this.props.form.setFieldsValue({ "airReportTime": dates });
-    this.props.dispatch({
-      type: 'report/updateState',
-      payload: {
-        dateReportForm: {
-          ...this.props.dateReportForm,
-          airReportTime: dates,
-          beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-          endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
-        },
-      },
-    });
     this.setState({
       beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
       endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
-    });
-  }
-
-  componentWillUnmount() {
-    this.props.dispatch({
-      type: 'report/updateState',
-      payload: {
-        dateReportForm: {
-          PollutantSourceType: 1,
-          current: 1,
-          pageSize: 34,
-          total: 0,
-          DGIMN: [],
-          ReportTime: moment().add(-1, 'day'),
-          beginTime: null,
-          endTime: null
-        },
-      },
     });
   }
 
@@ -488,9 +296,6 @@ class SiteDailyPage extends PureComponent {
       entAndPointLoading,
       dateReportForm,
       exportLoading,
-      match: {
-        params: { reportType },
-      },
       dateReportData,
       pollutantTypeList,
       regionList,
@@ -504,10 +309,10 @@ class SiteDailyPage extends PureComponent {
     const { formLayout, defaultSearchForm } = this.SELF;
     const { currentEntName, currentDate, defaultRegionCode } = this.state;
 
-
     const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
     let dateType = "";
     let mode;
+    const reportType = getFieldValue("reportType")
     switch (reportType) {
       case "monthly":
         dateType = "month";
@@ -522,44 +327,60 @@ class SiteDailyPage extends PureComponent {
         mode = [];
         break;
     }
-    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />;
-    let airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(dateReportForm.beginTime), moment(dateReportForm.endTime)]} />
+    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} dataType={dateType} />;
+    let airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]} />
 
-    // let timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} format={format} />;
-    // if (format === 'YYYY-MM') {
-    //   timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />;
-    // } else if (format === 'YYYY') {
-    //   timeEle = (
-    //     <YearPicker
-    //       format={format}
-    //       allowClear={false}
-    //       style={{ width: '100%' }}
-    //       _onPanelChange={v => {
-    //         this.props.form.setFieldsValue({ ReportTime: v });
-    //       }}
-    //     />
-    //   );
-    // }
+
+    // 处理分页
     let pageSize = dateReportForm.pageSize;
-    if (getFieldValue("PollutantSourceType") == 5) {
-      if (reportType === "siteDaily") {
-        pageSize = 24
-      } else if (reportType === "monthly") {
-        pageSize = 31
-      } else {
-        pageSize = 12
-      }
-    };
+    // if (getFieldValue("PollutantSourceType") == 5) {
+    if (reportType === "siteDaily") {
+      pageSize = 24
+    } else if (reportType === "monthly") {
+      pageSize = 31
+    } else {
+      pageSize = 12
+    }
+    // };
     return (
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
-                <Col md={4} xs={24}>
+                <Col xxl={4} md={6} xs={24}>
+                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+                    {getFieldDecorator('reportType', {
+                      initialValue: "siteDaily",
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择报表类型',
+                        },
+                      ],
+                    })(
+                      <Select onChange={(value) => {
+                        this.props.dispatch({
+                          type: 'report/updateState',
+                          payload: {
+                            dateReportForm: {
+                              ...this.props.dateReportForm,
+                              current: 1,
+                            },
+                          },
+                        });
+                        this.changeReportType(value)
+                      }}>
+                        <Option key="siteDaily">站点日报</Option>
+                        <Option key="monthly">站点月报</Option>
+                        <Option key="annals">站点年报</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={4} md={4} xs={24}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
-                      // initialValue: defaultSearchForm.PollutantSourceType,
                       initialValue: pollutantTypeList.length
                         ? pollutantTypeList[0].pollutantTypeCode
                         : undefined,
@@ -570,11 +391,6 @@ class SiteDailyPage extends PureComponent {
                         },
                       ],
                     })(
-                      // <Select placeholder="请选择污染物类型">
-                      //   {
-                      //     pollutantTypeList.map(item => <Option value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>)
-                      //   }
-                      // </Select>
                       <SelectPollutantType
                         placeholder="请选择污染物类型"
                         onChange={value => {
@@ -598,6 +414,7 @@ class SiteDailyPage extends PureComponent {
                                 }
                               }
                               this.props.form.setFieldsValue({ "DGIMN": DGIMN })
+                              this.changeReportType(this.props.form.getFieldValue("reportType"))
                             }
                           });
                         }}
@@ -605,8 +422,12 @@ class SiteDailyPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col md={7} xs={24}>
-                  <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                <Col xxl={7} md={8} xs={24}>
+                  <FormItem
+                    {...formLayout}
+                    label="监控目标"
+                    style={{ width: '100%' }}
+                  >
                     {getFieldDecorator('DGIMN', {
                       initialValue: this.props.form.getFieldValue("DGIMN"),
                       rules: [
@@ -616,55 +437,38 @@ class SiteDailyPage extends PureComponent {
                         },
                       ],
                     })(
-                      // <SearchSelect configId="AEnterpriseTest" itemValue="dbo.T_Bas_Enterprise.EntCode" itemName="dbo.T_Bas_Enterprise.EntName"/>
-                      <CascaderMultiple options={entAndPontList} {...this.props} />
+                      <CascaderMultiple pollutantTypes={getFieldValue("PollutantSourceType")}  {...this.props} />
                     )}
                   </FormItem>
                 </Col>
 
-                {
-                  getFieldValue("PollutantSourceType") == 5 ?
-                    <Col md={7} xs={24}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator('airReportTime', {
-                          initialValue: [moment(dateReportForm.beginTime), moment(dateReportForm.endTime)],
-                          rules: [
-                            {
-                              required: true,
-                              message: '请填写统计时间',
-                            },
-                          ],
-                        })(airTimeEle)}
-                      </FormItem>
-                    </Col>
-                    : <Col md={6} xs={24}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator("ReportTime", {
-                          initialValue: defaultSearchForm.ReportTime,
-                          rules: [{
-                            required: true,
-                            message: '请填写统计时间',
-                          }],
-                        })(
-                          timeEle
-                        )}
-                      </FormItem>
-                    </Col>
-                }
-                {/* <Col xxl={7} xl={7} sm={24} lg={7}>
+                <Col xxl={5} md={6} xs={24} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                    {getFieldDecorator('ReportTime', {
-                      initialValue: defaultSearchForm.ReportTime,
+                    {getFieldDecorator('airReportTime', {
+                      initialValue: defaultSearchForm.airReportTime,
                       rules: [
                         {
                           required: true,
                           message: '请填写统计时间',
                         },
                       ],
-                    })(timeEle)}
+                    })(airTimeEle)}
                   </FormItem>
-                </Col> */}
-                <Col md={6} xs={24}>
+                </Col>
+                <Col xxl={5} md={6} xs={24} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "none" : "block" }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator("ReportTime", {
+                      initialValue: defaultSearchForm.ReportTime,
+                      rules: [{
+                        required: true,
+                        message: '请填写统计时间',
+                      }],
+                    })(
+                      timeEle
+                    )}
+                  </FormItem>
+                </Col>
+                <Col xxl={4} md={10} xs={24}>
                   <FormItem label="" style={{ width: '100%' }}>
                     <Button
                       type="primary"
@@ -699,12 +503,6 @@ class SiteDailyPage extends PureComponent {
                 </Col>
               </Row>
             </Form>
-            {currentEntName && (
-              <p className={style.title}>
-                {currentEntName}
-                {currentDate}报表
-              </p>
-            )}
             <SdlTable
               rowKey={(record, index) => index}
               loading={loading}
@@ -712,7 +510,7 @@ class SiteDailyPage extends PureComponent {
               size="small"
               columns={this.state.columns}
               dataSource={dateReportData}
-              // defaultWidth={80}
+              defaultWidth={80}
               // scroll={{ y: 'calc(100vh - 65px - 100px - 320px)' }}
               rowClassName={(record, index, indent) => {
                 if (index === 0 || record.time === '0时') {
@@ -738,4 +536,4 @@ class SiteDailyPage extends PureComponent {
   }
 }
 
-export default SiteDailyPage;
+export default DateReportPage;

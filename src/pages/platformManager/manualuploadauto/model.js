@@ -12,7 +12,8 @@ import {
     addGetPollutantByPoint,
     DeleteUploadFiles,
     UpdateManualSupplementData,
-    getPollutantTypeList
+    getPollutantTypeList,
+    CalculationAQIData,
 } from './services';
 import config from '@/config';
 import {
@@ -34,7 +35,7 @@ export default Model.extend({
         pointName: null,
         //手工数据上传参数
         manualUploadautoParameters: {
-            DGIMNs: '',
+            DGIMN: '',
             PollutantCode: '',
             BeginTime: moment().add(-2, 'days').format('YYYY-MM-DD 01:00:00'),
             EndTime: moment().format('YYYY-MM-DD 00:00:00'),
@@ -42,7 +43,7 @@ export default Model.extend({
             pageSize: 24,
             PointName: '',
             isAsc: true,
-            dataType: 'daySelecthour',
+            Type: 'daySelecthour',
             flag: true,
             IsSupplyData: true,
         },
@@ -150,7 +151,7 @@ export default Model.extend({
                     yield put({
                         type: 'GetPollutantByPoint',
                         payload: {
-                            DGIMN: manualUploadautoParameters.DGIMNs
+                            DGIMN: manualUploadautoParameters.DGIMN
                         }
                     });
                 }
@@ -160,6 +161,28 @@ export default Model.extend({
                 });
             }
         },
+
+
+        //统计AQI
+        * CalculationAQIData({
+            payload
+        }, {
+            call,
+            put,
+            update,
+            select,
+        }) {
+            const { manualUploadautoParameters } = yield select(a => a.manualuploadauto);
+            const result = yield call(CalculationAQIData, { ...manualUploadautoParameters });
+            if (result.IsSuccess) {
+                message.info(result.Message);
+            }
+            else {
+                message.error("统计失败！");
+            }
+        },
+
+
         //获取Excel模板
         * getUploadTemplate({
             payload

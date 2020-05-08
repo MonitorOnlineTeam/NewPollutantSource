@@ -74,7 +74,7 @@ class SdlTable extends PureComponent {
         this.setState({
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
         }, () => {
-          console.log("computeHeight=", this.state.computeHeight)
+          // console.log("computeHeight=", this.state.computeHeight)
         });
       }
     }, 50);
@@ -96,15 +96,17 @@ class SdlTable extends PureComponent {
     const title = col.title;
     if (col.title.constructor === String) {
       if (title.indexOf('时间') != -1) {
-        return 180;
+        return 160;
       } else if (title.indexOf('状态') != -1) {
         return col.width || 150;
-      } else if (title.indexOf('类型') != -1 || title.indexOf('AQI') != -1 || title.indexOf('风向') != -1 || title.indexOf('次数') != -1) {
-        return 100;
+      } else if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
+        return 80;
       } else if (title == '行政区') {
         return col.width || 200;
       } else if (title == '企业名称') {
         return col.width || 240;
+      } else if (title == 'AQI') {
+        return 60;
       } else {
         return col.width || this.props.defaultWidth;
       }
@@ -135,7 +137,6 @@ class SdlTable extends PureComponent {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
-        console.log("computeHeight=", this.state.computeHeight)
       });
     }
 
@@ -143,7 +144,6 @@ class SdlTable extends PureComponent {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
       }, () => {
-        console.log("computeHeight=", this.state.computeHeight)
       });
     }
   }
@@ -207,7 +207,7 @@ class SdlTable extends PureComponent {
 }
 
 SdlTable.defaultProps = {
-  defaultWidth: 150,
+  defaultWidth: 130,
   resizable: false
 }
 
