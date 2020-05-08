@@ -3,7 +3,7 @@
  * @Date: 2019-09-19 11:23:37
  * @LastEditors: lzp
  * @LastEditTime: 2019-09-19 11:23:37
- * @Description: 
+ * @Description:
  */
 import React, { Component } from 'react';
 import { Row, Col, Card, List, Tabs, Divider, Modal, Table, Spin } from 'antd';
@@ -11,7 +11,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import styles from './RealTimeWarning.less';
-import PollutantSelect from "@/components/PollutantSelect/index";
+import PollutantSelect from '@/components/PollutantSelect/index';
 
 const pageUrl = {
     updateState: 'workbenchmodel/updateState',
@@ -19,18 +19,18 @@ const pageUrl = {
     getPollutantList: 'dataquery/querypollutantlist',
     getDataOverWarningData: 'workbenchmodel/getDataOverWarningData',
 };
-const TabPane = Tabs.TabPane;
+const { TabPane } = Tabs;
 @connect(({
     loading,
     workbenchmodel,
-    dataquery
+    dataquery,
 }) => ({
     hourDataOverWarningList: workbenchmodel.hourDataOverWarningList,
     warningDetailsDatas: workbenchmodel.warningDetailsDatas,
     pollutantList: dataquery.pollutantlist,
     loadingRealTimeWarningDatas: loading.effects[pageUrl.getRealTimeWarningDatas],
     loadingPollutantList: loading.effects[pageUrl.getPollutantList],
-    loadinghourDataOverWarningList: loading.effects[pageUrl.getDataOverWarningData]
+    loadinghourDataOverWarningList: loading.effects[pageUrl.getDataOverWarningData],
 }))
 class RealTimeWarningModal extends Component {
     constructor(props) {
@@ -48,8 +48,8 @@ class RealTimeWarningModal extends Component {
         dispatch({
             type: pageUrl.getDataOverWarningData,
             payload: {
-                DGIMN: DGIMN
-            }
+                DGIMN,
+            },
         })
     }
 
@@ -58,15 +58,15 @@ class RealTimeWarningModal extends Component {
             this.props.dispatch({
                 type: pageUrl.getDataOverWarningData,
                 payload: {
-                    DGIMN: nextProps.DGIMN
-                }
+                    DGIMN: nextProps.DGIMN,
+                },
             })
         }
         if (this.props.hourDataOverWarningList !== nextProps.hourDataOverWarningList) {
-            var items = nextProps.hourDataOverWarningList.tableDatas[0]
+            const items = nextProps.hourDataOverWarningList.tableDatas[0]
             if (items) {
                 console.log('items=', items)
-                var item = items.OverWarnings[0]
+                const item = items.OverWarnings[0]
                 this.showModal(items.PointName, items.DGIMNs, item.PollutantCode, item.PollutantName, item.SuggestValue)
             }
         }
@@ -75,10 +75,10 @@ class RealTimeWarningModal extends Component {
     /**
       * 更新model中的state
       */
-    updateState = (payload) => {
+    updateState = payload => {
         this.props.dispatch({
             type: pageUrl.updateState,
-            payload: payload,
+            payload,
         });
     }
 
@@ -95,12 +95,12 @@ class RealTimeWarningModal extends Component {
     /**
      * 根据排口获取污染物
      */
-    getPollutantList = (mn) => {
+    getPollutantList = mn => {
         this.props.dispatch({
             type: pageUrl.getPollutantList,
             payload: {
-                dgimn: mn
-            }
+                dgimn: mn,
+            },
         });
     }
 
@@ -111,19 +111,19 @@ class RealTimeWarningModal extends Component {
         console.log('this.props1=', this.props)
         this.getPollutantList(mn);
         this.updateState({
-            SuggestValue: SuggestValue,
+            SuggestValue,
             warningDetailsDatas: {
                 ...this.props.warningDetailsDatas,
                 ...{
                     DGIMNs: mn,
                     selectedPollutantCode: pollutantCode,
-                    selectedPollutantName: pollutantName
-                }
-            }
+                    selectedPollutantName: pollutantName,
+                },
+            },
         });
         this.getRealTimeWarningDatas();
         this.setState({
-            SuggestValue: SuggestValue,
+            SuggestValue,
             visibleModal: true,
             clickThisPointName: name,
         });
@@ -143,7 +143,7 @@ class RealTimeWarningModal extends Component {
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}
                 size="large"
             />);
@@ -155,25 +155,25 @@ class RealTimeWarningModal extends Component {
      * 智能监控_渲染预警详情图表数据
      */
     getWarningChartOption = () => {
-        let { chartDatas, selectedPollutantCode, selectedPollutantName } = this.props.warningDetailsDatas;
+        const { chartDatas, selectedPollutantCode, selectedPollutantName } = this.props.warningDetailsDatas;
         const { pollutantList } = this.props;
-        let xAxis = [];
-        let seriesData = [];
+        const xAxis = [];
+        const seriesData = [];
 
-        chartDatas && chartDatas.map((item) => {
+        chartDatas && chartDatas.map(item => {
             xAxis.push(`${moment(item.MonitorTime).format('HH:mm:ss')}`);
             seriesData.push(item[selectedPollutantCode]);
         });
-        let suugestValue = this.state.SuggestValue;
-        //当前选中的污染物的信息
+        const suugestValue = this.state.SuggestValue;
+        // 当前选中的污染物的信息
         const selectPllutantInfo = pollutantList.find((value, index, arr) => value.PollutantCode == selectedPollutantCode);
-        let legenddata = [];
+        const legenddata = [];
         let pollutantData = [];
         legenddata.push(selectedPollutantName);
         if (selectPllutantInfo && selectPllutantInfo.alarmType) {
             legenddata.push('标准值');
             switch (selectPllutantInfo.alarmType) {
-                //上限报警
+                // 上限报警
                 case 1:
                     pollutantData = [
                         {
@@ -182,13 +182,13 @@ class RealTimeWarningModal extends Component {
                             label: {
                                 normal: {
                                     position: 'end',
-                                    formatter: selectPllutantInfo.upperValue
-                                }
-                            }
-                        }
+                                    formatter: selectPllutantInfo.upperValue,
+                                },
+                            },
+                        },
                     ];
                     break;
-                //下限报警
+                // 下限报警
                 case 2:
                     pollutantData = [
                         {
@@ -197,13 +197,13 @@ class RealTimeWarningModal extends Component {
                             label: {
                                 normal: {
                                     position: 'end',
-                                    formatter: selectPllutantInfo.lowerValue
-                                }
-                            }
-                        }
+                                    formatter: selectPllutantInfo.lowerValue,
+                                },
+                            },
+                        },
                     ];
                     break;
-                //区间报警
+                // 区间报警
                 case 3:
                     pollutantData = [
                         {
@@ -212,9 +212,9 @@ class RealTimeWarningModal extends Component {
                             label: {
                                 normal: {
                                     position: 'end',
-                                    formatter: selectPllutantInfo.upperValue
-                                }
-                            }
+                                    formatter: selectPllutantInfo.upperValue,
+                                },
+                            },
                         },
                         {
                             yAxis: selectPllutantInfo.lowerValue,
@@ -222,10 +222,10 @@ class RealTimeWarningModal extends Component {
                             label: {
                                 normal: {
                                     position: 'end',
-                                    formatter: selectPllutantInfo.lowerValue
-                                }
-                            }
-                        }
+                                    formatter: selectPllutantInfo.lowerValue,
+                                },
+                            },
+                        },
                     ];
                     break;
             }
@@ -234,8 +234,7 @@ class RealTimeWarningModal extends Component {
         let suggestData = null;
 
 
-        if (suugestValue && suugestValue !== "-") {
-
+        if (suugestValue && suugestValue !== '-') {
             legenddata.push('建议浓度');
             suggestData = [
                 {
@@ -244,37 +243,37 @@ class RealTimeWarningModal extends Component {
                     label: {
                         normal: {
                             position: 'end',
-                            formatter: suugestValue
-                        }
-                    }
-                }
+                            formatter: suugestValue,
+                        },
+                    },
+                },
             ];
         }
-        let option = {
+        const option = {
             color: ['#37b5e4', '#ff9d45', '#4fde48'],
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
             },
             legend: {
-                data: legenddata
+                data: legenddata,
             },
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
                 data: xAxis,
-                name: '监测时间'
+                name: '监测时间',
             },
             yAxis: {
                 type: 'value',
                 // name: 'ug/m³',
                 name: selectPllutantInfo ? selectPllutantInfo.unit : '',
                 axisLabel: {
-                    formatter: '{value}'
-                }
+                    formatter: '{value}',
+                },
             },
             grid: {
                 left: '5%',
-                right: '8%'
+                right: '8%',
             },
             series: [
                 {
@@ -287,8 +286,8 @@ class RealTimeWarningModal extends Component {
                     type: 'line',
                     data: [],
                     markLine: {
-                        data: pollutantData
-                    }
+                        data: pollutantData,
+                    },
                 },
                 {
                     name: '建议浓度',
@@ -296,9 +295,9 @@ class RealTimeWarningModal extends Component {
                     data: [],
                     markLine: {
                         data: suggestData,
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
 
 
@@ -309,7 +308,6 @@ class RealTimeWarningModal extends Component {
             className="echarts-for-echarts"
             theme="my_theme"
         />;
-
     }
 
     //如果是数据列表则没有选择污染物，而是展示全部污染物
@@ -327,9 +325,9 @@ class RealTimeWarningModal extends Component {
                 ...this.props.warningDetailsDatas,
                 ...{
                     selectedPollutantCode: value,
-                    selectedPollutantName: selectedOptions.props.children
-                }
-            }
+                    selectedPollutantName: selectedOptions.props.children,
+                },
+            },
         });
     };
 
@@ -337,7 +335,7 @@ class RealTimeWarningModal extends Component {
      * 智能监控_渲染预警详情表格数据
      */
     renderWarningDetailsTable = () => {
-        let { selectedPollutantCode, selectedPollutantName, chartDatas } = this.props.warningDetailsDatas;
+        const { selectedPollutantCode, selectedPollutantName, chartDatas } = this.props.warningDetailsDatas;
         const { pollutantList } = this.props;
         const selectPllutantInfo = pollutantList.find((value, index, arr) => value.PollutantCode == selectedPollutantCode);
         console.log('selectPllutantInfo=', selectPllutantInfo)
@@ -355,14 +353,14 @@ class RealTimeWarningModal extends Component {
                 dataIndex: 'none',
                 key: 'none',
                 render: (text, record) => `${selectedPollutantName}`,
-                width: '20%'
+                width: '20%',
             },
             {
                 key: selectedPollutantCode,
                 title: '监测值',
                 dataIndex: selectedPollutantCode,
                 width: '20%',
-                align: 'center'
+                align: 'center',
             },
             {
                 key: `${selectedPollutantCode}_StandardValue`,
@@ -379,7 +377,7 @@ class RealTimeWarningModal extends Component {
                 width: '20%',
                 align: 'center',
                 render: (text, record) => suugestValue,
-            }
+            },
         ];
 
         return <Table
@@ -435,7 +433,7 @@ class RealTimeWarningModal extends Component {
                         height: 'calc(100vh/2)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
                     }}
                     size="large"
                 /> :

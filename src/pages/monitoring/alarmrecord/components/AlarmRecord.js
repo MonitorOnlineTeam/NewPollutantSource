@@ -71,9 +71,9 @@ class AlarmRecord extends Component {
         beginTime: firsttime ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss') : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
         endTime: lasttime ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss') : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
       }
-      console.log("firsttime=", firsttime);
-      console.log("lasttime=", lasttime);
-      console.log("this.props.DGIMN=", this.props.DGIMN);
+      console.log('firsttime=', firsttime);
+      console.log('lasttime=', lasttime);
+      console.log('this.props.DGIMN=', this.props.DGIMN);
       if (firsttime && lasttime) {
         this.setState({
           rangeDate: [firsttime, lasttime],
@@ -288,7 +288,10 @@ class AlarmRecord extends Component {
   handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
     form.validateFields((err, values) => {
+
+      debugger;
       if (!err) {
+        debugger;
         const formData = handleFormData(values, this.state.uid);
         formData.VerifyPerSon = formData.VerifyPerSon1;
         formData.VerifyTime = formData.VerifyTime1;
@@ -369,16 +372,16 @@ class AlarmRecord extends Component {
 
     // },
     {
-      title: '核实状态',
+      title: '处置状态',
       width: 100,
       dataIndex: 'State',
       key: 'State',
 
       render: (text, record) => {
         if (text === '0') {
-          return <span> <Badge status="error" text="未核实" /> </span>;
+          return <span> <Badge status="error" text="未处置" /> </span>;
         }
-        return <span> <Badge status="default" text="已核实" /> </span>;
+        return <span> <Badge status="default" text="已处置" /> </span>;
       },
       // filters: [{
       //   text: '未核实',
@@ -437,9 +440,9 @@ class AlarmRecord extends Component {
               <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
                 dataType="minute"
                 dateValue={this.state.rangeDate}
-                callback={(dates) => this._handleDateChange(dates)}
+                callback={dates => this._handleDateChange(dates)}
               />
-              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />核实</Button>
+              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />处置</Button>
             </div>
           }
 
@@ -457,7 +460,7 @@ class AlarmRecord extends Component {
                 // showSizeChanger: true,
                 showQuickJumper: true,
                 total: this.props.total,
-                pageSize: 20,//this.props.overdataparams.pageSize,
+                pageSize: 20, // this.props.overdataparams.pageSize,
                 current: this.props.overdataparams.pageIndex,
                 onChange: this.onChange,
                 onShowSizeChange: this.onShowSizeChange,
@@ -482,7 +485,7 @@ class AlarmRecord extends Component {
           </Card.Grid>
 
           <Modal
-            title="核实单详情"
+            title="处置单详情"
             visible={this.state.visible}
             destroyOnClose // 清除上次数据
             onOk={this.handleOk}
@@ -499,13 +502,13 @@ class AlarmRecord extends Component {
             <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
               <Row>
                 <Col span={12}>
-                  <FormItem {...formLayout} label="核实人">
+                  <FormItem {...formLayout} label="处置人">
                     {getFieldDecorator('VerifyPerSon1', {
                       initialValue: UserName,
                       rules: [
                         {
                           required: true,
-                          message: '核实人不能为空',
+                          message: '处置人不能为空',
                         },
                       ],
                     })(
@@ -514,13 +517,13 @@ class AlarmRecord extends Component {
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem {...formLayout} label="核实时间">
+                  <FormItem {...formLayout} label="处置时间">
                     {getFieldDecorator('VerifyTime1', {
                       initialValue: moment(),
                       rules: [
                         {
                           required: true,
-                          message: '核实时间不能为空',
+                          message: '处置时间不能为空',
                         },
                       ],
                     })(

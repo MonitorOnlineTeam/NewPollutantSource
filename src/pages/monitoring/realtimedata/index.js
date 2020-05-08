@@ -6,7 +6,7 @@
  * @Description: 实时数据
  */
 import React, { Component } from 'react';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import NavigationTree from '../../../components/NavigationTree';
 import DataQuery from '../dataquery/components/DataQuery';
 import { Layout, Card, Col, Badge, Button, Avatar, Spin } from 'antd';
@@ -42,14 +42,14 @@ class Index extends Component {
             showSider: false,
             contentstyle: styles.hiddentrigger,
             scale: 1,
-            translation: { x: 0, y: 0 }
+            translation: { x: 0, y: 0 },
         };
     }
 
     componentWillReceiveProps = nextProps => {
         const { stateInfo, paramsInfo, paramstatusInfo, DGIMN } = this.props;
         const { param, status, data, dgimn } = this.state;
-        //推送要渲染点击事件，当MN号不同时不渲染并把右侧布局清空，这个只是针对MN号相同时推送相关问题
+        // 推送要渲染点击事件，当MN号不同时不渲染并把右侧布局清空，这个只是针对MN号相同时推送相关问题
         if (dgimn === DGIMN) {
             if (nextProps.stateInfo !== stateInfo || nextProps.paramsInfo !== paramsInfo || nextProps.paramstatusInfo !== paramstatusInfo) {
                 this.positionClick(param, status, data)
@@ -65,21 +65,20 @@ class Index extends Component {
             paramInfo: [],
             collapsed: true,
         })
-        //同時更新此Model中的DGIMN
+        // 同時更新此Model中的DGIMN
         dispatch({
             type: 'realtimeserver/updateState',
             payload: {
-                DGIMN: dgimn
-            }
+                DGIMN: dgimn,
+            },
         });
-        //同時更新此Model中的DGIMN
+        // 同時更新此Model中的DGIMN
         dispatch({
             type: 'realtimeserver/GetProcessFlowChartStatus',
             payload: {
-                dgimn: dgimn
-            }
+                dgimn,
+            },
         });
-        
     }
     // /** dgimn改變時候切換數據源 */
     // componentWillReceiveProps = nextProps => {
@@ -96,17 +95,16 @@ class Index extends Component {
     //     }
     // }
 
-    //参数表盘
+    // 参数表盘
     getparamInfo = () => {
         const { paramsInfo } = this.props;
-        let res = [];
+        const res = [];
 
         if (paramsInfo) {
             paramsInfo.map((item, key) => {
-
                 if (item.value) {
                     if (item.dataparam) {
-                        //有异常或者超标数据
+                        // 有异常或者超标数据
                         const bsparam = item.dataparam.split('-');
                         if (bsparam == 0) {
                             res.push(
@@ -118,8 +116,7 @@ class Index extends Component {
                                         </div>
                                     </div>
                                 </Col>)
-                        }
-                        else {
+                        } else {
                             res.push(
                                 <Col span={3} xl={3}>
                                     <div onClick={() => this.paramClick(item, 3)} style={{ background: 'url(/instrumentexception.png) no-repeat' }} className={styles.divcard}>
@@ -130,9 +127,8 @@ class Index extends Component {
                                     </div>
                                 </Col>)
                         }
-                    }
-                    else {
-                        //正常渲染
+                    } else {
+                        // 正常渲染
                         res.push(
                             <Col span={3} xl={3}>
                                 <div onClick={() => this.paramClick(item, 1)} style={{ background: 'url(/instrumentnormal.png) no-repeat' }} className={styles.divcard}>
@@ -143,9 +139,8 @@ class Index extends Component {
                                 </div>
                             </Col>)
                     }
-                }
-                else {
-                    //离线
+                } else {
+                    // 离线
                     res.push(
                         <Col span={3} xl={3}>
                             <div onClick={() => this.paramClick(item, 0)} style={{ background: 'url(/instrumentunline.png) no-repeat' }} className={styles.divcard}>
@@ -154,85 +149,70 @@ class Index extends Component {
                                     <p>-</p>
                                 </div>
                             </div>
-                        </Col>
+                        </Col>,
                     )
                 }
-
             })
             return res;
         }
         return null;
     }
-    //系统参数
+
+    // 系统参数
     getsystemparam = (param, textname, unit) => {
         const { paramstatusInfo } = this.props;
         if (paramstatusInfo && paramstatusInfo.length) {
-            const nameInfo = paramstatusInfo.find(value => {
-                return value.statename.indexOf(param) > -1;
-            })
-            if (nameInfo)
-                return textname + ":" + nameInfo.value + unit;
+            const nameInfo = paramstatusInfo.find(value => value.statename.indexOf(param) > -1)
+            if (nameInfo) { return `${textname}:${nameInfo.value}${unit}`; }
         }
-        return textname + ":暂未上传";
+        return `${textname}:暂未上传`;
     }
-    //系统状态
-    getsystemstate = (param) => {
+
+    // 系统状态
+    getsystemstate = param => {
         const { stateInfo } = this.props;
         if (stateInfo) {
-            const nameInfo = stateInfo.find(value => {
-                return value.name.indexOf(param) > -1;
-            })
+            const nameInfo = stateInfo.find(value => value.name.indexOf(param) > -1)
             if (nameInfo) {
-                if (nameInfo.statename == "正常") {
+                if (nameInfo.statename == '正常') {
                     return (<span className={styles.normalstatus}><Badge status="processing" text="正常" /></span>)
                 }
-                else {
                     return (<span className={styles.overstatus}><Badge status="processing" text="故障" /></span>)
-                }
             }
-
         }
     }
-    //图片上的点击事件
+
+    // 图片上的点击事件
     positionClick = (param, status, data) => {
-        //推送过来要调用参数，再此存储参数值
+        // 推送过来要调用参数，再此存储参数值
         this.setState({
-            param: param,
-            status: status,
-            data: data,
+            param,
+            status,
+            data,
         })
         const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
-        const paramlist = param ? param.split(",") : null;
-        const statuslist = status ? status.split(",") : null;
-        const datalist = data ? data.split(",") : null;
-        let paramInfolist = [];
-        let stateInfolist = [];
-        let dataInfolist = [];
+        const paramlist = param ? param.split(',') : null;
+        const statuslist = status ? status.split(',') : null;
+        const datalist = data ? data.split(',') : null;
+        const paramInfolist = [];
+        const stateInfolist = [];
+        const dataInfolist = [];
         if (paramlist && paramstatusInfo) {
             paramlist.map(item => {
-                const params = paramstatusInfo.find(value => {
-                    return value.statecode == item;
-                })
-                if (params)
-                    paramInfolist.push(params);
+                const params = paramstatusInfo.find(value => value.statecode == item)
+                if (params) { paramInfolist.push(params); }
             })
         }
         if (statuslist && stateInfo) {
             statuslist.map(item => {
-                const statuses = stateInfo.find(value => {
-                    return value.code == item;
-                })
-                if (statuses)
-                    stateInfolist.push(statuses);
+                const statuses = stateInfo.find(value => value.code == item)
+                if (statuses) { stateInfolist.push(statuses); }
             })
         }
         if (datalist && paramsInfo) {
             datalist.map(item => {
-                const datas = paramsInfo.find(value => {
-                    return value.pollutantCode == item;
-                })
-                if (datas)
-                    dataInfolist.push(datas);
+                const datas = paramsInfo.find(value => value.pollutantCode == item)
+                if (datas) { dataInfolist.push(datas); }
             })
         }
 
@@ -240,6 +220,7 @@ class Index extends Component {
             this.imgClick(paramInfolist, stateInfolist, dataInfolist);
         }
     }
+
     /**
      *获取工艺流程图类型
      *
@@ -248,29 +229,28 @@ class Index extends Component {
     getChartType = () => {
         const { dataInfo, DGIMN } = this.props;
         const { dgimn } = this.state;
-       
+
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
-                case "1":
+                case '1':
                     return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} />)
                     break;
-                case "2":
+                case '2':
                     return (<VocChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} />)
                     break;
-                case "3":
+                case '3':
                     return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} />)
-                case "5":
+                case '5':
                     return <CommonChart DGIMN={dgimn} />
                 default:
                     return <CommonChart DGIMN={dgimn} />
                     // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
                     //     getsystemstate={this.getsystemstate} />)
             }
-        }
-        else if (dgimn) {
+        } else if (dgimn) {
             console.log('datainfo=', dataInfo)
             return <CommonChart DGIMN={dgimn} />
         }
@@ -298,14 +278,14 @@ class Index extends Component {
         //     return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
         //         getsystemstate={this.getsystemstate} />)
     }
-    //图片点击事件
-    imgClick = (paramInfolist, stateInfolist, dataInfolist) => {
-        let res = [];
-        if (stateInfolist && stateInfolist.length > 0) {
 
+    // 图片点击事件
+    imgClick = (paramInfolist, stateInfolist, dataInfolist) => {
+        const res = [];
+        if (stateInfolist && stateInfolist.length > 0) {
             stateInfolist.map(item => {
                 let statusstyle = styles.exceptionstatus;
-                if (item.statename == "正常") {
+                if (item.statename == '正常') {
                     statusstyle = styles.normalstatus
                 }
                 res.push(<div className={statusstyle}>
@@ -323,7 +303,7 @@ class Index extends Component {
                 if (item.pollutantName) {
                     res.push(<div className={styles.dataInfo}><Avatar size="small"
                         style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{key + 1}
-                    </Avatar>{item.pollutantName}:{item.value ? item.value : "-"}</div>)
+                    </Avatar>{item.pollutantName}:{item.value ? item.value : '-'}</div>)
                     if (item.pollutantParamInfo && item.pollutantParamInfo.length > 0) {
                         item.pollutantParamInfo.map(param => {
                             res.push(<div className={styles.datalist} style={{ marginLeft: 20 }}>
@@ -337,22 +317,20 @@ class Index extends Component {
             paramInfo: res,
             collapsed: false,
             showSider: true,
-            contentstyle: styles.content
+            contentstyle: styles.content,
         })
     }
 
 
-    //点击事件
+    // 点击事件
     paramClick = (item, status) => {
-        let res = [];
+        const res = [];
         let statusstyle = styles.unlinestatus;
         if (status === 1) {
             statusstyle = styles.normalstatus;
-        }
-        else if (status === 2) {
+        } else if (status === 2) {
             statusstyle = styles.overstatus;
-        }
-        else if (status === 3) {
+        } else if (status === 3) {
             statusstyle = styles.exceptionstatus;
         }
         if (item && item.pollutantParamInfo) {
@@ -366,19 +344,21 @@ class Index extends Component {
         this.setState({
             paramInfo: res,
             collapsed: false,
-            contentstyle: styles.content
+            contentstyle: styles.content,
         })
     }
+
     onCollapse = (collapsed, type) => {
         let contentstyle = styles.content;
         if (collapsed) {
             contentstyle = styles.contentcollapse;
         }
         this.setState({
-            collapsed: collapsed,
-            contentstyle: contentstyle
+            collapsed,
+            contentstyle,
         })
     }
+
     render() {
         const pointcode = this.state.dgimn; // 任务ID
         const { scale, translation } = this.state;
@@ -392,11 +372,11 @@ class Index extends Component {
             <div id="realtimedata">
                 <BreadcrumbWrapper>
                     <div style={{ overflowX: 'hidden' }}>
-                        <Layout className={this.state.contentstyle} hasSider={true}>
-                            <Content><Card className='contentContainer' >
+                        <Layout className={this.state.contentstyle} hasSider>
+                            <Content><Card className="contentContainer" >
                                 {isloading ? <Spin style={{
                                     width: '100%',
-                                    marginTop: 100
+                                    marginTop: 100,
                                 }} size="large" />
                                     : this.getChartType()
                                 }
@@ -405,8 +385,8 @@ class Index extends Component {
                                 this.state.showSider && <Sider width={250} collapsedWidth={10} theme="light"
                                     collapsed={this.state.collapsed}
                                     onCollapse={this.onCollapse}
-                                    collapsible={true}
-                                    reverseArrow={true}>
+                                    collapsible
+                                    reverseArrow>
                                     <div className={styles.rightParams}>
                                         {this.state.paramInfo}
                                     </div>
