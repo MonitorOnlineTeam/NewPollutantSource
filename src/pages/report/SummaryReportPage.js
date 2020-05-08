@@ -129,12 +129,15 @@ class SummaryReportPage extends PureComponent {
         }, {
           title: '首要污染物',
           dataIndex: '首要污染物',
+          width: 120,
         }, {
-          title: '空气质量指数类别',
+          title: '指数类别',
           dataIndex: '空气质量指数类别',
+          width: 80,
         }, {
-          title: '空气质量指数级别',
+          title: '指数级别',
           dataIndex: '空气质量指数级别',
+          width: 80,
         }]
       }
 
@@ -455,7 +458,7 @@ class SummaryReportPage extends PureComponent {
               size="small"
               columns={this.state.columns}
               dataSource={dailySummaryDataList}
-              // defaultWidth={200}
+              defaultWidth={80}
               rowClassName={
                 (record, index, indent) => {
                   if (index === 0 || record.time === "0时") {

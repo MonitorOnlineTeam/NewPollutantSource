@@ -154,11 +154,11 @@ class DateReportPage extends PureComponent {
           width: 120,
         }, {
           title: '指数类别',
-          dataIndex: '指数类别',
+          dataIndex: '空气质量指数类别',
           width: 80,
         }, {
           title: '指数级别',
-          dataIndex: '指数级别',
+          dataIndex: '空气质量指数级别',
           width: 80,
         }]
       }
