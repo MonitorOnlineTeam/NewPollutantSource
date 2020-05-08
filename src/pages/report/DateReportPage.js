@@ -150,7 +150,7 @@ class DateReportPage extends PureComponent {
           dataIndex: 'AQI',
         }, {
           title: '首要污染物',
-          dataIndex: '首要污染物 ',
+          dataIndex: '首要污染物',
           width: 120,
         }, {
           title: '指数类别',
@@ -210,8 +210,8 @@ class DateReportPage extends PureComponent {
     let time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
       case "siteDaily":
-        beginTime = moment(time).add(-1, 'day').format('YYYY-MM-DD 01:00:00');
-        endTime = moment(time).format('YYYY-MM-DD 00:00:00');
+        beginTime = moment(time).format('YYYY-MM-DD 01:00:00');
+        endTime = moment(time).add(1, "day").format('YYYY-MM-DD 00:00:00');
         break;
       case "monthly":
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
@@ -249,7 +249,7 @@ class DateReportPage extends PureComponent {
             DGIMN: values.DGIMN,
             BeginTime: this.state.beginTime,
             EndTime: this.state.endTime,
-            Type:values.reportType
+            Type: values.reportType
           },
         });
       }
@@ -327,20 +327,20 @@ class DateReportPage extends PureComponent {
         mode = [];
         break;
     }
-    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />;
+    let timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} dataType={dateType} />;
     let airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]} />
 
 
     // 处理分页
     let pageSize = dateReportForm.pageSize;
     // if (getFieldValue("PollutantSourceType") == 5) {
-      if (reportType === "siteDaily") {
-        pageSize = 24
-      } else if (reportType === "monthly") {
-        pageSize = 31
-      } else {
-        pageSize = 12
-      }
+    if (reportType === "siteDaily") {
+      pageSize = 24
+    } else if (reportType === "monthly") {
+      pageSize = 31
+    } else {
+      pageSize = 12
+    }
     // };
     return (
       <BreadcrumbWrapper>
@@ -414,7 +414,7 @@ class DateReportPage extends PureComponent {
                                 }
                               }
                               this.props.form.setFieldsValue({ "DGIMN": DGIMN })
-                              this.statisticsReport()
+                              this.changeReportType(this.props.form.getFieldValue("reportType"))
                             }
                           });
                         }}
@@ -442,35 +442,32 @@ class DateReportPage extends PureComponent {
                   </FormItem>
                 </Col>
 
-                {
-                  getFieldValue("PollutantSourceType") == 5 ?
-                    <Col xxl={5} md={6} xs={24}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator('airReportTime', {
-                          initialValue: defaultSearchForm.airReportTime,
-                          rules: [
-                            {
-                              required: true,
-                              message: '请填写统计时间',
-                            },
-                          ],
-                        })(airTimeEle)}
-                      </FormItem>
-                    </Col>
-                    : <Col xxl={5} md={6} xs={24}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator("ReportTime", {
-                          initialValue: defaultSearchForm.ReportTime,
-                          rules: [{
-                            required: true,
-                            message: '请填写统计时间',
-                          }],
-                        })(
-                          timeEle
-                        )}
-                      </FormItem>
-                    </Col>
-                }
+                <Col xxl={5} md={6} xs={24} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator('airReportTime', {
+                      initialValue: defaultSearchForm.airReportTime,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请填写统计时间',
+                        },
+                      ],
+                    })(airTimeEle)}
+                  </FormItem>
+                </Col>
+                <Col xxl={5} md={6} xs={24} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "none" : "block" }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator("ReportTime", {
+                      initialValue: defaultSearchForm.ReportTime,
+                      rules: [{
+                        required: true,
+                        message: '请填写统计时间',
+                      }],
+                    })(
+                      timeEle
+                    )}
+                  </FormItem>
+                </Col>
                 <Col xxl={4} md={10} xs={24}>
                   <FormItem label="" style={{ width: '100%' }}>
                     <Button
