@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const Option = Select.Option
 
-let yearList = [], monthList = [], hoursList = [];
+let yearList = [], monthList = [], hoursList = ["00"];
 
 class SelectTime extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class SelectTime extends Component {
         startFormat = "00:00";
         endFormat = "59:59";
         startTimeObj = {
-          day:  day >= 10 ? day : "0" + day,
+          day: day >= 10 ? day : "0" + day,
         }
         break;
       case "hour":
@@ -97,8 +97,8 @@ class SelectTime extends Component {
       monthList.push(i >= 10 ? i : "0" + i)
     }
     // 小时
-    for (let i = 1; i <= 24; i++) {
-      i === 24 ? hoursList.push("00") : hoursList.push(i >= 10 ? i : "0" + i)
+    for (let i = 1; i < 24; i++) {
+      hoursList.push(i >= 10 ? i : "0" + i)
     }
 
     this.initTime()
@@ -126,11 +126,19 @@ class SelectTime extends Component {
     }
 
     let key = type === 1 ? "startTimeObj" : "endTimeObj";
+    let day = this.state.startTimeObj.day;
+    if (type === 0) {
+      day = this.state.endTimeObj.day;
+    }
+    if (day > days) {
+      day = days
+    }
 
     this.setState({
       [key]: {
         ...this.state[key],
         month: value,
+        day: day,
         daysInMonthList: dayList
       }
     }, () => {
@@ -162,9 +170,6 @@ class SelectTime extends Component {
     }, () => {
       this.onChange()
     })
-
-
-
   }
 
   // 结束时间change事件
