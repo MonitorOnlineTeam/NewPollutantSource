@@ -92,7 +92,6 @@ class MapView extends Component {
         }, () => {
           m.setFitView()
         })
-
       },
       zoomchange: value => {
         const zoom = _thismap.getZoom();
@@ -808,7 +807,7 @@ class MapView extends Component {
             }
           }
         }} />
-        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '400px', position: 'relative' }}>
+        <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '320px', position: 'relative' }}>
           <Map
             amapkey="c5cb4ec7ca3ba4618348693dd449002d"
             plugins={plugins}
