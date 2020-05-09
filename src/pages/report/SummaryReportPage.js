@@ -259,7 +259,8 @@ class SummaryReportPage extends PureComponent {
             "Regions": '',//values.Regions.toString(),
             "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
             BeginTime: this.state.beginTime,
-            EndTime: this.state.endTime
+            EndTime: this.state.endTime,
+            Type:values.reportType
           }
         })
       }

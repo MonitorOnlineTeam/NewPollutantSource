@@ -69,6 +69,9 @@ class MapView extends Component {
       currentDescItem: {},
       airShowType: undefined,
       multiple: 4,
+      pointName:'',
+      entName:'',
+      pollutantTypes:'',
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -174,6 +177,9 @@ class MapView extends Component {
           let newState = {};
           if (this.state.displayType === 1) {
             console.log("this.state.displayType=", this.state.displayType)
+            this.setState({
+              pointName:extData.position.title,
+            })
             // 点击排口，显示弹窗
             newState = {
               infoWindowVisible: true,
@@ -208,6 +214,10 @@ class MapView extends Component {
             //   // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
             //   this.randomMarker(extData.position.children)
             // })
+            this.setState({
+              entName:extData.position.title,
+              pollutantTypes:extData.position.PollutantType,
+            })
           }
           // 设置平移
           this.setState({
@@ -808,6 +818,10 @@ class MapView extends Component {
                 })
               }
             }
+            this.setState({
+              pointName: val[0].pointName,
+              entName: val[0].entName,
+            })
           }
         }} />
         <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '320px', position: 'relative' }}>
@@ -910,7 +924,7 @@ class MapView extends Component {
                                   //     })
                                   //   }, 200);
                                 })
-                              }}>排口详情</a>
+                              }}>监测点详情</a>
                             </>)
                         }
                       </>
@@ -995,7 +1009,7 @@ class MapView extends Component {
                     this.setState({
                       pointVisible: true,
                     })
-                  }}>排口详情</a>
+                  }}>监测点详情</a>
                 </Spin>
               </div>
             </InfoWindow>
@@ -1064,7 +1078,7 @@ class MapView extends Component {
             }}>
               {
                 menuDescList.includes("历史数据") && <TabPane tab="历史数据" key="1">
-                  <DataQuery DGIMN={currentKey} initLoadData chartHeight='calc(100vh - 427px)' style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} />
+                  <DataQuery DGIMN={currentKey} initLoadData chartHeight='calc(100vh - 427px)' style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
                 </TabPane>
               }
               {
