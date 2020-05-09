@@ -57,7 +57,8 @@ class DataQuery extends Component {
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
-      this.changeDgimn(nextProps.DGIMN);
+      // this.changeDgimn(nextProps.DGIMN);
+      this.setState({dgimn: nextProps.DGIMN})
     }
     // if (this.props.pollutantlist !== nextProps.pollutantlist) {
     //   this.dispatch({
@@ -178,6 +179,7 @@ class DataQuery extends Component {
       type: 'dataquery/queryhistorydatalist',
       payload: {
         ...payload,
+        DGIMN: this.state.dgimn,
         datatype: this.state.dataType
       },
     });

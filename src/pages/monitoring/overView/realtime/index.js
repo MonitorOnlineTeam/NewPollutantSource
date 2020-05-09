@@ -33,6 +33,7 @@ class index extends Component {
     this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
     this.state = {
       columns: [],
+      fixed: false,
       currentDataType: 'HourData',
       realTimeDataView: [],
       filteredInfo: null,
@@ -46,14 +47,10 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
+      // let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
+      let fixed = false;
       let width = 200;
-      // if (nextProps.realtimeColumns.length > 5) {
-      //   fixed = true;
-      // } else {
-      //   // 计算宽度
-      //   width = (window.innerWidth - 64 - 48 - 680) / nextProps.realtimeColumns.length;
-      // }
+
       let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
         return {
           title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
