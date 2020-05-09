@@ -145,6 +145,7 @@ class SummaryReportPage extends PureComponent {
         {
           title: "排口名称",
           dataIndex: 'PointName',
+          width: 160,
         },
         {
           title: '时间',
@@ -217,8 +218,8 @@ class SummaryReportPage extends PureComponent {
     })
   }
 
-  changeReportType = (reportType) => {
-    const pollutantType = this.props.form.getFieldValue("PollutantSourceType")
+  changeReportType = (reportType, type) => {
+    const pollutantType = type || this.props.form.getFieldValue("PollutantSourceType")
     let reportTime = this.props.form.getFieldValue("ReportTime");
     let beginTime, endTime;
 
@@ -368,7 +369,7 @@ class SummaryReportPage extends PureComponent {
                               }
                             }
                             this.props.form.setFieldsValue({ DGIMN: DGIMN })
-                            this.statisticsReport()
+                            this.changeReportType(this.props.form.getFieldValue("reportType"), value)
                           },
                         });
                       }} />
@@ -413,36 +414,32 @@ class SummaryReportPage extends PureComponent {
                     </FormItem>
                   </Col>
                 }
-                {
-                  getFieldValue("PollutantSourceType") == 5 ?
-                    <Col sm={24} md={5}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator('airReportTime', {
-                          initialValue: defaultSearchForm.airReportTime,
-                          rules: [
-                            {
-                              required: true,
-                              message: '请填写统计时间',
-                            },
-                          ],
-                        })(airTimeEle)}
-                      </FormItem>
-                    </Col>
-                    : <Col sm={24} md={5}>
-                      <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                        {getFieldDecorator("ReportTime", {
-                          initialValue: defaultSearchForm.ReportTime,
-                          rules: [{
-                            required: true,
-                            message: '请填写统计时间',
-                          }],
-                        })(
-                          timeEle
-                        )}
-                      </FormItem>
-                    </Col>
-                }
-
+                <Col sm={24} md={5} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator('airReportTime', {
+                      initialValue: defaultSearchForm.airReportTime,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请填写统计时间',
+                        },
+                      ],
+                    })(airTimeEle)}
+                  </FormItem>
+                </Col>
+                <Col sm={24} md={5} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "none" : "block" }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {getFieldDecorator("ReportTime", {
+                      initialValue: defaultSearchForm.ReportTime,
+                      rules: [{
+                        required: true,
+                        message: '请填写统计时间',
+                      }],
+                    })(
+                      timeEle
+                    )}
+                  </FormItem>
+                </Col>
                 <Col md={5} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
                     {/* {getFieldDecorator("", {})( */}
