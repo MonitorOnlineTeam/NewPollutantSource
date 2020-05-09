@@ -288,7 +288,7 @@ class DataQuery extends Component {
 
   render() {
     const { dataType, dateValue, displayType, dgimn } = this.state;
-    const { pointName, entName } = this.props;
+    const { pointName, entName, pollutantTypes } = this.props;
     return (
       <div>
         <Card
@@ -296,7 +296,7 @@ class DataQuery extends Component {
           title={
             <div>
               <div>
-                {entName + "-" + pointName}
+                {pollutantTypes === '5' ? entName : entName + "-" + pointName}
               </div>
               <Row style={{ marginTop: 10 }}>
                 {!this.props.isloading && this.getpollutantSelect()}
