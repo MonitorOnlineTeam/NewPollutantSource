@@ -58,6 +58,13 @@ class DataQuery extends Component {
   componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
       // this.changeDgimn(nextProps.DGIMN);
+      this.props.dispatch({
+        type: 'dataquery/querypollutantlist',
+        payload: {
+          dgimn: nextProps.DGIMN,
+          notLoad: true
+        }
+      });
       this.setState({dgimn: nextProps.DGIMN})
     }
     // if (this.props.pollutantlist !== nextProps.pollutantlist) {
