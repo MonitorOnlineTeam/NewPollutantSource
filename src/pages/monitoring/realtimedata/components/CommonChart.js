@@ -13,6 +13,7 @@ import { Card, Col, Row, Tabs, Badge, Icon, Divider, Tooltip, Spin, Popover, Emp
 import { Xiangshang, Xiangxia } from '@/utils/icon';
 
 import styles from './ProcessFlowChart.less';
+
 const { TabPane } = Tabs;
 @connect(({ loading, dataquery, realtimeserver }) => ({
     pollutantlist: realtimeserver.pollutantlist,
@@ -22,7 +23,7 @@ const { TabPane } = Tabs;
     isloading: loading.effects['realtimeserver/querypollutantlist'],
     paramsInfo: realtimeserver.paramsInfo,
     dataInfo: realtimeserver.dataInfo,
-    historyparams: realtimeserver.historyparams
+    historyparams: realtimeserver.historyparams,
 }))
 class CommonChart extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class CommonChart extends Component {
         dispatch({
             type: 'realtimeserver/querypollutantlist',
             payload: {
-                dgimn: DGIMN
+                dgimn: DGIMN,
             },
         });
     }
@@ -48,44 +49,43 @@ class CommonChart extends Component {
             // console.log('nextProps.paramsInfo=', nextProps.paramsInfo);
             // console.log('this.props.paramsInfo=', this.props.paramsInfo);
             if (nextProps.paramsInfo !== this.props.paramsInfo) {
-                let paramsInfo = nextProps.paramsInfo;
-                //console.log('paramsInfo=', paramsInfo);
+                const { paramsInfo } = nextProps;
+                // console.log('paramsInfo=', paramsInfo);
                 if (paramsInfo) {
                     paramsInfo.map(item => {
-                        var params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
-                        var state = '0'
+                        const params = this.props.paramsInfo.find(m => m.pollutantCode == item.pollutantCode)
+                        let state = '0'
                         if (params != null) {
                             if (item.value > params.value) {
-                                state = '1'  //向上箭头
+                                state = '1' // 向上箭头
                             } else if (item.value == params.value) {
-                                state = '0' //无箭头
+                                state = '0' // 无箭头
                             } else {
-                                state = '2' //向下箭头
+                                state = '2' // 向下箭头
                             }
                         }
                         item.state = state;
                     })
                     this.setState({ paramsInfo })
                 }
-
             }
         }
-        //推送数据改变曲线图
+        // 推送数据改变曲线图
         if (this.props.option !== nextProps.option) {
             if (this.echartsReact && nextProps.option) {
-                //console.log("nextProps.option=", nextProps.option)
+                // console.log("nextProps.option=", nextProps.option)
                 this.echartsReact.getEchartsInstance().setOption(nextProps.option);
             }
         }
     }
 
-    //加载曲线图
+    // 加载曲线图
     getEchart = () => {
         const { option, dataloading } = this.props;
         if (option) {
             option.backgroundColor = '#fff';
             return <ReactEcharts
-                ref={(reactEcharts) => { this.echartsReact = reactEcharts; }}
+                ref={reactEcharts => { this.echartsReact = reactEcharts; }}
                 theme="light"
                 option={option}
                 lazyUpdate
@@ -93,15 +93,14 @@ class CommonChart extends Component {
                 id="rightLine"
                 style={{ width: '100%', height: 'calc(100vh - 270px)' }}
             />
-        } else {
+        }
             return <Empty style={{
                 width: '100%',
             }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        }
     }
     /**仪表盘的点击事件 */
     dashboardClick = (pollutantCode, pollutantName, Unit) => {
-        let { historyparams, dispatch } = this.props;
+        const { historyparams, dispatch } = this.props;
 
         historyparams.pollutantCodes = pollutantCode;
         historyparams.pollutantNames = pollutantName;
@@ -109,34 +108,33 @@ class CommonChart extends Component {
         dispatch({
             type: 'realtimeserver/updateState',
             payload: {
-                historyparams: historyparams
-            }
+                historyparams,
+            },
         })
         dispatch({
             type: 'realtimeserver/queryhistorydatalist',
             payload: {
-            }
+            },
         })
     }
 
-    /**污染物参数 */
-    getPollutantParam = (pollutantParamlist) => {
+    /** 污染物参数 */
+    getPollutantParam = pollutantParamlist => {
         if (pollutantParamlist) {
-            let res = [];
+            const res = [];
             pollutantParamlist.map(item => {
                 res.push(<p className={styles.pshsj}>{item.statename}:{item.value}</p>)
             })
             return res;
         }
     }
-    getDeials = (params) => {
-        var res = []
+
+    getDeials = params => {
+        const res = []
         if (params) {
             params.map(item => {
-
                 res.push(<p>{item.statename}:{item.value}</p>)
             })
-
         } else {
             res.push(<Empty style={{
                 width: '100%',
@@ -147,46 +145,41 @@ class CommonChart extends Component {
     }
 
     //污染物选项卡改变事件
-    pollutantClick = (e) => {
+    pollutantClick = e => {
         this.dashboardClick(this.props.pollutantlist[e].PollutantCode, this.props.pollutantlist[e].PollutantName, this.props.pollutantlist[e].Unit);
     }
 
-    /**仪表盘 */
+    /** 仪表盘 */
     getLastestData = () => {
         const { pollutantlist, paramsInfo } = this.props;
         if (pollutantlist) {
-            let res = [];
+            const res = [];
             pollutantlist.map((item, key) => {
                 if (paramsInfo) {
-                    var pollutantParam = paramsInfo.find(param => {
-                        return param.pollutantCode == item.PollutantCode;
-                    })
+                    const pollutantParam = paramsInfo.find(param => param.pollutantCode == item.PollutantCode)
                     if (pollutantParam) {
-                        //定义超标异常标识
-                        var flag = 2;
+                        // 定义超标异常标识
+                        let flag = 2;
                         if (pollutantParam.dataparam) {
                             flag = pollutantParam.dataparam.split('§')[0];
                         }
                         res.push(<TabPane tab={
                             <div size="small" className={styles.maincard} bordered={false} >
-                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title='详细参数' content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
-                                <p >浓度：<span style={{ color: flag === "0" ? "red" : flag === "1" ? "#ffbe00e3" : "" }} className={styles.cardfonttype}>{pollutantParam.value}</span>
+                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title="详细参数" content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
+                                <p >浓度：<span style={{ color: flag === '0' ? 'red' : flag === '1' ? '#ffbe00e3' : '' }} className={styles.cardfonttype}>{pollutantParam.value}</span>
                                     {
                                         pollutantParam.state ? pollutantParam.state === '1' ?
                                             <span><Xiangshang /></span> :
                                             pollutantParam.state === '2' ?
-                                                <Xiangxia /> : "" : ""
+                                                <Xiangxia /> : '' : ''
                                     }
                                 </p>
                                 <p>单位：<span>{item.Unit}</span></p>
-                                <p>标准值:{item.StandardValueStr}</p>
+                                <p>排放标准值:{item.StandardValueStr}</p>
                             </div>} key={key}>
                         </TabPane>)
-
                     }
-
                 }
-
             })
             return res;
         }
@@ -194,6 +187,7 @@ class CommonChart extends Component {
             Content of tab {1}
         </TabPane>)
     }
+
     render() {
         const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo } = this.props;
         return (
@@ -214,10 +208,10 @@ class CommonChart extends Component {
                 </div>
                 <div>{isloading ? <Spin style={{
                     width: '100%',
-                    marginTop: 100
+                    marginTop: 100,
                 }} size="large" /> : <div>{dataloading ? <Spin style={{
                     width: '100%',
-                    marginTop: 100
+                    marginTop: 100,
                 }} size="large" /> : this.getEchart()}</div>}</div>
             </div>
         );

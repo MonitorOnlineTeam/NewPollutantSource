@@ -220,7 +220,7 @@ expandedRowRender = (record, index, indent, expanded) => {
           {this.props.form.getFieldDecorator(`AnalyzerRangeMin${record.key}`, {
             initialValue: text || undefined,
           })(
-            <InputNumber min={-10000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMin', value, idx) }} />,
+            <InputNumber min={-100000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMin', value, idx) }} />,
           )}
         </FormItem>,
     },
@@ -232,7 +232,7 @@ expandedRowRender = (record, index, indent, expanded) => {
           {this.props.form.getFieldDecorator(`AnalyzerRangeMax${record.key}`, {
             initialValue: text || undefined,
           })(
-            <InputNumber min={-10000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMax', value, idx) }} />,
+            <InputNumber min={-100000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMax', value, idx) }} />,
           )}
         </FormItem>,
     },

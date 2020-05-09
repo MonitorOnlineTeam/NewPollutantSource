@@ -3,11 +3,12 @@ import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, me
 import { connect } from 'dva';
 import moment from 'moment';
 import { router } from 'umi';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import ViewImagesModal from './ViewImagesModal'
 import NavigationTree from '@/components/NavigationTree'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import styles from '../index.less'
+import config from '@/config'
 
 const { Option } = Select;
 
@@ -27,7 +28,7 @@ function getBase64(file) {
   imageList: common.imageList,
   imageListVisible: common.imageListVisible,
   logForm: operations.logForm,
-  loading: loading.effects["operations/getOperationLogList"],
+  loading: loading.effects['operations/getOperationLogList'],
   currentRecordType: operationform.currentRecordType,
   currentDate: operationform.currentDate,
 }))
@@ -35,13 +36,13 @@ class LogTimeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentRecordType: "",
+      currentRecordType: '',
       dateValues: props.currentDate,
       current: 1,
       pageIndex: 10,
       previewVisible: false,
-      previewImage: "",
-      DGIMN: props.DGIMN
+      previewImage: '',
+      DGIMN: props.DGIMN,
     };
   }
 
@@ -65,40 +66,40 @@ class LogTimeList extends Component {
     if (this.props.DGIMN !== nextProps.DGIMN) {
       const flag = this.props.type != nextProps.type;
       this.setState({
-        DGIMN: nextProps.DGIMN
+        DGIMN: nextProps.DGIMN,
       }, () => {
         this.getOperationLogList(flag)
       })
     }
     if (this.props.recordTypeList !== nextProps.recordTypeList) {
       this.setState({
-        recordTypeList: []
+        recordTypeList: [],
       })
     }
   }
 
-  getStatusColor = (status) => {
-    let color = "";
+  getStatusColor = status => {
+    let color = '';
     switch (status) {
       case 0:
         // 超标
-        color = "#ff4544"
+        color = '#ff4544'
         break;
       case 1:
         // 维修
-        color = ""
+        color = ''
         break;
       case 2:
         // 停机
-        color = "red"
+        color = 'red'
         break;
       case 9:
         // 对勾
-        color = "#52c41a"
+        color = '#52c41a'
         break;
       case 10:
         // 异常
-        color = "#ff995b"
+        color = '#ff995b'
         break;
 
       default:
@@ -118,11 +119,11 @@ class LogTimeList extends Component {
           key={item.RecordDate}
         >
           {/* <div className={styles.DateLoad}> */}
-          <p className={styles.taskDate}><Tag className={styles.dateContent}>{moment(item.RecordDate).format("YYYY-MM-DD")}</Tag></p>
+          <p className={styles.taskDate}><Tag className={styles.dateContent}>{moment(item.RecordDate).format('YYYY-MM-DD')}</Tag></p>
           {/* </div> */}
-        </Timeline.Item>
+        </Timeline.Item>,
       )
-  {/* <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p> */}
+  { /* <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p> */ }
       item.Nodes.map(node => {
         timelineItems.push(
           <Timeline.Item
@@ -133,12 +134,14 @@ class LogTimeList extends Component {
             {
               node.TypeID !== 0 ?
                 <>
-                  <p><span style={{ color: "#40a9ff", marginRight: 10 }}>{node.CreateUser}</span>{node.DisplayInfo}</p>
+                  <p><span style={{ color: '#40a9ff', marginRight: 10 }}>{node.CreateUser}</span>{node.DisplayInfo}</p>
                   <Tag
                     color="#43b9ff"
-                    style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: "0 20px", fontSize: 13 }}
+                    style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: '0 20px', fontSize: 13 }}
                     onClick={() => {
-                      if (node.PollutantType != 2) {
+                      if (config.XinJiang) {
+                        this.getOperationImageList(node)
+                      } else if (node.PollutantType !== 2) {
                         // 查看图片
                         this.getOperationImageList(node)
                       } else {
@@ -149,42 +152,42 @@ class LogTimeList extends Component {
                     查看详情
             </Tag>
                 </>
-                : <><p><span style={{ color: "#40a9ff", marginRight: 10 }}>{node.CreateUser}</span>需要对当前排口进行处理</p>
+                : <><p><span style={{ color: '#40a9ff', marginRight: 10 }}>{node.CreateUser}</span>需要对当前排口进行处理</p>
                   </>
 
-                        
+
             }
 
-          </Timeline.Item>
+          </Timeline.Item>,
         )
       })
     })
     return timelineItems;
   }
-  
+
   // 获取运维日志数据
-  getOperationLogList = (flag) => {
+  getOperationLogList = flag => {
     const { dateValues, DGIMN, currentRecordType } = this.state;
     this.props.dispatch({
-      type: "operations/getOperationLogList",
+      type: 'operations/getOperationLogList',
       payload: {
-        "pageIndex": this.state.current,
-        "pageSize": this.state.pageIndex,
-        "DGIMN": DGIMN,
+        pageIndex: this.state.current,
+        pageSize: this.state.pageIndex,
+        DGIMN,
         // "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
         // "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
         // "RecordType": flag ? "" : this.props.logForm.RecordType
-        "RecordType": flag ? "" : this.props.currentRecordType
-      }
+        RecordType: flag ? '' : this.props.currentRecordType,
+      },
     })
   }
 
   // 获取详情图片
-  getOperationImageList = (data) => {
+  getOperationImageList = data => {
     this.props.dispatch({
-      type: "common/getOperationImageList",
+      type: 'common/getOperationImageList',
       payload: {
-        FormMainID: data.MainFormID
+        FormMainID: data.MainFormID,
         // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
       },
     })
@@ -192,7 +195,7 @@ class LogTimeList extends Component {
 
   paginationChange = (current, pageSize) => {
     this.setState({
-      current
+      current,
     }, () => {
       this.getOperationLogList()
     })
@@ -215,25 +218,25 @@ class LogTimeList extends Component {
                 style={{ width: 220, marginRight: 10 }}
                 placeholder="请选择记录表"
                 allowClear
-                onChange={(value) => {
+                onChange={value => {
                   this.props.dispatch({
-                    type: "operations/updateState",
+                    type: 'operations/updateState',
                     payload: {
                       logForm: {
                         ...logForm,
-                        RecordType: value
-                      }
-                    }
+                        RecordType: value,
+                      },
+                    },
                   })
                   this.props.dispatch({
                     type: 'operationform/updateState',
                     payload: {
-                      currentRecordType: value
-                    }
+                      currentRecordType: value,
+                    },
                   })
                   this.setState({
                     currentRecordType: value,
-                    current: 1
+                    current: 1,
                   }, () => {
                     this.getOperationLogList()
                   })
@@ -241,43 +244,41 @@ class LogTimeList extends Component {
               >
                 <Option value={null} key="null">全部</Option>
                 {
-                  recordTypeList.map(item => {
-                    return <Option value={item.TypeId} key={item.TypeId}>{item.Abbreviation}</Option>
-                  })
+                  recordTypeList.map(item => <Option value={item.TypeId} key={item.TypeId}>{item.Abbreviation}</Option>)
                 }
               </Select>
               <RangePicker_
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
                 dateValue={dateValues}
                 //format={"YYYY-MM-DD"}
-                callback={(date) => {
+                callback={date => {
                   this.props.dispatch({
-                    type: "operations/updateState",
+                    type: 'operations/updateState',
                     payload: {
                       logForm: {
                         ...logForm,
-                        dateTime: date
-                      }
-                    }
+                        dateTime: date,
+                      },
+                    },
                   })
                   this.props.dispatch({
-                    type: "operationform/updateState",
+                    type: 'operationform/updateState',
                     payload: {
-                      currentDate: date
-                    }
+                      currentDate: date,
+                    },
                   })
                   this.setState({
                     dateValues: date,
-                    current: 1
+                    current: 1,
                   }, () => {
                     this.getOperationLogList()
                   })
                 }}
                 allowClear={false}
               />
-              <Radio.Group defaultValue="log" buttonStyle="solid" onChange={(e) => {
-                if (e.target.value === "operationrecord") {
-                  router.push(`/operations/operationrecord`)
+              <Radio.Group defaultValue="log" buttonStyle="solid" onChange={e => {
+                if (e.target.value === 'operationrecord') {
+                  router.push('/operations/operationrecord')
                 }
               }}>
                 <Radio.Button value="log">运维日志</Radio.Button>
@@ -294,7 +295,7 @@ class LogTimeList extends Component {
                   height: 'calc(100vh/2)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}
                 size="large"
               />
@@ -307,9 +308,9 @@ class LogTimeList extends Component {
                       {this.renderTimeLineItem()}
                     </Timeline>
                   </div>
-                  <div style={{ width: "100%", marginTop: 10 }}>
+                  <div style={{ width: '100%', marginTop: 10 }}>
                     <Pagination
-                      style={{ float: "right" }}
+                      style={{ float: 'right' }}
                       showQuickJumper
                       // defaultCurrent={}
                       pageSize={10}
