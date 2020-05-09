@@ -12,25 +12,34 @@ import {
   Icon,
   Empty,
 } from 'antd';
-import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './index.less';
+import config from '@/config';
+import HkRealVideoData from './HkRealVideoData';
+import HkHisVideoData from './HkHisVideoData';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
+import {
+  InitVideo, clickLogin, clickStartRealPlay, mouseDownPTZControl, mouseUpPTZControl,
+  PTZZoomIn, PTZZoomOut, PTZZoomStop,
+  PTZFocusIn, PTZFocusOut, PTZFocusStop,
+  PTZIrisIn, PTZIrisOut, PTZIrisStop, clickStartPlayback, clickStopPlayback, clickPause, clickResume, clickPlaySlow, clickPlayFast, clickReversePlayback, clickCapturePic,
+} from '@/utils/video';
 
 const { TabPane } = Tabs;
-
 /**
- * GBS
+ * 海康视频
  * xpy
- * 2020-03-19
+ * 2019-09-16
  */
 @connect(({
-  videodata, loading, gbsvideo,
+  videodata, loading,
 }) => ({
   IsLoading: loading.effects['videodata/hkvideourl'],
   hkvideoListParameters: videodata.hkvideoListParameters,
 }))
-class GBSVideo extends Component {
+class HkShowVideo extends Component {
   constructor(props) {
     super(props);
 
@@ -50,69 +59,17 @@ class GBSVideo extends Component {
 
   /** 初始化加载 */
   componentDidMount() {
-    // this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
+    this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
   /** 改变排口后加载 */
   componentWillReceiveProps = nextProps => {
-    // if (nextProps.DGIMN !== this.props.DGIMN) {
-    //   this.setState({
-    //     dgimn: nextProps.DGIMN,
-    //   })
-    //   this.changeDgimn(nextProps.DGIMN);
-    // }
-  }
-
-  /** 实时视频云台控制 */
-  PTZChange=type => {
-    this.props.dispatch({
-      type: 'gbsvideo/GetGBSPTZ',
-      payload: {
-        serial: '34020000001320000510',
-        code: '34020000001320000511',
-        command: type,
-        callback: result => {
-          if (result === 'OK') {
-            this.props.dispatch({
-              type: 'gbsvideo/GetGBSPTZ',
-              payload: {
-                serial: '34020000001320000510',
-                code: '34020000001320000511',
-                command: 'stop',
-                callback: result => {
-                },
-              },
-            })
-          }
-        },
-      },
-    })
-  }
-
-  /** 实时视频光圈控制 */
-  FLChange=type => {
-    this.props.dispatch({
-      type: 'gbsvideo/GetGBSPFL',
-      payload: {
-        serial: '34020000001320000510',
-        code: '34020000001320000511',
-        command: type,
-        callback: result => {
-          if (result === 'OK') {
-            this.props.dispatch({
-              type: 'gbsvideo/GetGBSPFL',
-              payload: {
-                serial: '34020000001320000510',
-                code: '34020000001320000511',
-                command: 'stop',
-                callback: result => {
-                },
-              },
-            })
-          }
-        },
-      },
-    })
+    if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.setState({
+        dgimn: nextProps.DGIMN,
+      })
+      this.changeDgimn(nextProps.DGIMN);
+    }
   }
 
   /** 根据排口信息初始化视频 */
@@ -126,10 +83,35 @@ class GBSVideo extends Component {
         DGIMN: dgimn,
       },
     }).then(() => {
-
+      this.initV(this.props.hkvideoListParameters[0])
     })
   }
 
+  /** 视频登陆初始化 */
+  initV = loginPara => {
+    const divPlugin = document.getElementById('divPlugin');
+    if (loginPara != null && divPlugin !== undefined && divPlugin != null) {
+      const msg = InitVideo();
+      if (msg.flag) {
+        this.setState({ IsIE: true });
+        message.info(msg.message);
+        const msg2 = clickLogin(loginPara);
+        if (msg2 !== null && msg2 !== undefined && msg2.flag) {
+          message.success(msg2.message);
+          // 实时视频立即播放
+          if (this.state.tabsKey === '1') {
+            console.log('播放');
+            const para = loginPara;
+            setTimeout(() => {
+              clickStartRealPlay(para);
+            }, 1000);
+          }
+        } else {
+          message.warning(msg.message, 100000)
+        }
+      }
+    };
+  }
 
   /** 历史视频 */
   onRef1 = ref => {
@@ -138,29 +120,35 @@ class GBSVideo extends Component {
 
   /** 回放操作 */
   playBack = () => {
+   
     const {
       beginDate,
       endDate,
     } = this.state;
-    // this.child.startPlay(
-    //   moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
-    //   moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
-    // );
-    if (beginDate !== '' && endDate !== '') {
-      this.props.dispatch({
-        type: 'gbsvideo/PlaybackStart',
-        payload: {
-          serial: '34020000001320088888',
-          code: '34020000001320088888',
-          starttime: moment(beginDate).format('YYYY-MM-DDTHH:mm:ss'),
-          endtime: moment(endDate).format('YYYY-MM-DDTHH:mm:ss'),
-          callback: result => {
-            if (!result) {
-              console.log('------------------------', result);
-            }
-          },
-        },
-      })
+    console.log(this.props.hkvideoListParameters[0].Device_Port);
+    this.child.startPlay(
+      beginDate,
+      endDate,
+    );
+    if (this.state.IsIE) {
+      if (this.props.hkvideoListParameters[0]) {
+        const para = {
+          beginTime: beginDate,
+          endTime: endDate,
+          ip: this.props.hkvideoListParameters[0].IP,
+          devicePort: this.props.hkvideoListParameters[0].Device_Port,
+          userName: this.props.hkvideoListParameters[0].User_Name,
+          userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+          cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+        };
+        const msg = clickStartPlayback(para);
+        if (msg === '开始回放成功！') {
+          this.child.startPlay(
+            moment(beginDate, 'YYYY-MM-DD HH:mm:ss'),
+            moment(endDate, 'YYYY-MM-DD HH:mm:ss'),
+          );
+        }
+      }
     }
   };
 
@@ -192,6 +180,91 @@ class GBSVideo extends Component {
     }
   }
 
+  /** 截图 */
+  CapturePic = () => {
+    if (this.state.IsIE && this.props.hkvideoListParameters[0]) {
+      const msg = clickCapturePic(this.props.hkvideoListParameters[0].VedioCamera_No);
+      if (msg.flag) {
+        message.success(msg.message, 5);
+      } else {
+        message.error(msg.message);
+      }
+    }
+  }
+
+  // 倒放
+  reverseBack = () => {
+    const {
+      beginDate,
+      endDate,
+    } = this.state;
+    if (this.state.IsIE) {
+      if (this.props.hkvideoListParameters[0]) {
+        const para = {
+          beginTime: beginDate,
+          endTime: endDate,
+          ip: this.props.hkvideoListParameters[0].IP,
+          devicePort: this.props.hkvideoListParameters[0].Device_Port,
+          userName: this.props.hkvideoListParameters[0].User_Name,
+          userPwd: this.props.hkvideoListParameters[0].User_Pwd,
+          cameraNo: this.props.hkvideoListParameters[0].VedioCamera_No,
+        };
+        const msg = clickReversePlayback(para);
+        message.info(msg);
+      }
+    } else {
+      message.info('请在IE11浏览器下查看视频');
+    }
+  }
+
+  /** 实时视频操作 */
+  btnClick = opt => {
+    //this.initV(this.props.hkvideoListParameters[0]);
+    if (this.state.IsIE) {
+      mouseDownPTZControl(opt);
+      mouseUpPTZControl();
+    }
+  }
+
+  /** 调焦 */
+  btnZoomClick = opt => {
+    if (this.state.IsIE) {
+      if (opt === 11) {
+        PTZZoomIn();
+        PTZZoomStop();
+      } else {
+        PTZZoomOut();
+        PTZZoomStop();
+      }
+    }
+  }
+
+  /** 聚焦 */
+  btnFocusClick = opt => {
+    if (this.state.IsIE) {
+      if (opt === 15) {
+        PTZFocusIn();
+        PTZFocusStop();
+      } else {
+        PTZFocusOut();
+        PTZFocusStop();
+      }
+    }
+  }
+
+  /** 光圈 */
+  btnIrisClick = opt => {
+    if (this.state.IsIE) {
+      if (opt === 19) {
+        PTZIrisIn();
+        PTZIrisStop();
+      } else {
+        PTZIrisOut();
+        PTZIrisStop();
+      }
+    }
+  }
+
   /** tabs切换 */
   tabsChange = key => {
     console.log('----------------------key', key === '1');
@@ -201,12 +274,13 @@ class GBSVideo extends Component {
         tabsKey: key,
       }, () => {
         this.btnBackClick(1);
+        this.initV(this.props.hkvideoListParameters[0]);
       })
     } else {
       this.setState({
         tabsKey: key,
       }, () => {
-
+        this.initV(this.props.hkvideoListParameters[0]);
       })
     }
   };
@@ -267,39 +341,73 @@ class GBSVideo extends Component {
   }
 
   /**
-    *  video-url	视频地址	String	-
-    *  video-title	视频右上角显示的标题	String	-
-    *  snap-url	视频封面图片	String	-
-    *  auto-play	自动播放	Boolean	true
-    *  live	是否直播, 标识要不要显示进度条	Boolean	true
-    *  speed	是否显示倍速播放按钮。注意：当live为true时，此属性不生效	Boolean	true
-    *  loop	是否轮播。	Boolean	false
-    *  alt	视频流地址没有指定情况下, 视频所在区域显示的文字	String	无信号
-    *  muted	是否静音	Boolean	false
-    *  aspect	视频显示区域的宽高比	String	16:9
-    *  isaspect	视频显示区域是否强制宽高比	Boolean	true
-    *  loading	指示加载状态, 支持 sync 修饰符	String	-
-    *  fluent	流畅模式	Boolean	true
-    *  timeout	加载超时(秒)	Number	20
-    *  stretch	是否不同分辨率强制铺满窗口	Boolean	false
-    *  show-custom-button	是否在工具栏显示自定义按钮(极速/流畅, 拉伸/标准)	Boolean	true
-    *  isresolution	是否在播放 m3u8 时显示多清晰度选择	Boolean	false
-    *  isresolution	供选择的清晰度 "yh,fhd,hd,sd", yh:原始分辨率	fhd:超清，hd:高清，sd:标清	-
-    *  resolutiondefault	默认播放的清晰度	String	hd
+   * 时间回调
    */
+  dateCallBack=(dates,dataType,fieldName)=>{
+    this.onChange('startValue',dates[0]);
+    this.onChange('endValue',dates[1]);
+    this.setState({
+      beginDate:dates[0],
+      endDate:dates[1],
+    });
+  }
+
   render() {
     const { hkvideoListParameters, IsLoading } = this.props;
     const { endOpen, IsIE } = this.state;
+    // if (!IsIE) {
+    //   return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style={
+    //     {
+    //       textAlign: 'center',
+    //     }
+    //   } > <Empty image={
+    //     Empty.PRESENTED_IMAGE_SIMPLE
+    //   } description="请在IE11浏览器中打开网站并观看视频"
+    //     /></div ></Card>);
+    // }
+    if (IsLoading) {
+      return (<Spin
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 225px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        size="large"
+      />);
+    }
+    if (IsLoading) {
+      return (<Spin
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 225px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        size="large"
+      />);
+    }
+    if (hkvideoListParameters.length === 0) {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style={
+        {
+          textAlign: 'center',
+        }
+      } > <Empty image={
+        Empty.PRESENTED_IMAGE_SIMPLE
+      } description="暂无视频数据"
+        /></div ></Card>);
+    }
     return (
       <div style={{ height: 'calc(100vh - 210px)', width: '100%' }}>
         <Row gutter={24} style={{ height: '100%' }}>
           <Col xl={18} lg={24} md={24} sm={24} xs={24} style={{ height: '100%', overflow: 'hidden' }}>
-          <easy-player video-url="http://121.40.50.44:10001/flv/hls/34020000001320000510_0200000511.flv" muted="true" auto-play="true" live="true" aspect="600:350" debug="true"
-   isresolution="true" resolution="yh,fhd,hd,sd" resolutiondefault="yh"></easy-player>
+            <div id="divPlugin" style={{ width: '100%', marginRight: '10px', height: '100%', position: 'absolute', zIndex: '-1' }} />
           </Col>
           <Col xl={6} lg={24} md={24} sm={24} xs={24} style={{ height: '100%' }}>
             <Card className={styles.card}>
-            <Tabs
+              <Tabs
                 defaultActiveKey="1"
                 onChange={key => {
                   this.tabsChange(key);
@@ -308,27 +416,39 @@ class GBSVideo extends Component {
                 <TabPane tab="实时" key="1">
                   <Card className={styles.hisYunStyle}>
                     <Row style={{ textAlign: 'center' }}>
+                      <Col span={8}>
+                        <Button
+                          icon="file-image"
+                          size="Small"
+                          onClick={this.CapturePic.bind(this)}
+                        > 抓图
+                                                </Button>
+                      </Col>
+                    </Row>
+                    <Divider type="horizontal" />
+                    <Row style={{ textAlign: 'center' }}>
                       <Col span={24}>
                         <Row>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
                               onClick={
-                                this.PTZChange.bind(this, 'upleft')
+                                this.btnClick.bind(this, 5)
                               }
-                            > <Lefttop />左上</Button>
+                            > <Lefttop />左上
+                                                </Button>
                           </Col>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'up')}
+                              onClick={this.btnClick.bind(this, 1)}
                             ><Top />上&nbsp;&nbsp;&nbsp;
                                                 </Button>
                           </Col>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'upright')}
+                              onClick={this.btnClick.bind(this, 7)}
                             ><Righttop /> 右上
                                                 </Button>
                           </Col>
@@ -337,16 +457,19 @@ class GBSVideo extends Component {
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'left')}
+                              onClick={this.btnClick.bind(this, 3)}
                             ><Left />左&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
-                          </Col>
-                          <Col className={styles.gutterleft} span={8}>
-
                           </Col>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 4)}
+                              onClick={this.btnClick.bind(this, 9)}
+                            ><Adaption />自动</Button>
+                          </Col>
+                          <Col className={styles.gutterleft} span={8}>
+                            <Button
+                              size="Small"
+                              onClick={this.btnClick.bind(this, 4)}
                             ><Right />右&nbsp;&nbsp;&nbsp;</Button>
                           </Col>
                         </Row>
@@ -354,19 +477,19 @@ class GBSVideo extends Component {
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'upright')}
-                            ><Leftdown />&nbsp;左下</Button>
+                              onClick={this.btnClick.bind(this, 6)}
+                            ><Leftdown />左下</Button>
                           </Col>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'down')}
+                              onClick={this.btnClick.bind(this, 2)}
                             ><Down />下&nbsp;&nbsp;&nbsp;</Button>
                           </Col>
                           <Col className={styles.gutterleft} span={8}>
                             <Button
                               size="Small"
-                              onClick={this.PTZChange.bind(this, 'downright')}
+                              onClick={this.btnClick.bind(this, 8)}
                             ><Rightdown />右下</Button>
                           </Col>
                         </Row>
@@ -385,7 +508,7 @@ class GBSVideo extends Component {
                                     icon="zoom-in"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.PTZChange.bind(this, 'zoomin')}
+                                    onClick={this.btnZoomClick.bind(this, 11)}
                                   />
                                 </Col>
                                 <Col className={styles.gutterleft} span={8}>变倍</Col>
@@ -395,7 +518,7 @@ class GBSVideo extends Component {
                                     icon="zoom-out"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.PTZChange.bind(this, 'zoomout')}
+                                    onClick={this.btnZoomClick.bind(this, 12)}
                                   />
                                 </Col>
                               </div>
@@ -410,7 +533,7 @@ class GBSVideo extends Component {
                                     icon="zoom-in"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.FLChange.bind(this, 'focusnear')}
+                                    onClick={this.btnFocusClick.bind(this, 15)}
                                   />
                                 </Col>
                                 <Col className={styles.gutterleft} span={8}>变焦</Col>
@@ -420,7 +543,7 @@ class GBSVideo extends Component {
                                     icon="zoom-out"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.FLChange.bind(this, 'focusfar')}
+                                    onClick={this.btnFocusClick.bind(this, 16)}
                                   />
                                 </Col>
                               </div>
@@ -435,7 +558,7 @@ class GBSVideo extends Component {
                                     icon="zoom-in"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.FLChange.bind(this, 'irisin')}
+                                    onClick={this.btnIrisClick.bind(this, 19)}
                                   />
                                 </Col>
                                 <Col className={styles.gutterleft} span={8}>光圈</Col>
@@ -445,7 +568,7 @@ class GBSVideo extends Component {
                                     icon="zoom-out"
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
-                                    onClick={this.FLChange.bind(this, 'irisout')}
+                                    onClick={this.btnIrisClick.bind(this, 20)}
                                   />
                                 </Col>
                               </div>
@@ -457,7 +580,7 @@ class GBSVideo extends Component {
                     <Divider type="horizontal" />
                     <Row gutter={48}>
                       <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-
+                        {this.state.displayR && <HkRealVideoData dgimn={this.state.dgimn} />}
                       </Col>
                     </Row>
                   </Card>
@@ -467,7 +590,7 @@ class GBSVideo extends Component {
                     <Row>
                       <Col span={24}>
                         <Row>
-                          <Col span={10}>
+                          {/* <Col span={10}>
                             <DatePicker
                               style={{ width: '170px', minWidth: '130px' }}
                               disabledDate={
@@ -503,6 +626,9 @@ class GBSVideo extends Component {
                                 this.handleEndOpenChange
                               }
                             />
+                          </Col> */}
+                          <Col>
+                             <RangePicker_ callback={(dates,dataType,fieldName)=>this.dateCallBack(dates,dataType,fieldName)} style={{width:'100%'}}  />
                           </Col>
                         </Row>
                       </Col>
@@ -524,19 +650,30 @@ class GBSVideo extends Component {
                     <Row>
                       <Col span={24}>
                         <Row>
-                          <Col className={styles.gutterleft} span={12}><Button icon="pause-circle" onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
-                          <Col className={styles.gutterleft} span={12}><Button icon="check-circle" onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
+
+                          <Col className={styles.gutterleft} span={8}><Button icon="pause-circle" onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="check-circle" onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="picture" onClick={this.CapturePic.bind(this)}>抓图</Button></Col>
                         </Row>
                         <Row style={{ marginTop: '30px' }}>
-                          <Col className={styles.gutterleft} span={12}><Button icon="step-forward" onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
-                          <Col className={styles.gutterleft} span={12}><Button icon="fast-forward" onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="step-forward" onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="fast-forward" onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon="fast-backward" onClick={this.reverseBack.bind(this)}> 倒放</Button></Col>
                         </Row>
                       </Col>
                     </Row>
                     <Divider type="horizontal" />
                     <Row gutter={48} style={{ display: this.state.displayH }}>
                       <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-
+                        {this.state.displayR && (
+                          <HkHisVideoData
+                            onRef={this.onRef1}
+                            {...this.props}
+                            dgimn={this.state.dgimn}
+                            beginDate={this.state.beginDate}
+                            endDate={this.state.endDate}
+                          />
+                        )}
                       </Col>
                     </Row>
                   </Card>
@@ -549,4 +686,4 @@ class GBSVideo extends Component {
     );
   }
 }
-export default GBSVideo;
+export default HkShowVideo;
