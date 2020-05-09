@@ -395,6 +395,15 @@ class DateReportPage extends PureComponent {
                         placeholder="请选择污染物类型"
                         onChange={value => {
                           this.props.dispatch({
+                            type: 'report/updateState',
+                            payload: {
+                              dateReportForm: {
+                                ...this.props.dateReportForm,
+                                current: 1,
+                              },
+                            },
+                          });
+                          this.props.dispatch({
                             type: "report/getPointReportEntAndPointList",
                             payload: {
                               "PollutantTypes": value,
