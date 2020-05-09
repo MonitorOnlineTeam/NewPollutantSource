@@ -593,6 +593,9 @@ class MapView extends Component {
       },
       yAxis: {
         type: 'value',
+        nameTextStyle: {
+          padding: [0, 0, 0, 24]
+        },
         name: this.state.chartTitle ? this.state.chartTitle : (this.props.tableList.length && this.props.tableList[0].title),
         axisLabel: {
           formatter: '{value}',
