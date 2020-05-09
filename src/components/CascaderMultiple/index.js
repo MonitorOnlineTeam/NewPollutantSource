@@ -36,7 +36,7 @@ class CascaderMultiple extends PureComponent {
 
   componentDidMount() {
     let activeElement = document;
-    if(config.isShowTabs && defaultSettings.layout === "sidemenu"){
+    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
       activeElement = document.getElementsByClassName("ant-tabs-tabpane-active")[0];
     }
     let cascaderMultiple = activeElement.getElementsByClassName('cascaderMultiple')[0];
@@ -70,6 +70,9 @@ class CascaderMultiple extends PureComponent {
       },
       callback: res => {
         const entAndPointList = res;
+        let currentChildren = [];
+        let currentIndex = 1;
+        let currentEntLable = "";
         // 计算全部长度
         let checkedValues = [];
         entAndPointList.filter(item => {
@@ -96,8 +99,9 @@ class CascaderMultiple extends PureComponent {
               this.props.value && this.props.value.map(val => {
                 if (itm.key == val) {
                   checkedLabels.push(item.title + "/" + itm.title)
-                  // currentChildren = item.children;
-                  // currentIndex = index
+                  currentChildren = item.children;
+                  currentIndex = 1
+                  currentEntLable = item.title
                 }
               })
             })
@@ -115,7 +119,10 @@ class CascaderMultiple extends PureComponent {
           allLength: checkedValues.length,
           checkedValues: this.props.value,
           checkedLabels: checkedLabels,
-          all: this.props.value ? checkedValues.length === this.props.value.length : false
+          all: this.props.value ? checkedValues.length === this.props.value.length : false,
+          currentChildren: currentChildren,
+          currentIndex: currentIndex,
+          currentEntLable: currentEntLable
         })
 
 
@@ -155,7 +162,7 @@ class CascaderMultiple extends PureComponent {
       this.setState({
         checkedValues: nextProps.value,
         checkedLabels: checkedLabels,
-        all: this.state.allLength === nextProps.value.length
+        all: this.state.allLength === nextProps.value.length,
         // currentChildren: currentChildren,
         // currentIndex: currentIndex
       })
@@ -288,7 +295,8 @@ class CascaderMultiple extends PureComponent {
                       this.setState({
                         // inputValue: inputValue,
                         options: newOptions,
-                        currentEntLable: newOptions[0].title,
+                        currentIndex: 0,
+                        currentEntLable: newOptions[0] ? newOptions[0].title : "",
                         currentChildren: newOptions.length ? newOptions[0].children || [] : []
                       })
 
@@ -318,7 +326,7 @@ class CascaderMultiple extends PureComponent {
             <div>
               <ul className="ant-cascader-menu">
                 {
-                  options.length ? options.map((item, index) => {
+                  options.length ? options.map((item = {}, index) => {
                     return (
                       <li key={index} className={`ant-cascader-menu-item ant-cascader-menu-item-expand ${currentIndex === index ? "ant-cascader-menu-item-active" : null}`} title={item.title} role="menuitem" onClick={(e) => {
                         // <li className={`ant-cascader-menu-item ant-cascader-menu-item-expand`} title="Zhejiang" role="menuitem" onClick={(e) => {
