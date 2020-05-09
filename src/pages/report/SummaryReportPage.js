@@ -145,6 +145,7 @@ class SummaryReportPage extends PureComponent {
         {
           title: "排口名称",
           dataIndex: 'PointName',
+          width: 160,
         },
         {
           title: '时间',
