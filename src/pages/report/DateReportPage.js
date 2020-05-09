@@ -422,26 +422,28 @@ class DateReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={7} md={8} xs={24}>
-                  <FormItem
-                    {...formLayout}
-                    label="监控目标"
-                    style={{ width: '100%' }}
-                  >
-                    {getFieldDecorator('DGIMN', {
-                      initialValue: this.props.form.getFieldValue("DGIMN"),
-                      rules: [
-                        {
-                          required: true,
-                          message: '请选择监控目标',
-                        },
-                      ],
-                    })(
-                      <CascaderMultiple pollutantTypes={getFieldValue("PollutantSourceType")}  {...this.props} />
-                    )}
-                  </FormItem>
-                </Col>
-
+                {
+                  getFieldValue("PollutantSourceType") &&
+                  <Col xxl={7} md={8} xs={24}>
+                    <FormItem
+                      {...formLayout}
+                      label="监控目标"
+                      style={{ width: '100%' }}
+                    >
+                      {getFieldDecorator('DGIMN', {
+                        initialValue: this.props.form.getFieldValue("DGIMN"),
+                        rules: [
+                          {
+                            required: true,
+                            message: '请选择监控目标',
+                          },
+                        ],
+                      })(
+                        <CascaderMultiple pollutantTypes={getFieldValue("PollutantSourceType")}  {...this.props} />
+                      )}
+                    </FormItem>
+                  </Col>
+                }
                 <Col xxl={5} md={6} xs={24} style={{ display: getFieldValue("PollutantSourceType") == 5 ? "block" : "none" }}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('airReportTime', {
