@@ -120,7 +120,7 @@ class DataQuery extends Component {
       defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
       onChange={this.handlePollutantChange}
       placeholder="请选择污染物"
-      maxTagCount={2}
+      maxTagCount={1}
       maxTagTextLength={5}
       maxTagPlaceholder="..."
       style={{ width: 160 }}

@@ -188,7 +188,7 @@ export default Model.extend({
         pollutantlist.map((item, key) => {
           const unit = item.Unit ? `(${item.Unit})` : ''
           pollutantcols = pollutantcols.concat({
-            title: item.PollutantName + unit,
+            title: <>{item.PollutantName}<br />({item.Unit})</>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
