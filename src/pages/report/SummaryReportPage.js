@@ -30,7 +30,8 @@ const { MonthPicker, RangePicker } = DatePicker
   regionList: autoForm.regionList,
   configInfo: global.configInfo,
   entAndPontList: report.entAndPontList,
-  summaryForm: report.summaryForm
+  summaryForm: report.summaryForm,
+  Total: report.Total,
 }))
 class SummaryReportPage extends PureComponent {
   constructor(props) {
@@ -42,6 +43,8 @@ class SummaryReportPage extends PureComponent {
       currentDate: moment(),
       beginTime: moment().add(-1, 'day').format('YYYY-MM-DD 00:00:00'),
       endTime: moment().add(-1, 'day').format('YYYY-MM-DD 23:59:59'),
+      pageIndex: 1,
+      pageSize: 20,
     };
     this.SELF = {
       formLayout: {
@@ -206,7 +209,9 @@ class SummaryReportPage extends PureComponent {
                   "Regions": '', //values.Regions.toString(),
                   "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
                   BeginTime: this.state.beginTime,
-                  EndTime: this.state.endTime
+                  EndTime: this.state.endTime,
+                  pageIndex: this.state.pageIndex,
+                  pageSize: this.state.pageSize,
                   //  ..._payload
                 },
                 reportType: values.reportType
@@ -260,7 +265,7 @@ class SummaryReportPage extends PureComponent {
             "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
             BeginTime: this.state.beginTime,
             EndTime: this.state.endTime,
-            Type:values.reportType
+            Type: values.reportType
           }
         })
       }
@@ -282,12 +287,20 @@ class SummaryReportPage extends PureComponent {
       endTime: dates[1].format('YYYY-MM-DD HH:mm:ss')
     });
   }
-
+  // 分页
+  onTableChange = (pageIndex, pageSize) => {
+    this.setState({
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    })
+      // 获取表格数据
+      this.statisticsReport()
+  };
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, summaryForm, entAndPointLoading, form: { getFieldDecorator, getFieldValue }, pollutantTypeList, enterpriseList, configInfo, entAndPontList } = this.props;
+    const { loading, dailySummaryDataList, exportLoading, regionList, summaryForm, entAndPointLoading, form: { getFieldDecorator, getFieldValue }, pollutantTypeList, enterpriseList, configInfo, entAndPontList, Total } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
-
+    const { pageSize, pageIndex } = this.state
     const reportType = getFieldValue("reportType")
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
@@ -467,6 +480,14 @@ class SummaryReportPage extends PureComponent {
                   }
                 }
               }
+              pagination={{
+                // showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize: pageSize,
+                current: pageIndex,
+                onChange: this.onTableChange,
+                total: Total,
+              }}
             // bordered
             // pagination={true}
             />

@@ -53,6 +53,7 @@ export default Model.extend({
     },
     smokeReportData: [],
     pointName: "",
+    Total:0,
     // 烟气报表 ----- 结束
   },
 
@@ -206,13 +207,13 @@ export default Model.extend({
         let data = [];
         if (result.Datas.length) {
           data = result.Datas.map(item => {
-            return item.Datas.map(itm => {
-              return { ...itm, EntName: item.EntName, rowSpan: item.Datas.length }
-            })
-          }).reduce((acc, cur) => acc.concat(cur))
+            // return { ...item, EntName: item.EntName}
+              return {EntName: item.EntName, ...item.DatasItem }
+          })
         }
         yield update({
-          dailySummaryDataList: data
+          dailySummaryDataList: data,
+          Total:result.Total,
         })
       }
     },
