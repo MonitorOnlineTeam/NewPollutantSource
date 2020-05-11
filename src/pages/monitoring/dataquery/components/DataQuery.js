@@ -82,6 +82,45 @@ class DataQuery extends Component {
 
   }
 
+  diffTime = () => {
+    let isSearch = true;
+    let ranges = null;
+    const { historyparams: { beginTime, endTime } } = this.props;
+    switch (this.state.dataType) {
+      case "realtime":
+        ranges = moment(endTime).add(-7, 'day');
+        if (ranges > moment(beginTime)) {
+          message.info('实时数据时间间隔不能超过7天');
+          isSearch = false
+        }
+        break;
+      case "minute":
+        ranges = moment(endTime).add(-1, 'month');
+        if (ranges > moment(beginTime)) {
+          message.info('分钟数据时间间隔不能超过1个月');
+          isSearch = false
+        }
+        break;
+      case "hour":
+        ranges = moment(endTime).add(-6, 'month');
+        if (ranges > moment(beginTime)) {
+          message.info('小时数据时间间隔不能超过6个月');
+          isSearch = false
+        }
+        break;
+      case "day":
+        ranges = moment(EndTime).add(-12, 'month');
+        if (ranges > moment(beginTime)) {
+          message.info('日数据时间间隔不能超过1年');
+          isSearch = false
+        }
+        break;
+    }
+    return isSearch;
+  }
+
+
+
   /** 根据排口dgimn获取它下面的所有污染物 */
   getpointpollutants = dgimn => {
     this.props.dispatch({
@@ -367,7 +406,11 @@ class DataQuery extends Component {
                   })
                   // this.reloaddatalist(historyparams);
                 }} />
-                <Button type="primary" loading={false} onClick={() => { this.reloaddatalist() }} style={{ marginRight: 10 }}>查询</Button>
+                <Button type="primary" loading={false} onClick={() => {
+                  if (this.diffTime()) {
+                    this.reloaddatalist()
+                  }
+                }} style={{ marginRight: 10 }}>查询</Button>
                 <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
               </Row>
               <Row style={{ marginTop: 10 }}>
