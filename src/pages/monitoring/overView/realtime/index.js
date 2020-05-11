@@ -152,7 +152,7 @@ class index extends Component {
           title: '序号',
           dataIndex: 'index',
           key: 'index',
-          width: 60,
+          width: 50,
           align: 'center',
           fixed: fixed,
           show: true,
@@ -198,7 +198,7 @@ class index extends Component {
           title: '监测点',
           dataIndex: 'pointName',
           // width: 160,
-          width: 220,
+          width: 210,
           // ellipsis: true,
           key: 'pointName',
           fixed: fixed,
@@ -220,8 +220,8 @@ class index extends Component {
         },
         {
           title: '监测时间',
-          // width: 150,
-          width: 10,
+          width: 140,
+          // width: 10,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed: fixed,
@@ -571,7 +571,7 @@ class index extends Component {
             rowClassName={(record, index, indent) => {
               return;
             }}
-            defaultWidth={80}
+            defaultWidth={94}
             loading={dataLoading || columnLoading}
             size="middle"
             bordered={true}
