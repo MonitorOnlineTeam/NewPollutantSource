@@ -14,14 +14,14 @@ const columns = [
     title: '监测点名称',
     dataIndex: 'PointName',
     key: 'PointName',
-    width: 200,
+    width: 180,
     // fixed: 'left',
   },
   {
     title: '监测时间',
     dataIndex: 'MonitorTime',
     key: 'MonitorTime',
-    width: 200,
+    width: 90,
     // fixed: 'left',
   },
   {
@@ -29,103 +29,109 @@ const columns = [
     children: [
       {
         title: '二氧化硫（SO₂ ）24小时平均',
+        width: 200,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '03',
             key: '03',
-            width: 150,
+            width: 115,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '03_IAQI',
             key: '03_IAQI',
-            width: 150,
+            width: 105,
           },
         ]
       },
       {
         title: '二氧化硫（NO₂ ）24小时平均',
+        width: 200,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '05',
             key: '05',
-            width: 150,
+            width: 110,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '05_IAQI',
             key: '05_IAQI',
-            width: 150,
+            width: 90,
           },
         ]
       },
       {
         title: '颗粒物（粒径小于等于10μm）24小时平均',
+        width: 250,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '07',
             key: '07',
-            width: 150,
+            width: 140,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '07_IAQI',
             key: '07_IAQI',
-            width: 150,
+            width: 110,
           },
         ]
       },
       {
         title: '一氧化氮（CO）24小时平均',
+        width: 200,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '02',
             key: '02',
-            width: 150,
+            width: 110,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '02_IAQI',
             key: '02_IAQI',
-            width: 150,
+            width: 90,
           },
         ]
       },
       {
         title: '臭氧（O₃）24小时平均',
+        width: 200,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '01',
             key: '01',
-            width: 150,
+            width: 110,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '01_IAQI',
             key: '01_IAQI',
-            width: 150,
+            width: 90,
           },
         ]
       },
       {
         title: '颗粒物（粒径小于等于2.5μm）24小时平均',
+        width: 250,
         children: [
           {
             title: '浓度（μg/m³）',
             dataIndex: '08',
             key: '08',
-            width: 150,
+            width: 140,
           },
           {
             title: 'IAQI分指数',
             dataIndex: '08_IAQI',
             key: '08_IAQI',
-            width: 150,
+            width: 110,
           },
         ]
       },
@@ -133,30 +139,32 @@ const columns = [
   },
   {
     title: '空气质量指数（AQI）',
+    // title: <>空气质量指数 <br />（AQI）</>,
     dataIndex: 'AQI',
     key: 'AQI',
-    width: 150,
+    width: 70,
   },
   {
     title: '首要污染物',
     dataIndex: 'PrimaryPollutant',
     key: 'PrimaryPollutant',
-    width: 150,
+    width: 70,
   },
   {
     title: '空气质量指数级别',
     dataIndex: 'AirLevel',
     key: 'AirLevel',
-    width: 150,
+    width: 70,
   },
   {
     title: '空气质量指数类别',
+    width: 140,
     children: [
       {
         title: '颜色',
         dataIndex: 'AirColorCN',
         key: 'AirColorCN',
-        width: 150,
+        width: 60,
         render: (text, record) => {
           return <span style={{ color: record.AirColor }}>{text}</span>
         }
@@ -165,7 +173,7 @@ const columns = [
         title: '等级',
         dataIndex: 'AirQuality',
         key: 'AirQuality',
-        width: 150,
+        width: 80,
       },
     ],
   },
@@ -224,7 +232,7 @@ class Report extends PureComponent {
       }
     })
   }
-   
+
   dateOnchange=(dates,beginTime,endTime)=>{
       const {form:{setFieldsValue}}=this.props;
       setFieldsValue({"ReportTime":dates});
@@ -292,7 +300,7 @@ class Report extends PureComponent {
           />
         </Card>
       </BreadcrumbWrapper>
-    );  
+    );
   }
 }
 

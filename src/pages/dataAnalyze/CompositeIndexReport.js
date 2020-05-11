@@ -54,16 +54,17 @@ class CompositeIndexReport extends Component {
       columns: [
         {
           title: '排口名称',
-          width: 300,
+          width: 200,
           dataIndex: 'DGIMN',
         },
         {
           title: '综合指数',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: 'Isum',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -71,7 +72,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: 'IsumYear',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -79,7 +80,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: 'IsumChain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -88,11 +89,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'O₃',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '01',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -100,7 +102,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '01Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -108,7 +110,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '01Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -117,11 +119,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'Co',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '02',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -129,7 +132,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '02Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -137,7 +140,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '02Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -146,11 +149,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'SO₂',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '03',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -158,7 +162,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '03Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -166,7 +170,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '03Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -175,11 +179,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'NO₂',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '05',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -187,7 +192,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '05Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -195,7 +200,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '05Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -204,11 +209,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'PM10',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '07',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -216,7 +222,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '07Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -224,7 +230,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '07Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -233,11 +239,12 @@ class CompositeIndexReport extends Component {
         },
         {
           title: 'PM2.5',
+          width: 220,
           children: [
             {
               title: '数值',
               dataIndex: '08',
-              width: 100,
+              width: 60,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -245,7 +252,7 @@ class CompositeIndexReport extends Component {
             {
               title: '同比',
               dataIndex: '08Year',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -253,7 +260,7 @@ class CompositeIndexReport extends Component {
             {
               title: '环比',
               dataIndex: '08Chain',
-              width: 100,
+              width: 80,
               render: (text, record) => {
                 return text !== undefined ? text : '-'
               }
@@ -563,7 +570,7 @@ class CompositeIndexReport extends Component {
                 </Col>
               </Row>
             </Form>
-            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={100} />
+            <SdlTable columns={columns_} dataSource={compositeIndexDataSource} pagination={false} defaultWidth={100} scroll={{ x: "1800px" }} />
             {/* scroll={{ x: 2600, y: 'calc(100vh - 380px)' }}  */}
           </Card>
         </Spin>

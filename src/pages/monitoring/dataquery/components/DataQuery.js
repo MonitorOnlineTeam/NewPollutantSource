@@ -6,6 +6,7 @@ import {
   Spin,
   message, Empty, Radio, Row, Col,
   Button, Form,
+  Select
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -14,6 +15,8 @@ import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 import SelectTime from "@/pages/monitoring/dataquery/components/SelectTime"
 
+
+const { Option } = Select;
 @Form.create()
 /**
  * 数据查询组件
@@ -46,7 +49,9 @@ class DataQuery extends Component {
       selectP: '',
       dgimn: '',
       dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      dataType: "realtime"
+      dataType: "realtime",
+      pollutantCodes: [],
+      pollutantNames: []
     };
   }
 
@@ -58,15 +63,23 @@ class DataQuery extends Component {
   componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
       // this.changeDgimn(nextProps.DGIMN);
-      this.setState({dgimn: nextProps.DGIMN})
+      this.props.dispatch({
+        type: 'dataquery/querypollutantlist',
+        payload: {
+          dgimn: nextProps.DGIMN,
+          notLoad: true
+        },
+        callback: (historyparams) => {
+          this.setState({ dgimn: nextProps.DGIMN, pollutantCodes: historyparams.pollutantCodes, pollutantNames: historyparams.pollutantNames })
+        }
+      });
     }
-    // if (this.props.pollutantlist !== nextProps.pollutantlist) {
-    //   this.dispatch({
-    //     type: 'dataquery/queryhistorydatalist',
-    //     payload: {
-    //     },
-    //   });
-    // }
+    if (this.props.pollutantlist !== nextProps.pollutantlist) {
+      this.setState({
+        pollutantCodes: nextProps.pollutantlist.map((item) => item.PollutantCode)
+      })
+    }
+
   }
 
   /** 根据排口dgimn获取它下面的所有污染物 */
@@ -113,19 +126,34 @@ class DataQuery extends Component {
     const {
       displayType,
       selectP,
+      pollutantCodes
     } = this.state;
     const { pollutantlist } = this.props;
-    return (<PollutantSelect
-      mode="multiple"
-      optionDatas={pollutantlist}
-      defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-      onChange={this.handlePollutantChange}
-      placeholder="请选择污染物"
-      maxTagCount={1}
-      maxTagTextLength={5}
-      maxTagPlaceholder="..."
-      style={{ width: 160 }}
-    />);
+    let value = pollutantCodes;
+    if (typeof pollutantCodes === 'string' && pollutantCodes) {
+      value = pollutantCodes.split(",")
+    }
+    return (
+      <Select
+        mode="multiple"
+        value={value}
+        onChange={this.handlePollutantChange}
+        placeholder="请选择污染物"
+        maxTagCount={1}
+        maxTagTextLength={5}
+        maxTagPlaceholder="..."
+        style={{ width: 160 }}
+      >
+        {
+          pollutantlist.map((item, key) => {
+            return <Option
+              key={key}
+              value={item.PollutantCode}
+            >{item.PollutantName}</Option>
+          })
+        }
+      </Select>
+    );
   }
 
   /**切换污染物 */
@@ -145,6 +173,8 @@ class DataQuery extends Component {
     }
     this.setState({
       selectP: value.length > 0 ? value : [],
+      pollutantCodes: value.length > 0 ? value : [],
+      pollutantNames: res.length > 0 ? res : [],
     })
 
     dispatch({
@@ -180,7 +210,9 @@ class DataQuery extends Component {
       payload: {
         ...payload,
         DGIMN: this.state.dgimn,
-        datatype: this.state.dataType
+        datatype: this.state.dataType,
+        pollutantCodes: this.state.pollutantCodes.toString(),
+        pollutantNames: this.state.pollutantNames.toString()
       },
     });
   }

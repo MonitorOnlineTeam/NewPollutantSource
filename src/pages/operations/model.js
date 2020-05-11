@@ -153,7 +153,7 @@ export default Model.extend({
               uid: index,
               name: item,
               status: 'done',
-              url: `/upload/${item}`,
+              url: `/uploadplantform/${item}`,
             }))
           yield update({
             imageListVisible: true,
