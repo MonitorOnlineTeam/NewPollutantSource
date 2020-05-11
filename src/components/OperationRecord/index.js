@@ -164,49 +164,50 @@ class OperationRecord extends Component {
     var type = this.props.PollutantType
     // const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
     const currentRecordType = this.props.currentRecordType || 1;
-    if (type == "2") {
-      switch (currentRecordType) {
-        case 1://维修记录表
-          configid = 'FormMainInfoRepair'
-          break;
-        case 2://停机记录表
-          configid = 'FormMainInfoStop'
-          break;
-        case 3://易耗品更换记录表
-          configid = 'FormMainInfoCon'
-          break;
-        case 4://标准气体更换记录表
-          configid = 'FormMainInfoGas'
-          break;
-        case 5://完全抽取法CEMS日常巡检记录表
-          configid = 'FormMainInfoPatrol'
-          break;
-        case 6://稀释采样法CEMS日常巡检记录表
-          configid = 'FormMainInfoPatrol'
-          break;
-        case 7://直接测量法CEMS日常巡检记录表
-          configid = 'FormMainInfoPatrol'
-          break;
-        case 8://CEMS零点量程漂移与校准记录表
-          configid = ''
-          break;
-        case 9://CEMS校验测试记录
-          configid = 'FormMainInfoTestResult'
-          break;
-        case 10://CEMS设备数据异常记录表
-          configid = 'FormMainInfoDeviceExce'
-          break;
-        case 27://保养项记录表
-          configid = 'FormMainInfoMain'
-          break;
-        case 28://备品备件记录表
-          configid = 'FormMainInfoSpare'
-          break;
-      }
-    }
-    else {
-      configid = 'FormMainInfoPic'
-    }
+    configid = 'FormMainInfoPic'
+    // if (type == "2") {
+    //   switch (currentRecordType) {
+    //     case 1://维修记录表
+    //       configid = 'FormMainInfoRepair'
+    //       break;
+    //     case 2://停机记录表
+    //       configid = 'FormMainInfoStop'
+    //       break;
+    //     case 3://易耗品更换记录表
+    //       configid = 'FormMainInfoCon'
+    //       break;
+    //     case 4://标准气体更换记录表
+    //       configid = 'FormMainInfoGas'
+    //       break;
+    //     case 5://完全抽取法CEMS日常巡检记录表
+    //       configid = 'FormMainInfoPatrol'
+    //       break;
+    //     case 6://稀释采样法CEMS日常巡检记录表
+    //       configid = 'FormMainInfoPatrol'
+    //       break;
+    //     case 7://直接测量法CEMS日常巡检记录表
+    //       configid = 'FormMainInfoPatrol'
+    //       break;
+    //     case 8://CEMS零点量程漂移与校准记录表
+    //       configid = ''
+    //       break;
+    //     case 9://CEMS校验测试记录
+    //       configid = 'FormMainInfoTestResult'
+    //       break;
+    //     case 10://CEMS设备数据异常记录表
+    //       configid = 'FormMainInfoDeviceExce'
+    //       break;
+    //     case 27://保养项记录表
+    //       configid = 'FormMainInfoMain'
+    //       break;
+    //     case 28://备品备件记录表
+    //       configid = 'FormMainInfoSpare'
+    //       break;
+    //   }
+    // }
+    // else {
+    //   configid = 'FormMainInfoPic'
+    // }
     this.setState({
       configName: configid,
       searchParams: [
@@ -343,9 +344,9 @@ class OperationRecord extends Component {
                 appendHandleRows={row => {
                   return <Tooltip title="详情">
                     <a onClick={() => {
-                      if (this.props.PollutantType == "2") {
-                        router.push('/operations/recordForm/' + currentType + '/' + row['dbo.T_Bas_Task.ID'])
-                      } else {
+                      // if (this.props.PollutantType == "2") {
+                      //   router.push('/operations/recordForm/' + currentType + '/' + row['dbo.T_Bas_Task.ID'])
+                      // } else {
                         // 获取详情图片
                         this.props.dispatch({
                           type: "common/getOperationImageList",
@@ -359,7 +360,7 @@ class OperationRecord extends Component {
                             })
                           }
                         })
-                      }
+                      // }
                     }}><Icon type="profile" style={{ fontSize: 16 }} /></ a>
                   </Tooltip>
                 }}

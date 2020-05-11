@@ -225,7 +225,7 @@ class NavigationTree extends Component {
   controlsScrollBarOffsetTop = () => {
     let selectedTreeNode = $(".ant-tree-treenode-selected");
     let treeElement = $(".ant-tree");
-    if(Setting.layout === "sidemenu" && config.isShowTabs){
+    if (Setting.layout === "sidemenu" && config.isShowTabs) {
       selectedTreeNode = $(".ant-tabs-tabpane-active .ant-tree-treenode-selected")
       treeElement = $(".ant-tabs-tabpane-active .ant-tree")
     }
@@ -285,6 +285,7 @@ class NavigationTree extends Component {
 
   //处理接口返回的企业和排口数据
   generateList = (data = this.state.EntAndPoint, selKeys, overAll) => {
+    debugger
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
@@ -323,6 +324,7 @@ class NavigationTree extends Component {
         } else if (this.props.overallselkeys.length != 0) {
           var state = !!this.state.dataList.find(m => m.key == this.props.overallselkeys[0].toString())
           if (state) {
+            // console.log('state=',this.state.dataList.find(m => m.key == this.props.overallselkeys[0].toString()))
             nowKey = this.props.overallselkeys
             nowExpandKey = this.props.overallexpkeys
           }
@@ -333,8 +335,17 @@ class NavigationTree extends Component {
           overAll: overAll,
           expandedKeys: nowExpandKey
         })
-        var pollutantType = this.state.dataList.find(m => m.key == nowKey[0].toString()) ? this.state.dataList.find(m => m.key == nowKey[0].toString()).Type : "";
-        var rtnKey = [{ key: nowKey[0], pointName: node.title, entName: node.EntName, IsEnt: false, Type: pollutantType, EntCode: node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo }]
+        var hisData = this.state.dataList.find(m => m.key == nowKey[0].toString());
+        // console.log('hisData=', hisData)
+        // var pollutantType = this.state.dataList.find(m => m.key == nowKey[0].toString()) ? this.state.dataList.find(m => m.key == nowKey[0].toString()).Type : "";
+        var pollutantType = hisData ? hisData.Type : "";
+        var pointName = hisData ? hisData.title : "";
+        var entName = hisData ? hisData.entName : "";
+        var EntCode = hisData ? hisData.EntCode : "";
+        var QCAType = hisData ? hisData.QCAType : "";
+        var VideoNo = hisData ? hisData.VideoNo : "";
+        var rtnKey = [{ key: nowKey[0], pointName: pointName, entName: entName, IsEnt: false, Type: pollutantType, EntCode: EntCode, QCAType: QCAType, VideoNo: VideoNo }]
+        console.log('rtnKey=', rtnKey)
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
       }
@@ -663,6 +674,7 @@ class NavigationTree extends Component {
       }
     })
     //向外部返回选中的数据
+    console.log('rtnKey=', rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (rtnList.length == 0) {
