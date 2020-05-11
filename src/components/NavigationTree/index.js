@@ -109,7 +109,7 @@ class NavigationTree extends Component {
             return (
               <>
                 {
-                  record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: "0 10px" }} /> : ""
+                  record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: "0 4px" }} /> : ""
                 }
                 {
                   !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, color: "red", marginTop: 8 }} /></div>

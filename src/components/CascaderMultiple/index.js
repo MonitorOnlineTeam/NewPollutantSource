@@ -71,7 +71,7 @@ class CascaderMultiple extends PureComponent {
       callback: res => {
         const entAndPointList = res;
         let currentChildren = [];
-        let currentIndex = 1;
+        let currentIndex = undefined;
         let currentEntLable = "";
         // 计算全部长度
         let checkedValues = [];
@@ -100,7 +100,7 @@ class CascaderMultiple extends PureComponent {
                 if (itm.key == val) {
                   checkedLabels.push(item.title + "/" + itm.title)
                   currentChildren = item.children;
-                  currentIndex = 1
+                  currentIndex = this.props.value ? 1 : undefined;
                   currentEntLable = item.title
                 }
               })
@@ -117,7 +117,7 @@ class CascaderMultiple extends PureComponent {
             ...entAndPointList,
           ],
           allLength: checkedValues.length,
-          checkedValues: this.props.value,
+          checkedValues: this.props.value || [],
           checkedLabels: checkedLabels,
           all: this.props.value ? checkedValues.length === this.props.value.length : false,
           currentChildren: currentChildren,
