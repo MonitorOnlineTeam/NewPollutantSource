@@ -208,6 +208,8 @@ class SiteParamsPage extends PureComponent {
     const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { format, dataType } = this.state;
     const legendData = chartList.map(item => item.PollutantName);
+    console.log(legendData);
+    debugger
     // series
     const series = chartList.map((item, index) => {
       let otherProps = {}
@@ -222,6 +224,7 @@ class SiteParamsPage extends PureComponent {
         ...otherProps
       }
     })
+    debugger
     const yAxis = chartList.map((item, index) => {
       let otherProps = {}
       if (index === 1) {
@@ -234,6 +237,12 @@ class SiteParamsPage extends PureComponent {
             }
           },
           nameLocation: 'end',
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          },
         }
       } else if (index === 2) {
         otherProps = {
@@ -241,6 +250,12 @@ class SiteParamsPage extends PureComponent {
           nameLocation: 'end',
           position: "left",  //多个Y轴使用
           offset: 60,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          },
         }
       } else if (index === 3) {
         otherProps = {
@@ -248,6 +263,12 @@ class SiteParamsPage extends PureComponent {
           nameLocation: 'end',
           position: "right",  //多个Y轴使用
           offset: 60,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          },
         }
       } else if (index > 3 && index % 2 === 0) {
         otherProps = {
@@ -255,6 +276,12 @@ class SiteParamsPage extends PureComponent {
           nameLocation: 'end',
           position: "left",  //多个Y轴使用
           offset: (index - 3) * -50,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          },
         }
       } else if (index > 3 && index % 2 !== 0) {
         otherProps = {
@@ -262,6 +289,12 @@ class SiteParamsPage extends PureComponent {
           nameLocation: 'end',
           position: "right",  //多个Y轴使用
           offset: (index - 4) * -50,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          },
         }
       }
 
@@ -299,7 +332,10 @@ class SiteParamsPage extends PureComponent {
     if (yAxis.length) {
       return {
         grid: {
-          bottom: 80
+          x: 90,
+          y: 60,
+          x2: 90,
+          y2: 20,
         },
         toolbox: {
           feature: {
@@ -337,6 +373,7 @@ class SiteParamsPage extends PureComponent {
         },
         legend: {
           data: legendData,
+          // padding: [140, 40, 50, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
         },
         xAxis: [
           {
@@ -348,10 +385,17 @@ class SiteParamsPage extends PureComponent {
             splitLine: {
               show: false
             },
+            splitLine: {
+              show: true,
+              lineStyle: {
+                type: 'dashed'
+              }
+            },
           }
         ],
         yAxis: [...yAxis],
-        series: [...series]
+        series: [...series],
+
       };
     }
     return {}
@@ -360,7 +404,7 @@ class SiteParamsPage extends PureComponent {
   pageContent = () => {
     const { showType, columns } = this.state;
     const { siteParamsData: { timeList, tableList, chartList }, loading } = this.props;
-
+debugger
     if (loading) {
       return <PageLoading />
     }
@@ -369,7 +413,7 @@ class SiteParamsPage extends PureComponent {
         <ReactEcharts
           option={this.getOptions()}
           lazyUpdate={true}
-          style={{ height: 'calc(100vh - 310px)', width: '100%' }}
+          style={{ height: 'calc(100vh - 250px)', width: '100%' }}
           className="echarts-for-echarts"
           theme="my_theme"
         /> :

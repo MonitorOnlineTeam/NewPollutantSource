@@ -172,8 +172,9 @@ class MultiSiteParamsPage extends PureComponent {
       legend: {
         data: legend,
         // left: 60,
-        width: "70%"
+        width: "70%",
         // align: 'center',
+       // padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
       },
       toolbox: {
         feature: {
@@ -209,12 +210,30 @@ class MultiSiteParamsPage extends PureComponent {
         splitLine: {
           show: false
         },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
       },
       yAxis: {
         type: 'value',
         splitLine: {
           show: false
-        }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
+      },
+      grid: {
+        x: 60,
+        y: 60,
+        x2: 45,
+        y2: 20,
       },
       series: series
     };
