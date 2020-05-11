@@ -301,9 +301,16 @@ export default class ContentList extends Component {
     //统计AQI按钮确认框
      confirm=()=> {
         const { dispatch ,manualUploadautoParameters} = this.props;
+        var beginTime=manualUploadautoParameters.BeginTime;
+        var endTime=manualUploadautoParameters.EndTime;
+        if(manualUploadautoParameters.Type!='daySelecthour')
+        {
+            beginTime=moment(beginTime).format('YYYY-MM-DD');
+            endTime=moment(endTime).format('YYYY-MM-DD');
+        }
         Modal.confirm({
             title: '提示',
-            content: '确认清除'+manualUploadautoParameters.BeginTime+'-'+manualUploadautoParameters.EndTime+'范围内的AQI并重新计算吗?',
+            content: '确认清除'+beginTime+'-'+endTime+'范围内的AQI并重新计算吗?',
             okText: '确认',
             cancelText: '取消',
             width:500,
