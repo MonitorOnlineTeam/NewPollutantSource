@@ -85,6 +85,8 @@ export default class ContentList extends Component {
                         ...{
                             BeginTime: dates[0].format('YYYY-MM-DD HH:00:00'),
                             EndTime: dates[1].format('YYYY-MM-DD HH:00:00'),
+                            pageIndex: 1,
+                            pageSize: 24,
                         }
                     }
                 }
@@ -190,6 +192,7 @@ export default class ContentList extends Component {
     }
     //分页等改变事件
     onShowSizeChange = (PageIndex, PageSize) => {
+        debugger
         const { dispatch } = this.props;
         dispatch({
             type: 'manualuploadauto/updateState',
@@ -223,7 +226,7 @@ export default class ContentList extends Component {
             action: config.templateUploadUrlAuto,
             onChange(info) {
                 that.setState({
-                    uploadLoading: true
+                    uploadLoading: true,
                 });
                 if (info.file.status === 'done') {
                     message.success("导入成功！")
@@ -237,6 +240,9 @@ export default class ContentList extends Component {
                         uploadLoading: false
                     })
                 }
+                that.setState({
+                    visible: false,
+                })
             },
             multiple: true,
             accept: ".xls,.xlsx",
@@ -252,13 +258,18 @@ export default class ContentList extends Component {
             }
         };
         return (
-            <Upload {...props} >
-                <Button type="primary" >
-                    <Icon type="upload" /> 文件导入
+            <Upload {...props} style={{ marginLeft: 5 }} >
+                <Button type="primary"   >
+                    确认
                 </Button>
             </Upload>
-
         )
+    }
+    //导入之前确认框
+    uploadConfirm = () => {
+        this.setState({
+            visible: true,
+        })
     }
 
     //数据类型切换
@@ -299,39 +310,37 @@ export default class ContentList extends Component {
         this.GetManualSupplementList();
     }
     //统计AQI按钮确认框
-     confirm=()=> {
-        const { dispatch ,manualUploadautoParameters} = this.props;
+    confirm = () => {
+        const { dispatch, manualUploadautoParameters } = this.props;
         Modal.confirm({
             title: '提示',
-            content: '确认清除'+manualUploadautoParameters.BeginTime+'-'+manualUploadautoParameters.EndTime+'范围内的AQI并重新计算吗?',
+            content: '确认清除' + manualUploadautoParameters.BeginTime + '-' + manualUploadautoParameters.EndTime + '范围内的AQI并重新计算吗?',
             okText: '确认',
             cancelText: '取消',
-            width:500,
-            onOk:() => {
+            width: 500,
+            onOk: () => {
                 this.StatisticsAQI()
             },
-            onCancel:()=>{
+            onCancel: () => {
                 console.log('false')
             }
-          });
-      }
+        });
+    }
 
     //统计AQI
     StatisticsAQI = e => {
-        const { dispatch ,manualUploadautoParameters} = this.props;
-        let t1= moment(manualUploadautoParameters.BeginTime);
+        const { dispatch, manualUploadautoParameters } = this.props;
+        let t1 = moment(manualUploadautoParameters.BeginTime);
         let t2 = moment(manualUploadautoParameters.EndTime);
-        var dayNum=t2.diff(t1,'day')+1;
-        console.log(dayNum)  
-        if(dayNum>15)
-        {
+        var dayNum = t2.diff(t1, 'day') + 1;
+        console.log(dayNum)
+        if (dayNum > 15) {
             message.error("日期范围不能超过15天!");
-        }else
-        {
+        } else {
             dispatch({
-            type: 'manualuploadauto/CalculationAQIData',
-            payload: {
-            }
+                type: 'manualuploadauto/CalculationAQIData',
+                payload: {
+                }
             });
             // console.log('yes')
         }
@@ -347,7 +356,8 @@ export default class ContentList extends Component {
     };
     render() {
         const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
-        const { format } = this.state;
+        const { format, visible } = this.state;
+        let dataType = manualUploadautoParameters.Type === "daySelecthour" ? "小时" : "日";
         let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
             dateValue = [moment(manualUploadautoParameters.BeginTime), moment(manualUploadautoParameters.EndTime)];
@@ -357,6 +367,7 @@ export default class ContentList extends Component {
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
         }
+        console.log(uploaddata)
         return (
             <Card
                 extra={
@@ -394,7 +405,9 @@ export default class ContentList extends Component {
                             </Select>
                         </Form.Item> */}
                         <Form.Item>
-                            {this.upload()}
+                            <Button type="primary" onClick={this.uploadConfirm} >
+                                <Icon type="upload" /> 文件导入
+                            </Button>
                             <Spin
                                 delay={500}
                                 spinning={this.state.uploadLoading}
@@ -433,7 +446,27 @@ export default class ContentList extends Component {
                         pageSizeOptions: pageCount
                     }}
                 />
-             
+                <Modal
+                    visible={visible}
+                    onOk={() => this.setModal1Visible(false)}
+                    onCancel={() => this.handleCancel()}
+                    footer={[
+                        <Button key="back" onClick={this.handleCancel}>
+                            取消
+                        </Button>,
+                        this.upload()
+                    ]}
+                >
+                    <div class="ant-modal-confirm-body">
+                        <i style={{ color: "#faad14" }} aria-label="icon: question-circle" class="anticon anticon-question-circle"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="question-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+                            <path d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0 1 30.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1 0 80 0 40 40 0 1 0-80 0z"></path>
+                        </svg>
+                        </i>
+                        <span class="ant-modal-confirm-title">提示</span>
+                        <div class="ant-modal-confirm-content"> 确认导入模板文件中的时间点的<span style={{ color: 'red' }}>{dataType}</span>数据吗?</div></div>
+
+                </Modal>
             </Card>
         );
     }
