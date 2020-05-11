@@ -12,6 +12,7 @@ import {
 import styles from './index.less'
 import { Resizable } from 'react-resizable';
 import { connect } from 'dva'
+import $ from 'jquery'
 
 // const DEFAULT_WIDTH = 180;
 
@@ -96,7 +97,7 @@ class SdlTable extends PureComponent {
     const title = col.title;
     if (col.title.constructor === String) {
       if (title.indexOf('时间') != -1) {
-        return 160;
+        return col.width || 160;
       } else if (title.indexOf('状态') != -1) {
         return col.width || 150;
       } else if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
