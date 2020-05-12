@@ -47,6 +47,7 @@ class SdlTable extends PureComponent {
       _props: {},
       columns: props.columns,
       computeHeight: null,
+      headAndFooterHeight: 110,
     };
 
     this.components = {
@@ -72,8 +73,9 @@ class SdlTable extends PureComponent {
       // let fr=this.refs.polytableframe;
       if (!this._calledComponentWillUnmount) {
         // let otherHeight = this.props.pagination ? 136 : 96;
+
         this.setState({
-          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
         }, () => {
           // console.log("computeHeight=", this.state.computeHeight)
         });
@@ -136,25 +138,38 @@ class SdlTable extends PureComponent {
 
     if (this.props.loading !== nextProps.loading && nextProps.loading === false) {
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
       }, () => {
       });
     }
 
     if (this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false) {
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0) + 110
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
       }, () => {
       });
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.columns !== prevState.columns) {
+      let tableThead = this.sdlTableFrame.getElementsByClassName("ant-table-thead");
+      let tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+      let tableFooter = this.sdlTableFrame.getElementsByClassName("ant-table-footer");
+      let tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+      let count = tableTheadHeight + 65 + tableFooterHeight;
+      this.setState({
+        headAndFooterHeight: count > 110 ? count : 110
+      })
+    }
+  }
+
   render() {
     const { defaultWidth, resizable, clientHeight, pagination } = this.props;
-    const { _props, columns } = this.state;
+    const { _props, columns, headAndFooterHeight } = this.state;
 
     let fixedHeight = this.state.computeHeight;
-    let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight : "");
+    let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight - headAndFooterHeight : "");
     // 没有分页高度 + 40
     let scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
