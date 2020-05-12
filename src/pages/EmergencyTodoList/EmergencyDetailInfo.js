@@ -598,8 +598,8 @@ class EmergencyDetailInfo extends Component {
                         <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
-                                <Description term="排口">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
-                                <Description term="企业">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
+                                <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
+                                <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
@@ -638,7 +638,7 @@ class EmergencyDetailInfo extends Component {
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="2">
                                 <Description term="处理人">
-                                    {isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}
+                                    {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
                                 </Description>
                                 <Description term="处理时间">
                                     {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}

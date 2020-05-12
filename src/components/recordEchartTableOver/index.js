@@ -336,7 +336,7 @@ class Index extends Component {
 
 
     /** 数据类型切换 */
-    _handleDateTypeChange = (e) => {
+    _handleDateTypeChange = e => {
         const dataType = e.target.value;
         this.setState({ dataType });
         this.children.onDataTypeChange(dataType);
@@ -347,8 +347,7 @@ class Index extends Component {
    * 回调获取时间并重新请求数据
    */
     dateCallback = (date, dataType) => {
-        if (!this.props.DGIMN)
-            return;
+        if (!this.props.DGIMN) { return; }
         this.setState({
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -365,13 +364,13 @@ class Index extends Component {
             payload: {
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-                dataType: dataType,
+                dataType,
                 DGIMN: [this.props.DGIMN],
             },
         })
     }
 
-    onRef1 = (ref) => {
+    onRef1 = ref => {
         this.children = ref;
     }
 
@@ -381,16 +380,16 @@ class Index extends Component {
         const option = {
             legend: {
                 orient: 'vertical',
-                x: 'right',      //可设定图例在左、右、居中
-                y: 'top',     //可设定图例在上、下、居中
-                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+                x: 'right', // 可设定图例在左、右、居中
+                y: 'top', // 可设定图例在上、下、居中
+                padding: [15, 30, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
 
             },
             grid: {
                 x: 35,
                 y: 10,
                 x2: 1,
-                y2: 35
+                y2: 35,
             },
             tooltip: {},
             dataset: {
@@ -407,11 +406,12 @@ class Index extends Component {
             },
             xAxis: { type: 'category', triggerEvent: true },
             yAxis: {
-                triggerEvent: true, splitLine: {
+                triggerEvent: true,
+splitLine: {
                     show: true,
                     lineStyle: {
-                        type: 'dashed'
-                    }
+                        type: 'dashed',
+                    },
                 },
             },
             // Declare several bar series, each will be mapped
@@ -428,9 +428,9 @@ class Index extends Component {
 
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
                                 dataType={this.state.dataType}
-                                // format={this.state.format} 
+                                // format={this.state.format}
                                 onRef={this.onRef1}
-                                isVerification={true}
+                                isVerification
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
@@ -463,7 +463,7 @@ class Index extends Component {
                                         style={{
                                             width: '100%',
                                             height: 'calc(100vh - 520px)',
-                                            maxHeight: 280
+                                            maxHeight: 280,
                                         }}
                                     />
 
