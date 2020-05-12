@@ -175,8 +175,8 @@ class NewRangePicker extends Component {
     }
 
     onDateChange = (dates, dateStrings) => {
+        var dateValue = this.getFormatDate(dates[0], dates[1]);
         if (dates && dates.length && dates[0] && dates[1]) {
-            var dateValue = this.getFormatDate(dates[0], dates[1]);
             if (dateValue)
                 this.setState({
                     dateValue,
@@ -186,11 +186,11 @@ class NewRangePicker extends Component {
                     dateValue: [undefined, undefined],
                 });
             }
-        } else {
-            message.error("选择时间段不符合要求，请检查！");
-            return;
-        }
-
+        } 
+        // else {
+        //     message.error("选择时间段不符合要求，请检查！");
+        //     return;
+        // }
     }
 
 
