@@ -145,11 +145,11 @@ class CascaderMultiple extends PureComponent {
       let currentChildren = [];
       let currentIndex = 0;
       // let options = nextProps.options ? nextProps.options : nextProps.entAndPointList;
-      let options = this.state.options;
+      let options = this.state.options || [];
       options.map((item, index) => {
         if (item.children) {
           item.children.map(itm => {
-            nextProps.value.map(val => {
+            nextProps.value && nextProps.value.map(val => {
               if (itm.key == val) {
                 checkedLabels.push(item.title + "/" + itm.title)
                 // currentChildren = item.children;
@@ -162,7 +162,7 @@ class CascaderMultiple extends PureComponent {
       this.setState({
         checkedValues: nextProps.value,
         checkedLabels: checkedLabels,
-        all: this.state.allLength === nextProps.value.length,
+        all: nextProps.value ? this.state.allLength === nextProps.value.length : false,
         // currentChildren: currentChildren,
         // currentIndex: currentIndex
       })

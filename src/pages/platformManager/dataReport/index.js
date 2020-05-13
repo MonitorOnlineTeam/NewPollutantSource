@@ -19,16 +19,17 @@ import {
 } from 'antd';
 import styles from './style.less';
 
-import { PointIcon, DelIcon,EditIcon } from '@/utils/icon'
+import { PointIcon, DelIcon, EditIcon } from '@/utils/icon'
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import moment from 'moment';
-import  DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+
 const { confirm } = Modal;
 const { MonthPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -42,9 +43,9 @@ const FormItem = Form.Item;
     routerConfig: autoForm.routerConfig,
     userandentInfo: datareport.userandentInfo,
     reportwhere: datareport.reportwhere,
-    selectmonth:datareport.selectmonth,
-    beginTime:datareport.beginTime,
-    endTime:datareport.endTime
+    selectmonth: datareport.selectmonth,
+    beginTime: datareport.beginTime,
+    endTime: datareport.endTime,
 }))
 @Form.create({
 })
@@ -56,23 +57,21 @@ export default class MonitorTarget extends Component {
             formLayout: {
               labelCol: { span: 7 },
               wrapperCol: { span: 17 },
-            }
+            },
           }
-      
     }
-  
+
 
     componentDidMount() {
         const { match, dispatch } = this.props;
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
-                configId:match.params.configId,
+                configId: match.params.configId,
             },
         })
-        if(match.params.monitortime!=1 && match.params.entcode!=1)
-        {
-            this.updateState(moment(match.params.monitortime),match.params.entcode)
+        if (match.params.monitortime != 1 && match.params.entcode != 1) {
+            this.updateState(moment(match.params.monitortime), match.params.entcode)
         }
      //   this.updateState(moment().add(1,"month"),"0051264")
     }
@@ -86,19 +85,18 @@ export default class MonitorTarget extends Component {
     /**
      * 更新参数
      */
-    updateState=(monitotTime,beginTime,endTime,EntCode)=>{
-        const{dispatch,match}=this.props;
-        let where=[{
+    updateState=(monitotTime, beginTime, endTime, EntCode) => {
+        const { dispatch, match } = this.props;
+        const where = [{
             Key: 'dbo__T_Bas_DataReporting__MonitorTime',
             Value: beginTime,
             Where: '$gte',
-         },{
+         }, {
              Key: 'dbo__T_Bas_DataReporting__MonitorTime',
              Value: endTime,
              Where: '$lt',
           }];
-          if(EntCode)
-          {
+          if (EntCode) {
             where.push({
                 Key: 'dbo__T_Bas_DataReporting__EntCode',
                 Value: EntCode,
@@ -108,42 +106,43 @@ export default class MonitorTarget extends Component {
         dispatch({
             type: 'datareport/updateState',
             payload: {
-                selectEntCode:EntCode,
-                selectmonth:monitotTime,
-                reportwhere:where
+                selectEntCode: EntCode,
+                selectmonth: monitotTime,
+                reportwhere: where,
             },
         })
     }
+
    /**
     * 时间控件回调
     */
-    onDateCallBack=(dates,beginTime,endTime)=>{
-        const {form:{setFieldsValue},dispatch,StatisticsReportDataWhere}=this.props;
-        setFieldsValue({"MonitorTime":dates});
+    onDateCallBack=(dates, beginTime, endTime) => {
+        const { form: { setFieldsValue }, dispatch, StatisticsReportDataWhere } = this.props;
+        setFieldsValue({ MonitorTime: dates });
         dispatch({
             type: 'datareport/updateState',
-            payload:{
-                beginTime:beginTime,
-                endTime:endTime
-            }
-           
+            payload: {
+                beginTime,
+                endTime,
+            },
+
         })
     }
 
 
-    Serach=()=>{
-        const { form,dispatch,match,selectEntCode,reportwhere,beginTime,endTime } = this.props;
+    Serach=() => {
+        const { form, dispatch, match, selectEntCode, reportwhere, beginTime, endTime } = this.props;
         form.validateFields((err, values) => {
           if (!err) {
-            this.updateState(values.MonitorTime,beginTime,endTime,selectEntCode);
+            this.updateState(values.MonitorTime, beginTime, endTime, selectEntCode);
             this.reloadPage();
           }
         });
     }
 
-    /**重新加载 */
-    reloadPage=()=>{
-        const {dispatch,reportwhere,match}=this.props;
+    /** 重新加载 */
+    reloadPage=() => {
+        const { dispatch, reportwhere, match } = this.props;
         dispatch({
             type: 'autoForm/getAutoFormData',
             payload: {
@@ -152,10 +151,11 @@ export default class MonitorTarget extends Component {
             },
         });
     }
-    showDeleteConfirm = (row,id) => {
+
+    showDeleteConfirm = (row, id) => {
         const that = this;
-        const { dispatch,match } = this.props;
-        if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
+        const { dispatch, match } = this.props;
+        if (moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
             confirm({
                 title: '确定要删除该条数据吗？',
                 content: '删除后不可恢复',
@@ -166,7 +166,7 @@ export default class MonitorTarget extends Component {
                     dispatch({
                         type: 'datareport/deleteDataReport',
                         payload: {
-                            ID:id,
+                            ID: id,
                             callback: res => {
                                 that.reloadPage()
                             },
@@ -174,15 +174,12 @@ export default class MonitorTarget extends Component {
                     })
                 },
                 onCancel() {
-    
+
                 },
             });
+        } else {
+            sdlMessage('只能删除本月的数据', 'error')
         }
-        else{
-            sdlMessage('只能删除本月的数据', "error")
-        }
-
-      
     }
 
     onRef1 = ref => {
@@ -190,7 +187,8 @@ export default class MonitorTarget extends Component {
     };
 
     render() {
-        const { form: { getFieldDecorator },searchConfigItems, searchForm, tableInfo, match: { params: { configId,monitortime,entcode } }, dispatch,selectmonth,reportwhere } = this.props;
+        const { form: { getFieldDecorator }, searchConfigItems, searchForm, tableInfo, match: { params: { configId, monitortime, entcode } }, dispatch, selectmonth, reportwhere } = this.props;
+        console.log('entcode', entcode);
         const { formLayout } = this.SELF;
         if (this.props.loading) {
             return (<Spin
@@ -219,7 +217,7 @@ export default class MonitorTarget extends Component {
                           message: '请填写统计月份',
                         },
                       ],
-                    })(<DatePickerTool  callback={this.onDateCallBack} picker="month" allowClear={false} style={{ width: '100%' }}/>)}
+                    })(<DatePickerTool callback={this.onDateCallBack} picker="month" allowClear={false} style={{ width: '100%' }}/>)}
                   </FormItem>
                   </Col>
                   <Col xxl={6} xl={6} lg={8}>
@@ -233,14 +231,13 @@ export default class MonitorTarget extends Component {
                     </Button>
                   </FormItem>
                 </Col>
-                <Col style={{position:"absolute",right:50}}>
-               { entcode!=1?
-                <Button onClick={()=>
-                dispatch(routerRedux.push
-                ('/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList'))}>返回</Button>:''}
+                <Col style={{ position: 'absolute', right: 50 }}>
+               { entcode != 1 ?
+                <Button onClick={() =>
+                dispatch(routerRedux.push('/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList'))}>返回</Button> : ''}
                 </Col>
                      </Row>
-                       
+
                         <AutoFormTable
                          //   onRef={this.onRef1}
                             style={{ marginTop: 10 }}
@@ -254,25 +251,23 @@ export default class MonitorTarget extends Component {
                                     key, row,
                                 })
                             }}
-                            onAdd={()=>{
+                            onAdd={() => {
                                 dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}/${entcode}`));
                             }}
                             appendHandleRows={row => <Fragment>
                                 <Tooltip title="编辑">
                                     <a onClick={() => {
-                                        if(moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM')==moment().format('YYYY-MM') ){
-                                            dispatch(routerRedux.push
-                                                (`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}/${entcode}`));
-                                        }
-                                        else{
-                                            sdlMessage('只能修改本月的数据', "error")
+                                        if (moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
+                                            dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['dbo.T_Bas_DataReporting.ID']}/${selectmonth}/${entcode}`));
+                                        } else {
+                                            sdlMessage('只能修改本月的数据', 'error')
                                         }
                                     }}>   <EditIcon /> </a>
                                 </Tooltip>
                                 <Divider type="vertical" />
                                 <Tooltip title="删除">
                                     <a onClick={() => {
-                                        this.showDeleteConfirm(row,row['dbo.T_Bas_DataReporting.ID']);
+                                        this.showDeleteConfirm(row, row['dbo.T_Bas_DataReporting.ID']);
                                     }}><DelIcon />    </a>
                                 </Tooltip>
                             </Fragment>}

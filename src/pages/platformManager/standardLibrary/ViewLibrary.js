@@ -49,7 +49,7 @@ class ViewLibrary extends Component {
               configId={tableConfigId}
               getPageConfig
               rowKey={(record, index) => index}
-              scroll={{ y: 'calc(100vh - 600px)' }}
+              // scroll={{ y: 'calc(100vh - 600px)' }}
             />
           </Card>
         </Card>
