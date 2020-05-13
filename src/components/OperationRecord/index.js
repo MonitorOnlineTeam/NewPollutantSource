@@ -213,8 +213,8 @@ class OperationRecord extends Component {
       searchParams: [
         { "Key": "dbo__T_Bas_Task__DGIMN", "Value": DGIMN || this.props.DGIMN, "Where": "$=" },
         { "Key": "dbo__T_Bas_FormMainInfo__TypeID", "Value": currentRecordType, "Where": "$=" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[0], "Where": "$gte" },
-        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[1], "Where": "$lte" }]
+        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[0].format('YYYY-MM-DD HH:mm:ss'), "Where": "$gte" },
+        { "Key": "dbo__T_Bas_FormMainInfo__CreateTime", "Value": this.props.currentDate[1].format('YYYY-MM-DD HH:mm:ss'), "Where": "$lte" }]
     })
     return configid
   }
