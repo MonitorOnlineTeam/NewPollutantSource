@@ -76,6 +76,8 @@ class SmokeReportPage extends PureComponent {
         this.format = "YYYY-MM-DD";
         // this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
         this.tableFooter = "烟气日排放总量单位：×10⁴m³/d";
+        this.unit1 = "kg/h";
+        this.unit2 = "m³/h";
         beginTime = moment().format('YYYY-MM-DD 01:00:00');
         endTime = moment().add(1, 'day').format('YYYY-MM-DD 00:00:00');
         reportType = "dayanddate"
@@ -85,6 +87,8 @@ class SmokeReportPage extends PureComponent {
         this.format = "YYYY-MM"
         // this.timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />
         this.tableFooter = "烟气月排放总量单位：×10⁴m³/月";
+        this.unit1 = "t/d";
+        this.unit2 = "×10⁴m³/h";
         beginTime = moment().format('YYYY-MM-01 00:00:00');
         endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
         break;
@@ -224,7 +228,7 @@ class SmokeReportPage extends PureComponent {
               }
             },
             {
-              title: '排放量(kg/h)',
+              title: `排放量(${this.unit1})`,
               dataIndex: '01sum',
               width: 110,
             },
@@ -266,7 +270,7 @@ class SmokeReportPage extends PureComponent {
               }
             },
             {
-              title: '排放量(kg/h)',
+              title: `排放量(${this.unit1})`,
               dataIndex: '02sum',
               width: 110,
             },
@@ -308,14 +312,14 @@ class SmokeReportPage extends PureComponent {
               }
             },
             {
-              title: '排放量(kg/h)',
+              title: `排放量(${this.unit1})`,
               dataIndex: '03sum',
               width: 110,
             },
           ]
         },
         {
-          title: '标干流量(m³/h)',
+          title: `标干流量(${this.unit2})`,
           dataIndex: 'b02',
           width: 100,
         },

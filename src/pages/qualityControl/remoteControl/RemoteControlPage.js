@@ -43,7 +43,8 @@ class RemoteControlPage extends Component {
       // visible: false,
       stopDGIMN: [],
       stopMNHall: [],
-      activeKey: 1
+      activeKey: 1,
+      A: {}, B: {}, C: {},
       // stopStandardPollutantName: "",
       // stopStandardPollutantCode: ""
     };
@@ -110,6 +111,19 @@ class RemoteControlPage extends Component {
         MNHall: nextProps.CEMSList.length && nextProps.CEMSList[0].MNHall
       })
     }
+
+    if (this.props.standardGasList !== nextProps.standardGasList) {
+      let standardGasList = nextProps.standardGasList.filter(itm => itm.PollutantCode !== "065");
+      let AObj = standardGasList.find(item => item.PollutantCode === "02");
+      let BObj = standardGasList.find(item => item.PollutantCode === "03");
+      let CObj = standardGasList.find(item => item.PollutantCode === "s01");
+      let A = { "data-value": AObj.PollutantCode, "data-name": AObj.PollutantName, "data-concentration": AObj.Concentration, "data-totalFlowSetVal": AObj.TotalFlowSetVal };
+      let B = { "data-value": BObj.PollutantCode, "data-name": AObj.PollutantName, "data-concentration": BObj.Concentration, "data-totalFlowSetVal": BObj.TotalFlowSetVal };
+      let C = { "data-value": CObj.PollutantCode, "data-name": AObj.PollutantName, "data-concentration": CObj.Concentration, "data-totalFlowSetVal": CObj.TotalFlowSetVal };
+      this.setState({
+        A, B, C
+      })
+    }
   }
 
   // 开始质控
@@ -133,6 +147,7 @@ class RemoteControlPage extends Component {
         QCType: 1,
         flag: true
       }
+      // console.log("postData=", postData)
       // return;
       this.SendQCACmd(postData);
     })
@@ -268,7 +283,7 @@ class RemoteControlPage extends Component {
 
   render() {
     const { formItemLayout } = this._SELF_;
-    const { QCAMN, activeKey } = this.state;
+    const { QCAMN, activeKey, A, B, C } = this.state;
     const {
       form: { getFieldDecorator, setFieldsValue, getFieldValue },
       form, standardGasList, CEMSList, loading, autoQCAInfo, QCStatus
@@ -388,7 +403,7 @@ class RemoteControlPage extends Component {
             >
               <Form {...formItemLayout}>
                 <Row>
-                  <Col span={12}>
+                  <Col span={12} style={{ display: "none" }}>
                     <Form.Item label="标气组分" style={{ width: '100%' }}>
                       {getFieldDecorator('StandardPollutantCode', {
                         rules: [{
@@ -415,6 +430,36 @@ class RemoteControlPage extends Component {
                               </Option>
                             })
                           }
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="工作模式" style={{ width: '100%' }}>
+                      {getFieldDecorator('model', {
+                        rules: [{
+                          required: true,
+                          message: '请选择工作模式!',
+                        },],
+                      })(
+                        <Select placeholder="请选择工作模式" style={{ width: '100%' }} onChange={(value, option) => {
+                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"], "FlowValue": option.props["data-totalFlowSetVal"], "StandardPollutantCode": option.props["data-value"] })
+                          this.setState({
+                            StandardPollutantName: option.props["data-name"]
+                          })
+                          if (value == "02" || value == "03") {
+                            form.setFieldsValue({ "OldStandardUnit": "mg/m3", "MatchStandardUnit": "mg/m3" })
+                          } else {
+                            form.setFieldsValue({ "OldStandardUnit": "%", "MatchStandardUnit": "%" })
+                          }
+                        }}>
+                          <Option key={1} {...A}>P+N+A</Option>
+                          <Option key={2} {...B}>P+N+B</Option>
+                          <Option key={3} {...C}>P+N+C</Option>
+                          <Option key={4} {...A}>P+NA+P+NB</Option>
+                          <Option key={5} {...A}>P+NA+P+NC</Option>
+                          <Option key={6} {...B}>P+NB+P+NC</Option>
+                          <Option key={7} {...C}>P+NA+P+NB+P+NC</Option>
                         </Select>
                       )}
                     </Form.Item>
@@ -520,7 +565,7 @@ class RemoteControlPage extends Component {
                       )}
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={12} style={{ display: "none" }}>
                     <Form.Item label="稀释气组分名称">
                       {getFieldDecorator('DeliPollutantCode', {
                         // rules: [{
@@ -565,6 +610,23 @@ class RemoteControlPage extends Component {
                       )}
                     </Form.Item>
                   </Col>
+                  <Col span={12} style={{textAlign: 'right', marginTop: 14}}>
+                    <Icon type="info-circle" style={{ color: "#1890ff" }} />
+                    <span style={{ color: "#666", fontSize: 12, marginLeft: 10 }}>
+                      <span style={{fontWeight: 500, fontSize: 13}}>P：</span>空气 <Divider type="vertical" />
+                      <span style={{fontWeight: 500, fontSize: 13}}>N：</span>氮气 <Divider type="vertical" />
+                      <span style={{fontWeight: 500, fontSize: 13}}>A：</span>实测SO2 <Divider type="vertical" />
+                      <span style={{fontWeight: 500, fontSize: 13}}>B：</span>实测NOx <Divider type="vertical" />
+                      <span style={{fontWeight: 500, fontSize: 13}}>C：</span>氧含量
+                    </span>
+                  </Col>
+                </Row>
+                <Row style={{ position: 'absolute', display: "none" }}>
+                  {/* <Alert message="Informational Notes" type="info" showIcon /> */}
+                  <Icon type="info-circle" style={{ color: "#1890ff" }} />
+                  <span style={{ color: "#666", fontSize: 12, marginLeft: 10 }}>
+                  P代表空气；N代表氮气；A代表实测SO2；B代表实测NOx；C代表氧含量；
+                    </span>
                 </Row>
                 {/* <Row>
                   <div>
