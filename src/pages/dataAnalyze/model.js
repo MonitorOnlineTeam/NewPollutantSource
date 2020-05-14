@@ -28,6 +28,7 @@ export default Model.extend({
     reportTableData: [],
     compositeIndexDataSource: [],
     compositeRangeDataSource: [],
+    compositeContrastDataSource: [],
   },
 
   effects: {
@@ -219,6 +220,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    
+    // 获取综合指数对比报表数据
+    *queryCompositeRangeContrastData({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.queryCompositeRangeContrastData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          compositeContrastDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 导出综合指数对比报表数据
+    *exportCompositeRangeContrast({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.exportCompositeRangeContrast, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 });

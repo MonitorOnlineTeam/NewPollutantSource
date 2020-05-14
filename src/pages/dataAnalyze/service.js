@@ -105,7 +105,17 @@ export async function exportRangeCompositeReport(params) {
   const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeSlotCompositeNum', params, null);
   return result;
 }
+// 获取综合指数对比报表数据
+export async function queryCompositeRangeContrastData(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetTimeComparisonComposite', params, null);
+  return result;
+}
 
+// 导出综合指数对比报表数据
+export async function exportCompositeRangeContrast(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeComparisonCompositeNum', params, null);
+  return result;
+}
 
 
 
