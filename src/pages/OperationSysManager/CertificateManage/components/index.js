@@ -37,8 +37,17 @@ import {
 
     componentDidMount() {
       const {
-        configId,
+        configId, UserID
       } = this.props;
+      const DataWhere = [{
+        Key: '[dbo]__[T_Bas_CertificateInfo]__User_ID',
+        Value: UserID,
+        Where: '$=',
+      },
+      ];
+      this.setState({
+        DataWhere
+      })
       this.reloadPage(configId);
     }
 
