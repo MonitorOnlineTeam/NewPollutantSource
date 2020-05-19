@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 
 import * as services from '@/services/autoformapi';
-import { DeleteOperationSys } from '@/services/operationsysmanage';
+import { DeleteOperationSys, addoutputstop, deleteoutputstop } from '@/services/operationsysmanage';
 
 export default Model.extend({
   namespace: 'operationsysmanage',
@@ -28,6 +28,30 @@ export default Model.extend({
           ...payload,
         });
         if (result.IsSuccess && result.Datas) {
+          yield put({
+          type: 'autoForm/getAutoFormData',
+          payload: {
+            configId: payload.configId,
+            searchParams: payload.searchParams ? payload.searchParams : '',
+          },
+        })
+        }
+      },
+       /** 添加停产 */
+       * addoutputstop({ payload }, { call }) {
+        const result = yield call(addoutputstop, { ...payload, FormData: payload.FormData });
+        payload.callback(result);
+        },
+       /** 删除停产 */
+       * deleteoutputstop({
+        payload,
+      }, {
+        call, put,
+      }) {
+        const result = yield call(deleteoutputstop, {
+          ...payload,
+        });
+        if (result.IsSuccess) {
           yield put({
           type: 'autoForm/getAutoFormData',
           payload: {

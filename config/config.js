@@ -424,6 +424,12 @@ export default {
                   path: '/platformconfig/factorytest',
                   component: './platformManager/factorytest',
                 },
+                //停产管理
+                {
+                  name: 'outputstopmanage',
+                  path: '/platformconfig/outputstopmanage/:configId',
+                  component: './platformManager/outputstopManager/',
+                },
               ],
             },
             {
