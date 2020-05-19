@@ -14,10 +14,15 @@ import { EnumRequstResult, EnumPatrolTaskType, EnumPsOperationForm, EnumOperatio
 import { imgaddress } from '../../config.js';
 import MonitorContent from '../../components/MonitorContent/index';
 import { get, post, authorpost } from '@/utils/request';
-import ViewImagesModal from '@/pages/operations/components/ViewImagesModal'
-import ViewImagesListModal from '../../components/ImgView'
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
+import ViewImagesListModal from '../../components/ImgView';
 // import "react-image-lightbox/style.css";
-import config from '@/config'
+import config from '@/config';
+import { EnumPropellingAlarmSourceType } from '@/utils/enum';
+import { EnumDYParameterException } from '@/utils/enum';
+import { EnumDataException } from '@/utils/enum';
+import { EnumDataLogicErr } from '@/utils/enum';
+import { EnumDYStatusException } from '@/utils/enum';
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -435,15 +440,103 @@ class EmergencyDetailInfo extends Component {
                                 AlarmCount += item.AlarmCount;
                             });
                         }
+                        let ExceptionName = '';
+                        console.log(EnumPropellingAlarmSourceType);
+                        debugger
+                        switch (parseInt(item.AlarmType)) {
+                            //参数异常
+                            case EnumPropellingAlarmSourceType.DYPARAMETER:
+                                switch (parseInt(item.MsgType)) {
+                                    case EnumDYParameterException.O2Content:
+                                        ExceptionName = "氧气含量异常";
+                                        break;
+                                    case EnumDYParameterException.FlueGasHumidity:
+                                        ExceptionName = "烟气湿度";
+                                        break;
+                                    case EnumDYParameterException.DifferentialPressure:
+                                        ExceptionName = "差压";
+                                        break;
+                                    case EnumDYParameterException.FlueGasTemperature:
+                                        ExceptionName = "烟气温度";
+                                        break;
+                                    case EnumDYParameterException.FlueGasStaticPressure:
+                                        ExceptionName = "烟气静压";
+                                        break;
+                                    case EnumDYParameterException.ProbeTemperature:
+                                        ExceptionName = "探头温度";
+                                        break;
+                                    case EnumDYParameterException.PipelineTemperature:
+                                        ExceptionName = "管线温度";
+                                        break;
+                                    case EnumDYParameterException.CoolerTemperature:
+                                        ExceptionName = "制冷器温度";
+                                        break;
+                                }
+                                break;
+                            //数据异常
+                            case EnumPropellingAlarmSourceType.DataException:
+                                debugger
+                                switch (parseInt(item.MsgType)) {
+                                    case EnumDataException.Zero:
+                                        ExceptionName = "零值异常";
+                                        break;
+                                    case EnumDataException.OverRun:
+                                        ExceptionName = "超限异常";
+                                        break;
+                                    case EnumDataException.Series:
+                                        ExceptionName = "连续值异常";
+                                        break;
+                                    case EnumDataException.DataLoss:
+                                        ExceptionName = "数据异常";
+                                        break;
+                                }
+                                break;
+                            //逻辑异常
+                            case EnumPropellingAlarmSourceType.DataLogicErr:
+                                switch (parseInt(item.MsgType)) {
+                                    case EnumDataLogicErr.Unknown:
+                                        ExceptionName = "未知异常";
+                                        break;
+                                }
+                                break;
+                            //状态异常
+                            case EnumPropellingAlarmSourceType.DYSTATEALARM:
+                                switch (parseInt(item.MsgType)) {
+                                    case EnumDYStatusException.PowerFailure:
+                                        ExceptionName = "电源故障";
+                                        break;
+                                    case EnumDYStatusException.CoolerAlarm:
+                                        ExceptionName = "制冷器报警";
+                                        break;
+                                    case EnumDYStatusException.SamplingPipeline:
+                                        ExceptionName = "采样管线故障";
+                                        break;
+                                    case EnumDYStatusException.SamplingProbe:
+                                        ExceptionName = "采样探头故障";
+                                        break;
+                                    case EnumDYStatusException.HumidityAlarm:
+                                        ExceptionName = "湿度报警";
+                                        break;
+                                    case EnumDYStatusException.AnalyzerFailure:
+                                        ExceptionName = "分析仪故障";
+                                        break;
+                                }
+                                break;
+                        }
+
                         AlarmList.push({
                             key: item.AlarmSourceType,
                             FirstAlarmTime: item.FirstTime,
                             LastAlarmTime: item.AlarmTime,
-                           // AlarmMsg: AlarmType !== '' ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
-                           AlarmMsg: item.AlarmMsg,
+                            // AlarmMsg: AlarmType !== '' ? AlarmType.substring(0, AlarmType.lastIndexOf(',')) : AlarmType,
+                            AlarmMsg: item.AlarmMsg,
                             AlarmCount: item.AlarmCount,
                             MsgTypeList: item.MsgTypeList,
                             AlarmType: item.AlarmType,
+                            AlarmValue: item.AlarmValue,
+                            StandardValue: item.StandardValue,
+                            PollutantName: item.PollutantName,
+                            MsgType: ExceptionName,
                         });
                     }
                 });
@@ -478,92 +571,106 @@ class EmergencyDetailInfo extends Component {
             );
         });
         // 报警列表列名
-        const columns = [{
+        let columns = [{
             title: '开始报警时间',
-            width: '20%',
+            width: 100,
             dataIndex: 'FirstAlarmTime',
             key: 'FirstAlarmTime',
         }, {
             title: '最后一次报警时间',
-            width: '20%',
+            width: 100,
             dataIndex: 'LastAlarmTime',
             key: 'LastAlarmTime',
         }, {
             title: '报警类型',
-            width: '10%',
+            width: 100,
             dataIndex: 'AlarmType',
             key: 'AlarmType',
             render: (text, row, index) => {
-                 switch (text) {
+                switch (text) {
                     case '0':
                         return '数据异常'
-                      break;
-                     case '1':
-                       return '参数异常'
-                     break;
-                     case '2':
+                        break;
+                    case '1':
+                        return '参数异常'
+                        break;
+                    case '2':
                         return '数据超标'
-                      break;
-                      case '3':
+                        break;
+                    case '3':
                         return '状态异常'
-                      break;
-                      case '4':
+                        break;
+                    case '4':
                         return '逻辑异常'
-                      break;
-                      case '5':
+                        break;
+                    case '5':
                         return '超标预警'
-                      break;
-                      case '6':
+                        break;
+                    case '6':
                         return '过期时间报警'
-                      break;
-                      case '7':
+                        break;
+                    case '7':
                         return '余量不足报警'
-                      break;
-                      case '8':
+                        break;
+                    case '8':
                         return '工作状态异常'
-                      break;
-                      case '9':
+                        break;
+                    case '9':
                         return '压力异常报警'
-                      break;
-                 }
+                        break;
+                }
             },
-        }, {
-            title: '异常描述',
-            dataIndex: 'AlarmMsg',
-            width: '35%',
-            key: 'AlarmMsg',
-            // render: (text, row, index) => {
-            //     if (text !== null && text !== '') {
-            //         const types = [];
-            //         text.split(',').map(item => {
-            //             const dot = types.length + 1 < text.split(',').length ? '，' : '';
-            //             types.push(<span><a
-            //                 href="javascript:;"
-            //                 onClick={
-            //                     () => {
-            //                         const alarmList = row.MsgTypeList.filter(i => i.MsgTypeText === item);
-            //                         this.setState({
-            //                             moreAlarmList: alarmList,
-            //                             alarmType: row.AlarmType,
-            //                             visible: true,
-            //                         });
-            //                     }
-            //                 }
-            //             >{item}
-            //             </a>{dot}
-            //             </span>);
-            //         });
-            //         return {
-            //             children: types,
-            //         };
-            //     }
-            // },
         }, {
             title: '报警次数',
             dataIndex: 'AlarmCount',
-            width: '15%',
+            width: 100,
             key: 'AlarmCount',
+        }, {
+            title: '异常描述',
+            dataIndex: 'AlarmMsg',
+            width: 200,
+            key: 'AlarmMsg',
         }];
+        if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+            //超标列
+            if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === "2") {
+                columns = columns.concat({
+                    title: '污染物',
+                    width: 100,
+                    dataIndex: 'PollutantName',
+                    key: 'PollutantName',
+                });
+                columns = columns.concat({
+                    title: '超标值',
+                    width: 100,
+                    dataIndex: 'AlarmValue',
+                    key: 'AlarmValue',
+                });
+                columns = columns.concat({
+                    title: '标准值',
+                    width: 100,
+                    dataIndex: 'StandardValue',
+                    key: 'StandardValue',
+                });
+            }
+            //异常列
+            else {
+                columns = columns.concat({
+                    title: '污染物',
+                    width: 100,
+                    dataIndex: 'PollutantName',
+                    key: 'PollutantName',
+                });
+                columns = columns.concat({
+                    title: '异常类型',
+                    width: 100,
+                    dataIndex: 'MsgType',
+                    key: 'MsgType',
+                });
+            }
+
+        }
+
         const upload = {
             showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
             listType: 'picture-card',
@@ -594,8 +701,8 @@ class EmergencyDetailInfo extends Component {
                         </div>}
                 >
 
-                    <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
-                        <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
+                    <div style={{ height: SCREEN_HEIGHT, backgroundColor: 'white' }} className={styles.ExceptionDetailDiv}>
+                        <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
                                 <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
@@ -645,7 +752,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>}>
+                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20 }}>
                             {
                                 upload.fileList.length === 0 ? '没有上传附件' : (<Upload
                                     {...upload}

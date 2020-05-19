@@ -948,6 +948,12 @@ export default {
                   path: '/Intelligentanalysis/compositeIndexRange',
                   component: './dataAnalyze/CompositeRangeReport',
                 },
+                // 综合指数对比
+                {
+                  name: 'compositeIndexContrast',
+                  path: '/Intelligentanalysis/compositeIndexContrast',
+                  component: './dataAnalyze/CompositeIndexContrast',
+                },
                 // 季度有效数据捕集率
                 {
                   name: 'quartDataCaptureRate',

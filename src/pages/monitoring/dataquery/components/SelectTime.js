@@ -4,7 +4,13 @@ import moment from 'moment';
 
 const Option = Select.Option
 
-let yearList = [], monthList = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"], hoursList = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "00" ];
+let yearList = [];
+let currentYear = moment().get('year') + 1;
+// 年
+for (let i = 1; i <= 20; i++) {
+  yearList.push(--currentYear)
+}
+let monthList = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"], hoursList = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "00"];
 
 class SelectTime extends Component {
   constructor(props) {
@@ -27,11 +33,7 @@ class SelectTime extends Component {
         daysInMonthList: []
       }
     };
-    let currentYear = moment().get('year') + 1;
-    // 年
-    for (let i = 1; i <= 20; i++) {
-      yearList.push(--currentYear)
-    }
+
   }
 
   // 初始化时间

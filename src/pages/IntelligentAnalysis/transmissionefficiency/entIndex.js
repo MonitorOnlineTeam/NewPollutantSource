@@ -14,7 +14,9 @@ import {
     Col,
     Icon,
     Badge,
-    Modal
+    Modal,
+    Input,
+    Button,
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -24,19 +26,26 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import PointIndex from './pointIndex';
-import { router } from "umi"
+import { router } from "umi";
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
     getData: 'transmissionefficiency/getEntData'
 };
+const content = (
+    <div>
+        当传输有效率未到达90%时判定为未达标
+    </div>
+);
 @connect(({
     loading,
     transmissionefficiency
 }) => ({
     loading: loading.effects[pageUrl.getData],
-    total: transmissionefficiency.total,
+    total: transmissionefficiency.entTotal,
     pageSize: transmissionefficiency.pageSize,
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.enttableDatas,
@@ -84,6 +93,7 @@ export default class EntTransmissionEfficiency extends Component {
                 pageSize: pagination.pageSize
             });
         }
+        debugger
         this.getTableData(pagination.current);
     }
     onDateChange = (value, beginTime, endTime) => {
@@ -93,6 +103,25 @@ export default class EntTransmissionEfficiency extends Component {
         });
         this.getTableData(this.props.pageIndex);
     }
+    getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
+                <p><Badge status="warning" text="传输率：传输个数/应传个数" /></p>
+                <p><Badge status="warning" text="有效率：有效个数/应传个数" /></p>
+                <p><Badge status="warning" text="传输有效率：传输率*有效率" /></p>
+                <p><Badge status="warning" text="当传输有效率高于90%时传输有效率达标并标记为绿色，否则标记为红色" /></p>
+            </Card>
+        ),
+        filterIcon: filtered => <QuestionCircleOutlined style={{ color: '#1890FF' }} />,
+        // onFilter: (value, record) =>
+        //   record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+        // onFilterDropdownVisibleChange: visible => {
+        //   if (visible) {
+        //     setTimeout(() => this.searchInput.select());
+        //   }
+        // },
+
+    });
     render() {
         const columns = [
             {
@@ -139,7 +168,12 @@ export default class EntTransmissionEfficiency extends Component {
                 }
             },
             {
-                title: (<span style={{ fontWeight: 'bold' }}>传输有效率</span>),
+                title: (
+                    <span style={{ fontWeight: 'bold' }}>传输有效率
+                        {/* <Popover content={content} >
+                            <QuestionCircleOutlined style={{ color: '#1890FF', marginLeft: 2 }} />
+                        </Popover> */}
+                    </span>),
                 dataIndex: 'TransmissionEffectiveRate',
                 key: 'TransmissionEffectiveRate',
                 // width: '250px',
@@ -167,7 +201,8 @@ export default class EntTransmissionEfficiency extends Component {
                             format={percent => (<span style={{ color: 'black' }}>{percent}%</span>)}
                         />
                     </div>);
-                }
+                },
+                ...this.getColumnSearchProps('TransmissionEffectiveRate'),
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>操作</span>),
@@ -221,6 +256,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 marginLeft: 60,
                                 marginRight: 3
                             }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+
                             <div
                                 style={{
                                     display: 'inline-block',

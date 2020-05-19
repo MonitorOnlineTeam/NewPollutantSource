@@ -321,20 +321,25 @@ class MapView extends Component {
       boxShadow: "0px 0px 3px 2px #fff"
     }
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
-    switch (extData.position.PollutantType) {
-      case "1":
-        // return <WaterIcon style={style} />
-        return this.getWaterIcon(extData.position.Status)
-      case "2":
-        return this.getGasIcon(extData.position.Status)
-      case "10":
-        return <VocIcon style={style} />
-      case "12":
-        return <CustomIcon type='icon-yangchen1' style={{ ...style }} />
-      case "5":
-        return <a><CustomIcon type='icon-fangwu' style={style} /></a>
-      case "37":
-        return <CustomIcon type='icon-dian2' style={{ ...style }} />
+    if(extData.position.outPutFlag==1)//停产
+    {
+      return <CustomIcon type='icon-tingzhishangbao' style={{ ...style }} />
+    }else{
+      switch (extData.position.PollutantType) {
+        case "1":
+          // return <WaterIcon style={style} />
+          return this.getWaterIcon(extData.position.Status)
+        case "2":
+          return this.getGasIcon(extData.position.Status)
+        case "10":
+          return <VocIcon style={style} />
+        case "12":
+          return <CustomIcon type='icon-yangchen1' style={{ ...style }} />
+        case "5":
+          return <a><CustomIcon type='icon-fangwu' style={style} /></a>
+        case "37":
+          return <CustomIcon type='icon-dian2' style={{ ...style }} />
+      } 
     }
   }
 

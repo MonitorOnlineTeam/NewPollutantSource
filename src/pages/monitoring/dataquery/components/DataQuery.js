@@ -109,7 +109,7 @@ class DataQuery extends Component {
         }
         break;
       case "day":
-        ranges = moment(EndTime).add(-12, 'month');
+        ranges = moment(endTime).add(-12, 'month');
         if (ranges > moment(beginTime)) {
           message.info('日数据时间间隔不能超过1年');
           isSearch = false

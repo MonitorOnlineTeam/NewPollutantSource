@@ -40,6 +40,7 @@ class MaintenanceCycle extends Component {
             type: '233',
             ID: '',
             DGIMN: this.props.DGIMN,
+            loadings: false,
         };
     }
 
@@ -51,6 +52,7 @@ class MaintenanceCycle extends Component {
 
     /** 切换Tabs标签 */
     onChange = key => {
+        const { loadings } = this.state;
         this.setState({
             type: key,
         }, () => {
@@ -89,6 +91,9 @@ class MaintenanceCycle extends Component {
 
     /** 添加获取更新数据 */
     handleSubmit = e => {
+        this.setState({
+            loadings: true
+        })
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             const { ID, type } = this.state;
@@ -124,6 +129,9 @@ class MaintenanceCycle extends Component {
                             callback: model => {
                                 if (model.Datas) {
                                     message.success('修改成功');
+                                    this.setState({
+                                        loadings: false
+                                    })
                                 }
                             },
                         },
@@ -136,7 +144,7 @@ class MaintenanceCycle extends Component {
     /** 加载数据 */
     getdata = type => {
         const { dispatch, PointCode } = this.props;
-        const { DGIMN } = this.state;
+        const { DGIMN, loadings } = this.state;
         if (DGIMN) {
             dispatch({
                 type: 'maintenances/GetMaintenanceReminder',
@@ -153,6 +161,9 @@ class MaintenanceCycle extends Component {
                                 ID: '',
                             });
                         }
+                        this.setState({
+                            loadings: false
+                        })
                     },
                 },
             });
@@ -162,7 +173,7 @@ class MaintenanceCycle extends Component {
     /** 组装form */
     getfromData = () => {
         const { Maintenancereminderdata, DGIMN } = this.props;
-
+        const { loadings } = this.state;
         const {
             ID,
             RemindCycle,
@@ -233,10 +244,11 @@ class MaintenanceCycle extends Component {
                     <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
                         <Col span={24} style={{ textAlign: 'center' }}>
                             <Button
+                                loading={loadings}
                                 type="primary"
                                 htmlType="submit"
                                 className="login-form-button"
-                                loading={this.props.Addloading}
+                            // loading={this.props.Addloading}
                             >
                                 保存
                                 </Button>
