@@ -6,7 +6,7 @@
  * @Description: 导航树
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin } from 'antd';
+import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin,Tag } from 'antd';
 import { connect } from 'dva';
 import EnterprisePointCascadeMultiSelect from '../../components/EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
@@ -97,7 +97,7 @@ class NavigationTree extends Component {
           dataIndex: 'pointName',
           width: '40%',
           render: (text, record) => {
-            return <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}</span></div>
+          return <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}{record.outPutFlag==1? <Tag line-height={18}  color="#f50">停产</Tag>:""}</span></div>
           }
         },
         {
@@ -268,9 +268,9 @@ class NavigationTree extends Component {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { key } = node;
-      this.state.dataList.push({ key, title: node.title, entName: node.IsEnt ? node.title : node.EntName, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo });
+      this.state.dataList.push({ key, title: node.title, entName: node.IsEnt ? node.title : node.EntName, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo,outPutFlag:node.outPutFlag  });
       if (node.IsEnt == 0) {
-        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type };
+        var pushItem = { key, pointName: node.title, entName: node.EntName, Status: node.Status, Pollutant: node.PollutantType, QCAType: node.Type,outPutFlag:node.outPutFlag };
         // var ddd=panelDataList.filter(item=>item.key==key);
         // if(panelDataList.filter(item=>item.key==key).length==0)
         // {
@@ -801,7 +801,7 @@ class NavigationTree extends Component {
         } else if (item.Type == "1") {
           return <TreeNode style={{ width: "100%" }} title={
             <div style={{ width: "253px", position: "relative" }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: "absolute", right: 10 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag==1? <Tag line-height={18}  color="#f50">停产</Tag>:""}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: "absolute", right: 10 }} /> : ""}{!!this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles["bell-shake-delay"]} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: "red" }} />
                 </div>

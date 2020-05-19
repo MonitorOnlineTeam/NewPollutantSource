@@ -436,7 +436,7 @@ class RemoteControlPage extends Component {
                   </Col>
                   <Col span={12}>
                     <Form.Item label="工作模式" style={{ width: '100%' }}>
-                      {getFieldDecorator('model', {
+                      {getFieldDecorator('Model', {
                         rules: [{
                           required: true,
                           message: '请选择工作模式!',
