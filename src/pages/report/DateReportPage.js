@@ -129,6 +129,8 @@ class DateReportPage extends PureComponent {
                   DGIMN: values.DGIMN,
                   BeginTime: this.state.beginTime,
                   EndTime: this.state.endTime,
+                  current: 1,
+                  pageSize: 24,
                 },
                 reportType: values.reportType
               });
