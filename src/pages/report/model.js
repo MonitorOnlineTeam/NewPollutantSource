@@ -114,7 +114,7 @@ export default Model.extend({
       //   }
       // }
       const postData = {
-        PageIndex: payload.current || dateReportForm.current,
+        PageIndex: dateReportForm.current,
         IsPage: 1,
         ...payload
       }
