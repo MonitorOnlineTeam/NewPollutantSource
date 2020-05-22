@@ -32,7 +32,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import AlarmPushRel from '@/components/AlarmPushRel';
-
+import styles from './index.less';
 
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
@@ -789,7 +789,7 @@ class DepartIndex extends Component {
             onChange: this.onChangeTree,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
-            searchPlaceholder: '搜索',
+            searchPlaceholder: '行政区',
             treeDefaultExpandedKeys: ['0'],
             style: {
                 width: 400,
@@ -1051,7 +1051,7 @@ class DepartIndex extends Component {
                                                 // showAll
                                                 onChange={this.handleSizeChange}
                                             />
-                                            <TreeSelect {...tProps} />
+                                            <TreeSelect className={styles.placeHolderClass} {...tProps} />
                                         </Row>{
                                             (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{
@@ -1110,5 +1110,6 @@ class DepartIndex extends Component {
         );
     }
 }
+
 
 export default DepartIndex;

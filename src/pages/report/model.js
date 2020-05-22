@@ -53,7 +53,7 @@ export default Model.extend({
     },
     smokeReportData: [],
     pointName: "",
-    Total:0,
+    Total: 0,
     // 烟气报表 ----- 结束
   },
 
@@ -114,7 +114,7 @@ export default Model.extend({
       //   }
       // }
       const postData = {
-        PageIndex: dateReportForm.current && dateReportForm.current,
+        PageIndex: dateReportForm.current,
         IsPage: 1,
         ...payload
       }
@@ -208,12 +208,12 @@ export default Model.extend({
         if (result.Datas.length) {
           data = result.Datas.map(item => {
             // return { ...item, EntName: item.EntName}
-              return {EntName: item.EntName, ...item.DatasItem }
+            return { EntName: item.EntName, ...item.DatasItem }
           })
         }
         yield update({
           dailySummaryDataList: data,
-          Total:result.Total,
+          Total: result.Total,
         })
       }
     },

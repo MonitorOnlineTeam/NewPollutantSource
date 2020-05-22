@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import moment from 'moment';
 import NavigationTree from '../../../components/NavigationTree'
 import ContentList from './components/ContentList'
-import moment from "moment";
 
 @connect(({ manualuploadauto, loading }) => ({
 
@@ -19,11 +19,11 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            DGIMN: "",
+            DGIMN: '',
         };
     }
 
-    changeDgimn = (DGIMN) => {
+    changeDgimn = DGIMN => {
         const { dispatch } = this.props;
         this.setState({
             DGIMN,
@@ -40,24 +40,26 @@ class Index extends Component {
                             // BeginTime: moment().subtract(3, 'month').format('YYYY-MM-DD 00:00:00'),
                             // EndTime: moment().format('YYYY-MM-DD 23:59:59'),
                             PollutantCode: '',
-                            DGIMN
-                        }
-                    }
-                }
+                            DGIMN,
+                        },
+                    },
+                },
             });
             this.GetAllPollutantTypes(DGIMN);
         }
     }
-    //根据MN号获取污染物与类型
-    GetAllPollutantTypes = (DGIMN) => {
+
+    // 根据MN号获取污染物与类型
+    GetAllPollutantTypes = DGIMN => {
         const { dispatch } = this.props;
         dispatch({
             type: 'manualuploadauto/addGetPollutantByPoint',
             payload: {
-                DGIMN
+                DGIMN,
             },
         });
     }
+
     render() {
         const { DGIMN } = this.state;
         return (
@@ -65,7 +67,7 @@ class Index extends Component {
                 <BreadcrumbWrapper >
                     <ContentList DGIMN={DGIMN} />
                 </BreadcrumbWrapper>
-                <NavigationTree runState='1' domId="#manualuploadauto" choice={false} onItemClick={value => {
+                <NavigationTree runState="1" domId="#manualuploadauto" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }
