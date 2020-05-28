@@ -55,10 +55,11 @@ class DataAuditTable extends Component {
       message.error("请填写修改原因！");
       return;
     }
+    let time = this.props.dataType === "hour" ? record.MonitorTime + ":00:00" : record.MonitorTime + " 00:00:00"
     this.props.dispatch({
       type: "dataquery/updateDataFlag",
       payload: {
-        MonitorTime: record.MonitorTime,
+        MonitorTime: time,
         UpdateState: flag === "N" ? "RM" : "N",
         Msg: this.props.form.getFieldValue("msg"),
         DataType: this.props.dataType,

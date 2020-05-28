@@ -117,7 +117,7 @@ class SelectTime extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.mode !== nextProps.mode || this.props.dgimn !== nextProps.dgimn) {
+    if (this.props.mode !== nextProps.mode || this.props.reloadKey !== nextProps.reloadKey) {
       this.initTime(nextProps.mode, true)
     }
   }

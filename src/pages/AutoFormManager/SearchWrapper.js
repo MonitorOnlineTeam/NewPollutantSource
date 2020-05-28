@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-04-04 14:03:27
+ * @Last Modified time: 2020-05-27 14:53:06
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -126,10 +126,10 @@ class SearchWrapper extends Component {
             }
           },
           whereList: {
-            ...whereList,
             [resultConfigId]: {
               ...whereList[configId]
-            }
+            },
+            ...whereList,
           }
         }
       })
@@ -324,7 +324,7 @@ class SearchWrapper extends Component {
       return (
         element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
-          <FormItem {...formLayout} label={labelText} style={{ width: '100%', zIndex: zIndex }}>
+          <FormItem {...formLayout} label={labelText} style={{ width: '100%'}}>
             {getFieldDecorator(`${fieldName}`, {})(
               element
             )}
@@ -380,7 +380,7 @@ class SearchWrapper extends Component {
             this._renderFormItem()
           }
           {
-            searchConditions.length ? <Col style={{ marginTop: 6, ...style }}>
+            searchConditions.length ? <div style={{ marginTop: 6, ...style }}>
               <Button type="primary" onClick={() => {
                 // 重置分页并查询数据
                 this.props.dispatch({
@@ -417,7 +417,7 @@ class SearchWrapper extends Component {
                   }
                 </React.Fragment>
               }
-            </Col> : null
+            </div> : null
           }
         </Row>
         {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
