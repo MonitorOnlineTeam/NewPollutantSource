@@ -186,7 +186,7 @@ class DataAuditPage extends Component {
                 dataSource={dataAuditDataSource}
                 columnsData={pollutantList}
                 pagination={{ pageSize: 20 }}
-                scroll={{ y: isShowFlag ? "calc(100vh - 500px)" : "calc(100vh - 400px)" }}
+                // scroll={{ y: isShowFlag ? "calc(100vh - 500px)" : "calc(100vh - 400px)" }}
                 isShowFlag={isShowFlag}
                 loading={loading}
                 className=" "

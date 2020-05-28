@@ -260,7 +260,7 @@ export default class ContentList extends Component {
         return (
             <Upload {...props} style={{ marginLeft: 5 }} >
                 <Button type="primary"   >
-                    确认
+                    文件导入
                 </Button>
             </Upload>
         )
@@ -412,9 +412,11 @@ export default class ContentList extends Component {
                             </Select>
                         </Form.Item> */}
                         <Form.Item>
-                            <Button type="primary" onClick={this.uploadConfirm} >
+                            {/* <Button type="primary" onClick={this.uploadConfirm} >
                                 <Icon type="upload" /> 文件导入
-                            </Button>
+                            </Button> */
+                            this.upload()}
+                            
                             <Spin
                                 delay={500}
                                 spinning={this.state.uploadLoading}
