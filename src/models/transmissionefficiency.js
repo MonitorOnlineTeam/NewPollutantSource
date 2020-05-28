@@ -19,12 +19,14 @@ export default Model.extend({
         transmissionEffectiveRate: 'ascend',
         enttableDatas: [],
         entCode: null,
+        total: 0,
+        entTotal: 0,
     },
     subscriptions: {
     },
     effects: {
         * getData({ payload }, { call, put, update, select }) {
-            const { beginTime, endTime, pageSize, transmissionEffectiveRate,entCode } = yield select(state => state.transmissionefficiency);
+            const { beginTime, endTime, pageSize, transmissionEffectiveRate, entCode } = yield select(state => state.transmissionefficiency);
             let body = {
                 EnterpriseCodes: (payload.entcode && payload.entcode != "null" && payload.entcode != "0") ? [payload.entcode] : null,
                 BeginTime: beginTime,
@@ -58,7 +60,7 @@ export default Model.extend({
             if (response.IsSuccess) {
                 yield update({
                     enttableDatas: response.Datas,
-                    total: response.Total,
+                    entTotal: response.Total,
                     pageIndex: payload.pageIndex || 1,
                 });
             }

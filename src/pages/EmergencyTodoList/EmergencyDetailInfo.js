@@ -594,8 +594,8 @@ class EmergencyDetailInfo extends Component {
                         </div>}
                 >
 
-                    <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
-                        <Card title={<span style={{ fontWeight: '600' }}>基本信息</span>}>
+                    <div style={{ height: SCREEN_HEIGHT,backgroundColor:'white' }} className={styles.ExceptionDetailDiv}>
+                        <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
                             <DescriptionList className={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
                                 <Description term="排口">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
@@ -645,7 +645,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>}>
+                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20 }}>
                             {
                                 upload.fileList.length === 0 ? '没有上传附件' : (<Upload
                                     {...upload}

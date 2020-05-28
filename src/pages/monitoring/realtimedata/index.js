@@ -43,6 +43,8 @@ class Index extends Component {
             contentstyle: styles.hiddentrigger,
             scale: 1,
             translation: { x: 0, y: 0 },
+            pointName: '',
+            entName: '',
         };
     }
 
@@ -57,26 +59,28 @@ class Index extends Component {
         }
     }
 
-    changeDgimn = dgimn => {
+    changeDgimn = value => {
         const { dispatch } = this.props;
         this.setState({
-            dgimn,
+            dgimn: value[0].key,
             showSider: false,
             paramInfo: [],
             collapsed: true,
+            pointName: value[0].pointName,
+            entName: value[0].entName,
         })
         // 同時更新此Model中的DGIMN
         dispatch({
             type: 'realtimeserver/updateState',
             payload: {
-                DGIMN: dgimn,
+                DGIMN: value[0].key,
             },
         });
         // 同時更新此Model中的DGIMN
         dispatch({
             type: 'realtimeserver/GetProcessFlowChartStatus',
             payload: {
-                dgimn,
+                dgimn: value[0].key,
             },
         });
     }
@@ -177,7 +181,7 @@ class Index extends Component {
                 if (nameInfo.statename == '正常') {
                     return (<span className={styles.normalstatus}><Badge status="processing" text="正常" /></span>)
                 }
-                    return (<span className={styles.overstatus}><Badge status="processing" text="故障" /></span>)
+                return (<span className={styles.overstatus}><Badge status="processing" text="故障" /></span>)
             }
         }
     }
@@ -228,31 +232,31 @@ class Index extends Component {
      */
     getChartType = () => {
         const { dataInfo, DGIMN } = this.props;
-        const { dgimn } = this.state;
+        const { dgimn, pointName, entName } = this.state;
 
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
                 case '1':
                     return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} />)
+                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName}/>)
                     break;
                 case '2':
                     return (<VocChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} />)
+                        getsystemstate={this.getsystemstate}  pointName={pointName} entName={entName}/>)
                     break;
                 case '3':
                     return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} />)
+                        getsystemstate={this.getsystemstate}  pointName={pointName} entName={entName}/>)
                 case '5':
-                    return <CommonChart DGIMN={dgimn} />
+                    return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName}/>
                 default:
-                    return <CommonChart DGIMN={dgimn} />
-                    // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                    //     getsystemstate={this.getsystemstate} />)
+                    return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
+                // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
+                //     getsystemstate={this.getsystemstate} />)
             }
         } else if (dgimn) {
             console.log('datainfo=', dataInfo)
-            return <CommonChart DGIMN={dgimn} />
+            return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
         }
         // else
         // {
@@ -399,7 +403,7 @@ class Index extends Component {
                 </BreadcrumbWrapper>
                 <NavigationTree domId="#realtimedata" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value[0].key)
+                        this.changeDgimn(value)
                     }
                 }} />
             </div>

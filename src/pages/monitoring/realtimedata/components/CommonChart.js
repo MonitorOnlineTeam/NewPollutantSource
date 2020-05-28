@@ -91,12 +91,12 @@ class CommonChart extends Component {
                 lazyUpdate
                 notMerge
                 id="rightLine"
-                style={{ width: '100%', height: 'calc(100vh - 270px)' }}
+                style={{ width: '100%', height: 'calc(100vh - 370px)' }}
             />
         }
-            return <Empty style={{
-                width: '100%',
-            }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        return <Empty style={{
+            width: '100%',
+        }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
     /**仪表盘的点击事件 */
     dashboardClick = (pollutantCode, pollutantName, Unit) => {
@@ -189,10 +189,18 @@ class CommonChart extends Component {
     }
 
     render() {
-        const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo } = this.props;
+        const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo, pointName, entName } = this.props;
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
-                <div className={styles.maintabs}>
+                <Card
+                    className={styles.cardClass}
+                    title={
+                        <div>
+                            <span>{entName ? pointName ? entName + "-" + pointName : null : null}</span>
+                            <span style={{ marginLeft: 10, fontSize: 14 }}>{pollutantlist.length !== 0 ? paramsInfo.length !== 0 ? paramsInfo[0].MonitorTime : null : null}</span>
+                        </div>
+                    }
+                >
                     {/* <p>刷新时间：{paramsInfo && dataInfo && paramsInfo[0].MonitorTime ? paramsInfo[0].MonitorTime : dataInfo && dataInfo.time}</p> */}
                     <Tabs onChange={this.pollutantClick}>
                         {this.getLastestData()}
@@ -205,7 +213,7 @@ class CommonChart extends Component {
                         offlineChartData={option}
                         handleTabChange={this.pollutantClick}
                     /> */}
-                </div>
+                </Card>
                 <div>{isloading ? <Spin style={{
                     width: '100%',
                     marginTop: 100,

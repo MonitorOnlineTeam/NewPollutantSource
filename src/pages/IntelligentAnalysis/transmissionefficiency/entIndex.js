@@ -36,7 +36,7 @@ const pageUrl = {
     transmissionefficiency
 }) => ({
     loading: loading.effects[pageUrl.getData],
-    total: transmissionefficiency.total,
+    total: transmissionefficiency.entTotal,
     pageSize: transmissionefficiency.pageSize,
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.enttableDatas,
@@ -84,6 +84,7 @@ export default class EntTransmissionEfficiency extends Component {
                 pageSize: pagination.pageSize
             });
         }
+        debugger
         this.getTableData(pagination.current);
     }
     onDateChange = (value, beginTime, endTime) => {
