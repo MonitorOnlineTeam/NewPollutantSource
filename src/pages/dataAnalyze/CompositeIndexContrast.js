@@ -26,7 +26,7 @@ class CompositeIndexContrast extends Component {
       OverTime: moment(),
       columns: [
         {
-          title: '排口名称',
+          title: '大气站',
           width: 200,
           dataIndex: 'DGIMN',
         },
@@ -35,7 +35,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: 'Isum',
               width: 60,
               render: (text, record) => {
@@ -43,7 +43,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: 'IsumNew',
               width: 60,
               render: (text, record) => {
@@ -65,7 +65,7 @@ class CompositeIndexContrast extends Component {
           width: 220,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '01',
               width: 60,
               render: (text, record) => {
@@ -73,7 +73,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '01New',
               width: 60,
               render: (text, record) => {
@@ -95,7 +95,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '02',
               width: 60,
               render: (text, record) => {
@@ -103,7 +103,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '02New',
               width: 60,
               render: (text, record) => {
@@ -125,7 +125,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '03',
               width: 60,
               render: (text, record) => {
@@ -133,7 +133,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '03New',
               width: 60,
               render: (text, record) => {
@@ -155,7 +155,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '05',
               width: 60,
               render: (text, record) => {
@@ -163,7 +163,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '05New',
               width: 60,
               render: (text, record) => {
@@ -185,7 +185,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '07',
               width: 60,
               render: (text, record) => {
@@ -193,7 +193,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '07New',
               width: 60,
               render: (text, record) => {
@@ -215,7 +215,7 @@ class CompositeIndexContrast extends Component {
           width: 200,
           children: [
             {
-              title: '数值',
+              title: '时间段1',
               dataIndex: '08',
               width: 60,
               render: (text, record) => {
@@ -223,7 +223,7 @@ class CompositeIndexContrast extends Component {
               }
             },
             {
-              title: '数值',
+              title: '时间段2',
               dataIndex: '08New',
               width: 60,
               render: (text, record) => {
@@ -314,7 +314,7 @@ class CompositeIndexContrast extends Component {
             <Form layout="inline" style={{ marginBottom: 20 }}>
               <Row>
                 <Col span={7}>
-                  <FormItem {...formLayout} label="开始时间段" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="时间段1" style={{ width: '100%' }}>
                     <RangePicker value={[BeginTime, EndTime]} allowClear={false} onChange={(dates, dateString) => {
                       this.setState({
                         BeginTime: dates[0],
@@ -324,7 +324,7 @@ class CompositeIndexContrast extends Component {
                   </FormItem>
                 </Col>
                 <Col span={7}>
-                  <FormItem {...formLayout} label="结束时间段" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="时间段2" style={{ width: '100%' }}>
                     {/* disabledDate={this.disabledDate}  */}
                     <RangePicker value={[StartTime, OverTime]} allowClear={false} onChange={(dates, dateString) => {
                       this.setState({
