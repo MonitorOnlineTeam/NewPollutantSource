@@ -552,6 +552,11 @@ export default {
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
                     },
+                    {
+                      name: 'sparepartsstation',
+                      path: '/operations/materielmanager/sparepartsstation/:configId',
+                      component: './OperationSysManager/SparePartsStation/',
+                    },
                   ]
                 },
                 {

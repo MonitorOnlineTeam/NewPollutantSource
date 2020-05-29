@@ -5,7 +5,7 @@ import { routerRedux } from 'dva/router';
 import { CALL_HISTORY_METHOD } from 'react-router-redux';
 import { async } from 'q';
 import moment from 'moment';
-// import Lightbox from "react-image-lightbox-rotate";
+import Lightbox from "react-image-lightbox-rotate";
 import { router } from 'umi'
 import styles from './EmergencyDetailInfo.less';
 import DescriptionList from '../../components/DescriptionList';
@@ -16,7 +16,7 @@ import MonitorContent from '../../components/MonitorContent/index';
 import { get, post, authorpost } from '@/utils/request';
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 import ViewImagesListModal from '../../components/ImgView';
-// import "react-image-lightbox/style.css";
+import "react-image-lightbox/style.css";
 import config from '@/config';
 import { EnumPropellingAlarmSourceType } from '@/utils/enum';
 import { EnumDYParameterException } from '@/utils/enum';
@@ -85,7 +85,7 @@ class EmergencyDetailInfo extends Component {
         });
         this.setState({
             previewVisible: true,
-            previewImage: file.url,
+            // previewImage: file.url,
             photoIndex: ImageList,
         });
     }
@@ -559,7 +559,7 @@ class EmergencyDetailInfo extends Component {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/uploadplantform/${item}`,
+                    url: `/upload/${item}`,
                 });
             }
         });
@@ -567,7 +567,7 @@ class EmergencyDetailInfo extends Component {
         const ImageList = [];
         fileList.map(item => {
             ImageList.push(
-                `/uploadplantform/${item.name}`,
+                `/upload/${item.name}`,
             );
         });
         // 报警列表列名
@@ -676,6 +676,7 @@ class EmergencyDetailInfo extends Component {
             listType: 'picture-card',
             fileList: [...fileList],
         };
+        debugger
         const { isloading } = this.props;
         if (isloading) {
             return (<Spin
@@ -701,9 +702,9 @@ class EmergencyDetailInfo extends Component {
                         </div>}
                 >
 
-                    <div style={{ height: SCREEN_HEIGHT, backgroundColor: 'white' }} className={styles.ExceptionDetailDiv}>
-                        <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
-                            <DescriptionList className={styles.headerList} size="large" col="3">
+                    <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
+                        <Card style={{ paddingBottom: '1.5%' }} title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
+                            <DescriptionList classNam={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
                                 <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
                                 <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
@@ -728,14 +729,14 @@ class EmergencyDetailInfo extends Component {
                                     <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
                             }
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20 }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} />
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20 }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
@@ -752,7 +753,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20 }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             {
                                 upload.fileList.length === 0 ? '没有上传附件' : (<Upload
                                     {...upload}
@@ -762,7 +763,7 @@ class EmergencyDetailInfo extends Component {
                                 />)
                             }
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 20 }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             {
                                 <Steps width={this.stepsWidth(TaskLogList)} style={{ overflowX: 'scroll' }}>
                                     {
@@ -794,23 +795,22 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
                 {this.state.previewVisible && (
-                    <div></div>
-                    // <Lightbox
-                    //     mainSrc={ImageList[photoIndex]}
-                    //     nextSrc={ImageList[(photoIndex + 1) % ImageList.length]}
-                    //     prevSrc={ImageList[(photoIndex + ImageList.length - 1) % ImageList.length]}
-                    //     onCloseRequest={() => this.setState({ previewVisible: false })}
-                    //     onPreMovePrevRequest={() =>
-                    //         this.setState({
-                    //             photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
-                    //         })
-                    //     }
-                    //     onPreMoveNextRequest={() =>
-                    //         this.setState({
-                    //             photoIndex: (photoIndex + 1) % ImageList.length
-                    //         })
-                    //     }
-                    // />
+                    <Lightbox
+                        mainSrc={ImageList[photoIndex]}
+                        nextSrc={ImageList[(photoIndex + 1) % ImageList.length]}
+                        prevSrc={ImageList[(photoIndex + ImageList.length - 1) % ImageList.length]}
+                        onCloseRequest={() => this.setState({ previewVisible: false })}
+                        onPreMovePrevRequest={() =>
+                            this.setState({
+                                photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
+                            })
+                        }
+                        onPreMoveNextRequest={() =>
+                            this.setState({
+                                photoIndex: (photoIndex + 1) % ImageList.length
+                            })
+                        }
+                    />
                 )}
 
                 <Modal
@@ -838,9 +838,9 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
 
-                <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
+                {/* <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
                     <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-                </Modal>
+                </Modal> */}
             </div>
         );
     }
