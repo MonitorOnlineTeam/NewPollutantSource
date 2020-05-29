@@ -38,7 +38,12 @@ export default Model.extend({
       if (result.IsSuccess) {
         let defaultValue = [];
         if (result.Datas.length) {
-          defaultValue = result.Datas.length >= 2 ? [result.Datas[0].PollutantCode, result.Datas[1].PollutantCode] : [result.Datas[0].PollutantCode]
+          // defaultValue = result.Datas.length >= 2 ? [result.Datas[0].PollutantCode, result.Datas[1].PollutantCode] : [result.Datas[0].PollutantCode]
+          result.Datas.map((item, index) => {
+            if (item && index < 6) {
+              defaultValue.push(item.PollutantCode) 
+            }
+          })
         }
         yield update({
           pollutantList: result.Datas,
