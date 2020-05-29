@@ -40,7 +40,7 @@ export default Model.extend({
         if (result.Datas.length) {
           // defaultValue = result.Datas.length >= 2 ? [result.Datas[0].PollutantCode, result.Datas[1].PollutantCode] : [result.Datas[0].PollutantCode]
           result.Datas.map((item, index) => {
-            if (item && index < 6) {
+            if (item && index < 7) {
               defaultValue.push(item.PollutantCode) 
             }
           })
