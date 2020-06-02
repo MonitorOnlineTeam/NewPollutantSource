@@ -11,13 +11,15 @@ import {
     GetTaskRecord, GetJzRecord,
     GetRecordType, GetConsumablesReplaceRecord,
     GetStandardGasReplaceRecord, GetPatrolRecord,
-    GetDeviceExceptionRecord,GetStopCemsRecord,
-    GetBdTestRecord,RevokeTask,
-    GetPatrolType,GetRepairRecord,MaintainRecordDetail,GetSparePartReplaceRecord
+    GetDeviceExceptionRecord, GetStopCemsRecord,
+    GetBdTestRecord, RevokeTask,
+    GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
+    GetOperationLogList,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
+import moment from 'moment';
 
 export default Model.extend({
     namespace: 'task',
@@ -29,22 +31,29 @@ export default Model.extend({
         RepairRecord: null,//维修记录
         ExceptionRecord: null,//设备异常记录
         BdRecord: null,//比对监测记录
-        ConsumablesReplaceRecord:null,//易耗品更换记录
-        StandardGasRepalceRecord:null,//标气更换记录
-        MaintainRecordDetailRecord:null,//保养项更换记录
-        SparePartReplaceRecord:null,//备品更换记录
+        ConsumablesReplaceRecord: null,//易耗品更换记录
+        StandardGasRepalceRecord: null,//标气更换记录
+        MaintainRecordDetailRecord: null,//保养项更换记录
+        SparePartReplaceRecord: null,//备品更换记录
         RecordTypes: [],//运维表单类型
-        AlarmResponseList:[]
+        AlarmResponseList: [],
+        //运维记录参数
+        operationRzWhere: {
+            beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            DGIMN: '',
+            pageIndex: 1,
+            pageSize: 10,
+        },
     },
 
     effects: {
         // 任务记录
         * GetTaskRecord({
             payload,
-        }, { call, update,put,select,take }) {
+        }, { call, update, put, select, take }) {
             const taskInfo = yield call(GetTaskRecord, payload);
             if (taskInfo !== null && taskInfo.IsSuccess) {
-                if(taskInfo.Datas.length>0){
+                if (taskInfo.Datas.length > 0) {
                     yield put({
                         type: 'GetAlarmResponseList',
                         payload: {
@@ -53,18 +62,18 @@ export default Model.extend({
                         },
                     });
                     yield take('GetAlarmResponseList/@@end');
-                    const {AlarmResponseList} = yield select(_ => _.task);
-                    if(AlarmResponseList.length>0){
-                        taskInfo.Datas[0].AlarmList=AlarmResponseList;
+                    const { AlarmResponseList } = yield select(_ => _.task);
+                    if (AlarmResponseList.length > 0) {
+                        taskInfo.Datas[0].AlarmList = AlarmResponseList;
                         yield update({
                             TaskRecord: taskInfo
                         });
-                    }else{
+                    } else {
                         yield update({
                             TaskRecord: taskInfo
                         });
                     }
-                }else{
+                } else {
                     yield update({
                         TaskRecord: []
                     });
@@ -80,7 +89,7 @@ export default Model.extend({
                 if (DataInfo.Datas !== null) {
                     yield update({ JzRecord: DataInfo.Datas });
                 }
-            }else{
+            } else {
                 yield update({
                     JzRecord: null
                 });
@@ -93,8 +102,8 @@ export default Model.extend({
             const DataInfo = yield call(GetRecordType, payload);
             if (DataInfo !== null && DataInfo.IsSuccess) {
                 yield update({ RecordTypes: DataInfo.Datas });
-            }else{
-                yield update({RecordTypes: []});
+            } else {
+                yield update({ RecordTypes: [] });
             }
         },
         // 易耗品更换记录
@@ -211,7 +220,7 @@ export default Model.extend({
                 if (DataInfo.Datas !== null) {
                     yield update({ StopCemsRecord: DataInfo.Datas });
                 }
-            }else{
+            } else {
                 yield update({
                     StopCemsRecord: null
                 });
@@ -239,7 +248,7 @@ export default Model.extend({
                 if (DataInfo.Datas !== null) {
                     yield update({ ExceptionRecord: DataInfo.Datas });
                 }
-            }else{
+            } else {
                 yield update({
                     ExceptionRecord: null
                 });
@@ -255,7 +264,7 @@ export default Model.extend({
                 if (DataInfo.Datas !== null) {
                     yield update({ BdRecord: DataInfo.Datas });
                 }
-            }else{
+            } else {
                 yield update({
                     BdRecord: null
                 });
@@ -286,15 +295,37 @@ export default Model.extend({
         //获取报警响应列表
         * GetAlarmResponseList({
             payload,
-        }, { call,update }) {
+        }, { call, update }) {
             const DataInfo = yield call(GetAlarmResponseList, payload);
             if (DataInfo !== null && DataInfo.IsSuccess) {
                 if (DataInfo.Datas !== null) {
                     yield update({ AlarmResponseList: DataInfo.Datas });
-                }else{
+                } else {
                     yield update({ AlarmResponseList: [] });
                 }
 
+            }
+        },
+        // 获取运维记录
+        * GetOperationLogList({
+            payload
+        }, {
+            call,
+            update,
+            select,
+        }) {
+            const { operationRzWhere } = yield select(a => a.task);
+            const DataInfo = yield call(GetOperationLogList, operationRzWhere);
+            if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    PatrolRecord: DataInfo.Datas,
+                });
+            } else {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    PatrolRecord: null,
+                });
             }
         }
     },

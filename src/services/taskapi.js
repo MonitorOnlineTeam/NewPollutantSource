@@ -288,3 +288,9 @@ export async function GetPatrolType(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPatrolTypeIdbyTaskId', body, null);
     return result;
 }
+// 获取运维记录
+export async function GetOperationLogList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/SMCManagerApi/GetOperationLogList', params, null);
+    return result;
+}
+
