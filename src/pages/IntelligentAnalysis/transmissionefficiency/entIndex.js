@@ -27,8 +27,6 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import PointIndex from './pointIndex';
 import { router } from "umi";
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { SearchOutlined } from '@ant-design/icons';
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
@@ -112,7 +110,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <p><Badge status="warning" text="当传输有效率高于90%时传输有效率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
         ),
-        filterIcon: filtered => <QuestionCircleOutlined style={{ color: '#1890FF' }} />,
+        filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />
         // onFilter: (value, record) =>
         //   record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         // onFilterDropdownVisibleChange: visible => {
