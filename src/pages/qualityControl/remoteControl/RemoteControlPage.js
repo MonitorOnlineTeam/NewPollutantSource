@@ -426,7 +426,7 @@ class RemoteControlPage extends Component {
                       {getFieldDecorator('FlowValue', {
                         rules: [{
                           required: true,
-                          message: '请输入总流量设定值!',
+                          message: '建议设为1.5倍-2倍!',
                         },],
                       })(
                         <InputNumber
