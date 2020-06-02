@@ -37,7 +37,7 @@ class MapUI extends PureComponent {
       map: map //关联的地图实例
     });
 
-    var adcode = this.props.configInfo.RegionCode; //全国的区划编码
+    var adcode = this.props.configInfo.AdCode; //高德地图adcode
     const that = this;
     districtExplorer.loadAreaNode(adcode, function (error, areaNode) {
       if (error) {

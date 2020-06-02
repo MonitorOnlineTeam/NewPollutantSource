@@ -39,7 +39,6 @@ export default Model.extend({
         },
         *addPoint({ payload }, { call, put, update, select }) {
             // ;
-            console.log('payload=', payload);
 
             // let result = yield call(services.postAutoFromDataAdd, {
             //     ...payload,

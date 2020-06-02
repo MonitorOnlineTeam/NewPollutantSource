@@ -381,7 +381,7 @@ class DataQuery extends Component {
                                             // onChange={this._handleDateChange}
                                             callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                             allowClear={false} showTime={this.state.format} /> */}
-                <SelectTime size={"default"} mode={dataType} dgimn={dgimn} style={{ margin: "0 10px" }} reload={(startTime, endTime) => {
+                <SelectTime size={"default"} mode={dataType} reloadKey={dgimn} style={{ margin: "0 10px" }} reload={(startTime, endTime) => {
                   let { historyparams } = this.props;
                   historyparams = {
                     ...historyparams,

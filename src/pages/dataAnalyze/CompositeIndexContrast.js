@@ -20,8 +20,8 @@ class CompositeIndexContrast extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      BeginTime: moment().subtract(16, "day"),
-      EndTime: moment().subtract(8, "day"),
+      BeginTime: moment().subtract(17, "day"),
+      EndTime: moment().subtract(9, "day"),
       StartTime: moment().subtract(8, "day"),
       OverTime: moment(),
       columns: [

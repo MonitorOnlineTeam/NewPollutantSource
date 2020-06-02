@@ -277,7 +277,7 @@ class SdlMap extends PureComponent {
               // 实例化Autocomplete
               var autoOptions = {
                 // city: "110000",
-                city: that.props.configInfo.RegionCode == '0' ? '全国' : that.props.configInfo.RegionCode.substring(0, 6),
+                city: that.props.configInfo.AdCode == '0' ? '全国' : that.props.configInfo.AdCode,
                 input: "tipInput"
               }
 

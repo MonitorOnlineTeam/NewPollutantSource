@@ -110,10 +110,15 @@ class SdlTable extends PureComponent {
         return col.width || 240;
       } else if (title == 'AQI') {
         return 60;
+      } else if (title.indexOf('流量') != -1) {
+        return 130;
       } else {
         return col.width || this.props.defaultWidth;
       }
     } else {
+      if(title.props.children.includes("流量")) {
+        return col.width || 130;
+      }
       return col.width || this.props.defaultWidth;
     }
 
