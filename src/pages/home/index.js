@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-01 09:53:28
+ * @Last Modified time: 2020-06-02 13:53:19
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -27,10 +27,10 @@ import { onlyOneEnt } from '../../config';
 import styles from './index.less';
 import { router } from 'umi';
 import Link from 'umi/link';
- 
- 
+
+
 import config from "@/config";
-import  HomeCommon from '@/components/home/HomeCommon';
+import HomeCommon from '@/components/home/HomeCommon';
 
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
@@ -45,13 +45,13 @@ let _thismap;
   warningInfoLoading: loading.effects['home/getWarningInfo'],
   taskCountLoading: loading.effects['home/getTaskCount'],
   exceptionProcessingLoading: loading.effects['home/getExceptionProcessing'],
-  loading:loading.effects['home/getHomePage'],
+  loading: loading.effects['home/getHomePage'],
   pollutantTypeList: home.pollutantTypeList,
   currentEntInfo: home.currentEntInfo,
   currentMarkersList: home.currentMarkersList,
   allEntAndPointList: home.allEntAndPointList,
   mounthOverData: home.mounthOverData,
-  homePage:home.homePage
+  homePage: home.homePage
 }))
 class index extends Component {
   constructor(props) {
@@ -71,23 +71,26 @@ class index extends Component {
       radioDefaultValue: "",
       infoWindowVisible: false,
       showType: "ent",
-      entCode:null,
-      DGIMN:null,
-      
+      entCode: null,
+      DGIMN: null,
+
     };
     this.mapEvents = {
       created(m) {
         _thismap = m;
-        m.setFitView();
-        if (config.offlineMapUrl.domain) {
-          var Layer = new window.AMap.TileLayer({
-            zIndex: 2,
-            getTileUrl: function (x, y, z) {
-              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
-            }
-          });
-          Layer.setMap(m);
+        if (m) {
+          m.setFitView();
+          if (config.offlineMapUrl.domain) {
+            var Layer = new window.AMap.TileLayer({
+              zIndex: 2,
+              getTileUrl: function (x, y, z) {
+                return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
+              }
+            });
+            Layer.setMap(m);
+          }
         }
+
       },
       zoomchange: (value) => {
         if (_thismap.getZoom() <= this.state.zoom) {
@@ -107,7 +110,7 @@ class index extends Component {
             })
             this.setState({
               currentPoint: undefined,
-              DGIMN:null
+              DGIMN: null
             })
           }
           this.setState({ showType: "ent" })
@@ -120,12 +123,12 @@ class index extends Component {
       }
     };
   }
-  componentWillMount(){
-     const {dispatch}=this.props;
-     dispatch({
-       type:'home/getHomePage',
-       payload:{}
-     })
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'home/getHomePage',
+      payload: {}
+    })
   }
 
   componentDidMount() {
@@ -146,7 +149,7 @@ class index extends Component {
     })
   }
 
- 
+
 
   componentWillReceiveProps(nextProps) {
     if (this.props.allEntAndPointList !== nextProps.allEntAndPointList) {
@@ -163,7 +166,7 @@ class index extends Component {
 
     if (this.props.currentEntInfo !== nextProps.currentEntInfo) {
       this.setState({
-        entCode:nextProps.currentEntInfo.key
+        entCode: nextProps.currentEntInfo.key
       })
       if (nextProps.currentEntInfo.Longitude && nextProps.currentEntInfo.Latitude) {
         this.setState({
@@ -264,10 +267,10 @@ class index extends Component {
           currentMarkersList: itemData.position.children,
         }
       })
-    } else { 
+    } else {
       this.setState({
         currentPoint: itemData.position,
-        DGIMN:itemData.position.key
+        DGIMN: itemData.position.key
       })
     }
   }
@@ -356,17 +359,17 @@ class index extends Component {
     return icon;
   }
 
-  onRef1=(ref)=>{
-    this.children=ref;
+  onRef1 = (ref) => {
+    this.children = ref;
   }
   //左边模块加载
-  leftLoading=()=>{
+  leftLoading = () => {
     // this.children.
   }
 
   //右边模块加载
-  rightLoading=()=>{
-  //   this.
+  rightLoading = () => {
+    //   this.
   }
   render() {
     const {
@@ -403,24 +406,23 @@ class index extends Component {
     if (ele) {
       height = ele.offsetHeight - 30;
     }
-    if(homePage=="1")
-    {
-       return <Spin
-       style={{
-         position: "absolute",
-         width: "100%",
-         height: "100%",
-         top: 0,
-         display: "flex",
-         alignItems: "center",
-         justifyContent: "center",
-         background: "rgba(0, 0, 0, 0)",
-         zIndex: 999,
-       }}
-       size="large"
-     />
+    if (homePage == "1") {
+      return <Spin
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          top: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(0, 0, 0, 0)",
+          zIndex: 999,
+        }}
+        size="large"
+      />
     }
-    
+
     const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
     return (
@@ -498,31 +500,31 @@ class index extends Component {
           >{this.state.currentTitle}</InfoWindow>
           <div className={styles.leftWrapper}>
             {/* 运行分析  || 智能质控*/}
-            <div style={{display:`${homePage?homePage.split(',')[0]:''}`}} className={styles.effectiveRate}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode}   onRef={this.onRef1}
-               assembly={homePage?homePage.split(',')[0]:"OperationAnalysis"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[0] : ''}` }} className={styles.effectiveRate}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} onRef={this.onRef1}
+                assembly={homePage ? homePage.split(',')[0] : "OperationAnalysis"} />
             </div>
             {/* 运维统计 */}
-            <div style={{display:`${homePage?homePage.split(',')[1]:''}`}} className={styles.operationsWrapper}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage?homePage.split(',')[1]:"OperationStatistics"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[1] : ''}` }} className={styles.operationsWrapper}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[1] : "OperationStatistics"} />
             </div>
             {/* 超标异常 */}
-            <div style={{display:`${homePage?homePage.split(',')[2]:''}`}} className={styles.excessiveAbnormalWrapper}>
-               <HomeCommon DGIMN={DGIMN} entCode={entCode}  assembly={homePage?homePage.split(',')[2]:"AlarmMessage"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[2] : ''}` }} className={styles.excessiveAbnormalWrapper}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[2] : "AlarmMessage"} />
             </div>
-           </div>
+          </div>
           <div className={styles.rightWrapper}>
             {/* 智能监控 */}
-            <div style={{display:`${homePage?homePage.split(',')[3]:''}`}} className={styles.monitoringContent}>
-               <HomeCommon DGIMN={DGIMN} entCode={entCode}  assembly={homePage?homePage.split(',')[3]:"MonitoringStatus"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[3] : ''}` }} className={styles.monitoringContent}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[3] : "MonitoringStatus"} />
             </div>
             {/* 企业排放量 */}
-            <div style={{display:`${homePage?homePage.split(',')[4]:''}`}} className={styles.emissionsContent}>
-                 <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage?homePage.split(',')[4]:"EmissionsAnalysis"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[4] : ''}` }} className={styles.emissionsContent}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[4] : "EmissionsAnalysis"} />
             </div>
             {/* 排污税 */}
-            <div style={{display:`${homePage?homePage.split(',')[5]:''}`}} className={styles.effluentFeeContent}>
-                <HomeCommon DGIMN={DGIMN} entCode={entCode}  assembly={homePage?homePage.split(',')[5]:"EmissionTax"} />
+            <div style={{ display: `${homePage ? homePage.split(',')[5] : ''}` }} className={styles.effluentFeeContent}>
+              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[5] : "EmissionTax"} />
             </div>
           </div>
           <div className={styles.currentInfoWrapper}>
