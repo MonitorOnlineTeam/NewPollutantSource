@@ -441,8 +441,6 @@ class EmergencyDetailInfo extends Component {
                             });
                         }
                         let ExceptionName = '';
-                        console.log(EnumPropellingAlarmSourceType);
-                        debugger
                         switch (parseInt(item.AlarmType)) {
                             //参数异常
                             case EnumPropellingAlarmSourceType.DYPARAMETER:
@@ -475,7 +473,6 @@ class EmergencyDetailInfo extends Component {
                                 break;
                             //数据异常
                             case EnumPropellingAlarmSourceType.DataException:
-                                debugger
                                 switch (parseInt(item.MsgType)) {
                                     case EnumDataException.Zero:
                                         ExceptionName = "零值异常";
@@ -559,7 +556,7 @@ class EmergencyDetailInfo extends Component {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `/uploadplantform/${item}`,
                 });
             }
         });
@@ -567,7 +564,7 @@ class EmergencyDetailInfo extends Component {
         const ImageList = [];
         fileList.map(item => {
             ImageList.push(
-                `/upload/${item.name}`,
+                `/uploadplantform/${item.name}`,
             );
         });
         // 报警列表列名
@@ -670,13 +667,12 @@ class EmergencyDetailInfo extends Component {
             }
 
         }
-
         const upload = {
+      
             showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
             listType: 'picture-card',
             fileList: [...fileList],
         };
-        debugger
         const { isloading } = this.props;
         if (isloading) {
             return (<Spin
