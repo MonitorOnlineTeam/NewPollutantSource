@@ -3,22 +3,23 @@ import moment from 'moment';
 import {
     Card,
     Spin,
-    Row, Col, Select, Input, Button, Tooltip, Modal, Form, Icon,
+    Select, Input, Button, Tooltip, Modal, Form, Icon, Steps, Pagination, Empty,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import SdlTable from '@/components/SdlTable'
 import { DetailIcon } from '@/utils/icon'
 import {
   routerRedux,
 } from 'dva/router';
-import RecordEchartTableOver from '@/components/recordEchartTableOver'
+import AlermIndex from './AlermIndex'
 import ExceptionAlarm from '@/components/ExceptionAlarm/ExceptionAlarm';
+import Style from './index.less';
 /**
  * 指挥调度组件
  * xpy 2020.02.11
  */
 const FormItem = Form.Item;
+const { Step } = Steps;
 @connect(({ loading, operations }) => ({
     dataloading: loading.effects['operations/getcommanddispatchreport'],
     total: operations.total,
@@ -48,9 +49,13 @@ class Dispatchreport extends Component {
             Evisible: false,
             btime: '',
             etime: '',
+            ID: '',
+            EID: '',
+            PID: '',
         };
          this.handleExpand = this.handleExpand.bind(this);
          this.resetForm = this.resetForm.bind(this);
+         this.Detail = this.Detail.bind(this);
     }
 
     componentDidMount() {
@@ -64,6 +69,105 @@ class Dispatchreport extends Component {
         }
     }
 
+    // 步骤
+    StepsList = StepsList => {
+        const returnStepList = [];
+        StepsList.map(item => {
+                returnStepList.push(
+                    <>
+                        <Card.Grid style={{ width: '100%', marginTop: '10px', overflowX: 'scroll' }}>
+                            <div className={this.CommandDispatchType('style', item.CommandDispatchType)}></div>
+                            <div style={{ float: 'left', marginLeft: '5px', width: '95%' }}>
+                                <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden', lineHeight: '24px' }}>
+                <div style={{ width: '95%', float: 'left', fontWeight: 'bolder' }}><span>{this.CommandDispatchType('', item.CommandDispatchType)}</span><span style={{ fontSize: '10px', color: '#8c8c8c', marginLeft: '10px' }}>{item.CreateTime}</span></div>
+                                    <div style={{ float: 'right' }}><Button type="primary" icon="profile" size="small" onClick={this.Detail.bind(this, item.TaskId, item.Flag, item.FirstTime, item.EndTime, item.EID, item.PID)}>详情</Button></div>
+                                </div>
+                                <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden' }}>
+                                    <div style={{ width: '100%', fontWeight: 'bold', fontSize: '12px' }}>{item.Remark}</div>
+                                </div>
+                                <Steps size="small" status="process">{this.TaskLogList(item.Steplist)}</Steps>
+                            </div>
+                        </Card.Grid>
+
+                    </>,
+                );
+            });
+        return returnStepList;
+    }
+
+    // 步骤条
+    TaskLogList = TaskLogList => {
+        const returnStepList = [];
+            TaskLogList.map(item => {
+                returnStepList.push(
+                    <Step
+                        status={item.Status == 1 ? 'finish' : 'wait'}
+                        title={item.TaskStatusText}
+                        description={this.description(item)}
+                        icon={<Icon type={
+                            this.showIcon(item.TaskStatusText)
+                        }
+                        />}
+                    />,
+                );
+            });
+        return returnStepList;
+    }
+
+    //图标
+    showIcon = TaskStatusText => {
+        switch (TaskStatusText) {
+            case '待执行': return 'minus-circle';
+            case '进行中': return 'clock-circle';
+            case '已完成': return 'check-circle';
+            case '待审核': return 'exclamation-circle';
+            case '审核通过': return 'check-square';
+            case '驳回': return 'close-circle';
+            case '待调整': return 'warning';
+            case '已调整': return 'check-square';
+            case '超标报警': return 'bell';
+            case '异常报警': return 'exclamation-circle-o';
+            default: return 'schedule';
+        }
+    }
+
+
+    // 步骤条描述
+    description = item => (
+                <div style={{ fontSize: '10' }}>
+                    <div style={{ marginTop: 5 }}>
+                        {item.Remark}
+                    </div>
+                    <div style={{ marginTop: 5 }}>
+                        {item.CreateUserName}
+                    </div>
+                    <div style={{ marginTop: 5 }}>
+                        {item.CreateTime == '0001-01-01 00:00:00' ? '' : item.CreateTime}
+                    </div>
+
+                </div>
+            )
+
+    // 派单类型图标
+    CommandDispatchType = (type, item) => {
+        if (type == 'style') {
+            switch (item) {
+                case '1': return Style.imgstyle1;
+                case '2': return Style.imgstyle2;
+                case '3': return Style.imgstyle3;
+                case '4': return Style.imgstyle4;
+                default: return '';
+            }
+        } else {
+            switch (item) {
+                case '1': return '例行派单';
+                case '2': return '异常报警';
+                case '3': return '人工派单';
+                case '4': return '超标报警';
+                default: return '';
+            }
+        }
+    }
 
     /** 切换任务类型 */
     SelectOnChange=value => {
@@ -157,6 +261,52 @@ class Dispatchreport extends Component {
             ETime: rangeDate.length > 0 ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
             CommandDispatchType: baseReportSearchForm.CommandDispatchType,
             UserID: baseReportSearchForm.UserID,
+            pageIndex: 1,
+        }
+        dispatch({
+            type: 'operations/updateState',
+            payload: {
+                queryparams,
+            },
+        })
+         dispatch({
+           type: 'operations/getcommanddispatchreport',
+           payload: {},
+         });
+    }
+
+    /** 分页 */
+    onShowSizeChange = (pageIndex, pageSize) => {
+        const {
+            dispatch,
+        } = this.props;
+        let queryparams = this.props;
+        queryparams = {
+            ...queryparams,
+            pageIndex,
+            pageSize,
+        }
+        dispatch({
+            type: 'operations/updateState',
+            payload: {
+                queryparams,
+            },
+        })
+         dispatch({
+           type: 'operations/getcommanddispatchreport',
+           payload: {},
+         });
+    }
+
+    onChange = (pageIndex, pageSize) => {
+        const {
+            dispatch,
+        } = this.props;
+        let queryparams = this.props;
+        queryparams = {
+            ...queryparams,
+            pageIndex,
+            pageSize,
         }
         dispatch({
             type: 'operations/updateState',
@@ -171,21 +321,24 @@ class Dispatchreport extends Component {
     }
 
     /** 详情 */
-    Detail=(TaskId, Type, btime, etime) => {
-        const {
-          DGIMN,
-        } = this.state.dgimn;
-          if (Type === 1) {
+    Detail=(TaskId, Type, btime, etime, EID, PID) => {
+        this.setState({
+            ID: TaskId,
+            EID,
+            PID,
+        })
+        const DGIMN = this.state.dgimn;
+          if (Type == 1) {
               this.props.dispatch(routerRedux.push(`/operations/CommandDispatchReport/details/${TaskId}/${DGIMN}`));
           }
-          if (Type === 3) {
+          if (Type == 3) {
               this.setState({
                   Rvisible: true,
                   btime,
                   etime,
               })
           }
-          if (Type === 2) {
+          if (Type == 2) {
             this.setState({
               Evisible: true,
                btime,
@@ -245,19 +398,13 @@ class Dispatchreport extends Component {
     render() {
         const { dataloading, datatable } = this.props;
 
+        console.log('datatable', datatable);
         const columns = [
-          {
-            title: '时间',
-            dataIndex: 'CreateTime',
-            key: 'CreateTime',
-            width: '15%',
-            align: 'center',
-          },
             {
             title: '调度类别',
             dataIndex: 'CommandDispatchType',
             key: 'CommandDispatchType',
-            width: '10%',
+            width: '5%',
             align: 'center',
             render: (text, record) => {
               if (text === '1') {
@@ -273,22 +420,16 @@ class Dispatchreport extends Component {
             },
             },
             {
-              title: '人员姓名',
-              dataIndex: 'UserName',
-              key: 'UserName',
-               width: '10%',
-              align: 'center',
-            },
-            {
-              title: '备注',
-              dataIndex: 'Remark',
-              key: 'Remark',
-              align: 'center',
+              title: 'ddddd',
+              dataIndex: 'Steplist',
+              key: 'Steplist',
+              align: 'left',
+              render: (text, record) => <Steps status="process">{this.TaskLogList(record.Steplist)}</Steps>,
             },
             {
                 title: '操作',
                 key: 'action',
-                 width: '10%',
+                 width: '5%',
                  align: 'center',
                 render: (text, record, index) => (
                     <span>
@@ -306,18 +447,20 @@ class Dispatchreport extends Component {
           Option,
         } = Select;
         const { queryparams } = this.props;
+        console.log('queryparams', queryparams);
         return (
-            <div>
-                <Card bordered={false}>
-                <Form layout="inline" style={{ marginTop: '10px' }}>
-                            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                                <Col md={24} lg={8} sm={24} xs={24}>
+            <div style={{ background: '#ECECEC' }}>
+                <Card
+                bordered={false}
+                extra={
+                    <Form layout="inline" style={{ marginTop: '10px' }}>
+                                <div style={{ float: 'left', width: '350px' }}>
                                     <FormItem {...this.formLayout} label="调度类别" style={{ width: '100%' }}>
                                         {getFieldDecorator('CommandDispatchType', {
                                             initialValue: queryparams.CommandDispatchType === '' ? undefined : queryparams.CommandDispatchType,
                                         })(
                                             <Select
-                                        style={{ width: '80%', margin: '5px' }}
+
                                         placeholder="请选择"
                                         allowClear
                                     >
@@ -328,28 +471,26 @@ class Dispatchreport extends Component {
                                             </Select>,
                                         )}
                                     </FormItem>
-                                </Col>
-                                <Col md={24} lg={8} sm={24} xs={24}>
+                                </div>
+                                <div style={{ float: 'left', width: '450px' }}>
                                     <FormItem {...this.formLayout} label="时间" style={{ width: '100%' }}>
                                         {getFieldDecorator('rangeDate')(
-                                            <RangePicker_ style={{ width: '90%', margin: '5px', textAlign: 'left' }}
+                                            <RangePicker_
                                             dateValue={this.state.rangeDate} format={this.state.format}
                                             callback={this._handleDateChange} fieldName="rangeDate" allowClear showTime={this.state.format} />,
                                         )}
                                     </FormItem>
-                                </Col>
-                                <Col md={24} lg={8} sm={24} xs={24}>
+                                </div>
+                                <div style={{ float: 'left', width: '350px' }}>
                                     <FormItem {...this.formLayout} label="人员姓名" style={{ width: '100%' }}>
                                         {getFieldDecorator('UserID', {
                                             initialValue: queryparams.UserID,
                                         })(
-                                            <Input style={{ width: '90%', margin: '5px' }} placeholder="人员姓名" allowClear/>,
+                                            <Input placeholder="人员姓名" allowClear/>,
                                         )}
                                     </FormItem>
-                                </Col>
-                            </Row>
-                            <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{ textAlign: 'left' }}>
-                                <Col md={24} sm={24} style={{ margin: '10px 0px' }}>
+                                </div>
+                                <div style={{ float: 'left' }}>
                                     <Button
                                         style={{ marginLeft: 8 }}
                                         onClick={() => {
@@ -367,35 +508,55 @@ class Dispatchreport extends Component {
                                         }}>
                                         重置
                                         </Button>
-                                </Col>
-                            </Row>
+                                    </div>
                         </Form>
-                    <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
-                        <SdlTable
-                            loading={dataloading}
-                            rowKey={(record, index) => `complete${index}`}
-                            dataSource={datatable}
-                            columns={columns}
-                            Pagination={null}
-
+                }
+                >
+                    <div className={Style.Content}>
+                        {
+                        dataloading && <Spin
+                            style={{
+                            width: '100%',
+                            height: 'calc(100vh/2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            }}
+                            size="large"
                         />
-                   </Card.Grid>
+                        }
+                        {
+                            !dataloading && (datatable.length ?
+                            <>
+                                <div className={Style.Item}>
+                                {this.StepsList(datatable)}
+                                </div>
+                                <div style={{ width: '100%', marginTop: 30 }}>
+                                <Pagination
+                                    style={{ float: 'right' }}
+                                    size="small"
+                                    showSizeChanger
+                                    showQuickJumper
+                                    total= {queryparams.total}
+                                    pageSize= {queryparams.pageSize}
+                                    current= {queryparams.pageIndex}
+                                    onChange={this.onChange}
+                                    onShowSizeChange={this.onShowSizeChange}
+                                />
+                                </div>
+                            </> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+                        }
+
+                    </div>
                     <Modal
                     destroyOnClose="true"
                     visible={this.state.Rvisible}
                     title="报警记录"
-                    width="70%"
+                    width="90%"
                     footer={null}
                     onCancel={this.onCancel}
                     >
-                     <RecordEchartTableOver
-                        style={{ maxHeight: '70vh' }}
-                        DGIMN={this.state.dgimn}
-                        firsttime={moment(moment(this.state.btime).format('YYYY-MM-DD 00:00:00'))}
-                        lasttime={moment(moment(this.state.etime).format('YYYY-MM-DD 23:59:59'))}
-                        noticeState={1}
-                        maxHeight={200}
-                            />
+                     <AlermIndex ID={this.state.ID} EID={this.state.EID} PID={this.state.PID}/>
                     </Modal>
                     <Modal
                     destroyOnClose="true"
@@ -409,7 +570,7 @@ class Dispatchreport extends Component {
                       initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={moment(moment(this.state.btime).format('YYYY-MM-DD 00:00:00'))}
                         lasttime={moment(moment(this.state.etime).format('YYYY-MM-DD 23:59:59'))}/>
                     </Modal>
-                </Card>
+                    </Card>
             </div >
         );
     }

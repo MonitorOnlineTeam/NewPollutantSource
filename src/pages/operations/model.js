@@ -59,11 +59,11 @@ export default Model.extend({
     pointInfoList: [],
     // 指挥调度报表
      datatable: [],
-       total: 0,
        queryparams: {
          DGIMN: '',
          pageIndex: 1,
          pageSize: 10,
+         total: 0,
          UserID: '',
          BTime: '',
          ETime: '',
@@ -419,7 +419,10 @@ export default Model.extend({
       const result = yield call(services.getcommanddispatchreport, queryparams);
       if (result.IsSuccess) {
         yield update({
-         total: result.total,
+          queryparams: {
+            ...queryparams,
+            total: result.Total,
+          },
          datatable: result.Datas,
         })
       }

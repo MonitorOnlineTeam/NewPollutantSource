@@ -25,7 +25,7 @@ export async function systemLogin(params) {
     if (result.IsSuccess && result.Datas) {
         Cookie.set(configToken.cookieName, result.Datas.Ticket);
     } else {
-        Cookie.set(configToken.cookieName, "");
+        Cookie.set(configToken.cookieName, '');
     }
     return result;
 }
@@ -36,7 +36,7 @@ export async function systemLogin(params) {
  */
 export async function getConditions() {
     const params = {
-        configId: "TestCommonPoint"
+        configId: 'TestCommonPoint',
     };
     const defaults = {};
     const body = Object.assign(defaults, params);
@@ -50,13 +50,13 @@ export async function getConditions() {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getPageConfigInfo(params) {
-    let param = {
-        configId: "TestCommonPoint",
-        ...params
+    const param = {
+        configId: 'TestCommonPoint',
+        ...params,
     };
     const defaults = {
         PageIndex: 1,
-        PageSize: 200
+        PageSize: 200,
     };
     const body = Object.assign(defaults, param);
     const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetPageConfigInfo', body, null);
@@ -88,7 +88,7 @@ export async function getListPager(params) {
  */
 export async function getAutoFromAddView() {
     const params = {
-        configId: "TestCommonPoint"
+        configId: 'TestCommonPoint',
     };
     const defaults = {};
     const body = Object.assign(defaults, params);
@@ -102,7 +102,7 @@ export async function getAutoFromAddView() {
  */
 export async function getAutoFromUpdateView() {
     const params = {
-        configId: "TestCommonPoint"
+        configId: 'TestCommonPoint',
     };
     const defaults = {};
     const body = Object.assign(defaults, params);
@@ -116,11 +116,11 @@ export async function getAutoFromUpdateView() {
  */
 export async function getFormData(params) {
     const defaults = {
-        configId: "TestCommonPoint"
+        configId: 'TestCommonPoint',
     };
     const body = {
         ...params,
-        ...defaults
+        ...defaults,
     };
     const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetFormData', params, null);
     return result;
@@ -132,8 +132,8 @@ export async function getFormData(params) {
  */
 export async function postAutoFromDataDelete(params) {
     const postData = {
-        configId: "TestCommonPoint",
-        ...params
+        configId: 'TestCommonPoint',
+        ...params,
     };
     // const defaults = {};
     // const body=Object.assign(defaults,params);
