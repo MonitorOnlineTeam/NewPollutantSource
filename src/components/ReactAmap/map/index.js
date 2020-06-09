@@ -300,7 +300,9 @@ class BaseMap extends Component {
     } else {
       const { onCreated, ...restOpts } = opts
       const initOpts = { ...defaultOpts[name], ...restOpts }
-      this.map.plugin([`AMap.${name}`], () => {
+      // console.log("this.map=", this.map)
+      this.map && this.map.plugin([`AMap.${name}`], () => {
+      // this.map.plugin([`AMap.${name}`], () => {
         this.pluginMap[name] = new window.AMap[name](initOpts)
         this.map.addControl(this.pluginMap[name])
         if (isFun(onCreated)) {

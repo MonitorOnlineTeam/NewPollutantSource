@@ -235,7 +235,7 @@ export default class ContentList extends Component {
                     })
                     that.GetManualSupplementList();
                 } else if (info.file.status === 'error') {
-                        message.error();
+                 
                         message.error(info.file.response.Message);
 
                     that.setState({

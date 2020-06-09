@@ -25,7 +25,7 @@ export const toLnglat = (pos) => {
     lng = pos.longitude
     lat = pos.latitude
   }
-  return hasWindow ? new window.AMap.LngLat(lng, lat) : null
+  return (hasWindow && window.AMap) ? new window.AMap.LngLat(lng, lat) : null
 }
 
 export const toPixel = (ofst) => {

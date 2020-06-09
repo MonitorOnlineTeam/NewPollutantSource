@@ -136,6 +136,10 @@ export default {
             { path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppSparePartReplaceRecord' },
             /* 手机端二维码 */
             { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
+            /* 扫码查运维页面 */
+            { path: '/appoperation/scanningCode/:DGIMN', component: './AppOperation/ScanningCode' },
+            /* 扫码查运维页面(更多) */
+            { path: '/appoperation/operationFormDetail/:DGIMN/:TaskID', component: './AppOperation/OperationFormDetail' },
           ],
         },
         {
@@ -552,6 +556,11 @@ export default {
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
                     },
+                    {
+                      name: 'sparepartsstation',
+                      path: '/operations/materielmanager/sparepartsstation/:configId',
+                      component: './OperationSysManager/SparePartsStation/',
+                    },
                   ]
                 },
                 {
@@ -846,6 +855,178 @@ export default {
 
 
 
+              ],
+            },
+            {
+              path: '/platformconfig',
+              name: 'platformconfig',
+              routes: [
+                {
+                  path: '/platformconfig',
+                  redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
+                },
+                {
+                  // 设备管理
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentManage',
+                  component: './platformManager/equipmentManage',
+                },
+                {
+                  // 设备管理 - 添加、编辑
+                  name: 'addEditEquipment',
+                  path: '/platformconfig/equipmentManage/:DGIMN/:id',
+                  component: './platformManager/equipmentManage/AddEditEquipmentPage',
+                },
+                {
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitortarget/:configId/:targetType',
+                  component: './platformManager/monitortarget',
+                },
+                {
+                  name: 'dischargepermit',
+                  path: '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                  component: './platformManager/dischargepermit',
+                },
+                {
+                  name: 'maintainbase',
+                  path: '/platformconfig/maintain/:configId/',
+                  component: './platformManager/maintain',
+                },
+                {
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
+                  component: './platformManager/monitortarget',
+                },
+                {
+                  name: 'monitorpoint',
+                  path:
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
+                  component: './platformManager/point',
+                },
+                {
+                  name: 'usestandardlibrary',
+                  path:
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                  component: './platformManager/point/components/setStandard',
+                },
+                {
+                  name: 'ysyvideo',
+                  path:
+                    '/platformconfig/ysycameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+                  component: './platformManager/ysyvideo/YsyCameraIndex',
+                },
+                {
+                  name: 'ysyshowvideo',
+                  path: '/platformconfig/ysyshowvideo/:ID/:pointcode/',
+                  component: './platformManager/ysyvideo/index',
+                },
+                {
+                  name: 'hkvideo',
+                  path:
+                    '/platformconfig/hkcameramanager/:Pointname/:Pointcode/:DGIMN/:EntCode/:EntName',
+                  component: './platformManager/hkvideo/hkCameraIndex',
+                },
+                {
+                  name: 'hkshowvideo',
+                  path: '/platformconfig/hkshowvideo/:pointcode/',
+                  component: './platformManager/hkvideo/index',
+                },
+                {
+                  name: 'manualupload',
+                  path: '/platformconfig/manualupload/',
+                  component: './platformManager/manualupload',
+                },
+                {
+                  name: 'manualuploadauto',
+                  path: '/platformconfig/manualuploadauto/',
+                  component: './platformManager/manualuploadauto',
+                },
+                {
+                  name: 'maintenancedatabase',
+                  path: '/platformconfig/maintenancedatabase/:configId',
+                  component: './OperationSysManager/MaintenanceDatabaseManage/',
+                },
+
+                {
+                  name: 'sparepartmanage',
+                  path: '/platformconfig/sparepartmanage/:configId',
+                  component: './OperationSysManager/SparepartManage/',
+                },
+                {
+                  name: 'standardgasmanage',
+                  path: '/platformconfig/standardgasmanage/:configId',
+                  component: './OperationSysManager/StandardGasManage/',
+                },
+                {
+                  name: 'handhelddevicesmanage',
+                  path: '/platformconfig/handhelddevicesmanage/:configId',
+                  component: './OperationSysManager/HandheldDevicesManage/',
+                },
+
+
+                {
+                  name: 'certificatemanage',
+                  path: '/platformconfig/certificatemanage/:configId',
+                  component: './OperationSysManager/CertificateManage/',
+                },
+                {
+                  //监测标准
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitoringstandard',
+                  component: './platformManager/monitoringstandard',
+                },
+                {
+                  //视频管理
+                  name: 'videomanager',
+                  path: '/platformconfig/videomanager',
+                  component: './platformManager/videomanager',
+                },
+                {
+                  //运维周期
+                  name: 'maintenancecycle',
+                  path: '/platformconfig/maintenancecycle',
+                  component: './platformManager/maintenancecycle',
+                },
+                // 标准库管理
+                {
+                  name: 'StandardLibrary',
+                  path: '/platformconfig/StandardLibrary',
+                  component: './platformManager/standardLibrary',
+                },
+                // 添加标准库
+                {
+                  name: 'addLibrary',
+                  path: '/platformconfig/StandardLibrary/addLibrary',
+                  component: './platformManager/standardLibrary/AddLibrary',
+                },
+                // 编辑标准库
+                {
+                  name: 'editLibrary',
+                  path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
+                  component: './platformManager/standardLibrary/AddLibrary',
+                },
+                // 编辑标准库
+                {
+                  name: 'viewLibrary',
+                  path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
+                  component: './platformManager/standardLibrary/ViewLibrary',
+                },
+                {
+                  name: 'equipmentinfomanage',
+                  path: '/platformconfig/equipmentinfomanage/:configId',
+                  component: './OperationSysManager/EquipmentInfoManage/',
+                },
+                {
+                  name: 'factorytest',
+                  path: '/platformconfig/factorytest',
+                  component: './platformManager/factorytest',
+                },
+                //停产管理
+                {
+                  name: 'outputstopmanage',
+                  path: '/platformconfig/outputstopmanage/:configId',
+                  component: './platformManager/outputstopManager/',
+                },
               ],
             },
             {

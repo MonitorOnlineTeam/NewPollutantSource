@@ -103,6 +103,15 @@ class DateReportPage extends PureComponent {
             }
             // console.log("DGIMN=",DGIMN)
             this.props.form.setFieldsValue({ "DGIMN": DGIMN })
+            this.props.dispatch({
+              type: 'report/updateState',
+              payload: {
+                dateReportForm: {
+                  ...this.props.dateReportForm,
+                  current:1,
+                },
+              },
+            });
             this.statisticsReport()
           }
         })

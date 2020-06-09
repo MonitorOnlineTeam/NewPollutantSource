@@ -19,6 +19,7 @@ import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import config from "@/config"
 import defaultSettings from '../../../../config/defaultSettings.js'
+import MapUI from "./MapUI"
 
 
 const { TabPane } = Tabs;
@@ -69,9 +70,9 @@ class MapView extends Component {
       currentDescItem: {},
       airShowType: undefined,
       multiple: 4,
-      pointName:'',
-      entName:'',
-      pollutantTypes:'',
+      pointName: '',
+      entName: '',
+      pollutantTypes: '',
     }
     // this.markers = randomMarker(10);
     // console.log("markers=", this.markers)
@@ -178,7 +179,7 @@ class MapView extends Component {
           if (this.state.displayType === 1) {
             console.log("this.state.displayType=", this.state.displayType)
             this.setState({
-              pointName:extData.position.title,
+              pointName: extData.position.title,
             })
             // 点击排口，显示弹窗
             newState = {
@@ -215,8 +216,8 @@ class MapView extends Component {
             //   this.randomMarker(extData.position.children)
             // })
             this.setState({
-              entName:extData.position.title,
-              pollutantTypes:extData.position.PollutantType,
+              entName: extData.position.title,
+              pollutantTypes: extData.position.PollutantType,
             })
           }
           // 设置平移
@@ -321,10 +322,10 @@ class MapView extends Component {
       boxShadow: "0px 0px 3px 2px #fff"
     }
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
-    if(extData.position.outPutFlag==1)//停产
+    if (extData.position.outPutFlag == 1)//停产
     {
       return <CustomIcon type='icon-tingzhishangbao' style={{ ...style }} />
-    }else{
+    } else {
       switch (extData.position.PollutantType) {
         case "1":
           // return <WaterIcon style={style} />
@@ -339,7 +340,7 @@ class MapView extends Component {
           return <a><CustomIcon type='icon-fangwu' style={style} /></a>
         case "37":
           return <CustomIcon type='icon-dian2' style={{ ...style }} />
-      } 
+      }
     }
   }
 
@@ -370,7 +371,14 @@ class MapView extends Component {
       // displayType: type,
       // infoWindowVisible: false,
     }, () => {
-      flag && _thismap.setFitView();
+      if (flag) {
+        if (this.state.allMarkers && this.state.polygon) {
+          _thismap.setFitView(this.state.allMarkers)
+        } else {
+          _thismap.setFitView();
+        }
+      }
+      // flag && _thismap.setFitView();
       let zoom = _thismap.getZoom();
       // console.log('didZoom=', zoom)
       // if (zoom > 14) {
@@ -412,6 +420,11 @@ class MapView extends Component {
     created: allMarkers => {
       console.log('All Markers Instance Are Below');
       console.log(allMarkers);
+      this.setState({
+        allMarkers: allMarkers
+      }, () => {
+        _thismap && _thismap.setFitView(this.state.allMarkers)
+      })
     },
     clickable: true,
     click: (MapsOption, marker) => {
@@ -423,6 +436,17 @@ class MapView extends Component {
     dragend: (MapsOption, marker) => { /* ... */ },
   }
 
+  polygonEvents = {
+    click: () => { console.log('clicked') },
+    created: (ins) => {
+      this.setState({
+        polygon: ins
+      })
+    },
+    mouseover: () => { console.log('mouseover') },
+    dblclick: () => { console.log('dbl clicked') }
+  };
+
   // 绘制厂界
   drawPolygon = () => {
     const res = [];
@@ -430,7 +454,7 @@ class MapView extends Component {
       const arr = eval(this.state.coordinateSet);
       for (let i = 0; i < arr.length; i++) {
         res.push(<Polygon
-          // events={this.polygonEvents}
+          events={this.polygonEvents}
           // key={item.entCode+i}
           // extData={item}
           style={{
@@ -840,7 +864,9 @@ class MapView extends Component {
             // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
+            useAMapUI={true}
           >
+            {_thismap && <MapUI />}
             {this.drawPolygon()}
             {/* <Polygon path={[[[[116.491204,39.957416],[116.587335,39.93636],[116.521417,39.891066],[116.495324,39.918457]]]]} /> */}
             <InfoWindow

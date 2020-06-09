@@ -7,6 +7,7 @@ import styles from './MapContent.less';
 import config from "@/config"
 import { connect } from 'dva';
 const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
+import MapUI from "@/pages/monitoring/mapview/MapUI"
 
 
 let AMap = null;
@@ -276,11 +277,11 @@ class SdlMap extends PureComponent {
               // 实例化Autocomplete
               var autoOptions = {
                 // city: "110000",
-                city: that.props.configInfo.RegionCode == '0' ? '全国' : that.props.configInfo.RegionCode.substring(0, 6),
+                city: that.props.configInfo.AdCode == '0' ? '全国' : that.props.configInfo.AdCode,
                 input: "tipInput"
               }
 
-              let autoComplete = new AMap.Autocomplete(autoOptions);
+              let autoComplete = new window.AMap.Autocomplete(autoOptions);
               window.AMap.event.addListener(autoComplete, "select", function (data) {
                 let latlng = data.poi.location;
                 // 设置缩放级别和中心点
@@ -320,7 +321,11 @@ class SdlMap extends PureComponent {
       // zoom={this.props.zoom}
       {...props}
       events={events}
+      useAMapUI={() => {
+        console.log("AMapUI Loaded Done")
+      }}
     >
+      {window.AMap && <MapUI />}
       {
         // 地图标注点
         this.state.position.longitude && this.state.position.latitude && this.props.handleMarker &&
