@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, Radio, message } from 'antd';
+import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, Radio, message, Popover, Icon } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';
@@ -30,7 +30,7 @@ export default class UpdateSparepartManage extends Component {
         };
     }
     componentWillMount() {
-        const { dispatch,item } = this.props;
+        const { dispatch, item } = this.props;
         dispatch({
             type: 'SparepartManage/GetSparePartsStation',
             payload: {
@@ -57,46 +57,15 @@ export default class UpdateSparepartManage extends Component {
                 sm: { span: 12 },
             },
         };
+        const DepartInfo = (
+            <div>
+                <p>如果备品备件没有编码，则按以下规则定义编码，格式：B+年+</p>
+                <p>月+日+001（累计排序），如：B20200601001、B20200601002</p>
+            </div>
+        );
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
-                    <Row gutter={24}>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label={'备件名称'}>
-                                {getFieldDecorator('PartName', {
-                                    initialValue: isExists ? item.PartName : null,
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: '请输入备件名称!',
-                                        },
-                                    ],
-                                })(
-                                    <Input placeholder="请输入" />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label={'备件型号'}>
-                                {getFieldDecorator('Code', {
-                                    initialValue: isExists ? item.Code : null,
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: '请输入设备型号!',
-                                        },
-                                    ],
-                                })(
-
-                                    <Input placeholder="请输入" />
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
                     <Row gutter={24}>
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
@@ -111,10 +80,72 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
+                                    <Input style={{ width: '90%' }} placeholder="请输入" />
+
+                                )}
+                                <Popover
+                                    content={DepartInfo}
+                                >
+                                    <Icon style={{ width: '10%' }} type="question-circle" theme="twoTone" />
+                                </Popover>
+                            </FormItem>
+                        </Col>
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'备品备件名称'}>
+                                {getFieldDecorator('PartName', {
+                                    initialValue: isExists ? item.PartName : null,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请输入备件名称!',
+                                        },
+                                    ],
+                                })(
                                     <Input placeholder="请输入" />
                                 )}
                             </FormItem>
                         </Col>
+                    </Row>
+                    <Row gutter={24}>
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'备品备件型号'}>
+                                {getFieldDecorator('Code', {
+                                    initialValue: isExists ? item.Code : null,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请输入设备型号!',
+                                        },
+                                    ],
+                                })(
+
+                                    <Input placeholder="请输入" />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'库存数量'}>
+                                {getFieldDecorator('Quantity', {
+                                    initialValue: isExists ? item.Quantity : null,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择数量!',
+                                        },
+                                    ],
+                                })(
+                                    <InputNumber min={0} />
+                                )}
+                            </FormItem>
+                        </Col>
+                    </Row>
+                    <Row gutter={24}>
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -124,6 +155,26 @@ export default class UpdateSparepartManage extends Component {
                                 })(
 
                                     <Input placeholder="请输入" />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'状态'}>
+                                {getFieldDecorator('IsUsed', {
+                                    initialValue: isExists ? item.IsUsed : 1,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择状态!',
+                                        },
+                                    ],
+                                })(
+                                    <Radio.Group>
+                                        <Radio value={1}>启用</Radio>
+                                        <Radio value={0}>禁用</Radio>
+                                    </Radio.Group>
                                 )}
                             </FormItem>
                         </Col>
@@ -142,56 +193,13 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
-
                                     <Select
                                         placeholder="请选择"
-                                    // onChange={this.pollutantChange}
                                     >
                                         <Option key='1'>废水</Option>
                                         <Option key='2'>废气</Option>
-                                        <Option key='10'>VOC</Option>
-                                        <Option key='12'>扬尘</Option>
+                                        <Option key='5'>环境质量</Option>
                                     </Select>
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label={'状态'}>
-                                {getFieldDecorator('IsUsed', {
-                                    initialValue: isExists ? item.IsUsed : null,
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: '请选择状态!',
-                                        },
-                                    ],
-                                })(
-                                    <Radio.Group>
-                                        <Radio value={0}>禁用</Radio>
-                                        <Radio value={1}>启用</Radio>
-                                    </Radio.Group>
-                                )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-
-                    <Row gutter={24}>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
-                            <FormItem
-                                {...formItemLayout}
-                                label={'数量'}>
-                                {getFieldDecorator('Quantity', {
-                                    initialValue: isExists ? item.Quantity : null,
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: '请选择数量!',
-                                        },
-                                    ],
-                                })(
-                                    <InputNumber min={0} />
                                 )}
                             </FormItem>
                         </Col>
@@ -210,7 +218,7 @@ export default class UpdateSparepartManage extends Component {
                                 })(
                                     <Select
                                         placeholder="请选择"
-                                        // onChange={this.pollutantChange}
+                                    // onChange={this.pollutantChange}
                                     >
                                         {
                                             sparePartsStationList.length !== 0 ? sparePartsStationList.map(item => <Option key={item.SparePartsStationCode}>{item.Name}</Option>) : null
@@ -220,7 +228,6 @@ export default class UpdateSparepartManage extends Component {
                             </FormItem>
                         </Col>
                     </Row>
-
                     <Row gutter={16} style={{ marginTop: 8 }}>
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} style={{ display: 'none' }}>
                             <FormItem
