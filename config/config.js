@@ -137,7 +137,9 @@ export default {
             /* 手机端二维码 */
             { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
             /* 扫码查运维页面 */
-            { path: '/appoperation/ScanningCode', component: './AppOperation/ScanningCode' },
+            { path: '/appoperation/scanningCode/:DGIMN', component: './AppOperation/ScanningCode' },
+            /* 扫码查运维页面(更多) */
+            { path: '/appoperation/operationFormDetail/:DGIMN/:TaskID', component: './AppOperation/OperationFormDetail' },
           ],
         },
         {

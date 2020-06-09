@@ -28,7 +28,12 @@ export default Model.extend({
         sparepartManageParameters: {
             pageIndex: 1,
             pageSize: 20,
-            SearchName: '',
+            PartCode: '',
+            PartName: '',
+            Code: '',
+            SparePartsStationCode: '',
+            EquipmentType: '',
+            IsUsed: '',
         },
         pageCount: ["20", "40", "60", "80"],
         sparePartsStationList: [],
@@ -76,13 +81,15 @@ export default Model.extend({
             payload
         }, {
             call,
+            put,
             update,
+            select,
         }) {
-            const result = yield call(getUploadTemplate, payload);
+            const { sparepartManageParameters } = yield select(a => a.SparepartManage);   
+            const result = yield call(getUploadTemplate, { ...sparepartManageParameters });
             if (result.IsSuccess) {
                 payload.callback(result.Datas);
             }
-
         },
 
         //删除数据

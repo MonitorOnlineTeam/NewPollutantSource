@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
 import { connect } from 'dva';
-
+import Lightbox from "react-image-lightbox-rotate";
+import "react-image-lightbox/style.css";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -20,7 +21,9 @@ class ViewImagesModal extends PureComponent {
     super(props);
     this.state = {
       previewVisible: false,
-      MainFormID: ""
+      MainFormID: "",
+      photoIndex: 0,
+      previewVisible: false,
     };
   }
 
@@ -36,18 +39,50 @@ class ViewImagesModal extends PureComponent {
     })
   };
 
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
+  // handlePreview = async file => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj);
+  //   }
+  //   this.setState({
+  //     previewImage: file.url || file.preview,
+  //     previewVisible: true,
+  //   });
+  // };
+  //点击图片放大
+  handlePreview = (file, images) => {
+    let ImageList = 0;
+    images.map((item, index) => {
+      if (item.uid === file.uid) {
+        ImageList = index;
+      }
     });
-  };
-
+    this.setState({
+      previewVisible: true,
+      photoIndex: ImageList,
+    });
+  }
 
   render() {
+    const { imageList } = this.props;
+    const { photoIndex } = this.state;
+
+    const UrlList = [];
+    if (imageList) {
+      //拼接放大的图片地址列表
+      imageList.map((item, key) => {
+        UrlList.push(
+          item.url
+        );
+      });
+    }
+
+    const upload = {
+      showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
+      listType: 'picture-card',
+      fileList: [...imageList],
+    };
+
+
     return (
       <Modal
         title="详情"
@@ -57,23 +92,49 @@ class ViewImagesModal extends PureComponent {
         onCancel={this.modalHandleCancel}
       >
         <div style={{ overflow: "hidden" }}>
-          <Upload
+          {/* <Upload
             action=""
             listType="picture-card"
             fileList={this.props.imageList}
             disabled
-            onPreview={this.handlePreview}
-          // onChange={this.handleChange}
+            // onPreview={this.handlePreview}
+            onPreview={file => {
+              this.handlePreview(file, imageList);
+            }}
           >
-            {/* {fileList.length >= 8 ? null : uploadButton} */}
-          </Upload>
-          <Modal visible={this.state.previewVisible} width={800} footer={null} onCancel={() => {
+          </Upload> */}
+          {/* <Modal visible={this.state.previewVisible} width={800} footer={null} onCancel={() => {
             this.setState({
               previewVisible: false
             })
           }}>
             <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-          </Modal>
+          </Modal> */}
+          <Upload
+            {...upload}
+            onPreview={file => {
+              this.handlePreview(file, imageList);
+            }}
+          />
+          {/* 放大的图片控件 */}
+          {this.state.previewVisible && (
+            <Lightbox
+              mainSrc={UrlList[photoIndex]}
+              nextSrc={UrlList[(photoIndex + 1) % UrlList.length]}
+              prevSrc={UrlList[(photoIndex + UrlList.length - 1) % UrlList.length]}
+              onCloseRequest={() => this.setState({ previewVisible: false })}
+              onPreMovePrevRequest={() =>
+                this.setState({
+                  photoIndex: (photoIndex + UrlList.length - 1) % UrlList.length
+                })
+              }
+              onPreMoveNextRequest={() =>
+                this.setState({
+                  photoIndex: (photoIndex + 1) % UrlList.length
+                })
+              }
+            />
+          )}
         </div>
       </Modal>
     );

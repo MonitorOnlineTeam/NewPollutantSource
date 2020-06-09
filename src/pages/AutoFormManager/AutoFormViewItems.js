@@ -24,7 +24,7 @@ const FormItem = Form.Item;
   loadingConfig: loading.effects['autoForm/getDetailsConfigInfo'],
   loadingData: loading.effects['autoForm/getFormData'],
   detailConfigInfo: autoForm.detailConfigInfo,
-  editFormData: autoForm.editFormData
+  editFormData: autoForm.editFormData,
 }))
 // @Form.create()
 class AutoFormViewItems extends Component {
@@ -49,6 +49,7 @@ class AutoFormViewItems extends Component {
   }
 
   componentDidMount() {
+    debugger;
     const { dispatch, detailConfigInfo, editFormData } = this.props;
     const { configId, keysParams } = this._SELF_;
     // 获取页面配置项
@@ -56,8 +57,8 @@ class AutoFormViewItems extends Component {
     dispatch({
       type: 'autoForm/getDetailsConfigInfo',
       payload: {
-        configId
-      }
+        configId,
+      },
     });
     // }
 
@@ -67,21 +68,21 @@ class AutoFormViewItems extends Component {
       type: 'autoForm/getFormData',
       payload: {
         configId,
-        ...keysParams
-      }
+        ...keysParams,
+      },
     });
     // }
 
     // }
   }
+
   _renderFormItem() {
     const { detailConfigInfo, editFormData } = this.props;
     const { formItemLayout, configId, keysParams } = this._SELF_;
     const formConfig = detailConfigInfo[configId] || [];
     const formData = editFormData[configId] || []
     return formConfig.map(item => {
-
-      let showText = "";
+      let showText = '';
       // if (item.type === "下拉列表框") {
       //   showText = <ReturnName
       //     configId={item.configId}
@@ -94,29 +95,29 @@ class AutoFormViewItems extends Component {
       if (item.configId && item.fullFieldName) {
         // 有表连接时，取带表名的字段
         if (formData[item.fullFieldName] != undefined) {
-          let fieldValue = formData[item.fullFieldName] + "";
+          const fieldValue = `${formData[item.fullFieldName]}`;
           showText = fieldValue.split(',')
         }
-      };
+      }
       let el = <div className={styles.detail}>{showText}</div>;
       // }
-      if (item.type === "坐标集合") {
+      if (item.type === '坐标集合') {
         return <Col span={24} style={{ marginBottom: 10 }} key={item.fieldName}>
-          <div className={styles.term} style={{ verticalAlign: "top" }}>{item.labelText}</div>
+          <div className={styles.term} style={{ verticalAlign: 'top' }}>{item.labelText}</div>
           <div className={styles.detail}><SdlMap
             mode="map"
-            longitude={formData["Longitude"]}
-            latitude={formData["Latitude"]}
+            longitude={formData.Longitude}
+            latitude={formData.Latitude}
             path={showText}
-            handleMarker={true}
-            handlePolygon={true}
+            handleMarker
+            handlePolygon
             style={{ height: 400 }}
             zoom={12}
           /></div>
         </Col>
       }
 
-      if (item.type === "上传") {
+      if (item.type === '上传') {
         const dataSource = getAttachmentDataSource(formData[item.FullFieldName]);
         el = <div className={styles.detail}>
           <AttachmentView dataSource={dataSource} />
@@ -135,14 +136,12 @@ class AutoFormViewItems extends Component {
   // 渲染追加数据源
   _renderAppendDataSource() {
     const { appendDataSource } = this.props;
-    return appendDataSource.map((item, index) => {
-      return (
+    return appendDataSource.map((item, index) => (
         <Col span={6} style={{ marginBottom: 10 }} key={index}>
           <div className={styles.term}>{item.label}</div>
           <div className={styles.detail}>{item.value}</div>
         </Col>
-      )
-    })
+      ))
   }
 
   renderContent() {
@@ -163,7 +162,7 @@ class AutoFormViewItems extends Component {
           height: 'calc(100vh/2)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
         size="large"
       />);
@@ -186,7 +185,7 @@ AutoFormViewItems.propTypes = {
 };
 
 AutoFormViewItems.defaultProps = {
-  appendDataSource: []
+  appendDataSource: [],
 }
 
 

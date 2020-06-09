@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import NavigationTree from '../../../components/NavigationTree'
 import CommandDispatchReport from './components/index'
 import PageLoading from '@/components/PageLoading'
