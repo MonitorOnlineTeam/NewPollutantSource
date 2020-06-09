@@ -201,6 +201,7 @@ import {
                         <SearchWrapper
                             onSubmitForm={form => this.loadReportList(form)}
                             configId={configId}
+                            searchParams={this.state.DataWhere}
                         ></SearchWrapper>
                         <SdlTable
                             style={{ marginTop: 10 }}
