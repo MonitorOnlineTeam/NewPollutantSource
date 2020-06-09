@@ -14,7 +14,7 @@ import {
     GetDeviceExceptionRecord, GetStopCemsRecord,
     GetBdTestRecord, RevokeTask,
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
-    GetOperationLogList,
+    GetOperationLogList,GetFailureHoursRecord
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -32,6 +32,7 @@ export default Model.extend({
         ExceptionRecord: null,//设备异常记录
         BdRecord: null,//比对监测记录
         ConsumablesReplaceRecord: null,//易耗品更换记录
+        FailureHoursRecord:null,//故障小时数记录表
         StandardGasRepalceRecord: null,//标气更换记录
         MaintainRecordDetailRecord: null,//保养项更换记录
         SparePartReplaceRecord: null,//备品更换记录
@@ -123,6 +124,27 @@ export default Model.extend({
                 yield update({
                     requstresult: DataInfo.IsSuccess,
                     ConsumablesReplaceRecord: null,
+                });
+            }
+        },
+
+        // 故障小时数记录表
+        * GetFailureHoursRecord({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const DataInfo = yield call(GetFailureHoursRecord, payload);
+            if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    FailureHoursRecord: DataInfo.Datas,
+                });
+            } else {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    FailureHoursRecord: null,
                 });
             }
         },

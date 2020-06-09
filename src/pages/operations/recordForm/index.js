@@ -25,6 +25,7 @@ import StopCemsRecordContent from '@/pages/EmergencyTodoList/StopCemsRecordConte
 import JzRecordContent from '@/pages/EmergencyTodoList/JzRecordContent'
 import MaintainRepalceRecord from '@/pages/EmergencyTodoList/MaintainRepalceRecord'
 import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRecordContent'
+import FailureHoursRecord from '@/pages/EmergencyTodoList/FailureHoursRecord'
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
@@ -45,6 +46,7 @@ class Index extends Component {
     }
     getrecordForm = () => {
         var form = []
+        console.log('msg=',this.props.match.params)
         var key = this.props.match.params.typeID
         switch (key) {
             case "1"://维修记录表
@@ -82,6 +84,15 @@ class Index extends Component {
                 break;
             case "28"://备品更换记录表
                 form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} />
+                break;
+            case "58":
+                form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
+            case "59":
+                form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                break;
+            case "60":
+                form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
         }
         return form
