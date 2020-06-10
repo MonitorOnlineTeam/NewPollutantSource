@@ -102,6 +102,13 @@ ol {
     overflow: hidden;
     overflow-y: auto;
   }
+
+  .ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
+  .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
+  .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
+  .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+    background: #e6f7ff !important;
+  }
 }
 
 a:hover {
@@ -449,5 +456,16 @@ a:hover {
 
   .hideBreadcrumb {
     display: none;
+  }
+}
+
+.notBorder {
+  .ant-table-small {
+    border: 0;
+
+  }
+
+  .ant-table-header {
+    background-color: #f0f2f5
   }
 }
