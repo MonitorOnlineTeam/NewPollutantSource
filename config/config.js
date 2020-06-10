@@ -130,6 +130,8 @@ export default {
             { path: '/appoperation/appbdtestrecord/:TaskID/:TypeID', component: './AppOperation/AppBdTestRecord' },
             /* CEMS设备异常记录表 */
             { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
+             /* 故障小时数记录表 */
+             { path: '/appoperation/appfailurehoursrecord/:TaskID/:TypeID', component: './AppOperation/AppFailureHoursRecord' },
             /* 保养项更换记录表 */
             { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
             /* 备件更换记录表 */

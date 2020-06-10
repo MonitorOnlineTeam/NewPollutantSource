@@ -111,6 +111,7 @@ class LogTimeList extends Component {
   // 渲染时间轴
   renderTimeLineItem = () => {
     const timelineItems = []
+    console.log('typeiD', this.props.timeLineList)
     this.props.timeLineList.map(item => {
       timelineItems.push(
         <Timeline.Item
@@ -123,7 +124,7 @@ class LogTimeList extends Component {
           {/* </div> */}
         </Timeline.Item>,
       )
-  { /* <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p> */ }
+      { /* <p style={{ color: "#f5222d", marginTop: 10 }}>{` ${node.DisplayInfo} `}</p> */ }
       item.Nodes.map(node => {
         timelineItems.push(
           <Timeline.Item
@@ -139,9 +140,9 @@ class LogTimeList extends Component {
                     color="#43b9ff"
                     style={{ cursor: 'pointer', marginTop: 10, borderRadius: 13, padding: '0 20px', fontSize: 13 }}
                     onClick={() => {
-                      if (config.XinJiang) {
+                      if (config.XinJiang && node.TypeID != 58 && node.TypeID != 59 && node.TypeID != 60) {
                         this.getOperationImageList(node)
-                      } else if (node.PollutantType !== 2) {
+                      } else if (node.PollutantType !== 2 &&node.TypeID != 58 && node.TypeID != 59 && node.TypeID != 60) {
                         // 查看图片
                         this.getOperationImageList(node)
                       } else {
@@ -153,7 +154,7 @@ class LogTimeList extends Component {
             </Tag>
                 </>
                 : <><p><span style={{ color: '#40a9ff', marginRight: 10 }}>{node.CreateUser}</span>需要对当前排口进行处理</p>
-                  </>
+                </>
 
 
             }

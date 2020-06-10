@@ -108,8 +108,8 @@ class EmergencyDetailInfo extends Component {
         console.log('data111=', data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                // 新疆兵团只要任务图片
-                if (types === '2' && !config.XinJiang) {
+                // 新疆兵团只要任务图片 故障小时数记录表不使用图片
+                if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -146,6 +146,15 @@ class EmergencyDetailInfo extends Component {
                             break;
                         case EnumPsOperationForm.SparePartReplace:
                             this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.Fault:
+                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.FaultWater:
+                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.FaultYan:
+                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID);
                             break;
                         default:
                             break;

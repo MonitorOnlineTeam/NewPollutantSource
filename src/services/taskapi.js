@@ -73,6 +73,19 @@ export async function GetConsumablesReplaceRecord(params) {
         Datas: null
     } : result;
 }
+
+// 根据任务id和类型id获取故障小时数记录表
+export async function GetFailureHoursRecord(params) {
+    const body = {
+        TaskID: params.TaskID,
+        TypeID: params.TypeID
+    };
+    const result =await post('/api/rest/PollutantSourceApi/TaskFormApi/FaultRecordDetail?', body, null);
+    return result === null ? {
+        Datas: null
+    } : result;
+}
+
 // 根据任务id和类型id获取备品列表
 export async function GetSparePartReplaceRecord(params) {
     const body = {
