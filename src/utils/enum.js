@@ -151,6 +151,9 @@ export const EnumPsOperationForm={
   DataException:10, //CEMS设备数据异常记录表
   Maintain:27, //保养记录表
   SparePartReplace:28, //备品备件更换记录表
+  Fault:58, //故障小时记录表
+  FaultWater:59, //故障小时记录表
+  FaultYan:60, //故障小时记录表
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

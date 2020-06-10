@@ -1,5 +1,5 @@
 /**
- * 功  能：传输有效率
+ * 功  能：有效传输率
  * 创建人：吴建伟
  * 创建时间：2018.12.08
  */
@@ -37,13 +37,14 @@ const pageUrl = {
     pageSize: transmissionefficiency.pageSize,
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.tableDatas,
+    beginTime: transmissionefficiency.beginTime,
 }))
 export default class TransmissionEfficiency extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            beginTime: moment(moment().format('YYYY-MM')),
+            beginTime: moment(this.props.beginTime) ,
             endTime: ''
         };
     }
@@ -57,7 +58,6 @@ export default class TransmissionEfficiency extends Component {
         });
     }
     getTableData = (pageIndex) => {
-        debugger
         const { entcode } = this.props;
         if (entcode) {
             this.props.dispatch({
@@ -135,15 +135,16 @@ export default class TransmissionEfficiency extends Component {
                 key: 'ShouldNumber',
                 width: '10%',
                 align: 'left',
-                // render: (text, record) => {
-                //     if (record.AvgShouldNumber <= text) {
-                //         return <span className={styles.normaldata}>{text}</span>;
-                //     }
-                //     const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{record.AvgShouldNumber}</span>)
-                //     return (<Popover content={content} trigger="hover">
-                //         <span className={styles.avgtext}> <Badge className={styles.warningdata} status="warning" />{text}
-                //         </span> </Popover>);
-                // }·
+                render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
+                    else
+                    {
+                        return text;
+                    }
+                }
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>实传个数</span>),
@@ -152,6 +153,10 @@ export default class TransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'left',
                 render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgTransmissionNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
                     }
@@ -168,6 +173,10 @@ export default class TransmissionEfficiency extends Component {
                 width: '11.3%',
                 align: 'left',
                 render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgEffectiveNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
                     }
@@ -184,6 +193,10 @@ export default class TransmissionEfficiency extends Component {
                 width: '12.3%',
                 align: 'left',
                 render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgTransmissionRate <= text) {
                         return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
                     }
@@ -201,6 +214,10 @@ export default class TransmissionEfficiency extends Component {
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgEffectiveRate <= text) {
                         return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
                     }
@@ -211,7 +228,7 @@ export default class TransmissionEfficiency extends Component {
                 }
             },
             {
-                title: (<span style={{ fontWeight: 'bold' }}>传输有效率</span>),
+                title: (<span style={{ fontWeight: 'bold' }}>有效传输率</span>),
                 dataIndex: 'TransmissionEffectiveRate',
                 key: 'TransmissionEffectiveRate',
                 // width: '250px',
@@ -219,6 +236,10 @@ export default class TransmissionEfficiency extends Component {
                 // align: 'center',
                 sorter: true,
                 render: (text, record) => {
+                    if(record.IsStop)
+                    {
+                        return   <span className={styles.normaldata}>停运</span>;
+                    }
                     // 红色：#f5222d 绿色：#52c41a
                     const percent = (parseFloat(text) * 100).toFixed(2);
                     if (percent >= 90) {
@@ -248,21 +269,21 @@ export default class TransmissionEfficiency extends Component {
             { Name: '智能质控', Url: '' }
         ]
         if (onlyOneEnt) {
-            tableTitle = `传输有效率列表`
+            tableTitle = `有效传输率列表`
             Crumbs = Crumbs.concat(
-                { Name: '传输有效率', Url: '' }
+                { Name: '有效传输率', Url: '' }
             )
         }
         else {
-            tableTitle = `传输有效率列表(${entName})`
+            tableTitle = `有效传输率列表(${entName})`
             Crumbs = Crumbs.concat(
-                { Name: '企业传输有效率', Url: '/qualitycontrol/transmissionefficiency' },
-                { Name: '排口传输有效率', Url: '' }
+                { Name: '企业有效传输率', Url: '/qualitycontrol/transmissionefficiency' },
+                { Name: '排口有效传输率', Url: '' }
             )
         }
 
         return (
-            // <BreadcrumbWrapper title="传输有效率-详情">
+            // <BreadcrumbWrapper title="有效传输率-详情">
             <div>
                 <Row className={styles.cardTitle}>
                     <Card
@@ -292,7 +313,7 @@ export default class TransmissionEfficiency extends Component {
                                     borderRadius: '20%',
                                     cursor: 'pointer',
                                     marginRight: 3
-                                }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                                }} /> <span style={{ cursor: 'pointer' }}> 排口有效传输率达标</span>
                                 <div style={{
                                     width: 20,
                                     height: 9,
@@ -302,7 +323,7 @@ export default class TransmissionEfficiency extends Component {
                                     cursor: 'pointer',
                                     marginLeft: 35,
                                     marginRight: 3
-                                }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                                }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
                                 <Badge style={{ marginLeft: 35, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
                                 <div
                                     style={{

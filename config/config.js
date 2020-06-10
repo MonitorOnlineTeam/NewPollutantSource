@@ -130,6 +130,8 @@ export default {
             { path: '/appoperation/appbdtestrecord/:TaskID/:TypeID', component: './AppOperation/AppBdTestRecord' },
             /* CEMS设备异常记录表 */
             { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
+             /* 故障小时数记录表 */
+             { path: '/appoperation/appfailurehoursrecord/:TaskID/:TypeID', component: './AppOperation/AppFailureHoursRecord' },
             /* 保养项更换记录表 */
             { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
             /* 备件更换记录表 */
@@ -137,7 +139,9 @@ export default {
             /* 手机端二维码 */
             { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
             /* 扫码查运维页面 */
-            { path: '/appoperation/ScanningCode', component: './AppOperation/ScanningCode' },
+            { path: '/appoperation/scanningCode/:DGIMN', component: './AppOperation/ScanningCode' },
+            /* 扫码查运维页面(更多) */
+            { path: '/appoperation/operationFormDetail/:DGIMN/:TaskID', component: './AppOperation/OperationFormDetail' },
           ],
         },
         {

@@ -18,11 +18,8 @@ import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 import ViewImagesListModal from '../../components/ImgView';
 import "react-image-lightbox/style.css";
 import config from '@/config';
-import { EnumPropellingAlarmSourceType } from '@/utils/enum';
-import { EnumDYParameterException } from '@/utils/enum';
-import { EnumDataException } from '@/utils/enum';
-import { EnumDataLogicErr } from '@/utils/enum';
-import { EnumDYStatusException } from '@/utils/enum';
+import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
+
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -111,8 +108,8 @@ class EmergencyDetailInfo extends Component {
         console.log('data111=', data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                // 新疆兵团只要任务图片
-                if (types === '2' && !config.XinJiang) {
+                // 新疆兵团只要任务图片 故障小时数记录表不使用图片
+                if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -149,6 +146,15 @@ class EmergencyDetailInfo extends Component {
                             break;
                         case EnumPsOperationForm.SparePartReplace:
                             this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.Fault:
+                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.FaultWater:
+                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.FaultYan:
+                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID);
                             break;
                         default:
                             break;
@@ -235,6 +241,7 @@ class EmergencyDetailInfo extends Component {
 
     // 步骤条
     TaskLogList = TaskLogList => {
+        console.log('TaskLogList', TaskLogList);
         const returnStepList = [];
         TaskLogList.map(item => {
             returnStepList.push(
@@ -441,84 +448,81 @@ class EmergencyDetailInfo extends Component {
                             });
                         }
                         let ExceptionName = '';
-                        console.log(EnumPropellingAlarmSourceType);
-                        debugger
                         switch (parseInt(item.AlarmType)) {
-                            //参数异常
+                            // 参数异常
                             case EnumPropellingAlarmSourceType.DYPARAMETER:
                                 switch (parseInt(item.MsgType)) {
                                     case EnumDYParameterException.O2Content:
-                                        ExceptionName = "氧气含量异常";
+                                        ExceptionName = '氧气含量异常';
                                         break;
                                     case EnumDYParameterException.FlueGasHumidity:
-                                        ExceptionName = "烟气湿度";
+                                        ExceptionName = '烟气湿度';
                                         break;
                                     case EnumDYParameterException.DifferentialPressure:
-                                        ExceptionName = "差压";
+                                        ExceptionName = '差压';
                                         break;
                                     case EnumDYParameterException.FlueGasTemperature:
-                                        ExceptionName = "烟气温度";
+                                        ExceptionName = '烟气温度';
                                         break;
                                     case EnumDYParameterException.FlueGasStaticPressure:
-                                        ExceptionName = "烟气静压";
+                                        ExceptionName = '烟气静压';
                                         break;
                                     case EnumDYParameterException.ProbeTemperature:
-                                        ExceptionName = "探头温度";
+                                        ExceptionName = '探头温度';
                                         break;
                                     case EnumDYParameterException.PipelineTemperature:
-                                        ExceptionName = "管线温度";
+                                        ExceptionName = '管线温度';
                                         break;
                                     case EnumDYParameterException.CoolerTemperature:
-                                        ExceptionName = "制冷器温度";
+                                        ExceptionName = '制冷器温度';
                                         break;
                                 }
                                 break;
-                            //数据异常
+                            // 数据异常
                             case EnumPropellingAlarmSourceType.DataException:
-                                debugger
                                 switch (parseInt(item.MsgType)) {
                                     case EnumDataException.Zero:
-                                        ExceptionName = "零值异常";
+                                        ExceptionName = '零值异常';
                                         break;
                                     case EnumDataException.OverRun:
-                                        ExceptionName = "超限异常";
+                                        ExceptionName = '超限异常';
                                         break;
                                     case EnumDataException.Series:
-                                        ExceptionName = "连续值异常";
+                                        ExceptionName = '连续值异常';
                                         break;
                                     case EnumDataException.DataLoss:
-                                        ExceptionName = "数据异常";
+                                        ExceptionName = '数据异常';
                                         break;
                                 }
                                 break;
-                            //逻辑异常
+                            // 逻辑异常
                             case EnumPropellingAlarmSourceType.DataLogicErr:
                                 switch (parseInt(item.MsgType)) {
                                     case EnumDataLogicErr.Unknown:
-                                        ExceptionName = "未知异常";
+                                        ExceptionName = '未知异常';
                                         break;
                                 }
                                 break;
-                            //状态异常
+                            // 状态异常
                             case EnumPropellingAlarmSourceType.DYSTATEALARM:
                                 switch (parseInt(item.MsgType)) {
                                     case EnumDYStatusException.PowerFailure:
-                                        ExceptionName = "电源故障";
+                                        ExceptionName = '电源故障';
                                         break;
                                     case EnumDYStatusException.CoolerAlarm:
-                                        ExceptionName = "制冷器报警";
+                                        ExceptionName = '制冷器报警';
                                         break;
                                     case EnumDYStatusException.SamplingPipeline:
-                                        ExceptionName = "采样管线故障";
+                                        ExceptionName = '采样管线故障';
                                         break;
                                     case EnumDYStatusException.SamplingProbe:
-                                        ExceptionName = "采样探头故障";
+                                        ExceptionName = '采样探头故障';
                                         break;
                                     case EnumDYStatusException.HumidityAlarm:
-                                        ExceptionName = "湿度报警";
+                                        ExceptionName = '湿度报警';
                                         break;
                                     case EnumDYStatusException.AnalyzerFailure:
-                                        ExceptionName = "分析仪故障";
+                                        ExceptionName = '分析仪故障';
                                         break;
                                 }
                                 break;
@@ -559,7 +563,7 @@ class EmergencyDetailInfo extends Component {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `/uploadplantform/${item}`,
                 });
             }
         });
@@ -567,7 +571,7 @@ class EmergencyDetailInfo extends Component {
         const ImageList = [];
         fileList.map(item => {
             ImageList.push(
-                `/upload/${item.name}`,
+                `/uploadplantform/${item.name}`,
             );
         });
         // 报警列表列名
@@ -632,8 +636,8 @@ class EmergencyDetailInfo extends Component {
             key: 'AlarmMsg',
         }];
         if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
-            //超标列
-            if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === "2") {
+            // 超标列
+            if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === '2') {
                 columns = columns.concat({
                     title: '污染物',
                     width: 100,
@@ -653,7 +657,7 @@ class EmergencyDetailInfo extends Component {
                     key: 'StandardValue',
                 });
             }
-            //异常列
+            // 异常列
             else {
                 columns = columns.concat({
                     title: '污染物',
@@ -668,15 +672,13 @@ class EmergencyDetailInfo extends Component {
                     key: 'MsgType',
                 });
             }
-
         }
-
         const upload = {
+      
             showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
             listType: 'picture-card',
             fileList: [...fileList],
         };
-        debugger
         const { isloading } = this.props;
         if (isloading) {
             return (<Spin

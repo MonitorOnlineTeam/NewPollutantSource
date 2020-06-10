@@ -10,7 +10,7 @@ import { post, get } from '@/utils/request';
 export async function GetAllOperationUsers(params) {
   const result = get('/api/rest/PollutantSourceApi/SparepartManageApi/GetAllOperationUsers', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -18,7 +18,7 @@ export async function GetAllOperationUsers(params) {
 export async function getSparePartsStationList(params) {
   const result = get('/api/rest/PollutantSourceApi/SparepartManageApi/getSparePartsStationList', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -27,10 +27,17 @@ export async function getSparePartsStationList(params) {
 export async function saveSparePartsStationUser(params) {
   const result = post('/api/rest/PollutantSourceApi/SparepartManageApi/saveSparePartsStationUser', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
+// 删除服务站信息
+export async function delSparePartsStation(params) {
+  const result = get('/api/rest/PollutantSourceApi/SparepartManageApi/delSparePartsStation', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
 
 
 

@@ -5,7 +5,7 @@
  * @LastEditTime: 2019-09-18 11:09:14
  * @Description: 运维记录表单api
  */
-import { post,authorpost } from '@/utils/request';
+import { post, get, authorpost } from '@/utils/request';
 import { EnumRejectFlag } from '../utils/enum';
 // 污染源运维的相关接口
 export async function GetTaskRecord(params) {
@@ -68,18 +68,31 @@ export async function GetConsumablesReplaceRecord(params) {
         TaskID: params.TaskID,
         TypeID: params.TypeIDs
     };
-    const result =await post('/api/rest/PollutantSourceApi/TaskFormApi/GetConsumablesReplaceRecordList?', body, null);
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetConsumablesReplaceRecordList?', body, null);
     return result === null ? {
         Datas: null
     } : result;
 }
+
+// 根据任务id和类型id获取故障小时数记录表
+export async function GetFailureHoursRecord(params) {
+    const body = {
+        TaskID: params.TaskID,
+        TypeID: params.TypeID
+    };
+    const result =await post('/api/rest/PollutantSourceApi/TaskFormApi/FaultRecordDetail?', body, null);
+    return result === null ? {
+        Datas: null
+    } : result;
+}
+
 // 根据任务id和类型id获取备品列表
 export async function GetSparePartReplaceRecord(params) {
     const body = {
         TaskID: params.TaskID,
         TypeID: params.TypeIDs
     };
-    const result =await post('/api/rest/PollutantSourceApi/TaskFormApi/GetSparePartReplaceRecordList?', body, null);
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetSparePartReplaceRecordList?', body, null);
     return result === null ? {
         Datas: null
     } : result;
@@ -269,7 +282,7 @@ export async function GetBdTestRecord(params) {
 }
 // 打回
 export async function RevokeTask(params) {
-  
+
     const body = {
         taskID: params.taskID,
         revokeReason: params.revokeReason,
@@ -292,5 +305,16 @@ export async function GetPatrolType(params) {
 export async function GetOperationLogList(params) {
     const result = await post('/api/rest/PollutantSourceApi/SMCManagerApi/GetOperationLogList', params, null);
     return result;
+}
+
+// 污染源运维的相关接口
+export async function GetOperationFormDetail(params) {
+    const result = await get('/api/rest/PollutantSourceApi/SMCManagerApi/GetTaskDitails', params, null);
+    return result === null ? { Datas: null } : result;
+}
+// 获取任务详情处理记录附件信息
+export async function GetTaskDitailsAttachment(params) {
+    const result = await get('/api/rest/PollutantSourceApi/SMCManagerApi/GetTaskDitailsAttachment', params, null);
+    return result === null ? { Datas: null } : result;
 }
 

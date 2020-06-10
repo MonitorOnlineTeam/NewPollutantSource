@@ -8,6 +8,7 @@ import {
     GetAllOperationUsers,
     getSparePartsStationList,
     saveSparePartsStationUser,
+    delSparePartsStation,
 } from './services';
 import config from '@/config';
 import {
@@ -71,12 +72,23 @@ export default Model.extend({
             if (result.IsSuccess) {
                 message.success("保存成功")
             }
-            else
-            {
+            else {
                 message.error(result.message)
             }
             payload.callback();
         },
 
+        /*删除服务站信息**/
+        * delSparePartsStation({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const result = yield call(delSparePartsStation, {
+                ...payload
+            });
+            payload.callback(result);
+        },
     },
 });

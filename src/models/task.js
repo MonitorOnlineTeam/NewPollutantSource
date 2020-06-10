@@ -14,12 +14,13 @@ import {
     GetDeviceExceptionRecord, GetStopCemsRecord,
     GetBdTestRecord, RevokeTask,
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
-    GetOperationLogList,
+    GetOperationLogList,GetFailureHoursRecord
+    , GetOperationFormDetail,GetTaskDitailsAttachment,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
-import moment from 'moment';
+import moment, { months } from 'moment';
 
 export default Model.extend({
     namespace: 'task',
@@ -32,11 +33,13 @@ export default Model.extend({
         ExceptionRecord: null,//设备异常记录
         BdRecord: null,//比对监测记录
         ConsumablesReplaceRecord: null,//易耗品更换记录
+        FailureHoursRecord:null,//故障小时数记录表
         StandardGasRepalceRecord: null,//标气更换记录
         MaintainRecordDetailRecord: null,//保养项更换记录
         SparePartReplaceRecord: null,//备品更换记录
         RecordTypes: [],//运维表单类型
         AlarmResponseList: [],
+        operationLogList: [],    //运维记录列表
         //运维记录参数
         operationRzWhere: {
             beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -44,6 +47,10 @@ export default Model.extend({
             pageIndex: 1,
             pageSize: 10,
         },
+        //手机任务详情
+        OperationFormDetail: [],
+        //手机任务详情(梳理记录附件)
+        TaskDitailsAttachmentList:[],
     },
 
     effects: {
@@ -80,6 +87,19 @@ export default Model.extend({
                 }
             }
         },
+
+        // 手机端运维记录详情
+        * GetOperationFormDetail({
+            payload,
+        }, { call, update, put, select, take }) {
+            const taskInfo = yield call(GetOperationFormDetail, payload);
+            if (taskInfo.IsSuccess) {
+                yield update({
+                    OperationFormDetail: taskInfo.Datas
+                });
+            }
+        },
+
         // 校准记录
         * GetJzRecord({
             payload,
@@ -123,6 +143,27 @@ export default Model.extend({
                 yield update({
                     requstresult: DataInfo.IsSuccess,
                     ConsumablesReplaceRecord: null,
+                });
+            }
+        },
+
+        // 故障小时数记录表
+        * GetFailureHoursRecord({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const DataInfo = yield call(GetFailureHoursRecord, payload);
+            if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    FailureHoursRecord: DataInfo.Datas,
+                });
+            } else {
+                yield update({
+                    requstresult: DataInfo.IsSuccess,
+                    FailureHoursRecord: null,
                 });
             }
         },
@@ -318,15 +359,25 @@ export default Model.extend({
             const DataInfo = yield call(GetOperationLogList, operationRzWhere);
             if (DataInfo !== null && DataInfo.IsSuccess) {
                 yield update({
-                    requstresult: DataInfo.IsSuccess,
-                    PatrolRecord: DataInfo.Datas,
-                });
-            } else {
-                yield update({
-                    requstresult: DataInfo.IsSuccess,
-                    PatrolRecord: null,
+                    operationLogList: DataInfo.Datas,
                 });
             }
-        }
+        },
+        // 获取任务详情处理记录附件信息
+        * GetTaskDitailsAttachment({
+            payload
+        }, {
+            call,
+            update,
+            select,
+        }) {
+            const DataInfo = yield call(GetTaskDitailsAttachment, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    TaskDitailsAttachmentList: DataInfo.Datas,
+                });
+            }
+        },
+        
     },
 });

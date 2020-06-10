@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin } from 'antd';
+import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin, Radio, Menu, Dropdown } from 'antd';
 import { connect } from 'dva';
 import styles from './Index.less';
 import { downloadFile } from '@/utils/utils';
@@ -9,6 +9,7 @@ import cuid from 'cuid';
 import Cookie from 'js-cookie';
 import UpdateSparepartManage from './UpdateSparepartManage';
 import { EditIcon, DelIcon } from '@/utils/icon';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 const confirm = Modal.confirm;
 const Option = Select.Option;
 const { Search } = Input;
@@ -17,7 +18,7 @@ const { Search } = Input;
     sparepartManageDatalist: SparepartManage.sparepartManageDatalist,
     total: SparepartManage.total,
     sparepartManageParameters: SparepartManage.sparepartManageParameters,
-    pageCount:SparepartManage.pageCount,
+    pageCount: SparepartManage.pageCount,
 }))
 @Form.create()
 
@@ -45,13 +46,11 @@ export default class Index extends Component {
     }
     //创建并获取模板
     Template = () => {
-        debugger
         //获取模板地址
         const { dispatch, sparepartManageParameters } = this.props;
         dispatch({
             type: 'SparepartManage/getUploadTemplate',
             payload: {
-                SearchName: sparepartManageParameters.SearchName,
                 callback: (data) => {
                     downloadFile(data);
                 }
@@ -61,15 +60,16 @@ export default class Index extends Component {
 
     //分页等改变事件
     onChange = (PageIndex, PageSize) => {
-        const { dispatch } = this.props;
+        const { dispatch, sparepartManageParameters } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
             payload: {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        pageIndex: PageIndex,
-                        pageSize: PageSize,
+                        // 判断条件时排序时栓过来的参数有可能为null，再此做修改
+                        pageIndex: PageSize ? PageIndex : sparepartManageParameters.pageIndex,
+                        pageSize: PageSize ? PageSize : sparepartManageParameters.pageSize,
                     }
                 }
             }
@@ -78,7 +78,6 @@ export default class Index extends Component {
     }
     //分页等改变事件
     onShowSizeChange = (PageIndex, PageSize) => {
-        debugger
         const { dispatch } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
@@ -142,11 +141,9 @@ export default class Index extends Component {
             }
         };
         return (
-            <Upload {...props} style={{ marginLeft: 5 }} >
-                <Button >
-                    <Icon type="upload" />
-                    文件导入
-                </Button>
+            <Upload {...props}>
+                <Icon type="import" />
+                <span style={{ marginLeft: 8 }}>文件导入</span>
             </Upload>
         )
     }
@@ -157,43 +154,6 @@ export default class Index extends Component {
         })
     }
 
-    //搜索
-    nameSearch = (value) => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'SparepartManage/updateState',
-            payload: {
-                sparepartManageParameters: {
-                    ...this.props.sparepartManageParameters,
-                    ...{
-                        SearchName: value,
-                        pageIndex: 1,
-                        pageSize: 20,
-                    }
-                }
-            }
-        });
-        this.GetSparepartManageList();
-    }
-    //搜索
-    nameSearchEnter = (value) => {
-        debugger
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'SparepartManage/updateState',
-            payload: {
-                sparepartManageParameters: {
-                    ...this.props.sparepartManageParameters,
-                    ...{
-                        SearchName: value.currentTarget.defaultValue,
-                        pageIndex: 1,
-                        pageSize: 20,
-                    }
-                }
-            }
-        });
-        this.GetSparepartManageList();
-    }
     //关闭Modal
     handleCancel = e => {
         this.setState({
@@ -224,7 +184,6 @@ export default class Index extends Component {
     handleSubmit = (e) => {
         const { dispatch, form } = this.props;
         const { data } = this.state;
-        debugger
         let PollutantCode = '';
         form.validateFieldsAndScroll((err, values) => {
             if (!err) {
@@ -288,28 +247,170 @@ export default class Index extends Component {
 
 
     }
+
+    //输入编码时的回调
+    PartCodeChange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        PartCode: e.target.value
+                    }
+                }
+            }
+        });
+    }
+    //备品备件名称回调
+    PartNameChange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        PartName: e.target.value
+                    }
+                }
+            }
+        });
+    }
+    //备品备件编号回调
+    Codechange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        Code: e.target.value
+                    }
+                }
+            }
+        });
+    }
+    //服务站回调
+    SparePartsStationNameChange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        SparePartsStationCode: e.target.value
+                    }
+                }
+            }
+        });
+    }
+    //设备类型回调
+    EquipmentTypeChange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        EquipmentType: e
+                    }
+                }
+            }
+        });
+    }
+    //状态回调
+    IsUsedChange = (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        IsUsed: e.target.value,
+                    }
+                }
+            }
+        });
+    }
+    //查询
+    changes = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        pageIndex: 1,
+                        pageSize: 20,
+                    }
+                }
+            }
+        });
+        this.GetSparepartManageList();
+    }
+    //重置
+    resertChanges = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        PartCode: '',
+                        PartName: '',
+                        Code: '',
+                        SparePartsStationCode: '',
+                        EquipmentType: '',
+                        IsUsed: '',
+                    }
+                }
+            }
+        });
+        this.GetSparepartManageList();
+    }
+    //导入导出下拉菜单
+    menuClick = (e) => {
+        if (e.key === "item_0") {
+            this.Template();
+        }
+    }
     render() {
         const { sparepartManageDatalist, sparepartManageParameters, pageCount } = this.props;
         const { visible } = this.state;
         const columns = [
             {
-                title: '备件名称',
+                title: '编码',
+                dataIndex: 'PartCode',
+                key: 'PartCode',
+                width: 100,
+                align: 'center',
+            },
+            {
+                title: '备品备件名称',
                 dataIndex: 'PartName',
                 key: 'PartName',
                 width: 100,
                 align: 'center',
             },
             {
-                title: '备件型号',
+                title: '备品备件型号',
                 dataIndex: 'Code',
                 key: 'Code',
                 width: 100,
                 align: 'center',
             },
             {
-                title: '编码',
-                dataIndex: 'PartCode',
-                key: 'PartCode',
+                title: '库存数量',
+                dataIndex: 'Quantity',
+                key: 'Quantity',
                 width: 100,
                 align: 'center',
             },
@@ -319,6 +420,25 @@ export default class Index extends Component {
                 key: 'Unit',
                 width: 100,
                 align: 'center',
+            },
+
+            {
+                title: '状态',
+                dataIndex: 'IsUsed',
+                key: 'IsUsed',
+                width: 100,
+                align: 'center',
+                render: (text, row, index) => {
+                    switch (text) {
+                        case 0:
+                            text = "禁用";
+                            break;
+                        case 1:
+                            text = "启用";
+                            break;
+                    }
+                    return text;
+                },
             },
             {
                 title: '设备类型',
@@ -348,39 +468,12 @@ export default class Index extends Component {
                 },
             },
             {
-                title: '状态',
-                dataIndex: 'IsUsed',
-                key: 'IsUsed',
-                width: 100,
-                align: 'center',
-                render: (text, row, index) => {
-                    switch (text) {
-                        case 0:
-                            text = "禁用";
-                            break;
-                        case 1:
-                            text = "启用";
-                            break;
-                    }
-                    return text;
-                },
-            },
-            {
-                title: '数量',
-                dataIndex: 'Quantity',
-                key: 'Quantity',
-                width: 100,
-                align: 'center',
-            },
-            {
-                title: '服务站名称',
+                title: '服务站',
                 dataIndex: 'SparePartsStationName',
                 key: 'SparePartsStationName',
                 width: 100,
                 align: 'center',
-                sorter: {
-                    compare: (a, b) => a.SparePartsStationName - b.SparePartsStationName,
-                },
+                sorter: (a, b) => a.SparePartsStationName.length - b.SparePartsStationName.length,
             },
             {
                 title: '操作',
@@ -409,89 +502,135 @@ export default class Index extends Component {
             }
         ];
         return (
-            <Card
-                style={{ height: 'calc(100vh - 100px)' }}
-                // extra={
-                //     <Button onClick={() => this.Template()}>
-                //         <Icon type="download" />模板下载
-                //     </Button>
-                // }
-                title={
-                    <Form layout="inline">
-                        <Form.Item>
-                            <Search
-                                placeholder="备件名称"
-                                enterButton="查询"
-                                size="middle"
-                                defaultValue={sparepartManageParameters.SearchName}
-                                onSearch={value => this.nameSearch(value)}
-                                onPressEnter={this.nameSearchEnter}
-                            />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button onClick={() => this.Template()}>
-                                <Icon type="download" />模板下载
-                    </Button>
-                        </Form.Item>
-                        <Form.Item>
-                            {
-                                this.upload()
-                            }
-                            <Spin
-                                delay={500}
-                                spinning={this.state.uploadLoading}
-                                style={{
-                                    marginLeft: 10,
-                                    height: '100%',
-                                    width: '30px',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button style={{ marginRight: 5 }}
-                                onClick={() => this.updateModel()}
-                            >
-                                添加
+            <BreadcrumbWrapper>
+                <Card
+                    style={{ height: 'calc(100vh - 150px)' }}
+                    // extra={
+                    //     <Button onClick={() => this.Template()}>
+                    //         <Icon type="download" />模板下载
+                    //     </Button>
+                    // }
+                    // title={
+
+                    // }
+                    bordered={false}>
+                    <div>
+                        <Form layout="inline">
+                            <Form.Item>
+                                <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Input placeholder="备品备件型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Input placeholder="服务站名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.SparePartsStationCode} onChange={this.SparePartsStationNameChange} />
+                            </Form.Item>
+                            <Form.Item>
+                                设备类型：
+                            <Select placeholder="设备类型" style={{ width: 120 }} value={sparepartManageParameters.EquipmentType} onChange={this.EquipmentTypeChange}>
+                                    <Option value="1">废水</Option>
+                                    <Option value="2">废气</Option>
+                                    <Option value="5">环境质量</Option>
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item>
+                                状态 ：
+                            {/* onChange={this.onChange} value={this.state.value} */}
+                                <Radio.Group placeholder="状态" value={sparepartManageParameters.IsUsed} onChange={this.IsUsedChange}>
+                                    <Radio value={1}>启用</Radio>
+                                    <Radio value={0}>禁用</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button onClick={this.changes}
+                                    type="primary"
+                                >查询
                             </Button>
-                        </Form.Item>
-                    </Form>
-                }
-                bordered={false}>
-                <SdlTable
-                    rowKey={record => record.ID}
-                    loading={this.props.loading}
-                    columns={columns}
-                    dataSource={sparepartManageDatalist}
-                    // scroll={{ y: 'calc(100vh - 450px)' }}
-                    pagination={{
-                        showSizeChanger: true,
-                        showQuickJumper: true,
-                        'total': this.props.total,
-                        'pageSize': sparepartManageParameters.pageSize,
-                        'current': sparepartManageParameters.pageIndex,
-                        onChange: this.onChange,
-                        onShowSizeChange: this.onShowSizeChange,
-                        pageSizeOptions: pageCount
-                    }}
-                />
-                <Modal
-                    destroyOnClose="true"
-                    visible={this.state.visible}
-                    title={this.state.title}
-                    width={this.state.width}
-                    onCancel={this.onCancel}
-                    onOk={this.handleSubmit}
-                >
-                    {
-                        <UpdateSparepartManage
-                            item={this.state.data}
-                            form={this.props.form}
-                        />
-                    }
-                </Modal>
-            </Card>
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button onClick={this.resertChanges}
+                                >重置
+                            </Button>
+                            </Form.Item>
+                        </Form>
+                    </div>
+                    <div style={{ marginBottom: 16, marginTop: 16 }}>
+                        <Button
+                            style={{ marginRight: 8 }}
+                            icon="plus"
+                            type="primary"
+                        >添加
+                  </Button>
+                        <Dropdown overlay={<Menu onClick={this.menuClick}>
+                            <Menu.Item>
+                                {/* <Button onClick={() => this.Template()}></Button> */}
+                                <Icon type="export" />模板下载
+                            </Menu.Item>
+                            <Menu.Item>
+                                {
+                                    this.upload()
+                                }
+                                <Spin
+                                    delay={500}
+                                    spinning={this.state.uploadLoading}
+                                    style={{
+                                        marginLeft: 10,
+                                        height: '100%',
+                                        width: '30px',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                />
+                            </Menu.Item>
+                        </Menu>}>
+                            <Button>
+                                更多操作 <Icon type="down" />
+                            </Button>
+                        </Dropdown>
+                    </div>
+                    <SdlTable
+                        rowKey={record => record.ID}
+                        loading={this.props.loading}
+                        columns={columns}
+                        dataSource={sparepartManageDatalist}
+                        // scroll={{ y: 'calc(100vh - 450px)' }}
+                        pagination={{
+                            showSizeChanger: true,
+                            showQuickJumper: true,
+                            'total': this.props.total,
+                            'pageSize': sparepartManageParameters.pageSize,
+                            'current': sparepartManageParameters.pageIndex,
+                            onChange: this.onChange,
+                            onShowSizeChange: this.onShowSizeChange,
+                            pageSizeOptions: pageCount
+                        }}
+                    />
+                    <Modal
+                        destroyOnClose="true"
+                        visible={this.state.visible}
+                        title={this.state.title}
+                        width={this.state.width}
+                        onCancel={this.onCancel}
+                        onOk={this.handleSubmit}
+                    >
+                        {
+                            <UpdateSparepartManage
+                                item={this.state.data}
+                                form={this.props.form}
+                            />
+                        }
+                    </Modal>
+                </Card>
+            </BreadcrumbWrapper>
         );
     }
 }

@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import {
-    Card, Spin, Tooltip, Icon, Divider, Modal, Transfer, Switch, Table, Tag
+    Card, Spin, Tooltip, Icon, Divider, Modal, Transfer, Switch, Table, Tag, message
 } from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import difference from 'lodash/difference';
-
+import { DelIcon } from '@/utils/icon'
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
     <Transfer {...restProps} showSelectAll={false}>
         {({
@@ -56,20 +56,6 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
     </Transfer>
 );
 
-// const mockTags = ['cat', 'dog', 'bird'];
-
-// const mockData = [];
-// for (let i = 0; i < 20; i++) {
-//     mockData.push({
-//         key: i.toString(),
-//         title: `content${i + 1}`,
-//         description: `description of content${i + 1}`,
-//         disabled: i % 4 === 0,
-//         tag: mockTags[i % 3],
-//     });
-// }
-// const originTargetKeys = mockData.filter(item => item.key % 3 > 1).map(item => item.key);
-
 const tableColumns = [
     {
         dataIndex: 'User_Account',
@@ -85,7 +71,7 @@ const tableColumns = [
     },
 ];
 
-
+const { confirm } = Modal;
 
 @connect(({ loading, autoForm, SparePartsStation }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -115,7 +101,7 @@ class Index extends Component {
         dispatch({
             type: 'SparePartsStation/GetAllOperationUsers',
             payload: {
-                Roles_ID:'eec719c2-7c94-4132-be32-39fe57e738c9',
+                Roles_ID: 'eec719c2-7c94-4132-be32-39fe57e738c9',
             },
         })
     }
@@ -150,13 +136,11 @@ class Index extends Component {
             targetKeys: [],
             SparePartsStationCode
         })
-        debugger
         dispatch({
             type: 'SparePartsStation/getSparePartsStationList',
             payload: {
                 SparePartsStationCode,
                 callback: (Datas) => {
-                    debugger
                     if (Datas.length !== 0) {
                         this.setState({
                             targetKeys: AllUser.filter(item => Datas.indexOf(item.User_ID) !== -1).map(item => item.User_ID)
@@ -176,6 +160,43 @@ class Index extends Component {
     onChange = nextTargetKeys => {
         this.setState({ targetKeys: nextTargetKeys });
     };
+    //删除自定义
+    showDeleteConfirm = (SparePartsStationCode) => {
+        const that = this;
+        const { dispatch } = this.props;
+        confirm({
+            title: '确定要删除该条数据吗？',
+            content: '删除后不可恢复',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                that.delPoint(SparePartsStationCode);
+            },
+            onCancel() {
+            },
+        });
+    }
+    //删除服务站
+    delPoint(SparePartsStationCode) {
+        const { dispatch, match } = this.props;
+        dispatch({
+            type: 'SparePartsStation/delSparePartsStation',
+            payload: {
+                SparePartsStationCode: SparePartsStationCode,
+                callback: result => {
+                    if (result.IsSuccess) {
+                        message.success(result.Message);
+                        this.reloadPage(match.params.configId);
+                    }
+                    else {
+                        message.error(result.Message)
+                    }
+                },
+            },
+        });
+    }
+
     //保存用户关联信息
     saveUser = () => {
         const { dispatch } = this.props;
@@ -196,7 +217,6 @@ class Index extends Component {
 
     render() {
         const { match: { params: { configId } }, AllUser, SparePartsStationUserLoading } = this.props;
-        debugger
         const { targetKeys, disabled, showSearch } = this.state;
         if (this.props.loading) {
             return (<Spin
@@ -224,6 +244,14 @@ class Index extends Component {
                             {...this.props}
                             appendHandleRows={row => (
                                 <span>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="删除">
+                                        <a onClick={() => {
+                                            this.showDeleteConfirm(row['dbo.T_Bas_SparePartsStation.SparePartsStationCode']);
+                                        }}><DelIcon />    </a>
+                                    </Tooltip>
+
+
                                     <Divider type="vertical" />
                                     <Tooltip title="关联用户">
                                         <a onClick={() => {
