@@ -1,5 +1,5 @@
 /**
- * 功  能：传输有效率
+ * 功  能：有效传输率
  * 创建人：吴建伟
  * 创建时间：2019.08.12
  */
@@ -35,7 +35,7 @@ const pageUrl = {
 };
 const content = (
     <div>
-        当传输有效率未到达90%时判定为未达标
+        当有效传输率未到达90%时判定为未达标
     </div>
 );
 @connect(({
@@ -91,7 +91,6 @@ export default class EntTransmissionEfficiency extends Component {
                 pageSize: pagination.pageSize
             });
         }
-        debugger
         this.getTableData(pagination.current);
     }
     onDateChange = (value, beginTime, endTime) => {
@@ -106,8 +105,8 @@ export default class EntTransmissionEfficiency extends Component {
             <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
                 <p><Badge status="warning" text="传输率：传输个数/应传个数" /></p>
                 <p><Badge status="warning" text="有效率：有效个数/应传个数" /></p>
-                <p><Badge status="warning" text="传输有效率：传输率*有效率" /></p>
-                <p><Badge status="warning" text="当传输有效率高于90%时传输有效率达标并标记为绿色，否则标记为红色" /></p>
+                <p><Badge status="warning" text="有效传输率：传输率*有效率" /></p>
+                <p><Badge status="warning" text="当有效传输率高于90%时有效传输率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
         ),
         filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />
@@ -139,6 +138,9 @@ export default class EntTransmissionEfficiency extends Component {
                 width: '15%',
                 align: 'left',
                 render: (text, record) => {
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgTransmissionRate <= text) {
                         return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
                     }
@@ -156,6 +158,9 @@ export default class EntTransmissionEfficiency extends Component {
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
+                    }
                     if (record.AvgEffectiveRate <= text) {
                         return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
                     }
@@ -167,7 +172,7 @@ export default class EntTransmissionEfficiency extends Component {
             },
             {
                 title: (
-                    <span style={{ fontWeight: 'bold' }}>传输有效率
+                    <span style={{ fontWeight: 'bold' }}>有效传输率
                         {/* <Popover content={content} >
                             <QuestionCircleOutlined style={{ color: '#1890FF', marginLeft: 2 }} />
                         </Popover> */}
@@ -179,6 +184,9 @@ export default class EntTransmissionEfficiency extends Component {
                 // align: 'center',
                 sorter: true,
                 render: (text, record) => {
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
+                    }
                     // 红色：#f5222d 绿色：#52c41a
                     const percent = (parseFloat(text) * 100).toFixed(2);
                     if (percent >= 90) {
@@ -218,7 +226,7 @@ export default class EntTransmissionEfficiency extends Component {
                         // router.push({
                         //     pathname: `/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`,
                         //     query: {
-                        //         tabName: "传输有效率 - 详情"
+                        //         tabName: "有效传输率 - 详情"
                         //     }
                         // })
                     }}>查看详情</a>
@@ -229,7 +237,7 @@ export default class EntTransmissionEfficiency extends Component {
             }
         ];
         return (
-            <BreadcrumbWrapper title="传输有效率">
+            <BreadcrumbWrapper title="有效传输率">
                 {/* <div className="contentContainer"> */}
                 <Card
                     bordered={false}
@@ -243,7 +251,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 borderRadius: '20%',
                                 cursor: 'pointer',
                                 marginRight: 3
-                            }} /> <span style={{ cursor: 'pointer' }}> 排口传输有效率达标</span>
+                            }} /> <span style={{ cursor: 'pointer' }}> 排口有效传输率达标</span>
                             <div style={{
                                 width: 20,
                                 height: 9,
@@ -253,7 +261,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 cursor: 'pointer',
                                 marginLeft: 60,
                                 marginRight: 3
-                            }} /><span style={{ cursor: 'pointer' }}> 排口传输有效率未达标</span>
+                            }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
 
                             <div
                                 style={{
@@ -296,7 +304,7 @@ export default class EntTransmissionEfficiency extends Component {
                     />
 
                     <Modal
-                        title="传输有效率 - 详情"
+                        title="有效传输率 - 详情"
                         destroyOnClose
                         footer={[]}
                         visible={this.state.visible}
@@ -304,7 +312,7 @@ export default class EntTransmissionEfficiency extends Component {
                         // style={{ height: "90vh" }}
                         onCancel={() => { this.setState({ visible: false }) }}
                     >
-                        <PointIndex entcode={this.state.EnterpriseCode} entname={this.state.EnterpriseName} ></PointIndex>
+                        <PointIndex entcode={this.state.EnterpriseCode} entname={this.state.EnterpriseName} beginTime={this.state.beginTime} ></PointIndex>
                     </Modal>
 
                 </Card>
