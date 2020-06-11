@@ -17,6 +17,7 @@ import {
     Modal,
     Input,
     Button,
+    Form,
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -27,9 +28,11 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import PointIndex from './pointIndex';
 import { router } from "umi";
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
+
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
     getData: 'transmissionefficiency/getEntData'
@@ -49,6 +52,7 @@ const content = (
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.enttableDatas,
 }))
+@Form.create()
 export default class EntTransmissionEfficiency extends Component {
     constructor(props) {
         super(props);
@@ -131,7 +135,7 @@ export default class EntTransmissionEfficiency extends Component {
         });
 
     }
-    enterpriseEnter=(value)=>{
+    enterpriseEnter = (value) => {
         this.props.dispatch({
             type: pageUrl.getData,
             payload: {
@@ -263,14 +267,21 @@ export default class EntTransmissionEfficiency extends Component {
                 <Card
                     bordered={false}
                     title={
-                        <Search
-                            placeholder="企业名称"
-                            allowClear
-                            onSearch={value => this.enterpriseChange(value)}
-                            onPressEnter={value => this.enterpriseEnter(value)}
-                            style={{ width: 200 }}
-                        />
-
+                        <Form layout="inline">
+                            <Form.Item>
+                                时间选择：
+                        <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
+                            </Form.Item>
+                            <Form.Item>
+                                <Search
+                                    placeholder="企业名称"
+                                    allowClear
+                                    onSearch={value => this.enterpriseChange(value)}
+                                    onPressEnter={value => this.enterpriseEnter(value)}
+                                    style={{ width: 200, marginLeft: 10 }}
+                                />
+                            </Form.Item>
+                        </Form>
                     }
                     extra={
                         <div>
@@ -293,22 +304,6 @@ export default class EntTransmissionEfficiency extends Component {
                                 marginLeft: 60,
                                 marginRight: 3
                             }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
-
-                            <div
-                                style={{
-                                    display: 'inline-block',
-                                    borderRadius: '20%',
-                                    marginLeft: 60,
-                                    marginRight: 3
-                                }}
-                            >
-                                <span style={{ color: '#b3b3b3' }}>
-                                    时间选择：
-                                <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
-                                    {/* <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} /> */}
-                                </span>
-                            </div>
-
                         </div>
 
 
