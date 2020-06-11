@@ -2,6 +2,7 @@ import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Badge, Modal, Lis
 import React, { PureComponent } from 'react';
 import zh_CN from 'antd-mobile/lib/date-picker/locale/zh_CN';
 import moment, { months } from 'moment';
+import styles from './ScanningCode.less';
 import { connect } from 'dva';
 import {
     Icon, Spin
@@ -141,9 +142,9 @@ class ScanningCode extends PureComponent {
         }
         if (operationLogList && operationLogList.FormList && operationLogList.FormList.length > 0) {
             operationLogList.FormList.map((item) => {
-                gridList.push(
-                    <WhiteSpace />
-                )
+                // gridList.push(
+                //     <WhiteSpace />
+                // )
 
                 gridList.push(
                     <Step
