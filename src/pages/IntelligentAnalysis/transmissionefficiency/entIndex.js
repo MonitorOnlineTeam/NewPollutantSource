@@ -27,6 +27,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import PointIndex from './pointIndex';
 import { router } from "umi";
+const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
@@ -58,6 +59,7 @@ export default class EntTransmissionEfficiency extends Component {
             EnterpriseCode: '',
             EnterpriseName: '',
             visible: false,
+            eName: '',
         };
     }
     componentWillMount() {
@@ -104,7 +106,7 @@ export default class EntTransmissionEfficiency extends Component {
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
                 <p><Badge status="warning" text="传输率：传输个数/应传个数" /></p>
-                <p><Badge status="warning" text="有效率：有效个数/应传个数" /></p>
+                <p><Badge status="warning" text="有效率：100%" /></p>
                 <p><Badge status="warning" text="有效传输率：传输率*有效率" /></p>
                 <p><Badge status="warning" text="当有效传输率高于90%时有效传输率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
@@ -119,7 +121,26 @@ export default class EntTransmissionEfficiency extends Component {
         // },
 
     });
+    //企业
+    enterpriseChange = (value) => {
+        this.props.dispatch({
+            type: pageUrl.getData,
+            payload: {
+                EnterpriseName: value,
+            },
+        });
+
+    }
+    enterpriseEnter=(value)=>{
+        this.props.dispatch({
+            type: pageUrl.getData,
+            payload: {
+                EnterpriseName: value.target.value,
+            },
+        });
+    }
     render() {
+        const { eName } = this.state;
         const columns = [
             {
                 title: (<span style={{ fontWeight: 'bold' }}>企业名称</span>),
@@ -241,6 +262,16 @@ export default class EntTransmissionEfficiency extends Component {
                 {/* <div className="contentContainer"> */}
                 <Card
                     bordered={false}
+                    title={
+                        <Search
+                            placeholder="企业名称"
+                            allowClear
+                            onSearch={value => this.enterpriseChange(value)}
+                            onPressEnter={value => this.enterpriseEnter(value)}
+                            style={{ width: 200 }}
+                        />
+
+                    }
                     extra={
                         <div>
                             <div style={{
