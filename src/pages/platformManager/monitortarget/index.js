@@ -30,7 +30,7 @@ import { sdlMessage } from '@/utils/utils';
 
 const { confirm } = Modal;
 
-@connect(({ loading, autoForm }) => ({
+@connect(({ loading, autoForm, common }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
     autoForm,
     searchConfigItems: autoForm.searchConfigItems,
@@ -167,6 +167,33 @@ export default class MonitorTarget extends Component {
         });
     }
 
+    //生成监测点二维码
+    CreatQRCode = (row) => {
+        debugger
+        this.props.dispatch({
+            type: 'common/CreatQRCode',
+            payload: {
+                EntCode: row['dbo.T_Bas_Enterprise.EntCode'],
+                callback: (result) => {
+                    if (result.IsSuccess) {
+                        this.downloadFile(result.Datas);
+                    } else {
+                        message.error('生成失败');
+                    }
+                }
+            },
+        });
+    }
+
+    /**下载模版 */
+    downloadFile = (returnName) => {
+        let a = document.createElement('a');
+        a.href = `/upload/${returnName}`;
+        a.download = '';
+        document.body.appendChild(a);
+        a.click();
+    }
+
     onRef1 = ref => {
         this.child = ref;
     };
@@ -247,6 +274,13 @@ export default class MonitorTarget extends Component {
                                         this.adddischargepermit('', row);
                                     }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
                                 </Tooltip></>}
+
+                            <Divider type="vertical" />
+                            <Tooltip title="生成监测点二维码">
+                                <a onClick={() => {
+                                    this.CreatQRCode(row);
+                                }}><Icon type="qrcode" /></a>
+                            </Tooltip>
 
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"

@@ -151,5 +151,20 @@ export default Model.extend({
         });
       }
     },
+    /**
+  * 基本信息-生成当前企业下所有监测点的二维码
+  * @param {传递参数} 传递参数
+  * @param {操作} 操作项
+  */
+    * CreatQRCode({
+      payload
+    }, {
+      call,
+    }) {
+      const result = yield call(services.CreatQRCode, {
+        ...payload
+      });
+      payload.callback(result);
+    },
   },
 });

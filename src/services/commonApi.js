@@ -45,3 +45,16 @@ export async function getEntAndPoint(params) {
   return result;
 }
 
+/**
+ * 基本信息-更新监测点的运营开始结束时间
+ * @param {传递参数} 传递参数
+ * @param {操作} 操作项
+ */
+export async function CreatQRCode(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/CreateQRCode', params, null);
+  return result === null ? {
+      data: null
+  } : result;
+}
+
+
