@@ -43,7 +43,7 @@ export default class UpdateSparepartManage extends Component {
         const { getFieldDecorator } = this.props.form;
         const { item, sparePartsStationList } = this.props;
         let isExists = false;
-        if (item) {
+        if (item.ID) {
             //有值是修改,状态改为true
             isExists = true;
         }
@@ -172,8 +172,8 @@ export default class UpdateSparepartManage extends Component {
                                     ],
                                 })(
                                     <Radio.Group>
-                                        <Radio value={1}>启用</Radio>
-                                        <Radio value={0}>禁用</Radio>
+                                        <Radio key={1} value={1}>启用</Radio>
+                                        <Radio key={0} value={0}>禁用</Radio>
                                     </Radio.Group>
                                 )}
                             </FormItem>
