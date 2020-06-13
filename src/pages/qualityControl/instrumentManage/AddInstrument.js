@@ -2,12 +2,12 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 14:11:18
+ * @Last Modified time: 2020-06-13 10:48:24
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Form, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon, TimePicker, DatePicker } from 'antd';
+import { Card, Form, Row, Col, Input, Select, Modal, Button, Table, Cascader, InputNumber, Divider, message, Icon, TimePicker, DatePicker } from 'antd';
 import { connect } from 'dva';
 import _ from 'lodash';
 import moment from 'moment';
@@ -16,6 +16,7 @@ import SdlTable from '@/components/SdlTable'
 import PageLoading from '@/components/PageLoading'
 import styles from './index.less';
 
+const { confirm } = Modal;
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
@@ -27,6 +28,7 @@ const InputGroup = Input.Group;
   qualityControlFormData: qualityControl.qualityControlFormData,
   qualityControlTableData: qualityControl.qualityControlTableData,
   QCAGasRelation: qualityControl.QCAGasRelation,
+  workPatternList: qualityControl.workPatternList,
   Sloading: loading.effects['qualityControl/getStandardGas'],
   loading: loading.effects['qualityControl/getQualityControlData'],
   btnloading: loading.effects['qualityControl/addQualityControl'],
@@ -44,54 +46,105 @@ class AddInstrument extends Component {
           title: '排口',
           dataIndex: 'DGIMN',
           render: (text, record, index) => <FormItem style={{ marginBottom: '0' }}>
-              {this.props.form.getFieldDecorator(`DGIMN${record.key}`, {
-                rules: [
-                  { required: true, message: '请输入排口' },
-                ],
-                initialValue: record.DGIMNArr || text,
-              })(
-                <Cascader
-                  style={{ width: '70%' }}
-                  fieldNames={{ label: 'title', value: 'key', children: 'children' }}
-                  showSearch
-                  // disabled={this.state.dataSource[index].find(item => item.DGIMN == )}
-                  options={this.props.entAndPointList}
-                  onChange={(value, selectedOptions) => {
-                    this.changeDataSource(value[1], index, 'DGIMN')
-                  }}
-                  placeholder="请选择排口"
-                />,
-              )}
-            </FormItem>,
+            {this.props.form.getFieldDecorator(`DGIMN${record.key}`, {
+              rules: [
+                { required: true, message: '请输入排口' },
+              ],
+              initialValue: record.DGIMNArr || text,
+            })(
+              <Cascader
+                style={{ width: '70%' }}
+                fieldNames={{ label: 'title', value: 'key', children: 'children' }}
+                showSearch
+                // disabled={this.state.dataSource[index].find(item => item.DGIMN == )}
+                options={this.props.entAndPointList}
+                onChange={(value, selectedOptions) => {
+                  this.changeDataSource(value[1], index, 'DGIMN')
+                }}
+                placeholder="请选择排口"
+              />,
+            )}
+          </FormItem>,
         },
         {
           title: '排口通道',
           dataIndex: 'MNHall',
           render: (text, record, index) => <FormItem style={{ marginBottom: '0' }}>
-              {this.props.form.getFieldDecorator(`MNHall${record.key}`, {
-                rules: [
-                  { required: true, message: '请输入排口通道' },
-                ],
-                initialValue: text,
-              })(
-                // <InputNumber min={0}/>
-                <Select onChange={value => { this.changeDataSource(value, index, 'MNHall') }} >
-                  {
-                    this._SELF_.MNHallList.map(item => <Option disabled={this.state.dataSource.find(itm => itm.MNHall == item)} key={item}>{item}</Option>)
-                  }
-                </Select>,
-              )}
-            </FormItem>,
+            {this.props.form.getFieldDecorator(`MNHall${record.key}`, {
+              rules: [
+                { required: true, message: '请输入排口通道' },
+              ],
+              initialValue: text,
+            })(
+              // <InputNumber min={0}/>
+              <Select onChange={value => { this.changeDataSource(value, index, 'MNHall') }} >
+                {
+                  this._SELF_.MNHallList.map(item => <Option disabled={this.state.dataSource.find(itm => itm.MNHall == item)} key={item}>{item}</Option>)
+                }
+              </Select>,
+            )}
+          </FormItem>,
         },
         {
           title: '操作',
-          render: (text, record, index) => <a onClick={() => {
-              const tempDataSource = this.state.dataSource;
-              tempDataSource.splice(index, 1);
-              this.setState({
-                dataSource: [...tempDataSource],
-              })
-            }}>删除</a>,
+          render: (text, record, index) => {
+            const that = this;
+            return (
+              <>
+                <a onClick={() => {
+                  const tempDataSource = this.state.dataSource;
+                  tempDataSource.splice(index, 1);
+                  this.setState({
+                    dataSource: [...tempDataSource],
+                  })
+                }}>删除</a>
+                <Divider type="vertical" />
+                <a onClick={() => {
+                  confirm({
+                    title: '请选择要导入的工作模式！',
+                    content:
+                      <Select
+                        // defaultValue={this.props.workPatternList[0].ModelName}
+                        defaultValue={this.state.currentWorkPatternValue}
+                        style={{ width: 200 }}
+                        onChange={(value, option) => {
+                          this.setState({
+                            currentWorkPatternList: option.props.ModelList,
+                            currentWorkPatternValue: value
+                          })
+                        }}
+                      >
+                        {
+                          this.props.workPatternList.map(item => {
+                            return <Option value={item.ModelName} ModelList={item.ModelList} key={item.ModelName}>{item.ModelName}</Option>
+                          })
+                        }
+                      </Select>,
+                    onOk() {
+                      let tempDataSource = that.state.dataSource;
+                      let component = that.state.currentWorkPatternList.map(item => {
+                        return {
+                          key: Math.floor(Math.random() * 65535),
+                          ...item,
+                          unit: item.StandardGasCode === "03" || item.StandardGasCode === "02" ? 'mg/m3' : "%"
+                        }
+                      });
+                      tempDataSource[index].Component = component;
+                      console.log('tempDataSource=', tempDataSource)
+                      that.setState({
+                        dataSource: [...tempDataSource],
+                        expandedRowKeys: [
+                          ...that.state.expandedRowKeys,
+                          index
+                        ]
+                      })
+                    },
+                    onCancel() { },
+                  });
+                }}>导入工作模式</a>
+              </>
+            )
+          }
         },
       ],
     };
@@ -120,29 +173,29 @@ class AddInstrument extends Component {
     // 获取标气列表
     this.props.dispatch({
       type: 'qualityControl/getStandardGas',
-       payload: {
-          QCAMN: '',
-         },
-         callback: standardGasList => {
-           if (!this._SELF_.id) {
-           const dataSourceR = [];
-           standardGasList.map(item => {
-             dataSourceR.push({
-               // key: `${index}${key}`,
-               key: Math.floor(Math.random() * 655321),
-               StandardGasCode: item.PollutantCode,
-               ExpirationDate: undefined,
-               Concentration: undefined,
-               unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
-               GasInitPower: undefined,
-             })
-           })
-           this.setState({
-             dataSourceR,
-           })
-          }
-         },
-        });
+      payload: {
+        QCAMN: '',
+      },
+      callback: standardGasList => {
+        if (!this._SELF_.id) {
+          const dataSourceR = [];
+          standardGasList.map(item => {
+            dataSourceR.push({
+              // key: `${index}${key}`,
+              key: Math.floor(Math.random() * 655321),
+              StandardGasCode: item.PollutantCode,
+              ExpirationDate: undefined,
+              Concentration: undefined,
+              unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
+              GasInitPower: undefined,
+            })
+          })
+          this.setState({
+            dataSourceR,
+          })
+        }
+      },
+    });
     // 获取编辑数据
     if (this._SELF_.id) {
       this.props.dispatch({
@@ -153,21 +206,26 @@ class AddInstrument extends Component {
       })
     } else {
       const { dataSourceR } = this.state;
-       this.props.standardGasList.map(item => {
-         dataSourceR.push({
-           // key: `${index}${key}`,
-           key: Math.floor(Math.random() * 655321),
-           StandardGasCode: item.PollutantCode, // 标气code
-           ExpirationDate: undefined, // 过期时间
-           Concentration: undefined, // 气瓶浓度
-           unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
-           GasInitPower: undefined, // 标气初始压力
-         })
-       })
-       this.setState({
-         dataSourceR,
-       })
+      this.props.standardGasList.map(item => {
+        dataSourceR.push({
+          // key: `${index}${key}`,
+          key: Math.floor(Math.random() * 655321),
+          StandardGasCode: item.PollutantCode, // 标气code
+          ExpirationDate: undefined, // 过期时间
+          Concentration: undefined, // 气瓶浓度
+          unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
+          GasInitPower: undefined, // 标气初始压力
+        })
+      })
+      this.setState({
+        dataSourceR,
+      })
     }
+
+    // 获取工作模式
+    this.props.dispatch({
+      type: 'qualityControl/getWorkPatternList',
+    })
   }
 
   componentWillUnmount() {
@@ -189,6 +247,14 @@ class AddInstrument extends Component {
       this.setState({
         dataSourceR: nextProps.QCAGasRelation,
       })
+    }
+    if (this.props.workPatternList !== nextProps.workPatternList) {
+      if (nextProps.workPatternList.length) {
+        this.setState({
+          currentWorkPatternList: nextProps.workPatternList[0].ModelList,
+          currentWorkPatternValue: nextProps.workPatternList[0].ModelName
+        })
+      }
     }
   }
 
@@ -250,39 +316,39 @@ class AddInstrument extends Component {
           item.DGIMN = item.DGIMNArr[1];
         }
         // 处理氮气
-        item.Component = item.Component.map(itm => {
+        item.Component = item.Component.map((itm, index) => {
           if (itm.StandardGasCode === '065') {
             return {
               GasInitPower: itm.GasInitPower,
               ExpirationDate: itm.ExpirationDate,
             }
           }
-            return itm
+          return { ...itm, FlagForQCA: index }
         })
       })
       const QCAGasVolume = [];
       const QCAGasRelation = [];
 
       if (dataSourceR.length > 0) {
-         isErr = false;
+        isErr = false;
 
-         const { QCAMN } = fieldsValue;
-         dataSourceR.map(item => {
-           const arr = {
-             QCAMN,
-             StandardGasCode: item.StandardGasCode,
-             VolumeValue: (item.GasInitPower * 8 * 10).toFixed(4),
-           }
-           const arr1 = {
-             QCAMN,
-             StandardGasCode: item.StandardGasCode,
-             ExpirationDate: item.ExpirationDate,
-             Concentration: item.Concentration,
-             GasInitPower: item.GasInitPower,
-           }
-           QCAGasVolume.push(arr);
-           QCAGasRelation.push(arr1);
-         })
+        const { QCAMN } = fieldsValue;
+        dataSourceR.map(item => {
+          const arr = {
+            QCAMN,
+            StandardGasCode: item.StandardGasCode,
+            VolumeValue: (item.GasInitPower * 8 * 10).toFixed(4),
+          }
+          const arr1 = {
+            QCAMN,
+            StandardGasCode: item.StandardGasCode,
+            ExpirationDate: item.ExpirationDate,
+            Concentration: item.Concentration,
+            GasInitPower: item.GasInitPower,
+          }
+          QCAGasVolume.push(arr);
+          QCAGasRelation.push(arr1);
+        })
       } else {
         isErr = true;
       }
@@ -336,11 +402,11 @@ class AddInstrument extends Component {
   }
 
   selectAfter = (index, idx, value) => <Select defaultValue={`${value}`} onChange={value => {
-      this.changeStandardGasData(index, 'DateType', value, idx)
-    }}>
-      <Option value="0">天</Option>
-      <Option value="1">小时</Option>
-    </Select>
+    this.changeStandardGasData(index, 'DateType', value, idx)
+  }}>
+    <Option value="0">天</Option>
+    <Option value="1">小时</Option>
+  </Select>
 
   // 嵌套表格
   expandedRowRender = (record, index, indent, expanded) => {
@@ -357,57 +423,64 @@ class AddInstrument extends Component {
         // fixed: 'left',
         width: 80,
         render: (text, record, idx) => <a onClick={() => {
-            const tempDataSource = this.state.dataSource;
-            tempDataSource[index].Component.splice(idx, 1);
-            this.setState({
-              dataSource: [...tempDataSource],
-            })
-          }}>删除</a>,
+          const tempDataSource = this.state.dataSource;
+          tempDataSource[index].Component.splice(idx, 1);
+          this.setState({
+            dataSource: [...tempDataSource],
+          })
+        }}>删除</a>,
       },
       {
         title: '标气名称',
         dataIndex: 'StandardGasCode',
         width: 200,
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
-            {this.props.form.getFieldDecorator(`StandardGasCode${record.key}`, {
-              rules: [
-                { required: true, message: '请选择标气名称' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <Select style={{ width: '100%' }} onChange={value => {
-                this.changeStandardGasData(index, 'StandardGasCode', value, idx);
-                let defaultValue;
-                // const unit;
-                switch (value) {
-                  case '02':
-                    defaultValue = '100';
-                    record.unit = 'mg/m3'
-                    break;
-                  case '03':
-                    defaultValue = '200';
-                    record.unit = 'mg/m3'
-                    break;
-                  default:
-                    defaultValue = undefined;
-                    record.unit = '%'
-                    break;
-                }
-                // this.setState({
-                //   unit: unit
-                // })
-                const StandardGasName = this.props.standardGasList.find(item => item.PollutantCode == value).PollutantName;
-                // 设置满量程值
-                this.changeStandardGasData(index, 'Range', defaultValue, idx);
-                // 设置标气名称
-                this.changeStandardGasData(index, 'StandardGasName', StandardGasName, idx);
-              }}>
-                {
-                  this.props.standardGasList.map(item => <Option disabled={this.state.dataSource[index].Component.find(itm => itm.StandardGasCode == item.PollutantCode)} key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>)
-                }
-              </Select>,
-            )}
-          </FormItem>,
+          {this.props.form.getFieldDecorator(`StandardGasCode${record.key}`, {
+            rules: [
+              { required: true, message: '请选择标气名称' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <Select style={{ width: '100%' }} onChange={value => {
+              this.changeStandardGasData(index, 'StandardGasCode', value, idx);
+              let defaultValue;
+              // const unit;
+              switch (value) {
+                case '02':
+                  defaultValue = '100';
+                  record.unit = 'mg/m3'
+                  break;
+                case '03':
+                  defaultValue = '200';
+                  record.unit = 'mg/m3'
+                  break;
+                default:
+                  defaultValue = undefined;
+                  record.unit = '%'
+                  break;
+              }
+              // this.setState({
+              //   unit: unit
+              // })
+              const StandardGasName = this.props.standardGasList.find(item => item.PollutantCode == value).PollutantName;
+              // 设置满量程值
+              this.changeStandardGasData(index, 'Range', defaultValue, idx);
+              // 设置标气名称
+              this.changeStandardGasData(index, 'StandardGasName', StandardGasName, idx);
+            }}>
+              {
+                this.props.standardGasList.filter(item => item.PollutantCode !== "065").map(item =>
+                  <Option
+                    // disabled={this.state.dataSource[index].Component.find(itm => itm.StandardGasCode == item.PollutantCode)}
+                    key={item.PollutantCode}
+                    value={item.PollutantCode}
+                  >
+                    {item.PollutantName}
+                  </Option>)
+              }
+            </Select>,
+          )}
+        </FormItem>,
       },
       {
         title: '配比气浓度',
@@ -440,20 +513,20 @@ class AddInstrument extends Component {
         dataIndex: 'TotalFlowSetVal',
         width: 180,
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
-              rules: [
-                { required: true, message: '请输入总流量设定值' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <InputNumber
-                // formatter={value => `${value}${record.unit}`}
-                // parser={value => value.replace(`${record.unit}`, '')}
-                min={0}
-                onChange={value => { this.changeStandardGasData(index, 'TotalFlowSetVal', value, idx) }}
-              />,
-            )}
-          </FormItem>,
+          {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
+            rules: [
+              { required: true, message: '请输入总流量设定值' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <InputNumber
+              // formatter={value => `${value}${record.unit}`}
+              // parser={value => value.replace(`${record.unit}`, '')}
+              min={0}
+              onChange={value => { this.changeStandardGasData(index, 'TotalFlowSetVal', value, idx) }}
+            />,
+          )}
+        </FormItem>,
       },
       // {
       //   title: '偏移范围',
@@ -502,6 +575,38 @@ class AddInstrument extends Component {
         },
       },
       {
+        title: '通气时间',
+        dataIndex: 'VentilationTime',
+        width: 100,
+        render: (text, record, idx) => {
+          if (record.StandardGasCode === n2Code) {
+            return '-'
+          }
+          let i = 0;
+          const timeList = [];
+          while (i < 60) {
+            timeList.push(<Option key={i + 1}>{i + 1}分钟</Option>)
+            i++;
+          }
+          return <FormItem style={{ marginBottom: '0' }}>
+            {this.props.form.getFieldDecorator(`VentilationTime${record.key}`, {
+              rules: [
+                { required: true, message: '请选择通气时间' },
+              ],
+              initialValue: text ? `${text}` : '3',
+            })(
+              <Select
+                onChange={value => { this.changeStandardGasData('VentilationTime', value, idx) }}
+              >
+                {
+                  timeList.map(item => item)
+                }
+              </Select>,
+            )}
+          </FormItem>
+        },
+      },
+      {
         title: '稳定时间',
         dataIndex: 'StabilizationTime',
         width: 100,
@@ -547,7 +652,7 @@ class AddInstrument extends Component {
               rules: [
                 { required: true, message: '请输入质控周期' },
               ],
-              initialValue: text || undefined,
+              initialValue: text ? `${text}` : undefined,
             })(
               <InputGroup compact>
                 <Input
@@ -699,7 +804,7 @@ class AddInstrument extends Component {
     } else {
       props = {
         footer: () => <div className={styles.addContent} onClick={() => { this.addStandardGas(index) }}>
-            <Icon type="plus" /> 添加标气
+          <Icon type="plus" /> 添加标气
         </div>,
       };
     }
@@ -735,6 +840,7 @@ class AddInstrument extends Component {
       DateType: 0, // 周期类型(0:天 1:小时)
       Hour: undefined, // 小时
       Minutes: undefined, // 分钟
+      VentilationTime: '5', // 通气时间
       StabilizationTime: '3', // 稳定时间
       // ExpirationDate: undefined, // 过期时间
       // Concentration: undefined, // 气瓶浓度
@@ -768,44 +874,44 @@ class AddInstrument extends Component {
         // fixed: 'left',
         width: 80,
         render: (text, record, idx) => <a onClick={() => {
-            const tempDataSource = this.state.dataSourceR;
-            tempDataSource.splice(idx, 1);
-            this.setState({
-              dataSourceR: [...tempDataSource],
-            })
-          }}>删除</a>,
+          const tempDataSource = this.state.dataSourceR;
+          tempDataSource.splice(idx, 1);
+          this.setState({
+            dataSourceR: [...tempDataSource],
+          })
+        }}>删除</a>,
       },
       {
         title: '标气名称',
         dataIndex: 'StandardGasCode',
         width: 200,
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
-            {this.props.form.getFieldDecorator(`StandardGasCode${record.key}`, {
-              rules: [
-                { required: true, message: '请选择标气名称' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <Select style={{ width: '100%' }} onChange={value => {
-                this.changeStandardGasDataR('StandardGasCode', value, idx);
-                switch (value) {
-                  case '02':
-                    record.unit = 'mg/m3'
-                    break;
-                  case '03':
-                    record.unit = 'mg/m3'
-                    break;
-                  default:
-                    record.unit = '%'
-                    break;
-                }
-              }}>
-                {
-                  this.props.standardGasList.map(item => <Option disabled={this.state.dataSourceR.find(itm => itm.StandardGasCode == item.PollutantCode)} key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>)
-                }
-              </Select>,
-            )}
-          </FormItem>,
+          {this.props.form.getFieldDecorator(`StandardGasCode${record.key}`, {
+            rules: [
+              { required: true, message: '请选择标气名称' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <Select style={{ width: '100%' }} onChange={value => {
+              this.changeStandardGasDataR('StandardGasCode', value, idx);
+              switch (value) {
+                case '02':
+                  record.unit = 'mg/m3'
+                  break;
+                case '03':
+                  record.unit = 'mg/m3'
+                  break;
+                default:
+                  record.unit = '%'
+                  break;
+              }
+            }}>
+              {
+                this.props.standardGasList.map(item => <Option disabled={this.state.dataSourceR.find(itm => itm.StandardGasCode == item.PollutantCode)} key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>)
+              }
+            </Select>,
+          )}
+        </FormItem>,
       },
       {
         title: '气瓶标气浓度',
@@ -822,11 +928,11 @@ class AddInstrument extends Component {
               ],
               initialValue: text || undefined,
             })(
-                <InputNumber
-                  min={0}
-                  precision={2}
-                  onChange={value => { this.changeStandardGasDataR('Concentration', value, idx) }}
-                />,
+              <InputNumber
+                min={0}
+                precision={2}
+                onChange={value => { this.changeStandardGasDataR('Concentration', value, idx) }}
+              />,
             )} &nbsp;{record.unit}
           </FormItem>
         },
@@ -836,19 +942,19 @@ class AddInstrument extends Component {
         dataIndex: 'GasInitPower',
         width: 140,
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`GasInitPower${record.key}`, {
-              rules: [
-                { required: true, message: '请填写标气初始压力' },
-              ],
-              initialValue: text || undefined,
-            })(
-                <InputNumber
-                  // formatter={value => `${value}mpa`}
-                  // parser={value => value.replace("mpa", '')}
-                  min={0}
-                  onChange={value => { this.changeStandardGasDataR('GasInitPower', value, idx) }}
-                />,
-            )}&nbsp;mpa
+          {this.props.form.getFieldDecorator(`GasInitPower${record.key}`, {
+            rules: [
+              { required: true, message: '请填写标气初始压力' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <InputNumber
+              // formatter={value => `${value}mpa`}
+              // parser={value => value.replace("mpa", '')}
+              min={0}
+              onChange={value => { this.changeStandardGasDataR('GasInitPower', value, idx) }}
+            />,
+          )}&nbsp;mpa
           </FormItem>,
       },
       {
@@ -856,19 +962,19 @@ class AddInstrument extends Component {
         dataIndex: 'ExpirationDate',
         width: 140,
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`ExpirationDate${record.key}`, {
-              rules: [
-                { required: true, message: '请选择过期时间' },
-              ],
-              initialValue: text ? moment(text) : undefined,
-            })(
-              <DatePicker format="YYYY-MM-DD" onChange={(date, dataString) => {
-                if (date && dataString) {
-                  this.changeStandardGasDataR('ExpirationDate', `${dataString} 00:00:00`, idx)
-                }
-              }} />,
-            )}
-          </FormItem>,
+          {this.props.form.getFieldDecorator(`ExpirationDate${record.key}`, {
+            rules: [
+              { required: true, message: '请选择过期时间' },
+            ],
+            initialValue: text ? moment(text) : undefined,
+          })(
+            <DatePicker format="YYYY-MM-DD" onChange={(date, dataString) => {
+              if (date && dataString) {
+                this.changeStandardGasDataR('ExpirationDate', `${dataString} 00:00:00`, idx)
+              }
+            }} />,
+          )}
+        </FormItem>,
       },
 
     ];
@@ -884,7 +990,7 @@ class AddInstrument extends Component {
     } else {
       locale = {
         footer: () => <div className={styles.addContent} onClick={() => { this.addStandardGasR() }}>
-            <Icon type="plus" /> 添加标气
+          <Icon type="plus" /> 添加标气
         </div>,
       };
     }
