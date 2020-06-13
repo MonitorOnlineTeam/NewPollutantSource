@@ -179,11 +179,11 @@ export default {
           // authority: ['admin', 'user'],
           routes: [
             { path: '/', redirect: defaultNavigateUrl },
-            {
-              name: 'test',
-              path: '/test',
-              component: './Test/Test',
-            },
+            // {
+            //   name: 'test',
+            //   path: '/test',
+            //   component: './Test/Test',
+            // },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
