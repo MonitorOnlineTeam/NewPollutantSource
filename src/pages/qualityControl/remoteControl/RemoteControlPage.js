@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-05-26 11:53:08
+ * @Last Modified time: 2020-06-12 20:04:44
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -121,6 +121,7 @@ class RemoteControlPage extends Component {
       const { StandardPollutantName } = this.state;
       let postData = {
         ...fieldsValue,
+        MatchStandardValue: fieldsValue.MatchStandardValue || 0,
         OldStandardUnit: fieldsValue.OldStandardUnit === "mg/m3" ? 0 : 1,
         MatchStandardUnit: fieldsValue.MatchStandardUnit === "mg/m3" ? 0 : 1,
         DGIMN: fieldsValue.DGIMN.toString(),
@@ -131,6 +132,7 @@ class RemoteControlPage extends Component {
         QCTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         QCExecuType: 1,
         QCType: 1,
+        PumpValve: fieldsValue.StandardPollutantCode === "P" ? 1 : 0,
         flag: true
       }
       console.log('postData=', postData)
@@ -267,6 +269,16 @@ class RemoteControlPage extends Component {
     }
   }
 
+  getTimeOptions = () => {
+    let i = 0;
+    const timeList = [];
+    while (i < 60) {
+      timeList.push(<Option key={i + 1}>{i + 1}分钟</Option>)
+      i++;
+    }
+    return timeList;
+  }
+
   render() {
     const { formItemLayout } = this._SELF_;
     const { QCAMN, activeKey } = this.state;
@@ -398,7 +410,7 @@ class RemoteControlPage extends Component {
                         },],
                       })(
                         <Select placeholder="请选择标气组分" style={{ width: '100%' }} onChange={(value, option) => {
-                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"], "FlowValue": option.props["data-totalFlowSetVal"] })
+                          form.setFieldsValue({ "OldStandardValue": option.props["data-concentration"] })
                           this.setState({
                             StandardPollutantName: option.props.children ? option.props.children[0] : undefined
                           })
@@ -416,37 +428,80 @@ class RemoteControlPage extends Component {
                               </Option>
                             })
                           }
+                          <Option key={"P"} value={"P"} data-concentration={"0"} data-totalFlowSetVal={"0"}>
+                            空气
+                            <span></span>
+                          </Option>
                         </Select>
                       )}
                     </Form.Item>
-
                   </Col>
                   <Col span={12}>
                     <Form.Item label="总流量设定值">
                       {getFieldDecorator('FlowValue', {
                         rules: [{
-                          required: true,
-                          message: '建议设为1.5倍-2倍!',
+                          required: form.getFieldValue("StandardPollutantCode") !== "P" ? true : false,
+                          message: '建议设为取样流量的1.5倍-2倍!',
                         },],
                       })(
                         <InputNumber
+                          disabled={form.getFieldValue("StandardPollutantCode") == "P"}
                           // formatter={value => `${value}${form.getFieldValue("OldStandardUnit")}`}
                           // parser={value => value.replace(`${form.getFieldValue("OldStandardUnit")}`, '')}
-                          placeholder="请输入总流量设定值" style={{ width: '70%' }} min={0} precision={1} />
+                          placeholder="建议设为取样流量的1.5倍-2倍" style={{ width: '70%' }} min={0} precision={1} />
                       )}
                       <span className="ant-form-text">ml/min</span>
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="通气时间">
+                      {getFieldDecorator('VentilationTime', {
+                        rules: [{
+                          required: true,
+                          message: '请选择通气时间!',
+                        },],
+                      })(
+                        <Select
+                          placeholder="请选择通气时间"
+                        // onChange={value => { this.changeStandardGasData('StabilizationTime', value, idx) }}
+                        >
+                          {
+                            this.getTimeOptions().map(item => item)
+                          }
+                        </Select>,
+
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="稳定时间">
+                      {getFieldDecorator('StabilizationTime', {
+                        rules: [{
+                          required: true,
+                          message: '请选择稳定时间!',
+                        },],
+                      })(
+                        <Select
+                          placeholder="请选择稳定时间"
+                        // onChange={value => { this.changeStandardGasData('StabilizationTime', value, idx) }}
+                        >
+                          {
+                            this.getTimeOptions().map(item => item)
+                          }
+                        </Select>,
+                      )}
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item label="配比标气浓度设定值">
                       {getFieldDecorator('MatchStandardValue', {
                         rules: [{
-                          required: true,
+                          required: form.getFieldValue("StandardPollutantCode") !== "P" ? true : false,
                           message: '请输入配比标气浓度设定值!',
                         }],
                       })(
                         // min={50} max={5000}
-                        <InputNumber placeholder="请输入配比标气浓度设定值" style={{ width: '70%' }} min={0} max={form.getFieldValue("OldStandardValue")} precision={1} />
+                        <InputNumber disabled={form.getFieldValue("StandardPollutantCode") == "P"} placeholder="请输入配比标气浓度设定值" style={{ width: '70%' }} min={0} max={form.getFieldValue("OldStandardValue")} precision={1} />
                       )}
                       <span className="ant-form-text">{form.getFieldValue("OldStandardUnit")}</span>
                     </Form.Item>
@@ -521,51 +576,56 @@ class RemoteControlPage extends Component {
                       )}
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
-                    <Form.Item label="稀释气组分名称">
-                      {getFieldDecorator('DeliPollutantCode', {
-                        // rules: [{
-                        //   required: true,
-                        //   message: '请选择稀释气组分名称!',
-                        // },],
-                        initialValue: "0"
-                      })(
-                        // <p>{"N2"} {this.getResidueIcon(VolumeValue, GasInitPower)}</p>
-                        <Select disabled placeholder="请选择稀释气组分名称">
-                          <Option key="0">
-                            N2
+                  {
+                    form.getFieldValue("StandardPollutantCode") !== "P" && <Col span={12}>
+                      <Form.Item label="稀释气组分名称">
+                        {getFieldDecorator('DeliPollutantCode', {
+                          // rules: [{
+                          //   required: true,
+                          //   message: '请选择稀释气组分名称!',
+                          // },],
+                          initialValue: "0"
+                        })(
+                          // <p>{"N2"} {this.getResidueIcon(VolumeValue, GasInitPower)}</p>
+                          <Select disabled placeholder="请选择稀释气组分名称">
+                            <Option key="0">
+                              N2
                             {/*  TODO (WJQ) :
                             替换成
                             {this.getResidueIcon(standardGasList.filter(itm => itm.PollutantCode === "065")[0]["余量字段名"])}
                             */}
-                            {this.getResidueIcon(VolumeValue, GasInitPower)}
-                          </Option>
-                        </Select>
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item label="原标气浓度">
-                      {getFieldDecorator('OldStandardValue', {
-                        // rules: [{
-                        //   required: true,
-                        //   message: '请输入原标气浓度!',
-                        // },],
-                      })(
-                        <>
-                          {
-                            form.getFieldValue("OldStandardValue") ?
-                              <p>
-                                {form.getFieldValue("OldStandardValue")}
-                                {form.getFieldValue("OldStandardUnit")}
-                              </p> : undefined
-                          }
-                        </>
-                        // min={500} max={5000}
-                        // <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
-                      )}
-                    </Form.Item>
-                  </Col>
+                              {this.getResidueIcon(VolumeValue, GasInitPower)}
+                            </Option>
+                          </Select>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  }
+                  {
+                    form.getFieldValue("StandardPollutantCode") !== "P" &&
+                    <Col span={12}>
+                      <Form.Item label="原标气浓度">
+                        {getFieldDecorator('OldStandardValue', {
+                          // rules: [{
+                          //   required: true,
+                          //   message: '请输入原标气浓度!',
+                          // },],
+                        })(
+                          <>
+                            {
+                              form.getFieldValue("OldStandardValue") ?
+                                <p>
+                                  {form.getFieldValue("OldStandardValue")}
+                                  {form.getFieldValue("OldStandardUnit")}
+                                </p> : undefined
+                            }
+                          </>
+                          // min={500} max={5000}
+                          // <InputNumber placeholder="请输入原标气浓度" style={{ width: '100%' }} min={0} precision={1} />
+                        )}
+                      </Form.Item>
+                    </Col>
+                  }
                 </Row>
                 {/* <Row>
                   <div>
