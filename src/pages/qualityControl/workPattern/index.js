@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Form, Popconfirm, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon, Tooltip, DatePicker } from 'antd';
+import { Card, Form, Popconfirm, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon, Tooltip, DatePicker } from 'antd';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import SdlTable from '@/components/SdlTable'
 import PageLoading from '@/components/PageLoading'
@@ -153,6 +153,11 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
+          <Row style={{marginBottom: 10}}>
+            <Button icon="plus" type="primary" onClick={() => {
+              router.push("/qualityControl/qcaManager/workPattern/add")
+            }}>添加</Button>
+          </Row>
           <Table
             size="small"
             loading={loading}

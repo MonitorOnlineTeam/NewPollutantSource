@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-13 10:48:24
+ * @Last Modified time: 2020-06-13 13:52:41
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -98,50 +98,59 @@ class AddInstrument extends Component {
                     dataSource: [...tempDataSource],
                   })
                 }}>删除</a>
-                <Divider type="vertical" />
-                <a onClick={() => {
-                  confirm({
-                    title: '请选择要导入的工作模式！',
-                    content:
-                      <Select
-                        // defaultValue={this.props.workPatternList[0].ModelName}
-                        defaultValue={this.state.currentWorkPatternValue}
-                        style={{ width: 200 }}
-                        onChange={(value, option) => {
-                          this.setState({
-                            currentWorkPatternList: option.props.ModelList,
-                            currentWorkPatternValue: value
-                          })
-                        }}
-                      >
-                        {
-                          this.props.workPatternList.map(item => {
-                            return <Option value={item.ModelName} ModelList={item.ModelList} key={item.ModelName}>{item.ModelName}</Option>
-                          })
-                        }
-                      </Select>,
-                    onOk() {
-                      let tempDataSource = that.state.dataSource;
-                      let component = that.state.currentWorkPatternList.map(item => {
-                        return {
-                          key: Math.floor(Math.random() * 65535),
-                          ...item,
-                          unit: item.StandardGasCode === "03" || item.StandardGasCode === "02" ? 'mg/m3' : "%"
-                        }
-                      });
-                      tempDataSource[index].Component = component;
-                      console.log('tempDataSource=', tempDataSource)
-                      that.setState({
-                        dataSource: [...tempDataSource],
-                        expandedRowKeys: [
-                          ...that.state.expandedRowKeys,
-                          index
-                        ]
-                      })
-                    },
-                    onCancel() { },
-                  });
-                }}>导入工作模式</a>
+
+                {
+                  this.props.workPatternList.length ?
+                    <>
+                      <Divider type="vertical" />
+                      <a onClick={() => {
+                        Modal.info({
+                          cancelText: "取消",
+                          okText: "确定",
+                          title: '请选择要导入的工作模式！',
+                          content:
+                            <Select
+                              // defaultValue={this.props.workPatternList[0].ModelName}
+                              defaultValue={this.state.currentWorkPatternValue}
+                              style={{ width: 200 }}
+                              onChange={(value, option) => {
+                                this.setState({
+                                  currentWorkPatternList: option.props.ModelList,
+                                  currentWorkPatternValue: value
+                                })
+                              }}
+                            >
+                              {
+                                this.props.workPatternList.map(item => {
+                                  return <Option value={item.ModelName} ModelList={item.ModelList} key={item.ModelName}>{item.ModelName}</Option>
+                                })
+                              }
+                            </Select>,
+                          onOk() {
+                            let tempDataSource = that.state.dataSource;
+                            let component = that.state.currentWorkPatternList.map(item => {
+                              return {
+                                key: Math.floor(Math.random() * 65535),
+                                ...item,
+                                unit: item.StandardGasCode === "03" || item.StandardGasCode === "02" ? 'mg/m3' : "%"
+                              }
+                            });
+                            tempDataSource[index].Component = component;
+                            console.log('tempDataSource=', tempDataSource)
+                            that.setState({
+                              dataSource: [...tempDataSource],
+                              expandedRowKeys: [
+                                ...that.state.expandedRowKeys,
+                                index + 1
+                              ]
+                            })
+                          },
+                          onCancel() { },
+                        });
+                      }}>导入工作模式</a>
+                    </>
+                    : ""
+                }
               </>
             )
           }

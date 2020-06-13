@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-07 11:34:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-13 11:37:44
+ * @Last Modified time: 2020-06-13 13:41:17
  * @desc: 添加标准库
  */
 import React, { Component } from 'react';
@@ -480,8 +480,8 @@ class AddInstrument extends Component {
       DateType: 0, // 周期类型(0:天 1:小时)
       Hour: undefined, // 小时
       Minutes: undefined, // 分钟
-      StabilizationTime: '5', // 稳定时间
-      VentilationTime: '3', // 通气时间
+      StabilizationTime: '3', // 稳定时间
+      VentilationTime: '5', // 通气时间
       // ExpirationDate: undefined, // 过期时间
       // Concentration: undefined, // 气瓶浓度
       unit: 'mg/m3',

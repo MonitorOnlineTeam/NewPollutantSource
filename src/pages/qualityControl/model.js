@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-13 11:36:58
+ * @Last Modified time: 2020-06-13 13:47:51
  * @desc: 智能质控model
  */
 
@@ -182,6 +182,7 @@ export default Model.extend({
             let Component = [];
             Component = item.Component.map((itm, idx) => ({
               ...itm,
+              unit: (itm.StandardGasCode === "03" || itm.StandardGasCode === "02") ? "mg/m3" : "%",
               key: `${index}${idx}`,
             }))
             return {
@@ -669,7 +670,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    
+
   },
   reducers: {
     // 质控仪流程图 - 状态
