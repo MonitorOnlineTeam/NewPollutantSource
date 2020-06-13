@@ -568,6 +568,7 @@ export default class Index extends Component {
                             style={{ marginRight: 8 }}
                             icon="plus"
                             type="primary"
+                            onClick={this.updateModel}
                         >添加
                   </Button>
                         <Dropdown overlay={<Menu onClick={this.menuClick}>

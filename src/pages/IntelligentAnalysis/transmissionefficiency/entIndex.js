@@ -17,6 +17,7 @@ import {
     Modal,
     Input,
     Button,
+    Form,
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -27,8 +28,11 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import PointIndex from './pointIndex';
 import { router } from "umi";
+
+const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
+
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
     getData: 'transmissionefficiency/getEntData'
@@ -48,6 +52,7 @@ const content = (
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.enttableDatas,
 }))
+@Form.create()
 export default class EntTransmissionEfficiency extends Component {
     constructor(props) {
         super(props);
@@ -58,6 +63,7 @@ export default class EntTransmissionEfficiency extends Component {
             EnterpriseCode: '',
             EnterpriseName: '',
             visible: false,
+            eName: '',
         };
     }
     componentWillMount() {
@@ -104,7 +110,7 @@ export default class EntTransmissionEfficiency extends Component {
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
                 <p><Badge status="warning" text="传输率：传输个数/应传个数" /></p>
-                <p><Badge status="warning" text="有效率：有效个数/应传个数" /></p>
+                <p><Badge status="warning" text="有效率：100%" /></p>
                 <p><Badge status="warning" text="有效传输率：传输率*有效率" /></p>
                 <p><Badge status="warning" text="当有效传输率高于90%时有效传输率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
@@ -119,7 +125,26 @@ export default class EntTransmissionEfficiency extends Component {
         // },
 
     });
+    //企业
+    enterpriseChange = (value) => {
+        this.props.dispatch({
+            type: pageUrl.getData,
+            payload: {
+                EnterpriseName: value,
+            },
+        });
+
+    }
+    enterpriseEnter = (value) => {
+        this.props.dispatch({
+            type: pageUrl.getData,
+            payload: {
+                EnterpriseName: value.target.value,
+            },
+        });
+    }
     render() {
+        const { eName } = this.state;
         const columns = [
             {
                 title: (<span style={{ fontWeight: 'bold' }}>企业名称</span>),
@@ -241,6 +266,23 @@ export default class EntTransmissionEfficiency extends Component {
                 {/* <div className="contentContainer"> */}
                 <Card
                     bordered={false}
+                    title={
+                        <Form layout="inline">
+                            <Form.Item>
+                                时间选择：
+                        <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
+                            </Form.Item>
+                            <Form.Item>
+                                <Search
+                                    placeholder="企业名称"
+                                    allowClear
+                                    onSearch={value => this.enterpriseChange(value)}
+                                    onPressEnter={value => this.enterpriseEnter(value)}
+                                    style={{ width: 200, marginLeft: 10 }}
+                                />
+                            </Form.Item>
+                        </Form>
+                    }
                     extra={
                         <div>
                             <div style={{
@@ -262,22 +304,6 @@ export default class EntTransmissionEfficiency extends Component {
                                 marginLeft: 60,
                                 marginRight: 3
                             }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
-
-                            <div
-                                style={{
-                                    display: 'inline-block',
-                                    borderRadius: '20%',
-                                    marginLeft: 60,
-                                    marginRight: 3
-                                }}
-                            >
-                                <span style={{ color: '#b3b3b3' }}>
-                                    时间选择：
-                                <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
-                                    {/* <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} /> */}
-                                </span>
-                            </div>
-
                         </div>
 
 
