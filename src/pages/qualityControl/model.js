@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-06 09:42:29
+ * @Last Modified time: 2020-06-13 11:36:58
  * @desc: 智能质控model
  */
 
@@ -115,6 +115,9 @@ export default Model.extend({
     oldPlaybackPageDate: {},
     QCPlaybackTimeLine: [],
     QCAFlowChartAllData: [],
+    // 工作模式
+    workPatternList: [],
+    workPatternEditData: [],
   },
   effects: {
     // 获取企业及排口
@@ -143,26 +146,26 @@ export default Model.extend({
     },
     // 获取标气
     *getStandardGas({ payload, callback }, { call, put, update }) {
-      if (payload.QCAMN) {
-        const result = yield call(services.getStandardGas, payload);
-        if (result.IsSuccess) {
-          yield update({
-            standardGasList: result.Datas,
-            // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
-          })
-          yield put({
-            type: 'qualityControlModel/changeCurrentPollutantCode',
-            payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
-          })
-          callback && callback(result.Datas);
-        }
+      // if (payload.QCAMN) {
+      const result = yield call(services.getStandardGas, payload);
+      if (result.IsSuccess) {
+        yield update({
+          standardGasList: result.Datas,
+          // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+        })
+        yield put({
+          type: 'qualityControlModel/changeCurrentPollutantCode',
+          payload: result.Datas.length ? result.Datas[0].PollutantCode : undefined,
+        })
+        callback && callback(result.Datas);
       }
+      // }
     },
     // 添加质控仪
     *addQualityControl({ payload }, { call, put }) {
       const result = yield call(services.addQualityControl, payload);
       if (result.IsSuccess) {
-        router.push('/qualityControl/instrumentManage')
+        router.push('/qualityControl/qcaManager/instrumentManage')
         message.success('添加成功！')
       } else {
         message.error(result.Message)
@@ -618,6 +621,55 @@ export default Model.extend({
         })
       }
     },
+    // 添加工作模式
+    *workPatternAdd({ payload }, { call, put, update, select }) {
+      const result = yield call(services.workPatternAdd, [...payload.paramsData]);
+      if (result.IsSuccess) {
+        router.push("/qualityControl/qcaManager/workPattern");
+        message.success("添加成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 工作模式列表
+    *getWorkPatternList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getWorkPatternList, payload);
+      if (result.IsSuccess) {
+        yield update({ workPatternList: result.Datas })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 工作模式列表
+    *workPatternDelete({ payload }, { call, put, update, select }) {
+      const result = yield call(services.workPatternDelete, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功');
+        yield put({ type: "getWorkPatternList" })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 工作模式编辑 - 数据
+    *getWorkPatternEditData({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getWorkPatternEditData, payload);
+      if (result.IsSuccess) {
+        yield update({ workPatternEditData: result.Datas })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 工作模式编辑 - 保存
+    *workModelUps({ payload }, { call, put, update, select }) {
+      const result = yield call(services.workModelUps, payload);
+      if (result.IsSuccess) {
+        router.push("/qualityControl/qcaManager/workPattern");
+        message.success("修改成功")
+      } else {
+        message.error(result.Message)
+      }
+    },
+    
   },
   reducers: {
     // 质控仪流程图 - 状态
@@ -760,10 +812,10 @@ export default Model.extend({
     // 质控仪状态
     changeQCStatus(state, { payload }) {
       if (state.currentQCAMN) {
-        let filterQC = payload.filter(item => item.DataGatherCode === state.currentQCAMN);
+        let filterQC = payload.filter(item => item.DataGatherCode === state.currentQCAMN) || [];
         return {
           ...state,
-          QCStatus: filterQC[0].Status
+          QCStatus: filterQC.length ? filterQC[0].Status : undefined
         }
       }
       return { ...state }
