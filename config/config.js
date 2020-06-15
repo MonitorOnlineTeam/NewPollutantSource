@@ -104,11 +104,11 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        // {
-        //   name: 'newhomepage',
-        //   path: '/newhome',
-        //   component: './newHome',
-        // },
+        {
+          name: 'newhomepage',
+          path: '/newhome',
+          component: './newHome',
+        },
         // appoperation
         {
           path: '/appoperation',
