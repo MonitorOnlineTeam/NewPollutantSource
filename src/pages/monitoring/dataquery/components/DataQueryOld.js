@@ -333,7 +333,7 @@ class DataQuery extends Component {
                 columns={columns}
                 resizable
                 defaultWidth={80}
-                // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
+                scroll={{ y: this.props.tableHeight || undefined}}
                 pagination={{ pageSize: 20 }}
 
             />
