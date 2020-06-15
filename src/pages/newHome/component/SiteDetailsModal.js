@@ -13,6 +13,7 @@ import SdlMap from '@/pages/AutoFormManager/SdlMap'
 
 
 const { TabPane } = Tabs;
+let tabList = ["历史数据", "运维记录", "视频预览", "报警记录", "异常数据", "超标数据", "基本信息"];
 const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
 
 @connect(({ loading, newHome }) => ({
@@ -24,6 +25,7 @@ class SiteDetailsModal extends PureComponent {
     super(props);
     this.state = {
       currentKey: 1,
+      itemTitle: "历史数据",
     };
   }
 
@@ -41,17 +43,28 @@ class SiteDetailsModal extends PureComponent {
         pollutantTypes: data.PollutantType
       }
     })
+    if (data.PollutantType === "5") {
+      tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
+    }
   }
 
 
   footerItemClick = (key) => {
-    this.setState({ currentKey: key })
+    this.setState({ currentKey: key + 1, itemTitle: tabList[key] })
   }
 
   renderModalFooter = () => {
     return <div className={styles.modalFooter}>
       <ul>
-        <li onClick={() => { this.footerItemClick(1) }}>
+        {
+          tabList.map((item, index) => {
+            return item ? <li onClick={() => { this.footerItemClick(index) }}>
+              <img src={`/xj/0${index + 1}.png`} alt="" />
+              <p>{item}</p>
+            </li> : ""
+          })
+        }
+        {/* <li onClick={() => { this.footerItemClick(1) }}>
           <img src="/xj/01.png" alt="" />
           <p>历史数据</p>
         </li>
@@ -78,18 +91,17 @@ class SiteDetailsModal extends PureComponent {
         <li onClick={() => { this.footerItemClick(7) }}>
           <img src="/xj/07.png" alt="" />
           <p>基本信息</p>
-        </li>
+        </li> */}
       </ul>
     </div>
   }
 
   render() {
-    console.log("props=", this.props)
     const { data, infoWindowData } = this.props;
-    const { currentKey } = this.state;
+    const { currentKey, itemTitle } = this.state;
     return (
       <Modal
-        title={`${data.title} - 详情`}
+        title={`${data.title} - ${itemTitle}`}
         className={styles.detailsModal}
         destroyOnClose
         width="80%"

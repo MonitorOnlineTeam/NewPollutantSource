@@ -3,8 +3,8 @@ import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker }
 // import { Map, Marker, Polygon } from '@/components/ReactAmap';
 import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
 import moment from 'moment';
-import "animate.css";
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+// import "animate.css";
+// import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import MapUI from './component/MapUI'
 import styles from './index.less'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
