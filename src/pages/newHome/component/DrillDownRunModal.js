@@ -89,6 +89,7 @@ class DrillDownRunModal extends PureComponent {
           type: 'value',
           name: '（%）',
           position: 'left',
+          minInterval:1,
           splitLine: {
             show: true,
             lineStyle: {

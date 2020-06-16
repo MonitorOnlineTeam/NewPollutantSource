@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-05-27 10:18:38 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-11 14:04:57
+ * @Last Modified time: 2020-06-16 14:50:25
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -66,7 +66,7 @@ class AlarmResponse extends PureComponent {
       },
       series: [
         {
-          name: '异常任务',
+          name: '异常响应',
           type: 'bar',
           itemStyle: {
             color: "#fd6c6c"
@@ -75,7 +75,7 @@ class AlarmResponse extends PureComponent {
           // data: [11]
         },
         {
-          name: '异常任务同比',
+          name: '异常响应同比',
           type: 'bar',
           itemStyle: {
             color: "#fd6c6c"
@@ -124,20 +124,20 @@ class AlarmResponse extends PureComponent {
         {
           (taskCount || taskYearCount) ? <div className={styles["warningInfo"]}>
             <i></i>
-            <span>{`${month}月超标报警核实${taskCount}次，同比${taskYearRate > 0 ? "上涨" : "下降"}${taskYearRate}%`}</span>
+            <span>{`${month}月超标核实${taskCount}次，同比${taskYearRate > 0 ? "上涨" : "下降"}${taskYearRate}%`}</span>
           </div> : ""
         }
         {
           (execptionCount || execptionYearCount) ? <div className={styles["warningInfo"]}>
             <i style={{ background: "#f6b322" }}></i>
-            <span>{`${month}月异常任务统计${execptionCount}次，同比${execptionYearRate > 0 ? "上涨" : "下降"}${execptionYearRate}%`}</span>
+            <span>{`${month}月异常报警响应${execptionCount}次，同比${execptionYearRate > 0 ? "上涨" : "下降"}${execptionYearRate}%`}</span>
           </div> : ""
         }
         <ReactEcharts
           option={this.barOptions()}
           onEvents={{
             click: () => {
-              this.getTrippingAlarmResponse("任务统计")
+              this.getTrippingAlarmResponse("异常响应")
             }
           }}
           style={{ height: '180px', marginBottom: 20 }}

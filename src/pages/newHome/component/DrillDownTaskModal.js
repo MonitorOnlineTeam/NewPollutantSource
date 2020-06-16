@@ -81,7 +81,8 @@ class DrillDownTaskModal extends PureComponent {
         ],
         yAxis: [
           {
-            type: 'value'
+            type: 'value',
+            minInterval:1
           }
         ],
         series: [
@@ -159,12 +160,13 @@ class DrillDownTaskModal extends PureComponent {
         ],
         yAxis: [
           {
-            type: 'value'
+            type: 'value',
+            minInterval:1,
           }
         ],
         series: [
           {
-            name: `${taskClassifyModalData.name}统计 - 已完成`,
+            name: "已完成",
             type: 'bar',
             color: "#67a2ef",
             barWidth: '40%',
@@ -172,7 +174,7 @@ class DrillDownTaskModal extends PureComponent {
             data: taskClassifyModalData.ywc
           },
           {
-            name: `${taskClassifyModalData.name}统计 - 未完成`,
+            name: "未完成",
             type: 'bar',
             color: "#0edaad",
             barWidth: '40%',
@@ -212,7 +214,8 @@ class DrillDownTaskModal extends PureComponent {
       ],
       yAxis: [
         {
-          type: 'value'
+          type: 'value',
+          minInterval:1,
         }
       ],
       series: [

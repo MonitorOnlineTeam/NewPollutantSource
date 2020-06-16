@@ -92,16 +92,7 @@ class Operations extends PureComponent {
         containLabel: true
       },
       xAxis: {
-        type: 'value',
-        axisTick: {
-          show: false
-        },
-        // axisLine: {
-        //   show: false,
-        // },
-        splitLine: {
-          show: false,
-        },
+        show: false,
       },
       yAxis: {
         type: 'category',
