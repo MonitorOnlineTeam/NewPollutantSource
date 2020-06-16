@@ -3,7 +3,7 @@ import styles from '../index.less'
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import DrillDownTaskModal from "./DrillDownTaskModal"
-const TASK_TYPE = ["verificationTestComplete, verificationTestUnfinished, 检验测试", "maintenanceRepairComplete, maintenanceRepairUnfinished, 维修维护", "cooperationInspectionComplete, cooperationInspectionUnfinished,配合检查", "matchingComplete, matchingUnfinished, 配合对比", "manualComparisonComplete, manualComparisonUnfinished, 手工对比", "calibrationComplete, calibrationUnfinished, 校准", "onSiteInspectionComplete, onSiteInspectionUnfinished, 巡逻"];
+const TASK_TYPE = ["cooperationInspectionComplete, cooperationInspectionUnfinished,配合检查", "matchingComplete, matchingUnfinished, 配合对比", "manualComparisonComplete, manualComparisonUnfinished, 手工对比", "verificationTestComplete, verificationTestUnfinished, 检验测试", "maintenanceRepairComplete, maintenanceRepairUnfinished, 维修维护", "calibrationComplete, calibrationUnfinished, 校准", "onSiteInspectionComplete, onSiteInspectionUnfinished, 巡检"];
 
 @connect(({ loading, newHome }) => ({
   taskStatisticsData: newHome.taskStatisticsData,
@@ -119,7 +119,7 @@ class Operations extends PureComponent {
           align: "left",
           margin: 70,
         },
-        data: ['校验测试', '维修维护', '配合检查', '配合对比', '手工对比', '校准', '巡逻',]
+        data: ['配合检查', '配合对比', '手工对比', '校验测试', '维修维护', '校准', '巡检',]
       },
       series: [
         {
@@ -135,7 +135,7 @@ class Operations extends PureComponent {
               if (params.value === 0) { return "" } else { return params.value }
             }
           },
-          data: [verificationTestComplete, maintenanceRepairComplete, cooperationInspectionComplete, matchingComplete, manualComparisonComplete, calibrationComplete, onSiteInspectionComplete]
+          data: [cooperationInspectionComplete, matchingComplete, manualComparisonComplete, verificationTestComplete, maintenanceRepairComplete, calibrationComplete, onSiteInspectionComplete]
         },
         {
           name: '未完成',
@@ -150,7 +150,7 @@ class Operations extends PureComponent {
               if (params.value === 0) { return "" } else { return params.value }
             }
           },
-          data: [verificationTestUnfinished, maintenanceRepairUnfinished, cooperationInspectionUnfinished, matchingUnfinished, manualComparisonUnfinished, calibrationUnfinished, onSiteInspectionUnfinished]
+          data: [cooperationInspectionUnfinished, matchingUnfinished, manualComparisonUnfinished, verificationTestUnfinished, maintenanceRepairUnfinished, calibrationUnfinished, onSiteInspectionUnfinished]
         },
 
       ]
@@ -160,7 +160,8 @@ class Operations extends PureComponent {
 
   // 图表点击
   getTrippingOperationAnalysis = (title, dataIndex, taskType) => {
-    console.log('title=',title)
+    console.log('title=', title)
+    console.log('dataIndex=', dataIndex)
     this.setState({ title })
     this.props.dispatch({
       type: "newHome/getTrippingOperationAnalysis",
