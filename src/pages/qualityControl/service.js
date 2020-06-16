@@ -151,3 +151,34 @@ export async function getQCADataForRecord(params) {
 }
 
 
+// 添加工作模式
+export async function workPatternAdd(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelAdd', params, null);
+  return result;
+}
+
+// 工作模式列表
+export async function getWorkPatternList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelList', params, null);
+  return result;
+}
+
+// 删除工作模式
+export async function workPatternDelete(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelDel', params, null);
+  return result;
+}
+
+// 获取编辑工作模式数据
+export async function getWorkPatternEditData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelDetail', params, null);
+  return result;
+}
+
+// 工作模式编辑保存数据
+export async function workModelUps(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelUps', params, null);
+  return result;
+}
+
+

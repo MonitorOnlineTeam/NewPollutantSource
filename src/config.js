@@ -56,7 +56,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // //at.alicdn.com/t/font_1298443_wayosrtec6l.js
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_ptv8spmqful.js', // 局域网部署需要1.更换路径： iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js', // 局域网部署需要1.更换路径： /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
@@ -85,7 +85,7 @@ module.exports = {
   PlayDatas: 10 * 60,
   // 手工数据上传地址
   templateUploadUrl: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
-   // 手工自动数据上传地址
+  // 手工自动数据上传地址
   templateUploadUrlAuto: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto',
   // 设备运转率标准%
   RunningRate: 90,

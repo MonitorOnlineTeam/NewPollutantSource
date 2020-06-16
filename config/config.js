@@ -99,11 +99,15 @@ export default {
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
-
         {
           name: 'homepage',
           path: '/homepage',
           component: './home',
+        },
+        {
+          name: 'home',
+          path: '/home',
+          component: './newHome',
         },
         // appoperation
         {
@@ -175,11 +179,11 @@ export default {
           // authority: ['admin', 'user'],
           routes: [
             { path: '/', redirect: defaultNavigateUrl },
-            {
-              name: 'test',
-              path: '/test',
-              component: './Test/Test',
-            },
+            // {
+            //   name: 'test',
+            //   path: '/test',
+            //   component: './Test/Test',
+            // },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -1238,6 +1242,24 @@ export default {
                       name: 'instrumentView',
                       path: '/qualityControl/qcaManager/instrumentManage/view/:id',
                       component: './qualityControl/instrumentManage/ViewInstrument',
+                    },
+                    // 工作模式 - 列表
+                    {
+                      name: 'workPatternAdd',
+                      path: '/qualityControl/qcaManager/workPattern',
+                      component: './qualityControl/workPattern/index',
+                    },
+                    // 工作模式 - 添加
+                    {
+                      name: 'workPatternAdd',
+                      path: '/qualityControl/qcaManager/workPattern/add',
+                      component: './qualityControl/workPattern/Add',
+                    },
+                    // 工作模式 - 编辑
+                    {
+                      name: 'workPatternAdd',
+                      path: '/qualityControl/qcaManager/workPattern/edit/:modelName',
+                      component: './qualityControl/workPattern/Add',
                     },
 
                   ]
