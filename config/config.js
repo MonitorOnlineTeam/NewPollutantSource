@@ -105,8 +105,8 @@ export default {
           component: './home',
         },
         {
-          name: 'newhomepage',
-          path: '/newhome',
+          name: 'home',
+          path: '/home',
           component: './newHome',
         },
         // appoperation
