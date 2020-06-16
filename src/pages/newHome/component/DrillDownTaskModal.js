@@ -364,7 +364,7 @@ class DrillDownTaskModal extends PureComponent {
               <Col span={6}>
                 <Form.Item {...formItemLayout} label="任务分类" style={{ width: '100%' }}>
                   {getFieldDecorator("taskType", {
-                    initialValue: taskClassifyModalData.name
+                    initialValue: taskClassifyModalData.name + ''
                   })(
                     <Select style={{ width: '100%' }} onChange={(val, option) => {
                       this.setState({
@@ -379,13 +379,13 @@ class DrillDownTaskModal extends PureComponent {
                     <Option value="手工对比" key="manualComparisonComplete, manualComparisonUnfinished">手工对比</Option>
                     <Option value="校准" key="calibrationComplete, calibrationUnfinished">校准</Option>
                     <Option value="巡逻" key="onSiteInspectionComplete, onSiteInspectionUnfinished">巡逻</Option> */}
-                      <Option value="检验测试" key="0">检验测试</Option>
-                      <Option value="维修维护" key="1">维修维护</Option>
-                      <Option value="配合检查" key="2">配合检查</Option>
-                      <Option value="配合对比" key="3">配合对比</Option>
-                      <Option value="手工对比" key="4">手工对比</Option>
+                      <Option value="巡检" key="6">巡检</Option>
                       <Option value="校准" key="5">校准</Option>
-                      <Option value="巡逻" key="6">巡逻</Option>
+                      <Option value="维修维护" key="4">维修维护</Option>
+                      <Option value="检验测试" key="3">检验测试</Option>
+                      <Option value="手工对比" key="2">手工对比</Option>
+                      <Option value="配合对比" key="1">配合对比</Option>
+                      <Option value="配合检查" key="0">配合检查</Option>
                     </Select>
                   )}
                 </Form.Item>

@@ -85,7 +85,7 @@ module.exports = {
   PlayDatas: 10 * 60,
   // 手工数据上传地址
   templateUploadUrl: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
-   // 手工自动数据上传地址
+  // 手工自动数据上传地址
   templateUploadUrlAuto: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto',
   // 设备运转率标准%
   RunningRate: 90,
