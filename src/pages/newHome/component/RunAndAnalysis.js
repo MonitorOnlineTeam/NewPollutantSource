@@ -97,12 +97,12 @@ class RunAndAnalysis extends PureComponent {
           color: '#72A0BA',
         }
       },
-      tooltip: {
-        show: true,
-        trigger: 'item',
-        formatter: "{b}:{d}%",
-        position: [10, 20]
-      },
+      // tooltip: {
+      //   show: true,
+      //   trigger: 'item',
+      //   formatter: "{b}:{d}%",
+      //   position: [10, 20]
+      // },
 
       legend: {
         orient: 'vertical',

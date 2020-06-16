@@ -91,8 +91,8 @@ class DrillDownTaskModal extends PureComponent {
             itemStyle: {
               color: "#fd6c6c"
             },
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: alarmResponseModalData.taskCount
             // data: [11]
           },
@@ -102,8 +102,8 @@ class DrillDownTaskModal extends PureComponent {
             itemStyle: {
               color: "#fd6c6c"
             },
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: alarmResponseModalData.taskYearCount
             // data: [22]
           },
@@ -113,8 +113,8 @@ class DrillDownTaskModal extends PureComponent {
             itemStyle: {
               color: "#f6b322"
             },
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: alarmResponseModalData.execptionCount            // data: [3]
           },
           {
@@ -123,8 +123,8 @@ class DrillDownTaskModal extends PureComponent {
             itemStyle: {
               color: "#f6b322"
             },
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: alarmResponseModalData.execptionYearCount
             // data: [33]
           },
@@ -167,16 +167,16 @@ class DrillDownTaskModal extends PureComponent {
             name: `${taskClassifyModalData.name}统计 - 已完成`,
             type: 'bar',
             color: "#67a2ef",
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: taskClassifyModalData.ywc
           },
           {
             name: `${taskClassifyModalData.name}统计 - 未完成`,
             type: 'bar',
             color: "#0edaad",
-            barMaxWidth: "60px",
             barWidth: '40%',
+            barMaxWidth: "60px",
             data: taskClassifyModalData.wwc
           },
         ]
@@ -219,8 +219,8 @@ class DrillDownTaskModal extends PureComponent {
         {
           name: '计划外',
           type: 'bar',
-          barMaxWidth: "60px",
           barWidth: '40%',
+          barMaxWidth: "60px",
           label: {
             show: true,
             position: 'top'
@@ -230,8 +230,8 @@ class DrillDownTaskModal extends PureComponent {
         {
           name: '计划内',
           type: 'bar',
-          barMaxWidth: "60px",
           barWidth: '40%',
+          barMaxWidth: "60px",
           label: {
             show: true,
             position: 'top'

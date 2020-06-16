@@ -101,8 +101,8 @@ class DrillDownRunModal extends PureComponent {
         {
           name: this.props.title,
           type: 'bar',
-          barMaxWidth: "60px",
           barWidth: '40%',
+          barMaxWidth: "60px",
           data: seriesData
         }
       ]
