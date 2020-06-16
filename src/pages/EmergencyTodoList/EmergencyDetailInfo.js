@@ -746,12 +746,15 @@ class EmergencyDetailInfo extends Component {
                                     }
                                 </Description>
                             </DescriptionList>
-                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="2">
+                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="处理人">
                                     {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
                                 </Description>
                                 <Description term="处理时间">
                                     {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}
+                                </Description>
+                                <Description term="协助人">
+                                    {isExistTask ? this.props.taskInfo.Datas[0].TaskHelpersPeople : null}
                                 </Description>
                             </DescriptionList>
                         </Card>
