@@ -205,6 +205,12 @@ class DateReportPage extends PureComponent {
         width: 150,
         dataIndex: 'pointName',
       });
+      columns.unshift({
+        title: '企业名称',
+        width: 150,
+        dataIndex: 'entName',
+      });
+      
       this.setState({
         columns,
       });

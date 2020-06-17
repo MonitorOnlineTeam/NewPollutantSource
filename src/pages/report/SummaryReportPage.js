@@ -79,10 +79,10 @@ class SummaryReportPage extends PureComponent {
             PointMark: "2"
           },
           callback: (sucRes, defaultValue) => {
-            let RegionCode = defaultValue;
-            this.setState({
-              defaultRegionCode: RegionCode
-            })
+            // let RegionCode = defaultValue;
+            // this.setState({
+            //   defaultRegionCode: RegionCode
+            // })
 
             // 获取监控目标
             this.props.dispatch({
@@ -206,7 +206,7 @@ class SummaryReportPage extends PureComponent {
                   "DGIMN": values.PollutantSourceType == "5" ? values.DGIMN : null,
                   "type": match.params.reportType,
                   "PollutantSourceType": values.PollutantSourceType,
-                  "Regions": '', //values.Regions.toString(),
+                  "Regions": values.Regions.toString(),
                   "ReportTime": values.ReportTime && moment(values.ReportTime).format("YYYY-MM-DD"),
                   BeginTime: this.state.beginTime,
                   EndTime: this.state.endTime,
@@ -293,8 +293,8 @@ class SummaryReportPage extends PureComponent {
       pageIndex: pageIndex,
       pageSize: pageSize,
     })
-      // 获取表格数据
-      this.statisticsReport()
+    // 获取表格数据
+    this.statisticsReport()
   };
 
   render() {
@@ -305,10 +305,12 @@ class SummaryReportPage extends PureComponent {
     const reportText = reportType === "daily" ? "汇总日报" : (reportType === "monthly" ? "汇总月报" : "汇总年报");
     const format = reportType === "daily" ? "YYYY-MM-DD" : (reportType === "monthly" ? "YYYY-MM" : "YYYY");
     const pollutantSourceType = this.props.form.getFieldValue("PollutantSourceType");
-
     let picker = "";
     let dateType = "";
     let mode;
+    debugger
+    let IfShowRegionInReport = configInfo.IfShowRegionInReport ? configInfo.IfShowRegionInReport === '1' ? '' : 'none':'none';
+    console.log(IfShowRegionInReport)
     switch (reportType) {
       case "monthly":
         picker = "month";
@@ -390,15 +392,15 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}> */}
-                {/* <Col xl={6} sm={24} md={12} style={{ display: "none" }}>
-                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                <Col md={5} sm={24} style={{display: IfShowRegionInReport}}>
+                  <FormItem {...formLayout} label="行政区" style={{ width: '100%'}}>
                     {getFieldDecorator("Regions", {
                       // initialValue: defaultSearchForm.Regions,
                       initialValue: this.state.defaultRegionCode,
-                      rules: [{
-                        required: true,
-                        message: '请选择行政区',
-                      }],
+                      // rules: [{
+                      //   required: true,
+                      //   message: '请选择行政区',
+                      // }],
                     })(
                       <SdlCascader
                         changeOnSelect={false}
@@ -407,11 +409,11 @@ class SummaryReportPage extends PureComponent {
                       />
                     )}
                   </FormItem>
-                </Col> */}
+                </Col>
                 {
                   getFieldValue("PollutantSourceType") == 5 &&
                   // 大气站显示监控目标
-                  <Col sm={24} md={6}>
+                  <Col sm={24} md={5}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
