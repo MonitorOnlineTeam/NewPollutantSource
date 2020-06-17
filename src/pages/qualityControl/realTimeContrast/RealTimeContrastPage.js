@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-26 10:41:03
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 17:42:21
+ * @Last Modified time: 2020-06-17 17:09:08
  */
 import React, { Component } from 'react';
 import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon } from 'antd'
@@ -176,6 +176,12 @@ class index extends Component {
           }
         }
       },
+      grid: {
+        left: '10px',
+        right: '10px',
+        bottom: '10px',
+        containLabel: true
+      },
       xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -281,7 +287,7 @@ class index extends Component {
             notMerge
             id="rightLine"
             style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-          /> : <SdlTable dataSource={tableData} columns={columns}  />
+          /> : <SdlTable dataSource={tableData} columns={columns} />
           // scroll={{ y: '200px' }}
         }
       </Card>

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 11:07:33
+ * @Last Modified time: 2020-06-17 17:10:32
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -164,6 +164,7 @@ class ResultContrastPage extends Component {
           DGIMN: DGIMN,
           QCAMN: this.props.QCAMN,
           PollutantCode: PollutantCode,
+          QCTime: this.props.QCTime,
           // BeginTime: moment(dateValue[0]).format("YYYY-MM-DD HH:mm:ss"),
           // EndTime: moment(dateValue[1]).format("YYYY-MM-DD HH:mm:ss"),
           ID: dateValue
@@ -327,6 +328,12 @@ class ResultContrastPage extends Component {
       color: ["#56f485", "#c23531"],
       legend: {
         data: ["测量浓度", "配比标气浓度"],
+      },
+      grid: {
+        left: '10px',
+        right: '10px',
+        bottom: '10px',
+        containLabel: true
       },
       tooltip: {
         trigger: 'axis',

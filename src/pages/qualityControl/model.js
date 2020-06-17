@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-13 13:47:51
+ * @Last Modified time: 2020-06-17 16:03:16
  * @desc: 智能质控model
  */
 
@@ -89,6 +89,8 @@ export default Model.extend({
     flowList: {}, // 气瓶流量
     p2Pressure: {},
     p1Pressure: {},
+    p3Pressure: {},
+    p4Pressure: {},
     QCStatus: undefined, // 质控仪状态
     standardValueUtin: null, // 单位
     realtimeStabilizationTime: {},
@@ -110,6 +112,8 @@ export default Model.extend({
       standardValueUtin: null, // 单位
       p1Pressure: {},
       p2Pressure: {},
+      p3Pressure: {},
+      p4Pressure: {},
       thisTime: null,
     },
     oldPlaybackPageDate: {},
@@ -707,6 +711,17 @@ export default Model.extend({
             // 吹扫阀门
             ValveStatus.purge = value
           }
+           if (code === "32018") {
+            console.log("32018#@!@#=", payload)
+            // 泵配气阀状态
+            ValveStatus.Air = value
+          }
+
+          if (code === "32019") {
+            console.log("32019#@!@#=", payload)
+            // 泵通电状态
+            ValveStatus.Pump = value
+          }
 
           // 总流量
           if (code === "33509") {
@@ -722,7 +737,9 @@ export default Model.extend({
           // p1/p2 压力
           let p2Pressure = state.p2Pressure;
           let p1Pressure = state.p1Pressure;
-          if (code === "33502") {
+          let p3Pressure = state.p3Pressure;
+          let p4Pressure = state.p4Pressure;
+          if (code === "33503") {
             // p2气瓶压力
             p2Pressure = {
               value: payload.Value + "",
@@ -731,7 +748,7 @@ export default Model.extend({
             };
 
           }
-          if (code === "33503") {
+          if (code === "33502") {
             // p1气瓶压力
             p1Pressure = {
               value: payload.Value + "",
@@ -739,6 +756,29 @@ export default Model.extend({
               pollutantCode: payload.PollutantCode
             };
           }
+
+          if (code === "33516") {
+            console.log('p3=', payload)
+            // p3气瓶压力
+            p3Pressure = {
+              value: payload.Value + "",
+              isException: payload.IsException,
+              pollutantCode: payload.PollutantCode
+            };
+          }
+
+          if (code === "33517") {
+            console.log('p4=', payload)
+            // p4气瓶压力
+            p4Pressure = {
+              value: payload.Value + "",
+              isException: payload.IsException,
+              pollutantCode: payload.PollutantCode
+            };
+          }
+
+         
+
 
           let flowList = state.flowList;
           // 气瓶流量
@@ -775,6 +815,8 @@ export default Model.extend({
             valveStatus: ValveStatus,
             p2Pressure: p2Pressure || state.p2Pressure,
             p1Pressure: p1Pressure || state.p1Pressure,
+            p3Pressure: p3Pressure || state.p3Pressure,
+            p4Pressure: p4Pressure || state.p4Pressure,
             standardValue: standardValue,
             standardValueUtin: standardValueUtin,
             totalFlow: totalFlow,
@@ -794,6 +836,7 @@ export default Model.extend({
                   isException: payload.IsException
                 }
               }
+
               return {
                 ...item,
                 valve: payload.Value
