@@ -276,7 +276,7 @@ class PlaybackPage extends PureComponent {
       this.setState({ count: 0 }, () => {
         this.updateFlowChartData(this.props);
       })
-    }else{
+    } else {
       this.updateFlowChartData(this.props);
     }
   }
@@ -368,20 +368,21 @@ class PlaybackPage extends PureComponent {
                 </Col>
                 <Col xxl={17} xl={15} style={{ height: '100%' }}>
                   <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
-                    <Spin spinning={!!(flowChartLoading || otherLoading)} style={{ position: "relative" }}>
+                    <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
                       {this.returnQCStatus()}
                       <FlowChart />
                       {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
-                        <Row style={{ position: "absolute", bottom: "65px", width: "100%" }}>
+                      // {true ?
+                        <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
                           {
-                            !start ? <Icon type="play-circle" style={{ fontSize: 24, position: "absolute", bottom: 41, left: 6, cursor: "pointer" }} onClick={this.start} /> :
-                              <Icon type="pause-circle" style={{ fontSize: 24, position: "absolute", bottom: 41, left: 6, cursor: "pointer" }} onClick={this.pause} />
+                            !start ? <Icon type="play-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.start} /> :
+                              <Icon type="pause-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.pause} />
                           }
                           <Slider
                             value={count}
                             max={QCAFlowChartAllData.length}
                             // max={100}
-                            style={{ bottom: 36, left: 40, width: 'calc(100% - 60px)' }}
+                            style={{ float: 'left', width: 'calc(100% - 60px)' }}
                             tooltipVisible
                             tipFormatter={(value => {
                               return thisTime
