@@ -245,8 +245,8 @@ export default Model.extend({
         const state = yield select(state => state.newHome);
         yield update({
           regionList,
-          LEVEL: regionList.length > 1 ? 1 : 2,
-          level: regionList.length > 1 ? 1 : 2,
+          // LEVEL: regionList.length > 1 ? 1 : 2,
+          // level: regionList.length > 1 ? 1 : 2,
           constructionCorpsList,
           allEntAndPointList: [
             ...state.allEntAndPointList,
@@ -286,7 +286,7 @@ export default Model.extend({
     // 点击师 - 改变RegionCode - 左右联动
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
-      yield update({ regionCode, level: 2, LEVEL: 2, regionList: [regionCode] })
+      yield update({ regionCode, level: 2 })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }
@@ -528,7 +528,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 
+    //
     *updateDivisionShowCoordinate({ payload }, { call, update, select, put }) {
       const monitorRegionDivision = yield select(state => state.newHome.monitorRegionDivision)
       let currentDivision = monitorRegionDivision.find(item => item.regionCode === payload.adcode + "000");

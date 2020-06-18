@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker } from "antd"
-// import { Map, Marker, Polygon } from '@/components/ReactAmap';
-import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
+import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, Select } from "antd"
+// import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
+import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 // import "animate.css";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import MapUI from './component/MapUI'
+import config from "@/config"
 import styles from './index.less'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import CustomIcon from '@/components/CustomIcon';
@@ -29,6 +30,7 @@ import SiteDetailsModal from "./component/SiteDetailsModal"
 // ]
 const { MonthPicker } = DatePicker;
 const { Search } = Input;
+const { Option } = Select;
 const iconStyle = {
   color: "#3c99d8",
   fontSize: "28px",
@@ -65,6 +67,7 @@ let aMap = null;
   currentDivisionPosition: newHome.currentDivisionPosition,
   startTime: newHome.startTime,
   endTime: newHome.endTime,
+  LEVEL: newHome.LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
 }))
 class NewHome extends PureComponent {
@@ -75,9 +78,17 @@ class NewHome extends PureComponent {
       created: (mapInstance) => {
         console.log('高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
         aMap = mapInstance;
-        // console.log(mapInstance.getZoom());
-        // this.renderEntMarkers(this.props)
-      }
+        if (config.offlineMapUrl.domain) {
+          var Layer = new window.AMap.TileLayer({
+            zIndex: 2,
+            getTileUrl: function (x, y, z) {
+              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
+            }
+          });
+          Layer.setMap(m);
+        }
+      },
     };
     // markers事件
     this.markersEvents = {
@@ -131,6 +142,7 @@ class NewHome extends PureComponent {
       infoWindowVisible: false, // 点弹窗
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
+      filterEntAndPointList: [], // 用于筛选的
     };
 
   }
@@ -201,7 +213,8 @@ class NewHome extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.allEntAndPointList !== nextProps.allEntAndPointList) {
-      this.renderEntMarkers(nextProps)
+      this.renderEntMarkers(nextProps.allEntAndPointList)
+      this.setState({ filterEntAndPointList: nextProps.allEntAndPointList })
     }
     if (this.props.currentDivisionPosition !== nextProps.currentDivisionPosition) {
       // this.renderEntMarkers(nextProps)
@@ -222,8 +235,8 @@ class NewHome extends PureComponent {
   }
 
   // 渲染所有企业
-  renderEntMarkers = (props) => {
-    const entMarkers = props.allEntAndPointList.map(item => {
+  renderEntMarkers = (entAndPointList) => {
+    const entMarkers = entAndPointList.map(item => {
       return {
         position: {
           longitude: item.Longitude,
@@ -493,6 +506,10 @@ class NewHome extends PureComponent {
   infoWindowContent = () => {
     const { currentClickObj } = this.state;
     const { infoWindowData } = this.props;
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.jpg" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    if (infoWindowData.photo) {
+      imgName = config.uploadHost + "upload" + imgName;
+    }
     return <div className={styles.infoWindowContent} style={{ width: 320, minHeight: 360 }}>
       <div className={styles.header}>
         <h2>{infoWindowData.Abbreviation} - {currentClickObj.title}</h2>
@@ -511,7 +528,7 @@ class NewHome extends PureComponent {
           <p>纬度：{currentClickObj.Latitude}</p>
         </div>
         <div className={styles["desc-r"]}>
-          <img src="/infoWindowImg.png" alt="" width="100%" />
+          <img src={imgName} alt="" width="100%" height="100%" />
         </div>
       </div>
       <div className={styles.data}>
@@ -573,8 +590,8 @@ class NewHome extends PureComponent {
 
 
   render() {
-    const { searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
-    const { constructionCorpsList, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
+    const { filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
+    const { allEntAndPointList, constructionCorpsList, LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
     const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
     const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
     const bigLoading = drillDownLoading || getAllEntAndPointLoading;
@@ -657,7 +674,16 @@ class NewHome extends PureComponent {
                     zIndex: 1
                   }} onClick={() => {
                     this.setState({ clickedDivision: undefined })
-                    this.reloadPageData();
+                    this.props.dispatch({
+                      type: "newHome/updateState",
+                      payload: {
+                        level: LEVEL,
+                        regionCode: "660000000"
+                      }
+                    })
+                    setTimeout(() => {
+                      this.reloadPageData();
+                    }, 0)
                   }}>返回上级</Button>
                 }
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
@@ -669,6 +695,21 @@ class NewHome extends PureComponent {
                     this.setState({ searchInputVal: e.target.value })
                   }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
                 }
+                <Select className={styles.selectShowType} defaultValue="" onChange={(val) => {
+                  if (val) {
+                    let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
+                    console.log('filterList=', filterList)
+                    this.renderEntMarkers(filterList);
+                  } else {
+                    this.renderEntMarkers(allEntAndPointList);
+                  }
+                }}>
+                  <Option value="">全部</Option>
+                  <Option value="服务站">服务站</Option>
+                  <Option value="1">企业</Option>
+                  <Option value="师">师</Option>
+                  <Option value="2">空气站</Option>
+                </Select>
                 {
                   clickedDivision && <div className={styles.shibox}>
                     {/* <span>师局</span><br /> */}
