@@ -30,7 +30,7 @@ export default class APILoader {
   }
 
   getScriptSrc(cfg) {
-    if(config.offlineMapUrl.domain) {
+    if (config.offlineMapUrl.domain) {
       // return 'http://172.16.9.20:808/amap/js/maps.js?v=1.3&key=c0fa7cbef7939ee6e2ce2d940e623e0b';
       return config.offlineMapUrl.domain + config.offlineMapUrl.srcPath;
     }
@@ -65,24 +65,17 @@ export default class APILoader {
       return Promise.resolve()
     }
     const script = this.buildScriptTag(this.getScriptSrc(this.config))
-
-    const that=this;
     const p = new Promise(resolve => {
-      window[that.config.callback] = () => {
+      window[this.config.callback] = () => {
         resolve()
-        delete window[that.config.callback]
+        delete window[this.config.callback]
       }
-       setTimeout(() => {
-        resolve();
-      }, 1000)
     })
-    // debugger;
     document.body.appendChild(script)
     return p
   }
 
   load() {
-    
     if (typeof window === 'undefined') {
       return null
     }
@@ -95,19 +88,18 @@ export default class APILoader {
       mainPromise.then(() => {
         if (useAMapUI && amapuiPromise) {
           amapuiPromise.then(() => {
-            
+            if (window.initAMapUI && !amapuiInited) {
+              window.initAMapUI()
+              if (typeof useAMapUI === 'function') {
+                useAMapUI()
+              }
+              amapuiInited = true
+            }
+            resolve()
           })
         } else {
           resolve()
         }
-        if (window.initAMapUI && !amapuiInited) {
-          window.initAMapUI()
-          if (typeof useAMapUI === 'function') {
-            useAMapUI()
-          }
-          amapuiInited = true
-        }
-        resolve()
       })
     })
   }
