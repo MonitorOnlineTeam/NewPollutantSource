@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-10 11:12:39
+ * @Last Modified time: 2020-06-18 10:51:39
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -166,6 +166,9 @@ class SdlForm extends PureComponent {
       //   }}
       //   format={format} />
     }
+    if (format === 'YYYY-MM-DD') {
+      return <DatePicker format={format} style={{ width: '100%' }} />
+    }
     // 年-月-日 时:分:秒
     return <DatePicker showTime format={format} style={{ width: '100%' }} />
   }
@@ -311,6 +314,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') || formData.Longitude}
             latitude={getFieldValue('Latitude') || formData.Latitude}
+            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet']}
             handleMarker
           />
           break;
@@ -325,6 +329,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') || formData.Longitude}
             latitude={getFieldValue('Latitude') || formData.Latitude}
+            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet']}
             handleMarker
           />;
           break;
@@ -338,7 +343,7 @@ class SdlForm extends PureComponent {
             longitude={getFieldValue('Longitude')}
             latitude={getFieldValue('Latitude')}
             path={getFieldValue(`${fieldName}`) || formData[fieldName]}
-            // handleMarker={true}
+            showMarker={true}
             handlePolygon
           />;
           break;

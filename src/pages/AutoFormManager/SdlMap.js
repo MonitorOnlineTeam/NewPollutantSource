@@ -328,7 +328,7 @@ class SdlMap extends PureComponent {
       {window.AMap && <MapUI />}
       {
         // 地图标注点
-        this.state.position.longitude && this.state.position.latitude && this.props.handleMarker &&
+        this.state.position.longitude && this.state.position.latitude  &&
         <Marker
           position={this.state.position}
           event={markerEvents}
