@@ -5,7 +5,7 @@
  * @Last Modified time: 2020-06-17 17:09:08
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon, Popover } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -16,7 +16,13 @@ import CustomIcon from '@/components/CustomIcon'
 import styles from '../remoteControl/index.less'
 
 const Option = Select.Option;
-
+const content = (
+  <div>
+    <img style={{ width: 350, marginRight: 6, marginBottom: 4 }} src="/qcaimg.png" />
+    <img style={{ width: 350, marginRight: 6, marginBottom: 4 }} src="/qcaimg1.png" />
+    <img style={{ width: 550, marginRight: 6, marginBottom: 4 }} src="/qcaimg2.png" />
+  </div>
+);
 const columns = [
   {
     title: '时间',
@@ -37,6 +43,7 @@ const columns = [
 
 @connect(({ loading, qualityControl, qualityControlModel }) => ({
   standardGasList: qualityControl.standardGasList,
+  qcaReportList: qualityControl.qcaReportList,
   valueList: qualityControlModel.valueList,
   timeList: qualityControlModel.timeList,
   tableData: qualityControlModel.tableData,
@@ -117,6 +124,51 @@ class index extends Component {
         chartYMaxValue2
       })
     }
+
+    if (this.props.QCAResult !== nextProps.QCAResult && nextProps.QCAResult != "0") {
+      this.setState({
+        showType:"data"
+      })
+      this.props.dispatch({
+        type: "qualityControl/GetQCAReport",
+        payload: {
+          QCTime: nextProps.startTime,
+          StandardGasCode: nextProps.PollutantCode,
+        }
+      })
+    }
+  }
+
+  renderData = (record) => {
+    const rtnVal = [];
+    if (record !== null && record.length > 0) {
+      record.map((item, index) => {
+        rtnVal.push(
+          <tr>
+            <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {index}
+            </td>
+            <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+              {item.StandValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {item.ShowValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              {item.AvgValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              {item.Error}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+
+            </td>
+          </tr>
+        );
+      });
+    }
+
+    return rtnVal;
   }
 
   searchWhere = () => {
@@ -177,8 +229,8 @@ class index extends Component {
         }
       },
       grid: {
-        left: '10px',
-        right: '10px',
+        left: '30px',
+        right: '30px',
         bottom: '10px',
         containLabel: true
       },
@@ -264,20 +316,27 @@ class index extends Component {
   }
 
   render() {
-    const { valueList, timeList, tableData, PollutantCode } = this.props;
+    const { valueList, timeList, tableData, PollutantCode, QCAResult } = this.props;
     const { showType } = this.state;
     return (
-      <Card title={this.searchWhere()} extra={
-        <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-          this.setState({
-            showType: e.target.value
-          })
-        }}>
-          <Radio.Button value="chart">图表</Radio.Button>
-          <Radio.Button value="data">数据</Radio.Button>
-        </Radio.Group>
+      <Card title={this.searchWhere()} 
+      bodyStyle={{maxHeight: 510, overflowY:"auto"}}
+      extra={
+        <>
+          {
+            QCAResult != "0" ?
+              <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+                this.setState({
+                  showType: e.target.value
+                })
+              }}>
+                <Radio.Button value="chart">图表</Radio.Button>
+                <Radio.Button value="data">报表</Radio.Button>
+              </Radio.Group> : <></>
+          }
+        </>
       }>
-        {this.getQCAResult()}
+
         {
           showType === "chart" ? <ReactEcharts
             theme="line"
@@ -287,7 +346,60 @@ class index extends Component {
             notMerge
             id="rightLine"
             style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-          /> : <SdlTable dataSource={tableData} columns={columns} />
+          /> : <table
+            className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+          >
+              {this.getQCAResult()}
+              <tbody >
+                <tr>
+                  <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                    序号
+                  </td>
+                  <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                    标准气体或校准器件参考值
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                    CEMS显示值
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    CEMS显示值的平均值
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    示值误差（%）
+                    <Popover content={content} title="计算规则" placement="bottom">
+                      <Icon type="exclamation-circle" />
+                    </Popover>
+
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    备注
+                  </td>
+                </tr>
+                {
+                  this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
+                }
+                {/* <tr> */}
+                {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    测定值
+                  </td>
+                  <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    平均值
+                  </td> */}
+                {/* </tr> */}
+                {/* <tr> */}
+                {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T1
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T2
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T=T1+T2
+                  </td> */}
+                {/* </tr> */}
+                {}
+              </tbody>
+            </table>
           // scroll={{ y: '200px' }}
         }
       </Card>

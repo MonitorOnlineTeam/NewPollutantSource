@@ -20,6 +20,7 @@ export default Model.extend({
   state: {
     entAndPointList: [],
     standardGasList: [],
+    qcaReportList:[],
     qualityControlFormData: {},
     qualityControlTableData: [],
     QCAGasRelation: [],
@@ -165,6 +166,20 @@ export default Model.extend({
       }
       // }
     },
+
+    // 获取质控报表
+    *GetQCAReport({ payload, callback }, { call, put, update }) {
+      // if (payload.QCAMN) {
+      const result = yield call(services.GetQCAReport, payload);
+      if (result.IsSuccess) {
+        yield update({
+          qcaReportList: result.Datas,
+          // currentPollutantCode: result.Datas.length ? result.Datas[0].PollutantCode : undefined
+        })
+      }
+      // }
+    },
+
     // 添加质控仪
     *addQualityControl({ payload }, { call, put }) {
       const result = yield call(services.addQualityControl, payload);
