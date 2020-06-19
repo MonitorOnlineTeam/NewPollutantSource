@@ -38,15 +38,15 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  offlineMapUrl: {
-    domain: '',
-    srcPath: '/amap-master/amap/js/maps.js',
-  },
-  // 离线地图配置：
   // offlineMapUrl: {
-  //   domain: 'http://10.230.28.70:8184',
+  //   domain: '',
   //   srcPath: '/amap-master/amap/js/maps.js',
   // },
+  // 离线地图配置：
+  offlineMapUrl: {
+    domain: 'http://172.16.12.135:50209',
+    srcPath: '/amap-master/amap/js/maps.js',
+  },
   // 内网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://172.16.9.20:808",
