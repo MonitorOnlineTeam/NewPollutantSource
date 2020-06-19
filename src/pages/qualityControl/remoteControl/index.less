@@ -208,85 +208,88 @@
   top: 568px;
   left: 327px;
 }
+
 .FormTable {
-  width:70%;
-  border-collapse: collapse;/* 边框合并属性  */
+  width: 70%;
+  border-collapse: collapse;
+  /* 边框合并属性  */
   font-size: 15px;
-  margin:auto;
+  margin: auto;
   //background-color: #fff;
-  margin-top:5px;
+  margin-top: 5px;
   margin-bottom: 5px;
 }
-  .FormTable>tbody>tr>th {
-      text-align: left;
-      padding-left: 9px;
-      padding-top:9px;
-      padding-bottom:9px;
-      font-weight:bold !important;
-      border: 1px solid #ccc;
-      font-weight: normal;
-      display: table-cell;
-      vertical-align: inherit;
-      line-height: 25px;
-      height: 25px;
-      white-space: nowrap;
-  }
 
-  .FormTable>tbody>tr>td {
-      border: 1px solid #ccc;
-      display: table-cell;
-      vertical-align: inherit;
-      text-align: left;
-      padding-left: 9px;
-      padding-top:9px;
-      padding-bottom:9px;
-  }
+.FormTable>tbody>tr>th {
+  text-align: left;
+  padding-left: 9px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-weight: bold !important;
+  border: 1px solid #ccc;
+  font-weight: normal;
+  display: table-cell;
+  vertical-align: inherit;
+  line-height: 25px;
+  height: 25px;
+  white-space: nowrap;
+}
 
-  .FormDiv{
-      width:100%;
-      min-width: 1000px;
-      margin:auto;
-      overflow-x:hidden;
-      overflow-y: scroll; 
-      background-color: #fff;
-  }
+.FormTable>tbody>tr>td {
+  border: 1px solid #ccc;
+  display: table-cell;
+  vertical-align: inherit;
+  text-align: left;
+  padding-left: 9px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
 
-  .HeadDiv{
-      width: 70%;
-      height: 30px;
-      line-height: 30px;
-      margin: 0 auto;
-  }
+.FormDiv {
+  width: 100%;
+  min-width: 1000px;
+  margin: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background-color: #fff;
+}
 
-  .FormName{
-      width: 80%;
-      height: 50px;
-      line-height: 50px;
-      margin: 0 auto;
-      margin-top:20px; 
-      font-size: 20px;
-      text-align: center;
-      font-weight: bold;
-  }
+.HeadDiv {
+  width: 70%;
+  height: 30px;
+  line-height: 30px;
+  margin: 0 auto;
+}
 
-  .Toexamine{
-      position: absolute;
-      right:40px;
-      top:1px;
-    }
+.FormName {
+  width: 80%;
+  height: 50px;
+  line-height: 50px;
+  margin: 0 auto;
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
 
-    .SigDiv{
-      width: 80%;
-      margin: 0 auto;
-      margin-top: 10px;
-      text-align: right;
-  }
+.Toexamine {
+  position: absolute;
+  right: 40px;
+  top: 1px;
+}
 
-  .loadContent{
-      width: 100%;
-      margin: 0 auto;
-      text-align: center;
-        }
+.SigDiv {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.loadContent {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
 
 
 
@@ -370,4 +373,23 @@
   position: absolute;
   top: 260px;
   left: 120px;
+}
+
+.legendNumBox {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 20px;
+
+  &>span {
+    display: inline-block;
+    width: 190px;
+
+    span {
+      display: inline-block;
+      width: 50%;
+      padding: 0 10px;
+      padding-left: 20px;
+    }
+  }
 }
