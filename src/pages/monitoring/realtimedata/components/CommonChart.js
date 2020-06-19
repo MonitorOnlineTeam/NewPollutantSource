@@ -165,8 +165,8 @@ class CommonChart extends Component {
                         }
                         res.push(<TabPane tab={
                             <div size="small" className={styles.maincard} bordered={false} >
-                                <p ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title="详细参数" content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
-                                <p >浓度：<span style={{ color: flag === '0' ? 'red' : flag === '1' ? '#ffbe00e3' : '' }} className={styles.cardfonttype}>{pollutantParam.value}</span>
+                                <p style={{ marginBottom: 6 }} ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title="详细参数" content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
+                                <p style={{ marginBottom: 6 }} >浓度：<span style={{ color: flag === '0' ? 'red' : flag === '1' ? '#ffbe00e3' : '' }} className={styles.cardfonttype}>{pollutantParam.value}</span>
                                     {
                                         pollutantParam.state ? pollutantParam.state === '1' ?
                                             <span><Xiangshang /></span> :
@@ -174,8 +174,8 @@ class CommonChart extends Component {
                                                 <Xiangxia /> : '' : ''
                                     }
                                 </p>
-                                <p>单位：<span>{item.Unit}</span></p>
-                                <p>排放标准值:{item.StandardValueStr}</p>
+                                <p style={{ marginBottom: 6 }}>单位：<span>{item.Unit}</span></p>
+                                <p style={{ marginBottom: 6 }}>排放标准值:{item.StandardValueStr}</p>
                             </div>} key={key}>
                         </TabPane>)
                     }
