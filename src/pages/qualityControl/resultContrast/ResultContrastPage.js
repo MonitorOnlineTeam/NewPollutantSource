@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 17:10:32
+ * @Last Modified time: 2020-06-19 17:08:15
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
@@ -241,7 +241,7 @@ class ResultContrastPage extends Component {
       },
     ];
 
-    const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
+    // const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
     const result = this.props.resultContrastData.errorStr;
     const color = result === "不合格" ? "#f5232d" : "#51c41b";
     return (
