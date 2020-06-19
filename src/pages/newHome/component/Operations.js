@@ -92,16 +92,7 @@ class Operations extends PureComponent {
         containLabel: true
       },
       xAxis: {
-        type: 'value',
-        axisTick: {
-          show: false
-        },
-        // axisLine: {
-        //   show: false,
-        // },
-        splitLine: {
-          show: false,
-        },
+        show: false,
       },
       yAxis: {
         type: 'category',
@@ -219,7 +210,7 @@ class Operations extends PureComponent {
             theme="my_theme"
           />
           <div className={styles.taskCount}>
-            <span>共完成运维任务{taskStatisticsData.insidePlan + taskStatisticsData.UnInsidePlan}次</span>
+            <span>共完成运维任务{taskStatisticsData.completeTaskCount}次</span>
           </div>
         </div>
         {drillDownTaskClassifyVisible && <DrillDownTaskModal type="taskClassify" title={title} chartClick={(index) => {

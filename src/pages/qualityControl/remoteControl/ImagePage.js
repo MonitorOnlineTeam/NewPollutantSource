@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-12-06 17:17:23
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-06 17:17:45
+ * @Last Modified time: 2020-06-17 16:17:53
  * @desc: 质控仪流程图页面
  */
 import React, { PureComponent } from 'react';
@@ -31,6 +31,8 @@ const QCStatusColor = {
   valveStatus: qualityControl.valveStatus,
   p2Pressure: qualityControl.p2Pressure,
   p1Pressure: qualityControl.p1Pressure,
+  p3Pressure: qualityControl.p3Pressure,
+  p4Pressure: qualityControl.p4Pressure,
   flowList: qualityControl.flowList,
   standardValue: qualityControl.standardValue,
   qualityControlName: qualityControl.qualityControlName,
@@ -130,7 +132,7 @@ class ImagePage extends PureComponent {
     }
     // 控制查看实时比对提示显示隐藏
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
-    // if (true) {
+      // if (true) {
       notification.close("QCAnotification")
       notification.open({
         message: '查看质控实时比对',
@@ -224,7 +226,7 @@ class ImagePage extends PureComponent {
   }
 
   pageContent = (type) => {
-    const { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, flowList, standardValue, qualityControlName } = this.props;
     let props = {};
     if (type === "modal") {
       props = {
@@ -259,7 +261,7 @@ class ImagePage extends PureComponent {
         </ul>
       </div>
       {
-        (p1Pressure.pollutantCode == "s01" && p1Pressure.isException == "1") ?
+        (p4Pressure.pollutantCode == "s01" && p4Pressure.isException == "1") ?
           <div className={styles.gasImgBox}>
             <img src="/qualityControl/gasException.png" alt="" />
             <p>O₂</p>
@@ -299,7 +301,7 @@ class ImagePage extends PureComponent {
         </ul>
       </div>
       {
-        (p1Pressure.pollutantCode == "03" && p1Pressure.isException == "1") ?
+        (p3Pressure.pollutantCode == "03" && p3Pressure.isException == "1") ?
           <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px)" }}>
             <img src="/qualityControl/gasException.png" alt="" />
             <p style={{ fontSize: 15, left: 1 }}>NOx</p>
@@ -308,6 +310,7 @@ class ImagePage extends PureComponent {
 
       <img className={styles.valve} style={{ top: "calc(90px + 130px + 30px)" }} src="/qualityControl/valveClose.jpg" alt="" />
       {valveStatus.NOx ?
+        // {true ?
         <>
           <img className={styles.line} src="/qualityControl/NOx.png" alt="" />
           <img className={styles.valve} style={{ top: "calc(90px + 130px + 30px)" }} src="/qualityControl/valveOpen.jpg" alt="" />
@@ -339,7 +342,7 @@ class ImagePage extends PureComponent {
         </ul>
       </div>
       {
-        (p1Pressure.pollutantCode == "02" && p1Pressure.isException == "1") ?
+        (p2Pressure.pollutantCode == "02" && p2Pressure.isException == "1") ?
           <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px * 2)" }}>
             <img src="/qualityControl/gasException.png" alt="" />
             <p style={{ fontSize: 15, left: 2 }}>SO₂</p>
@@ -347,6 +350,7 @@ class ImagePage extends PureComponent {
       }
       <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px)* 2)" }} src="/qualityControl/valveClose.jpg" alt="" />
       {valveStatus.SO2 ?
+        // {true ?
         <>
           <img className={styles.line} src="/qualityControl/SO2.png" alt="" />
           <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 2)" }} src="/qualityControl/valveOpen.jpg" alt="" />
@@ -378,7 +382,7 @@ class ImagePage extends PureComponent {
         </ul>
       </div>
       {
-        (p2Pressure.pollutantCode == "065" && p2Pressure.isException == "1") ?
+        (p1Pressure.pollutantCode == "065" && p1Pressure.isException == "1") ?
           <div className={styles.gasImgBox} style={{ top: "calc(86px +  152px * 3)" }}>
             <img src="/qualityControl/gasException.png" alt="" />
             <p>N₂</p>
@@ -386,19 +390,23 @@ class ImagePage extends PureComponent {
       }
       <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px)* 3)" }} src="/qualityControl/valveClose.jpg" alt="" />
       {valveStatus.N2 ?
+        // {true ?
         <>
           <img className={styles.line} src="/qualityControl/N2.png" alt="" />
           <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 3)" }} src="/qualityControl/valveOpen.jpg" alt="" />
         </> : null
       }
       {/* 吹扫 */}
-      <img className={styles.valve} style={{ top: "496px", left: "384px" }} src="/qualityControl/valveClose2.jpg" alt="" />
+      <img className={styles.valve} style={{ top: "499px", left: "484px" }} src="/qualityControl/valveClose2.jpg" alt="" />
       {
         !!valveStatus.purge ? <>
+          {/* true ? <> */}
           <img className={styles.line} src="/qualityControl/purge.png" alt="" />
-          <img className={styles.valve} style={{ top: "496px", left: "384px" }} src="/qualityControl/valveOpen2.jpg" alt="" />
+          <img className={styles.valve} style={{ top: "499px", left: "484px" }} src="/qualityControl/valveOpen2.jpg" alt="" />
         </> : null
       }
+
+
 
       {/* CEMS */}
       {
@@ -446,13 +454,9 @@ class ImagePage extends PureComponent {
               </div>
             </div>
             <img src="/qualityControl/valveClose.jpg" className={styles.CEMSvalve} style={{ top: top }} alt="" />
-            {
-              item.valve === "1" ?
-                <>
-                  <img className={styles.CEMSLine} src={lineSrc} />
-                  <img className={styles.CEMSvalve} style={{ top: top }} src="/qualityControl/valveOpen.jpg" alt="" />
-                </> : undefined
-            }
+            {item.valve === "1" ? <img className={styles.CEMSvalve} style={{ top: top }} src="/qualityControl/valveOpen.jpg" alt="" /> : ""}
+            {item.valve === "1" && !valveStatus.Air ? <img className={styles.CEMSLine} src={lineSrc} /> : ""}
+            {item.valve === "1" && valveStatus.Air ? <img className={styles.airCEMSLine} src={`/qualityControl/airCEMS${index + 1}.png`} /> : ""}
           </>
           // }
           // return <img src="/qualityControl/valveClose.jpg" className={styles.CEMSvalve} style={{ top: top }} alt="" />
@@ -465,14 +469,44 @@ class ImagePage extends PureComponent {
       </div>
       {
         p1Pressure.isException ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
+        // true ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
       }
+
       {/* 压力p2 */}
-      <div className={styles.pressure} style={{ top: 518 }}>
+      <div className={styles.pressure} style={{ top: 358 }}>
         {p2Pressure.value != undefined ? `${p2Pressure.value}MPa` : undefined}
       </div>
       {
-        p2Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 568 }} src="p2Exception.png" /> : null
+        p2Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /> : null
+        // true ? <img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /> : null
       }
+
+      {/* 压力p3 */}
+      <div className={styles.pressure} style={{ top: 196 }}>
+        {p3Pressure.value != undefined ? `${p3Pressure.value}MPa` : undefined}
+      </div>
+      {
+        p3Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Pressure.png" /> : null
+        // true ? <img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Exception.png" /> : null
+      }
+
+      {/* 压力p4 */}
+      <div className={styles.pressure} style={{ top: 40 }}>
+        {p4Pressure.value != undefined ? `${p4Pressure.value}MPa` : undefined}
+      </div>
+      {
+        p4Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
+        //  true ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
+      }
+
+      {/* 空气泵 */}
+      {
+        valveStatus.Air ? <img className={styles.airValve} src="/qualityControl/valveOpen.jpg" alt="" /> : ""
+      }
+      {
+        valveStatus.Pump ? <img className={styles.airOpen} src="/qualityControl/airOpen.png" alt="" /> : ""
+      }
+
       {/* 质控仪 */}
       <div className={styles.qualityControl}>
         {
@@ -506,7 +540,7 @@ class ImagePage extends PureComponent {
   render() {
     const { p1Pressure, realtimeStabilizationTime } = this.props;
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: '100%' }} className={styles.imagePage}>
         <Tooltip title="全屏查看">
           <Icon type="fullscreen" className={styles.fullscreen} onClick={() => { this.setState({ fullscreenVisible: true }) }} />
         </Tooltip>

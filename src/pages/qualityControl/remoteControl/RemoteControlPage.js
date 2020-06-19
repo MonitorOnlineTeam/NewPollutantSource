@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-12 20:04:44
+ * @Last Modified time: 2020-06-17 15:43:03
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -121,6 +121,7 @@ class RemoteControlPage extends Component {
       const { StandardPollutantName } = this.state;
       let postData = {
         ...fieldsValue,
+        StabilizationTime: fieldsValue.StabilizationTime || 0,
         MatchStandardValue: fieldsValue.MatchStandardValue || 0,
         OldStandardUnit: fieldsValue.OldStandardUnit === "mg/m3" ? 0 : 1,
         MatchStandardUnit: fieldsValue.MatchStandardUnit === "mg/m3" ? 0 : 1,
@@ -473,25 +474,27 @@ class RemoteControlPage extends Component {
                       )}
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
-                    <Form.Item label="稳定时间">
-                      {getFieldDecorator('StabilizationTime', {
-                        rules: [{
-                          required: true,
-                          message: '请选择稳定时间!',
-                        },],
-                      })(
-                        <Select
-                          placeholder="请选择稳定时间"
-                        // onChange={value => { this.changeStandardGasData('StabilizationTime', value, idx) }}
-                        >
-                          {
-                            this.getTimeOptions().map(item => item)
-                          }
-                        </Select>,
-                      )}
-                    </Form.Item>
-                  </Col>
+                  {
+                    form.getFieldValue("StandardPollutantCode") !== "P" && <Col span={12}>
+                      <Form.Item label="稳定时间">
+                        {getFieldDecorator('StabilizationTime', {
+                          rules: [{
+                            required: true,
+                            message: '请选择稳定时间!',
+                          },],
+                        })(
+                          <Select
+                            placeholder="请选择稳定时间"
+                          // onChange={value => { this.changeStandardGasData('StabilizationTime', value, idx) }}
+                          >
+                            {
+                              this.getTimeOptions().map(item => item)
+                            }
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                  }
                   <Col span={12}>
                     <Form.Item label="配比标气浓度设定值">
                       {getFieldDecorator('MatchStandardValue', {

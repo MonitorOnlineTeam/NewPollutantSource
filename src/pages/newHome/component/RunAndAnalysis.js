@@ -14,12 +14,12 @@ class RunAndAnalysis extends PureComponent {
   }
 
   componentDidMount() {
-    // this.props.dispatch({
-    //   type: "newHome/getRunAndAnalysisData",
-    //   payload: {
+    this.props.dispatch({
+      type: "newHome/getRunAndAnalysisData",
+      payload: {
 
-    //   }
-    // })
+      }
+    })
   }
 
   // 超标率下钻
@@ -48,13 +48,14 @@ class RunAndAnalysis extends PureComponent {
     // let networkeRate = rateData.NetworkeRate === undefined ? 0 : (parseFloat(rateData.NetworkeRate) * 100).toFixed(0);
     // let runningRate = rateData.RunningRate === undefined ? 0 : (parseFloat(rateData.RunningRate) * 100).toFixed(0);
     // let transmissionEffectiveRate = rateData.TransmissionEffectiveRate === undefined ? 0 : (parseFloat(rateData.TransmissionEffectiveRate) * 100).toFixed(0);
-    const { runAndAnalysisData: { transmissionEfficiencyRate, overDataRate, operationRate, exceptionRate, AccuracyRate } } = this.props;
+    const { runAndAnalysisData: { transmissionEfficiencyRate, overDataRate, operationRate, exceptionRate } } = this.props;
+    let AccuracyRate = 100;
     let color = [];
     let seriesName = '';
     let seriesData = [];
     if (type === 1) {
       color = ["#0edaad", "#85edb4"];
-      seriesName = '传输有效率';
+      seriesName = '有效传输率';
       seriesData = [
         { value: transmissionEfficiencyRate, name: '正常' },
         { value: 100 - transmissionEfficiencyRate, name: '离线' }
@@ -217,8 +218,10 @@ class RunAndAnalysis extends PureComponent {
             </div>
         <div className={styles["item-content"]}>
           <div className={styles["over-rate"]} onClick={() => this.getTrippingOverDataList("超标率")}>
-            超标率
-                <div className={styles.value}>{runAndAnalysisData.overDataRate} <span>%</span></div>
+            <p>超标率</p>
+            <div className={styles.bg} style={{ width: `${runAndAnalysisData.overDataRate}%` }}>
+            </div>
+            <p className={styles.value}>{runAndAnalysisData.overDataRate} <span>%</span></p>
           </div>
           <div className={styles.pieContent}>
             <div className={styles.pieItem}>

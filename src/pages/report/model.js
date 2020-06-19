@@ -126,7 +126,7 @@ export default Model.extend({
           data = result.Datas.map(item => {
             let variate = [];
             variate = item.Datas.map(itm => {
-              return { ...itm, pointName: item.PointName, rowSpan: item.Datas.length + 3 }
+              return { ...itm, pointName: item.PointName, entName: item.EntName, rowSpan: item.Datas.length + 3 }
             })
             // 大气和扬尘不显示最大最小平均值
             if (dateReportForm.PollutantSourceType.value != 5 && dateReportForm.PollutantSourceType.value != 12) {

@@ -77,7 +77,7 @@ class PlaybackPage extends PureComponent {
       this.setState({
         count: count
       })
-    }, 500)
+    }, 1000)
 
   }
 
@@ -259,11 +259,11 @@ class PlaybackPage extends PureComponent {
     // let DeviceStatus = this.props.oldPlaybackPageDate ? this.props.oldPlaybackPageDate.DeviceStatus
     switch (this.props.oldPlaybackPageDate.DeviceStatus) {
       case "0":
-        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", border: "#ddd"}} message={`质控仪离线中`} showIcon/>
+        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", border: "#ddd" }} message={`质控仪离线中`} showIcon />
       case "1":
         return <Alert type="success" message={`质控仪在线中`} showIcon />
       case "3":
-        return <Alert type="warning" message={`质控仪状态异常`} showIcon/>
+        return <Alert type="warning" message={`质控仪状态异常`} showIcon />
       default:
         return "";
     }
@@ -272,7 +272,13 @@ class PlaybackPage extends PureComponent {
 
   // 开始
   start = () => {
-    this.updateFlowChartData(this.props);
+    if (this.state.count === this.props.QCAFlowChartAllData.length) {
+      this.setState({ count: 0 }, () => {
+        this.updateFlowChartData(this.props);
+      })
+    } else {
+      this.updateFlowChartData(this.props);
+    }
   }
 
   // 暂停
@@ -362,20 +368,21 @@ class PlaybackPage extends PureComponent {
                 </Col>
                 <Col xxl={17} xl={15} style={{ height: '100%' }}>
                   <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
-                    <Spin spinning={!!(flowChartLoading || otherLoading)} style={{ position: "relative" }}>
+                    <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
                       {this.returnQCStatus()}
                       <FlowChart />
                       {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
-                        <Row>
+                      // {true ?
+                        <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
                           {
-                            !start ? <Icon type="play-circle" style={{ fontSize: 24, position: "absolute", bottom: 41, left: 6, cursor: "pointer" }} onClick={this.start} /> :
-                              <Icon type="pause-circle" style={{ fontSize: 24, position: "absolute", bottom: 41, left: 6, cursor: "pointer" }} onClick={this.pause} />
+                            !start ? <Icon type="play-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.start} /> :
+                              <Icon type="pause-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.pause} />
                           }
                           <Slider
                             value={count}
                             max={QCAFlowChartAllData.length}
                             // max={100}
-                            style={{ bottom: 36, left: 40, width: 'calc(100% - 60px)' }}
+                            style={{ float: 'left', width: 'calc(100% - 60px)' }}
                             tooltipVisible
                             tipFormatter={(value => {
                               return thisTime

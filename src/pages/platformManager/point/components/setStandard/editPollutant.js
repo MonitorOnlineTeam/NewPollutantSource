@@ -208,14 +208,14 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出上限">
                     {getFieldDecorator('AbnormalUpperLimit', {
                       initialValue: 0,
-                    })(<InputNumber min={-10000} max={100000} step={1} />)}
+                    })(<InputNumber min={-100000} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出下限">
                     {getFieldDecorator('AbnormalLowerLimit', {
                       initialValue: 0,
-                    })(<InputNumber min={-10000} max={10000} step={1} />)}
+                    })(<InputNumber min={-100000} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>
@@ -224,14 +224,14 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
                       initialValue: 1,
-                    })(<InputNumber min={0} max={10000} step={1} />)}
+                    })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="连续值计数">
                     {getFieldDecorator('SerialContinuityCount', {
                       initialValue: 2,
-                    })(<InputNumber min={0} max={10000} step={1} />)}
+                    })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>
@@ -240,7 +240,7 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超限计数">
                     {getFieldDecorator('OverrunContinuityCount', {
                       initialValue: 1,
-                    })(<InputNumber min={0} max={10000} step={1} />)}
+                    })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>

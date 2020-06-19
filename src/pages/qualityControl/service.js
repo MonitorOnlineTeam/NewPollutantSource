@@ -12,6 +12,12 @@ export async function getStandardGas(params) {
   return result;
 }
 
+// 获取质控报表
+export async function GetQCAReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAReport', params, null);
+  return result;
+}
+
 // 添加质控仪
 export async function addQualityControl(params) {
   const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/AddQCAnalyzerInfoAndPoint', params, null);

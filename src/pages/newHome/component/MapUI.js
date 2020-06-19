@@ -267,8 +267,9 @@ class MapUI extends PureComponent {
       return {
         cursor: 'default',
         bubble: true,
-        // strokeColor: "#5da4e3", //线颜色
-        strokeColor: "#e8cab0", //线颜色
+        strokeColor: "#5da4e3", //线颜色
+        // strokeColor: "#0f509f", //线颜色
+        // strokeColor: "#e8cab0", //线颜色
         strokeOpacity: 1, //线透明度
         strokeWeight: 1, //线宽
         // fillColor: fillColor, //填充色

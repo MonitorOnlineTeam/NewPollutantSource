@@ -10,6 +10,7 @@ import RecordEchartTable from '@/components/recordEchartTable'
 import OperDetails from "./OperDetails"
 import styles from '../index.less'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
+import config from "@/config"
 
 
 const { TabPane } = Tabs;
@@ -99,6 +100,16 @@ class SiteDetailsModal extends PureComponent {
   render() {
     const { data, infoWindowData } = this.props;
     const { currentKey, itemTitle } = this.state;
+
+    if (data.PollutantType === "5") {
+      tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
+    }else{
+      tabList = ["历史数据", "运维记录", "视频预览", "报警记录", "异常数据", "超标数据", "基本信息"];
+    }
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.jpg" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    if (infoWindowData.photo) {
+      imgName = config.uploadHost + "upload" + imgName;
+    }
     return (
       <Modal
         title={`${data.title} - ${itemTitle}`}
@@ -162,7 +173,7 @@ class SiteDetailsModal extends PureComponent {
           <div style={{ height: "60vh", overflow: 'auto' }}>
             <div className={styles.basisInfo}>
               <div>
-                <img src="/infoWindowImg.png" alt="" width="100%" />
+                <img src={imgName} alt="" width="100%" />
               </div>
               <div>
                 <Descriptions title={infoWindowData.pointName}>

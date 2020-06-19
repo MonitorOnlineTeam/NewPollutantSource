@@ -89,6 +89,7 @@ class DrillDownRunModal extends PureComponent {
           type: 'value',
           name: '（%）',
           position: 'left',
+          minInterval:1,
           splitLine: {
             show: true,
             lineStyle: {
@@ -101,8 +102,8 @@ class DrillDownRunModal extends PureComponent {
         {
           name: this.props.title,
           type: 'bar',
-          barWidth: '40%',
-          barMaxWidth: "60px",
+          // barWidth: '40%',
+          barMaxWidth: 60,
           data: seriesData
         }
       ]
