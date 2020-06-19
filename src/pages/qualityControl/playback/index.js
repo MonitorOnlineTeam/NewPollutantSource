@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import NavigationTree from '@/components/NavigationTree'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, DatePicker, Badge, Timeline, Row, Col, Icon, Divider, Empty, Tag, Alert, Spin, Slider, message } from 'antd';
+import { Card, DatePicker, Badge, Button, Modal, Timeline, Row, Col, Icon, Divider, Empty, Tag, Alert, Spin, Slider, message } from 'antd';
 import { connect } from 'dva'
 import moment from 'moment';
 import styles from './index.less'
 import FlowChart from './FlowChart';
+import ResultContrastPage from '../resultContrast/ResultContrastPage'
+
 
 const { RangePicker } = DatePicker;
 
@@ -44,6 +46,7 @@ class PlaybackPage extends PureComponent {
     this.state = {
       selectedTime: [moment().subtract(1, "day"), moment()],
       start: false,
+      QCALineItem: {},
     };
   }
 
@@ -127,7 +130,6 @@ class PlaybackPage extends PureComponent {
     clearInterval(timer)
     let currentTimeLineItem = item;
     if (item.QCType === 1) {
-
       // 质控
       this.props.dispatch({
         type: "qualityControl/getQCADataForRecord",
@@ -142,7 +144,10 @@ class PlaybackPage extends PureComponent {
         currentTimeLineItem: item,
         start: true,
         count: 0,// 重置count
+        QCALineItem: item,
       })
+    } else {
+      this.setState({ QCALineItem: {} })
     }
     if (item.QCType === 5) {
       // 开锁
@@ -303,7 +308,7 @@ class PlaybackPage extends PureComponent {
 
   render() {
     const { playbackPageDate, timeLineLoading, flowChartLoading, QCPlaybackTimeLine, QCAFlowChartAllData, playbackPageDate: { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName, thisTime } } = this.props;
-    const { selectedTime, currentTimeLineItem, otherLoading, start, count } = this.state;
+    const { selectedTime, currentTimeLineItem, otherLoading, start, count, QCALineItem: { ID, QCType, DGIMN, QCAMN, QCTime, PollutantCode } } = this.state;
     return (
       <>
         <NavigationTree QCAUse="1" domId="#remoteControl" onItemClick={value => {
@@ -370,9 +375,19 @@ class PlaybackPage extends PureComponent {
                   <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
                     <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
                       {this.returnQCStatus()}
+                      {
+                        PollutantCode && PollutantCode !== "P" && <Button
+                          // size="small"
+                          style={{ position: 'absolute', right: 0, top: 47, zIndex: 1 }}
+                          type="primary"
+                          onClick={() => { this.setState({ visible: true }) }}
+                        >
+                          查看结果比对
+                      </Button>
+                      }
                       <FlowChart />
                       {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
-                      // {true ?
+                        // {true ?
                         <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
                           {
                             !start ? <Icon type="play-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.start} /> :
@@ -397,6 +412,23 @@ class PlaybackPage extends PureComponent {
                 </Col>
               </Row>
             </Card>
+            <Modal
+              width={"90%"}
+              title="质控结果比对"
+              destroyOnClose
+              visible={this.state.visible}
+              footer={[]}
+              onOk={this.handleOk}
+              onCancel={() => {
+                this.setState({ visible: false })
+              }}
+            >
+              {
+                (ID && DGIMN && PollutantCode && QCType && QCTime && QCAMN) &&
+                <ResultContrastPage dateValue={ID} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
+                  QCTime={QCTime} QCAMN={QCAMN} />
+              }
+            </Modal>
           </BreadcrumbWrapper>
         </div>
       </>

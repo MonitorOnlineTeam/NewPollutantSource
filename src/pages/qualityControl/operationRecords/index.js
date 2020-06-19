@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 11:37:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-05 11:09:33
+ * @Last Modified time: 2020-06-19 16:43:04
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
@@ -57,13 +57,13 @@ class index extends Component {
                       DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
                       PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"],
                       QCType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"],
-                      QCExecuType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCExecuType"],
+                      QCExecuType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCExecuType"], //
                       QCTime: row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"],
-                      StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"],
-                      StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"],
+                      StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"], //
+                      StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"], //
                       QCAMN: row["dbo.T_Bas_QCAnalyzerControlCommand.QCAMN"],
-                      pointName: row["dbo.View_Point.PointName"],
-                      entName: row["dbo.View_Point.ParentName"]
+                      pointName: row["dbo.View_Point.PointName"], //
+                      entName: row["dbo.View_Point.ParentName"] //
                     })
                   }}><Icon type="profile" /></a>
                 </Tooltip>
