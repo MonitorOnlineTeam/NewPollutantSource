@@ -97,25 +97,25 @@ class OperationRecord extends Component {
     })
 
 
-    if (value == '8') {
-      this.props.dispatch({
-        type: 'operationform/getjzhistoryinfo',
-        payload: {
-          DGIMN: this.props.DGIMN,
-          BeginTime: this.props.BeginTime,
-          EndTime: this.props.EndTime
-        }
-      })
-    } else {
+    // if (value == '8') {
+    //   this.props.dispatch({
+    //     type: 'operationform/getjzhistoryinfo',
+    //     payload: {
+    //       DGIMN: this.props.DGIMN,
+    //       BeginTime: this.props.BeginTime,
+    //       EndTime: this.props.EndTime
+    //     }
+    //   })
+    // } else {
       setTimeout(() => {
         this.props.dispatch({
           type: 'autoForm/getPageConfig',
           payload: {
-            configId: this.getRecordType()
+            configId: this.getRecordType(this.props.DGIMN)
           }
         })
       }, 0)
-    }
+    // }
   }
   // onTreeSearch = (val) => {
   // }
@@ -316,27 +316,28 @@ class OperationRecord extends Component {
           }
         >
           <Card.Grid style={{ width: '100%', height: 'calc(100vh - 270px)', overflow: "auto", ...this.props.style, }}>
-            {this.props.currentRecordType == '8' ?
-              <>
-                <Row className={styles.buttonWrapper}>
-                  <Button
-                    style={{ marginRight: 8 }}
-                    icon="export"
-                    type="primary"
-                    loading={exportReportLoading}
-                    onClick={() => {
-                      this.export();
-                    }}
-                  >导出
-                         </Button>
-                </Row>
-                <SDLTable
-                  dataSource={this.props.JZDatas}
-                  columns={columns}
-                >
-                </SDLTable>
-              </>
-              :
+            {
+            // this.props.currentRecordType == '8' ?
+            //   <>
+            //     <Row className={styles.buttonWrapper}>
+            //       <Button
+            //         style={{ marginRight: 8 }}
+            //         icon="export"
+            //         type="primary"
+            //         loading={exportReportLoading}
+            //         onClick={() => {
+            //           this.export();
+            //         }}
+            //       >导出
+            //              </Button>
+            //     </Row>
+            //     <SDLTable
+            //       dataSource={this.props.JZDatas}
+            //       columns={columns}
+            //     >
+            //     </SDLTable>
+            //   </>
+            //   :
               ((this.state.configName && currentType) ? <AutoFormTable
                 // (this.state.configName && this.props.RecordType ? <AutoFormTable
                 configId={this.state.configName || "FormMainInfoPic"}
