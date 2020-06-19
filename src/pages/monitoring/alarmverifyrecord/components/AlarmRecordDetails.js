@@ -43,19 +43,16 @@ class AlarmRecordDetails extends Component {
             title: '首次报警时间',
             dataIndex: 'FirstTime',
             // fixed: 'left',
-            width: 50,
             key: 'FirstTime',
           },
            {
              title: '报警类型',
              dataIndex: 'AlarmTypeName',
-             width: 50,
              key: 'AlarmTypeName',
            },
           {
               title: '污染物',
               dataIndex: 'PollutantName',
-              width: 50,
               key: 'PollutantName',
           },
           {
@@ -66,7 +63,6 @@ class AlarmRecordDetails extends Component {
           {
               title: '报警次数',
               dataIndex: 'AlarmCount',
-              width: 50,
               key: 'AlarmCount',
           },
         ];
@@ -83,7 +79,7 @@ class AlarmRecordDetails extends Component {
           }
           return (
                   <div style={{ width: '100%', height: 'calc(100vh - 330px)', overflow: 'auto' }}>
-                      <Card title="核实单详情" bordered={false}>
+                      <Card title="处置单详情" bordered={false}>
                           <AutoFormViewItems
                             configId="ExceptionVerify"
                             keysParams={{ 'dbo.T_Cod_ExceptionVerify.ID': this.props.ID }}
@@ -91,6 +87,7 @@ class AlarmRecordDetails extends Component {
                       </Card>
                       <Card title="报警记录" bordered={false}>
                        <SdlTable
+                              scroll={{ y: 300 }}
                               loading={this.props.isloading}
                               columns={columns}
                               dataSource={this.props.AlarmRecordList}

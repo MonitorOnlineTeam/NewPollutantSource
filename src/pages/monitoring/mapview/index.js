@@ -6,20 +6,20 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
-import styles from './styles.less'
 import { isEqual } from 'lodash';
+import ReactEcharts from 'echarts-for-react';
+import styles from './styles.less'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
-import ReactEcharts from 'echarts-for-react';
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
-import config from "@/config"
+import config from '@/config'
 import defaultSettings from '../../../../config/defaultSettings.js'
-import MapUI from "./MapUI"
+import MapUI from './MapUI'
 
 
 const { TabPane } = Tabs;
@@ -27,11 +27,11 @@ const entZoom = 8;
 const pointZoom = 13;
 let _thismap = null;
 const iconStyle = {
-  color: "#3c99d8",
-  fontSize: "28px",
-  borderRadius: "50%",
-  background: "rgb(255, 255, 255)",
-  boxShadow: "rgb(255, 255, 255) 0px 0px 3px 2px",
+  color: '#3c99d8',
+  fontSize: '28px',
+  borderRadius: '50%',
+  background: 'rgb(255, 255, 255)',
+  boxShadow: 'rgb(255, 255, 255) 0px 0px 3px 2px',
 }
 
 @Form.create()
@@ -82,12 +82,12 @@ class MapView extends Component {
       created: m => {
         _thismap = m;
         if (config.offlineMapUrl.domain) {
-          var Layer = new window.AMap.TileLayer({
+          const Layer = new window.AMap.TileLayer({
             zIndex: 2,
-            getTileUrl: function (x, y, z) {
-              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
-              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
-            }
+            getTileUrl(x, y, z) {
+              // return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+            },
           });
           Layer.setMap(m);
         }
@@ -122,7 +122,6 @@ class MapView extends Component {
               this.randomMarker(this.props.allEntAndPointList, false)
             })
           }
-
         }
       },
       complete: () => {
@@ -153,9 +152,9 @@ class MapView extends Component {
   }
 
   // 渲染坐标点
-  renderMarker = extData => {
+  renderMarker = extData =>
     // let extData = extData;
-    return <div
+     <div
       onMouseEnter={() => {
         if (this.state.infoWindowVisible === false && !this.state.airVisible) {
           this.setState({
@@ -177,7 +176,7 @@ class MapView extends Component {
           _thismap.setCenter([extData.position.longitude, extData.position.latitude])
           let newState = {};
           if (this.state.displayType === 1) {
-            console.log("this.state.displayType=", this.state.displayType)
+            console.log('this.state.displayType=', this.state.displayType)
             this.setState({
               pointName: extData.position.title,
             })
@@ -196,7 +195,7 @@ class MapView extends Component {
                 airVisible: true,
                 currentPointInfo: extData.position,
                 overAll: true,
-                currentDescItem: {}
+                currentDescItem: {},
               }
             } else {
               // 显示排口，点击的企业
@@ -227,7 +226,7 @@ class MapView extends Component {
             // infoWindowVisible: true,
             currentKey: extData.position.key,
             infoWindowHoverVisible: false,
-            ...newState
+            ...newState,
             // currentEntInfo: extData.position
           }, () => {
             // this.state.displayType !== 0 &&
@@ -263,32 +262,33 @@ class MapView extends Component {
         </div>
       }
     </div>
-  }
+
+
   renderPonit(extData) {
     let pointEl = null;
     if (extData.position) {
       if (this.state.displayType === 0) {
         if (extData.position.MonitorObjectType == 2) {
-          let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
+          const color = (extData.position.Color && extData.position.Color !== '-') ? extData.position.Color : '#999';
           pointEl = <>
-            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: color }} />
+            <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color }} />
           </>
         } else if (extData.position.MonitorObjectType == 4) {
-          let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
+          const color = (extData.position.Color && extData.position.Color !== '-') ? extData.position.Color : '#999';
           pointEl = <>
-            <CustomIcon type="icon-yangchen1" style={{ ...iconStyle, color: color }} />
+            <CustomIcon type="icon-yangchen1" style={{ ...iconStyle, color }} />
           </>
         } else {
           // 企业
-          let isShow = "none";
+          let isShow = 'none';
           extData.position.children && extData.position.children.map(item => {
-            if (!!this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
-              isShow = "block";
+            if (this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
+              isShow = 'block';
             }
           })
           pointEl = <>
             <EntIcon style={{ fontSize: 28 }} />
-            <div className={styles.pulse1} style={{ left: "-11px", top: -12, display: isShow }}></div>
+            <div className={styles.pulse1} style={{ left: '-11px', top: -12, display: isShow }}></div>
           </>
         }
       } else {
@@ -314,42 +314,40 @@ class MapView extends Component {
     return pointEl;
   }
 
-  getPollutantIcon = (extData) => {
+  getPollutantIcon = extData => {
     const mapStyle = {
       fontSize: 24,
-      borderRadius: "50%",
-      background: "#fff",
-      boxShadow: "0px 0px 3px 2px #fff"
+      borderRadius: '50%',
+      background: '#fff',
+      boxShadow: '0px 0px 3px 2px #fff',
     }
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
-    if (extData.position.outPutFlag == 1)//停产
+    if (extData.position.outPutFlag == 1)// 停产
     {
-      return <CustomIcon type='icon-tingzhishangbao' style={{ ...style }} />
-    } else {
+      return <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />
+    }
       switch (extData.position.PollutantType) {
-        case "1":
+        case '1':
           // return <WaterIcon style={style} />
           return this.getWaterIcon(extData.position.Status)
-        case "2":
+        case '2':
           return this.getGasIcon(extData.position.Status)
-        case "10":
+        case '10':
           return <VocIcon style={style} />
-        case "12":
-          return <CustomIcon type='icon-yangchen1' style={{ ...style }} />
-        case "5":
-          return <a><CustomIcon type='icon-fangwu' style={style} /></a>
-        case "37":
-          return <CustomIcon type='icon-dian2' style={{ ...style }} />
+        case '12':
+          return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+        case '5':
+          return <a><CustomIcon type="icon-fangwu" style={style} /></a>
+        case '37':
+          return <CustomIcon type="icon-dian2" style={{ ...style }} />
       }
-    }
   }
-
 
 
   // 渲染点或企业
   randomMarker = (dataList = this.state.currentEntInfo.children, flag = true, did) => {
     // const dataList = type === 0 ? this.props.allEnterpriseList : this.props.ponitList;
-    let _dataList = dataList || [];
+    const _dataList = dataList || [];
     const markersList = _dataList.map((itm, idx) => {
       if (itm.Longitude && itm.Latitude) {
         return {
@@ -379,12 +377,12 @@ class MapView extends Component {
         }
       }
       // flag && _thismap.setFitView();
-      let zoom = _thismap.getZoom();
+      const zoom = _thismap.getZoom();
       // console.log('didZoom=', zoom)
       // if (zoom > 14) {
       //   zoom = 14;
       // }
-      did && this.setState({ zoom: zoom })
+      did && this.setState({ zoom })
     })
   }
 
@@ -398,8 +396,8 @@ class MapView extends Component {
         dataType: 'HourData',
         isLastest: true,
         type: pollutantType,
-        isAirOrSite: isAirOrSite,
-        pollutantTypes: pollutantType
+        isAirOrSite,
+        pollutantTypes: pollutantType,
       },
     })
     // 获取图表数据
@@ -421,7 +419,7 @@ class MapView extends Component {
       console.log('All Markers Instance Are Below');
       console.log(allMarkers);
       this.setState({
-        allMarkers: allMarkers
+        allMarkers,
       }, () => {
         _thismap && _thismap.setFitView(this.state.allMarkers)
       })
@@ -438,13 +436,13 @@ class MapView extends Component {
 
   polygonEvents = {
     click: () => { console.log('clicked') },
-    created: (ins) => {
+    created: ins => {
       this.setState({
-        polygon: ins
+        polygon: ins,
       })
     },
     mouseover: () => { console.log('mouseover') },
-    dblclick: () => { console.log('dbl clicked') }
+    dblclick: () => { console.log('dbl clicked') },
   };
 
   // 绘制厂界
@@ -479,7 +477,7 @@ class MapView extends Component {
     close: () => {
       this.setState({
         infoWindowVisible: false,
-        airVisible: false
+        airVisible: false,
       })
     },
     // change: () => { console.log('InfoWindow prop changed') },
@@ -528,7 +526,6 @@ class MapView extends Component {
         }
       }, 200);
     }
-
   }
 
   // 获取筛选状态图标颜色
@@ -596,7 +593,7 @@ class MapView extends Component {
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
-        text: `24小时趋势图`,
+        text: '24小时趋势图',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.75)',
           fontSize: 15,
@@ -633,7 +630,7 @@ class MapView extends Component {
       yAxis: {
         type: 'value',
         nameTextStyle: {
-          padding: [0, 0, 0, 24]
+          padding: [0, 0, 0, 24],
         },
         name: this.state.chartTitle ? this.state.chartTitle : (this.props.tableList.length && this.props.tableList[0].title),
         axisLabel: {
@@ -669,7 +666,7 @@ class MapView extends Component {
     const airOption = {
       // color: ['#3398DB'],
       title: {
-        text: this.state.currentDescItem.label ? this.state.currentDescItem.label + ` 24小时${this.state.airShowType}柱状图` : "24小时AQI柱状图",
+        text: this.state.currentDescItem.label ? `${this.state.currentDescItem.label} 24小时${this.state.airShowType}柱状图` : '24小时AQI柱状图',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.75)',
           fontSize: 15,
@@ -692,21 +689,21 @@ class MapView extends Component {
         left: '3%',
         right: '4%',
         bottom: '3%',
-        containLabel: true
+        containLabel: true,
       },
       xAxis: [
         {
           type: 'category',
           data: chartData.xAxisData,
           axisTick: {
-            alignWithLabel: true
-          }
-        }
+            alignWithLabel: true,
+          },
+        },
       ],
       yAxis: [
         {
-          type: 'value'
-        }
+          type: 'value',
+        },
       ],
       series: [
         {
@@ -714,9 +711,9 @@ class MapView extends Component {
           type: 'bar',
           barWidth: '60%',
           // 10, 52, 200, 334, 390, 330, 220
-          data: chartData.seriesData
-        }
-      ]
+          data: chartData.seriesData,
+        },
+      ],
     };
 
     const plugins = [
@@ -748,19 +745,19 @@ class MapView extends Component {
       />);
     }
     const statisticStyle = {
-      fontSize: 14
+      fontSize: 14,
     }
-    let AQIColorObj = airLevel.find(item => item.levelText == curPointData.AirLevel) || {};
+    const AQIColorObj = airLevel.find(item => item.levelText == curPointData.AirLevel) || {};
     // let AQIColor = AQIColorObj.color;
-    let AQIColor = curPointData.AQI_Color;
+    const AQIColor = curPointData.AQI_Color;
 
-    const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
+    const modalHeight = 'calc(100vh - 24vh - 55px - 48px - 90px - 48px)';
     let mapWrapperStyle = {};
-    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
+    if (config.isShowTabs && defaultSettings.layout === 'sidemenu') {
       mapWrapperStyle = { marginTop: 4 }
     }
     return (
-      //QCAUse="1"
+      // QCAUse="1"
       <div className={styles.mapWrapper} style={mapWrapperStyle}>
         <NavigationTree choice={false} selKeys={this.state.currentKey} isMap overAll={this.state.overAll} onMapClick={val => {
           if (val[0]) {
@@ -788,7 +785,7 @@ class MapView extends Component {
                   if (this.state.displayType == 1) {
                     newState = {
                       displayType: 0,
-                      coordinateSet: []
+                      coordinateSet: [],
                     }
                     _thismap.setZoomAndCenter(this.state.zoom, [entInfo[0].Longitude, entInfo[0].Latitude])
                     this.randomMarker(this.props.allEntAndPointList)
@@ -801,7 +798,7 @@ class MapView extends Component {
                     currentKey: val[0].key,
                     overAll: true,
                     currentDescItem: {},
-                    ...newState
+                    ...newState,
                   }, () => {
                     this.getPointInfo(entInfo[0].PollutantType, true)
                   })
@@ -864,7 +861,7 @@ class MapView extends Component {
             // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
-            useAMapUI={true}
+            useAMapUI
           >
             {_thismap && <MapUI />}
             {this.drawPolygon()}
@@ -882,7 +879,7 @@ class MapView extends Component {
               autoMove
               size={{ width: 430, height: 362 }}
               // style={{ borderRadius: 6, padding: 10 }}
-              closeWhenClickMap={true}
+              closeWhenClickMap
               visible={this.state.infoWindowVisible}
               offset={[4, -35]}
               events={this.windowEvents}
@@ -917,16 +914,16 @@ class MapView extends Component {
                                   // 只显示前六个
                                   this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
                                     this.setState({
-                                      chartTitle: item.title
+                                      chartTitle: item.title,
                                     })
                                     this.props.dispatch({
-                                      type: "mapView/updateChartData",
+                                      type: 'mapView/updateChartData',
                                       payload: {
                                         key: item.key,
-                                        label: item.label
-                                      }
+                                        label: item.label,
+                                      },
                                     })
-                                  }} className={styles.content} style={{ color: item.status === "0" ? "#f04d4c" : (item.status === "1" ? "rgb(243, 172, 0)" : "") }}>{item.value}</div></Descriptions.Item>)
+                                  }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
                                 }
                               </Descriptions>
                               {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
@@ -967,10 +964,10 @@ class MapView extends Component {
             <InfoWindow
               position={this.state.mapCenter}
               autoMove
-              size={{ width: 480, height: this.state.currentPointInfo.MonitorObjectType == "4" ? 380 : 440 }}
+              size={{ width: 480, height: this.state.currentPointInfo.MonitorObjectType == '4' ? 380 : 440 }}
               // size={{ width: 480 }}
               style={{ maxHeight: 524 }}
-              closeWhenClickMap={true}
+              closeWhenClickMap
               visible={this.state.airVisible}
               // visible={this.state.airVisible}
               offset={[4, -35]}
@@ -990,10 +987,10 @@ class MapView extends Component {
                             onClick={() => {
                               this.getPointInfo(this.state.currentPointInfo.PollutantType, true);
                               this.setState({
-                                currentDescItem: {}
+                                currentDescItem: {},
                               })
                             }}
-                          >AQI：<span style={{ background: AQIColor, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: "20px" }}>{curPointData.AQI}</span></span>
+                          >AQI：<span style={{ background: AQIColor, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: '20px' }}>{curPointData.AQI}</span></span>
                           <span>首要污染物：{curPointData.PrimaryPollutant}</span>
                           <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span>
                         </div>
@@ -1007,25 +1004,25 @@ class MapView extends Component {
                       this.props.tableList.map(item =>
                         <Descriptions.Item label={item.label}><div onClick={() => {
                           // 01,02,03,05,07,08
-                          let key = item.key + "_IAQI";
-                          let airShowType = "IAQI";
-                          if (item.key != "01" && item.key != "02" && item.key != "03" && item.key != "05" && item.key != "07" && item.key != "08") {
+                          let key = `${item.key}_IAQI`;
+                          let airShowType = 'IAQI';
+                          if (item.key != '01' && item.key != '02' && item.key != '03' && item.key != '05' && item.key != '07' && item.key != '08') {
                             key = item.key;
-                            airShowType = "浓度"
+                            airShowType = '浓度'
                           }
                           this.setState({
                             chartTitle: item.title,
                             currentDescItem: item,
-                            airShowType: airShowType
+                            airShowType,
                           })
                           this.props.dispatch({
-                            type: "mapView/updateChartData",
+                            type: 'mapView/updateChartData',
                             payload: {
-                              key: key,
+                              key,
                               itemKey: item.key,
                               label: item.label,
-                              isAirOrSite: true
-                            }
+                              isAirOrSite: true,
+                            },
                           })
                         }} className={styles.content} style={{ background: item.levelColor }}>{item.value}</div></Descriptions.Item>)
                     }
@@ -1061,16 +1058,14 @@ class MapView extends Component {
           </div>
           {/* 空气指数图例 */}
           {
-            (this.state.currentPointInfo.MonitorObjectType == "2" || this.state.currentPointInfo.MonitorObjectType == "4") && <div className={styles.legend}>
+            (this.state.currentPointInfo.MonitorObjectType == '2' || this.state.currentPointInfo.MonitorObjectType == '4') && <div className={styles.legend}>
               <ul>
                 {
-                  airLevel.map(item => {
-                    return <li>
+                  airLevel.map(item => <li>
                       <span>{item.text}</span>
                       <span style={{ backgroundColor: item.color }}></span>
                       <span>{item.standardValue}</span>
-                    </li>
-                  })
+                    </li>)
                 }
               </ul>
             </div>
@@ -1092,7 +1087,7 @@ class MapView extends Component {
               });
             }}
           >
-            <Tabs onChange={(activeKey) => {
+            <Tabs onChange={activeKey => {
               // this.setState({
               //   ["DGIMN" + activeKey]: this.state.currentKey
               // })
@@ -1108,30 +1103,30 @@ class MapView extends Component {
               // })
             }}>
               {
-                menuDescList.includes("历史数据") && <TabPane tab="历史数据" key="1">
-                  <DataQuery DGIMN={currentKey} initLoadData chartHeight='calc(100vh - 427px)' style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight={"calc(100vh - 34vh - 55px - 48px - 90px - 64px)"} pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
+                menuDescList.includes('历史数据') && <TabPane tab="历史数据" key="1">
+                  <DataQuery DGIMN={currentKey} initLoadData chartHeight="calc(100vh - 427px)" style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight="calc(100vh - 34vh - 55px - 48px - 90px - 64px)" pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
                 </TabPane>
               }
               {
-                menuDescList.includes("视频预览") && <TabPane tab="视频预览" key="2">
+                menuDescList.includes('视频预览') && <TabPane tab="视频预览" key="2">
                   <YsyShowVideo DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
               {
-                menuDescList.includes("报警记录") && this.state.currentPointInfo.PollutantType != "5" &&
-                <TabPane tab="报警记录" key="3">
-                  <AlarmRecord DGIMN={currentKey} initLoadData dataHeight='calc(100vh - 450px)' style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
+                menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
+                <TabPane tab="超标处置" key="3">
+                  <AlarmRecord DGIMN={currentKey} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
-                menuDescList.includes("异常数据") && <TabPane tab="异常数据" key="4">
-                  <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: "70vh" }} maxHeight={150} />
+                menuDescList.includes('异常数据') && <TabPane tab="异常数据" key="4">
+                  <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} />
                 </TabPane>
               }
               {
-                menuDescList.includes("超标数据") && this.state.currentPointInfo.PollutantType != "5" &&
+                menuDescList.includes('超标数据') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标数据" key="5">
-                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: "70vh" }} maxHeight={150} noticeState={1} />
+                  <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }
             </Tabs>
