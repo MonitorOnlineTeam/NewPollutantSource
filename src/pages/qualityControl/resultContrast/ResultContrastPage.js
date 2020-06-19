@@ -6,7 +6,7 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio,Popover,Icon } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -14,8 +14,16 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import styles from './ResultContrastPage.less';
-const Option = Select.Option;
+import stylesFor from '../remoteControl/index.less'
 
+const Option = Select.Option;
+const content = (
+  <div>
+    <img style={{ width: 350, marginRight: 6, marginBottom: 4 }} src="/qcaimg.png" />
+    <img style={{ width: 350, marginRight: 6, marginBottom: 4 }} src="/qcaimg1.png" />
+    <img style={{ width: 550, marginRight: 6, marginBottom: 4 }} src="/qcaimg2.png" />
+  </div>
+);
 const columns = [
   {
     title: '时间',
@@ -38,6 +46,7 @@ const columns = [
 @connect(({ loading, qualityControl }) => ({
   // standardGasList: qualityControl.standardGasList,
   resultContrastData: qualityControl.resultContrastData,
+  qcaReportList: qualityControl.qcaReportList,
   // resultContrastTimeList: qualityControl.resultContrastTimeList,
   standardGasLoading: loading.effects["qualityControl/getStandardGas"],
   QCAResultCheckByDGIMNLoading: loading.effects["qualityControl/QCAResultCheckByDGIMN"],
@@ -146,6 +155,7 @@ class ResultContrastPage extends Component {
 
   // 获取页面数据
   getPageData = (isSearch) => {
+    console.log('QCTime=', this.props)
     const { dateValue, DGIMN, PollutantCode } = this.state;
     if (isSearch) {
       if (!dateValue) {
@@ -171,6 +181,18 @@ class ResultContrastPage extends Component {
         },
         otherParams: {
           isSearch
+        }
+      })
+      // this.setState({
+      //   showType: "data"
+      // })
+      this.props.dispatch({
+        type: "qualityControl/GetQCAReport",
+        payload: {
+          DGIMN: DGIMN,
+          QCAMN: this.props.QCAMN,
+          QCTime: this.props.QCTime,
+          StandardGasCode: PollutantCode,
         }
       })
     }
@@ -285,12 +307,45 @@ class ResultContrastPage extends Component {
       //     </Col>
       //   </Row>
       // </Form>
-      <Row>
-        <Col style={{ color: "#524e4e", fontSize: 14 }} span={22}>
-    {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，正负误差为{this.props.resultContrastData.qcaResultOffset}，质控结果为<span style={{ color: color }}>{result}</span>
-        </Col>
-      </Row>
+      //   <Row>
+      //     <Col style={{ color: "#524e4e", fontSize: 14 }} span={22}>
+      // {entName} - {pointName}排口，在{QCTime} - {StopTime}时间段，进行{StandardPollutantName}{type}质控，正负误差为{this.props.resultContrastData.qcaResultOffset}，质控结果为<span style={{ color: color }}>{result}</span>
+      //     </Col>
+      //   </Row>
+      <></>
     )
+  }
+
+  renderData = (record) => {
+    const rtnVal = [];
+    if (record !== null && record.length > 0) {
+      record.map((item, index) => {
+        rtnVal.push(
+          <tr>
+            <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {index}
+            </td>
+            <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+              {item.StandValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {item.ShowValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              {item.AvgValue}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              {item.Error}
+            </td>
+            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+
+            </td>
+          </tr>
+        );
+      });
+    }
+
+    return rtnVal;
   }
 
   onAlertClose = () => {
@@ -440,16 +495,18 @@ class ResultContrastPage extends Component {
               )
           }
         </div>
-        <Card title={this.searchWhere()} extra={
-          <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-            this.setState({
-              showType: e.target.value
-            })
-          }}>
-            <Radio.Button value="chart">图表</Radio.Button>
-            <Radio.Button value="data">数据</Radio.Button>
-          </Radio.Group>
-        }>
+        <Card title={this.searchWhere()}
+          bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
+          extra={
+            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+              this.setState({
+                showType: e.target.value
+              })
+            }}>
+              <Radio.Button value="chart">图表</Radio.Button>
+              <Radio.Button value="data">报表</Radio.Button>
+            </Radio.Group>
+          }>
           {
             showType === "chart" ? <ReactEcharts
               // theme="line"
@@ -459,7 +516,59 @@ class ResultContrastPage extends Component {
               notMerge
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-            /> : <SdlTable dataSource={resultContrastData.tableData} columns={columns}  />
+            /> : <table
+            className={stylesFor.FormTable}  style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+            >
+                <tbody >
+                  <tr>
+                    <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                      序号
+                  </td>
+                    <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                      标准气体或校准器件参考值
+                  </td>
+                    <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                      CEMS显示值
+                  </td>
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      CEMS显示值的平均值
+                  </td>
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      示值误差（%）
+                    <Popover content={content} title="计算规则" placement="bottom">
+                        <Icon type="exclamation-circle" />
+                      </Popover>
+
+                    </td>
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      备注
+                  </td>
+                  </tr>
+                  {
+                    this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
+                  }
+                  {/* <tr> */}
+                  {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    测定值
+                  </td>
+                  <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    平均值
+                  </td> */}
+                  {/* </tr> */}
+                  {/* <tr> */}
+                  {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T1
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T2
+                  </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    T=T1+T2
+                  </td> */}
+                  {/* </tr> */}
+                  {}
+                </tbody>
+              </table>
             // scroll={{ y: echartsHeight }}
           }
         </Card>
