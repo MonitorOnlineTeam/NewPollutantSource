@@ -10,7 +10,7 @@ import { isEqual } from 'lodash';
 import ReactEcharts from 'echarts-for-react';
 import styles from './styles.less'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
-import DataQuery from '../dataquery/components/DataQuery'
+import DataQuery from '../dataquery/components/DataQueryOld'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
