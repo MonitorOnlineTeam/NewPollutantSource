@@ -194,6 +194,7 @@ class Index extends Component {
             status,
             data,
         })
+
         const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
         const paramlist = param ? param.split(',') : null;
         const statuslist = status ? status.split(',') : null;
@@ -238,17 +239,17 @@ class Index extends Component {
             switch (dataInfo.equipmentType) {
                 case '1':
                     return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName}/>)
+                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                     break;
                 case '2':
                     return (<VocChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate}  pointName={pointName} entName={entName}/>)
+                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                     break;
                 case '3':
                     return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate}  pointName={pointName} entName={entName}/>)
+                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                 case '5':
-                    return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName}/>
+                    return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
                 default:
                     return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
                 // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
@@ -390,7 +391,8 @@ class Index extends Component {
                                     collapsed={this.state.collapsed}
                                     onCollapse={this.onCollapse}
                                     collapsible
-                                    reverseArrow>
+                                    reverseArrow
+                                    >
                                     <div className={styles.rightParams}>
                                         {this.state.paramInfo}
                                     </div>
