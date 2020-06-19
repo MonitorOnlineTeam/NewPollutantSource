@@ -207,13 +207,13 @@ class index extends Component {
             if (this.state.pollutantCode == 5) {
               return (
                 <span>
-                  {text}{record.outPutFlag==1? <Tag color="#f50">停产</Tag>:""}
+                  {text}{record.outPutFlag==1? <Tag color="#f50">停运</Tag>:""}
                 </span>
               );
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag==1? <Tag color="#f50">停产</Tag>:""}
+                {record.abbreviation} - {text}{record.outPutFlag==1? <Tag color="#f50">停运</Tag>:""}
               </span>
             );
           },

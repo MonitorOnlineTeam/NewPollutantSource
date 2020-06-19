@@ -277,7 +277,7 @@ export default Model.extend({
           align: 'center',
           render: (value, record, index) => {
             if (selectpoint.stop) {
-              return '停产';
+              return '停运';
             }
 
             return formatPollutantPopover(value, record.pollutantCodeParam);
@@ -293,7 +293,7 @@ export default Model.extend({
           align: 'center',
           render: (value, record, index) => {
             if (selectpoint.stop) {
-              return '停产';
+              return '停运';
             }
             return formatPollutantPopover(value, record.zspollutantCodeParam);
           },

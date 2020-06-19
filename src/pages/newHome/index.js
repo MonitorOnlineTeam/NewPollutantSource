@@ -86,7 +86,7 @@ class NewHome extends PureComponent {
               return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
             }
           });
-          Layer.setMap(m);
+          Layer.setMap(mapInstance);
         }
       },
     };
@@ -655,12 +655,9 @@ class NewHome extends PureComponent {
             <div className={styles.mapContent}>
               <div className={styles.mapInnerBox}>
                 {
-                  // displayType === 1 && <Button type="primary" style={{
                   displayType === 1 && <Button type="primary" style={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    zIndex: 1
+                    //  true && <Button type="primary" style={{
+                    float: 'right',
                   }} onClick={() => {
                     this.renderEntMarkers(this.props)
                     aMap.setFitView();
@@ -668,10 +665,7 @@ class NewHome extends PureComponent {
                 }
                 {
                   clickedDivision && <Button type="primary" style={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    zIndex: 1
+                    float: 'right',
                   }} onClick={() => {
                     this.setState({ clickedDivision: undefined })
                     this.props.dispatch({
@@ -714,6 +708,7 @@ class NewHome extends PureComponent {
                   clickedDivision && <div className={styles.shibox}>
                     {/* <span>师局</span><br /> */}
                     <span>{clickedDivision.title}</span>
+                    {/* <span>第九师</span> */}
                   </div>
                 }
               </div>

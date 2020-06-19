@@ -92,7 +92,7 @@ class NavigationTree extends Component {
           title: 'Age',
           dataIndex: 'pointName',
           width: '40%',
-          render: (text, record) => <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}{record.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停产</Tag> : ''}</span></div>,
+          render: (text, record) => <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}{record.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</span></div>,
         },
         {
           title: 'Age',
@@ -796,7 +796,7 @@ class NavigationTree extends Component {
         } if (item.Type == '1') {
           return <TreeNode style={{ width: '100%' }} title={
             <div style={{ width: '253px', position: 'relative' }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停产</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>

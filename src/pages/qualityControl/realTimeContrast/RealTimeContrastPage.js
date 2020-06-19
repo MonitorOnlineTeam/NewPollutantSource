@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-26 10:41:03
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 17:09:08
+ * @Last Modified time: 2020-06-19 11:23:57
  */
 import React, { Component } from 'react';
 import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon, Popover } from 'antd'
@@ -127,7 +127,7 @@ class index extends Component {
 
     if (this.props.QCAResult !== nextProps.QCAResult && nextProps.QCAResult != "0") {
       this.setState({
-        showType:"data"
+        showType: "data"
       })
       this.props.dispatch({
         type: "qualityControl/GetQCAReport",
@@ -316,78 +316,88 @@ class index extends Component {
   }
 
   render() {
-    const { valueList, timeList, tableData, PollutantCode, QCAResult } = this.props;
+    const { valueList, standardValueList, timeList, tableData, PollutantCode, QCAResult } = this.props;
     const { showType } = this.state;
     return (
-      <Card title={this.searchWhere()} 
-      bodyStyle={{maxHeight: 510, overflowY:"auto"}}
-      extra={
-        <>
+      <Card title={this.searchWhere()}
+        bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
+        extra={
+          <>
+            {
+              QCAResult != "0" ?
+                <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+                  this.setState({
+                    showType: e.target.value
+                  })
+                }}>
+                  <Radio.Button value="chart">图表</Radio.Button>
+                  <Radio.Button value="data">报表</Radio.Button>
+                </Radio.Group> : <></>
+            }
+          </>
+        }>
+        <div style={{ position: "relative", }}>
           {
-            QCAResult != "0" ?
-              <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-                this.setState({
-                  showType: e.target.value
-                })
-              }}>
-                <Radio.Button value="chart">图表</Radio.Button>
-                <Radio.Button value="data">报表</Radio.Button>
-              </Radio.Group> : <></>
-          }
-        </>
-      }>
-
-        {
-          showType === "chart" ? <ReactEcharts
-            theme="line"
-            // option={() => { this.lightOption() }}
-            option={this.lineOption()}
-            lazyUpdate={true}
-            notMerge
-            id="rightLine"
-            style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-          /> : <table
-            className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-          >
-              {this.getQCAResult()}
-              <tbody >
-                <tr>
-                  <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                    序号
+            showType === "chart" ?
+              <>
+                <div className={styles.legendNumBox}>
+                  <span>
+                    <span style={{ color: "#56f485" }}>{valueList[valueList.length - 1]}</span>
+                    <span style={{ color: "#c23531" }}>{standardValueList[standardValueList.length - 1]}</span>
+                  </span>
+                </div>
+                <ReactEcharts
+                  theme="line"
+                  // option={() => { this.lightOption() }}
+                  option={this.lineOption()}
+                  lazyUpdate={true}
+                  notMerge
+                  id="rightLine"
+                  style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+                />
+              </>
+              : <table
+                className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+              >
+                {this.getQCAResult()}
+                <tbody >
+                  <tr>
+                    <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                      序号
                   </td>
-                  <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-                    标准气体或校准器件参考值
+                    <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                      标准气体或校准器件参考值
                   </td>
-                  <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                    CEMS显示值
+                    <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                      CEMS显示值
                   </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    CEMS显示值的平均值
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      CEMS显示值的平均值
                   </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    示值误差（%）
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      示值误差（%）
                     <Popover content={content} title="计算规则" placement="bottom">
-                      <Icon type="exclamation-circle" />
-                    </Popover>
+                        <Icon type="exclamation-circle" />
+                      </Popover>
 
+                    </td>
+                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                      备注
                   </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    备注
-                  </td>
-                </tr>
-                {
-                  this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
-                }
-                {/* <tr> */}
-                {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  </tr>
+                  {
+                    this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
+                  }
+                  {/* <tr> */}
+                  {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
                     测定值
                   </td>
                   <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
                     平均值
                   </td> */}
-                {/* </tr> */}
-                {/* <tr> */}
-                {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  {/* </tr> */}
+                  {/* <tr> */}
+                  {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
                     T1
                   </td>
                   <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
@@ -396,12 +406,13 @@ class index extends Component {
                   <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
                     T=T1+T2
                   </td> */}
-                {/* </tr> */}
-                {}
-              </tbody>
-            </table>
-          // scroll={{ y: '200px' }}
-        }
+                  {/* </tr> */}
+                  {}
+                </tbody>
+              </table>
+            // scroll={{ y: '200px' }}
+          }
+        </div>
       </Card>
     );
   }
