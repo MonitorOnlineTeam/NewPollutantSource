@@ -452,7 +452,7 @@ class dataList extends PureComponent {
                     width: colwidth,
                     render: (text, record, index) => {
                         if (record.stop) {
-                            return '停产';
+                            return '停运';
                         }
                         if (item.field === "AQI") {
                             const colorObj = airLevel.find(itm => itm.value == record.AirLevel) || {};

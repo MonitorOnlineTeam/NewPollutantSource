@@ -167,21 +167,33 @@
     line-height: 56px;
     height: 56px;
     color: #fff;
-    padding-left: 20px;
+    // padding-left: 20px;
     overflow: hidden;
     cursor: pointer;
 
-    .value {
-      width: 130px;
+    p {
+      position: absolute;
+      margin-left: 20px;
+    }
+
+    .bg {
       background: #36a9f4;
+      height: 56px;
+      border-radius: 820px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      float: right;
+    }
+
+    .value {
+      // width: 90%;
+      position: absolute;
+      right: 40px;
       font-size: 28px;
       font-weight: 500;
       float: right;
       line-height: 56px;
-      height: 56px;
-      text-align: center;
-      border-radius: 32px;
-      margin-right: -16px;
+      text-align: right;
 
       span {
         font-size: 12px;
@@ -514,31 +526,54 @@
   position: absolute;
   z-index: 1;
   text-align: center;
-
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 100px;
   .shibox {
-    padding-top: 46px;
+    width: 88px;
+    background-color: rgba(0, 0, 0, .5);
+    float: right;
+    position: absolute;
+    right: 6px;
+    top: 0;
+    height: 64px;
+    border-bottom-left-radius: 44px;
+    border-bottom-right-radius: 44px;
+    color: #fff;
 
     span {
-      line-height: 40px;
-      font-size: 20px;
-      color: #114fa1;
+      line-height: 60px;
+      font-size: 18px;
       font-weight: 500;
+      color: #fff;
     }
   }
 }
 
 .searchInput {
   width: 200px;
-  position: absolute;
-  left: 220px;
-  top: 10px;
+  // position: absolute;
+  // left: 220px;
+  // top: 10px;
+  float: left;
+  margin-right: 6px;
+}
+
+.selectShowType {
+  width: 200px;
+  // position: absolute;
+  // left: 430px;
+  // top: 10px;
+  float: left;
 }
 
 .monthPicker {
-  width: 200px;
-  position: absolute;
-  left: 10px;
-  top: 10px;
+  width: 120px;
+  // position: absolute;
+  // left: 10px;
+  // top: 10px;
+  float: left;
+  margin-right: 6px;
 }
 
 .basisInfo {

@@ -54,19 +54,71 @@ class DrillDownTaskModal extends PureComponent {
   }
 
   getOption = () => {
-    const { type, alarmResponseModalData, taskCountModalData, taskClassifyModalData } = this.props;
+    const { type, alarmResponseModalData, taskCountModalData, taskClassifyModalData, title } = this.props;
+    let series = [];
     if (type === "alarmResponse") {
+      if (title === "异常响应") {
+        series = [{
+          name: '异常响应',
+          type: 'bar',
+          itemStyle: {
+            color: "#f6b322"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          data: alarmResponseModalData.execptionCount
+        },
+        {
+          name: '异常响应同比',
+          type: 'bar',
+          itemStyle: {
+            color: "#f6b322"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          data: alarmResponseModalData.execptionYearCount
+        }]
+      } else {
+        // 超标报警核实
+        series = [{
+          name: '超标报警核实',
+          type: 'bar',
+          itemStyle: {
+            color: "#fd6c6c"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          data: alarmResponseModalData.taskCount
+        },
+        {
+          name: '超标报警核实同比',
+          type: 'bar',
+          itemStyle: {
+            color: "#fd6c6c"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          data: alarmResponseModalData.taskYearCount
+        },]
+      }
+
       return {
         color: ["#f6b322", "#0edaad"],
         tooltip: {
           trigger: 'axis',
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-          }
+          },
+          formatter(params, ticket, callback) {
+            console.log('params=', params)
+            let res = `${params[0].axisValue}<br/>`;
+            params.map(item => {
+              res += item.marker + `${item.seriesName}：${item.value}次<br />`;
+            });
+            return res;
+          },
         },
-        // legend: {
-        //   data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎', '百度', '谷歌', '必应', '其他']
-        // },
+        legend: {},
         grid: {
           left: '3%',
           right: '4%',
@@ -76,60 +128,20 @@ class DrillDownTaskModal extends PureComponent {
         xAxis: [
           {
             type: 'category',
-            data: alarmResponseModalData.x
+            data: alarmResponseModalData.x,
+            axisLabel: {
+              interval: 0,
+              rotate: 40
+            },
           }
         ],
         yAxis: [
           {
             type: 'value',
-            minInterval:1
+            minInterval: 1
           }
         ],
-        series: [
-          {
-            name: '异常任务',
-            type: 'bar',
-            itemStyle: {
-              color: "#fd6c6c"
-            },
-            barWidth: '40%',
-            barMaxWidth: "60px",
-            data: alarmResponseModalData.taskCount
-            // data: [11]
-          },
-          {
-            name: '异常任务同比',
-            type: 'bar',
-            itemStyle: {
-              color: "#fd6c6c"
-            },
-            barWidth: '40%',
-            barMaxWidth: "60px",
-            data: alarmResponseModalData.taskYearCount
-            // data: [22]
-          },
-          {
-            name: '超标报警核实',
-            type: 'bar',
-            itemStyle: {
-              color: "#f6b322"
-            },
-            barWidth: '40%',
-            barMaxWidth: "60px",
-            data: alarmResponseModalData.execptionCount            // data: [3]
-          },
-          {
-            name: '超标报警核实同比',
-            type: 'bar',
-            itemStyle: {
-              color: "#f6b322"
-            },
-            barWidth: '40%',
-            barMaxWidth: "60px",
-            data: alarmResponseModalData.execptionYearCount
-            // data: [33]
-          },
-        ]
+        series: series
       };
 
     }
@@ -161,7 +173,7 @@ class DrillDownTaskModal extends PureComponent {
         yAxis: [
           {
             type: 'value',
-            minInterval:1,
+            minInterval: 1,
           }
         ],
         series: [
@@ -169,16 +181,16 @@ class DrillDownTaskModal extends PureComponent {
             name: "已完成",
             type: 'bar',
             color: "#67a2ef",
-            barWidth: '40%',
-            barMaxWidth: "60px",
+            // barWidth: '40%',
+            barMaxWidth: 60,
             data: taskClassifyModalData.ywc
           },
           {
             name: "未完成",
             type: 'bar',
             color: "#0edaad",
-            barWidth: '40%',
-            barMaxWidth: "60px",
+            // barWidth: '40%',
+            barMaxWidth: 60,
             data: taskClassifyModalData.wwc
           },
         ]
@@ -215,15 +227,15 @@ class DrillDownTaskModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          minInterval:1,
+          minInterval: 1,
         }
       ],
       series: [
         {
           name: '计划外',
           type: 'bar',
-          barWidth: '40%',
-          barMaxWidth: "60px",
+          // barWidth: '40%',
+          barMaxWidth: 60,
           label: {
             show: true,
             position: 'top'
@@ -233,8 +245,8 @@ class DrillDownTaskModal extends PureComponent {
         {
           name: '计划内',
           type: 'bar',
-          barWidth: '40%',
-          barMaxWidth: "60px",
+          // barWidth: '40%',
+          barMaxWidth: 60,
           label: {
             show: true,
             position: 'top'

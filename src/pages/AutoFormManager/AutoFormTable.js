@@ -416,16 +416,14 @@ class AutoFormTable extends PureComponent {
             return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
-          return text && <div>
+          return text && <div className={styles.ellipsisText}>
             {/* {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             } */}
             {type == '小圆点' && <Badge status="warning" text={text} />}
             {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
-            {!type && <div className={styles.ellipsisText}>
-              {text}
-            </div>}
+            {!type && text }
           </div>
 
 

@@ -14,12 +14,12 @@ class RunAndAnalysis extends PureComponent {
   }
 
   componentDidMount() {
-    // this.props.dispatch({
-    //   type: "newHome/getRunAndAnalysisData",
-    //   payload: {
+    this.props.dispatch({
+      type: "newHome/getRunAndAnalysisData",
+      payload: {
 
-    //   }
-    // })
+      }
+    })
   }
 
   // 超标率下钻
@@ -218,8 +218,10 @@ class RunAndAnalysis extends PureComponent {
             </div>
         <div className={styles["item-content"]}>
           <div className={styles["over-rate"]} onClick={() => this.getTrippingOverDataList("超标率")}>
-            超标率
-                <div className={styles.value}>{runAndAnalysisData.overDataRate} <span>%</span></div>
+            <p>超标率</p>
+            <div className={styles.bg} style={{ width: `${runAndAnalysisData.overDataRate}%` }}>
+            </div>
+            <p className={styles.value}>{runAndAnalysisData.overDataRate} <span>%</span></p>
           </div>
           <div className={styles.pieContent}>
             <div className={styles.pieItem}>
