@@ -238,15 +238,30 @@ class Index extends Component {
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
                 case '1':
-                    return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
+                    return (<WasteGasChart positionClick={(param, status, data) => {
+                        this.positionClick(param, status, data);
+                        this.setState({
+                            showSider: true
+                        })
+                    }} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                     break;
                 case '2':
-                    return (<VocChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
+                    return (<VocChart positionClick={(param, status, data) => {
+                        this.positionClick(param, status, data);
+                        this.setState({
+                            showSider: true
+                        })
+                    }} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                     break;
                 case '3':
-                    return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
+                    return (<HgChart positionClick={(param, status, data) => {
+                        this.positionClick(param, status, data);
+                        this.setState({
+                            showSider: true
+                        })
+                    }} getsystemparam={this.getsystemparam}
                         getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
                 case '5':
                     return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
@@ -321,7 +336,6 @@ class Index extends Component {
         this.setState({
             paramInfo: res,
             collapsed: false,
-            showSider: true,
             contentstyle: styles.content,
         })
     }
@@ -392,7 +406,7 @@ class Index extends Component {
                                     onCollapse={this.onCollapse}
                                     collapsible
                                     reverseArrow
-                                    >
+                                >
                                     <div className={styles.rightParams}>
                                         {this.state.paramInfo}
                                     </div>
