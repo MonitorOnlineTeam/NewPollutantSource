@@ -65,11 +65,15 @@ export default class APILoader {
       return Promise.resolve()
     }
     const script = this.buildScriptTag(this.getScriptSrc(this.config))
+    const that = this;
     const p = new Promise(resolve => {
-      window[this.config.callback] = () => {
+      window[that.config.callback] = () => {
         resolve()
-        delete window[this.config.callback]
+        delete window[that.config.callback]
       }
+      setTimeout(() => {
+        resolve();
+      }, 1000)
     })
     document.body.appendChild(script)
     return p
@@ -100,6 +104,14 @@ export default class APILoader {
         } else {
           resolve()
         }
+        // if (window.initAMapUI && !amapuiInited) {
+        //   window.initAMapUI()
+        //   if (typeof useAMapUI === 'function') {
+        //     useAMapUI()
+        //   }
+        //   amapuiInited = true
+        // }
+        // resolve()
       })
     })
   }
