@@ -194,7 +194,7 @@ class Index extends Component {
             status,
             data,
         })
-
+debugger
         const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
         const paramlist = param ? param.split(',') : null;
         const statuslist = status ? status.split(',') : null;
@@ -223,6 +223,13 @@ class Index extends Component {
 
         if (paramInfolist.length > 0 || stateInfolist.length > 0 || dataInfolist.length > 0) {
             this.imgClick(paramInfolist, stateInfolist, dataInfolist);
+        }
+        else
+        {
+            this.setState({
+                showSider: false,
+                paramInfo:[],
+            })
         }
     }
 
