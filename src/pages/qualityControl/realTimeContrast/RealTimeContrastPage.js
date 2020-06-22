@@ -126,9 +126,9 @@ class index extends Component {
     }
 
     if (this.props.QCAResult !== nextProps.QCAResult && nextProps.QCAResult != "0") {
-      this.setState({
-        showType: "data"
-      })
+      // this.setState({
+      //   showType: "data"
+      // })
       this.props.dispatch({
         type: "qualityControl/GetQCAReport",
         payload: {
@@ -141,30 +141,54 @@ class index extends Component {
 
   renderData = (record) => {
     const rtnVal = [];
+    var count = record.length;
     if (record !== null && record.length > 0) {
       record.map((item, index) => {
-        rtnVal.push(
-          <tr>
-            <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {index}
-            </td>
-            <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-              {item.StandValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {item.ShowValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.AvgValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.Error}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-
-            </td>
-          </tr>
-        );
+        if(index==0)
+        {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {index + 1}
+              </td>
+              <td rowSpan={count} style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                {item.StandValue}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.AvgValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.Error}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+  
+              </td>
+            </tr>
+          );
+        }else
+        {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {index + 1}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              {/* <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td>
+              <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td> */}
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+  
+              </td>
+            </tr>
+          );
+        }
+       
       });
     }
 
@@ -306,6 +330,7 @@ class index extends Component {
     switch (this.props.QCAResult) {
       case "0":
         return <Spin style={{ position: 'absolute', right: 20 }} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        // return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "1":
         return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "2":
@@ -333,10 +358,12 @@ class index extends Component {
                   <Radio.Button value="chart">图表</Radio.Button>
                   <Radio.Button value="data">报表</Radio.Button>
                 </Radio.Group> : <></>
+                
             }
           </>
         }>
         <div style={{ position: "relative", }}>
+        {this.getQCAResult()}
           {
             showType === "chart" ?
               <>
@@ -359,7 +386,7 @@ class index extends Component {
               : <table
                 className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
               >
-                {this.getQCAResult()}
+               
                 <tbody >
                   <tr>
                     <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
