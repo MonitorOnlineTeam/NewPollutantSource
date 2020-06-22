@@ -45,7 +45,7 @@ class index extends Component {
             getPageConfig
             configId={configId}
             appendHandleRows={(row, key) => {
-              if (row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"] == 1) {
+              if (row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"] == 1&&row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"]!="P") {
                 let endTime = row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"] ? row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"] : moment();
                 let startTime = moment(row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"])
                 return <Tooltip title="查看结果比对">

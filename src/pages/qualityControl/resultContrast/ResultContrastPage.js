@@ -6,7 +6,7 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio,Popover,Icon } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio, Popover, Icon } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import styles from './ResultContrastPage.less';
 import stylesFor from '../remoteControl/index.less'
+import CustomIcon from '@/components/CustomIcon'
 
 const Option = Select.Option;
 const content = (
@@ -318,30 +319,54 @@ class ResultContrastPage extends Component {
 
   renderData = (record) => {
     const rtnVal = [];
+    var count = record.length;
     if (record !== null && record.length > 0) {
       record.map((item, index) => {
-        rtnVal.push(
-          <tr>
-            <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {index}
-            </td>
-            <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-              {item.StandValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {item.ShowValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.AvgValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.Error}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-
-            </td>
-          </tr>
-        );
+        if(index==0)
+        {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {index + 1}
+              </td>
+              <td rowSpan={count} style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                {item.StandValue}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.AvgValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.Error}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+  
+              </td>
+            </tr>
+          );
+        }else
+        {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              {index + 1}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              {/* <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td>
+              <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td> */}
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+  
+              </td>
+            </tr>
+          );
+        }
+       
       });
     }
 
@@ -466,7 +491,7 @@ class ResultContrastPage extends Component {
     const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + "px" : 200 + "px"
     return (
       <>
-        <div style={{ marginBottom: 10 }}>
+        {/* <div style={{ marginBottom: 10 }}>
           {
             (resultContrastData.errorStr === "合格" && dateValue) ? (
               <Alert
@@ -494,7 +519,7 @@ class ResultContrastPage extends Component {
               /> : null
               )
           }
-        </div>
+        </div> */}
         <Card title={this.searchWhere()}
           bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
           extra={
@@ -508,6 +533,14 @@ class ResultContrastPage extends Component {
             </Radio.Group>
           }>
           {
+
+            (resultContrastData.errorStr === "合格" && dateValue) ? (
+              <CustomIcon className={styles.QCResult} type="icon-hege" />
+            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
+              <CustomIcon className={styles.QCResult} type="icon-buhege" /> : null
+              )
+          }
+          {
             showType === "chart" ? <ReactEcharts
               // theme="line"
               // option={() => { this.lightOption() }}
@@ -517,7 +550,7 @@ class ResultContrastPage extends Component {
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
             /> : <table
-            className={stylesFor.FormTable}  style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
             >
                 <tbody >
                   <tr>
