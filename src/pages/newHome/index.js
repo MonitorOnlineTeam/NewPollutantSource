@@ -597,7 +597,7 @@ class NewHome extends PureComponent {
     // const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
     // const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
     // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
-    const bigLoading = getAllEntAndPointLoading;
+    const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
     return (
       <div className={styles.newHomeWrap}>
@@ -607,7 +607,7 @@ class NewHome extends PureComponent {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>
         </header>
-        <Spin style={{ zIndex: 9999 }} spinning={bigLoading}>
+        <Spin style={{ zIndex: 9999 }} spinning={loading}>
           <div className={styles.pageContainer}>
             <Drawer
               // getContainer={false}
@@ -622,7 +622,7 @@ class NewHome extends PureComponent {
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
                 <Icon type={leftVisible ? "caret-left" : "caret-right"} className={styles.icon} />
               </div>
-              {/* <Spin spinning={isLeftLoading}> */}
+              <Spin spinning={loading}>
                 <div className={styles["content"]}>
                   {/* 监控现状 */}
                   <Monitoring RegionCode={RegionCode} />
@@ -631,7 +631,7 @@ class NewHome extends PureComponent {
                   {/* 报警响应情况 */}
                   <AlarmResponse RegionCode={RegionCode} />
                 </div>
-              {/* </Spin> */}
+              </Spin>
             </Drawer>
             <Drawer
               // getContainer={false}
@@ -646,14 +646,14 @@ class NewHome extends PureComponent {
               <div className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`} onClick={() => this.toggle()}>
                 <Icon type={rightVisible ? "caret-right" : "caret-left"} className={styles.icon} />
               </div>
-              {/* <Spin spinning={isRightLoading}> */}
+              <Spin spinning={loading}>
                 <div className={styles["content"]}>
                   {/* 运维分析 */}
                   <Operations RegionCode={RegionCode} />
                   {/* 水平衡差 */}
                   <DiffHorizontal RegionCode={RegionCode} />
                 </div>
-              {/* </Spin> */}
+              </Spin>
             </Drawer>
             <div className={styles.mapContent}>
               <div className={styles.mapInnerBox}>
@@ -742,7 +742,7 @@ class NewHome extends PureComponent {
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}
-                features={['bg','point','building']}
+                features={['bg', 'point', 'building']}
                 id="mapId"
                 events={this.amapEvents}
                 // zoom={4}
