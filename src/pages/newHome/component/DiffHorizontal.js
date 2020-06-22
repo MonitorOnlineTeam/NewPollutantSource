@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.less'
+import { Popover, Icon } from "antd";
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 
@@ -90,7 +91,15 @@ class DiffHorizontal extends PureComponent {
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]}>
           水平衡差
+          <Popover title={"污水处理厂水平衡差计算公式"} content={
+            <div>
+              {/* 污水处理厂水平衡差计算公式：<br /> */}
+              ((进水口流量 - 回水口流量 - 出水口流量) / 进水口流量) * 100%
             </div>
+          }>
+            <Icon style={{ marginLeft: 6, fontSize: '15px' }} type="exclamation-circle" />
+          </Popover>
+        </div>
         <ReactEcharts
           option={this.barOptions()}
           style={{ height: '430px', marginTop: 20 }}

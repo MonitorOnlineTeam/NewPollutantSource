@@ -138,8 +138,8 @@ class MapUI extends PureComponent {
     var polys = districtExplorer.findFeaturePolygonsByAdcode(props.adcode);
     for (var i = 0, len = polys.length; i < len; i++) {
       polys[i].setOptions({
-        fillOpacity: isHover ? 0.5 : 0.2,
-        fillColor: isHover ? "#36a9f4" : "#f7f6f0"
+        fillOpacity: isHover ? 0.4 : 0.2,
+        fillColor: isHover ? "#f2e232" : "#f7f6f0"
       });
     }
   }
@@ -267,11 +267,11 @@ class MapUI extends PureComponent {
       return {
         cursor: 'default',
         bubble: true,
-        strokeColor: "#5da4e3", //线颜色
+        strokeColor: "#3c500c", //线颜色
         // strokeColor: "#0f509f", //线颜色
         // strokeColor: "#e8cab0", //线颜色
         strokeOpacity: 1, //线透明度
-        strokeWeight: 1, //线宽
+        strokeWeight: 2, //线宽
         // fillColor: fillColor, //填充色
         fillColor: "#f7f6f0", //填充色
         // fillColor: "#f4f4f4", //填充色
@@ -282,10 +282,10 @@ class MapUI extends PureComponent {
     districtExplorer.renderParentFeature(areaNode, {
       cursor: 'default',
       bubble: true,
-      strokeColor: '#485f9e', //线颜色
+      strokeColor: '#3c500c', //线颜色
       // strokeColor: '#485f9e', //线颜色
       strokeOpacity: 1, //线透明度
-      strokeWeight: 2, //线宽
+      strokeWeight: 3, //线宽
       fillColor: areaNode.getSubFeatures().length ? null : colors[0], //填充色
       // fillColor: areaNode.getSubFeatures().length ? null : "blue", //填充色
       fillOpacity: 0.35, //填充透明度

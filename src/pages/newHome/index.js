@@ -52,13 +52,13 @@ let aMap = null;
   allEntAndPointList: newHome.allEntAndPointList,
   configInfo: global.configInfo,
   infoWindowData: newHome.infoWindowData,
-  monitoringDataLoading: loading.effects["newHome/getMonitoringData"],
-  runAndAnalysisDataLoading: loading.effects["newHome/getRunAndAnalysisData"],
-  alarmResponseDataLoading: loading.effects["newHome/getAlarmResponseData"],
-  operationAnalysisLoading: loading.effects["newHome/getOperationAnalysis"],
-  taskStatisticsDataLoading: loading.effects["newHome/getTaskStatisticsData"],
-  diffHorizontalDataLoading: loading.effects["newHome/getDiffHorizontalData"],
-  drillDownLoading: newHome.drillDownLoading,
+  // monitoringDataLoading: loading.effects["newHome/getMonitoringData"],
+  // runAndAnalysisDataLoading: loading.effects["newHome/getRunAndAnalysisData"],
+  // alarmResponseDataLoading: loading.effects["newHome/getAlarmResponseData"],
+  // operationAnalysisLoading: loading.effects["newHome/getOperationAnalysis"],
+  // taskStatisticsDataLoading: loading.effects["newHome/getTaskStatisticsData"],
+  // diffHorizontalDataLoading: loading.effects["newHome/getDiffHorizontalData"],
+  // drillDownLoading: newHome.drillDownLoading,
   getAllEntAndPointLoading: loading.effects["newHome/getAllEntAndPoint"],
   officeVisible: newHome.officeVisible,
   siteDetailsVisible: newHome.siteDetailsVisible,
@@ -68,6 +68,7 @@ let aMap = null;
   startTime: newHome.startTime,
   endTime: newHome.endTime,
   LEVEL: newHome.LEVEL,
+  INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
 }))
 class NewHome extends PureComponent {
@@ -143,6 +144,7 @@ class NewHome extends PureComponent {
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
+      selectValue: "", // 筛选
     };
 
   }
@@ -506,11 +508,11 @@ class NewHome extends PureComponent {
   infoWindowContent = () => {
     const { currentClickObj } = this.state;
     const { infoWindowData } = this.props;
-    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.jpg" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
       imgName = config.uploadHost + "upload" + imgName;
     }
-    return <div className={styles.infoWindowContent} style={{ width: 320, minHeight: 360 }}>
+    return <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
       <div className={styles.header}>
         <h2>{infoWindowData.Abbreviation} - {currentClickObj.title}</h2>
         <Button type="primary" size="small" onClick={() => {
@@ -537,12 +539,12 @@ class NewHome extends PureComponent {
           {
             infoWindowData.list.map(item => {
               return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
+                <li title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
               </Tooltip>
             })
           }
         </ul>
-        <p>发布时间：{infoWindowData.MonitorTime}</p>
+        <p>监控时间：{infoWindowData.MonitorTime}</p>
       </div>
     </div>
   }
@@ -590,11 +592,12 @@ class NewHome extends PureComponent {
 
 
   render() {
-    const { filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
-    const { allEntAndPointList, constructionCorpsList, LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
-    const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
-    const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
-    const bigLoading = drillDownLoading || getAllEntAndPointLoading;
+    const { selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
+    const { allEntAndPointList, constructionCorpsList, INIT_LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
+    // const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
+    // const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
+    // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
+    const bigLoading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
     return (
       <div className={styles.newHomeWrap}>
@@ -619,7 +622,7 @@ class NewHome extends PureComponent {
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
                 <Icon type={leftVisible ? "caret-left" : "caret-right"} className={styles.icon} />
               </div>
-              <Spin spinning={isLeftLoading}>
+              {/* <Spin spinning={isLeftLoading}> */}
                 <div className={styles["content"]}>
                   {/* 监控现状 */}
                   <Monitoring RegionCode={RegionCode} />
@@ -628,7 +631,7 @@ class NewHome extends PureComponent {
                   {/* 报警响应情况 */}
                   <AlarmResponse RegionCode={RegionCode} />
                 </div>
-              </Spin>
+              {/* </Spin> */}
             </Drawer>
             <Drawer
               // getContainer={false}
@@ -643,14 +646,14 @@ class NewHome extends PureComponent {
               <div className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`} onClick={() => this.toggle()}>
                 <Icon type={rightVisible ? "caret-right" : "caret-left"} className={styles.icon} />
               </div>
-              <Spin spinning={isRightLoading}>
+              {/* <Spin spinning={isRightLoading}> */}
                 <div className={styles["content"]}>
                   {/* 运维分析 */}
                   <Operations RegionCode={RegionCode} />
                   {/* 水平衡差 */}
                   <DiffHorizontal RegionCode={RegionCode} />
                 </div>
-              </Spin>
+              {/* </Spin> */}
             </Drawer>
             <div className={styles.mapContent}>
               <div className={styles.mapInnerBox}>
@@ -659,7 +662,8 @@ class NewHome extends PureComponent {
                     //  true && <Button type="primary" style={{
                     float: 'right',
                   }} onClick={() => {
-                    this.renderEntMarkers(this.props)
+                    let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
+                    this.renderEntMarkers(filterList)
                     aMap.setFitView();
                   }}>返回企业</Button>
                 }
@@ -671,7 +675,8 @@ class NewHome extends PureComponent {
                     this.props.dispatch({
                       type: "newHome/updateState",
                       payload: {
-                        level: LEVEL,
+                        level: INIT_LEVEL,
+                        LEVEL: INIT_LEVEL,
                         regionCode: "660000000"
                       }
                     })
@@ -689,7 +694,8 @@ class NewHome extends PureComponent {
                     this.setState({ searchInputVal: e.target.value })
                   }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
                 }
-                <Select className={styles.selectShowType} defaultValue="" onChange={(val) => {
+                <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
+                  this.setState({ selectValue: val })
                   if (val) {
                     let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
                     console.log('filterList=', filterList)
@@ -721,6 +727,7 @@ class NewHome extends PureComponent {
                     <li><WaterOffline /> <span>废水</span></li>
                     <li><GasOffline /> <span>废气</span></li>
                     <li><CustomIcon type="icon-fangwu" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />空气站</li>
+                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停产</li>
                   </ul>
                 </div>
                 {
@@ -735,6 +742,7 @@ class NewHome extends PureComponent {
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}
+                features={['bg','point','building']}
                 id="mapId"
                 events={this.amapEvents}
                 // zoom={4}

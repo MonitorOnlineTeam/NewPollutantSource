@@ -22,6 +22,7 @@ const { MonthPicker } = DatePicker;
   endTime: newHome.endTime,
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
+  modelTitle: newHome.modelTitle,
 }))
 class DrillDownRunModal extends PureComponent {
   constructor(props) {
@@ -57,9 +58,9 @@ class DrillDownRunModal extends PureComponent {
       legend: {},
       tooltip: {
         trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        },
+        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        // },
         formatter: (params) => {
           var tar = params[0];
           return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + ' %';
@@ -89,7 +90,7 @@ class DrillDownRunModal extends PureComponent {
           type: 'value',
           name: '（%）',
           position: 'left',
-          minInterval:1,
+          minInterval: 1,
           splitLine: {
             show: true,
             lineStyle: {
@@ -100,10 +101,19 @@ class DrillDownRunModal extends PureComponent {
       ],
       series: [
         {
-          name: this.props.title,
+          name: this.props.modelTitle,
           type: 'bar',
           // barWidth: '40%',
           barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "%"
+              }
+            }
+          },
           data: seriesData
         }
       ]
@@ -177,14 +187,14 @@ class DrillDownRunModal extends PureComponent {
 
 
   render() {
-    const { drillDownRunVisible, startTime, endTime, title, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { drillDownRunVisible, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
     const { formItemLayout } = this.state;
 
-    let levelText = level === 1 ? "(师)" : (level === 2 ? "(监测点)" : "(排口)")
+    let levelText = level === 1 ? "(师)" : (level === 2 ? "(监控目标)" : "(排口)")
     return (
       <Modal
         title={<div>
-          {`${title}${levelText} - 详情`}
+          {`${modelTitle}${levelText} - 详情`}
           {
             level !== LEVEL && <Button
               style={{ marginLeft: 10 }}
@@ -205,62 +215,62 @@ class DrillDownRunModal extends PureComponent {
         width={"80%"}
         onCancel={this.close}
       >
-        <Form>
-          <Row>
-            {
-              level === 2 &&
+        <Spin spinning={loading}>
+          <Form>
+            <Row>
+              {
+                level === 2 &&
+                <Col span={10}>
+                  <Form.Item {...formItemLayout} label="企业名称">
+                    {getFieldDecorator("entName", {
+                    })(
+                      <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                        this.props.dispatch({
+                          type: "newHome/updateState",
+                          payload: {
+                            entName: e.target.value
+                          }
+                        })
+                      }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              }
               <Col span={10}>
-                <Form.Item {...formItemLayout} label="企业名称">
-                  {getFieldDecorator("entName", {
+                <Form.Item {...formItemLayout} label="日期">
+                  {getFieldDecorator("time", {
+                    initialValue: moment(startTime)
                   })(
-                    <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                    <MonthPicker allowClear={false} onChange={(date, dateString) => {
                       this.props.dispatch({
                         type: "newHome/updateState",
                         payload: {
-                          entName: e.target.value
+                          startTime: date.format("YYYY-MM-01 00:00:00"),
+                          endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
                         }
                       })
                     }} />
                   )}
                 </Form.Item>
               </Col>
-            }
-            <Col span={10}>
-              <Form.Item {...formItemLayout} label="日期">
-                {getFieldDecorator("time", {
-                  initialValue: moment(startTime)
-                })(
-                  <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                    this.props.dispatch({
-                      type: "newHome/updateState",
-                      payload: {
-                        startTime: date.format("YYYY-MM-01 00:00:00"),
-                        endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
-                      }
-                    })
-                  }} />
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item>
-                <Button type="primary" onClick={() => {
-                  this.props.chartClick();
-                }}>查询</Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-        <Divider style={{ margin: 0 }} />
-        {/* <Spin spinning={!!loading}> */}
-        <ReactEcharts
-          option={this.getOption()}
-          style={{ height: '60vh' }}
-          onEvents={this.chartEvents}
-          className="echarts-for-echarts"
-          theme="my_theme"
-        />
-        {/* </Spin> */}
+              <Col span={4}>
+                <Form.Item>
+                  <Button type="primary" onClick={() => {
+                    this.props.chartClick();
+                  }}>查询</Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <Divider style={{ margin: 0 }} />
+          <ReactEcharts
+            option={this.getOption()}
+            style={{ height: '60vh' }}
+            onEvents={this.chartEvents}
+            className="echarts-for-echarts"
+            theme="my_theme"
+          />
+        </Spin>
       </Modal >
     );
   }

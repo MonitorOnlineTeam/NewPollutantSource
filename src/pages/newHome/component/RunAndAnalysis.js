@@ -4,9 +4,14 @@ import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva'
 import DrillDownRunModal from "./DrillDownRunModal"
 
+
+let servicesName = "";
 @connect(({ loading, newHome }) => ({
   runAndAnalysisData: newHome.runAndAnalysisData,
+  modelTitle: newHome.modelTitle,
+  // drillDownRunVisible: newHome.drillDownRunVisible,
 }))
+
 class RunAndAnalysis extends PureComponent {
   constructor(props) {
     super(props);
@@ -22,9 +27,23 @@ class RunAndAnalysis extends PureComponent {
     })
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.modelTitle !== nextProps.modelTitle) {
+      return false;
+    }
+    return true;
+  }
+
   // 超标率下钻
   getTrippingOverDataList = (title) => {
-    this.setState({ title })
+    // this.setState({ title })
+    this.props.dispatch({
+      type: "newHome/updateState",
+      payload: {
+        drillDownRunVisible: true,
+        modelTitle: title
+      }
+    })
     this.props.dispatch({
       type: "newHome/getTrippingOverDataList",
     })
@@ -32,7 +51,15 @@ class RunAndAnalysis extends PureComponent {
 
   // 图表点击
   onEchartsClick = (title, servicesName) => {
-    this.setState({ title, servicesName })
+    // this.setState({ title, servicesName })
+    servicesName = servicesName;
+    this.props.dispatch({
+      type: "newHome/updateState",
+      payload: {
+        drillDownRunVisible: true,
+        modelTitle: title
+      }
+    })
     this.props.dispatch({
       type: "newHome/getEChartsDrillDown",
       payload: {
@@ -209,8 +236,8 @@ class RunAndAnalysis extends PureComponent {
 
 
   render() {
-    const { runAndAnalysisData } = this.props;
-    const { title, servicesName } = this.state;
+    const { modelTitle, runAndAnalysisData } = this.props;
+    // const { title, servicesName } = this.state;
     return (
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]}>
@@ -229,14 +256,14 @@ class RunAndAnalysis extends PureComponent {
                 option={this.getOption(1)}
                 onEvents={{
                   click: (event) => {
-                    // 传输有效率下钻
-                    this.onEchartsClick("传输有效率", "getTransmissionEfficiencyRateDrillDown")
+                    // 有效传输率下钻
+                    this.onEchartsClick("有效传输率", "getTransmissionEfficiencyRateDrillDown")
                   }
                 }}
                 style={{ height: '110px', width: '100%' }}
                 theme="my_theme"
               />
-              <div className={styles.echartsTitle}>传输有效率</div>
+              <div className={styles.echartsTitle}>有效传输率</div>
             </div>
             <div className={styles.pieItem}>
               <ReactEcharts
@@ -282,8 +309,8 @@ class RunAndAnalysis extends PureComponent {
             </div>
           </div>
         </div>
-        <DrillDownRunModal title={this.state.title} chartClick={() => {
-          title === "超标率" ? this.getTrippingOverDataList(title) : this.onEchartsClick(title, servicesName)
+        <DrillDownRunModal chartClick={() => {
+          modelTitle === "超标率" ? this.getTrippingOverDataList(modelTitle) : this.onEchartsClick(modelTitle, servicesName)
         }} />
       </div>
     );
