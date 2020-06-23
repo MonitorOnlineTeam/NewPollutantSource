@@ -39,6 +39,7 @@ class NewRangePicker extends Component {
         };
         this.state = defaultOption;
     }
+
     componentWillMount = () => {
         const { onRef } = this.props;
         onRef && onRef(this);
@@ -52,17 +53,17 @@ class NewRangePicker extends Component {
         if (dateValue) {
             return this.getFormatDate(dateValue[0], dateValue[1]);
         }
-        else {
+
             return this.getFormatDate(null, null);
-        }
     }
+
     /**
      * 获取格式化的时间
      */
     getFormatDate = (beginTime, endTime, Type) => {
-        //验证、回调、form中的字段名
+        // 验证、回调、form中的字段名
         const { isVerification, callback, fieldName } = this.props;
-        let dataType = Type || this.props.dataType;
+        const dataType = Type || this.props.dataType;
         if (!beginTime || !endTime) {
             callback && callback([beginTime, endTime], dataType, fieldName);
             return;
@@ -70,7 +71,7 @@ class NewRangePicker extends Component {
 
 
         switch (dataType) {
-            case "realtime":
+            case 'realtime':
                 if (beginTime == 1 || !endTime == 1) {
                     beginTime = moment(new Date()).add(-60, 'minutes');
                     endTime = moment(new Date());
@@ -83,14 +84,13 @@ class NewRangePicker extends Component {
                     }
                 }
                 break;
-            case "minute":
+            case 'minute':
                 if (beginTime == 1 || !endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-1, 'day').format("YYYY-MM-DD HH:mm:00"));
-                    endTime = moment(moment(new Date()).format("YYYY-MM-DD HH:mm:59"));
-                }
-                else {
-                    beginTime = moment(beginTime.format("YYYY-MM-DD HH:mm:00"));
-                    endTime = moment(endTime.format("YYYY-MM-DD HH:mm:59"));
+                    beginTime = moment(moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:mm:00'));
+                    endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:59'));
+                } else {
+                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:mm:00'));
+                    endTime = moment(endTime.format('YYYY-MM-DD HH:mm:59'));
                 }
                 if (isVerification) {
                     const ranges = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-1, 'month');
@@ -99,17 +99,16 @@ class NewRangePicker extends Component {
                         return;
                     }
                 }
-                // 
+                //
                 break;
-            case "hour":
-            case "Hour":
+            case 'hour':
+            case 'Hour':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-1, 'day').format("YYYY-MM-DD HH:00:00"));
-                    endTime = moment(moment(new Date()).format("YYYY-MM-DD HH:59:59"));
-                }
-                else {
-                    beginTime = moment(beginTime.format("YYYY-MM-DD HH:00:00"));
-                    endTime = moment(endTime.format("YYYY-MM-DD HH:59:59"));
+                    beginTime = moment(moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:00:00'));
+                    endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:59:59'));
+                } else {
+                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:00:00'));
+                    endTime = moment(endTime.format('YYYY-MM-DD HH:59:59'));
                 }
                 if (isVerification) {
                     const ranges = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-6, 'month');
@@ -119,15 +118,14 @@ class NewRangePicker extends Component {
                     }
                 }
                 break;
-            case "day":
-            case "Day":
+            case 'day':
+            case 'Day':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-1, 'month').format("YYYY-MM-DD 00:00:00"));
-                    endTime = moment(moment(new Date()).format("YYYY-MM-DD 23:59:59"));
-                }
-                else {
-                    beginTime = moment(beginTime.format("YYYY-MM-DD 00:00:00"));
-                    endTime = moment(endTime.format("YYYY-MM-DD 23:59:59"));
+                    beginTime = moment(moment(new Date()).add(-1, 'month').format('YYYY-MM-DD 00:00:00'));
+                    endTime = moment(moment(new Date()).format('YYYY-MM-DD 23:59:59'));
+                } else {
+                    beginTime = moment(beginTime.format('YYYY-MM-DD 00:00:00'));
+                    endTime = moment(endTime.format('YYYY-MM-DD 23:59:59'));
                 }
                 if (isVerification) {
                     const ranges = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-12, 'month');
@@ -137,15 +135,14 @@ class NewRangePicker extends Component {
                     }
                 }
                 break;
-            //较为特殊的一种选择时间控件，由于小时数据统计从1点开始到0点结束
-            case "daySelecthour":
+            // 较为特殊的一种选择时间控件，由于小时数据统计从1点开始到0点结束
+            case 'daySelecthour':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-1, 'month').format("YYYY-MM-DD 01:00:00"));
-                    endTime = moment(moment(new Date()).format("YYYY-MM-DD 00:00:00"));
-                }
-                else {
-                    beginTime = moment(beginTime.format("YYYY-MM-DD 01:00:00"));
-                    endTime = moment(endTime.format("YYYY-MM-DD 00:00:00"));
+                    beginTime = moment(moment(new Date()).add(-1, 'month').format('YYYY-MM-DD 01:00:00'));
+                    endTime = moment(moment(new Date()).format('YYYY-MM-DD 00:00:00'));
+                } else {
+                    beginTime = moment(beginTime.format('YYYY-MM-DD 01:00:00'));
+                    endTime = moment(endTime.format('YYYY-MM-DD 00:00:00'));
                 }
 
                 const interval = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-12, 'month');
@@ -158,16 +155,14 @@ class NewRangePicker extends Component {
                     }
                 }
                 break;
-            case "month":
+            case 'month':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-3, 'month').format("YYYY-MM-01 01:00:00"));
+                    beginTime = moment(moment(new Date()).add(-3, 'month').format('YYYY-MM-01 01:00:00'));
                     endTime = moment(moment().add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');
-                }
-                else {
-                    beginTime = moment(beginTime.format("YYYY-MM-01 00:00:00"));
+                } else {
+                    beginTime = moment(beginTime.format('YYYY-MM-01 00:00:00'));
                     endTime = moment(endTime.add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');
                 }
-
         }
 
         callback && callback([beginTime, endTime], dataType, fieldName);
@@ -175,18 +170,24 @@ class NewRangePicker extends Component {
     }
 
     onDateChange = (dates, dateStrings) => {
-        var dateValue = this.getFormatDate(dates[0], dates[1]);
+        debugger;
+        const dateValue = this.getFormatDate(dates[0], dates[1]);
         if (dates && dates.length && dates[0] && dates[1]) {
-            if (dateValue)
-                this.setState({
+            if (dateValue) {
+ this.setState({
                     dateValue,
                 });
-            else {
+} else {
                 this.setState({
                     dateValue: [undefined, undefined],
                 });
             }
         } 
+        else {
+            this.setState({
+                dateValue: [undefined, undefined],
+            });
+        }
         // else {
         //     message.error("选择时间段不符合要求，请检查！");
         //     return;
@@ -195,21 +196,20 @@ class NewRangePicker extends Component {
 
 
     onPanelChange = (dates, mode) => {
-        var dateValue = this.getFormatDate(dates[0], dates[1]);
-        if (dateValue)
-            this.setState({
+        const dateValue = this.getFormatDate(dates[0], dates[1]);
+        if (dateValue) {
+ this.setState({
                 dateValue,
             });
-        else {
+} else {
             this.setState({
                 dateValue: [undefined, undefined],
             });
         }
     }
 
-    onDataTypeChange = (dataType) => {
-
-        var dateValue = this.getFormatDate(1, 1, dataType);
+    onDataTypeChange = dataType => {
+        const dateValue = this.getFormatDate(1, 1, dataType);
         this.setState({
             dateValue,
         });

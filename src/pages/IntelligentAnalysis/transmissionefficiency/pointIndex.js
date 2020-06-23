@@ -14,23 +14,24 @@ import {
     Col,
     Icon,
     Badge,
-    Button
+    Button,
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SdlTable from '@/components/SdlTable';
 import { onlyOneEnt } from '@/config';
+
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
-    getData: 'transmissionefficiency/getData'
+    getData: 'transmissionefficiency/getData',
 };
 @connect(({
     loading,
-    transmissionefficiency
+    transmissionefficiency,
 }) => ({
     loading: loading.effects[pageUrl.getData],
     total: transmissionefficiency.total,
@@ -44,57 +45,61 @@ export default class TransmissionEfficiency extends Component {
         super(props);
 
         this.state = {
-            beginTime: moment(this.props.beginTime) ,
-            endTime: ''
+            beginTime: moment(this.props.beginTime),
+            endTime: '',
         };
     }
+
     componentWillMount() {
         this.getTableData(1);
     }
-    updateState = (payload) => {
+
+    updateState = payload => {
         this.props.dispatch({
             type: pageUrl.updateState,
-            payload: payload,
+            payload,
         });
     }
-    getTableData = (pageIndex) => {
+
+    getTableData = pageIndex => {
         const { entcode } = this.props;
         if (entcode) {
             this.props.dispatch({
                 type: pageUrl.getData,
                 payload: {
-                    entcode: entcode,
-                    pageIndex: pageIndex,
+                    entcode,
+                    pageIndex,
                 },
             });
         }
-
     }
+
     handleTableChange = (pagination, filters, sorter) => {
         if (sorter.order) {
             this.updateState({
                 transmissionEffectiveRate: sorter.order,
                 pageIndex: pagination.current,
-                pageSize: pagination.pageSize
+                pageSize: pagination.pageSize,
             });
         } else {
             this.updateState({
                 transmissionEffectiveRate: 'ascend',
                 pageIndex: pagination.current,
-                pageSize: pagination.pageSize
+                pageSize: pagination.pageSize,
             });
         }
         this.getTableData(pagination.current);
     }
+
     onDateChange = (value, dateString) => {
-        let endTime = moment(dateString).add(1, 'months').format('YYYY-MM-01 00:00:00');
+        const endTime = moment(dateString).add(1, 'months').format('YYYY-MM-01 00:00:00');
 
         // if (moment(dateString).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')) {
         //     endTime = moment().format('YYYY-MM-DD HH:mm:ss');
         // }
         this.updateState({
             beginTime: moment(dateString).format('YYYY-MM-01 HH:mm:ss'),
-            endTime: endTime
+            endTime,
         });
         // let endTime = moment(dateString).add(1, 'months').add(-1, 'days').format('YYYY-MM-DD HH:mm:ss');
 
@@ -107,6 +112,7 @@ export default class TransmissionEfficiency extends Component {
         // });
         this.getTableData(this.props.pageIndex);
     }
+
     render() {
         const columns = [
             {
@@ -115,9 +121,7 @@ export default class TransmissionEfficiency extends Component {
                 key: 'PollutantTypeName',
                 width: '12%',
                 align: 'left',
-                render: (text, record) => {
-                    return text;
-                }
+                render: (text, record) => text,
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>排口名称</span>),
@@ -125,9 +129,7 @@ export default class TransmissionEfficiency extends Component {
                 key: 'PointName',
                 width: '12%',
                 align: 'left',
-                render: (text, record) => {
-                    return text;
-                }
+                render: (text, record) => text,
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>应传个数</span>),
@@ -136,15 +138,12 @@ export default class TransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'left',
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
-                    else
-                    {
+
                         return text;
-                    }
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>实传个数</span>),
@@ -153,9 +152,8 @@ export default class TransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'left',
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgTransmissionNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
@@ -164,7 +162,7 @@ export default class TransmissionEfficiency extends Component {
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}> <Badge className={styles.warningdata} status="warning" />{text}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>有效个数</span>),
@@ -173,9 +171,8 @@ export default class TransmissionEfficiency extends Component {
                 width: '11.3%',
                 align: 'left',
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgEffectiveNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
@@ -184,7 +181,7 @@ export default class TransmissionEfficiency extends Component {
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{text}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
@@ -193,18 +190,17 @@ export default class TransmissionEfficiency extends Component {
                 width: '12.3%',
                 align: 'left',
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgTransmissionRate <= text) {
-                        return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
+                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2) + '%'}</span>)
+                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
-                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{(parseFloat(text) * 100).toFixed(2) + '%'}
+                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
@@ -214,18 +210,17 @@ export default class TransmissionEfficiency extends Component {
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgEffectiveRate <= text) {
-                        return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
+                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2) + '%'}</span>)
+                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
-                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{(parseFloat(text) * 100).toFixed(2) + '%'}
+                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>有效传输率</span>),
@@ -236,9 +231,8 @@ export default class TransmissionEfficiency extends Component {
                 // align: 'center',
                 sorter: true,
                 render: (text, record) => {
-                    if(record.IsStop)
-                    {
-                        return   <span className={styles.normaldata}>停运</span>;
+                    if (record.IsStop) {
+                        return <span className={styles.normaldata}>停运</span>;
                     }
                     // 红色：#f5222d 绿色：#52c41a
                     const percent = (parseFloat(text) * 100).toFixed(2);
@@ -260,25 +254,24 @@ export default class TransmissionEfficiency extends Component {
                             format={percent => (<span style={{ color: 'black' }}>{percent}%</span>)}
                         />
                     </div>);
-                }
+                },
             },
         ];
         const entName = this.props.entname;
-        let tableTitle = "";
+        let tableTitle = '';
         let Crumbs = [
-            { Name: '智能质控', Url: '' }
+            { Name: '智能质控', Url: '' },
         ]
         if (onlyOneEnt) {
-            tableTitle = `有效传输率列表`
+            tableTitle = '有效传输率列表'
             Crumbs = Crumbs.concat(
-                { Name: '有效传输率', Url: '' }
+                { Name: '有效传输率', Url: '' },
             )
-        }
-        else {
+        } else {
             tableTitle = `有效传输率列表(${entName})`
             Crumbs = Crumbs.concat(
                 { Name: '企业有效传输率', Url: '/qualitycontrol/transmissionefficiency' },
-                { Name: '排口有效传输率', Url: '' }
+                { Name: '排口有效传输率', Url: '' },
             )
         }
 
@@ -287,7 +280,7 @@ export default class TransmissionEfficiency extends Component {
             <div>
                 <Row className={styles.cardTitle}>
                     <Card
-                        title={<div style={{marginBottom: 20 }}>
+                        title={<div style={{ marginBottom: 20 }}>
                             {entName}
                             {/* <Button
                                 style={{ marginLeft: 10 }}
@@ -304,7 +297,7 @@ export default class TransmissionEfficiency extends Component {
                         bordered={false}
                         style={{ height: 'auto' }}
                         extra={
-                            <div style={{marginBottom: 20 }}>
+                            <div style={{ marginBottom: 20 }}>
                                 <div style={{
                                     width: 20,
                                     height: 9,
@@ -312,7 +305,7 @@ export default class TransmissionEfficiency extends Component {
                                     display: 'inline-block',
                                     borderRadius: '20%',
                                     cursor: 'pointer',
-                                    marginRight: 3
+                                    marginRight: 3,
                                 }} /> <span style={{ cursor: 'pointer' }}> 排口有效传输率达标</span>
                                 <div style={{
                                     width: 20,
@@ -322,7 +315,7 @@ export default class TransmissionEfficiency extends Component {
                                     borderRadius: '20%',
                                     cursor: 'pointer',
                                     marginLeft: 35,
-                                    marginRight: 3
+                                    marginRight: 3,
                                 }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
                                 <Badge style={{ marginLeft: 35, marginBottom: 4 }} status="warning" /><span style={{ cursor: 'pointer' }}> 未达到平均值</span>
                                 <div
@@ -330,17 +323,15 @@ export default class TransmissionEfficiency extends Component {
                                         display: 'inline-block',
                                         borderRadius: '20%',
                                         marginLeft: 35,
-                                        marginRight: 3
+                                        marginRight: 3,
                                     }}
                                 >
                                     <span style={{ color: '#b3b3b3' }}>
                                         时间选择：
-                                <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} onChange={this.onDateChange} />
+                                <MonthPicker defaultValue={this.state.beginTime} format={monthFormat} allowClear={false} onChange={this.onDateChange} />
                                     </span>
                                 </div>
                             </div>
-
-
 
 
                         }
@@ -360,10 +351,10 @@ export default class TransmissionEfficiency extends Component {
                                 showSizeChanger: true,
                                 showQuickJumper: true,
                                 sorter: true,
-                                'total': this.props.total,
-                                'pageSize': this.props.pageSize,
-                                'current': this.props.pageIndex,
-                                pageSizeOptions: ['10', '20', '30', '40', '50']
+                                total: this.props.total,
+                                pageSize: this.props.pageSize,
+                                current: this.props.pageIndex,
+                                pageSizeOptions: ['10', '20', '30', '40', '50'],
                             }}
                         />
                     </Card>
