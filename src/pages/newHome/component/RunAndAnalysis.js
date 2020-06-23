@@ -5,7 +5,6 @@ import { connect } from 'dva'
 import DrillDownRunModal from "./DrillDownRunModal"
 
 
-let servicesName = "";
 @connect(({ loading, newHome }) => ({
   runAndAnalysisData: newHome.runAndAnalysisData,
   modelTitle: newHome.modelTitle,
@@ -16,6 +15,9 @@ class RunAndAnalysis extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this._SELF_ = {
+      servicesName: "",
+    }
   }
 
   componentDidMount() {
@@ -51,8 +53,7 @@ class RunAndAnalysis extends PureComponent {
 
   // 图表点击
   onEchartsClick = (title, servicesName) => {
-    // this.setState({ title, servicesName })
-    servicesName = servicesName;
+    this._SELF_.servicesName = servicesName;
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
@@ -234,10 +235,17 @@ class RunAndAnalysis extends PureComponent {
 
   }
 
+  clickCallback = () => {
+    if (this.props.modelTitle === "超标率") {
+      this.getTrippingOverDataList(this.props.modelTitle)
+    } else {
+      this.onEchartsClick(this.props.modelTitle, this._SELF_.servicesName)
+    }
+  }
+
 
   render() {
     const { modelTitle, runAndAnalysisData } = this.props;
-    // const { title, servicesName } = this.state;
     return (
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]}>
@@ -309,9 +317,7 @@ class RunAndAnalysis extends PureComponent {
             </div>
           </div>
         </div>
-        <DrillDownRunModal chartClick={() => {
-          modelTitle === "超标率" ? this.getTrippingOverDataList(modelTitle) : this.onEchartsClick(modelTitle, servicesName)
-        }} />
+        <DrillDownRunModal chartClick={this.clickCallback} />
       </div>
     );
   }

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-22 16:21:33
+ * @Last Modified time: 2020-06-23 11:55:45
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -132,13 +132,13 @@ class AlarmResponse extends PureComponent {
         {
           <div className={styles["warningInfo"]}>
             <i></i>
-            <span>{`${month}月超标核实${taskCount}次`}{taskYearRate ? (`，同比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
+            <span>{`${month}月超标核实${taskCount}次`}{taskYearRate !== 0 ? (`，同比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
           </div>
         }
         {
           <div className={styles["warningInfo"]}>
             <i style={{ background: "#f6b322" }}></i>
-            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate ? (`,同比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
+            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,同比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
           </div>
         }
         <ReactEcharts

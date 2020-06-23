@@ -52,13 +52,13 @@ let aMap = null;
   allEntAndPointList: newHome.allEntAndPointList,
   configInfo: global.configInfo,
   infoWindowData: newHome.infoWindowData,
-  // monitoringDataLoading: loading.effects["newHome/getMonitoringData"],
-  // runAndAnalysisDataLoading: loading.effects["newHome/getRunAndAnalysisData"],
-  // alarmResponseDataLoading: loading.effects["newHome/getAlarmResponseData"],
-  // operationAnalysisLoading: loading.effects["newHome/getOperationAnalysis"],
-  // taskStatisticsDataLoading: loading.effects["newHome/getTaskStatisticsData"],
-  // diffHorizontalDataLoading: loading.effects["newHome/getDiffHorizontalData"],
-  // drillDownLoading: newHome.drillDownLoading,
+  monitoringDataLoading: loading.effects["newHome/getMonitoringData"],
+  runAndAnalysisDataLoading: loading.effects["newHome/getRunAndAnalysisData"],
+  alarmResponseDataLoading: loading.effects["newHome/getAlarmResponseData"],
+  operationAnalysisLoading: loading.effects["newHome/getOperationAnalysis"],
+  taskStatisticsDataLoading: loading.effects["newHome/getTaskStatisticsData"],
+  diffHorizontalDataLoading: loading.effects["newHome/getDiffHorizontalData"],
+  drillDownLoading: newHome.drillDownLoading,
   getAllEntAndPointLoading: loading.effects["newHome/getAllEntAndPoint"],
   officeVisible: newHome.officeVisible,
   siteDetailsVisible: newHome.siteDetailsVisible,
@@ -510,7 +510,7 @@ class NewHome extends PureComponent {
     const { infoWindowData } = this.props;
     let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
-      imgName = config.uploadHost + "upload" + imgName;
+      imgName = config.uploadHost + "upload/" + infoWindowData.photo[0];
     }
     return <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
       <div className={styles.header}>
@@ -539,7 +539,7 @@ class NewHome extends PureComponent {
           {
             infoWindowData.list.map(item => {
               return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
               </Tooltip>
             })
           }
@@ -594,8 +594,8 @@ class NewHome extends PureComponent {
   render() {
     const { selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
     const { allEntAndPointList, constructionCorpsList, INIT_LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
-    // const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
-    // const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
+    const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
+    const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
     // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
     const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
@@ -622,7 +622,7 @@ class NewHome extends PureComponent {
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
                 <Icon type={leftVisible ? "caret-left" : "caret-right"} className={styles.icon} />
               </div>
-              <Spin spinning={loading}>
+              <Spin spinning={isLeftLoading}>
                 <div className={styles["content"]}>
                   {/* 监控现状 */}
                   <Monitoring RegionCode={RegionCode} />
@@ -646,7 +646,7 @@ class NewHome extends PureComponent {
               <div className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`} onClick={() => this.toggle()}>
                 <Icon type={rightVisible ? "caret-right" : "caret-left"} className={styles.icon} />
               </div>
-              <Spin spinning={loading}>
+              <Spin spinning={isRightLoading}>
                 <div className={styles["content"]}>
                   {/* 运维分析 */}
                   <Operations RegionCode={RegionCode} />
@@ -662,7 +662,13 @@ class NewHome extends PureComponent {
                     //  true && <Button type="primary" style={{
                     float: 'right',
                   }} onClick={() => {
-                    let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
+                    let filterList = allEntAndPointList;
+                    if (selectValue) {
+                      filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
+                    }
+                    this.setState({
+                      infoWindowVisible: false, // 关闭排口弹窗
+                    })
                     this.renderEntMarkers(filterList)
                     aMap.setFitView();
                   }}>返回企业</Button>
@@ -670,6 +676,7 @@ class NewHome extends PureComponent {
                 {
                   clickedDivision && <Button type="primary" style={{
                     float: 'right',
+                    display: displayType === 1 ? "none" : "inline"
                   }} onClick={() => {
                     this.setState({ clickedDivision: undefined })
                     this.props.dispatch({
@@ -711,7 +718,9 @@ class NewHome extends PureComponent {
                   <Option value="2">空气站</Option>
                 </Select>
                 {
-                  clickedDivision && <div className={styles.shibox}>
+                  clickedDivision && <div style={{
+                    display: displayType === 1 ? "none" : "block"
+                  }} className={styles.shibox}>
                     {/* <span>师局</span><br /> */}
                     <span>{clickedDivision.title}</span>
                     {/* <span>第九师</span> */}
@@ -742,7 +751,7 @@ class NewHome extends PureComponent {
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}
-                features={['bg', 'point', 'building']}
+                // features={['bg', 'point', 'building']}
                 id="mapId"
                 events={this.amapEvents}
                 // zoom={4}
