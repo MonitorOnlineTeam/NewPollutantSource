@@ -80,6 +80,7 @@ class index extends Component {
           visible={this.state.visible}
           footer={null}
           onOk={this.handleOk}
+          bodyStyle={{padding: "10px 14px 14px" }}
           onCancel={() => {
             this.setState({ visible: false })
           }}
