@@ -23,6 +23,8 @@ const Option = Select.Option
   codeList: newHome.codeList,
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
+  taskModelType: newHome.taskModelType,
+  modelTitle: newHome.modelTitle,
 }))
 class DrillDownTaskModal extends PureComponent {
   constructor(props) {
@@ -54,10 +56,10 @@ class DrillDownTaskModal extends PureComponent {
   }
 
   getOption = () => {
-    const { type, alarmResponseModalData, taskCountModalData, taskClassifyModalData, title } = this.props;
+    const { taskModelType, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
     let series = [];
-    if (type === "alarmResponse") {
-      if (title === "异常响应") {
+    if (taskModelType === "alarmResponse") {
+      if (modelTitle === "异常响应") {
         series = [{
           name: '异常响应',
           type: 'bar',
@@ -66,6 +68,15 @@ class DrillDownTaskModal extends PureComponent {
           },
           // barWidth: '40%',
           barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
+          },
           data: alarmResponseModalData.execptionCount
         },
         {
@@ -76,6 +87,15 @@ class DrillDownTaskModal extends PureComponent {
           },
           // barWidth: '40%',
           barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
+          },
           data: alarmResponseModalData.execptionYearCount
         }]
       } else {
@@ -88,6 +108,15 @@ class DrillDownTaskModal extends PureComponent {
           },
           // barWidth: '40%',
           barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
+          },
           data: alarmResponseModalData.taskCount
         },
         {
@@ -98,6 +127,15 @@ class DrillDownTaskModal extends PureComponent {
           },
           // barWidth: '40%',
           barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
+          },
           data: alarmResponseModalData.taskYearCount
         },]
       }
@@ -106,9 +144,9 @@ class DrillDownTaskModal extends PureComponent {
         color: ["#f6b322", "#0edaad"],
         tooltip: {
           trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-          },
+          // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          // },
           formatter(params, ticket, callback) {
             console.log('params=', params)
             let res = `${params[0].axisValue}<br/>`;
@@ -145,13 +183,20 @@ class DrillDownTaskModal extends PureComponent {
       };
 
     }
-    if (type === "taskClassify") {
+    if (taskModelType === "taskClassify") {
       return {
         tooltip: {
           trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-          }
+          // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          // }
+          formatter(params, ticket, callback) {
+            let res = `${params[0].axisValue}<br/>`;
+            params.map(item => {
+              res += item.marker + `${item.seriesName}：${item.value}次<br />`;
+            });
+            return res;
+          },
         },
         legend: {},
         grid: {
@@ -183,6 +228,15 @@ class DrillDownTaskModal extends PureComponent {
             color: "#67a2ef",
             // barWidth: '40%',
             barMaxWidth: 60,
+            label: {
+              show: true,
+              position: 'top',
+              formatter: (params) => {
+                if (params.value) {
+                  return params.value + "次"
+                }
+              }
+            },
             data: taskClassifyModalData.ywc
           },
           {
@@ -191,6 +245,15 @@ class DrillDownTaskModal extends PureComponent {
             color: "#0edaad",
             // barWidth: '40%',
             barMaxWidth: 60,
+            label: {
+              show: true,
+              position: 'top',
+              formatter: (params) => {
+                if (params.value) {
+                  return params.value + "次"
+                }
+              }
+            },
             data: taskClassifyModalData.wwc
           },
         ]
@@ -201,12 +264,19 @@ class DrillDownTaskModal extends PureComponent {
       color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
+        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        // }
+        formatter(params, ticket, callback) {
+          let res = `${params[0].axisValue}<br/>`;
+          params.map(item => {
+            res += item.marker + `${item.seriesName}：${item.value}次<br />`;
+          });
+          return res;
+        },
       },
       legend: {
-        data: ['计划内', '计划外']
+        data: ['计划维护次数', '计划外维护次数']
       },
       grid: {
         left: '3%',
@@ -232,24 +302,34 @@ class DrillDownTaskModal extends PureComponent {
       ],
       series: [
         {
-          name: '计划外',
+          name: '计划外维护次数',
           type: 'bar',
           // barWidth: '40%',
           barMaxWidth: 60,
           label: {
             show: true,
-            position: 'top'
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
           },
           data: taskCountModalData.unInsidePlan
         },
         {
-          name: '计划内',
+          name: '计划维护次数',
           type: 'bar',
           // barWidth: '40%',
           barMaxWidth: 60,
           label: {
             show: true,
-            position: 'top'
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
+            }
           },
           data: taskCountModalData.insidePlan
         },
@@ -324,14 +404,14 @@ class DrillDownTaskModal extends PureComponent {
 
 
   render() {
-    const { taskClassifyModalData, drillDownTaskVisible, type, startTime, endTime, title, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { taskClassifyModalData, drillDownTaskVisible, taskModelType, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
     const { formItemLayout, showBack } = this.state;
-    let levelText = level === 1 ? "(师)" : (level === 2 ? "(监控目标)" : "(监测点)")
+    let levelText = level === 1 ? "(师)" : (level === 2 ? "(监控目标)" : "(排口)")
 
     return (
       <Modal
         title={<div>
-          {`${title}${levelText} - 详情`}
+          {`${modelTitle}${levelText} - 详情`}
           {
             level !== LEVEL && <Button
               style={{ marginLeft: 10 }}
@@ -346,47 +426,48 @@ class DrillDownTaskModal extends PureComponent {
                 </Button>
           }
         </div>}
-        // visible={drillDownTaskVisible}
-        visible={true}
+        visible={drillDownTaskVisible}
+        // visible={true}
         destroyOnClose
         footer={null}
         width={"80%"}
         onCancel={this.close}
       >
-        <Form>
-          <Row>
-            {
-              level === 2 &&
-              <Col span={6}>
-                <Form.Item {...formItemLayout} label="企业名称">
-                  {getFieldDecorator("entName", {
-                  })(
-                    <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
-                      this.props.dispatch({
-                        type: "newHome/updateState",
-                        payload: {
-                          entName: e.target.value
-                        }
-                      })
-                    }} />
-                  )}
-                </Form.Item>
-              </Col>
-            }
-            {
-              // 任务统计 - 显示任务分类筛选
-              type === "taskClassify" &&
-              <Col span={6}>
-                <Form.Item {...formItemLayout} label="任务分类" style={{ width: '100%' }}>
-                  {getFieldDecorator("taskType", {
-                    initialValue: taskClassifyModalData.name + ''
-                  })(
-                    <Select style={{ width: '100%' }} onChange={(val, option) => {
-                      this.setState({
-                        taskClassifyIndex: option.key
-                      })
-                    }}>
-                      {/* <Option value="检验测试" key="verificationTestComplete, verificationTestUnfinished">检验测试</Option>
+        <Spin spinning={loading}>
+          <Form>
+            <Row>
+              {
+                level === 2 &&
+                <Col span={6}>
+                  <Form.Item {...formItemLayout} label="企业名称">
+                    {getFieldDecorator("entName", {
+                    })(
+                      <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                        this.props.dispatch({
+                          type: "newHome/updateState",
+                          payload: {
+                            entName: e.target.value
+                          }
+                        })
+                      }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              }
+              {
+                // 任务统计 - 显示任务分类筛选
+                taskModelType === "taskClassify" &&
+                <Col span={6}>
+                  <Form.Item {...formItemLayout} label="任务分类" style={{ width: '100%' }}>
+                    {getFieldDecorator("taskType", {
+                      initialValue: taskClassifyModalData.name + ''
+                    })(
+                      <Select style={{ width: '100%' }} onChange={(val, option) => {
+                        this.setState({
+                          taskClassifyIndex: option.key
+                        })
+                      }}>
+                        {/* <Option value="检验测试" key="verificationTestComplete, verificationTestUnfinished">检验测试</Option>
 
                     <Option value="维修维护" key="maintenanceRepairComplete, maintenanceRepairUnfinished">维修维护</Option>
                     <Option value="配合检查" key="cooperationInspectionComplete, cooperationInspectionUnfinished">配合检查</Option>
@@ -394,53 +475,54 @@ class DrillDownTaskModal extends PureComponent {
                     <Option value="手工对比" key="manualComparisonComplete, manualComparisonUnfinished">手工对比</Option>
                     <Option value="校准" key="calibrationComplete, calibrationUnfinished">校准</Option>
                     <Option value="巡逻" key="onSiteInspectionComplete, onSiteInspectionUnfinished">巡逻</Option> */}
-                      <Option value="巡检" key="6">巡检</Option>
-                      <Option value="校准" key="5">校准</Option>
-                      <Option value="维修维护" key="4">维修维护</Option>
-                      <Option value="检验测试" key="3">检验测试</Option>
-                      <Option value="手工对比" key="2">手工对比</Option>
-                      <Option value="配合对比" key="1">配合对比</Option>
-                      <Option value="配合检查" key="0">配合检查</Option>
-                    </Select>
+                        <Option value="巡检" key="6">巡检</Option>
+                        <Option value="校准" key="5">校准</Option>
+                        <Option value="维修维护" key="4">维修维护</Option>
+                        <Option value="检验测试" key="3">检验测试</Option>
+                        <Option value="手工对比" key="2">手工对比</Option>
+                        <Option value="配合对比" key="1">配合对比</Option>
+                        <Option value="配合检查" key="0">配合检查</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              }
+
+              <Col span={8}>
+                <Form.Item {...formItemLayout} label="日期" style={{ width: '100%' }}>
+                  {getFieldDecorator("time", {
+                    initialValue: moment(startTime)
+                  })(
+                    <MonthPicker allowClear={false} onChange={(date, dateString) => {
+                      this.props.dispatch({
+                        type: "newHome/updateState",
+                        payload: {
+                          startTime: date.format("YYYY-MM-01 00:00:00"),
+                          endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                        }
+                      })
+                    }} />
                   )}
                 </Form.Item>
               </Col>
-            }
-
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label="日期" style={{ width: '100%' }}>
-                {getFieldDecorator("time", {
-                  initialValue: moment(startTime)
-                })(
-                  <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                    this.props.dispatch({
-                      type: "newHome/updateState",
-                      payload: {
-                        startTime: date.format("YYYY-MM-01 00:00:00"),
-                        endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
-                      }
-                    })
-                  }} />
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item>
-                <Button type="primary" onClick={() => {
-                  this.props.chartClick(this.state.taskClassifyIndex);
-                }}>查询</Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-        <Divider style={{ margin: 0 }} />
-        <ReactEcharts
-          option={this.getOption()}
-          style={{ height: '60vh' }}
-          onEvents={this.chartEvents}
-          className="echarts-for-echarts"
-          theme="my_theme"
-        />
+              <Col span={4}>
+                <Form.Item>
+                  <Button type="primary" onClick={() => {
+                    this.props.chartClick(this.state.taskClassifyIndex);
+                  }}>查询</Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <Divider style={{ margin: 0 }} />
+          <ReactEcharts
+            option={this.getOption()}
+            style={{ height: '60vh' }}
+            onEvents={this.chartEvents}
+            className="echarts-for-echarts"
+            theme="my_theme"
+          />
+        </Spin>
       </Modal>
     );
   }

@@ -20,14 +20,14 @@ import {
     Form,
 } from 'antd';
 import moment from 'moment';
-import styles from './style.less';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import { router } from 'umi';
 import PointIndex from './pointIndex';
-import { router } from "umi";
+import styles from './style.less';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -35,7 +35,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
-    getData: 'transmissionefficiency/getEntData'
+    getData: 'transmissionefficiency/getEntData',
 };
 const content = (
     <div>
@@ -44,7 +44,7 @@ const content = (
 );
 @connect(({
     loading,
-    transmissionefficiency
+    transmissionefficiency,
 }) => ({
     loading: loading.effects[pageUrl.getData],
     total: transmissionefficiency.entTotal,
@@ -66,46 +66,52 @@ export default class EntTransmissionEfficiency extends Component {
             eName: '',
         };
     }
+
     componentWillMount() {
         this.getTableData(1);
     }
-    updateState = (payload) => {
+
+    updateState = payload => {
         this.props.dispatch({
             type: pageUrl.updateState,
-            payload: payload,
+            payload,
         });
     }
-    getTableData = (pageIndex) => {
+
+    getTableData = pageIndex => {
         this.props.dispatch({
             type: pageUrl.getData,
             payload: {
-                pageIndex: pageIndex,
+                pageIndex,
             },
         });
     }
+
     handleTableChange = (pagination, filters, sorter) => {
         if (sorter.order) {
             this.updateState({
                 transmissionEffectiveRate: sorter.order,
                 pageIndex: pagination.current,
-                pageSize: pagination.pageSize
+                pageSize: pagination.pageSize,
             });
         } else {
             this.updateState({
                 transmissionEffectiveRate: 'ascend',
                 pageIndex: pagination.current,
-                pageSize: pagination.pageSize
+                pageSize: pagination.pageSize,
             });
         }
         this.getTableData(pagination.current);
     }
+
     onDateChange = (value, beginTime, endTime) => {
         this.updateState({
-            beginTime: beginTime,
-            endTime: endTime
+            beginTime,
+            endTime,
         });
         this.getTableData(this.props.pageIndex);
     }
+
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
@@ -115,7 +121,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <p><Badge status="warning" text="当有效传输率高于90%时有效传输率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
         ),
-        filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />
+        filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />,
         // onFilter: (value, record) =>
         //   record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         // onFilterDropdownVisibleChange: visible => {
@@ -125,17 +131,18 @@ export default class EntTransmissionEfficiency extends Component {
         // },
 
     });
-    //企业
-    enterpriseChange = (value) => {
+
+    // 企业
+    enterpriseChange = value => {
         this.props.dispatch({
             type: pageUrl.getData,
             payload: {
                 EnterpriseName: value,
             },
         });
-
     }
-    enterpriseEnter = (value) => {
+
+    enterpriseEnter = value => {
         this.props.dispatch({
             type: pageUrl.getData,
             payload: {
@@ -143,6 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
             },
         });
     }
+
     render() {
         const { eName } = this.state;
         const columns = [
@@ -152,9 +160,7 @@ export default class EntTransmissionEfficiency extends Component {
                 key: 'EnterpriseName',
                 width: '30%',
                 align: 'left',
-                render: (text, record) => {
-                    return text;
-                }
+                render: (text, record) => text,
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
@@ -167,13 +173,13 @@ export default class EntTransmissionEfficiency extends Component {
                         return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgTransmissionRate <= text) {
-                        return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
+                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2) + '%'}</span>)
+                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
-                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{(parseFloat(text) * 100).toFixed(2) + '%'}
+                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
@@ -187,13 +193,13 @@ export default class EntTransmissionEfficiency extends Component {
                         return <span className={styles.normaldata}>停运</span>;
                     }
                     if (record.AvgEffectiveRate <= text) {
-                        return <span className={styles.normaldata}>{(parseFloat(text) * 100).toFixed(2) + '%'}</span>;
+                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2) + '%'}</span>)
+                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
-                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{(parseFloat(text) * 100).toFixed(2) + '%'}
+                        <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
-                }
+                },
             },
             {
                 title: (
@@ -241,8 +247,8 @@ export default class EntTransmissionEfficiency extends Component {
                 key: 'opt',
                 width: '10%',
                 align: 'center',
-                render: (text, record) => {
-                    return <a onClick={() => {
+                render: (text, record) =>
+                     <a onClick={() => {
                         this.setState({
                             visible: true,
                             EnterpriseCode: record.EnterpriseCode,
@@ -258,8 +264,8 @@ export default class EntTransmissionEfficiency extends Component {
                     // return (
                     //     <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}?tabName=`}> 查看详情 </Link>
                     // );
-                }
-            }
+                ,
+            },
         ];
         return (
             <BreadcrumbWrapper title="有效传输率">
@@ -270,7 +276,7 @@ export default class EntTransmissionEfficiency extends Component {
                         <Form layout="inline">
                             <Form.Item>
                                 时间选择：
-                        <DatePickerTool defaultValue={this.state.beginTime} picker="month" callback={this.onDateChange} />
+                        <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} />
                             </Form.Item>
                             <Form.Item>
                                 <Search
@@ -292,7 +298,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 display: 'inline-block',
                                 borderRadius: '20%',
                                 cursor: 'pointer',
-                                marginRight: 3
+                                marginRight: 3,
                             }} /> <span style={{ cursor: 'pointer' }}> 排口有效传输率达标</span>
                             <div style={{
                                 width: 20,
@@ -302,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
                                 borderRadius: '20%',
                                 cursor: 'pointer',
                                 marginLeft: 60,
-                                marginRight: 3
+                                marginRight: 3,
                             }} /><span style={{ cursor: 'pointer' }}> 排口有效传输率未达标</span>
                         </div>
 
@@ -322,10 +328,10 @@ export default class EntTransmissionEfficiency extends Component {
                             showSizeChanger: true,
                             showQuickJumper: true,
                             sorter: true,
-                            'total': this.props.total,
-                            'pageSize': this.props.pageSize,
-                            'current': this.props.pageIndex,
-                            pageSizeOptions: ['10', '20', '30', '40', '50']
+                            total: this.props.total,
+                            pageSize: this.props.pageSize,
+                            current: this.props.pageIndex,
+                            pageSizeOptions: ['10', '20', '30', '40', '50'],
                         }}
                     />
 
@@ -334,7 +340,7 @@ export default class EntTransmissionEfficiency extends Component {
                         destroyOnClose
                         footer={[]}
                         visible={this.state.visible}
-                        width={"90%"}
+                        width="90%"
                         // style={{ height: "90vh" }}
                         onCancel={() => { this.setState({ visible: false }) }}
                     >

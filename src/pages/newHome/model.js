@@ -81,6 +81,9 @@ export default Model.extend({
     // 报警响应下钻
     alarmResponseModalData: {
       taskCount: [], taskYearCount: [], execptionCount: [], execptionYearCount: [], x: []
+    },
+    taskClassifyModalData: {
+      ywc: [], wwc: [], x: [], name: ""
     }
   },
   effects: {
@@ -88,7 +91,7 @@ export default Model.extend({
     *getLevel({ payload }, { call, update }) {
       const result = yield call(services.getLevel);
       if (result.IsSuccess) {
-        yield update({ level: result.Datas, LEVEL: result.Datas });
+        yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
         message.error(result.Message)
       }
@@ -286,7 +289,7 @@ export default Model.extend({
     // 点击师 - 改变RegionCode - 左右联动
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
-      yield update({ regionCode, level: 2 })
+      yield update({ regionCode, level: 2, LEVEL: 2 })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }
@@ -418,7 +421,7 @@ export default Model.extend({
           paramsList.push(item.code)
         })
         yield update({
-          drillDownRunVisible: true,
+          // drillDownRunVisible: true,
           seriesData,
           xData,
           paramsList,
