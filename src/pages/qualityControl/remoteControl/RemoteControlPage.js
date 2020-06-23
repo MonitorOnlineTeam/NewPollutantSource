@@ -26,6 +26,7 @@ const { Panel } = Collapse;
 @Form.create()
 @connect(({ loading, qualityControl }) => ({
   standardGasList: qualityControl.standardGasList,
+  standardGasListLoading: loading.effects["qualityControl/getStandardGas"],
   CEMSList: qualityControl.CEMSList,
   autoQCAInfo: qualityControl.autoQCAInfo,
   sendQCACmd3Loading: qualityControl.sendQCACmd3Loading,
@@ -285,7 +286,7 @@ class RemoteControlPage extends Component {
     const { QCAMN, activeKey } = this.state;
     const {
       form: { getFieldDecorator, setFieldsValue, getFieldValue },
-      form, standardGasList, CEMSList, loading, autoQCAInfo, QCStatus
+      form, standardGasList, standardGasListLoading, CEMSList, loading, autoQCAInfo, QCStatus
     } = this.props;
     let VolumeValue = 0;
     let GasInitPower = 0;

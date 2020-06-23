@@ -13,6 +13,7 @@ import { router } from 'umi'
 import { message } from 'antd';
 import * as services from './service';
 import _ from 'lodash'
+import { IfSpecial } from '@/services/login';
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -873,9 +874,12 @@ export default Model.extend({
     changeQCStatus(state, { payload }) {
       if (state.currentQCAMN) {
         let filterQC = payload.filter(item => item.DataGatherCode === state.currentQCAMN) || [];
-        return {
-          ...state,
-          QCStatus: filterQC.length ? filterQC[0].Status : undefined
+        if(filterQC.length)
+        {
+          return {
+            ...state,
+            QCStatus: filterQC.length ? filterQC[0].Status : undefined
+          }
         }
       }
       return { ...state }

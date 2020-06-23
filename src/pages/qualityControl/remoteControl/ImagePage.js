@@ -129,6 +129,13 @@ class ImagePage extends PureComponent {
           cemsList: this.props.cemsList.map(item => ({ ...item, monitorValue: undefined }))
         }
       })
+      //更新余量
+      this.props.dispatch({
+        type: "qualityControl/getCemsAndStandGasState",
+        payload: {
+          QCAMN: this.props.QCAMN
+        }
+      })
     }
     // 控制查看实时比对提示显示隐藏
     if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
@@ -468,7 +475,7 @@ class ImagePage extends PureComponent {
         {p1Pressure.value != undefined ? `${p1Pressure.value}MPa` : undefined}
       </div>
       {
-        p1Pressure.isException ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
+        p1Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="p1Exception.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
       }
 
@@ -477,7 +484,7 @@ class ImagePage extends PureComponent {
         {p2Pressure.value != undefined ? `${p2Pressure.value}MPa` : undefined}
       </div>
       {
-        p2Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /> : null
+        p2Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /> : null
       }
 
@@ -486,7 +493,7 @@ class ImagePage extends PureComponent {
         {p3Pressure.value != undefined ? `${p3Pressure.value}MPa` : undefined}
       </div>
       {
-        p3Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Pressure.png" /> : null
+        p3Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Pressure.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Exception.png" /> : null
       }
 
@@ -495,7 +502,7 @@ class ImagePage extends PureComponent {
         {p4Pressure.value != undefined ? `${p4Pressure.value}MPa` : undefined}
       </div>
       {
-        p4Pressure.isException ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
+        p4Pressure.isException ?  <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /></Tooltip> : null
         //  true ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
       }
 

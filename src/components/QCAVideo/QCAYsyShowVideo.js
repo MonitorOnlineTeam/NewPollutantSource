@@ -15,7 +15,7 @@ import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
 import config from '@/config';
-import  RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 /*
@@ -106,7 +106,13 @@ class QCAYsyShowVideo extends Component {
           displayHStartBtn: 'block',
           displayHEndBtn: 'none',
         });
-        message.error(event.data.value);
+        if(event.data.value=="ezopen协议格式有误!")
+        {
+          message.error("摄像头ID找不到,请重新配置")
+        }else
+        {
+          message.error(event.data.value);
+        }
       }
       if (event.data.key === 'playback') {
         this.backplay();
@@ -148,6 +154,8 @@ class QCAYsyShowVideo extends Component {
   /** 获取url */
   getVideoIp = (type, id) => {
     const { match, dispatch } = this.props;
+    if (id == "")
+      return
     dispatch({
       type: 'videodata/qcaysyvideourl',
       payload: {
@@ -319,14 +327,9 @@ class QCAYsyShowVideo extends Component {
           <div className={styles.divc}
           >
             <Card className={styles.card}>
-              <Tabs
-                defaultActiveKey={this.state.defaultActiveKey}
-                onChange={key => {
-                  this.tabsChange(key);
-                }}
-              >
                 {
-                  !this.props.showModal && <TabPane tab="实时" key="1">
+                  //<TabPane tab="实时" key="1">
+                  !this.props.showModal && <>
                     <Row>
                       <Col
                         className={styles.gutterleft}
@@ -367,6 +370,8 @@ class QCAYsyShowVideo extends Component {
                           暂停播放
                       </a>
                       </Col>
+                    </Row>
+                    <Row>
                       <Col className={styles.gutterleft} span={8}>
                         <Tooltip placement="top" title="刷新视频">
                           <Button
@@ -381,6 +386,8 @@ class QCAYsyShowVideo extends Component {
                           刷新视频
                       </a>
                       </Col>
+                    </Row>
+                    <Row>
                       <Col className={styles.gutterleft} span={8}>
                         <Tooltip placement="top" title="抓取图片">
                           <Button
@@ -411,121 +418,8 @@ class QCAYsyShowVideo extends Component {
                       {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
                     </Col>
                   </Row> */}
-                  </TabPane>
+                  </>
                 }
-
-                <TabPane tab="历史" key="2">
-                  <Row>
-                    <Col className={styles.gutterleft} span={24}>
-                      {/* <RangePicker
-                        defaultValue={this.state.startdateString ? [moment(this.state.startdateString), moment(this.state.enddateString)] : undefined}
-                        style={{ width: '350px' }}
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        onChange={this.onChange}
-                      /> */}
-                      <RangePicker_
-                        defaultValue={this.state.startdateString ? [moment(this.state.startdateString), moment(this.state.enddateString)] : undefined}
-                        style={{ width: '350px' }}
-                        // showTime={{ format: 'HH:mm:ss' }}
-                        // format="YYYY-MM-DD HH:mm:ss"
-                        dataType='realtime'
-                        placeholder={['开始时间', '结束时间']}
-                        callback={this.onChange}
-                      />
-
-                    </Col>
-                  </Row>
-                  <Divider dashed />
-                  <Row>
-                    <Col
-                      className={styles.gutterleft}
-                      span={8}
-                      style={{ display: this.state.displayHStartBtn }}
-                    >
-                      <Tooltip placement="top" title="开始播放">
-                        <Button
-                          type="primary"
-                          shape="circle"
-                          icon="play-circle"
-                          size="Small"
-                          onClick={this.backplay.bind(this)}
-                        />
-                      </Tooltip>
-                      <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
-                        开始播放
-                      </a>
-                    </Col>
-                    <Col
-                      className={styles.gutterleft}
-                      span={8}
-                      style={{ display: this.state.displayHEndBtn }}
-                    >
-                      <Tooltip placement="top" title="暂停播放">
-                        <Button
-                          type="danger"
-                          shape="circle"
-                          icon="pause-circle"
-                          size="Small"
-                          onClick={this.backbtnClick.bind(this, 2)}
-                        />
-                      </Tooltip>
-                      <a
-                        style={{ marginLeft: '10px', color: 'red' }}
-                        onClick={this.backbtnClick.bind(this, 2)}
-                      >
-                        暂停播放
-                      </a>
-                    </Col>
-                    <Col className={styles.gutterleft} span={8}>
-                      <Tooltip placement="top" title="刷新视频">
-                        <Button
-                          type="primary"
-                          shape="circle"
-                          icon="redo"
-                          size="Small"
-                          onClick={this.backplay.bind(this)}
-                        />
-                      </Tooltip>
-                      <a style={{ marginLeft: '10px' }} onClick={this.backplay.bind(this)}>
-                        刷新视频
-                      </a>
-                    </Col>
-                    <Col className={styles.gutterleft} span={8}>
-                      <Tooltip placement="top" title="抓取图片">
-                        <Button
-                          type="dashed"
-                          shape="circle"
-                          icon="file-image"
-                          size="Small"
-                          onClick={this.backbtnClick.bind(this, 3)}
-                        />
-                      </Tooltip>
-                      <a
-                        style={{ marginLeft: '10px', color: 'black' }}
-                        onClick={this.backbtnClick.bind(this, 3)}
-                      >
-                        抓取图片
-                      </a>
-                    </Col>
-                  </Row>
-                  <Divider type="horizontal" />
-                  {/* <Row gutter={48} style={{ display: this.state.displayH }}>
-                    <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                      {this.state.displayR && (
-                        <HistoryVideo
-                          onRef={this.onRef1}
-                          {...this.props}
-                          dgimn={this.state.dgimn}
-                          beginDate={moment(this.state.startdateString, 'YYYY-MM-DD HH:mm:ss')}
-                          endDate={moment(this.state.enddateString, 'YYYY-MM-DD HH:mm:ss')}
-                        />
-                      )}
-                    </Col>
-                  </Row> */}
-                </TabPane>
-              </Tabs>
             </Card>
           </div>
         </Row>
