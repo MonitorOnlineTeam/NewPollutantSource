@@ -351,8 +351,8 @@ class Dispatchreport extends Component {
         queryparams = {
             ...queryparams,
             DGIMN: dgimn,
-            BTime: rangeDate.length > 0 ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
-            ETime: rangeDate.length > 0 ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
+            BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
+            ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
             CommandDispatchType: selectvalue,
             UserID: UserName,
         }
@@ -449,7 +449,7 @@ class Dispatchreport extends Component {
                     <Row gutter={16} style={{ width: '800px' }}>
                         <Col xl={{ span: 6 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
                             <Select
-                                    onSelect={this.SelectOnChange}
+                                    onChange={this.SelectOnChange}
                                     placeholder="调度类别"
                                     allowClear
                                     style={{ width: '100%' }}
@@ -467,7 +467,7 @@ class Dispatchreport extends Component {
                                     callback={this._handleDateChange} allowClear showTime={this.state.format} />
                         </Col>
                         <Col xl={{ span: 4 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
-                            <Input placeholder="人员姓名" style={{ width: '100%' }} allowClear/>
+                            <Input placeholder="人员姓名" style={{ width: '100%' }} allowClear onChange={this.InoutOnChange}/>
                         </Col>
                         <Col xl={{ span: 2 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
                             <Button
