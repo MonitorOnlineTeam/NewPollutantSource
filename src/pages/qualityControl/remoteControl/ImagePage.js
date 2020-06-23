@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-12-06 17:17:23
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 16:17:53
+ * @Last Modified time: 2020-06-23 14:36:21
  * @desc: 质控仪流程图页面
  */
 import React, { PureComponent } from 'react';
@@ -42,6 +42,7 @@ const QCStatusColor = {
   realtimeStabilizationTime: qualityControl.realtimeStabilizationTime,
   totalFlow: qualityControl.totalFlow,
   DeviceStatus: qualityControl.DeviceStatus,
+  isReceiveData: qualityControlModel.isReceiveData,
 }))
 
 class ImagePage extends PureComponent {
@@ -120,7 +121,7 @@ class ImagePage extends PureComponent {
     //   })
     // }
 
-    // 状态从吹扫变为空时，清空所有流量和浓度数据
+    // 状态从吹扫变为空时，清空所有流量和浓度数据, 将isReceiveData重置为false，不接受实时比对数据
     if (this.props.QCStatus === "5" && nextProps.QCStatus === "6") {
       this.props.dispatch({
         type: "qualityControl/updateState",
@@ -136,9 +137,16 @@ class ImagePage extends PureComponent {
           QCAMN: this.props.QCAMN
         }
       })
+      // 将isReceiveData重置为false，不接受实时比对数据
+      this.props.dispatch({
+        type: "qualityControlModel/updateState",
+        payload: {
+          isReceiveData: false
+        }
+      })
     }
     // 控制查看实时比对提示显示隐藏
-    if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime) {
+    if (this.props.QCStatus === "4" && nextProps.realtimeStabilizationTime.StabilizationTime && nextProps.realtimeStabilizationTime.StartTime && nextProps.isReceiveData) {
       // if (true) {
       notification.close("QCAnotification")
       notification.open({
@@ -502,7 +510,7 @@ class ImagePage extends PureComponent {
         {p4Pressure.value != undefined ? `${p4Pressure.value}MPa` : undefined}
       </div>
       {
-        p4Pressure.isException ?  <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /></Tooltip> : null
+        p4Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /></Tooltip> : null
         //  true ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
       }
 

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-13 15:15:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 15:43:03
+ * @Last Modified time: 2020-06-23 14:36:48
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
@@ -198,6 +198,13 @@ class RemoteControlPage extends Component {
             type: "qualityControl/updateState",
             payload: {
               QCAResult: "0"
+            }
+          })
+          // 将isReceiveData重置为true，接受实时比对数据
+          this.props.dispatch({
+            type: "qualityControlModel/updateState",
+            payload: {
+              isReceiveData: true
             }
           })
           this.setState({ visible: false });
