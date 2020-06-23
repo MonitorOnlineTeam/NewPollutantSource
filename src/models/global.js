@@ -294,12 +294,15 @@ export default Model.extend({
     // 接收消息推送更改Model内存
     changeQCANotices(state, { payload }) {
       const notices = [...state.notices];
+      // console.log('error=',notices)
+      // console.log('payload=',payload)
       // 67: 余量、过期时间报警; 89: 工作状态异常、压力异常报警
       const changeType = payload.find(t => t.Type == 6 || t.Type == 7) ? 67 : 89;
       payload.map(item => {
         // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警
         // 判断过滤条件
         let filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && item.Code == 0)
+        console.log('index=',filterDataIndex)
         let PollutantName = item.TypeName;
         if (changeType === 67) {
           filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && notice.PollutantCodes == item.Code)
@@ -411,7 +414,7 @@ export default Model.extend({
               // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
               const obj = JSON.parse(data);
 
-              //console.log('real=', obj)
+              // console.log('real=', obj)
               switch (obj.MessageType) {
                 case 'RealTimeData':
                   // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
@@ -513,6 +516,7 @@ export default Model.extend({
                   })
                   break;
                 case 'QCAAlarmMsg':
+                  // console.log('msg=',obj)
                   dispatch({
                     type: 'qualityControl/volumeWarning',
                     payload: obj.Message,

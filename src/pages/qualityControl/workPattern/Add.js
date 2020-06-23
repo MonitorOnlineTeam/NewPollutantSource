@@ -116,6 +116,8 @@ class AddInstrument extends Component {
 
   changeStandardGasData = (key, value, index) => {
     const tempDataSource = this.state.dataSource;
+    console.log('tempDataSource=', tempDataSource)
+    debugger
     tempDataSource[index][key] = value;
     this.setState({
       dataSource: tempDataSource,
@@ -202,6 +204,10 @@ class AddInstrument extends Component {
                   defaultValue = '200';
                   record.unit = 'mg/m3'
                   break;
+                case 'P':
+                  defaultValue = undefined;
+                  record.unit = '%'
+                  break;
                 default:
                   defaultValue = undefined;
                   record.unit = '%'
@@ -210,11 +216,15 @@ class AddInstrument extends Component {
               // this.setState({
               //   unit: unit
               // })
-              const StandardGasName = this.props.standardGasList.find(item => item.PollutantCode == value).PollutantName;
+              const StandardGasName = value == "P" ? "空气" : this.props.standardGasList.find(item => item.PollutantCode == value).PollutantName;
               // 设置满量程值
               this.changeStandardGasData('Range', defaultValue, idx);
               // 设置标气名称
               this.changeStandardGasData('StandardGasName', StandardGasName, idx);
+              if(value=="P")
+              {
+                this.changeStandardGasData('StabilizationTime', 0, idx);
+              }
             }}>
               {
                 this.props.standardGasList.filter(item => item.PollutantCode !== "065").map(item =>
@@ -226,6 +236,15 @@ class AddInstrument extends Component {
                     {item.PollutantName}
                   </Option>)
               }
+              {
+                <Option
+                  // disabled={this.state.dataSource.find(itm => itm.StandardGasCode == item.PollutantCode)}
+                  key={"P"}
+                  value={"P"}
+                >
+                  {"空气"}
+                </Option>
+              }
             </Select>,
           )}
         </FormItem>,
@@ -235,7 +254,7 @@ class AddInstrument extends Component {
         dataIndex: 'StandardValue',
         width: 180,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code) {
+          if (record.StandardGasCode === n2Code||record.StandardGasCode==="P") {
             return '-'
           }
           return <FormItem style={{ marginBottom: '0' }}>
@@ -260,7 +279,11 @@ class AddInstrument extends Component {
         title: '总流量设定值',
         dataIndex: 'TotalFlowSetVal',
         width: 180,
-        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
+        render: (text, record, idx) =>{
+          if (record.StandardGasCode === "P") {
+            return '-'
+          }
+          <FormItem style={{ marginBottom: '0' }}>
           {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
             rules: [
               { required: true, message: '请输入总流量设定值' },
@@ -274,7 +297,7 @@ class AddInstrument extends Component {
               onChange={value => { this.changeStandardGasData('TotalFlowSetVal', value, idx) }}
             />,
           )}
-        </FormItem>,
+        </FormItem>},
       },
       {
         title: '满量程值',
@@ -302,7 +325,7 @@ class AddInstrument extends Component {
         dataIndex: 'VentilationTime',
         width: 100,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code) {
+          if (record.StandardGasCode === n2Code ) {
             return '-'
           }
           let i = 0;
@@ -334,7 +357,7 @@ class AddInstrument extends Component {
         dataIndex: 'StabilizationTime',
         width: 100,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code) {
+          if (record.StandardGasCode === n2Code|| record.StandardGasCode === "P") {
             return '-'
           }
           let i = 0;

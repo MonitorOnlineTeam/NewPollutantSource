@@ -322,8 +322,7 @@ class ResultContrastPage extends Component {
     var count = record.length;
     if (record !== null && record.length > 0) {
       record.map((item, index) => {
-        if(index==0)
-        {
+        if (index == 0) {
           rtnVal.push(
             <tr>
               <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
@@ -342,16 +341,15 @@ class ResultContrastPage extends Component {
                 {item.Error}
               </td>
               <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-  
+
               </td>
             </tr>
           );
-        }else
-        {
+        } else {
           rtnVal.push(
             <tr>
               <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {index + 1}
+                {index + 1}
               </td>
               <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                 {item.ShowValue}
@@ -361,12 +359,12 @@ class ResultContrastPage extends Component {
               <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
               </td> */}
               <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-  
+
               </td>
             </tr>
           );
         }
-       
+
       });
     }
 
@@ -447,10 +445,10 @@ class ResultContrastPage extends Component {
       dataZoom: [{
         type: 'inside',
         start: 0,
-        end: 20
+        end: 100
       }, {
         start: 0,
-        end: 10,
+        end: 100,
         handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
         handleSize: '80%',
         handleStyle: {
@@ -520,18 +518,17 @@ class ResultContrastPage extends Component {
               )
           }
         </div> */}
-        <Card title={this.searchWhere()}
-          bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
-          extra={
-            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-              this.setState({
-                showType: e.target.value
-              })
-            }}>
-              <Radio.Button value="chart">图表</Radio.Button>
-              <Radio.Button value="data">报表</Radio.Button>
-            </Radio.Group>
-          }>
+        <Radio.Group  defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+          this.setState({
+            showType: e.target.value
+          })
+        }}>
+          <Radio.Button value="chart">图表</Radio.Button>
+          <Radio.Button value="data">报表</Radio.Button>
+        </Radio.Group>
+        <Card
+          bodyStyle={{ maxHeight: 510, overflowY: "auto", padding: "10px 0" }}
+        >
           {
 
             (resultContrastData.errorStr === "合格" && dateValue) ? (
@@ -540,6 +537,7 @@ class ResultContrastPage extends Component {
               <CustomIcon className={styles.QCResult} type="icon-buhege" /> : null
               )
           }
+
           {
             showType === "chart" ? <ReactEcharts
               // theme="line"
@@ -550,7 +548,7 @@ class ResultContrastPage extends Component {
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
             /> : <table
-              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px',marginTop:'3%' }}
             >
                 <tbody >
                   <tr>
