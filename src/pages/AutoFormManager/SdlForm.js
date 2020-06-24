@@ -293,7 +293,6 @@ class SdlForm extends PureComponent {
           )
           break;
         case '经度':
-          debugger;
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
 
