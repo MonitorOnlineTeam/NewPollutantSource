@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 08:52:37
+ * @Last Modified time: 2020-06-24 10:06:28
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -23,6 +23,9 @@ class AlarmResponse extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this._SELF_ = {
+      dataIndex: 0,
+    }
   }
 
   componentDidMount() {
@@ -48,14 +51,14 @@ class AlarmResponse extends PureComponent {
       },
       grid: {
         top: 20,
-        left: '6%',
-        right: '6%',
-        bottom: '3%',
+        left: '3%',
+        right: '3%',
+        bottom: '6%',
         containLabel: true
       },
       xAxis: {
         type: 'category',
-        // data: [`${month}月核实`, `${month + 1}月核实`, `${month}月响应`, `${month + 1}月响应`]
+        data: [`${month + 1}月响应`, `${month}月响应`, `${month + 1}月核实`, `${month}月核实`]
       },
       yAxis: {
         type: 'value',
@@ -70,80 +73,120 @@ class AlarmResponse extends PureComponent {
         {
           name: '异常报警响应',
           type: 'bar',
+          barMaxWidth: 40,
           itemStyle: {
-            color: "#f6b322"
+            color: function (params) {
+              var colorList = ['#f6b322', '#FF9800', '#fd6c6c', '#FF5722'];
+              return colorList[params.dataIndex]
+            }
           },
           label: {
             show: true,
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${month + 1}月响应${params.value}次`
+                return `${params.value}次`
               }
             }
           },
-          data: [execptionCount]
-          // data: [11]
-        },
-        {
-          name: '异常报警响应环比',
-          type: 'bar',
-          itemStyle: {
-            color: "#FF9800"
-          },
-          label: {
-            show: true,
-            position: 'top',
-            formatter: (params) => {
-              if (params.value) {
-                return `${month}月响应${params.value}次`
-              }
-            }
-          },
-          data: [execptionYearCount]
-          // data: [22]
-        },
-        {
-          name: '超标报警核实',
-          type: 'bar',
-          itemStyle: {
-            color: "#fd6c6c"
-          },
-          label: {
-            show: true,
-            position: 'top',
-            formatter: (params) => {
-              if (params.value) {
-                return `${month + 1}月核实${params.value}次`
-              }
-            },
-          },
-          data: [taskCount]
-          // data: [3]
-        },
-        {
-          name: '超标报警核实环比',
-          type: 'bar',
-          itemStyle: {
-            color: "#FF5722"
-          },
-          label: {
-            show: true,
-            position: 'top',
-            formatter: (params) => {
-              if (params.value) {
-                return `${month}月核实${params.value}次`
-              }
-            },
-          },
-          data: [taskYearCount]
-          // data: [33]
-        },
+          data: [execptionCount, execptionYearCount, taskCount, taskYearCount]
+        }
       ]
+      // series: [
+      //   {
+      //     name: '异常报警响应',
+      //     type: 'bar',
+      //     barMaxWidth: 40,
+      //     itemStyle: {
+      //       color: "#f6b322"
+      //     },
+      //     label: {
+      //       show: true,
+      //       position: 'top',
+      //       formatter: (params) => {
+      //         if (params.value) {
+      //           return `${month + 1}月响应${params.value}次`
+      //         }
+      //       }
+      //     },
+      //     data: [execptionCount]
+      //     // data: [11]
+      //   },
+      //   {
+      //     name: '异常报警响应环比',
+      //     type: 'bar',
+      //     barMaxWidth: 40,
+      //     itemStyle: {
+      //       color: "#FF9800"
+      //     },
+      //     label: {
+      //       show: true,
+      //       position: 'top',
+      //       formatter: (params) => {
+      //         if (params.value) {
+      //           return `${month}月响应${params.value}次`
+      //         }
+      //       }
+      //     },
+      //     data: [execptionYearCount]
+      //     // data: [22]
+      //   },
+      //   {
+      //     name: '超标报警核实',
+      //     type: 'bar',
+      //     itemStyle: {
+      //       color: "#fd6c6c"
+      //     },
+      //     label: {
+      //       show: true,
+      //       position: 'top',
+      //       formatter: (params) => {
+      //         if (params.value) {
+      //           return `${month + 1}月核实${params.value}次`
+      //         }
+      //       },
+      //     },
+      //     data: [taskCount]
+      //     // data: [3]
+      //   },
+      //   {
+      //     name: '超标报警核实环比',
+      //     type: 'bar',
+      //     itemStyle: {
+      //       color: "#FF5722"
+      //     },
+      //     label: {
+      //       show: true,
+      //       position: 'top',
+      //       formatter: (params) => {
+      //         if (params.value) {
+      //           return `${month}月核实${params.value}次`
+      //         }
+      //       },
+      //     },
+      //     data: [taskYearCount]
+      //     // data: [33]
+      //   },
+      // ]
     }
   };
 
-  getTrippingAlarmResponse = (title) => {
+  getTrippingAlarmResponse = (dataIndex) => {
+    let title = "";
+    switch (dataIndex) {
+      case 0:
+        title = "异常报警响应";
+        break;
+      case 1:
+        title = "异常报警响应环比";
+        break;
+      case 2:
+        title = "超标报警核实";
+        break;
+      case 3:
+        title = "超标报警核实环比";
+        break;
+    }
     // this.setState({ title })
     this.props.dispatch({
       type: "newHome/updateState",
@@ -183,7 +226,8 @@ class AlarmResponse extends PureComponent {
           option={this.barOptions()}
           onEvents={{
             click: (e) => {
-              this.getTrippingAlarmResponse(e.seriesName)
+              this._SELF_.dataIndex = e.dataIndex;
+              this.getTrippingAlarmResponse(e.dataIndex)
             }
           }}
           style={{ height: '180px', marginBottom: 20 }}
@@ -191,8 +235,8 @@ class AlarmResponse extends PureComponent {
           theme="my_theme"
         />
         <DrillDownAlarmResponseModel chartClick={() => {
-          this.getTrippingAlarmResponse(modelTitle);
-        }} />}
+          this.getTrippingAlarmResponse(this._SELF_.dataIndex);
+        }} />
       </div>
     );
   }

@@ -88,6 +88,9 @@ class NewHome extends PureComponent {
             }
           });
           Layer.setMap(mapInstance);
+          mapInstance.setCity(650000, function() {
+            mapInstance.setZoom(6)
+          })
         }
       },
     };
@@ -540,7 +543,7 @@ class NewHome extends PureComponent {
         </div>
       </div>
       <div className={styles.data}>
-        <h3>空气质量数据</h3>
+        <h3>{infoWindowData.pollutantTypeCode === 2 ? "废气数据" : (infoWindowData.pollutantTypeCode === 1 ? "废水数据" : "空气质量数据")}</h3>
         <ul>
           {
             infoWindowData.list.map(item => {
@@ -675,7 +678,8 @@ class NewHome extends PureComponent {
                       infoWindowVisible: false, // 关闭排口弹窗
                     })
                     this.renderEntMarkers(filterList)
-                    aMap.setFitView();
+                    // aMap.setFitView();
+                    aMap.setZoom(6)
                   }}>返回企业</Button>
                 }
                 {

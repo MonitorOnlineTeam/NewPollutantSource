@@ -19,7 +19,6 @@ const Option = Select.Option
   startTime: newHome.startTime,
   endTime: newHome.endTime,
   alarmResponseModalData: newHome.alarmResponseModalData,
-  taskClassifyModalData: newHome.taskClassifyModalData,
   codeList: newHome.codeList,
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
@@ -57,11 +56,10 @@ class DrillDownTaskStatisticsModal extends PureComponent {
   }
 
   getOption = () => {
-    const { taskModelType, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
-    console.log('taskClassifyModalData=', taskClassifyModalData)
+    const { taskModelType, alarmResponseModalData, taskCountModalData, modelTitle } = this.props;
     let series = [];
     return {
-      color: ["#0edaad","#b2d1f6"],
+      color: ["#0edaad","#67a2ef"],
       tooltip: {
         trigger: 'axis',
         // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -206,7 +204,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
 
 
   render() {
-    const { currentDivisionName, currentEntName, taskClassifyModalData, taskStatisticsVisible, taskModelType, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { currentDivisionName, currentEntName, taskStatisticsVisible, taskModelType, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
     const { formItemLayout, showBack } = this.state;
     let levelText, afterText = "";
     switch (level) {

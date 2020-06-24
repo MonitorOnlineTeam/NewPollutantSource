@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Modal, Tabs, Descriptions, Divider } from 'antd';
 import { connect } from 'dva'
 import DataQuery from '@/pages/monitoring/dataquery/components/DataQuery'
-import DataQueryOld from '@/pages/monitoring/dataquery/components/DataQueryOld'
 import AlarmRecord from '@/pages/monitoring/alarmrecord/components/AlarmRecord'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
@@ -128,7 +127,7 @@ class SiteDetailsModal extends PureComponent {
       >
         {
           currentKey === 1 && <div style={{ height: "60vh", overflow: "hidden" }}>
-            <DataQueryOld
+            <DataQuery
               DGIMN={data.key}
               initLoadData
               chartHeight='calc(100vh - 590px)'
