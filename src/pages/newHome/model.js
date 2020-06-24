@@ -49,7 +49,9 @@ export default Model.extend({
       exceptionRate: 0,
       AccuracyRate: 0
     },
-    alarmResponseData: {},
+    alarmResponseData: {
+      taskCount: 0, taskYearCount: 0, taskYearRate: 0, execptionCount: 0, execptionYearCount: 0, execptionYearRate: 0
+    },
     taskStatisticsData: [],
     operationAnalysis: [],
     diffHorizontalData: [],
