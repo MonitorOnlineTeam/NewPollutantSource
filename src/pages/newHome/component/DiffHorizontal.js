@@ -30,7 +30,7 @@ class DiffHorizontal extends PureComponent {
         }
       },
       grid: {
-        top: 40,
+        top: 30,
         left: '6%',
         right: '6%',
         bottom: '3%',
@@ -44,16 +44,24 @@ class DiffHorizontal extends PureComponent {
           axisTick: {
             alignWithLabel: true
           },
+          nameTextStyle: {
+            rich: {
+              height: 100
+            },
+
+          },
           axisLabel: {
             formatter: function (value) {
-              let val = value;
-              if (value === "(") {
-                val = "︵"
-              }
-              if (value === ")") {
-                val = "︶"
-              }
-              return val.split("").join("\n")
+              // console.log('value=', value)
+              // let val = value;
+              // if (value === "(") {
+              //   val = "︵"
+              // }
+              // if (value === ")") {
+              //   val = "︶"
+              // }
+              let val = value.split("").join("\n");
+              return val
             }
           },
           // axisLabel: {
@@ -102,7 +110,7 @@ class DiffHorizontal extends PureComponent {
         </div>
         <ReactEcharts
           option={this.barOptions()}
-          style={{ height: '430px', marginTop: 20 }}
+          style={{ height: '400px', marginTop: 20 }}
           className="echarts-for-echarts"
           theme="my_theme"
         />

@@ -342,8 +342,8 @@ export default Model.extend({
           },
           data: result.Datas.timeList && result.Datas.timeList
         })
-        const valueMax = _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : undefined;
-        const standValMax = _.max(result.Datas.standValue) ? _.max(result.Datas.standValue) * 1 + 10 : undefined
+        const valueMax = _.max(result.Datas.valueList) ? _.max(result.Datas.valueList) * 1 + 10 : 0;
+        const standValMax = _.max(result.Datas.standValue) ? _.max(result.Datas.standValue) * 1 + 10 : 0
         yield update({
           resultContrastData: result.Datas,
           chartMax: valueMax > standValMax ? valueMax : standValMax

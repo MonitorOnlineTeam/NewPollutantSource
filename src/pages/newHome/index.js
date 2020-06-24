@@ -88,6 +88,9 @@ class NewHome extends PureComponent {
             }
           });
           Layer.setMap(mapInstance);
+          mapInstance.setCity(650000, function() {
+            mapInstance.setZoom(6)
+          })
         }
       },
     };
@@ -362,6 +365,12 @@ class NewHome extends PureComponent {
               this.setState({
                 clickedDivision: extData.position
               })
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  currentDivisionName: extData.position.title
+                }
+              })
               this.props.dispatch({ type: "newHome/changeRegionCode", payload: { regionCode: extData.position.RegionCode } })
             }} />
           {/* </ReactCSSTransitionGroup> */}
@@ -534,7 +543,7 @@ class NewHome extends PureComponent {
         </div>
       </div>
       <div className={styles.data}>
-        <h3>空气质量数据</h3>
+        <h3>{infoWindowData.pollutantTypeCode === 2 ? "废气数据" : (infoWindowData.pollutantTypeCode === 1 ? "废水数据" : "空气质量数据")}</h3>
         <ul>
           {
             infoWindowData.list.map(item => {
@@ -566,7 +575,6 @@ class NewHome extends PureComponent {
   divisionInfoWindow = () => {
     const { currentDivision } = this.props;
     if (currentDivision && currentDivision.divisionList) {
-      debugger
       return currentDivision.divisionList.map(item => {
         return <InfoWindow
           position={[item.longitude, item.latitude]}
@@ -670,7 +678,8 @@ class NewHome extends PureComponent {
                       infoWindowVisible: false, // 关闭排口弹窗
                     })
                     this.renderEntMarkers(filterList)
-                    aMap.setFitView();
+                    // aMap.setFitView();
+                    aMap.setZoom(6)
                   }}>返回企业</Button>
                 }
                 {
@@ -684,7 +693,8 @@ class NewHome extends PureComponent {
                       payload: {
                         level: INIT_LEVEL,
                         LEVEL: INIT_LEVEL,
-                        regionCode: "660000000"
+                        regionCode: "660000000",
+                        currentDivisionName: ""
                       }
                     })
                     setTimeout(() => {
@@ -756,29 +766,16 @@ class NewHome extends PureComponent {
                 events={this.amapEvents}
                 // zoom={4}
                 mapStyle="amap://styles/fresh"
-                useAMapUI={true}
+                useAMapUI={!config.offlineMapUrl.domain}
               >
-                <MapUI
-                  renderEnt={() => {
-                    this.renderEntMarkers(this.props);
-                  }}
-                // featureOnClick={(feature) => {
-                //   this.setState({
-                //     adCode: feature.properties.adcode
-                //   }, () => {
-                //     this.getAllEntAndPoint();
-                //   })
-                // }}
-                // featureMouseover={(adcode) => {
-                //   console.log('adcode=', adcode)
-                //   this.props.dispatch({
-                //     type: "newHome/updateDivisionShowCoordinate",
-                //     payload: {
-                //       adcode
-                //     }
-                //   })
-                // }}
-                />
+                {
+                  !config.offlineMapUrl.domain && <MapUI
+                    renderEnt={() => {
+                      this.renderEntMarkers(this.props);
+                    }}
+                  />
+                }
+
                 {this.drawPolygon()}
                 <Markers
                   markers={this.state.markersList}
@@ -814,7 +811,6 @@ class NewHome extends PureComponent {
                     {searchResult.title}
                   </InfoWindow>
                 }
-                {console.log('divisionInfoWindow=', this.divisionInfoWindow())}
                 {/* {
                   this.divisionInfoWindow()
                 } */}
