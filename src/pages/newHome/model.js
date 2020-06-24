@@ -104,7 +104,14 @@ export default Model.extend({
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
         let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
-        let allEntAndPointList = result.Datas.filter(item => item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4");
+        let allEntAndPointList = result.Datas.filter(item => {
+          if(item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4"){
+            return {
+              ...item,
+              EntName: item.EntName || item.title
+            }
+          }
+        });
         filterList.map(item => {
           if (item.children) {
             let childrenList = item.children.map(itm => {
