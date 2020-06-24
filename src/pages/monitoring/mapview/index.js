@@ -756,6 +756,13 @@ class MapView extends Component {
     if (config.isShowTabs && defaultSettings.layout === 'sidemenu') {
       mapWrapperStyle = { marginTop: 4 }
     }
+
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
+
     return (
       // QCAUse="1"
       <div className={styles.mapWrapper} style={mapWrapperStyle}>
@@ -861,6 +868,7 @@ class MapView extends Component {
             // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
+            {...mapStaticAttribute}
             // useAMapUI
           >
             {/* {_thismap && <MapUI />} */}
