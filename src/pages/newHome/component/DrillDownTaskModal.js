@@ -78,7 +78,7 @@ class DrillDownTaskModal extends PureComponent {
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '0%',
         containLabel: true
       },
       xAxis: [

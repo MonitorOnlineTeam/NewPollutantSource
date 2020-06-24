@@ -79,7 +79,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '0%',
         containLabel: true
       },
       xAxis: [
@@ -214,11 +214,11 @@ class DrillDownTaskStatisticsModal extends PureComponent {
         break;
       case 2:
         levelText = "(监控目标)"
-        afterText = currentDivisionName + " - "
+        afterText = currentDivisionName ? currentDivisionName + " - " : ""
         break;
       case 3:
         levelText = "(排口)"
-        afterText = currentEntName + " - "
+        afterText = currentEntName ? currentEntName + " - " : ""
         break;
     }
     let title = `${afterText}任务统计${levelText}`;
