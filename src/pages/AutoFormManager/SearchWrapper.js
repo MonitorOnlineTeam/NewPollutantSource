@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-23 14:08:03
+ * @Last Modified time: 2020-06-24 10:23:58
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -375,7 +375,8 @@ class SearchWrapper extends Component {
     }
     return (
       <Form layout="inline" >
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}> */}
+        <Row>
           {
             this._renderFormItem()
           }
