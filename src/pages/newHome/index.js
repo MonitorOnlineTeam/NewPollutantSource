@@ -88,7 +88,7 @@ class NewHome extends PureComponent {
             }
           });
           Layer.setMap(mapInstance);
-          mapInstance.setCity(650000, function() {
+          mapInstance.setCity(650000, function () {
             mapInstance.setZoom(6)
           })
         }
@@ -559,7 +559,13 @@ class NewHome extends PureComponent {
   }
 
   onSearch = (value) => {
-    const filter = this.state.markersList.filter(item => item.position.title.indexOf(value) > -1);
+    const filter = this.state.markersList.filter(item => {
+      if (item.position.IsEnt === 1) {
+        if (item.position.title.indexOf(value) > -1 || item.position.EntName.indexOf(value) > -1) {
+          return item;
+        }
+      }
+    });
     if (filter.length > 0) {
       this.setState({
         searchResult: filter[0].position,
@@ -801,11 +807,11 @@ class NewHome extends PureComponent {
                     events={this.searchWindowEvent}
                     position={[searchResult.Longitude, searchResult.Latitude]}
                     visible={searchResult}
-                    offset={[4, -35]}
+                    offset={[4, -40]}
                     autoMove
                     showShadow
                     closeWhenClickMap
-                  // isCustom
+                    isCustom
                   // content={this.infoWindowContent()}
                   >
                     {searchResult.title}
