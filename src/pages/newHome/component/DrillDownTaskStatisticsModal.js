@@ -59,7 +59,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
     const { taskModelType, alarmResponseModalData, taskCountModalData, modelTitle } = this.props;
     let series = [];
     return {
-      color: ["#0edaad","#67a2ef"],
+      color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
         // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
