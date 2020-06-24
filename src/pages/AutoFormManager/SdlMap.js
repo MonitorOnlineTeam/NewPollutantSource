@@ -317,14 +317,22 @@ class SdlMap extends PureComponent {
     }
     // 如果没有传入经纬度的话，定位到用户所在城市的中心
     const props = this.state.mapCenter ? { center: this.state.mapCenter } : { status: 'resizeEnable' }
+
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
+
     return <Map
       amapkey={YOUR_AMAP_KEY}
       // zoom={this.props.zoom}
       {...props}
       events={events}
-      // useAMapUI={() => {
-      //   console.log("AMapUI Loaded Done")
-      // }}
+      {...mapStaticAttribute}
+    // useAMapUI={() => {
+    //   console.log("AMapUI Loaded Done")
+    // }}
     >
       {/* {window.AMap && <MapUI />} */}
       {

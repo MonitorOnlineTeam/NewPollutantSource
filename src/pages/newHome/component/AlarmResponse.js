@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 10:43:52
+ * @Last Modified time: 2020-06-24 14:47:52
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -58,7 +58,7 @@ class AlarmResponse extends PureComponent {
       },
       xAxis: {
         type: 'category',
-        data: [`${month + 1}月响应`, `${month}月响应`, `${month + 1}月核实`, `${month}月核实`]
+        data: [`${month}月响应`, `${month + 1}月响应`, `${month}月核实`, `${month + 1}月核实`]
       },
       yAxis: {
         type: 'value',
@@ -76,7 +76,7 @@ class AlarmResponse extends PureComponent {
           barMaxWidth: 40,
           itemStyle: {
             color: function (params) {
-              var colorList = ['#f6b322', '#FF9800', '#fd6c6c', '#FF5722'];
+              var colorList = ['#FF9800', '#ffd065', '#fd6c6c', '#FF5722'];
               return colorList[params.dataIndex]
             }
           },
@@ -89,7 +89,8 @@ class AlarmResponse extends PureComponent {
               }
             }
           },
-          data: [execptionCount, execptionYearCount, taskCount, taskYearCount]
+          data: [execptionYearCount, execptionCount, taskYearCount, taskCount]
+          // data: [20, 11, 44, 32]
         }
       ]
       // series: [
@@ -178,13 +179,13 @@ class AlarmResponse extends PureComponent {
         title = "异常报警响应";
         break;
       case 1:
-        title = "异常报警响应环比";
+        title = "异常报警响应";
         break;
       case 2:
         title = "超标报警核实";
         break;
       case 3:
-        title = "超标报警核实环比";
+        title = "超标报警核实";
         break;
     }
     // this.setState({ title })
@@ -212,7 +213,7 @@ class AlarmResponse extends PureComponent {
         </div>
         {
           <div className={styles["warningInfo"]}>
-            <i style={{ background: "#f6b322" }}></i>
+            <i style={{ background: "#ffd065" }}></i>
             <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
           </div>
         }

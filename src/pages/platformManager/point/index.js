@@ -527,6 +527,7 @@ export default class MonitorPoint extends Component {
             onCancel={this.handleCancel}
             width="60%"
             destroyOnClose
+            bodyStyle={{paddingBottom:0}}
             footer={[
               !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
                 取消

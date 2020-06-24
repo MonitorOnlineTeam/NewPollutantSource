@@ -329,6 +329,7 @@ class MonitoringStandard extends Component {
             <Card
                 bordered={false}
                 style={{ width: '100%' }}
+                bodyStyle={{paddingBottom:0}}
                 extra={
                     <Button
                         onClick={() => {

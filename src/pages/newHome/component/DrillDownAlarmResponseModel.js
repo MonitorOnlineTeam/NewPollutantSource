@@ -61,85 +61,88 @@ class DrillDownAlarmResponseModel extends PureComponent {
     const { taskModelType, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
     const month = moment().get('month');
     let series = [];
-    if (modelTitle === "异常报警响应" || modelTitle === "异常报警响应环比") {
-      series = [{
-        name: `${month + 1}月异常报警响应`,
-        type: 'bar',
-        itemStyle: {
-          color: "#f6b322"
-        },
-        // barWidth: '40%',
-        barMaxWidth: 60,
-        label: {
-          show: true,
-          position: 'top',
-          formatter: (params) => {
-            if (params.value) {
-              return params.value + "次"
+    if (modelTitle === "异常报警响应") {
+      series = [
+        {
+          name: `${month}月异常报警响应`,
+          type: 'bar',
+          itemStyle: {
+            color: "#FF9800"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
             }
-          }
+          },
+          data: alarmResponseModalData.execptionYearCount
         },
-        data: alarmResponseModalData.execptionCount
-      },
-      {
-        name: `${month}月异常报警响应`,
-        type: 'bar',
-        itemStyle: {
-          color: "#FF9800"
-        },
-        // barWidth: '40%',
-        barMaxWidth: 60,
-        label: {
-          show: true,
-          position: 'top',
-          formatter: (params) => {
-            if (params.value) {
-              return params.value + "次"
+        {
+          name: `${month + 1}月异常报警响应`,
+          type: 'bar',
+          itemStyle: {
+            color: "#ffd065"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
             }
-          }
-        },
-        data: alarmResponseModalData.execptionYearCount
-      }]
+          },
+          data: alarmResponseModalData.execptionCount
+        },]
     } else {
       // 超标报警核实
-      series = [{
-        name: `${month + 1}月超标报警核实`,
-        type: 'bar',
-        itemStyle: {
-          color: "#fd6c6c"
-        },
-        // barWidth: '40%',
-        barMaxWidth: 60,
-        label: {
-          show: true,
-          position: 'top',
-          formatter: (params) => {
-            if (params.value) {
-              return params.value + "次"
+      series = [
+        {
+          name: `${month}月超标报警核实`,
+          type: 'bar',
+          itemStyle: {
+            color: "#FF5722"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
             }
-          }
+          },
+          data: alarmResponseModalData.taskYearCount
         },
-        data: alarmResponseModalData.taskCount
-      },
-      {
-        name: `${month}月超标报警核实`,
-        type: 'bar',
-        itemStyle: {
-          color: "#FF5722"
-        },
-        // barWidth: '40%',
-        barMaxWidth: 60,
-        label: {
-          show: true,
-          position: 'top',
-          formatter: (params) => {
-            if (params.value) {
-              return params.value + "次"
+        {
+          name: `${month + 1}月超标报警核实`,
+          type: 'bar',
+          itemStyle: {
+            color: "#fd6c6c"
+          },
+          // barWidth: '40%',
+          barMaxWidth: 60,
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return params.value + "次"
+              }
             }
-          }
+          },
+          data: alarmResponseModalData.taskCount
         },
-        data: alarmResponseModalData.taskYearCount
-      },]
+      ]
     }
 
     return {

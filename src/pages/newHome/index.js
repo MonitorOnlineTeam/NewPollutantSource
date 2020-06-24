@@ -548,7 +548,7 @@ class NewHome extends PureComponent {
           {
             infoWindowData.list.map(item => {
               return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
               </Tooltip>
             })
           }
@@ -559,22 +559,24 @@ class NewHome extends PureComponent {
   }
 
   onSearch = (value) => {
-    const filter = this.state.markersList.filter(item => {
-      if (item.position.IsEnt === 1) {
-        if (item.position.title.indexOf(value) > -1 || item.position.EntName.indexOf(value) > -1) {
-          return item;
+    if (value) {
+      const filter = this.state.markersList.filter(item => {
+        if (item.position.IsEnt === 1) {
+          if (item.position.title.indexOf(value) > -1 || item.position.EntName.indexOf(value) > -1) {
+            return item;
+          }
         }
-      }
-    });
-    if (filter.length > 0) {
-      this.setState({
-        searchResult: filter[0].position,
-        searchInputVal: undefined
-      })
+      });
+      if (filter.length > 0) {
+        this.setState({
+          searchResult: filter[0].position,
+          searchInputVal: undefined
+        })
 
-      aMap.setZoomAndCenter(aMap.getZoom() + 2, [filter[0].position.Longitude, filter[0].position.Latitude])
-    } else {
-      message.error("未找到相关企业或空气站")
+        aMap.setZoomAndCenter(aMap.getZoom() + 2, [filter[0].position.Longitude, filter[0].position.Latitude])
+      } else {
+        message.error("未找到相关企业或空气站")
+      }
     }
   }
 
@@ -613,6 +615,11 @@ class NewHome extends PureComponent {
     // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
     const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
     return (
       <div className={styles.newHomeWrap}>
         <header className={styles.homeHeader}>
@@ -752,7 +759,7 @@ class NewHome extends PureComponent {
                     <li><WaterOffline /> <span>废水</span></li>
                     <li><GasOffline /> <span>废气</span></li>
                     <li><CustomIcon type="icon-fangwu" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />空气站</li>
-                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停产</li>
+                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停运</li>
                   </ul>
                 </div>
                 {
@@ -773,6 +780,7 @@ class NewHome extends PureComponent {
                 // zoom={4}
                 mapStyle="amap://styles/fresh"
                 useAMapUI={!config.offlineMapUrl.domain}
+                {...mapStaticAttribute}
               >
                 {
                   !config.offlineMapUrl.domain && <MapUI
