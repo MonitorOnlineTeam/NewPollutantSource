@@ -52,6 +52,7 @@ const columns = [
   start: qualityControlModel.start,
   end: qualityControlModel.end,
   QCAResult: qualityControl.QCAResult,
+  qcaLoading: loading.effects['qualityControl/GetQCAReport']
   // chartMax: qualityControlModel.chartMax,
 }))
 class index extends Component {
@@ -133,7 +134,7 @@ class index extends Component {
         type: "qualityControl/GetQCAReport",
         payload: {
           QCTime: nextProps.startTime,
-          StandardGasCode: nextProps.PollutantCode,
+          StandardGasCode: this.state.PollutantCode,
         }
       })
     }
@@ -144,8 +145,7 @@ class index extends Component {
     var count = record.length;
     if (record !== null && record.length > 0) {
       record.map((item, index) => {
-        if(index==0)
-        {
+        if (index == 0) {
           rtnVal.push(
             <tr>
               <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
@@ -164,16 +164,15 @@ class index extends Component {
                 {item.Error}
               </td>
               <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-  
+
               </td>
             </tr>
           );
-        }else
-        {
+        } else {
           rtnVal.push(
             <tr>
               <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {index + 1}
+                {index + 1}
               </td>
               <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                 {item.ShowValue}
@@ -183,12 +182,12 @@ class index extends Component {
               <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
               </td> */}
               <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-  
+
               </td>
             </tr>
           );
         }
-       
+
       });
     }
 
@@ -262,6 +261,12 @@ class index extends Component {
         type: 'category',
         boundaryGap: false,
         data: timeList,
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
       },
       yAxis: [
         {
@@ -328,9 +333,10 @@ class index extends Component {
   // 获取质控结果
   getQCAResult = () => {
     switch (this.props.QCAResult) {
+      // switch ('1') {
       case "0":
         return <Spin style={{ position: 'absolute', right: 20 }} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
-        // return <CustomIcon className={styles.QCResult} type="icon-hege" />
+      // return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "1":
         return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "2":
@@ -341,52 +347,72 @@ class index extends Component {
   }
 
   render() {
-    const { valueList, standardValueList, timeList, tableData, PollutantCode, QCAResult } = this.props;
+    const { valueList, standardValueList, timeList, tableData, PollutantCode, QCAResult,qcaLoading } = this.props;
     const { showType } = this.state;
     return (
-      <Card title={this.searchWhere()}
-        bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
-        extra={
-          <>
-            {
-              QCAResult != "0" ?
-                <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-                  this.setState({
-                    showType: e.target.value
-                  })
-                }}>
-                  <Radio.Button value="chart">图表</Radio.Button>
-                  <Radio.Button value="data">报表</Radio.Button>
-                </Radio.Group> : <></>
-                
-            }
-          </>
-        }>
-        <div style={{ position: "relative", }}>
+      <Card
+        bodyStyle={{ maxHeight: 510, overflowY: "auto", padding: "10px 14px 10px" }}
+      >
+        {/* <div style={{ position: "relative"}}> */}
         {this.getQCAResult()}
-          {
-            showType === "chart" ?
-              <>
-                <div className={styles.legendNumBox}>
-                  <span>
-                    <span style={{ color: "#56f485" }}>{valueList[valueList.length - 1]}</span>
-                    <span style={{ color: "#c23531" }}>{standardValueList[standardValueList.length - 1]}</span>
-                  </span>
-                </div>
-                <ReactEcharts
-                  theme="line"
-                  // option={() => { this.lightOption() }}
-                  option={this.lineOption()}
-                  lazyUpdate={true}
-                  notMerge
-                  id="rightLine"
-                  style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-                />
-              </>
-              : <table
-                className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-              >
-               
+        {
+          QCAResult != "0" ?
+            // true ?
+            <Radio.Group defaultValue="chart"
+              style={{
+                position: "absolute",
+                right: 10,
+                zIndex: 1,
+                float: "right",
+                height: 8,
+                position: "relative",
+                marginTop: -2
+              }}
+              buttonStyle="solid" onChange={(e) => {
+                this.setState({
+                  showType: e.target.value
+                })
+                
+                  
+              }}>
+              <Radio.Button value="chart">图表</Radio.Button>
+              <Radio.Button value="data">报表</Radio.Button>
+            </Radio.Group>
+            : <></>
+
+        }
+        {
+          showType === "chart" ?
+            <>
+              <div className={styles.legendNumBox}>
+                <span>
+                  <span style={{ color: "#56f485" }}>{valueList[valueList.length - 1]}</span>
+                  <span style={{ color: "#c23531" }}>{standardValueList[standardValueList.length - 1]}</span>
+                </span>
+              </div>
+              <ReactEcharts
+                theme="line"
+                // option={() => { this.lightOption() }}
+                option={this.lineOption()}
+                lazyUpdate={true}
+                notMerge
+                id="rightLine"
+                style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+              />
+            </>
+            : (qcaLoading ? <Spin
+              style={{
+                width: '100%',
+                height: 'calc(100vh/2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              size="large"
+            /> : <table
+              className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px', marginTop: 38 }}
+            >
+
                 <tbody >
                   <tr>
                     <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
@@ -437,9 +463,10 @@ class index extends Component {
                   {}
                 </tbody>
               </table>
-            // scroll={{ y: '200px' }}
-          }
-        </div>
+            )
+          // scroll={{ y: '200px' }}
+        }
+        {/* </div> */}
       </Card>
     );
   }

@@ -563,7 +563,7 @@ class ImagePage extends PureComponent {
         <Modal
           title="查看结果实时比对"
           visible={this.state.visible}
-          footer={[]}
+          footer={null}
           // okText={"开始质控"}
           // onClick={this.onSubmitForm}
           width={"90%"}

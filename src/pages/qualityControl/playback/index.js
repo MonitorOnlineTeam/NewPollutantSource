@@ -481,7 +481,7 @@ class PlaybackPage extends PureComponent {
               title="质控结果比对"
               destroyOnClose
               visible={this.state.visible}
-              footer={[]}
+              footer={null}
               onOk={this.handleOk}
               onCancel={() => {
                 this.setState({ visible: false })
