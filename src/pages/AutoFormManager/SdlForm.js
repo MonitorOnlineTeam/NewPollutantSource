@@ -22,7 +22,8 @@ import {
   DatePicker,
   message,
   Modal,
-  Carousel
+  Carousel,
+  Tabs 
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -203,7 +204,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading,corporationCode } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -292,6 +293,7 @@ class SdlForm extends PureComponent {
           )
           break;
         case '经度':
+          debugger;
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
 
@@ -314,7 +316,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') || formData.Longitude}
             latitude={getFieldValue('Latitude') || formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet']}
+            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
           />
           break;
@@ -329,7 +331,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') || formData.Longitude}
             latitude={getFieldValue('Latitude') || formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet']}
+            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
           />;
           break;
@@ -342,7 +344,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude')}
             latitude={getFieldValue('Latitude')}
-            path={getFieldValue(`${fieldName}`) || formData[fieldName]}
+            path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
             showMarker={true}
             handlePolygon
           />;

@@ -370,6 +370,7 @@ class SdlMap extends PureComponent {
         res.push(<Polygon
           // key={item.entCode+i}
           // extData={item}
+          bubble={true}
           style={{
             strokeColor: '#FF33FF',
             strokeOpacity: 0.2,
