@@ -71,7 +71,7 @@ class DrillDownRunModal extends PureComponent {
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '0%',
         containLabel: true
       },
       xAxis: [
@@ -206,7 +206,7 @@ class DrillDownRunModal extends PureComponent {
         break;
       case 3:
         levelText = "(排口)"
-        afterText = currentDivisionName ? currentEntName + " - " : ""
+        afterText = currentEntName ? currentEntName + " - " : ""
         break;
     }
     let title = `${afterText}${modelTitle}${levelText}`;
