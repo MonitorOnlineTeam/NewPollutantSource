@@ -121,21 +121,21 @@ class WasteGasChart extends Component {
 
                         <div style={{
                             position: 'relative', left: '120px',
-                            top: '-85px', fontWeight: '700', fontSize: '10px', width: 150, height: 50
+                            top: '20px', fontWeight: '700', fontSize: '10px', width: 150, height: 50
                         }}
                             onClick={() => this.positionClick("", "", "s07,s08,b02")} className={styles.divClick}>
                         </div>
 
                         <div style={{
                             position: 'relative', left: '120px',
-                            top: '-71px', fontWeight: '700', fontSize: '10px', width: 150, height: 50
+                            top: '34px', fontWeight: '700', fontSize: '10px', width: 150, height: 50
                         }}
                             onClick={() => this.positionClick("", "", "01")} className={styles.divClick}>
                         </div>
 
                         <div style={{
                             position: 'relative', left: '1000px',
-                            top: '20px', fontWeight: '700', fontSize: '10px', width: 150, height: 40
+                            top: '85px', fontWeight: '700', fontSize: '10px', width: 150, height: 40
                         }}
                             onClick={() => this.positionClick("", "", "02,03")} className={styles.divClick}>
                         </div>

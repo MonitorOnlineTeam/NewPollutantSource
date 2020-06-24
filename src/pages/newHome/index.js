@@ -68,6 +68,7 @@ let aMap = null;
   startTime: newHome.startTime,
   endTime: newHome.endTime,
   LEVEL: newHome.LEVEL,
+  INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
 }))
 class NewHome extends PureComponent {
@@ -143,6 +144,7 @@ class NewHome extends PureComponent {
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
+      selectValue: "", // 筛选
     };
 
   }
@@ -360,6 +362,12 @@ class NewHome extends PureComponent {
               this.setState({
                 clickedDivision: extData.position
               })
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  currentDivisionName: extData.position.title
+                }
+              })
               this.props.dispatch({ type: "newHome/changeRegionCode", payload: { regionCode: extData.position.RegionCode } })
             }} />
           {/* </ReactCSSTransitionGroup> */}
@@ -506,11 +514,11 @@ class NewHome extends PureComponent {
   infoWindowContent = () => {
     const { currentClickObj } = this.state;
     const { infoWindowData } = this.props;
-    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.jpg" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
-      imgName = config.uploadHost + "upload" + imgName;
+      imgName = config.uploadHost + "upload/" + infoWindowData.photo[0];
     }
-    return <div className={styles.infoWindowContent} style={{ width: 320, minHeight: 360 }}>
+    return <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
       <div className={styles.header}>
         <h2>{infoWindowData.Abbreviation} - {currentClickObj.title}</h2>
         <Button type="primary" size="small" onClick={() => {
@@ -537,12 +545,12 @@ class NewHome extends PureComponent {
           {
             infoWindowData.list.map(item => {
               return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
               </Tooltip>
             })
           }
         </ul>
-        <p>发布时间：{infoWindowData.MonitorTime}</p>
+        <p>监控时间：{infoWindowData.MonitorTime}</p>
       </div>
     </div>
   }
@@ -564,7 +572,6 @@ class NewHome extends PureComponent {
   divisionInfoWindow = () => {
     const { currentDivision } = this.props;
     if (currentDivision && currentDivision.divisionList) {
-      debugger
       return currentDivision.divisionList.map(item => {
         return <InfoWindow
           position={[item.longitude, item.latitude]}
@@ -590,11 +597,12 @@ class NewHome extends PureComponent {
 
 
   render() {
-    const { filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
-    const { allEntAndPointList, constructionCorpsList, LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
+    const { selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
+    const { allEntAndPointList, constructionCorpsList, INIT_LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
     const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
     const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
-    const bigLoading = drillDownLoading || getAllEntAndPointLoading;
+    // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
+    const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
     return (
       <div className={styles.newHomeWrap}>
@@ -604,7 +612,7 @@ class NewHome extends PureComponent {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>
         </header>
-        <Spin style={{ zIndex: 9999 }} spinning={bigLoading}>
+        <Spin style={{ zIndex: 9999 }} spinning={loading}>
           <div className={styles.pageContainer}>
             <Drawer
               // getContainer={false}
@@ -659,20 +667,30 @@ class NewHome extends PureComponent {
                     //  true && <Button type="primary" style={{
                     float: 'right',
                   }} onClick={() => {
-                    this.renderEntMarkers(this.props)
+                    let filterList = allEntAndPointList;
+                    if (selectValue) {
+                      filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
+                    }
+                    this.setState({
+                      infoWindowVisible: false, // 关闭排口弹窗
+                    })
+                    this.renderEntMarkers(filterList)
                     aMap.setFitView();
                   }}>返回企业</Button>
                 }
                 {
                   clickedDivision && <Button type="primary" style={{
                     float: 'right',
+                    display: displayType === 1 ? "none" : "inline"
                   }} onClick={() => {
                     this.setState({ clickedDivision: undefined })
                     this.props.dispatch({
                       type: "newHome/updateState",
                       payload: {
-                        level: LEVEL,
-                        regionCode: "660000000"
+                        level: INIT_LEVEL,
+                        LEVEL: INIT_LEVEL,
+                        regionCode: "660000000",
+                        currentDivisionName: ""
                       }
                     })
                     setTimeout(() => {
@@ -689,7 +707,8 @@ class NewHome extends PureComponent {
                     this.setState({ searchInputVal: e.target.value })
                   }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
                 }
-                <Select className={styles.selectShowType} defaultValue="" onChange={(val) => {
+                <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
+                  this.setState({ selectValue: val })
                   if (val) {
                     let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
                     console.log('filterList=', filterList)
@@ -705,7 +724,9 @@ class NewHome extends PureComponent {
                   <Option value="2">空气站</Option>
                 </Select>
                 {
-                  clickedDivision && <div className={styles.shibox}>
+                  clickedDivision && <div style={{
+                    display: displayType === 1 ? "none" : "block"
+                  }} className={styles.shibox}>
                     {/* <span>师局</span><br /> */}
                     <span>{clickedDivision.title}</span>
                     {/* <span>第九师</span> */}
@@ -721,6 +742,7 @@ class NewHome extends PureComponent {
                     <li><WaterOffline /> <span>废水</span></li>
                     <li><GasOffline /> <span>废气</span></li>
                     <li><CustomIcon type="icon-fangwu" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />空气站</li>
+                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停产</li>
                   </ul>
                 </div>
                 {
@@ -735,33 +757,21 @@ class NewHome extends PureComponent {
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}
+                // features={['bg', 'point', 'building']}
                 id="mapId"
                 events={this.amapEvents}
                 // zoom={4}
                 mapStyle="amap://styles/fresh"
-                useAMapUI={true}
+                useAMapUI={!config.offlineMapUrl.domain}
               >
-                <MapUI
-                  renderEnt={() => {
-                    this.renderEntMarkers(this.props);
-                  }}
-                // featureOnClick={(feature) => {
-                //   this.setState({
-                //     adCode: feature.properties.adcode
-                //   }, () => {
-                //     this.getAllEntAndPoint();
-                //   })
-                // }}
-                // featureMouseover={(adcode) => {
-                //   console.log('adcode=', adcode)
-                //   this.props.dispatch({
-                //     type: "newHome/updateDivisionShowCoordinate",
-                //     payload: {
-                //       adcode
-                //     }
-                //   })
-                // }}
-                />
+                {
+                  !config.offlineMapUrl.domain && <MapUI
+                    renderEnt={() => {
+                      this.renderEntMarkers(this.props);
+                    }}
+                  />
+                }
+
                 {this.drawPolygon()}
                 <Markers
                   markers={this.state.markersList}
@@ -797,7 +807,6 @@ class NewHome extends PureComponent {
                     {searchResult.title}
                   </InfoWindow>
                 }
-                {console.log('divisionInfoWindow=', this.divisionInfoWindow())}
                 {/* {
                   this.divisionInfoWindow()
                 } */}

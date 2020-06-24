@@ -75,12 +75,15 @@ export default Model.extend({
     paramsList: [],
     // 任务统计下钻
     taskCountModalData: {
-      x: [], insidePlan: [], unInsidePlan: []
+      x: [], insidePlan: [], unInsidePlan: [], completeTaskCount: []
     },
     codeList: [],
     // 报警响应下钻
     alarmResponseModalData: {
       taskCount: [], taskYearCount: [], execptionCount: [], execptionYearCount: [], x: []
+    },
+    taskClassifyModalData: {
+      ywc: [], wwc: [], x: [], name: ""
     }
   },
   effects: {
@@ -88,7 +91,7 @@ export default Model.extend({
     *getLevel({ payload }, { call, update }) {
       const result = yield call(services.getLevel);
       if (result.IsSuccess) {
-        yield update({ level: result.Datas, LEVEL: result.Datas });
+        yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
         message.error(result.Message)
       }
@@ -286,7 +289,7 @@ export default Model.extend({
     // 点击师 - 改变RegionCode - 左右联动
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
-      yield update({ regionCode, level: 2 })
+      yield update({ regionCode, level: 2, LEVEL: 2 })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }
@@ -418,7 +421,7 @@ export default Model.extend({
           paramsList.push(item.code)
         })
         yield update({
-          drillDownRunVisible: true,
+          // drillDownRunVisible: true,
           seriesData,
           xData,
           paramsList,
@@ -431,7 +434,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //获取运维分析下钻
+    //获取任务分类统计下钻
     *getTrippingOperationAnalysis({ payload }, { call, update, select, put }) {
       yield update({ drillDownLoading: true })
       const state = yield select(state => state.newHome)
@@ -469,20 +472,20 @@ export default Model.extend({
       let postData = getDrillDownParams(state)
       const result = yield call(services.getTrippingTaskStatistics, postData);
       if (result.IsSuccess) {
-        let insidePlan = [], unInsidePlan = [], x = [], codeList = [];
+        let insidePlan = [], unInsidePlan = [], x = [], codeList = [], completeTaskCount = [];
         result.Datas.map(item => {
           insidePlan.push(item.insidePlan);
           unInsidePlan.push(item.unInsidePlan);
+          completeTaskCount.push(item.completeTaskCount);
           x.push(item.name);
           codeList.push(item.code);
         })
 
         yield update({
-          drillDownTaskVisible: true,
           drillDownLoading: false,
           codeList,
           taskCountModalData: {
-            insidePlan, unInsidePlan, x,
+            insidePlan, unInsidePlan, x, completeTaskCount
           }
         })
       } else {

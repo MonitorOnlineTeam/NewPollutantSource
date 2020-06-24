@@ -50,7 +50,14 @@ export default class APILoader {
     if (window.AMapUI) {
       return Promise.resolve()
     }
-    const script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+    let script = "";
+    script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+
+    // if (config.offlineMapUrl.domain) {
+    //   script = this.buildScriptTag(`${config.offlineMapUrl.domain}/ui/1.0/main-async.js`)
+    // } else {
+    //   script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+    // }
     const p = new Promise(resolve => {
       script.onload = () => {
         resolve()

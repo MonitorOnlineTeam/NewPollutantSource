@@ -1,32 +1,34 @@
 import React, { PureComponent } from 'react';
-import { Modal, Tabs, Spin, Input, Button, Icon, Row, Col, Form, Divider, DatePicker } from "antd";
+import { Modal, Tabs, Spin, Input, Icon, Button, Row, Col, Form, Divider, DatePicker, Select } from "antd";
 import { connect } from 'dva'
-import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
+import SdlTable from '@/components/SdlTable'
 import styles from '../index.less'
 import ReactEcharts from 'echarts-for-react';
+const { RangePicker, MonthPicker } = DatePicker;
 
-const { MonthPicker } = DatePicker;
-
+const Option = Select.Option
 
 @Form.create()
 @connect(({ loading, newHome }) => ({
-  drillDownRunVisible: newHome.drillDownRunVisible,
-  seriesData: newHome.seriesData,
-  xData: newHome.xData,
-  paramsList: newHome.paramsList,
+  alarmResponseVisible: newHome.alarmResponseVisible,
   level: newHome.level,
   LEVEL: newHome.LEVEL,
   loading: newHome.drillDownLoading,
+  taskCountModalData: newHome.taskCountModalData,
   startTime: newHome.startTime,
   endTime: newHome.endTime,
+  alarmResponseModalData: newHome.alarmResponseModalData,
+  taskClassifyModalData: newHome.taskClassifyModalData,
+  codeList: newHome.codeList,
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
+  taskModelType: newHome.taskModelType,
   modelTitle: newHome.modelTitle,
   currentDivisionName: newHome.currentDivisionName,
   currentEntName: newHome.currentEntName,
 }))
-class DrillDownRunModal extends PureComponent {
+class DrillDownAlarmResponseModel extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,34 +42,122 @@ class DrillDownRunModal extends PureComponent {
       },
     };
   }
+
   close = () => {
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
-        drillDownRunVisible: false,
+        alarmResponseVisible: false,
         level: this.props.LEVEL,
         startTime: this.props.START_TIME,
         endTime: this.props.END_TIME,
         entName: "",
       }
     })
+    this.props.onClose && this.props.onClose();
   }
 
   getOption = () => {
-    const { seriesData, xData } = this.props;
+    const { taskModelType, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
+    const month = moment().get('month');
+    let series = [];
+    if (modelTitle === "异常报警响应" || modelTitle === "异常报警响应环比") {
+      series = [{
+        name: `${month + 1}月异常报警响应`,
+        type: 'bar',
+        itemStyle: {
+          color: "#f6b322"
+        },
+        // barWidth: '40%',
+        barMaxWidth: 60,
+        label: {
+          show: true,
+          position: 'top',
+          formatter: (params) => {
+            if (params.value) {
+              return params.value + "次"
+            }
+          }
+        },
+        data: alarmResponseModalData.execptionCount
+      },
+      {
+        name: `${month}月异常报警响应`,
+        type: 'bar',
+        itemStyle: {
+          color: "#FF9800"
+        },
+        // barWidth: '40%',
+        barMaxWidth: 60,
+        label: {
+          show: true,
+          position: 'top',
+          formatter: (params) => {
+            if (params.value) {
+              return params.value + "次"
+            }
+          }
+        },
+        data: alarmResponseModalData.execptionYearCount
+      }]
+    } else {
+      // 超标报警核实
+      series = [{
+        name: `${month + 1}月超标报警核实`,
+        type: 'bar',
+        itemStyle: {
+          color: "#fd6c6c"
+        },
+        // barWidth: '40%',
+        barMaxWidth: 60,
+        label: {
+          show: true,
+          position: 'top',
+          formatter: (params) => {
+            if (params.value) {
+              return params.value + "次"
+            }
+          }
+        },
+        data: alarmResponseModalData.taskCount
+      },
+      {
+        name: `${month}月超标报警核实`,
+        type: 'bar',
+        itemStyle: {
+          color: "#FF5722"
+        },
+        // barWidth: '40%',
+        barMaxWidth: 60,
+        label: {
+          show: true,
+          position: 'top',
+          formatter: (params) => {
+            if (params.value) {
+              return params.value + "次"
+            }
+          }
+        },
+        data: alarmResponseModalData.taskYearCount
+      },]
+    }
+
     return {
-      color: ['#3398DB'],
-      legend: {},
+      color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
         // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
         //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
         // },
-        formatter: (params) => {
-          var tar = params[0];
-          return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + ' %';
-        }
+        formatter(params, ticket, callback) {
+          let res = `${params[0].axisValue}<br/>`;
+          params.map(item => {
+            res += item.marker + `${item.seriesName}：${item.value}次<br />`;
+          });
+          return res;
+        },
       },
+      legend: {},
       grid: {
         left: '3%',
         right: '4%',
@@ -77,10 +167,7 @@ class DrillDownRunModal extends PureComponent {
       xAxis: [
         {
           type: 'category',
-          data: xData,
-          axisTick: {
-            alignWithLabel: true
-          },
+          data: alarmResponseModalData.x,
           axisLabel: {
             interval: 0,
             rotate: 40
@@ -90,37 +177,11 @@ class DrillDownRunModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          name: '（%）',
-          position: 'left',
-          minInterval: 1,
-          splitLine: {
-            show: true,
-            lineStyle: {
-              type: 'dashed'
-            }
-          }
+          minInterval: 1
         }
       ],
-      series: [
-        {
-          name: this.props.modelTitle,
-          type: 'bar',
-          // barWidth: '40%',
-          barMaxWidth: 60,
-          label: {
-            show: true,
-            position: 'top',
-            formatter: (params) => {
-              if (params.value) {
-                return params.value + "%"
-              }
-            }
-          },
-          data: seriesData
-        }
-      ]
+      series: series
     };
-
   }
 
   chartEvents = {
@@ -130,7 +191,7 @@ class DrillDownRunModal extends PureComponent {
         this.props.dispatch({
           type: "newHome/updateState",
           payload: {
-            regionCode: this.props.paramsList[params.dataIndex],
+            regionCode: this.props.codeList[params.dataIndex],
             currentDivisionName: params.name
           }
         })
@@ -140,7 +201,7 @@ class DrillDownRunModal extends PureComponent {
         this.props.dispatch({
           type: "newHome/updateState",
           payload: {
-            entCode: this.props.paramsList[params.dataIndex],
+            entCode: this.props.codeList[params.dataIndex],
             currentEntName: params.name
           }
         })
@@ -152,7 +213,7 @@ class DrillDownRunModal extends PureComponent {
             level: this.props.level + 1
           }
         })
-        this.setState({ dataIndex: params.dataIndex })
+        this.setState({ showBack: true, dataIndex: params.dataIndex })
         this.props.chartClick();
       }
     }
@@ -165,7 +226,7 @@ class DrillDownRunModal extends PureComponent {
       this.props.dispatch({
         type: "newHome/updateState",
         payload: {
-          regionCode: this.props.paramsList[dataIndex]
+          regionCode: this.props.codeList[dataIndex]
         }
       })
     }
@@ -174,7 +235,7 @@ class DrillDownRunModal extends PureComponent {
       this.props.dispatch({
         type: "newHome/updateState",
         payload: {
-          entCode: this.props.paramsList[dataIndex]
+          entCode: this.props.codeList[dataIndex]
         }
       })
     }
@@ -190,10 +251,11 @@ class DrillDownRunModal extends PureComponent {
   }
 
 
-  render() {
-    const { currentDivisionName, currentEntName, drillDownRunVisible, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
-    const { formItemLayout } = this.state;
 
+  render() {
+    const { currentDivisionName, currentEntName, taskClassifyModalData, alarmResponseVisible, taskModelType, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { formItemLayout, showBack } = this.state;
+    console.log('modelTitle=', modelTitle)
     let levelText, afterText = "";
     switch (level) {
       case 1:
@@ -213,7 +275,6 @@ class DrillDownRunModal extends PureComponent {
     return (
       <Modal
         title={<div>
-          {/* {`${modelTitle}${levelText} - 详情`} */}
           {title}
           {
             level !== LEVEL && <Button
@@ -225,11 +286,12 @@ class DrillDownRunModal extends PureComponent {
               size="small"
             >
               <Icon type="rollback" />
-                返回上级
-              </Button>
+                  返回上级
+                </Button>
           }
         </div>}
-        visible={drillDownRunVisible}
+        visible={alarmResponseVisible}
+        // visible={true}
         destroyOnClose
         footer={null}
         width={"80%"}
@@ -240,7 +302,7 @@ class DrillDownRunModal extends PureComponent {
             <Row>
               {
                 level === 2 &&
-                <Col span={10}>
+                <Col span={6}>
                   <Form.Item {...formItemLayout} label="企业名称">
                     {getFieldDecorator("entName", {
                     })(
@@ -256,8 +318,8 @@ class DrillDownRunModal extends PureComponent {
                   </Form.Item>
                 </Col>
               }
-              <Col span={10}>
-                <Form.Item {...formItemLayout} label="日期">
+              <Col span={8}>
+                <Form.Item {...formItemLayout} label="日期" style={{ width: '100%' }}>
                   {getFieldDecorator("time", {
                     initialValue: moment(startTime)
                   })(
@@ -291,9 +353,9 @@ class DrillDownRunModal extends PureComponent {
             theme="my_theme"
           />
         </Spin>
-      </Modal >
+      </Modal>
     );
   }
 }
 
-export default DrillDownRunModal;
+export default DrillDownAlarmResponseModel;

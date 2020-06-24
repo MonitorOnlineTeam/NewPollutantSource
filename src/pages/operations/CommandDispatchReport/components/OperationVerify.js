@@ -23,17 +23,12 @@ class OperationVerify extends Component {
     }
 
     componentDidMount() {
-        this.reloadPage('OperationVerify');
+         this.reloadPage('OperationVerify');
     }
 
     reloadPage = configId => {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
+
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
@@ -43,16 +38,19 @@ class OperationVerify extends Component {
     }
 
     render() {
+        console.log('111111=', this.props.DataWhere2)
         return (
             <>
                 <Card bordered={false} title="核实详情" loading={this.props.loading}>
                     <Card.Grid style={{ width: '100%' }} className={Style.hidpage}>
-                        <AutoFormTable
+                        {
+                            (this.props.DataWhere2 && this.props.DataWhere2.length) ? <AutoFormTable
                             configId="OperationVerify"
                             {...this.props}
                             searchParams={this.props.DataWhere2}
                         >
-                        </AutoFormTable>
+                        </AutoFormTable> : ''
+                        }
                     </Card.Grid>
                 </Card>
             </>

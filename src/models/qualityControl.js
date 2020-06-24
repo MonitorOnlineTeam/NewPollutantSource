@@ -13,6 +13,7 @@ export default Model.extend({
     standardValueList: [],
     start: 0,
     end: 20,
+    isReceiveData: true,
   },
   effects: {
     *updateRealtimeData({ payload }, { call, put, select }) {
@@ -57,7 +58,7 @@ export default Model.extend({
         let realtimeData = payload.message;
 
 
-        if (realtimeData) {
+        if (realtimeData && state.isReceiveData) {
           if (state.currentPollutantCode && state.currentDGIMN) {
             const filterDGIMNList = realtimeData.filter(item => item.DGIMN === state.currentDGIMN);
             DGIMNList = [

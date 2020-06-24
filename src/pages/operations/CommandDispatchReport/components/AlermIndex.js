@@ -66,12 +66,7 @@ class AlermIndex extends Component {
 
     reloadPage = configId => {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
+
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
@@ -86,12 +81,15 @@ class AlermIndex extends Component {
             <>
                 <Card bordered={false} title="超标详情" loading={this.props.loading}>
                     <Card.Grid style={{ width: '100%' }} className={Style.hidpage}>
-                        <AutoFormTable
+                        {
+                            (this.state.DataWhere && this.state.DataWhere.length) ? <AutoFormTable
                             configId="ExceptionProcessing"
                             {...this.props}
                             searchParams={this.state.DataWhere}
                         >
-                        </AutoFormTable>
+                        </AutoFormTable> : ''
+                        }
+
                     </Card.Grid>
                 </Card>
                 {this.props.PID == null ? '' : <OperationVerify DataWhere2={this.state.DataWhere2}/>}

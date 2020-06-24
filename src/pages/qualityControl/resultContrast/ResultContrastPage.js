@@ -2,11 +2,11 @@
  * @Author: Jiaqi
  * @Date: 2019-11-15 15:15:09
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 17:10:32
+ * @Last Modified time: 2020-06-19 17:08:15
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio,Popover,Icon } from 'antd'
+import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio, Popover, Icon,Spin } from 'antd'
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import styles from './ResultContrastPage.less';
 import stylesFor from '../remoteControl/index.less'
+import CustomIcon from '@/components/CustomIcon'
 
 const Option = Select.Option;
 const content = (
@@ -47,6 +48,7 @@ const columns = [
   // standardGasList: qualityControl.standardGasList,
   resultContrastData: qualityControl.resultContrastData,
   qcaReportList: qualityControl.qcaReportList,
+  qcaLoading: loading.effects['qualityControl/GetQCAReport'],
   // resultContrastTimeList: qualityControl.resultContrastTimeList,
   standardGasLoading: loading.effects["qualityControl/getStandardGas"],
   QCAResultCheckByDGIMNLoading: loading.effects["qualityControl/QCAResultCheckByDGIMN"],
@@ -155,7 +157,6 @@ class ResultContrastPage extends Component {
 
   // 获取页面数据
   getPageData = (isSearch) => {
-    console.log('QCTime=', this.props)
     const { dateValue, DGIMN, PollutantCode } = this.state;
     if (isSearch) {
       if (!dateValue) {
@@ -241,7 +242,7 @@ class ResultContrastPage extends Component {
       },
     ];
 
-    const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
+    // const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
     const result = this.props.resultContrastData.errorStr;
     const color = result === "不合格" ? "#f5232d" : "#51c41b";
     return (
@@ -318,30 +319,52 @@ class ResultContrastPage extends Component {
 
   renderData = (record) => {
     const rtnVal = [];
+    var count = record.length;
     if (record !== null && record.length > 0) {
       record.map((item, index) => {
-        rtnVal.push(
-          <tr>
-            <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {index}
-            </td>
-            <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-              {item.StandValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-              {item.ShowValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.AvgValue}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-              {item.Error}
-            </td>
-            <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+        if (index == 0) {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {index + 1}
+              </td>
+              <td rowSpan={count} style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                {item.StandValue}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.AvgValue}
+              </td>
+              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                {item.Error}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
 
-            </td>
-          </tr>
-        );
+              </td>
+            </tr>
+          );
+        } else {
+          rtnVal.push(
+            <tr>
+              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {index + 1}
+              </td>
+              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                {item.ShowValue}
+              </td>
+              {/* <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td>
+              <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              </td> */}
+              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+
+              </td>
+            </tr>
+          );
+        }
+
       });
     }
 
@@ -402,6 +425,12 @@ class ResultContrastPage extends Component {
       xAxis: {
         type: 'category',
         data: resultContrastData.timeList,
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
       },
       yAxis: [
         {
@@ -422,10 +451,10 @@ class ResultContrastPage extends Component {
       dataZoom: [{
         type: 'inside',
         start: 0,
-        end: 20
+        end: 100
       }, {
         start: 0,
-        end: 10,
+        end: 100,
         handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
         handleSize: '80%',
         handleStyle: {
@@ -457,7 +486,7 @@ class ResultContrastPage extends Component {
   }
 
   render() {
-    const { resultContrastData, resultContrastTimeList, standardGasLoading, QCAResultCheckByDGIMNLoading, QCAResultCheckSelectListLoading } = this.props;
+    const { resultContrastData, resultContrastTimeList, standardGasLoading, QCAResultCheckByDGIMNLoading, QCAResultCheckSelectListLoading,qcaLoading } = this.props;
     const { dateValue, showType } = this.state;
     if (standardGasLoading || QCAResultCheckByDGIMNLoading || QCAResultCheckSelectListLoading) {
       return <PageLoading />
@@ -466,7 +495,7 @@ class ResultContrastPage extends Component {
     const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + "px" : 200 + "px"
     return (
       <>
-        <div style={{ marginBottom: 10 }}>
+        {/* <div style={{ marginBottom: 10 }}>
           {
             (resultContrastData.errorStr === "合格" && dateValue) ? (
               <Alert
@@ -494,19 +523,39 @@ class ResultContrastPage extends Component {
               /> : null
               )
           }
-        </div>
-        <Card title={this.searchWhere()}
-          bodyStyle={{ maxHeight: 510, overflowY: "auto" }}
-          extra={
-            <Radio.Group defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-              this.setState({
-                showType: e.target.value
-              })
-            }}>
-              <Radio.Button value="chart">图表</Radio.Button>
-              <Radio.Button value="data">报表</Radio.Button>
-            </Radio.Group>
-          }>
+        </div> */}
+
+        <Card
+          bodyStyle={{ maxHeight: 520, overflowY: "auto", padding: "10px 14px 10px" }}
+          footer={null}
+        >
+          {
+
+            (resultContrastData.errorStr === "合格" && dateValue) ? (
+              <CustomIcon className={styles.QCResult} type="icon-hege" />
+            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
+              <CustomIcon className={styles.QCResult} type="icon-buhege" /> : <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+              )
+          }
+
+
+
+          <Radio.Group style={{
+            position: "absolute",
+            right: 10,
+            zIndex: 1,
+            float: "right",
+            height: 8,
+            position: "relative",
+            marginTop: -2
+          }} defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+            this.setState({
+              showType: e.target.value
+            })
+          }}>
+            <Radio.Button value="chart">图表</Radio.Button>
+            <Radio.Button value="data">报表</Radio.Button>
+          </Radio.Group>
           {
             showType === "chart" ? <ReactEcharts
               // theme="line"
@@ -516,9 +565,18 @@ class ResultContrastPage extends Component {
               notMerge
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+            /> :(qcaLoading ? <Spin
+              style={{
+                width: '100%',
+                height: 'calc(100vh/2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              size="large"
             /> : <table
-            className={stylesFor.FormTable}  style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
-            >
+              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px', marginTop: 38 }}
+            > 
                 <tbody >
                   <tr>
                     <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
@@ -568,7 +626,7 @@ class ResultContrastPage extends Component {
                   {/* </tr> */}
                   {}
                 </tbody>
-              </table>
+              </table>)
             // scroll={{ y: echartsHeight }}
           }
         </Card>
