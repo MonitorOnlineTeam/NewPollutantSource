@@ -75,7 +75,7 @@ export default Model.extend({
     paramsList: [],
     // 任务统计下钻
     taskCountModalData: {
-      x: [], insidePlan: [], unInsidePlan: []
+      x: [], insidePlan: [], unInsidePlan: [], completeTaskCount: []
     },
     codeList: [],
     // 报警响应下钻
@@ -434,7 +434,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //获取运维分析下钻
+    //获取任务分类统计下钻
     *getTrippingOperationAnalysis({ payload }, { call, update, select, put }) {
       yield update({ drillDownLoading: true })
       const state = yield select(state => state.newHome)
@@ -472,20 +472,20 @@ export default Model.extend({
       let postData = getDrillDownParams(state)
       const result = yield call(services.getTrippingTaskStatistics, postData);
       if (result.IsSuccess) {
-        let insidePlan = [], unInsidePlan = [], x = [], codeList = [];
+        let insidePlan = [], unInsidePlan = [], x = [], codeList = [], completeTaskCount = [];
         result.Datas.map(item => {
           insidePlan.push(item.insidePlan);
           unInsidePlan.push(item.unInsidePlan);
+          completeTaskCount.push(item.completeTaskCount);
           x.push(item.name);
           codeList.push(item.code);
         })
 
         yield update({
-          drillDownTaskVisible: true,
           drillDownLoading: false,
           codeList,
           taskCountModalData: {
-            insidePlan, unInsidePlan, x,
+            insidePlan, unInsidePlan, x, completeTaskCount
           }
         })
       } else {

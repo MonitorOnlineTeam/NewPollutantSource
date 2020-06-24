@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-23 11:55:45
+ * @Last Modified time: 2020-06-24 08:52:37
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -10,13 +10,14 @@ import styles from '../index.less'
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva'
 import moment from 'moment'
-import DrillDownTaskModal from "./DrillDownTaskModal"
+import DrillDownAlarmResponseModel from "./DrillDownAlarmResponseModel"
 
 
 
 @connect(({ loading, newHome }) => ({
   alarmResponseData: newHome.alarmResponseData,
   drillDownAlarmResponseVisible: newHome.drillDownAlarmResponseVisible,
+  modelTitle: newHome.modelTitle,
 }))
 class AlarmResponse extends PureComponent {
   constructor(props) {
@@ -36,6 +37,7 @@ class AlarmResponse extends PureComponent {
   barOptions = () => {
     // color: ["#67a2ef", "#0edaad", "#fd6c6c", "f6b322"],
     const { alarmResponseData: { taskCount, taskYearCount, execptionCount, execptionYearCount } } = this.props;
+    const month = moment().get('month');
     return {
       // color: ["#fd6c6c", "#fd6c6c", "#f6b322", "#f6b322"],
       tooltip: {
@@ -53,7 +55,7 @@ class AlarmResponse extends PureComponent {
       },
       xAxis: {
         type: 'category',
-        // data: ['3月', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        // data: [`${month}月核实`, `${month + 1}月核实`, `${month}月响应`, `${month + 1}月响应`]
       },
       yAxis: {
         type: 'value',
@@ -66,19 +68,37 @@ class AlarmResponse extends PureComponent {
       },
       series: [
         {
-          name: '异常响应',
+          name: '异常报警响应',
           type: 'bar',
           itemStyle: {
             color: "#f6b322"
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return `${month + 1}月响应${params.value}次`
+              }
+            }
           },
           data: [execptionCount]
           // data: [11]
         },
         {
-          name: '异常响应同比',
+          name: '异常报警响应环比',
           type: 'bar',
           itemStyle: {
-            color: "#f6b322"
+            color: "#FF9800"
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return `${month}月响应${params.value}次`
+              }
+            }
           },
           data: [execptionYearCount]
           // data: [22]
@@ -89,14 +109,32 @@ class AlarmResponse extends PureComponent {
           itemStyle: {
             color: "#fd6c6c"
           },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return `${month + 1}月核实${params.value}次`
+              }
+            },
+          },
           data: [taskCount]
           // data: [3]
         },
         {
-          name: '超标报警核实同比',
+          name: '超标报警核实环比',
           type: 'bar',
           itemStyle: {
-            color: "#fd6c6c"
+            color: "#FF5722"
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params) => {
+              if (params.value) {
+                return `${month}月核实${params.value}次`
+              }
+            },
           },
           data: [taskYearCount]
           // data: [33]
@@ -110,7 +148,7 @@ class AlarmResponse extends PureComponent {
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
-        drillDownTaskVisible: true,
+        alarmResponseVisible: true,
         taskModelType: "alarmResponse",
         modelTitle: title,
       }
@@ -131,14 +169,14 @@ class AlarmResponse extends PureComponent {
         </div>
         {
           <div className={styles["warningInfo"]}>
-            <i></i>
-            <span>{`${month}月超标核实${taskCount}次`}{taskYearRate !== 0 ? (`，同比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
+            <i style={{ background: "#f6b322" }}></i>
+            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
           </div>
         }
         {
           <div className={styles["warningInfo"]}>
-            <i style={{ background: "#f6b322" }}></i>
-            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,同比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
+            <i></i>
+            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
           </div>
         }
         <ReactEcharts
@@ -152,7 +190,7 @@ class AlarmResponse extends PureComponent {
           className="echarts-for-echarts"
           theme="my_theme"
         />
-        <DrillDownTaskModal chartClick={() => {
+        <DrillDownAlarmResponseModel chartClick={() => {
           this.getTrippingAlarmResponse(modelTitle);
         }} />}
       </div>

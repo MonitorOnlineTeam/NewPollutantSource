@@ -5,14 +5,13 @@ import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import DrillDownTaskModal from "./DrillDownTaskModal"
 import isEqual from 'lodash/isEqual';
-const TASK_TYPE = ["cooperationInspectionComplete, cooperationInspectionUnfinished,配合检查", "matchingComplete, matchingUnfinished, 配合对比", "manualComparisonComplete, manualComparisonUnfinished, 手工对比", "verificationTestComplete, verificationTestUnfinished, 检验测试", "maintenanceRepairComplete, maintenanceRepairUnfinished, 维修维护", "calibrationComplete, calibrationUnfinished, 校准", "onSiteInspectionComplete, onSiteInspectionUnfinished, 巡检"];
+import TaskStatistics from './TaskStatistics'
+const TASK_TYPE = ["cooperationInspectionComplete,cooperationInspectionUnfinished,配合检查", "matchingComplete,matchingUnfinished,配合对比", "manualComparisonComplete,manualComparisonUnfinished,手工对比", "verificationTestComplete,verificationTestUnfinished,检验测试", "maintenanceRepairComplete,maintenanceRepairUnfinished,维修维护", "calibrationComplete,calibrationUnfinished,校准", "onSiteInspectionComplete,onSiteInspectionUnfinished,巡检"];
 
 let dataIndex = undefined;
 
 @connect(({ loading, newHome }) => ({
-  taskStatisticsData: newHome.taskStatisticsData,
   operationAnalysis: newHome.operationAnalysis,
-  modelTitle: newHome.modelTitle,
 }))
 class Operations extends PureComponent {
   constructor(props) {
@@ -28,69 +27,14 @@ class Operations extends PureComponent {
 
       }
     })
-    // 获取任务统计数据
-    this.props.dispatch({
-      type: "newHome/getTaskStatisticsData",
-      payload: {
-
-      }
-    })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.modelTitle !== nextProps.modelTitle) {
-      return false;
-    }
-    // if (this.props.taskModelType !== nextProps.taskModelType) {
-    //   return false;
-    // }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return true;
+  // }
 
   option = () => {
-    const { taskStatisticsData: { insidePlan, UnInsidePlan, insidePlanRate } } = this.props;
-    return {
-      color: ["#f6b322", "#0edaad"],
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b} : {c}' + "次"
-      },
-      series: [
-        {
-          name: '',
-          type: 'pie',
-          // radius: '55%',
-          center: ['50%', '50%'],
-          data: [
-            { value: UnInsidePlan, name: '计划外' },
-            { value: insidePlan, name: '计划' },
-          ],
-          label: {
-            show: true,
-            textStyle: {
-              fontSize: 13,
-              color: '#333',
-            },
-            padding: [0, 10, 0, 0],
-            textShadowOffsetX: 100,
-            formatter: (params) => {
-              return `${params.name}运维${params.value}次`
-            }
-          },
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ]
-    }
-  };
-
-  option1 = () => {
-    const { taskStatisticsData, operationAnalysis: {
+    const { operationAnalysis: {
       verificationTestComplete, verificationTestUnfinished,
       maintenanceRepairComplete, cooperationInspectionComplete, matchingComplete, manualComparisonComplete, calibrationComplete, onSiteInspectionComplete,
       maintenanceRepairUnfinished, cooperationInspectionUnfinished, matchingUnfinished, manualComparisonUnfinished, calibrationUnfinished, onSiteInspectionUnfinished
@@ -167,15 +111,13 @@ class Operations extends PureComponent {
   }
 
 
-  // 图表点击
-  getTrippingOperationAnalysis = (title, dataIndex, taskType) => {
+  // 任务分类统计
+  getTrippingOperationAnalysis = (dataIndex) => {
     // this.setState({ title })
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
         drillDownTaskVisible: true,
-        taskModelType: "taskClassify",
-        modelTitle: title,
       }
     })
     this.props.dispatch({
@@ -186,25 +128,13 @@ class Operations extends PureComponent {
     })
   }
 
-  getTrippingTaskStatistics = (title) => {
-    // this.setState({ title })
-    this.props.dispatch({
-      type: "newHome/updateState",
-      payload: {
-        drillDownTaskVisible: true,
-        taskModelType: undefined,
-        modelTitle: title,
-      }
-    })
-    this.props.dispatch({
-      type: "newHome/getTrippingTaskStatistics",
-    })
+  clickCallback = (index) => {
+    this.getTrippingOperationAnalysis(index !== undefined ? index : dataIndex)
   }
 
 
-
   render() {
-    const { modelTitle, taskStatisticsData, operationAnalysis } = this.props;
+    const { operationAnalysis } = this.props;
     return (
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]}>
@@ -217,52 +147,20 @@ class Operations extends PureComponent {
             <span><i style={{ backgroundColor: "#0edaad" }}></i>未完成</span>
           </div>
           <ReactEcharts
-            option={this.option1()}
+            option={this.option()}
             onEvents={{
               click: (params) => {
                 dataIndex = params.dataIndex
-                this.getTrippingOperationAnalysis("任务分类统计", params.dataIndex)
+                this.getTrippingOperationAnalysis(params.dataIndex)
               }
             }}
             style={{ height: '260px', width: '100%' }}
             theme="my_theme"
           />
           <Divider style={{ margin: "10px 0", marginTop: 4 }} />
-          <div className={styles.innerTitle}>
-            任务统计
-            <Popover content={
-              <div>
-                1、次数：巡检、校准、校验测试次数；<br />
-                2、计划运维：计划执行次数；<br />
-                3、计划外运维：完成计划运维次数外，额外完成次数；<br />
-                4、实际完成运维任务：实际完成次数。<br />
-              </div>
-            }>
-              <Icon style={{ marginLeft: 6, fontSize: '15px' }} type="exclamation-circle" />
-            </Popover>
-          </div>
-          <ReactEcharts
-            option={this.option()}
-            onEvents={{
-              click: () => {
-                this.getTrippingTaskStatistics("任务统计")
-              }
-            }}
-            style={{ height: '180px', width: '100%' }}
-            theme="my_theme"
-          />
-          <div className={styles.taskCount}>
-            <span>实际完成运维任务{taskStatisticsData.completeTaskCount}次</span>
-          </div>
+          <TaskStatistics />
         </div>
-        <DrillDownTaskModal chartClick={(index) => {
-          this.getTrippingOperationAnalysis(modelTitle, index !== undefined ? index : dataIndex)
-        }}
-        />
-        <DrillDownTaskModal chartClick={(index) => {
-          this.getTrippingTaskStatistics(modelTitle);
-        }}
-        />
+        <DrillDownTaskModal chartClick={this.clickCallback} />
       </div>
     );
   }
