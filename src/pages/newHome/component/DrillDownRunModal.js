@@ -202,11 +202,11 @@ class DrillDownRunModal extends PureComponent {
         break;
       case 2:
         levelText = "(监控目标)"
-        afterText = currentDivisionName + " - "
+        afterText = currentDivisionName ? currentDivisionName + " - " : ""
         break;
       case 3:
         levelText = "(排口)"
-        afterText = currentEntName + " - "
+        afterText = currentDivisionName ? currentEntName + " - " : ""
         break;
     }
     let title = `${afterText}${modelTitle}${levelText}`;

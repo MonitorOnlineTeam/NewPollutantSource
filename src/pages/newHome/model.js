@@ -91,7 +91,7 @@ export default Model.extend({
     *getLevel({ payload }, { call, update }) {
       const result = yield call(services.getLevel);
       if (result.IsSuccess) {
-        yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
+        // yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
         message.error(result.Message)
       }
@@ -105,7 +105,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
         let allEntAndPointList = result.Datas.filter(item => {
-          if(item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4"){
+          if (item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4") {
             return {
               ...item,
               EntName: item.EntName || item.title
@@ -253,7 +253,16 @@ export default Model.extend({
           ...item,
         }))
         const state = yield select(state => state.newHome);
+        // 获取级别, 更新regionCode
+        let level = 1;
+        let regionCode = state.regionCode;
+        if (result.Datas.length === 1) {
+          regionCode = result.Datas[0].RegionCode
+          level = 2;
+        }
         yield update({
+          level: level, LEVEL: level, INIT_LEVEL: level,
+          regionCode,
           regionList,
           // LEVEL: regionList.length > 1 ? 1 : 2,
           // level: regionList.length > 1 ? 1 : 2,
