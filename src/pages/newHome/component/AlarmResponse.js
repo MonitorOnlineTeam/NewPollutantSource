@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 10:06:28
+ * @Last Modified time: 2020-06-24 10:43:52
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -45,9 +45,9 @@ class AlarmResponse extends PureComponent {
       // color: ["#fd6c6c", "#fd6c6c", "#f6b322", "#f6b322"],
       tooltip: {
         trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
+        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        // }
       },
       grid: {
         top: 20,
