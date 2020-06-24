@@ -51,11 +51,13 @@ export default class APILoader {
       return Promise.resolve()
     }
     let script = "";
-    if (config.offlineMapUrl.domain) {
-      script = this.buildScriptTag(`${config.offlineMapUrl.domain}/ui/1.0/main-async.js`)
-    } else {
-      script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
-    }
+    script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+
+    // if (config.offlineMapUrl.domain) {
+    //   script = this.buildScriptTag(`${config.offlineMapUrl.domain}/ui/1.0/main-async.js`)
+    // } else {
+    //   script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+    // }
     const p = new Promise(resolve => {
       script.onload = () => {
         resolve()
