@@ -79,6 +79,12 @@ export async function addPoint(params) {
 }
 
 
+export async function getEnterpriseCorporationCode(params) {
+    // console.log("params=",params);
+    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/GetEnterpriseCorporationCode', params);
+    return result;
+}
+
 /**
  * 修改监测点
  * @params {
