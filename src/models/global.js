@@ -302,7 +302,7 @@ export default Model.extend({
         // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警
         // 判断过滤条件
         let filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && item.Code == 0)
-        console.log('index=',filterDataIndex)
+        // console.log('index=',filterDataIndex)
         let PollutantName = item.TypeName;
         if (changeType === 67) {
           filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && notice.PollutantCodes == item.Code)

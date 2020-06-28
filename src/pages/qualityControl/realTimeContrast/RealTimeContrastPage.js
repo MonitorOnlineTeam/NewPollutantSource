@@ -351,7 +351,7 @@ class index extends Component {
     const { showType } = this.state;
     return (
       <Card
-        bodyStyle={{ maxHeight: 510, overflowY: "auto", padding: "10px 14px 10px" }}
+        bodyStyle={{ maxHeight: 'calc(100vh - 400px)', overflowY: "auto", padding: "10px 14px 10px" }}
       >
         {/* <div style={{ position: "relative"}}> */}
         {this.getQCAResult()}
@@ -397,7 +397,7 @@ class index extends Component {
                 lazyUpdate={true}
                 notMerge
                 id="rightLine"
-                style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+                style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
               />
             </>
             : (qcaLoading ? <Spin
@@ -410,7 +410,7 @@ class index extends Component {
               }}
               size="large"
             /> : <table
-              className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px', marginTop: 38 }}
+              className={styles.FormTable} style={{ width: '100%', height: 'calc(100vh - 400px)', minHeight: '300px', marginTop: 38 }}
             >
 
                 <tbody >
