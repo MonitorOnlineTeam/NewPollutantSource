@@ -140,7 +140,8 @@ class DrillDownTaskModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          minInterval: 1,
+          name: '（次）',
+          minInterval: 1
         }
       ],
       series: [

@@ -143,6 +143,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
+          name: '（次）',
           minInterval: 1,
         }
       ],
