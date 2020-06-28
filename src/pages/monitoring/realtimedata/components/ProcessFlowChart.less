@@ -56,26 +56,66 @@
 .imgBg1{
   background: url(../../../../../public/gylct.png);
   background-repeat: no-repeat;
-  width: 1530px;
-  height: 755px;
+  width: 1548px;
+  height: 928px;
+  background-position-y:bottom;
+   background-size: 95% 95%;
 }
 .imgBg2{
   background: url(../../../../../public/pointvoc.png);
   background-repeat: no-repeat;
-  width: 1530px;
-  height: 755px;
+  width: '100%';
+  height: calc(100vh - 150px);
+  background-position-y:bottom;
+  background-size: 95% 95%;
 }
 .imgBg3{
   background: url(../../../../../public/pointhg.png);
   background-repeat: no-repeat;
-  width: 1530px;
-  height: 755px;
+  width: '100%';
+  height: calc(100vh - 150px);
+  background-position-y:bottom;
+  background-size: 95% 95%;
 }
 
+.CardDataClass
+{
+  background-color: white;
+  float: right;
+  margin-right: 50px;
+  position: relative; 
+  width: 65%; 
+  z-index: 1;
+}
 
+.mapClass{
+  position:absolute;
+  width:98%;
+  height: calc(100vh - 160px);
+}
+
+.gridStyle {
+  width: 150px;
+  text-align: center;
+};
 
 .lasttr{
   border: none;
+}
+.stateClass{
+
+  float: left;
+  position: relative; 
+  z-index: 1;
+}
+.stateClass :global {
+  .ant-badge-status-text{
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .ant-badge-status-error{
+    margin-bottom: 2px;
+  }
 }
 
 .FormTable {

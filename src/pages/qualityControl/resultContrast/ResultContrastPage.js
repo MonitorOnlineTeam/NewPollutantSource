@@ -526,7 +526,7 @@ class ResultContrastPage extends Component {
         </div> */}
 
         <Card
-          bodyStyle={{ maxHeight: 520, overflowY: "auto", padding: "10px 14px 10px" }}
+          bodyStyle={{ maxHeight: 'calc(100vh - 400px)', overflowY: "auto", padding: "10px 14px 10px" }}
           footer={null}
         >
           {
@@ -564,7 +564,7 @@ class ResultContrastPage extends Component {
               lazyUpdate
               notMerge
               id="rightLine"
-              style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px' }}
+              style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
             /> :(qcaLoading ? <Spin
               style={{
                 width: '100%',
@@ -575,7 +575,7 @@ class ResultContrastPage extends Component {
               }}
               size="large"
             /> : <table
-              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 600px)', minHeight: '300px', marginTop: 38 }}
+              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 400px)', minHeight: '300px', marginTop: 38 }}
             > 
                 <tbody >
                   <tr>
