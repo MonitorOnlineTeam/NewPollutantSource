@@ -27,7 +27,11 @@ const Model = {
           if(response.Datas.MenuDatas[0].name === "首页"){
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
           }else{
-            systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
+            if(response.Datas.MenuDatas[0].children.length){
+              systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
+            }else{
+              systemNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
+            }
           }
         }
         defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;

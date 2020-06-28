@@ -49,7 +49,9 @@ export default Model.extend({
       exceptionRate: 0,
       AccuracyRate: 0
     },
-    alarmResponseData: {},
+    alarmResponseData: {
+      taskCount: 0, taskYearCount: 0, taskYearRate: 0, execptionCount: 0, execptionYearCount: 0, execptionYearRate: 0
+    },
     taskStatisticsData: [],
     operationAnalysis: [],
     diffHorizontalData: [],
@@ -75,7 +77,7 @@ export default Model.extend({
     paramsList: [],
     // 任务统计下钻
     taskCountModalData: {
-      x: [], insidePlan: [], unInsidePlan: []
+      x: [], insidePlan: [], unInsidePlan: [], completeTaskCount: []
     },
     codeList: [],
     // 报警响应下钻
@@ -91,7 +93,7 @@ export default Model.extend({
     *getLevel({ payload }, { call, update }) {
       const result = yield call(services.getLevel);
       if (result.IsSuccess) {
-        yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
+        // yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
         message.error(result.Message)
       }
@@ -104,7 +106,14 @@ export default Model.extend({
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
         let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
-        let allEntAndPointList = result.Datas.filter(item => item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4");
+        let allEntAndPointList = result.Datas.filter(item => {
+          if (item.MonitorObjectType !== "2" && item.MonitorObjectType !== "4") {
+            return {
+              ...item,
+              EntName: item.EntName || item.title
+            }
+          }
+        });
         filterList.map(item => {
           if (item.children) {
             let childrenList = item.children.map(itm => {
@@ -246,7 +255,16 @@ export default Model.extend({
           ...item,
         }))
         const state = yield select(state => state.newHome);
+        // 获取级别, 更新regionCode
+        let level = 1;
+        let regionCode = state.regionCode;
+        if (result.Datas.length === 1) {
+          regionCode = result.Datas[0].RegionCode
+          level = 2;
+        }
         yield update({
+          level: level, LEVEL: level, INIT_LEVEL: level,
+          regionCode,
           regionList,
           // LEVEL: regionList.length > 1 ? 1 : 2,
           // level: regionList.length > 1 ? 1 : 2,
@@ -434,7 +452,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //获取运维分析下钻
+    //获取任务分类统计下钻
     *getTrippingOperationAnalysis({ payload }, { call, update, select, put }) {
       yield update({ drillDownLoading: true })
       const state = yield select(state => state.newHome)
@@ -472,20 +490,20 @@ export default Model.extend({
       let postData = getDrillDownParams(state)
       const result = yield call(services.getTrippingTaskStatistics, postData);
       if (result.IsSuccess) {
-        let insidePlan = [], unInsidePlan = [], x = [], codeList = [];
+        let insidePlan = [], unInsidePlan = [], x = [], codeList = [], completeTaskCount = [];
         result.Datas.map(item => {
           insidePlan.push(item.insidePlan);
           unInsidePlan.push(item.unInsidePlan);
+          completeTaskCount.push(item.completeTaskCount);
           x.push(item.name);
           codeList.push(item.code);
         })
 
         yield update({
-          drillDownTaskVisible: true,
           drillDownLoading: false,
           codeList,
           taskCountModalData: {
-            insidePlan, unInsidePlan, x,
+            insidePlan, unInsidePlan, x, completeTaskCount
           }
         })
       } else {

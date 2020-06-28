@@ -11,13 +11,14 @@ const Option = Select.Option
 
 @Form.create()
 @connect(({ loading, newHome }) => ({
-  drillDownTaskVisible: newHome.drillDownTaskVisible,
+  taskStatisticsVisible: newHome.taskStatisticsVisible,
   level: newHome.level,
   LEVEL: newHome.LEVEL,
   loading: newHome.drillDownLoading,
+  taskCountModalData: newHome.taskCountModalData,
   startTime: newHome.startTime,
   endTime: newHome.endTime,
-  taskClassifyModalData: newHome.taskClassifyModalData,
+  alarmResponseModalData: newHome.alarmResponseModalData,
   codeList: newHome.codeList,
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
@@ -25,7 +26,7 @@ const Option = Select.Option
   currentDivisionName: newHome.currentDivisionName,
   currentEntName: newHome.currentEntName,
 }))
-class DrillDownTaskModal extends PureComponent {
+class DrillDownTaskStatisticsModal extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,23 +45,21 @@ class DrillDownTaskModal extends PureComponent {
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
-        drillDownTaskVisible: false,
+        taskStatisticsVisible: false,
         level: this.props.LEVEL,
         startTime: this.props.START_TIME,
         endTime: this.props.END_TIME,
         entName: "",
       }
     })
-    this.setState({
-      taskClassifyIndex: undefined,
-    })
     this.props.onClose && this.props.onClose();
   }
 
   getOption = () => {
-    const { taskClassifyModalData } = this.props;
+    const { taskModelType, alarmResponseModalData, taskCountModalData, modelTitle } = this.props;
     let series = [];
     return {
+      color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
         // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -74,7 +73,9 @@ class DrillDownTaskModal extends PureComponent {
           return res;
         },
       },
-      legend: {},
+      legend: {
+        data: ['计划运维次数', '实际运维次数']
+      },
       grid: {
         left: '3%',
         right: '4%',
@@ -84,7 +85,7 @@ class DrillDownTaskModal extends PureComponent {
       xAxis: [
         {
           type: 'category',
-          data: taskClassifyModalData.x,
+          data: taskCountModalData.x,
           axisLabel: {
             interval: 0,
             rotate: 40
@@ -99,9 +100,8 @@ class DrillDownTaskModal extends PureComponent {
       ],
       series: [
         {
-          name: "已完成",
+          name: '计划运维次数',
           type: 'bar',
-          color: "#67a2ef",
           // barWidth: '40%',
           barMaxWidth: 60,
           label: {
@@ -113,12 +113,11 @@ class DrillDownTaskModal extends PureComponent {
               }
             }
           },
-          data: taskClassifyModalData.ywc
+          data: taskCountModalData.insidePlan
         },
         {
-          name: "未完成",
+          name: '实际运维次数',
           type: 'bar',
-          color: "#0edaad",
           // barWidth: '40%',
           barMaxWidth: 60,
           label: {
@@ -130,7 +129,7 @@ class DrillDownTaskModal extends PureComponent {
               }
             }
           },
-          data: taskClassifyModalData.wwc
+          data: taskCountModalData.completeTaskCount
         },
       ]
     };
@@ -166,7 +165,7 @@ class DrillDownTaskModal extends PureComponent {
           }
         })
         this.setState({ showBack: true, dataIndex: params.dataIndex })
-        this.props.chartClick(this.state.taskClassifyIndex);
+        this.props.chartClick();
       }
     }
   }
@@ -199,13 +198,13 @@ class DrillDownTaskModal extends PureComponent {
       }
     })
     // this.setState({ showBack: true })
-    this.props.chartClick(this.state.taskClassifyIndex);
+    this.props.chartClick();
   }
 
 
 
   render() {
-    const { currentDivisionName, currentEntName, taskClassifyModalData, drillDownTaskVisible, taskModelType, startTime, endTime, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { currentDivisionName, currentEntName, taskStatisticsVisible, taskModelType, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
     const { formItemLayout, showBack } = this.state;
     let levelText, afterText = "";
     switch (level) {
@@ -222,7 +221,7 @@ class DrillDownTaskModal extends PureComponent {
         afterText = currentEntName ? currentEntName + " - " : ""
         break;
     }
-    let title = `${afterText}任务分类统计${levelText}`;
+    let title = `${afterText}任务统计${levelText}`;
     return (
       <Modal
         title={<div>
@@ -241,7 +240,7 @@ class DrillDownTaskModal extends PureComponent {
                 </Button>
           }
         </div>}
-        visible={drillDownTaskVisible}
+        visible={taskStatisticsVisible}
         // visible={true}
         destroyOnClose
         footer={null}
@@ -269,28 +268,6 @@ class DrillDownTaskModal extends PureComponent {
                   </Form.Item>
                 </Col>
               }
-
-              <Col span={6}>
-                <Form.Item {...formItemLayout} label="任务分类" style={{ width: '100%' }}>
-                  {getFieldDecorator("taskType", {
-                    initialValue: taskClassifyModalData.name + ''
-                  })(
-                    <Select style={{ width: '100%' }} onChange={(val, option) => {
-                      this.setState({
-                        taskClassifyIndex: option.key
-                      })
-                    }}>
-                      <Option value="巡检" key="6">巡检</Option>
-                      <Option value="校准" key="5">校准</Option>
-                      <Option value="维修维护" key="4">维修维护</Option>
-                      <Option value="检验测试" key="3">检验测试</Option>
-                      <Option value="手工对比" key="2">手工对比</Option>
-                      <Option value="配合对比" key="1">配合对比</Option>
-                      <Option value="配合检查" key="0">配合检查</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
               <Col span={8}>
                 <Form.Item {...formItemLayout} label="日期" style={{ width: '100%' }}>
                   {getFieldDecorator("time", {
@@ -311,7 +288,7 @@ class DrillDownTaskModal extends PureComponent {
               <Col span={4}>
                 <Form.Item>
                   <Button type="primary" onClick={() => {
-                    this.props.chartClick(this.state.taskClassifyIndex);
+                    this.props.chartClick();
                   }}>查询</Button>
                 </Form.Item>
               </Col>
@@ -331,4 +308,4 @@ class DrillDownTaskModal extends PureComponent {
   }
 }
 
-export default DrillDownTaskModal;
+export default DrillDownTaskStatisticsModal;

@@ -23,6 +23,8 @@ const { MonthPicker } = DatePicker;
   START_TIME: newHome.START_TIME,
   END_TIME: newHome.END_TIME,
   modelTitle: newHome.modelTitle,
+  currentDivisionName: newHome.currentDivisionName,
+  currentEntName: newHome.currentEntName,
 }))
 class DrillDownRunModal extends PureComponent {
   constructor(props) {
@@ -69,7 +71,7 @@ class DrillDownRunModal extends PureComponent {
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '0%',
         containLabel: true
       },
       xAxis: [
@@ -128,7 +130,8 @@ class DrillDownRunModal extends PureComponent {
         this.props.dispatch({
           type: "newHome/updateState",
           payload: {
-            regionCode: this.props.paramsList[params.dataIndex]
+            regionCode: this.props.paramsList[params.dataIndex],
+            currentDivisionName: params.name
           }
         })
       }
@@ -137,7 +140,8 @@ class DrillDownRunModal extends PureComponent {
         this.props.dispatch({
           type: "newHome/updateState",
           payload: {
-            entCode: this.props.paramsList[params.dataIndex]
+            entCode: this.props.paramsList[params.dataIndex],
+            currentEntName: params.name
           }
         })
       }
@@ -187,14 +191,30 @@ class DrillDownRunModal extends PureComponent {
 
 
   render() {
-    const { drillDownRunVisible, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
+    const { currentDivisionName, currentEntName, drillDownRunVisible, startTime, endTime, modelTitle, level, LEVEL, loading, form: { getFieldDecorator } } = this.props;
     const { formItemLayout } = this.state;
 
-    let levelText = level === 1 ? "(师)" : (level === 2 ? "(监控目标)" : "(排口)")
+    let levelText, afterText = "";
+    switch (level) {
+      case 1:
+        levelText = "(师)"
+        afterText = ""
+        break;
+      case 2:
+        levelText = "(监控目标)"
+        afterText = currentDivisionName ? currentDivisionName + " - " : ""
+        break;
+      case 3:
+        levelText = "(排口)"
+        afterText = currentEntName ? currentEntName + " - " : ""
+        break;
+    }
+    let title = `${afterText}${modelTitle}${levelText}`;
     return (
       <Modal
         title={<div>
-          {`${modelTitle}${levelText} - 详情`}
+          {/* {`${modelTitle}${levelText} - 详情`} */}
+          {title}
           {
             level !== LEVEL && <Button
               style={{ marginLeft: 10 }}

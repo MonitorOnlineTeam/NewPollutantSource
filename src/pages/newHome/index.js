@@ -88,6 +88,9 @@ class NewHome extends PureComponent {
             }
           });
           Layer.setMap(mapInstance);
+          mapInstance.setCity(650000, function () {
+            mapInstance.setZoom(6)
+          })
         }
       },
     };
@@ -362,6 +365,12 @@ class NewHome extends PureComponent {
               this.setState({
                 clickedDivision: extData.position
               })
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  currentDivisionName: extData.position.title
+                }
+              })
               this.props.dispatch({ type: "newHome/changeRegionCode", payload: { regionCode: extData.position.RegionCode } })
             }} />
           {/* </ReactCSSTransitionGroup> */}
@@ -534,12 +543,12 @@ class NewHome extends PureComponent {
         </div>
       </div>
       <div className={styles.data}>
-        <h3>空气质量数据</h3>
+        <h3>{infoWindowData.pollutantTypeCode === 2 ? "废气数据" : (infoWindowData.pollutantTypeCode === 1 ? "废水数据" : "空气质量数据")}</h3>
         <ul>
           {
             infoWindowData.list.map(item => {
               return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}:{item.value}</li>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
               </Tooltip>
             })
           }
@@ -550,23 +559,30 @@ class NewHome extends PureComponent {
   }
 
   onSearch = (value) => {
-    const filter = this.state.markersList.filter(item => item.position.title.indexOf(value) > -1);
-    if (filter.length > 0) {
-      this.setState({
-        searchResult: filter[0].position,
-        searchInputVal: undefined
-      })
+    if (value) {
+      const filter = this.state.markersList.filter(item => {
+        if (item.position.IsEnt === 1) {
+          if (item.position.title.indexOf(value) > -1 || item.position.EntName.indexOf(value) > -1) {
+            return item;
+          }
+        }
+      });
+      if (filter.length > 0) {
+        this.setState({
+          searchResult: filter[0].position,
+          searchInputVal: undefined
+        })
 
-      aMap.setZoomAndCenter(aMap.getZoom() + 2, [filter[0].position.Longitude, filter[0].position.Latitude])
-    } else {
-      message.error("未找到相关企业或空气站")
+        aMap.setZoomAndCenter(aMap.getZoom() + 2, [filter[0].position.Longitude, filter[0].position.Latitude])
+      } else {
+        message.error("未找到相关企业或空气站")
+      }
     }
   }
 
   divisionInfoWindow = () => {
     const { currentDivision } = this.props;
     if (currentDivision && currentDivision.divisionList) {
-      debugger
       return currentDivision.divisionList.map(item => {
         return <InfoWindow
           position={[item.longitude, item.latitude]}
@@ -599,6 +615,11 @@ class NewHome extends PureComponent {
     // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
     const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
     return (
       <div className={styles.newHomeWrap}>
         <header className={styles.homeHeader}>
@@ -670,7 +691,8 @@ class NewHome extends PureComponent {
                       infoWindowVisible: false, // 关闭排口弹窗
                     })
                     this.renderEntMarkers(filterList)
-                    aMap.setFitView();
+                    // aMap.setFitView();
+                    aMap.setZoom(6)
                   }}>返回企业</Button>
                 }
                 {
@@ -684,7 +706,8 @@ class NewHome extends PureComponent {
                       payload: {
                         level: INIT_LEVEL,
                         LEVEL: INIT_LEVEL,
-                        regionCode: "660000000"
+                        regionCode: "660000000",
+                        currentDivisionName: ""
                       }
                     })
                     setTimeout(() => {
@@ -736,7 +759,7 @@ class NewHome extends PureComponent {
                     <li><WaterOffline /> <span>废水</span></li>
                     <li><GasOffline /> <span>废气</span></li>
                     <li><CustomIcon type="icon-fangwu" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />空气站</li>
-                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停产</li>
+                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停运</li>
                   </ul>
                 </div>
                 {
@@ -756,29 +779,17 @@ class NewHome extends PureComponent {
                 events={this.amapEvents}
                 // zoom={4}
                 mapStyle="amap://styles/fresh"
-                useAMapUI={true}
+                useAMapUI={!config.offlineMapUrl.domain}
+                {...mapStaticAttribute}
               >
-                <MapUI
-                  renderEnt={() => {
-                    this.renderEntMarkers(this.props);
-                  }}
-                // featureOnClick={(feature) => {
-                //   this.setState({
-                //     adCode: feature.properties.adcode
-                //   }, () => {
-                //     this.getAllEntAndPoint();
-                //   })
-                // }}
-                // featureMouseover={(adcode) => {
-                //   console.log('adcode=', adcode)
-                //   this.props.dispatch({
-                //     type: "newHome/updateDivisionShowCoordinate",
-                //     payload: {
-                //       adcode
-                //     }
-                //   })
-                // }}
-                />
+                {
+                  !config.offlineMapUrl.domain && <MapUI
+                    renderEnt={() => {
+                      this.renderEntMarkers(this.props);
+                    }}
+                  />
+                }
+
                 {this.drawPolygon()}
                 <Markers
                   markers={this.state.markersList}
@@ -804,17 +815,16 @@ class NewHome extends PureComponent {
                     events={this.searchWindowEvent}
                     position={[searchResult.Longitude, searchResult.Latitude]}
                     visible={searchResult}
-                    offset={[4, -35]}
+                    offset={[4, -40]}
                     autoMove
                     showShadow
                     closeWhenClickMap
-                  // isCustom
+                    isCustom
                   // content={this.infoWindowContent()}
                   >
                     {searchResult.title}
                   </InfoWindow>
                 }
-                {console.log('divisionInfoWindow=', this.divisionInfoWindow())}
                 {/* {
                   this.divisionInfoWindow()
                 } */}

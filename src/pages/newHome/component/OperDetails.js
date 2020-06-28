@@ -50,7 +50,7 @@ class OperDetails extends PureComponent {
             let reslist = [];
             reslist.push(
               <Tooltip title="详情">
-                <a><Icon onClick={() => router.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`)} type="profile" /></a>
+                <a><Icon onClick={() => window.open(`/operations/taskRecord/details/${TaskID}/${DGIMN}`)} type="profile" /></a>
               </Tooltip>
             )
             return reslist;
