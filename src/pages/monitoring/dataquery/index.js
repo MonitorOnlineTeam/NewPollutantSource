@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '../../../components/NavigationTree'
+import DataQuery2 from './components/DataQuery2'
 import DataQuery from './components/DataQuery'
-import DataQueryOld from './components/DataQueryOld'
 import PageLoading from '@/components/PageLoading'
 /**
  * 数据查询页面
@@ -36,7 +36,7 @@ class Index extends Component {
                     {
                         this.state.dgimn ?
                             (
-                                this.props.location.query.type == 1 ? <DataQueryOld DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
+                                this.props.location.query.type == 1 ? <DataQuery2 DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
                                     <DataQuery DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData />
                             )
                             : <PageLoading />

@@ -39,6 +39,7 @@ let count = 0;
   oldPlaybackPageDate: qualityControl.oldPlaybackPageDate,
   timeLineLoading: loading.effects['qualityControl/getQCATimelineRecord'],
   flowChartLoading: loading.effects['qualityControl/getCemsAndStandGasState'],
+  imgChartLoading: loading.effects['qualityControl/getQCADataForRecord'],
 }))
 class PlaybackPage extends PureComponent {
   constructor(props) {
@@ -47,6 +48,8 @@ class PlaybackPage extends PureComponent {
       selectedTime: [moment().subtract(1, "day"), moment()],
       start: false,
       QCALineItem: {},
+      imgShow: false,
+      selectIndex: -1,
     };
   }
 
@@ -123,11 +126,43 @@ class PlaybackPage extends PureComponent {
     this.setState({ currentTimeLineItem: undefined, count: 0 });
   }
 
+  clearData=()=>{
+    this.props.dispatch({
+      type: "qualityControl/updateState",
+      payload: {
+        playbackPageDate: {
+          qualityControlName: null, // 质控仪名称
+          gasData: {  // 气瓶信息
+            N2Info: {},
+            NOxInfo: {},
+            SO2Info: {},
+            O2Info: {},
+          },
+          cemsList: [{}, {}, {}, {}], // CEMS列表
+          QCStatus: undefined, // 质控仪状态
+          totalFlow: undefined, // 总流量
+          valveStatus: {},
+          standardValue: undefined, // 配比标气浓度,
+          standardValueUtin: null, // 单位
+          p1Pressure: {},
+          p2Pressure: {},
+          p3Pressure: {},
+          p4Pressure: {},
+          thisTime: null,
+        },
+      }
+    })
+  }
+
   // 时间轴点击
-  onTimeLineItemClick = (item) => {
+  onTimeLineItemClick = (item, index) => {
     // 每次点击清空定时器
     clearTimeout(timeout)
     clearInterval(timer)
+    this.clearData();
+    this.setState({
+      selectIndex: index
+    })
     let currentTimeLineItem = item;
     if (item.QCType === 1) {
       // 质控
@@ -145,26 +180,29 @@ class PlaybackPage extends PureComponent {
         start: true,
         count: 0,// 重置count
         QCALineItem: item,
+        imgShow: true
       })
     } else {
       this.setState({ QCALineItem: {} })
     }
     if (item.QCType === 5) {
       // 开锁
-      this.props.dispatch({
-        type: "qualityControl/updateState",
-        payload: {
-          playbackPageDate: {
-            ...this.props.oldPlaybackPageDate,
-            valveStatus: {
-              ...this.props.oldPlaybackPageDate.valveStatus,
-              door: "0"
-            }
-          }
-        }
-      })
+      // this.props.dispatch({
+      //   type: "qualityControl/updateState",
+      //   payload: {
+      //     playbackPageDate: {
+      //       ...this.props.oldPlaybackPageDate,
+      //       valveStatus: {
+      //         ...this.props.oldPlaybackPageDate.valveStatus,
+      //         door: "0"
+      //       }
+      //     }
+      //   }
+      // })
+      this.clearData()
       this.setState({
-        currentTimeLineItem: item
+        currentTimeLineItem: item,
+        imgShow: true
       })
       timeout = setTimeout(() => {
         this.props.dispatch({
@@ -183,23 +221,25 @@ class PlaybackPage extends PureComponent {
           currentTimeLineItem: undefined
         })
         message.success('开锁完成，门已关闭')
-      }, 5000)
+      }, 3000)
     }
     if (item.QCType === 3) {
-      this.props.dispatch({
-        type: "qualityControl/updateState",
-        payload: {
-          playbackPageDate: {
-            ...this.props.oldPlaybackPageDate,
-          }
-        }
-      })
+      // this.props.dispatch({
+      //   type: "qualityControl/updateState",
+      //   payload: {
+      //     playbackPageDate: {
+      //       ...this.props.oldPlaybackPageDate,
+      //     }
+      //   }
+      // })
+      this.clearData()
       // 重启
       this.setState({
         currentTimeLineItem: {
           ...currentTimeLineItem,
           Flag: "质控仪正在重启"
         },
+        imgShow: true,
         otherLoading: true
       }, () => {
         timeout = setTimeout(() => {
@@ -208,7 +248,7 @@ class PlaybackPage extends PureComponent {
             otherLoading: false,
             currentTimeLineItem: undefined
           })
-        }, 5000)
+        }, 3000)
       })
     }
     this.setState({
@@ -216,7 +256,9 @@ class PlaybackPage extends PureComponent {
     })
   }
 
-
+  setSelectHrpFactRowClassName = (index) => {
+    return index === this.state.selectIndex ? styles.clickRowStyl : '';
+  }
 
 
   // 渲染时间轴
@@ -232,7 +274,7 @@ class PlaybackPage extends PureComponent {
     //     <Tag className={styles.dateContent}>{moment(this.state.selectedTime[0]).format("YYYY-MM-DD")} - {moment(this.state.selectedTime[1]).format("YYYY-MM-DD")}</Tag>
     //   </Timeline.Item>
     // )
-    QCPlaybackTimeLine.map(item => {
+    QCPlaybackTimeLine.map((item, index) => {
       timelineItems.push(
         <Timeline.Item
           dot={<Icon type={iconTypeByQCType[item.QCType]} style={{ fontSize: '16px', color: QCStatusColor[item.QCType] }} />}
@@ -240,7 +282,8 @@ class PlaybackPage extends PureComponent {
           style={{ paddingBottom: 30 }}
         >
           <span style={{ fontSize: '13px', cursor: "pointer" }}
-            onClick={() => { this.onTimeLineItemClick(item) }}>
+            className={this.setSelectHrpFactRowClassName(index)}
+            onClick={() => { this.onTimeLineItemClick(item, index) }}>
             {`${item.BeginTime}${item.EndTime ? " - " + item.EndTime : ""}进行`}
             <Tag style={{ cursor: "pointer" }} color={QCStatusColor[item.QCType]}>{item.Flag}</Tag>
           </span>
@@ -306,8 +349,20 @@ class PlaybackPage extends PureComponent {
     this.updateFlowChartData(this.props);
   }
 
+  loadingImg = (loadingImg) => {
+    return (loadingImg ? <Spin
+      style={{
+        width: '100%',
+        height: 'calc(100vh/2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      size="large" /> : <FlowChart />)
+  }
+
   render() {
-    const { playbackPageDate, timeLineLoading, flowChartLoading, QCPlaybackTimeLine, QCAFlowChartAllData, playbackPageDate: { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName, thisTime } } = this.props;
+    const { playbackPageDate, timeLineLoading, imgChartLoading, flowChartLoading, QCPlaybackTimeLine, QCAFlowChartAllData, playbackPageDate: { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName, thisTime } } = this.props;
     const { selectedTime, currentTimeLineItem, otherLoading, start, count, QCALineItem: { ID, QCType, DGIMN, QCAMN, QCTime, PollutantCode } } = this.state;
     return (
       <>
@@ -318,6 +373,14 @@ class PlaybackPage extends PureComponent {
             }, () => {
               this.getCemsAndStandGasData();
               this.getQCATimelineRecord();
+              this.initFlowChartData();
+              // this.clearData();
+              this.setState(
+                {
+                  imgShow: false,
+                  selectIndex: -1
+                }
+              )
             })
           }
         }} />
@@ -371,6 +434,7 @@ class PlaybackPage extends PureComponent {
                     </Spin>
                   </Card>
                 </Col>
+
                 <Col xxl={17} xl={15} style={{ height: '100%' }}>
                   <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
                     <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
@@ -385,7 +449,7 @@ class PlaybackPage extends PureComponent {
                           查看结果比对
                       </Button>
                       }
-                      <FlowChart />
+                      {this.state.imgShow ? this.loadingImg(imgChartLoading): <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                       {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
                         // {true ?
                         <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
@@ -417,7 +481,7 @@ class PlaybackPage extends PureComponent {
               title="质控结果比对"
               destroyOnClose
               visible={this.state.visible}
-              footer={[]}
+              footer={null}
               onOk={this.handleOk}
               onCancel={() => {
                 this.setState({ visible: false })

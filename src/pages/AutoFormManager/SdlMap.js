@@ -3,24 +3,25 @@ import PropTypes, { array } from 'prop-types';
 import { Input, Modal, Icon, Button, message } from 'antd'
 // import { Map, MouseTool, Marker, Polygon } from 'react-amap';
 import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
-import styles from './MapContent.less';
-import config from "@/config"
 import { connect } from 'dva';
-const YOUR_AMAP_KEY = "c5cb4ec7ca3ba4618348693dd449002d";
-import MapUI from "@/pages/monitoring/mapview/MapUI"
+import styles from './MapContent.less';
+import config from '@/config'
+
+const YOUR_AMAP_KEY = 'c5cb4ec7ca3ba4618348693dd449002d';
+// import MapUI from "@/pages/monitoring/mapview/MapUI"
 
 
 let AMap = null;
 let thisMap = null;
-let marker = null;
+const marker = null;
 
 const styleC = {
-  width: "200px",
-  textAlign: "center",
-  position: "absolute",
-  top: "-27px",
-  left: "-85px",
-  color: "#000",
+  width: '200px',
+  textAlign: 'center',
+  position: 'absolute',
+  top: '-27px',
+  left: '-85px',
+  color: '#000',
 }
 
 @connect(({ loading, global }) => ({
@@ -33,10 +34,10 @@ class SdlMap extends PureComponent {
       MapVisible: false,
       position: {
         latitude: props.latitude && props.latitude * 1,
-        longitude: props.longitude && props.longitude * 1
+        longitude: props.longitude && props.longitude * 1,
       },
       // isChangePos: false,
-      isChangePos: props.handleMarker ? true : false,
+      isChangePos: !!props.handleMarker,
       address: null,
       polygon: [],
       path: props.path,
@@ -66,17 +67,17 @@ class SdlMap extends PureComponent {
   componentDidMount() {
     const self = this;
     this.toolEvents = {
-      created: (tool) => {
+      created: tool => {
         AMap = window.AMap;
         self.tool = tool;
       },
       draw({ obj }) {
         // self.drawWhat(obj);
-        if (obj.CLASS_NAME === "AMap.Polygon") {
+        if (obj.CLASS_NAME === 'AMap.Polygon') {
           // 绘制厂界
-          let markersList = [];
+          const markersList = [];
           for (let i = 0; i < obj.getPath().length; i++) {
-            let garr = new Array();
+            const garr = [];
             garr.push(obj.getPath()[i].lng);
             garr.push(obj.getPath()[i].lat);
             markersList.push(garr);
@@ -97,12 +98,12 @@ class SdlMap extends PureComponent {
             // ]
           } else {
             polygon.push([
-              markersList
+              markersList,
             ])
           }
 
           self.setState({
-            polygon: polygon
+            polygon,
           })
         }
 
@@ -113,17 +114,17 @@ class SdlMap extends PureComponent {
         //     latitude: obj.getPosition().lat
         //   }
         // })
-      }
+      },
     }
 
-    if (this.props.mode === "map") {
+    if (this.props.mode === 'map') {
       if (this.props.longitude && this.props.latitude) {
         this.setState({
-          mapCenter: [this.props.longitude, this.props.latitude]
+          mapCenter: [this.props.longitude, this.props.latitude],
         })
       } else if (this.props.path) {
         this.setState({
-          mapCenter: this.props.path[0][0][0]
+          mapCenter: this.props.path[0][0][0],
         })
       }
     }
@@ -135,41 +136,41 @@ class SdlMap extends PureComponent {
       const { position, address, polygon } = this.state;
       const marker = {
         ...position,
-        address: address,
-        polygon: polygon,
-        zoom: thisMap.getZoom()
+        address,
+        polygon,
+        zoom: thisMap.getZoom(),
       }
       this.props.onOk(marker)
     }
   }
 
-  //js 转换
-  json2string = (jsonObj) => {
-    let type = Object.prototype.toString.call(jsonObj).slice(8, -1); let rs;
+  // js 转换
+  json2string = jsonObj => {
+    const type = Object.prototype.toString.call(jsonObj).slice(8, -1); let rs;
     switch (type) {
-      case "Undefined":
-      case "Null":
-      case "Number":
-      case "Boolean":
-      case "Date":
-      case "Function":
-      case "Error":
-      case "RegExp": rs = jsonObj; break;
-      case "String": rs = `"${jsonObj}"`; break;
-      case "Array":
-        rs = "";
+      case 'Undefined':
+      case 'Null':
+      case 'Number':
+      case 'Boolean':
+      case 'Date':
+      case 'Function':
+      case 'Error':
+      case 'RegExp': rs = jsonObj; break;
+      case 'String': rs = `"${jsonObj}"`; break;
+      case 'Array':
+        rs = '';
         for (let i = 0, len = jsonObj.length; i < len; i++) {
           rs += `${this.json2string(jsonObj[i])},`;
         }
         rs = `[${rs.slice(0, -1)}]`;
         break;
 
-      case "Object":
+      case 'Object':
         rs = [];
-        for (let k in jsonObj) {
+        for (const k in jsonObj) {
           rs.push(`"${k.toString()}":${this.json2string(jsonObj[k])}`);
         }
-        rs = `{${rs.join(",")}}`;
+        rs = `{${rs.join(',')}}`;
         break;
     }
     return rs;
@@ -192,37 +193,37 @@ class SdlMap extends PureComponent {
   drawPolygon() {
     if (this.tool) {
       this.setState({
-        polygon: []
+        polygon: [],
       })
       this.tool.polygon();
       this.setState({
         isChangePos: false,
-        path: undefined
+        path: undefined,
       })
     }
   }
 
   // 地址搜索
-  onSearch = (obj) => {
+  onSearch = obj => {
     if (window.AMap) {
       window.AMap.service('AMap.Geocoder', () => { // 回调函数
         // 实例化Geocoder
-        let geocoder = new window.AMap.Geocoder();
+        const geocoder = new window.AMap.Geocoder();
         geocoder.getLocation(obj.target.value, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
-            let latlng = result.geocodes[0].location;
+            const latlng = result.geocodes[0].location;
             // 设置缩放级别和中心点
-            let latlngxy = [latlng.lng, latlng.lat];
+            const latlngxy = [latlng.lng, latlng.lat];
             this.setState({
               mapCenter: latlngxy,
               searchPosition: {
                 latitude: latlng.lat,
-                longitude: latlng.lng
+                longitude: latlng.lng,
               },
-              searchAddress: result.geocodes[0].formattedAddress
+              searchAddress: result.geocodes[0].formattedAddress,
             })
           } else {
-            message.error("未查询到相关地址！")
+            message.error('未查询到相关地址！')
           }
         });
       });
@@ -234,34 +235,34 @@ class SdlMap extends PureComponent {
       nextProps.path && this.setState({
         path: nextProps.path,
         polygon: this.props.path,
-        mapCenter: nextProps.path[0][0][0]
+        mapCenter: nextProps.path[0][0][0],
       }, () => {
         // thisMap.setFitView()
       })
     }
     if (this.props.handleMarker !== this.props.handleMarker) {
       this.setState({
-        isChangePos: nextProps.handleMarker
+        isChangePos: nextProps.handleMarker,
       })
     }
   }
 
   renderMapContent() {
     const markerEvents = {
-      created: (instance) => {
+      created: instance => {
         thisMap.setFitView(instance)
       },
     }
     const events = {
-      created: (ins) => {
+      created: ins => {
         thisMap = ins;
         if (config.offlineMapUrl.domain) {
-          var Layer = new window.AMap.TileLayer({
+          const Layer = new window.AMap.TileLayer({
             zIndex: 2,
-            getTileUrl: function (x, y, z) {
-              //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
-              return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
-            }
+            getTileUrl(x, y, z) {
+              // return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
+              return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+            },
           });
           Layer.setMap(ins);
         }
@@ -273,27 +274,27 @@ class SdlMap extends PureComponent {
         const timer = setInterval(() => {
           if (window.AMap && window.AMap.plugin) {
             const that = this;
-            window.AMap.plugin('AMap.Autocomplete', function () {
+            window.AMap.plugin('AMap.Autocomplete', () => {
               // 实例化Autocomplete
-              var autoOptions = {
+              const autoOptions = {
                 // city: "110000",
                 city: that.props.configInfo.AdCode == '0' ? '全国' : that.props.configInfo.AdCode,
-                input: "tipInput"
+                input: 'tipInput',
               }
 
-              let autoComplete = new window.AMap.Autocomplete(autoOptions);
-              window.AMap.event.addListener(autoComplete, "select", function (data) {
-                let latlng = data.poi.location;
+              const autoComplete = new window.AMap.Autocomplete(autoOptions);
+              window.AMap.event.addListener(autoComplete, 'select', data => {
+                const latlng = data.poi.location;
                 // 设置缩放级别和中心点
-                let latlngxy = [latlng.lng, latlng.lat];
+                const latlngxy = [latlng.lng, latlng.lat];
 
                 that.setState({
                   mapCenter: latlngxy,
                   searchPosition: {
                     latitude: latlng.lat,
-                    longitude: latlng.lng
+                    longitude: latlng.lng,
                   },
-                  searchAddress: data.poi.district + data.poi.address + data.poi.name
+                  searchAddress: data.poi.district + data.poi.address + data.poi.name,
                 })
               })
             })
@@ -301,34 +302,42 @@ class SdlMap extends PureComponent {
           }
         }, 200);
       },
-      click: (e) => {
+      click: e => {
         if (this.state.isChangePos) {
-          let position = {
+          const position = {
             longitude: e.lnglat.lng,
-            latitude: e.lnglat.lat
+            latitude: e.lnglat.lat,
           }
           this.setState({
-            position
+            position,
           })
           const that = this;
         }
-      }
+      },
     }
     // 如果没有传入经纬度的话，定位到用户所在城市的中心
-    let props = this.state.mapCenter ? { center: this.state.mapCenter } : { status: "resizeEnable" }
+    const props = this.state.mapCenter ? { center: this.state.mapCenter } : { status: 'resizeEnable' }
+
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
+
     return <Map
       amapkey={YOUR_AMAP_KEY}
       // zoom={this.props.zoom}
       {...props}
       events={events}
-      useAMapUI={() => {
-        console.log("AMapUI Loaded Done")
-      }}
+      {...mapStaticAttribute}
+    // useAMapUI={() => {
+    //   console.log("AMapUI Loaded Done")
+    // }}
     >
-      {window.AMap && <MapUI />}
+      {/* {window.AMap && <MapUI />} */}
       {
         // 地图标注点
-        this.state.position.longitude && this.state.position.latitude  &&
+        this.state.position.longitude && this.state.position.latitude &&
         <Marker
           position={this.state.position}
           event={markerEvents}
@@ -369,6 +378,7 @@ class SdlMap extends PureComponent {
         res.push(<Polygon
           // key={item.entCode+i}
           // extData={item}
+          bubble={true}
           style={{
             strokeColor: '#FF33FF',
             strokeOpacity: 0.2,
@@ -390,17 +400,17 @@ class SdlMap extends PureComponent {
     return (
       <Fragment>
         {
-          mode === "modal" &&
+          mode === 'modal' &&
           <Input
             suffix={<Icon
               onClick={() => {
                 if (latitude && longitude) {
                   this.setState({
                     position: {
-                      latitude: latitude,
-                      longitude: longitude
+                      latitude,
+                      longitude,
                     },
-                    mapCenter: [longitude, latitude]
+                    mapCenter: [longitude, latitude],
                   })
                 }
 
@@ -409,7 +419,7 @@ class SdlMap extends PureComponent {
                 if (handlePolygon && path) {
                   this.setState({
                     mapCenter: path[0] && path[0][0] && path[0][0][0],
-                    path: path
+                    path,
                   })
                 }
                 this.setState({
@@ -419,12 +429,12 @@ class SdlMap extends PureComponent {
               type="global"
               style={{ color: '#2db7f5', cursor: 'pointer' }}
             />}
-            allowClear={true}
+            allowClear
             {...this.props}
           />
         }
         {
-          mode === "map" &&
+          mode === 'map' &&
           <div className={styles.mapContent} style={{ ...this.props.style }}>
             {this.renderMapContent()}
           </div>
@@ -434,7 +444,7 @@ class SdlMap extends PureComponent {
           visible={mapVisible}
           title="编辑位置信息"
           width="70%"
-          destroyOnClose={true}// 清除上次数据
+          destroyOnClose// 清除上次数据
           onOk={() => {
             this.onOk();
             this.onCloseModal();
@@ -450,7 +460,7 @@ class SdlMap extends PureComponent {
                 this.setState({
                   position: {
                     latitude: undefined,
-                    longitude: undefined
+                    longitude: undefined,
                   },
                   address: undefined,
                   polygon: [],
@@ -461,7 +471,7 @@ class SdlMap extends PureComponent {
 
               {handleMarker && <Button style={{ marginLeft: 10 }} onClick={() => {
                 this.setState({
-                  isChangePos: true
+                  isChangePos: true,
                 })
               }} className={styles.ClearButton}>设置经纬度</Button>}
               {
@@ -476,7 +486,7 @@ class SdlMap extends PureComponent {
                   id="tipInput"
                   onChange={input => {
                     this.setState({
-                      address: input.target.value
+                      address: input.target.value,
                     })
                   }}
                   onPressEnter={value => this.onSearch(value)}
@@ -507,8 +517,8 @@ SdlMap.propTypes = {
 
 SdlMap.defaultProps = {
   // handleMarker: true,
-  mode: "modal",
-  zoom: 13
+  mode: 'modal',
+  zoom: 13,
 }
 
 export default SdlMap;

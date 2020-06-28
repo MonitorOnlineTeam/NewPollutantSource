@@ -3,7 +3,7 @@ import moment from 'moment';
 import {
     Card,
     Spin,
-    Select, Input, Button, Tooltip, Modal, Form, Icon, Steps, Pagination, Empty,
+    Select, Input, Button, Tooltip, Modal, Form, Icon, Steps, Pagination, Empty, Row, Col,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -40,7 +40,7 @@ class Dispatchreport extends Component {
           };
         this.state = {
             rangeDate: [],
-            format: 'YYYY-MM-DD HH:mm:ss',
+            format: 'YYYY-MM-DD HH:mm',
             selectvalue: '',
             UserName: '',
             dgimn: '',
@@ -171,6 +171,7 @@ class Dispatchreport extends Component {
 
     /** 切换任务类型 */
     SelectOnChange=value => {
+        debugger;
         if (value === undefined) {
             this.setState({
             selectvalue: '',
@@ -190,10 +191,9 @@ class Dispatchreport extends Component {
     }
 
     /** 切换时间 */
-    _handleDateChange = (date, dateString, fieldName) => {
-       const { form: { setFieldsValue } } = this.props;
+    _handleDateChange = (date, dateString) => {
+        debugger;
        if (date && date.length > 0 && date[0]) {
-        setFieldsValue({ [fieldName]: date })
         this.setState({ rangeDate: date });
         let {
           queryparams,
@@ -204,9 +204,8 @@ class Dispatchreport extends Component {
             ETime: date[1].format('YYYY-MM-DD HH:mm:ss'),
         }
        } else {
-           this.setState({ rangeDate: [] });
+           this.setState({ rangeDate: [undefined, undefined] });
        }
-       setFieldsValue({ [fieldName]: date })
     };
 
     /** 展开折叠 */
@@ -218,12 +217,7 @@ class Dispatchreport extends Component {
 
      /** 重置form */
      resetForm=() => {
-       this.setState({
-         rangeDate: [],
-       }, () => {
-         this.props.form.resetFields();
-         this.Search();
-       });
+        this.props.form.resetFields();
      }
 
     /** 后台请求数据 */
@@ -252,15 +246,15 @@ class Dispatchreport extends Component {
             dispatch,
         } = this.props;
         let { queryparams } = this.props;
-        const baseReportSearchForm = this.props.form.getFieldsValue();
-        const { rangeDate } = this.state;
+        const { rangeDate, selectvalue, UserName } = this.state;
+        debugger;
         queryparams = {
             ...queryparams,
             DGIMN: dgimn,
-            BTime: rangeDate.length > 0 ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
-            ETime: rangeDate.length > 0 ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
-            CommandDispatchType: baseReportSearchForm.CommandDispatchType,
-            UserID: baseReportSearchForm.UserID,
+            BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
+            ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
+            CommandDispatchType: selectvalue,
+            UserID: UserName,
             pageIndex: 1,
         }
         dispatch({
@@ -353,15 +347,14 @@ class Dispatchreport extends Component {
             dispatch,
         } = this.props;
         let { queryparams } = this.props;
-        const { rangeDate, dgimn } = this.state;
-        const baseReportSearchForm = this.props.form.getFieldsValue();
+        const { rangeDate, dgimn, selectvalue, UserName } = this.state;
         queryparams = {
             ...queryparams,
             DGIMN: dgimn,
             BTime: rangeDate.length > 0 ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
             ETime: rangeDate.length > 0 ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
-            CommandDispatchType: baseReportSearchForm.CommandDispatchType,
-            UserID: baseReportSearchForm.UserID,
+            CommandDispatchType: selectvalue,
+            UserID: UserName,
         }
         dispatch({
             type: 'operations/updateState',
@@ -453,63 +446,41 @@ class Dispatchreport extends Component {
                 <Card
                 bordered={false}
                 extra={
-                    <Form layout="inline" style={{ marginTop: '10px' }}>
-                                <div style={{ float: 'left', width: '350px' }}>
-                                    <FormItem {...this.formLayout} label="调度类别" style={{ width: '100%' }}>
-                                        {getFieldDecorator('CommandDispatchType', {
-                                            initialValue: queryparams.CommandDispatchType === '' ? undefined : queryparams.CommandDispatchType,
-                                        })(
-                                            <Select
-
-                                        placeholder="请选择"
-                                        allowClear
-                                    >
-                                        <Option value="1">例行派单</Option>
-                                        <Option value="2">异常报警</Option>
-                                        <Option value="3">人工派单</Option>
-                                        <Option value="4">超标报警</Option>
-                                            </Select>,
-                                        )}
-                                    </FormItem>
-                                </div>
-                                <div style={{ float: 'left', width: '450px' }}>
-                                    <FormItem {...this.formLayout} label="时间" style={{ width: '100%' }}>
-                                        {getFieldDecorator('rangeDate')(
-                                            <RangePicker_
-                                            dateValue={this.state.rangeDate} format={this.state.format}
-                                            callback={this._handleDateChange} fieldName="rangeDate" allowClear showTime={this.state.format} />,
-                                        )}
-                                    </FormItem>
-                                </div>
-                                <div style={{ float: 'left', width: '350px' }}>
-                                    <FormItem {...this.formLayout} label="人员姓名" style={{ width: '100%' }}>
-                                        {getFieldDecorator('UserID', {
-                                            initialValue: queryparams.UserID,
-                                        })(
-                                            <Input placeholder="人员姓名" allowClear/>,
-                                        )}
-                                    </FormItem>
-                                </div>
-                                <div style={{ float: 'left' }}>
-                                    <Button
-                                        style={{ marginLeft: 8 }}
-                                        onClick={() => {
-                                            // this.props.form.setFieldsValue({ current: 1 })
-                                            this.Search();
-                                        }}
-                                        type="primary"
-                                        htmlType="submit"
-                                    >
-                                        查询
-                                        </Button>
-                                    <Button style={{ marginLeft: 8 }} onClick={() => {
-                                            // this.props.form.setFieldsValue({ current: 1 })
-                                            this.resetForm();
-                                        }}>
-                                        重置
-                                        </Button>
-                                    </div>
-                        </Form>
+                    <Row gutter={16} style={{ width: '800px' }}>
+                        <Col xl={{ span: 6 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                            <Select
+                                    onSelect={this.SelectOnChange}
+                                    placeholder="调度类别"
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                >
+                                    <Option value="1">例行派单</Option>
+                                    <Option value="2">异常报警</Option>
+                                    <Option value="3">人工派单</Option>
+                                    <Option value="4">超标报警</Option>
+                            </Select>
+                        </Col>
+                        <Col xl={{ span: 11 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                            <RangePicker_
+                                    style={{ width: '100%' }}
+                                    dateValue={this.state.rangeDate} format={this.state.format}
+                                    callback={this._handleDateChange} allowClear showTime={this.state.format} />
+                        </Col>
+                        <Col xl={{ span: 4 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                            <Input placeholder="人员姓名" style={{ width: '100%' }} allowClear/>
+                        </Col>
+                        <Col xl={{ span: 2 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                            <Button
+                                    onClick={() => {
+                                        this.Search();
+                                    }}
+                                    type="primary"
+                                    htmlType="submit"
+                                >
+                                    查询
+                            </Button>
+                        </Col>
+                    </Row>
                 }
                 >
                     <div className={Style.Content}>
@@ -567,8 +538,8 @@ class Dispatchreport extends Component {
                     onCancel={this.onCancel1}
                     >
                      <ExceptionAlarm
-                      initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={moment(moment(this.state.btime).format('YYYY-MM-DD 00:00:00'))}
-                        lasttime={moment(moment(this.state.etime).format('YYYY-MM-DD 23:59:59'))}/>
+                      initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={moment(this.state.btime)}
+                        lasttime={moment(this.state.etime)}/>
                     </Modal>
                     </Card>
             </div >

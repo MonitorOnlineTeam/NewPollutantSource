@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Modal, Tabs, Descriptions, Divider } from 'antd';
 import { connect } from 'dva'
 import DataQuery from '@/pages/monitoring/dataquery/components/DataQuery'
-import DataQueryOld from '@/pages/monitoring/dataquery/components/DataQueryOld'
 import AlarmRecord from '@/pages/monitoring/alarmrecord/components/AlarmRecord'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
@@ -14,7 +13,7 @@ import config from "@/config"
 
 
 const { TabPane } = Tabs;
-let tabList = ["历史数据", "运维记录", "视频预览", "报警记录", "异常数据", "超标数据", "基本信息"];
+let tabList = ["历史数据", "运维记录", "视频预览", "超标核实", "异常数据", "超标数据", "基本信息"];
 const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
 
 @connect(({ loading, newHome }) => ({
@@ -79,7 +78,7 @@ class SiteDetailsModal extends PureComponent {
         </li>
         <li onClick={() => { this.footerItemClick(4) }}>
           <img src="/xj/04.png" alt="" />
-          <p>报警记录</p>
+          <p>超标核实</p>
         </li>
         <li onClick={() => { this.footerItemClick(5) }}>
           <img src="/xj/05.png" alt="" />
@@ -104,9 +103,9 @@ class SiteDetailsModal extends PureComponent {
     if (data.PollutantType === "5") {
       tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     }else{
-      tabList = ["历史数据", "运维记录", "视频预览", "报警记录", "异常数据", "超标数据", "基本信息"];
+      tabList = ["历史数据", "运维记录", "视频预览", "超标核实", "异常数据", "超标数据", "基本信息"];
     }
-    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.jpg" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
       imgName = config.uploadHost + "upload" + imgName;
     }
@@ -128,7 +127,7 @@ class SiteDetailsModal extends PureComponent {
       >
         {
           currentKey === 1 && <div style={{ height: "60vh", overflow: "hidden" }}>
-            <DataQueryOld
+            <DataQuery
               DGIMN={data.key}
               initLoadData
               chartHeight='calc(100vh - 590px)'

@@ -22,17 +22,12 @@ class ExceptionVerify extends Component {
     }
 
     componentDidMount() {
-        this.reloadPage('ExceptionVerifyService');
+         this.reloadPage('ExceptionVerifyService');
     }
 
     reloadPage = configId => {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
+
         dispatch({
             type: 'autoForm/getPageConfig',
             payload: {
@@ -42,16 +37,21 @@ class ExceptionVerify extends Component {
     }
 
     render() {
+        console.log('22222=', this.props.DataWhere1)
+
         return (
             <>
                 <Card bordered={false} title="处置详情" loading={this.props.loading}>
                     <Card.Grid style={{ width: '100%' }} className={Style.hidpage}>
-                        <AutoFormTable
+                        {
+                            (this.props.DataWhere1 && this.props.DataWhere1.length) ? <AutoFormTable
                             configId="ExceptionVerifyService"
                             {...this.props}
                             searchParams={this.props.DataWhere1}
                         >
-                        </AutoFormTable>
+                        </AutoFormTable> : ''
+                        }
+
                     </Card.Grid>
                 </Card>
             </>

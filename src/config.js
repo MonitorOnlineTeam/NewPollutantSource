@@ -38,15 +38,15 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  // offlineMapUrl: {
-  //   domain: '',
-  //   srcPath: '/amap-master/amap/js/maps.js',
-  // },
-  // 离线地图配置：
   offlineMapUrl: {
-    domain: 'http://172.16.12.135:50209',
+    domain: '',
     srcPath: '/amap-master/amap/js/maps.js',
   },
+  // 离线地图配置：
+  // offlineMapUrl: {
+  //   domain: 'http://10.66.1.72:8184',
+  //   srcPath: '/amap-master/amap/js/maps.js',
+  // },
   // 内网离线地图配置：
   // offlineMapUrl: {
   //   domain: "http://172.16.9.20:808",
@@ -54,7 +54,7 @@ module.exports = {
   // },
   isShowTabs: true,
   centerlongitude: '118.510962',
-  centerlatitude: '38.976271', // //at.alicdn.com/t/font_1298443_wayosrtec6l.js
+  centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
   iconFontUrl: '//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
@@ -80,7 +80,7 @@ module.exports = {
   // 萤石云视频地址
   ysyvideourl: `${apiHost}/Web/YsyVideo/YsyVideo.html`,
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
-  VideoServer: 0,
+  VideoServer: 1,
   // 历史视频定时播放数据时间（单位S）
   PlayDatas: 10 * 60,
   // 手工数据上传地址

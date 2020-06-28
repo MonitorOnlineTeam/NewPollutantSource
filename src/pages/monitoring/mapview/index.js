@@ -10,7 +10,7 @@ import { isEqual } from 'lodash';
 import ReactEcharts from 'echarts-for-react';
 import styles from './styles.less'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
-import DataQuery from '../dataquery/components/DataQueryOld'
+import DataQuery from '../dataquery/components/DataQuery'
 import AlarmRecord from '../alarmrecord/components/AlarmRecord'
 import RecordEchartTableOver from '@/components/recordEchartTableOver'
 import RecordEchartTable from '@/components/recordEchartTable'
@@ -756,6 +756,13 @@ class MapView extends Component {
     if (config.isShowTabs && defaultSettings.layout === 'sidemenu') {
       mapWrapperStyle = { marginTop: 4 }
     }
+
+    let mapStaticAttribute = {};
+    // 离线地图设置做大缩放级别
+    if (config.offlineMapUrl.domain) {
+      mapStaticAttribute.zooms = [3, 14]
+    }
+
     return (
       // QCAUse="1"
       <div className={styles.mapWrapper} style={mapWrapperStyle}>
@@ -861,9 +868,10 @@ class MapView extends Component {
             // features={['bg','point','building']}
             // center={this.state.mapCenter}
             events={this.mapEvents}
-            useAMapUI
+            {...mapStaticAttribute}
+            // useAMapUI
           >
-            {_thismap && <MapUI />}
+            {/* {_thismap && <MapUI />} */}
             {this.drawPolygon()}
             {/* <Polygon path={[[[[116.491204,39.957416],[116.587335,39.93636],[116.521417,39.891066],[116.495324,39.918457]]]]} /> */}
             <InfoWindow

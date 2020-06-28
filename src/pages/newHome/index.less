@@ -1,11 +1,17 @@
 @color: #114fa1;
 
 .newHomeWrap {
+
   // :global{
   //   .ant-spin-nested-loading {
   //     z-index: 9999;
   //   }
   // }
+  :global {
+    .amap-info-content {
+      padding: 10px 4px;
+    }
+  }
 }
 
 
@@ -107,7 +113,7 @@
 
 .content {
   width: 340px;
-  height: 100%;
+  height: calc(100vh - 64px);
   background: #fff;
   padding: 14px 0;
   // box-shadow: -7px 5px 15px 5px #ccc;
@@ -128,7 +134,7 @@
   color: #124e9f;
   padding-left: 34px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
   background: url(/xj/001.png) no-repeat 14px;
   background-color: #d6e1f0;
 }
@@ -223,7 +229,7 @@
   // 运维分析
   .innerTitle {
     color: #0f509f;
-    font-weight: 500;
+    font-weight: bold;
 
     span {
       color: #333;
@@ -321,7 +327,7 @@
 // 图例
 .legendContent {
   position: absolute;
-  height: 210px;
+  height: 246px;
   width: 190px;
   bottom: 20px;
   left: 20px;
@@ -459,6 +465,11 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         padding: 0px 8px;
+        font-size: 13px;
+
+        &.point {
+          width: 49%;
+        }
       }
     }
 
@@ -529,6 +540,7 @@
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 100px;
+
   .shibox {
     width: 88px;
     background-color: rgba(0, 0, 0, .5);

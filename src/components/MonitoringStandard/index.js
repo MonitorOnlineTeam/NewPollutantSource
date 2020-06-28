@@ -64,12 +64,13 @@ class MonitoringStandard extends Component {
     };
     componentDidMount() {
         const { dispatch, match, DGIMN } = this.props;
-        dispatch({
-            type: 'autoForm/getPageConfig',
-            payload: {
-                configId: 'service_StandardLibrary',
-            },
-        });
+        // !this.props.noload && dispatch({
+        //     type: 'autoForm/getPageConfig',
+        //     payload: {
+        //         configId: 'service_StandardLibrary',
+        //     },
+        // });
+   
         this.getpollutantbydgimn(DGIMN);
     }
 
@@ -328,6 +329,7 @@ class MonitoringStandard extends Component {
             <Card
                 bordered={false}
                 style={{ width: '100%' }}
+                bodyStyle={{paddingBottom:0}}
                 extra={
                     <Button
                         onClick={() => {

@@ -8,7 +8,8 @@ import { message } from 'antd';
 import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest } from '@/services/pointApi';
+import MonitoringStandard from '@/components/MonitoringStandard';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest,getEnterpriseCorporationCode } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -21,13 +22,19 @@ export default Model.extend({
         TestComponent: [], // 测试项目
         MainInstrumentName: [], // 主要仪器名称
         CemsList: [], //
+        CorporationCode:null,
     },
     effects: {
+
         // 获取监测点数据集合
         *getPointList({ payload }, { call, put, update, select, take }) {
             const dd1 = yield select(state => state.common);
             yield take('common/getPollutantTypeList/@@end');
             const dd = yield select(state => state.common);
+            const result = yield call(getEnterpriseCorporationCode, payload);
+            yield update({
+                CorporationCode:result.Datas
+            })
             payload.callback(dd.defaultPollutantCode);
         },
         *factoryTest({ payload }, { call, put, update, select, take }) {

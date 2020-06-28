@@ -8,7 +8,6 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import NavigationTree from '../../../components/NavigationTree';
-import DataQuery from '../dataquery/components/DataQuery';
 import { Layout, Card, Col, Badge, Button, Avatar, Spin } from 'antd';
 import styles from '@/pages/monitoring/realtimedata/components/ProcessFlowChart.less';
 import { connect } from 'dva';
