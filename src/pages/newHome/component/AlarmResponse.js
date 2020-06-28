@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 14:47:52
+ * @Last Modified time: 2020-06-28 13:45:08
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -35,6 +35,18 @@ class AlarmResponse extends PureComponent {
 
       }
     })
+
+    this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+    this.zr = this.echartsInstance.getZr();
+
+    this.zr.on('click', (...rest) => {
+      var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+      var index = parseInt(xIndex);
+      // console.log(index);
+      // console.log('App:onClickChart', rest);
+      this._SELF_.dataIndex = index
+      this.getTrippingAlarmResponse(index)
+    });
   }
 
   barOptions = () => {
@@ -45,6 +57,14 @@ class AlarmResponse extends PureComponent {
       // color: ["#fd6c6c", "#fd6c6c", "#f6b322", "#f6b322"],
       tooltip: {
         trigger: 'axis',
+        formatter: (params) => {
+          if (params[0].dataIndex === 0 || params[0].dataIndex === 1) {
+            return `${params[0].marker}异常报警响应：${params[0].value}次`
+          }
+          if (params[0].dataIndex === 2 || params[0].dataIndex === 3) {
+            return `${params[0].marker}超标报警核实：${params[0].value}次`
+          }
+        }
         // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
         //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
         // }
@@ -225,12 +245,15 @@ class AlarmResponse extends PureComponent {
         }
         <ReactEcharts
           option={this.barOptions()}
-          onEvents={{
-            click: (e) => {
-              this._SELF_.dataIndex = e.dataIndex;
-              this.getTrippingAlarmResponse(e.dataIndex)
-            }
+          ref={(e) => {
+            this.echartsReactRef = e;
           }}
+          // onEvents={{
+          //   click: (e) => {
+          //     this._SELF_.dataIndex = e.dataIndex;
+          //     this.getTrippingAlarmResponse(e.dataIndex)
+          //   }
+          // }}
           style={{ height: '180px', marginBottom: 20 }}
           className="echarts-for-echarts"
           theme="my_theme"

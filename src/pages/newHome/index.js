@@ -519,7 +519,7 @@ class NewHome extends PureComponent {
     const { infoWindowData } = this.props;
     let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
-      imgName = config.uploadHost + "upload/" + infoWindowData.photo[0];
+      imgName = "/upload/" + infoWindowData.photo[0];
     }
     return <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
       <div className={styles.header}>
@@ -718,17 +718,10 @@ class NewHome extends PureComponent {
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
                   this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), date.endOf("month").format("YYYY-MM-DD HH:mm:ss"));
                 }} />
-                {
-                  displayType === 0 &&
-                  <Search value={searchInputVal} allowClear onSearch={value => this.onSearch(value)} onChange={(e) => {
-                    this.setState({ searchInputVal: e.target.value })
-                  }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
-                }
                 <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
                   this.setState({ selectValue: val })
                   if (val) {
                     let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
-                    console.log('filterList=', filterList)
                     this.renderEntMarkers(filterList);
                   } else {
                     this.renderEntMarkers(allEntAndPointList);
@@ -740,6 +733,12 @@ class NewHome extends PureComponent {
                   <Option value="师">师</Option>
                   <Option value="2">空气站</Option>
                 </Select>
+                {
+                  displayType === 0 &&
+                  <Search value={searchInputVal} allowClear onSearch={value => this.onSearch(value)} onChange={(e) => {
+                    this.setState({ searchInputVal: e.target.value })
+                  }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
+                }
                 {
                   clickedDivision && <div style={{
                     display: displayType === 1 ? "none" : "block"

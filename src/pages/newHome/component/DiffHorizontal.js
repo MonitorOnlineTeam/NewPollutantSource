@@ -95,6 +95,7 @@ class DiffHorizontal extends PureComponent {
     }
   };
   render() {
+    const { diffHorizontalData } = this.props;
     return (
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]}>
@@ -108,12 +109,17 @@ class DiffHorizontal extends PureComponent {
             <Icon style={{ marginLeft: 6, fontSize: '15px' }} type="exclamation-circle" />
           </Popover>
         </div>
-        <ReactEcharts
-          option={this.barOptions()}
-          style={{ height: '400px', marginTop: 20 }}
-          className="echarts-for-echarts"
-          theme="my_theme"
-        />
+        {
+          diffHorizontalData.length ? <ReactEcharts
+            option={this.barOptions()}
+            style={{ height: '400px', marginTop: 20 }}
+            className="echarts-for-echarts"
+            theme="my_theme"
+          /> : <div className={styles.noData}>
+              <img src="/nodata1.png" style={{ width: 120 }} />
+              <p style={{ color: "rgb(166, 166, 167)", fontSize: 16, fontWeight: 500 }}>无企业</p>
+            </div>
+        }
       </div>
     );
   }

@@ -254,10 +254,10 @@ class DrillDownTaskModal extends PureComponent {
               {
                 level === 2 &&
                 <Col span={6}>
-                  <Form.Item {...formItemLayout} label="企业名称">
+                  <Form.Item {...formItemLayout} label="监控目标">
                     {getFieldDecorator("entName", {
                     })(
-                      <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                      <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
                         this.props.dispatch({
                           type: "newHome/updateState",
                           payload: {
