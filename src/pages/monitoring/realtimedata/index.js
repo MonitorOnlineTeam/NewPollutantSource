@@ -188,12 +188,11 @@ class Index extends Component {
     // 图片上的点击事件
     positionClick = (param, status, data) => {
         // 推送过来要调用参数，再此存储参数值
-        this.setState({
-            param,
-            status,
-            data,
-        })
-debugger
+        // this.setState({
+        //     param,
+        //     status,
+        //     data,
+        // })
         const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
         const paramlist = param ? param.split(',') : null;
         const statuslist = status ? status.split(',') : null;
@@ -223,13 +222,12 @@ debugger
         if (paramInfolist.length > 0 || stateInfolist.length > 0 || dataInfolist.length > 0) {
             this.imgClick(paramInfolist, stateInfolist, dataInfolist);
         }
-        else
-        {
-            this.setState({
-                showSider: false,
-                paramInfo:[],
-            })
-        }
+        // else {
+        //     this.setState({
+        //         showSider: false,
+        //         paramInfo: [],
+        //     })
+        // }
     }
 
     /**
@@ -238,19 +236,24 @@ debugger
      * @memberof ProcessFlowChart
      */
     getChartType = () => {
-        const { dataInfo, DGIMN } = this.props;
+        const { dataInfo, DGIMN, paramstatusInfo, stateInfo, paramsInfo } = this.props;
         const { dgimn, pointName, entName } = this.state;
 
         if (dataInfo && dataInfo.pollutantType == '2') {
             switch (dataInfo.equipmentType) {
                 case '1':
-                    return (<WasteGasChart positionClick={(param, status, data) => {
-                        this.positionClick(param, status, data);
-                        this.setState({
-                            showSider: true
-                        })
-                    }} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
+                    return (<WasteGasChart
+                        paramstatusInfo={paramstatusInfo}
+                        stateInfo={stateInfo}
+                        paramsInfo={paramsInfo}
+                        positionClick={(param, status, data) => {
+                            this.positionClick(param, status, data);
+                            this.setState({
+                                showSider: true
+                            })
+                        }}
+                        DGIMN={dgimn}
+                        pointName={pointName} entName={entName} />)
                     break;
                 case '2':
                     return (<VocChart positionClick={(param, status, data) => {

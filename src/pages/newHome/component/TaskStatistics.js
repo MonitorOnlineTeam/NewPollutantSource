@@ -28,6 +28,16 @@ class TaskStatistics extends PureComponent {
 
       }
     })
+
+    this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+    this.zr = this.echartsInstance.getZr();
+
+    this.zr.on('click', (...rest) => {
+      this.getTrippingTaskStatistics()
+    });
+
+
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -138,11 +148,14 @@ class TaskStatistics extends PureComponent {
         </div>
         <ReactEcharts
           option={this.option()}
-          onEvents={{
-            click: () => {
-              this.getTrippingTaskStatistics()
-            }
+          ref={(e) => {
+            this.echartsReactRef = e;
           }}
+          // onEvents={{
+          //   click: () => {
+          //     this.getTrippingTaskStatistics()
+          //   }
+          // }}
           style={{ height: '220px', width: '100%' }}
           theme="my_theme"
         />

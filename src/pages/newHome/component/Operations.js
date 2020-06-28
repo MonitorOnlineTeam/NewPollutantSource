@@ -47,7 +47,7 @@ class Operations extends PureComponent {
         }
       },
       grid: {
-        left: '-16%',
+        left: '-18%',
         top: "6%",
         right: '4%',
         bottom: '-6%',
@@ -70,7 +70,7 @@ class Operations extends PureComponent {
         axisLabel: {
           fontSize: 14,
           align: "left",
-          margin: 70,
+          margin: 86,
         },
         data: ['配合检查', '配合对比', '手工对比', '校验测试', '维修维护', '校准', '巡检',]
       },
@@ -83,7 +83,7 @@ class Operations extends PureComponent {
           barWidth: "24px",
           label: {
             show: true,
-            position: 'insideRight',
+            position: 'left',
             formatter: (params) => {
               if (params.value === 0) { return "" } else { return params.value }
             }
@@ -98,7 +98,7 @@ class Operations extends PureComponent {
           barWidth: "24px",
           label: {
             show: true,
-            position: 'insideRight',
+            position: 'right',
             formatter: (params) => {
               if (params.value === 0) { return "" } else { return params.value }
             }

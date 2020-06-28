@@ -43,6 +43,51 @@ class DrillDownAlarmResponseModel extends PureComponent {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.alarmResponseModalData !== this.props.alarmResponseModalData && !this.zr) {
+      this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+      this.zr = this.echartsInstance.getZr();
+
+      this.zr.on('click', (...rest) => {
+        var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+        var index = parseInt(xIndex);
+
+
+        if (this.props.level === 1) {
+          // 点击师，显示企业
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              regionCode: this.props.codeList[index],
+              currentDivisionName: this.props.alarmResponseModalData.x[index]
+            }
+          })
+        }
+        if (this.props.level === 2) {
+          // 点击企业，显示排口
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              entCode: this.props.codeList[index],
+              currentEntName: this.props.alarmResponseModalData.x[index]
+            }
+          })
+        }
+        if (this.props.level < 3) {
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              level: this.props.level + 1
+            }
+          })
+          this.setState({ showBack: true, dataIndex: index })
+          this.props.chartClick();
+        }
+
+      })
+    }
+  }
+
   close = () => {
     this.props.dispatch({
       type: "newHome/updateState",
@@ -271,7 +316,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
         break;
       case 3:
         levelText = "(排口)"
-        afterText = currentEntName ? currentEntName + " - " :""
+        afterText = currentEntName ? currentEntName + " - " : ""
         break;
     }
     let title = `${afterText}${modelTitle}${levelText}`;
@@ -306,10 +351,10 @@ class DrillDownAlarmResponseModel extends PureComponent {
               {
                 level === 2 &&
                 <Col span={6}>
-                  <Form.Item {...formItemLayout} label="企业名称">
+                  <Form.Item {...formItemLayout} label="监控目标">
                     {getFieldDecorator("entName", {
                     })(
-                      <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                      <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
                         this.props.dispatch({
                           type: "newHome/updateState",
                           payload: {
@@ -351,7 +396,10 @@ class DrillDownAlarmResponseModel extends PureComponent {
           <ReactEcharts
             option={this.getOption()}
             style={{ height: '60vh' }}
-            onEvents={this.chartEvents}
+            ref={(e) => {
+              this.echartsReactRef = e;
+            }}
+            // onEvents={this.chartEvents}
             className="echarts-for-echarts"
             theme="my_theme"
           />

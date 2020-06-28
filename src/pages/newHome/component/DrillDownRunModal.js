@@ -40,7 +40,10 @@ class DrillDownRunModal extends PureComponent {
       },
     };
   }
+  
+
   close = () => {
+    this.zr = undefined;
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
@@ -52,6 +55,53 @@ class DrillDownRunModal extends PureComponent {
       }
     })
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.seriesData !== this.props.seriesData && !this.zr) {
+      this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+      this.zr = this.echartsInstance.getZr();
+
+      this.zr.on('click', (...rest) => {
+        var pointInPixel = [rest.offsetX, rest.offsetY];
+        var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+        var index = parseInt(xIndex);
+
+        if (this.props.level === 1) {
+          // 点击师，显示企业
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              regionCode: this.props.paramsList[index],
+              currentDivisionName: this.props.xData[index]
+            }
+          })
+        }
+        if (this.props.level === 2) {
+          // 点击企业，显示排口
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              entCode: this.props.paramsList[index],
+              currentEntName: this.props.xData[index]
+            }
+          })
+        }
+        if (this.props.level < 3) {
+          this.props.dispatch({
+            type: "newHome/updateState",
+            payload: {
+              level: this.props.level + 1
+            }
+          })
+          this.setState({ dataIndex: index })
+          this.props.chartClick();
+        }
+
+
+      });
+    }
+  }
+
 
   getOption = () => {
     const { seriesData, xData } = this.props;
@@ -241,10 +291,10 @@ class DrillDownRunModal extends PureComponent {
               {
                 level === 2 &&
                 <Col span={10}>
-                  <Form.Item {...formItemLayout} label="企业名称">
+                  <Form.Item {...formItemLayout} label="监控目标">
                     {getFieldDecorator("entName", {
                     })(
-                      <Input allowClear placeholder="请输入企业名称" onChange={(e) => {
+                      <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
                         this.props.dispatch({
                           type: "newHome/updateState",
                           payload: {
@@ -286,7 +336,10 @@ class DrillDownRunModal extends PureComponent {
           <ReactEcharts
             option={this.getOption()}
             style={{ height: '60vh' }}
-            onEvents={this.chartEvents}
+            ref={(e) => {
+              this.echartsReactRef = e;
+            }}
+            // onEvents={this.chartEvents}
             className="echarts-for-echarts"
             theme="my_theme"
           />
