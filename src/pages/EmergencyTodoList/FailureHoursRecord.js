@@ -63,7 +63,15 @@ class FailureHoursRecord extends Component {
                 );
             });
         }
-
+        else{
+            rtnVal.push(
+                <tr>
+                    <td colSpan="8" style={{ width: '100%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                     暂无数据
+                    </td>
+                </tr>
+            );
+        }
         return rtnVal;
     }
 
