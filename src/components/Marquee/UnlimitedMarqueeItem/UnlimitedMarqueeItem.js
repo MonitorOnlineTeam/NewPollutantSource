@@ -7,10 +7,9 @@ import styles from './style.less'
 class UnlimitedMarqueeItem extends Component {
   render() {
     const { dataItem } = this.props;
-
     return (
       <div className={styles["item-div"]}>
-        <a className={styles["item-a"]} href={dataItem.url || "javascript:void(0)"} title={dataItem.desc}>
+        <a className={styles["item-a"]} href={dataItem.url || "javascript:void(0)"}>
           <div dangerouslySetInnerHTML={{ __html: dataItem.desc }}></div>
         </a>
       </div>

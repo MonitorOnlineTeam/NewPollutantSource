@@ -88,9 +88,10 @@ class NewHome extends PureComponent {
             }
           });
           Layer.setMap(mapInstance);
-          mapInstance.setCity(650000, function () {
-            mapInstance.setZoom(6)
-          })
+          // mapInstance.setCity(650000, function () {
+          //   mapInstance.setZoom(6)
+          // })
+          mapInstance.setFitView()
         }
       },
     };
@@ -256,6 +257,8 @@ class NewHome extends PureComponent {
       markersList: entMarkers,
       allPolygon: null,
       displayType: 0
+    }, () => {
+      aMap.setFitView();
     })
   }
 
