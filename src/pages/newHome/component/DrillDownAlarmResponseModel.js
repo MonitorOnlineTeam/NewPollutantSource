@@ -89,6 +89,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
   }
 
   close = () => {
+    this.zr = undefined;
     this.props.dispatch({
       type: "newHome/updateState",
       payload: {
@@ -121,7 +122,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "次"
+                return params.value
               }
             }
           },
@@ -140,7 +141,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "次"
+                return params.value
               }
             }
           },
@@ -162,7 +163,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "次"
+                return params.value
               }
             }
           },
@@ -181,7 +182,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "次"
+                return params.value
               }
             }
           },
@@ -194,9 +195,9 @@ class DrillDownAlarmResponseModel extends PureComponent {
       color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
-        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        // },
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        },
         formatter(params, ticket, callback) {
           let res = `${params[0].axisValue}<br/>`;
           params.map(item => {
@@ -225,6 +226,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
       yAxis: [
         {
           type: 'value',
+          name: '（次）',
           minInterval: 1
         }
       ],

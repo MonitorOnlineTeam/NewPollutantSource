@@ -110,9 +110,9 @@ class DrillDownTaskStatisticsModal extends PureComponent {
       color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
-        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        // }
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        },
         formatter(params, ticket, callback) {
           let res = `${params[0].axisValue}<br/>`;
           params.map(item => {
@@ -143,6 +143,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
+          name: '（次）',
           minInterval: 1,
         }
       ],
@@ -152,10 +153,10 @@ class DrillDownTaskStatisticsModal extends PureComponent {
           type: 'bar',
           // barWidth: '40%',
           barMaxWidth: 60,
-          stack: "任务统计",
+          // stack: "任务统计",
           label: {
             show: true,
-            position: 'insideTop',
+            position: 'top',
             formatter: (params) => {
               if (params.value) {
                 return params.value
@@ -171,7 +172,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
           type: 'bar',
           // barWidth: '40%',
           barMaxWidth: 60,
-          stack: "任务统计",
+          // stack: "任务统计",
           label: {
             show: true,
             position: 'top',

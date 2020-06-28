@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-28 13:45:08
+ * @Last Modified time: 2020-06-28 16:10:28
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -64,10 +64,10 @@ class AlarmResponse extends PureComponent {
           if (params[0].dataIndex === 2 || params[0].dataIndex === 3) {
             return `${params[0].marker}超标报警核实：${params[0].value}次`
           }
+        },
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
         }
-        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        // }
       },
       grid: {
         top: 20,
