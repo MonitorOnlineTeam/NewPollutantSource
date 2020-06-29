@@ -288,24 +288,24 @@ class DrillDownRunModal extends PureComponent {
         <Spin spinning={loading}>
           <Form>
             <Row>
-              {
-                level === 2 &&
-                <Col span={10}>
-                  <Form.Item {...formItemLayout} label="监控目标">
-                    {getFieldDecorator("entName", {
-                    })(
-                      <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
-                        this.props.dispatch({
-                          type: "newHome/updateState",
-                          payload: {
-                            entName: e.target.value
-                          }
-                        })
-                      }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              }
+              {/* {
+                level === 2 && */}
+              <Col span={10} style={{ display: level === 2 ? "block" : "none" }}>
+                <Form.Item {...formItemLayout} label="监控目标">
+                  {getFieldDecorator("entName", {
+                  })(
+                    <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
+                      this.props.dispatch({
+                        type: "newHome/updateState",
+                        payload: {
+                          entName: e.target.value
+                        }
+                      })
+                    }} />
+                  )}
+                </Form.Item>
+              </Col>
+              {/* } */}
               <Col span={10}>
                 <Form.Item {...formItemLayout} label="日期">
                   {getFieldDecorator("time", {
