@@ -61,7 +61,7 @@ class MapUI extends PureComponent {
       districtExplorer: districtExplorer,
       tipMarker: tipMarker
     }, () => {
-      this.switch2AreaNode(650000);
+    this.switch2AreaNode(650000);
     })
     let that = this;
     //feature被点击

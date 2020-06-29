@@ -234,13 +234,13 @@ class AlarmResponse extends PureComponent {
         {
           <div className={styles["warningInfo"]}>
             <i style={{ background: "#ffd065" }}></i>
-            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
+            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${Math.abs(execptionYearRate)}%`) : ""}</span>
           </div>
         }
         {
           <div className={styles["warningInfo"]}>
             <i></i>
-            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
+            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${Math.abs(taskYearRate)}%`) : ""}</span>
           </div>
         }
         <ReactEcharts
