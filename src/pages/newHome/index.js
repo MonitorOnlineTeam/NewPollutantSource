@@ -258,7 +258,12 @@ class NewHome extends PureComponent {
       allPolygon: null,
       displayType: 0
     }, () => {
-      aMap.setFitView();
+      const timer = setInterval(() => {
+        if (aMap) {
+          aMap.setFitView();
+          clearInterval(timer)
+        }
+      }, 200);
     })
   }
 

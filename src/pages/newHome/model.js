@@ -95,7 +95,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         // yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
-        message.error(result.Message)
+        // message.error(result.Message)
       }
     },
     // 获取企业和监测点信息
