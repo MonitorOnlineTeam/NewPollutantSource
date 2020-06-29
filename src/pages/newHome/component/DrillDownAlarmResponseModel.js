@@ -45,46 +45,48 @@ class DrillDownAlarmResponseModel extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.alarmResponseModalData !== this.props.alarmResponseModalData && !this.zr) {
-      this.echartsInstance = this.echartsReactRef.getEchartsInstance();
-      this.zr = this.echartsInstance.getZr();
+      if (this.echartsReactRef) {
+        this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+        this.zr = this.echartsInstance.getZr();
 
-      this.zr.on('click', (...rest) => {
-        var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
-        var index = parseInt(xIndex);
+        this.zr.on('click', (...rest) => {
+          var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+          var index = parseInt(xIndex);
 
 
-        if (this.props.level === 1) {
-          // 点击师，显示企业
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              regionCode: this.props.codeList[index],
-              currentDivisionName: this.props.alarmResponseModalData.x[index]
-            }
-          })
-        }
-        if (this.props.level === 2) {
-          // 点击企业，显示排口
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              entCode: this.props.codeList[index],
-              currentEntName: this.props.alarmResponseModalData.x[index]
-            }
-          })
-        }
-        if (this.props.level < 3) {
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              level: this.props.level + 1
-            }
-          })
-          this.setState({ showBack: true, dataIndex: index })
-          this.props.chartClick();
-        }
+          if (this.props.level === 1) {
+            // 点击师，显示企业
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                regionCode: this.props.codeList[index],
+                currentDivisionName: this.props.alarmResponseModalData.x[index]
+              }
+            })
+          }
+          if (this.props.level === 2) {
+            // 点击企业，显示排口
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                entCode: this.props.codeList[index],
+                currentEntName: this.props.alarmResponseModalData.x[index]
+              }
+            })
+          }
+          if (this.props.level < 3) {
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                level: this.props.level + 1
+              }
+            })
+            this.setState({ showBack: true, dataIndex: index })
+            this.props.chartClick();
+          }
 
-      })
+        })
+      }
     }
   }
 

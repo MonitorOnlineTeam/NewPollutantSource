@@ -43,48 +43,48 @@ class DrillDownTaskStatisticsModal extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.taskCountModalData !== this.props.taskCountModalData && !this.zr) {
-      this.echartsInstance = this.echartsReactRef.getEchartsInstance();
-      this.zr = this.echartsInstance.getZr();
+      if (this.echartsReactRef) {
+        this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+        this.zr = this.echartsInstance.getZr();
 
-      this.zr.on('click', (...rest) => {
-        var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
-        var index = parseInt(xIndex);
-        console.log('index=', index)
-
-
-        if (this.props.level === 1) {
-          // 点击师，显示企业
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              regionCode: this.props.codeList[index],
-              currentDivisionName: this.props.taskCountModalData.x[index]
-            }
-          })
-        }
-        if (this.props.level === 2) {
-          // 点击企业，显示排口
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              entCode: this.props.codeList[index],
-              currentEntName: this.props.taskCountModalData.x[index]
-            }
-          })
-        }
-        if (this.props.level < 3) {
-          this.props.dispatch({
-            type: "newHome/updateState",
-            payload: {
-              level: this.props.level + 1
-            }
-          })
-          this.setState({ showBack: true, dataIndex: index })
-          this.props.chartClick();
-        }
+        this.zr.on('click', (...rest) => {
+          var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+          var index = parseInt(xIndex);
+          console.log('index=', index)
 
 
-      })
+          if (this.props.level === 1) {
+            // 点击师，显示企业
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                regionCode: this.props.codeList[index],
+                currentDivisionName: this.props.taskCountModalData.x[index]
+              }
+            })
+          }
+          if (this.props.level === 2) {
+            // 点击企业，显示排口
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                entCode: this.props.codeList[index],
+                currentEntName: this.props.taskCountModalData.x[index]
+              }
+            })
+          }
+          if (this.props.level < 3) {
+            this.props.dispatch({
+              type: "newHome/updateState",
+              payload: {
+                level: this.props.level + 1
+              }
+            })
+            this.setState({ showBack: true, dataIndex: index })
+            this.props.chartClick();
+          }
+        })
+      }
     }
   }
 
