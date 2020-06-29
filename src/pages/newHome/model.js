@@ -148,6 +148,7 @@ export default Model.extend({
       const postData = {
         beginTime: state.startTime,
         endTime: state.endTime,
+        regionCode: state.regionCode,
         ...payload
       }
       const result = yield call(services.getMonitoringData, postData);
@@ -309,6 +310,7 @@ export default Model.extend({
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
       yield update({ regionCode, level: 2, LEVEL: 2 })
+      yield put({ type: "getMonitoringData" })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }
