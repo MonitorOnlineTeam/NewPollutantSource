@@ -274,11 +274,13 @@ class DrillDownAlarmResponseModel extends PureComponent {
   back = () => {
     const { dataIndex } = this.state;
     if (this.props.level === 2) {
+      this.props.form.setFieldsValue({ entName: undefined });
       // 点击企业，显示排口
       this.props.dispatch({
         type: "newHome/updateState",
         payload: {
-          regionCode: this.props.codeList[dataIndex]
+          regionCode: this.props.codeList[dataIndex],
+          entName: undefined
         }
       })
     }

@@ -211,11 +211,13 @@ class DrillDownRunModal extends PureComponent {
   back = () => {
     const { dataIndex } = this.state;
     if (this.props.level === 2) {
+      this.props.form.setFieldsValue({ entName: undefined });
       // 点击企业，显示排口
       this.props.dispatch({
         type: "newHome/updateState",
         payload: {
-          regionCode: this.props.paramsList[dataIndex]
+          regionCode: this.props.paramsList[dataIndex],
+          entName: undefined
         }
       })
     }
