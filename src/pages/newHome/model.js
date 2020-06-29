@@ -15,6 +15,7 @@ function getDrillDownParams(state) {
       postData.regionList = state.regionList;
       postData.regionCode = undefined;
       postData.entCode = undefined;
+      postData.entName = undefined;
       break;
     case 2:
       postData.regionList = undefined;

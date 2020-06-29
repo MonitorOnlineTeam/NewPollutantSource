@@ -221,11 +221,13 @@ class DrillDownTaskModal extends PureComponent {
   back = () => {
     const { dataIndex } = this.state;
     if (this.props.level === 2) {
+      this.props.form.setFieldsValue({ entName: undefined });
       // 点击企业，显示排口
       this.props.dispatch({
         type: "newHome/updateState",
         payload: {
-          regionCode: this.props.codeList[dataIndex]
+          regionCode: this.props.codeList[dataIndex],
+          entName: undefined
         }
       })
     }
@@ -298,25 +300,24 @@ class DrillDownTaskModal extends PureComponent {
         <Spin spinning={loading}>
           <Form>
             <Row>
-              {
-                level === 2 &&
-                <Col span={6}>
-                  <Form.Item {...formItemLayout} label="监控目标">
-                    {getFieldDecorator("entName", {
-                    })(
-                      <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
-                        this.props.dispatch({
-                          type: "newHome/updateState",
-                          payload: {
-                            entName: e.target.value
-                          }
-                        })
-                      }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              }
-
+              {/* {
+                level === 2 && */}
+              <Col span={6} style={{ display: level === 2 ? "block" : "none" }}>
+                <Form.Item {...formItemLayout} label="监控目标">
+                  {getFieldDecorator("entName", {
+                  })(
+                    <Input allowClear placeholder="请输入监控目标" onChange={(e) => {
+                      this.props.dispatch({
+                        type: "newHome/updateState",
+                        payload: {
+                          entName: e.target.value
+                        }
+                      })
+                    }} />
+                  )}
+                </Form.Item>
+              </Col>
+              {/* } */}
               <Col span={6}>
                 <Form.Item {...formItemLayout} label="任务分类" style={{ width: '100%' }}>
                   {getFieldDecorator("taskType", {
