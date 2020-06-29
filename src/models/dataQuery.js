@@ -179,7 +179,7 @@ export default Model.extend({
           title: '时间',
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          width: 150,
+          width: 160,
           // fixed: 'left',
           align: 'center',
         }];
@@ -206,7 +206,7 @@ export default Model.extend({
           title: '时间',
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          width: 150,
+          width: 160,
           align: 'center',
         }];
         columns = columns.concat(pollutantcols);
