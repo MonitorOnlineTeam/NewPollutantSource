@@ -131,6 +131,7 @@ export default Model.extend({
       const postData = {
         RunState: '',
         Status: [0, 1, 2, 3],
+        QCAInfo: "1"
       }
       let global = yield select(state => state.global);
       if (!global.configInfo) {
