@@ -60,25 +60,12 @@ class AddInstrument extends Component {
                 // disabled={this.state.dataSource[index].find(item => item.DGIMN == )}
                 options={this.state.entAndPointList}
                 onChange={(value, selectedOptions) => {
-                  // 不允许选择重复排口
-                  let newEntAndPointList = this.state.entAndPointList.map(item => {
-                    if (item.key === value[0]) {
-                      item.children = item.children.map(child => {
-                        if (child.key === value[1]) {
-                          return {
-                            disabled: true,
-                            ...child
-                          }
-                        }
-                        return child;
-                      })
-                    }
-                    return item;
-                  })
-                  this.setState({
-                    entAndPointList: newEntAndPointList
-                  })
-                  this.changeDataSource(value[1], index, 'DGIMN')
+                  const dataSource = [...this.state.dataSource];
+                  dataSource[index]['DGIMN'] = value[1];
+                  dataSource[index]['DGIMNArr'] = value;
+                  this.setState({ dataSource }, () => {
+                    this.handleCascaderDisable(this.state.entAndPointList)
+                  });
                 }}
                 placeholder="请选择排口"
               />,
@@ -188,6 +175,7 @@ class AddInstrument extends Component {
     };
     this._SELF_ = {
       id: props.match.params.id,
+      QCAMN: props.match.params.QCAMN,
       MNHallList: [1, 2, 3, 4], // 排口通道
       title: props.match.params.id ? '编辑质控仪' : '添加质控仪',
       n2Code: '065', // 氮气code
@@ -207,7 +195,24 @@ class AddInstrument extends Component {
   componentDidMount() {
     const { n2Code } = this._SELF_;
     // 获取企业及排口
-    this.props.dispatch({ type: 'qualityControl/getEntAndPointList' })
+    this.props.dispatch({
+      type: 'qualityControl/getEntAndPointList',
+      payload: {
+        QCAInfo: this._SELF_.id ? "2" : "1",
+        QCAMN: this._SELF_.QCAMN
+      },
+      callback: (res) => {
+        // 获取编辑数据
+        if (this._SELF_.id) {
+          this.props.dispatch({
+            type: 'qualityControl/getQualityControlData',
+            payload: {
+              ID: this._SELF_.id,
+            },
+          })
+        }
+      }
+    })
     // 获取标气列表
     this.props.dispatch({
       type: 'qualityControl/getStandardGas',
@@ -235,30 +240,30 @@ class AddInstrument extends Component {
       },
     });
     // 获取编辑数据
-    if (this._SELF_.id) {
-      this.props.dispatch({
-        type: 'qualityControl/getQualityControlData',
-        payload: {
-          ID: this._SELF_.id,
-        },
+    // if (this._SELF_.id) {
+    //   this.props.dispatch({
+    //     type: 'qualityControl/getQualityControlData',
+    //     payload: {
+    //       ID: this._SELF_.id,
+    //     },
+    //   })
+    // } else {
+    const { dataSourceR } = this.state;
+    this.props.standardGasList.map(item => {
+      dataSourceR.push({
+        // key: `${index}${key}`,
+        key: Math.floor(Math.random() * 655321),
+        StandardGasCode: item.PollutantCode, // 标气code
+        ExpirationDate: undefined, // 过期时间
+        Concentration: undefined, // 气瓶浓度
+        unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
+        GasInitPower: undefined, // 标气初始压力
       })
-    } else {
-      const { dataSourceR } = this.state;
-      this.props.standardGasList.map(item => {
-        dataSourceR.push({
-          // key: `${index}${key}`,
-          key: Math.floor(Math.random() * 655321),
-          StandardGasCode: item.PollutantCode, // 标气code
-          ExpirationDate: undefined, // 过期时间
-          Concentration: undefined, // 气瓶浓度
-          unit: item.PollutantCode === 's01' ? '%' : 'mg/m3',
-          GasInitPower: undefined, // 标气初始压力
-        })
-      })
-      this.setState({
-        dataSourceR,
-      })
-    }
+    })
+    this.setState({
+      dataSourceR,
+    })
+    // }
 
     // 获取工作模式
     this.props.dispatch({
@@ -279,8 +284,12 @@ class AddInstrument extends Component {
     if (this.props.qualityControlTableData !== nextProps.qualityControlTableData) {
       this.setState({
         dataSource: nextProps.qualityControlTableData,
+      }, () => {
+        // 禁用选中项，不能选择相同排口
+        this.handleCascaderDisable(nextProps.entAndPointList)
       })
     }
+
     if (this.props.QCAGasRelation !== nextProps.QCAGasRelation) {
       this.setState({
         dataSourceR: nextProps.QCAGasRelation,
@@ -294,11 +303,25 @@ class AddInstrument extends Component {
         })
       }
     }
-    if (this.props.entAndPointList !== nextProps.entAndPointList) {
-      this.setState({
-        entAndPointList: nextProps.entAndPointList
-      })
-    }
+  }
+
+  // 禁用选中项，不能选择相同排口
+  handleCascaderDisable = (entAndPointList) => {
+    let tempEntAndPointList = entAndPointList;
+    tempEntAndPointList.map(item => {
+      if (this.state.dataSource.find(itm => itm.DGIMNArr && itm.DGIMNArr[0] === item.key)) {
+        item.children.map(child => {
+          if (this.state.dataSource.find(itm => itm.DGIMNArr && itm.DGIMNArr[1] === child.key)) {
+            child.disabled = true
+          } else {
+            child.disabled = false
+          }
+        })
+      }
+    })
+    this.setState({
+      entAndPointList: tempEntAndPointList
+    })
   }
 
   changeDataSource = (value, index, key) => {
@@ -872,11 +895,8 @@ class AddInstrument extends Component {
         </div>,
       };
     }
-    console.log('index==========', index)
-    console.log('dataSource------', dataSource)
     const scrollXWidth = columns.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
     this._SELF_.scrollXWidth = scrollXWidth;
-    console.log('scrollXWidth=', scrollXWidth)
     return <Table
       {...props}
       rowKey={record => record.key}

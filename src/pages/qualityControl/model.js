@@ -127,11 +127,11 @@ export default Model.extend({
   },
   effects: {
     // 获取企业及排口
-    *getEntAndPointList({ payload }, { call, update, select }) {
+    *getEntAndPointList({ payload, callback }, { call, update, select }) {
       const postData = {
         RunState: '',
         Status: [0, 1, 2, 3],
-        QCAInfo: "1"
+        ...payload
       }
       let global = yield select(state => state.global);
       if (!global.configInfo) {
@@ -147,6 +147,7 @@ export default Model.extend({
         yield update({
           entAndPointList: result.Datas,
         })
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message)
       }

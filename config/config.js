@@ -1234,7 +1234,7 @@ export default {
                     // 质控仪 - 编辑
                     {
                       name: 'instrumentEdit',
-                      path: '/qualityControl/qcaManager/instrumentManage/edit/:id',
+                      path: '/qualityControl/qcaManager/instrumentManage/edit/:id/:QCAMN',
                       component: './qualityControl/instrumentManage/AddInstrument',
                     },
                     // 质控仪 - 详情
