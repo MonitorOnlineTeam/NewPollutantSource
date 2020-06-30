@@ -77,6 +77,7 @@ class TaskStatistics extends PureComponent {
       yAxis: [
         {
           type: 'value',
+          name: "（次）",
           splitLine: {
             show: true,
             lineStyle: {
@@ -97,7 +98,7 @@ class TaskStatistics extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${params.value}次`
+                return `${params.value}`
               }
             }
           },

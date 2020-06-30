@@ -70,7 +70,7 @@ class AlarmResponse extends PureComponent {
         }
       },
       grid: {
-        top: 20,
+        top: 40,
         left: '3%',
         right: '3%',
         bottom: '6%',
@@ -82,6 +82,7 @@ class AlarmResponse extends PureComponent {
       },
       yAxis: {
         type: 'value',
+        name: "（次）",
         splitLine: {
           show: true,
           lineStyle: {
@@ -105,7 +106,7 @@ class AlarmResponse extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${params.value}次`
+                return `${params.value}`
               }
             }
           },
