@@ -81,6 +81,7 @@ class Index extends Component {
     this.state = {
     };
     this._SELF_ = {
+      isChangeDate: false,
       formItemLayout: {
         labelCol: {
           span: 6,
@@ -199,8 +200,8 @@ class Index extends Component {
               title={
                 <Form>
                   <Row gutter={16}>
-                    <Col span={4}></Col>
-                    <Col span={7}>
+                    {/* <Col span={4}></Col> */}
+                    <Col span={5}>
                       <Form.Item>
                         {getFieldDecorator('time', {
                           initialValue: defaultValue
@@ -211,11 +212,14 @@ class Index extends Component {
                           //   format="YYYY-MM-DD HH:mm:ss"
                           //   onChange={this.dateChange}
                           // />,
-                          <DatePicker showTime allowClear={false} placeholder="监控时间" onChange={this.dateChange} />
+                          <DatePicker showTime allowClear={false} placeholder="监控时间" onChange={(date, dataString) => {
+                            this._SELF_.isChangeDate = true;
+                            this.dateChange(date, dataString)
+                          }} />
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={7}>
+                    <Col span={9}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
                         {getFieldDecorator('DataTempletCode', {
                           initialValue: selectValues
@@ -229,13 +233,19 @@ class Index extends Component {
                       </Form.Item>
                     </Col>
                     <Col span={6} style={{ marginTop: 4 }}>
-                      <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+                      <Button type="primary" loading={loading} style={{ marginRight: 10 }} onClick={() => {
+                        let _payload = {}
+                        if (!this._SELF_.isChangeDate) {
+                          this.props.form.setFieldsValue({ time: moment().add(-1, "hour") })
+                          _payload.BeginTime = moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss')
+                        }
                         this.props.dispatch({
                           type: 'qualityControl/updateState',
                           payload: {
                             statusRecordForm: {
                               ...this.props.statusRecordForm,
-                              BeginTime: moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss'),
+                              ..._payload
+                              // BeginTime: moment().add(-1, "hour").format('YYYY-MM-DD HH:mm:ss'),
                             }
                           }
                         })
@@ -252,7 +262,7 @@ class Index extends Component {
                 dataSource={QCAStatusList}
                 columns={columns}
                 loading={loading}
-           //     scroll={{ y: 'calc(100vh - 450px)' }}
+                //     scroll={{ y: 'calc(100vh - 450px)' }}
                 pagination={{
                   showSizeChanger: true,
                   showQuickJumper: true,

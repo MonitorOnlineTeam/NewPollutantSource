@@ -97,6 +97,7 @@ class index extends Component {
       defaultTime: moment().add(-1, "hour"),
     };
     this._SELF_ = {
+      isChangeDate: false,
       formItemLayout: {
         labelCol: {
           span: 6,
@@ -122,6 +123,7 @@ class index extends Component {
       payload: {
         paramsRecordForm: {
           ...this.props.paramsRecordForm,
+          pageSize,
           current,
         },
       },
@@ -138,7 +140,11 @@ class index extends Component {
     this.setState({
       defaultTime: moment().add(-1, "hour"),
     })
-    this.props.form.setFieldsValue({ BeginTime: moment().add(-1, "hour") })
+    let _payload = {};
+    if (!this._SELF_.isChangeDate) {
+      this.props.form.setFieldsValue({ BeginTime: moment().add(-1, "hour") })
+      _payload.BeginTime = { value: moment().add(-1, "hour") }
+    }
     if (showType === 'data') {
       // 查询表格数据
       this.props.dispatch({
@@ -146,7 +152,7 @@ class index extends Component {
         payload: {
           paramsRecordForm: {
             ...this.props.paramsRecordForm,
-            BeginTime: { value: moment().add(-1, "hour") },
+            ..._payload,
             current: 1,
           },
         },
@@ -241,6 +247,24 @@ class index extends Component {
     };
   }
 
+  // 分页页数change
+  onShowSizeChange = (current, pageSize) => {
+    this.props.dispatch({
+      type: 'qualityControl/updateState',
+      payload: {
+        paramsRecordForm: {
+          ...this.props.paramsRecordForm,
+          pageSize,
+          current: 1,
+        },
+      },
+    });
+    setTimeout(() => {
+      // 获取表格数据
+      this.getTableData();
+    }, 0);
+  }
+
   render() {
     const { form: { getFieldDecorator }, paramsRecordForm, paramsTableData, loading, paramsList } = this.props;
     const { formItemLayout } = this._SELF_;
@@ -261,19 +285,22 @@ class index extends Component {
             <Card className="contentContainer"
               title={
                 <Form>
+                  {/* <Row gutter={16}> */}
                   <Row gutter={16}>
-                    <Col span={2}></Col>
-                    <Col span={9}>
+                    {/* <Col span={2}></Col> */}
+                    <Col span={5}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
                         {getFieldDecorator('BeginTime', {
                           initialValue: defaultTime,
                         })(
                           // <RangePicker allowClear={false} format={"YYYY-MM-DD HH:mm:ss"} />,
-                          <DatePicker showTime allowClear={false} placeholder="监控时间" format={"YYYY-MM-DD HH:mm:ss"} />
+                          <DatePicker showTime allowClear={false} placeholder="监控时间" format={"YYYY-MM-DD HH:mm:ss"} onChange={(date) => {
+                            this._SELF_.isChangeDate = true;
+                          }} />
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={7}>
+                    <Col span={9}>
                       <Form.Item style={{ width: '100%', marginBottom: 0 }}>
                         {getFieldDecorator('DataTempletCode')(
                           <Select mode="multiple" allowClear placeholder="请选择参数">
@@ -295,7 +322,7 @@ class index extends Component {
                       </Form.Item>
                     </Col> */}
                     <Col span={6} style={{ marginTop: 4 }}>
-                      <Button type="primary" style={{ marginRight: 10 }} onClick={this.onSearch}>查询</Button>
+                      <Button type="primary" loading={loading} style={{ marginRight: 10 }} onClick={this.onSearch}>查询</Button>
                       <Radio.Group value={showType} onChange={e => {
                         this.setState({
                           showType: e.target.value,
@@ -315,9 +342,10 @@ class index extends Component {
                   dataSource={paramsTableData}
                   columns={columns}
                   loading={loading}
-             //     scroll={{ y: 'calc(100vh - 410px)' }}
+                  //     scroll={{ y: 'calc(100vh - 410px)' }}
                   pagination={{
-                    // showSizeChanger: true,
+                    showSizeChanger: true,
+                    onShowSizeChange: this.onShowSizeChange,
                     showQuickJumper: true,
                     pageSize: paramsRecordForm.pageSize,
                     current: paramsRecordForm.current,
