@@ -27,11 +27,18 @@ class Operations extends PureComponent {
 
       }
     })
-  }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return true;
-  // }
+    this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+    this.zr = this.echartsInstance.getZr();
+
+    this.zr.on('click', (...rest) => {
+      var indexArr = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+      var index = indexArr[1];
+      dataIndex = index;
+      this.getTrippingOperationAnalysis(index)
+    });
+
+  }
 
   option = () => {
     const { operationAnalysis: {
@@ -47,8 +54,8 @@ class Operations extends PureComponent {
         }
       },
       grid: {
-        left: '-16%',
-        top: "6%",
+        left: '-18%',
+        top: "4%",
         right: '4%',
         bottom: '-6%',
         containLabel: true
@@ -70,7 +77,7 @@ class Operations extends PureComponent {
         axisLabel: {
           fontSize: 14,
           align: "left",
-          margin: 70,
+          margin: 86,
         },
         data: ['配合检查', '配合对比', '手工对比', '校验测试', '维修维护', '校准', '巡检',]
       },
@@ -80,10 +87,11 @@ class Operations extends PureComponent {
           type: 'bar',
           stack: '总量',
           color: "#67a2ef",
+          // barMinHeight: 10,
           barWidth: "24px",
           label: {
             show: true,
-            position: 'insideRight',
+            position: 'left',
             formatter: (params) => {
               if (params.value === 0) { return "" } else { return params.value }
             }
@@ -95,10 +103,11 @@ class Operations extends PureComponent {
           type: 'bar',
           stack: '总量',
           color: "#0edaad",
+          // barMinHeight: 10,
           barWidth: "24px",
           label: {
             show: true,
-            position: 'insideRight',
+            position: 'right',
             formatter: (params) => {
               if (params.value === 0) { return "" } else { return params.value }
             }
@@ -148,12 +157,15 @@ class Operations extends PureComponent {
           </div>
           <ReactEcharts
             option={this.option()}
-            onEvents={{
-              click: (params) => {
-                dataIndex = params.dataIndex
-                this.getTrippingOperationAnalysis(params.dataIndex)
-              }
+            ref={(e) => {
+              this.echartsReactRef = e;
             }}
+            // onEvents={{
+            //   click: (params) => {
+            //     dataIndex = params.dataIndex
+            //     this.getTrippingOperationAnalysis(params.dataIndex)
+            //   }
+            // }}
             style={{ height: '260px', width: '100%' }}
             theme="my_theme"
           />

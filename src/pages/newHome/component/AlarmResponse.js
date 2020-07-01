@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-05-27 10:18:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 14:47:52
+ * @Last Modified time: 2020-06-28 16:10:28
  * @Description: 大屏 - 报警响应情况组件
  */
 import React, { PureComponent } from 'react'
@@ -35,6 +35,18 @@ class AlarmResponse extends PureComponent {
 
       }
     })
+
+    this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+    this.zr = this.echartsInstance.getZr();
+
+    this.zr.on('click', (...rest) => {
+      var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
+      var index = parseInt(xIndex);
+      // console.log(index);
+      // console.log('App:onClickChart', rest);
+      this._SELF_.dataIndex = index
+      this.getTrippingAlarmResponse(index)
+    });
   }
 
   barOptions = () => {
@@ -45,12 +57,20 @@ class AlarmResponse extends PureComponent {
       // color: ["#fd6c6c", "#fd6c6c", "#f6b322", "#f6b322"],
       tooltip: {
         trigger: 'axis',
-        // axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //   type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        // }
+        formatter: (params) => {
+          if (params[0].dataIndex === 0 || params[0].dataIndex === 1) {
+            return `${params[0].marker}异常报警响应：${params[0].value}次`
+          }
+          if (params[0].dataIndex === 2 || params[0].dataIndex === 3) {
+            return `${params[0].marker}超标报警核实：${params[0].value}次`
+          }
+        },
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
       },
       grid: {
-        top: 20,
+        top: 40,
         left: '3%',
         right: '3%',
         bottom: '6%',
@@ -62,6 +82,7 @@ class AlarmResponse extends PureComponent {
       },
       yAxis: {
         type: 'value',
+        name: "（次）",
         splitLine: {
           show: true,
           lineStyle: {
@@ -85,7 +106,7 @@ class AlarmResponse extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${params.value}次`
+                return `${params.value}`
               }
             }
           },
@@ -214,23 +235,26 @@ class AlarmResponse extends PureComponent {
         {
           <div className={styles["warningInfo"]}>
             <i style={{ background: "#ffd065" }}></i>
-            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${execptionYearRate}%`) : ""}</span>
+            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${Math.abs(execptionYearRate)}%`) : ""}</span>
           </div>
         }
         {
           <div className={styles["warningInfo"]}>
             <i></i>
-            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${taskYearRate}%`) : ""}</span>
+            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${Math.abs(taskYearRate)}%`) : ""}</span>
           </div>
         }
         <ReactEcharts
           option={this.barOptions()}
-          onEvents={{
-            click: (e) => {
-              this._SELF_.dataIndex = e.dataIndex;
-              this.getTrippingAlarmResponse(e.dataIndex)
-            }
+          ref={(e) => {
+            this.echartsReactRef = e;
           }}
+          // onEvents={{
+          //   click: (e) => {
+          //     this._SELF_.dataIndex = e.dataIndex;
+          //     this.getTrippingAlarmResponse(e.dataIndex)
+          //   }
+          // }}
           style={{ height: '180px', marginBottom: 20 }}
           className="echarts-for-echarts"
           theme="my_theme"

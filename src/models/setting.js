@@ -31,7 +31,6 @@ const SettingModel = {
           setting[key] = value === '1' ? true : value;
         }
       });
-      console.log('payload=', payload)
       if (payload) {
         setting.title = payload.SystemName
       }

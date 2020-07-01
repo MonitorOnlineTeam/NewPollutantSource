@@ -31,7 +31,7 @@ class InstrumentManage extends Component {
               router.push(`${this.props.match.path}/add`);
             }}
             onEdit={(record, key) => {
-              router.push(`${this.props.match.path}/edit/${key}`);
+              router.push(`${this.props.match.path}/edit/${key}/${record["dbo.T_Bas_QCAnalyzerInfo.QCAMN"]}`);
             }}
             onView={(record, key) => {
               router.push(`${this.props.match.path}/view/${key}`);

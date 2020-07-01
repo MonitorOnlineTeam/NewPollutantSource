@@ -15,6 +15,7 @@ function getDrillDownParams(state) {
       postData.regionList = state.regionList;
       postData.regionCode = undefined;
       postData.entCode = undefined;
+      postData.entName = undefined;
       break;
     case 2:
       postData.regionList = undefined;
@@ -95,7 +96,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         // yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
-        message.error(result.Message)
+        // message.error(result.Message)
       }
     },
     // 获取企业和监测点信息
@@ -147,6 +148,7 @@ export default Model.extend({
       const postData = {
         beginTime: state.startTime,
         endTime: state.endTime,
+        regionCode: state.regionCode,
         ...payload
       }
       const result = yield call(services.getMonitoringData, postData);
@@ -308,6 +310,7 @@ export default Model.extend({
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
       yield update({ regionCode, level: 2, LEVEL: 2 })
+      yield put({ type: "getMonitoringData" })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }

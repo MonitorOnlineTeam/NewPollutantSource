@@ -28,6 +28,16 @@ class TaskStatistics extends PureComponent {
 
       }
     })
+
+    this.echartsInstance = this.echartsReactRef.getEchartsInstance();
+    this.zr = this.echartsInstance.getZr();
+
+    this.zr.on('click', (...rest) => {
+      this.getTrippingTaskStatistics()
+    });
+
+
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -43,7 +53,10 @@ class TaskStatistics extends PureComponent {
       color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
-        formatter: '{b} : {c}' + "次"
+        formatter: '{b} : {c}' + "次",
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        },
       },
       grid: {
         left: '0',
@@ -64,6 +77,7 @@ class TaskStatistics extends PureComponent {
       yAxis: [
         {
           type: 'value',
+          name: "（次）",
           splitLine: {
             show: true,
             lineStyle: {
@@ -84,7 +98,7 @@ class TaskStatistics extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${params.value}次`
+                return `${params.value}`
               }
             }
           },
@@ -138,11 +152,14 @@ class TaskStatistics extends PureComponent {
         </div>
         <ReactEcharts
           option={this.option()}
-          onEvents={{
-            click: () => {
-              this.getTrippingTaskStatistics()
-            }
+          ref={(e) => {
+            this.echartsReactRef = e;
           }}
+          // onEvents={{
+          //   click: () => {
+          //     this.getTrippingTaskStatistics()
+          //   }
+          // }}
           style={{ height: '220px', width: '100%' }}
           theme="my_theme"
         />

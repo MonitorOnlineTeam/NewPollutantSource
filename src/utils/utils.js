@@ -85,9 +85,11 @@ export function formatPollutantPopover(value, additional) {
       );
       return (
         <Popover content={content}>
-          <span style={{ color: '#ff0000', cursor: 'pointer' }}>
-            {value || (value === 0 ? 0 : '-')}
-          </span>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#ff0000', cursor: 'pointer' }}>
+              {value || (value === 0 ? 0 : '-')}
+            </span>
+          </div>
         </Popover>
       );
     } else {
@@ -104,14 +106,16 @@ export function formatPollutantPopover(value, additional) {
       );
       return (
         <Popover content={content}>
-          <span style={{ color: '#F3AC00', cursor: 'pointer' }}>
-            {value || (value === 0 ? 0 : '-')}
-          </span>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#F3AC00', cursor: 'pointer' }}>
+              {value || (value === 0 ? 0 : '-')}
+            </span>
+          </div>
         </Popover>
       );
     }
   }
-  return value || (value === 0 ? 0 : '-');
+  return value ? <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div> : (value === 0 ? 0 : '-');
 }
 export function asc(a, b) {
   //数字类型
@@ -211,24 +215,22 @@ export const getDirLevel = (dir) => {
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
 
 //格式化数据类型
-export const GetDataType=(dataType)=>{
-  let res=dataType;
-  if(dataType)
-  {
-    switch(dataType)
-    {
-        case "realtime":
-            res="RealTimeData";
-            break;
-        case "minute":
-            res="MinuteData";
-            break;
-        case "hour":
-            res="HourData";
-            break;
-        case "day":
-            res="DayData";
-            break;   
+export const GetDataType = (dataType) => {
+  let res = dataType;
+  if (dataType) {
+    switch (dataType) {
+      case "realtime":
+        res = "RealTimeData";
+        break;
+      case "minute":
+        res = "MinuteData";
+        break;
+      case "hour":
+        res = "HourData";
+        break;
+      case "day":
+        res = "DayData";
+        break;
     }
   }
   return res;
