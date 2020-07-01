@@ -195,14 +195,6 @@ class Dispatchreport extends Component {
         debugger;
        if (date && date.length > 0 && date[0]) {
         this.setState({ rangeDate: date });
-        let {
-          queryparams,
-        } = this.props;
-        queryparams = {
-            ...queryparams,
-            BTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-            ETime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-        }
        } else {
            this.setState({ rangeDate: [undefined, undefined] });
        }
@@ -243,24 +235,21 @@ class Dispatchreport extends Component {
             dgimn,
         })
         const {
-            dispatch,
+            dispatch, queryparams,
         } = this.props;
-        let { queryparams } = this.props;
         const { rangeDate, selectvalue, UserName } = this.state;
-        debugger;
-        queryparams = {
-            ...queryparams,
-            DGIMN: dgimn,
-            BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
-            ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
-            CommandDispatchType: selectvalue,
-            UserID: UserName,
-            pageIndex: 1,
-        }
         dispatch({
             type: 'operations/updateState',
             payload: {
-                queryparams,
+                queryparams: {
+                    ...queryparams,
+                    DGIMN: dgimn,
+                    BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
+                    ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
+                    CommandDispatchType: selectvalue,
+                    UserID: UserName,
+                    pageIndex: 1,
+                },
             },
         })
          dispatch({
@@ -272,18 +261,16 @@ class Dispatchreport extends Component {
     /** 分页 */
     onShowSizeChange = (pageIndex, pageSize) => {
         const {
-            dispatch,
+            dispatch, queryparams,
         } = this.props;
-        let queryparams = this.props;
-        queryparams = {
-            ...queryparams,
-            pageIndex,
-            pageSize,
-        }
         dispatch({
             type: 'operations/updateState',
             payload: {
-                queryparams,
+                queryparams: {
+                    ...queryparams,
+                    pageIndex,
+                    pageSize,
+                },
             },
         })
          dispatch({
@@ -294,18 +281,16 @@ class Dispatchreport extends Component {
 
     onChange = (pageIndex, pageSize) => {
         const {
-            dispatch,
+            dispatch, queryparams,
         } = this.props;
-        let queryparams = this.props;
-        queryparams = {
-            ...queryparams,
-            pageIndex,
-            pageSize,
-        }
         dispatch({
             type: 'operations/updateState',
             payload: {
-                queryparams,
+                queryparams: {
+                    ...queryparams,
+                    pageIndex,
+                    pageSize,
+                },
             },
         })
          dispatch({
@@ -344,22 +329,22 @@ class Dispatchreport extends Component {
     /** 查询按钮 */
     Search=() => {
         const {
-            dispatch,
+            dispatch, queryparams,
         } = this.props;
-        let { queryparams } = this.props;
         const { rangeDate, dgimn, selectvalue, UserName } = this.state;
-        queryparams = {
-            ...queryparams,
-            DGIMN: dgimn,
-            BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
-            ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
-            CommandDispatchType: selectvalue,
-            UserID: UserName,
-        }
+
         dispatch({
             type: 'operations/updateState',
             payload: {
-                queryparams,
+                queryparams: {
+                    ...queryparams,
+                    DGIMN: dgimn,
+                    BTime: rangeDate.length > 0 && rangeDate[0] != undefined ? rangeDate[0].format('YYYY-MM-DD HH:mm:ss') : '',
+                    ETime: rangeDate.length > 0 && rangeDate[1] != undefined ? rangeDate[1].format('YYYY-MM-DD HH:mm:ss') : '',
+                    CommandDispatchType: selectvalue,
+                    UserID: UserName,
+                    pageIndex: 1,
+                },
             },
         })
          dispatch({

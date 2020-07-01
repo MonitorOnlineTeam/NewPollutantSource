@@ -5,8 +5,9 @@
  * @LastEditTime: 2019-09-18 11:12:33
  * @Description: 任务详情、运维单详情
  */
-//任务详情、运维单详情
+// 任务详情、运维单详情
 import { message } from 'antd';
+import moment, { months } from 'moment';
 import {
     GetTaskRecord, GetJzRecord,
     GetRecordType, GetConsumablesReplaceRecord,
@@ -14,43 +15,57 @@ import {
     GetDeviceExceptionRecord, GetStopCemsRecord,
     GetBdTestRecord, RevokeTask,
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
-    GetOperationLogList,GetFailureHoursRecord
-    , GetOperationFormDetail,GetTaskDitailsAttachment,
+    GetOperationLogList, GetFailureHoursRecord,
+     GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
-import moment, { months } from 'moment';
 
 export default Model.extend({
     namespace: 'task',
     state: {
-        TaskRecord: null,//任务详情
-        JzRecord: null,//校准记录
-        PatrolRecord: null,//日常例行运维记录
-        StopCemsRecord: null,//停机记录
-        RepairRecord: null,//维修记录
-        ExceptionRecord: null,//设备异常记录
-        BdRecord: null,//比对监测记录
-        ConsumablesReplaceRecord: null,//易耗品更换记录
-        FailureHoursRecord:null,//故障小时数记录表
-        StandardGasRepalceRecord: null,//标气更换记录
-        MaintainRecordDetailRecord: null,//保养项更换记录
-        SparePartReplaceRecord: null,//备品更换记录
-        RecordTypes: [],//运维表单类型
+        TaskRecord: null, // 任务详情
+        JzRecord: null, // 校准记录
+        PatrolRecord: null, // 日常例行运维记录
+        StopCemsRecord: null, // 停机记录
+        RepairRecord: null, // 维修记录
+        ExceptionRecord: null, // 设备异常记录
+        BdRecord: null, // 比对监测记录
+        ConsumablesReplaceRecord: null, // 易耗品更换记录
+        FailureHoursRecord: null, // 故障小时数记录表
+        StandardGasRepalceRecord: null, // 标气更换记录
+        MaintainRecordDetailRecord: null, // 保养项更换记录
+        SparePartReplaceRecord: null, // 备品更换记录
+        RecordTypes: [], // 运维表单类型
         AlarmResponseList: [],
-        operationLogList: [],    //运维记录列表
-        //运维记录参数
+        operationLogList: [], // 运维记录列表
+        // 运维记录参数
         operationRzWhere: {
-            beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             DGIMN: '',
             pageIndex: 1,
             pageSize: 10,
         },
-        //手机任务详情
+        // 手机任务详情
         OperationFormDetail: [],
-        //手机任务详情(梳理记录附件)
-        TaskDitailsAttachmentList:[],
+        // 手机任务详情(梳理记录附件)
+        TaskDitailsAttachmentList: [],
+        datatable: [],
+        gettasklistqueryparams: {
+            DGIMN: '',
+            TaskCode: '',
+            ExceptionType: '',
+            TaskFrom: '',
+            TaskStatus: '',
+            OperationsUserId: '',
+            TaskType: '',
+            CompleteTime: '',
+            CreateTime: '',
+            pageIndex: 1,
+            pageSize: 20,
+            total: 0,
+        },
     },
 
     effects: {
@@ -65,7 +80,7 @@ export default Model.extend({
                         type: 'GetAlarmResponseList',
                         payload: {
                             DGIMN: payload.DGIMN,
-                            TaskID: payload.TaskID
+                            TaskID: payload.TaskID,
                         },
                     });
                     yield take('GetAlarmResponseList/@@end');
@@ -73,16 +88,16 @@ export default Model.extend({
                     if (AlarmResponseList.length > 0) {
                         taskInfo.Datas[0].AlarmList = AlarmResponseList;
                         yield update({
-                            TaskRecord: taskInfo
+                            TaskRecord: taskInfo,
                         });
                     } else {
                         yield update({
-                            TaskRecord: taskInfo
+                            TaskRecord: taskInfo,
                         });
                     }
                 } else {
                     yield update({
-                        TaskRecord: []
+                        TaskRecord: [],
                     });
                 }
             }
@@ -95,7 +110,7 @@ export default Model.extend({
             const taskInfo = yield call(GetOperationFormDetail, payload);
             if (taskInfo.IsSuccess) {
                 yield update({
-                    OperationFormDetail: taskInfo.Datas
+                    OperationFormDetail: taskInfo.Datas,
                 });
             }
         },
@@ -111,7 +126,7 @@ export default Model.extend({
                 }
             } else {
                 yield update({
-                    JzRecord: null
+                    JzRecord: null,
                 });
             }
         },
@@ -128,7 +143,7 @@ export default Model.extend({
         },
         // 易耗品更换记录
         * GetConsumablesReplaceRecord({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -149,7 +164,7 @@ export default Model.extend({
 
         // 故障小时数记录表
         * GetFailureHoursRecord({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -170,7 +185,7 @@ export default Model.extend({
 
         // 备品更换记录
         * GetSparePartReplaceRecord({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -191,7 +206,7 @@ export default Model.extend({
 
         // 标气更换记录
         * GetStandardGasReplaceRecord({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -212,7 +227,7 @@ export default Model.extend({
 
         // 标气更换记录
         * MaintainRecordDetail({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -233,7 +248,7 @@ export default Model.extend({
 
         // 日常巡检记录
         * GetPatrolRecord({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -252,7 +267,7 @@ export default Model.extend({
             }
         },
 
-        //停机记录
+        // 停机记录
         * GetStopCemsRecord({
             payload,
         }, { call, update }) {
@@ -263,12 +278,12 @@ export default Model.extend({
                 }
             } else {
                 yield update({
-                    StopCemsRecord: null
+                    StopCemsRecord: null,
                 });
             }
         },
 
-        //维修记录
+        // 维修记录
         * GetRepairRecord({
             payload,
         }, { call, update }) {
@@ -280,7 +295,7 @@ export default Model.extend({
             }
         },
 
-        //数据异常记录
+        // 数据异常记录
         * GetDeviceExceptionRecord({
             payload,
         }, { call, update }) {
@@ -291,7 +306,7 @@ export default Model.extend({
                 }
             } else {
                 yield update({
-                    ExceptionRecord: null
+                    ExceptionRecord: null,
                 });
             }
         },
@@ -307,7 +322,7 @@ export default Model.extend({
                 }
             } else {
                 yield update({
-                    BdRecord: null
+                    BdRecord: null,
                 });
             }
         },
@@ -333,7 +348,7 @@ export default Model.extend({
             payload.callback(DataInfo.Datas);
         },
 
-        //获取报警响应列表
+        // 获取报警响应列表
         * GetAlarmResponseList({
             payload,
         }, { call, update }) {
@@ -344,12 +359,27 @@ export default Model.extend({
                 } else {
                     yield update({ AlarmResponseList: [] });
                 }
-
             }
         },
+        /** 获取任务列表 */
+        * GetOperationTaskList({
+            payload,
+          }, { call, update, select }) {
+            const { gettasklistqueryparams } = yield select(_ => _.task);
+            const result = yield call(GetOperationTaskList, gettasklistqueryparams);
+            if (result.IsSuccess) {
+              yield update({
+                gettasklistqueryparams: {
+                  ...gettasklistqueryparams,
+                  total: result.Total,
+                },
+               datatable: result.Datas,
+              })
+            }
+          },
         // 获取运维记录
         * GetOperationLogList({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -365,7 +395,7 @@ export default Model.extend({
         },
         // 获取任务详情处理记录附件信息
         * GetTaskDitailsAttachment({
-            payload
+            payload,
         }, {
             call,
             update,
@@ -378,6 +408,6 @@ export default Model.extend({
                 });
             }
         },
-        
+
     },
 });
