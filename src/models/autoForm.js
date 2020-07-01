@@ -11,7 +11,7 @@ import moment from 'moment'
 import * as services from '@/services/autoformapi';
 
 function getQueryParams(state, payload) {
-  let group = [];
+  const group = [];
   const { configId } = payload;
   const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
   if (searchForm) {
@@ -26,11 +26,11 @@ function getQueryParams(state, payload) {
           groupItem = [{
             Key: key,
             Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
-            Where: "$gte"
+            Where: '$gte',
           }, {
             Key: key,
             Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
-            Where: "$lte"
+            Where: '$lte',
           }]
           group.push(...groupItem);
         } else {
@@ -52,8 +52,8 @@ function getQueryParams(state, payload) {
     }
   }
 
-  let postData = {
-    configId: configId,
+  const postData = {
+    configId,
     pageIndex: searchForm.current || 1,
     pageSize: searchForm.pageSize || 20,
     ...payload.otherParams,
@@ -176,7 +176,7 @@ export default Model.extend({
       //   }],
       // }) : '';
 
-      let postData = getQueryParams(state, payload);
+      const postData = getQueryParams(state, payload);
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
@@ -251,7 +251,7 @@ export default Model.extend({
             configDataItemName: item.FOREIGN_DF_NAME,
             configDataItemValue: item.FOREIGN_DF_ID,
             dateFormat: item.DF_DATEFORMAT,
-            ...item
+            ...item,
           };
         });
         // 添加
@@ -407,7 +407,7 @@ export default Model.extend({
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,
-          FullFieldName: item.FullFieldName
+          FullFieldName: item.FullFieldName,
         }));
         yield update({
           detailConfigInfo: {
@@ -433,7 +433,7 @@ export default Model.extend({
 
     // 获取联动
     * getAttachmentList({ payload }, { call, update }) {
-      if (payload.FileUuid && payload.FileUuid !== "null") {
+      if (payload.FileUuid && payload.FileUuid !== 'null') {
         const result = yield call(services.getAttachmentList, { ...payload });
         if (result.IsSuccess) {
           let fileList = [];
@@ -441,7 +441,7 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: `${config.uploadHost}${item.Url}`,
+            url: `${item.Url}`,
           }))
           yield update({
             fileList,
@@ -449,10 +449,9 @@ export default Model.extend({
         }
       } else {
         yield update({
-          fileList: []
+          fileList: [],
         })
       }
-
     },
 
     // 文件上传
@@ -467,8 +466,8 @@ export default Model.extend({
 
     // 导出报表
     * exportDataExcel({ payload }, { call, select, update }) {
-      let state = yield select(state => state.autoForm);
-      let postData = getQueryParams(state, payload);
+      const state = yield select(state => state.autoForm);
+      const postData = getQueryParams(state, payload);
       const result = yield call(services.exportDataExcel, { ...postData, ...payload });
       if (result.IsSuccess) {
         console.log('suc=', result)
