@@ -76,8 +76,8 @@ class RunAndAnalysis extends PureComponent {
     // let networkeRate = rateData.NetworkeRate === undefined ? 0 : (parseFloat(rateData.NetworkeRate) * 100).toFixed(0);
     // let runningRate = rateData.RunningRate === undefined ? 0 : (parseFloat(rateData.RunningRate) * 100).toFixed(0);
     // let transmissionEffectiveRate = rateData.TransmissionEffectiveRate === undefined ? 0 : (parseFloat(rateData.TransmissionEffectiveRate) * 100).toFixed(0);
-    const { runAndAnalysisData: { transmissionEfficiencyRate, overDataRate, operationRate, exceptionRate } } = this.props;
-    let AccuracyRate = 100;
+    const { runAndAnalysisData: { transmissionEfficiencyRate, overDataRate, operationRate, exceptionRate, AccuracyRate } } = this.props;
+    // let AccuracyRate = 100;
     let color = [];
     let seriesName = '';
     let seriesData = [];

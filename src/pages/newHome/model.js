@@ -148,6 +148,7 @@ export default Model.extend({
       const postData = {
         beginTime: state.startTime,
         endTime: state.endTime,
+        regionCode: state.regionCode,
         ...payload
       }
       const result = yield call(services.getMonitoringData, postData);
@@ -194,7 +195,7 @@ export default Model.extend({
       const state = yield select(state => state.newHome)
       const postData = {
         beginTime: state.startTime,
-        endTime: state.endTime,
+        endTime: moment(state.endTime).endOf("month").format("YYYY-MM-DD HH:mm:ss"),
         regionCode: state.regionCode,
         ...payload
       }
@@ -309,6 +310,7 @@ export default Model.extend({
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
       yield update({ regionCode, level: 2, LEVEL: 2 })
+      yield put({ type: "getMonitoringData" })
       yield put({
         type: "getRunAndAnalysisData",
         // payload: { regionCode }
@@ -489,6 +491,7 @@ export default Model.extend({
       yield update({ drillDownLoading: true })
       const state = yield select(state => state.newHome)
       let postData = getDrillDownParams(state)
+      postData.endTime = moment(postData.endTime).endOf("month").format("YYYY-MM-DD HH:mm:ss");
       const result = yield call(services.getTrippingTaskStatistics, postData);
       if (result.IsSuccess) {
         let insidePlan = [], unInsidePlan = [], x = [], codeList = [], completeTaskCount = [];

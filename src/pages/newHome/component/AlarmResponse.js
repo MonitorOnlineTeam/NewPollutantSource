@@ -18,6 +18,8 @@ import DrillDownAlarmResponseModel from "./DrillDownAlarmResponseModel"
   alarmResponseData: newHome.alarmResponseData,
   drillDownAlarmResponseVisible: newHome.drillDownAlarmResponseVisible,
   modelTitle: newHome.modelTitle,
+  startTime: newHome.startTime,
+
 }))
 class AlarmResponse extends PureComponent {
   constructor(props) {
@@ -51,8 +53,8 @@ class AlarmResponse extends PureComponent {
 
   barOptions = () => {
     // color: ["#67a2ef", "#0edaad", "#fd6c6c", "f6b322"],
-    const { alarmResponseData: { taskCount, taskYearCount, execptionCount, execptionYearCount } } = this.props;
-    const month = moment().get('month');
+    const { month, alarmResponseData: { taskCount, taskYearCount, execptionCount, execptionYearCount } } = this.props;
+    // const month = moment(startTime).get('month');
     return {
       // color: ["#fd6c6c", "#fd6c6c", "#f6b322", "#f6b322"],
       tooltip: {
@@ -70,7 +72,7 @@ class AlarmResponse extends PureComponent {
         }
       },
       grid: {
-        top: 20,
+        top: 40,
         left: '3%',
         right: '3%',
         bottom: '6%',
@@ -82,6 +84,7 @@ class AlarmResponse extends PureComponent {
       },
       yAxis: {
         type: 'value',
+        name: "（次）",
         splitLine: {
           show: true,
           lineStyle: {
@@ -105,7 +108,7 @@ class AlarmResponse extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return `${params.value}次`
+                return `${params.value}`
               }
             }
           },
@@ -223,9 +226,9 @@ class AlarmResponse extends PureComponent {
   }
 
   render() {
-    const { modelTitle, drillDownAlarmResponseVisible, alarmResponseData: { taskCount, taskYearCount, taskYearRate, execptionCount, execptionYearCount, execptionYearRate } } = this.props;
+    const { modelTitle, drillDownAlarmResponseVisible, month, alarmResponseData: { taskCount, taskYearCount, taskYearRate, execptionCount, execptionYearCount, execptionYearRate } } = this.props;
     const { title } = this.state;
-    const month = moment().get('month') + 1;
+    // const month = moment(startTime).get('month') + 1;
     return (
       <div className={styles["group-item"]}>
         <div className={styles["item-title"]} style={{ marginBottom: 20 }}>
@@ -234,13 +237,13 @@ class AlarmResponse extends PureComponent {
         {
           <div className={styles["warningInfo"]}>
             <i style={{ background: "#ffd065" }}></i>
-            <span>{`${month}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${Math.abs(execptionYearRate)}%`) : ""}</span>
+            <span>{`${month + 1}月异常报警响应${execptionCount}次`}{execptionYearRate !== 0 ? (`,环比${execptionYearRate > 0 ? "增长" : "减少"}${Math.abs(execptionYearRate)}%`) : ""}</span>
           </div>
         }
         {
           <div className={styles["warningInfo"]}>
             <i></i>
-            <span>{`${month}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${Math.abs(taskYearRate)}%`) : ""}</span>
+            <span>{`${month + 1}月超标报警核实${taskCount}次`}{taskYearRate !== 0 ? (`，环比${taskYearRate > 0 ? "增长" : "减少"}${Math.abs(taskYearRate)}%`) : ""}</span>
           </div>
         }
         <ReactEcharts

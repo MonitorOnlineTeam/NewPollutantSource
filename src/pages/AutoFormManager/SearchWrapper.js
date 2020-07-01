@@ -381,7 +381,7 @@ class SearchWrapper extends Component {
             this._renderFormItem()
           }
           {
-            searchConditions.length ? <div style={{ marginTop: 6, ...style }}>
+            searchConditions.length ? <div style={{ marginTop: 6, display: 'inline-block', ...style }}>
               <Button type="primary" onClick={() => {
                 // 重置分页并查询数据
                 this.props.dispatch({

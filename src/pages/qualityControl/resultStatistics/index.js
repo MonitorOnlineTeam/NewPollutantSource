@@ -118,7 +118,7 @@ class index extends Component {
         {
           name: '合格率',
           type: 'bar',
-          barWidth: '40%',
+          barMaxWidth: 60,
           label: {
             normal: {
               show: true,

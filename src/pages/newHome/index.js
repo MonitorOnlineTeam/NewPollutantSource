@@ -3,6 +3,8 @@ import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, 
 // import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
 import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
+import { getDirLevel } from "@/utils/utils"
+
 // import "animate.css";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import MapUI from './component/MapUI'
@@ -149,6 +151,7 @@ class NewHome extends PureComponent {
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
       selectValue: "", // 筛选
+      month: moment().get('month')
     };
 
   }
@@ -536,7 +539,11 @@ class NewHome extends PureComponent {
           this.props.dispatch({ type: "newHome/updateState", payload: { siteDetailsVisible: true } })
         }}>进入站房</Button>
         <p>
-          站点状态：<span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
+          站点状态：{
+            currentClickObj.outPutFlag === 1 ?
+              <span style={{ color: '#999999' }}>停运</span> :
+              <span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
+          }
         </p>
       </div>
       <div className={styles.desc}>
@@ -555,8 +562,12 @@ class NewHome extends PureComponent {
         <ul>
           {
             infoWindowData.list.map(item => {
-              return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
+              let title = `${item.label}：${item.value}`;
+              if (item.label === "风向") {
+                title = `${item.label}：${getDirLevel(item.value)}`;
+              }
+              return <Tooltip placement="topLeft" title={title}>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={title}>{title}</li>
               </Tooltip>
             })
           }
@@ -658,7 +669,7 @@ class NewHome extends PureComponent {
                   {/* 运行分析 */}
                   <RunAndAnalysis RegionCode={RegionCode} />
                   {/* 报警响应情况 */}
-                  <AlarmResponse RegionCode={RegionCode} />
+                  <AlarmResponse RegionCode={RegionCode} month={this.state.month} />
                 </div>
               </Spin>
             </Drawer>
@@ -724,6 +735,7 @@ class NewHome extends PureComponent {
                   }}>返回上级</Button>
                 }
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
+                  this.setState({ month: moment(date).get('month') })
                   this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), date.endOf("month").format("YYYY-MM-DD HH:mm:ss"));
                 }} />
                 <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
