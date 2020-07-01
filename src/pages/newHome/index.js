@@ -3,6 +3,8 @@ import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, 
 // import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
 import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
+import { getDirLevel } from "@/utils/utils"
+
 // import "animate.css";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import MapUI from './component/MapUI'
@@ -539,7 +541,7 @@ class NewHome extends PureComponent {
         <p>
           站点状态：{
             currentClickObj.outPutFlag === 1 ?
-              <span style={{ color: '#999999'}}>停运</span> :
+              <span style={{ color: '#999999' }}>停运</span> :
               <span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
           }
         </p>
@@ -560,8 +562,12 @@ class NewHome extends PureComponent {
         <ul>
           {
             infoWindowData.list.map(item => {
-              return <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={`${item.label}：${item.value}`}>{item.label}：{item.value}</li>
+              let title = `${item.label}：${item.value}`;
+              if (item.label === "风向") {
+                title = `${item.label}：${getDirLevel(item.value)}`;
+              }
+              return <Tooltip placement="topLeft" title={title}>
+                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={title}>{title}</li>
               </Tooltip>
             })
           }
