@@ -537,7 +537,11 @@ class NewHome extends PureComponent {
           this.props.dispatch({ type: "newHome/updateState", payload: { siteDetailsVisible: true } })
         }}>进入站房</Button>
         <p>
-          站点状态：<span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
+          站点状态：{
+            currentClickObj.outPutFlag === 1 ?
+              <span style={{ color: '#999999'}}>停运</span> :
+              <span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
+          }
         </p>
       </div>
       <div className={styles.desc}>
