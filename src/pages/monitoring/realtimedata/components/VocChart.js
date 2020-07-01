@@ -2,12 +2,14 @@
  * @Author: lzp
  * @Date: 2019-09-05 10:57:14
  * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 14:22:43
- * @Description: voc工艺流程图
+ * @LastEditTime: 2019-09-18 14:22:52
+ * @Description: VOC工艺流程图
  */
 import React, { Component } from 'react';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './ProcessFlowChart.less';
+import { Card, Descriptions, Popover, Badge, Avatar } from 'antd';
+const pollutantCodes = ['01', '02', '03', 's03', 's08', 's05', 's02', 's01'];
 class VocChart extends Component {
     constructor(props) {
         super(props);
@@ -18,22 +20,31 @@ class VocChart extends Component {
     }
 
     //系统参数
-    getsystemparam=(param,textname,unit)=>{
-        return this.props.getsystemparam(param,textname,unit);
+    SystemParameters = (code, data) => {
+        return this.props.getsystemparamNew(code, data);
     }
-   //系统状态
-    getsystemstate=(param)=>{
-       return this.props.getsystemstate(param);
+
+    //监控数据
+    pollutantMonitingData = (pList) => {
+        return this.props.pollutantMonitingDataNew(pList)
     }
-    //图片点击事件
-    positionClick=(param,status,data)=>{
-        this.props.positionClick(param,status,data);
+
+    //获取系统状态
+    getSystemStates = () => {
+        return this.props.getSystemStatesNew()
     }
     render() {
         const { scale, translation } = this.state;
+        const { stateInfo } = this.props;
         return (
             <div>
-                <MapInteractionCSS
+                <div className={styles.stateClass}>{this.getSystemStates()}</div>
+                <Descriptions className={styles.CardDataClass} bordered column={4}>
+                    {/* 颗粒物、温度、压力、流速、VOC、非甲烷总烃 */}
+                    {this.pollutantMonitingData('01,s03,s08,s02,m005,a24088')}
+                </Descriptions>
+                <div className={styles.mapClass}>
+                    <MapInteractionCSS
                         scale={scale}
                         translation={translation}
                         onChange={({ scale, translation }) => this.setState({ scale, translation })}
@@ -41,59 +52,136 @@ class VocChart extends Component {
                         defaultTranslation={{ x: 0, y: 0 }}
                         minScale={0.05}
                         maxScale={5}
-                        showControls={true}>
+                        showControls={true}
+
+                    >
                         <div className={styles.imgBg2} >
-                        <div onClick={()=>this.positionClick("i33003,i33004,i33001","i12110,i12105")} style={{  position: 'relative', left: '60px', 
-                        top: '390px', fontWeight: '700', fontSize: '10px',width:300 }} className={styles.divClick}>{this.getsystemparam('系统采样探头温度','探头温度','°C')}</div>
-                        <div style={{  position: 'relative', left: '260px', 
-                        top: '380px', fontWeight: '700', fontSize: '10px' ,width:300}}
-                        onClick={()=>this.positionClick("i33003,i33004,i33001","i12110,i12105")} className={styles.divClick}>{this.getsystemparam('系统采样管线温度','管线温度','°C')}</div>
-                        <div style={{  position: 'relative', left: '225px', 
-                        top: '580px', fontWeight: '700', fontSize: '10px',width:300 }} className={styles.divClick}>{this.getsystemparam('钢气瓶压力','钢气瓶压力','Pa')}</div>
- 
-                        <div 
-                        className={`${styles.divClick} ${styles.caiyangbeng2}`}>{this.getsystemparam('采样泵累计使用时间','使用次数','次')}</div>
-                        <div style={{  position: 'relative', left: '365px', 
-                        top: '360px', fontWeight: '700', fontSize: '10px',width:300 }} className={styles.divClick}>{this.getsystemparam('蠕动泵累计使用时间','使用次数','次')}</div>
-                        
-                        <div style={{  position: 'relative', left: '260px', 
-                        top: '270px', fontWeight: '700', fontSize: '10px' ,width:100}} className={styles.divClick} 
-                         onClick={()=>this.positionClick("i33003,i33004,i33001","i12110,i12105")}>
-                          {this.getsystemstate("采样管线")}
-                         </div>
-                  
-                         <div style={{  position: 'relative', left: '80px', 
-                        top: '250px', fontWeight: '700', fontSize: '10px' ,width:300}} className={styles.divClick} 
-                         onClick={()=>this.positionClick("i33003,i33004,i33001","i12110,i12105")}>
-                           {this.getsystemstate("探头吹扫")}
-                         </div>
+                            <Popover content={this.SystemParameters('i13010,i13011,i13012')} title="系统采样探头">
+                                <div style={{
+                                    position: 'relative', left: '127px',
+                                    top: '522px', fontWeight: '700', fontSize: '10px', width: 15, height: 15, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13033')} title="系统采样管线">
+                                <div style={{
+                                    position: 'relative', left: '270px',
+                                    top: '504px', fontWeight: '700', fontSize: '10px', width: 190, height: 25, zIndex: 1
+                                }}
+                                    className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13014')} title="采样泵">
+                                <div style={{
+                                    position: 'relative', left: '870px',
+                                    top: '468px', fontWeight: '700', fontSize: '10px', width: 108, height: 52, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i33002')} title="冷凝器">
+                                <div
+                                    style={{
+                                        position: 'relative', left: '992px',
+                                        top: '241px', fontWeight: '700', fontSize: '10px', width: 142, height: 51, zIndex: 1
+                                    }}
+                                    className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13018')} title="电磁阀">
+                                <div style={{
+                                    position: 'relative', left: '1237px',
+                                    top: '374px', fontWeight: '700', fontSize: '10px', width: 35, height: 35, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13017')} title="钢瓶">
+                                <div
+                                    style={{
+                                        position: 'relative', left: '495px',
+                                        top: '578px', fontWeight: '700', fontSize: '10px', width: 45, height: 66, zIndex: 1
+                                    }}
+                                    className={`${styles.divClick} ${styles.caiyangbeng1}`}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13016')} title="蠕动泵">
+                                <div style={{
+                                    position: 'relative', left: '804px',
+                                    top: '273px', fontWeight: '700', fontSize: '10px', width: 35, height: 35, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13013')} title="过滤器">
+                                <div style={{
+                                    position: 'relative', left: '665px',
+                                    top: '229px', fontWeight: '700', fontSize: '10px', width: 109, height: 52, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13013')} title="过滤器">
+                                <div style={{
+                                    position: 'relative', left: '1024px',
+                                    top: '177px', fontWeight: '700', fontSize: '10px', width: 109, height: 52, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i13015')} title="制冷温度预设">
+                                <div style={{
+                                    position: 'relative', left: '1363px',
+                                    top: '372px', fontWeight: '700', fontSize: '10px', width: 65, height: 65, zIndex: 1, borderRadius: '50%'
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('i33101,i23001')} title="现场条件">
+                                <div style={{
+                                    position: 'relative', left: '713px',
+                                    top: '-233px', fontWeight: '700', fontSize: '10px', width: 118, height: 100, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
 
-                         <div style={{  position: 'relative', left: '375px', 
-                          top: '320px', fontWeight: '700', fontSize: '10px' ,width:300}} className={styles.divClick}>
-                          {this.getsystemstate("蠕动泵状态")}
-                         </div>
-                         <div style={{  position: 'relative', left: '805px', 
-                          top: '300px', fontWeight: '700', fontSize: '10px',width:300 }} className={styles.divClick}>
-                          {this.getsystemstate("废液桶液位")}
-                         </div>
 
-                         <div style={{  position: 'relative', left: '120px', 
-                        top: '70px', fontWeight: '700', fontSize: '10px',width:150,height:50 }} 
-                        onClick={()=>this.positionClick("","","s07,s08,b02")} className={styles.divClick}>
-                         </div>
+                            <Popover content={this.SystemParameters('', 's03')} title="温度">
+                                <div style={{
+                                    position: 'relative', left: '160px',
+                                    top: '-233px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', 's08')} title="压力">
+                                <div style={{
+                                    position: 'relative', left: '216px',
+                                    top: '-287px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', 's02')} title="流速">
+                                <div style={{
+                                    position: 'relative', left: '272px',
+                                    top: '-342px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
 
-                         <div style={{  position: 'relative', left: '120px', 
-                        top: '90px', fontWeight: '700', fontSize: '10px',width:150,height:50 }} 
-                        onClick={()=>this.positionClick("","","01")} className={styles.divClick}>
-                         </div>
-
-                         <div style={{ position: 'relative', left: '1000px', 
-                         top: '174px', fontWeight: '700', fontSize: '10px',width:150,height:50 }} 
-                         onClick={()=>this.positionClick("","","02,03")} className={styles.divClick}> 
-                         </div>
+                            <Popover content={this.SystemParameters('', '02')} title="二氧化硫">
+                                <div style={{
+                                    position: 'relative', left: '1304px',
+                                    top: '-197px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', '03')} title="氮氧化物">
+                                <div style={{
+                                    position: 'relative', left: '1359px',
+                                    top: '-251px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', 's01')} title="氧含量">
+                                <div style={{
+                                    position: 'relative', left: '1414px',
+                                    top: '-307px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', '01')} title="颗粒物">
+                                <div style={{
+                                    position: 'relative', left: '160px',
+                                    top: '-482px', fontWeight: '700', fontSize: '10px', width: 170, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', 's05')} title="湿度">
+                                <div style={{
+                                    position: 'relative', left: '619px',
+                                    top: '-419px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
                         </div>
                     </MapInteractionCSS>
-            </div>
+                </div>
+            </div >
         );
     }
 }
