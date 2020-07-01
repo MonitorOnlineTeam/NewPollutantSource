@@ -86,7 +86,8 @@ class AvatarDropdown extends React.Component {
           <Avatar
             size="small"
             className={styles.avatar}
-            src={'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'}
+            // src={'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'}
+            src={'/avatar.png'}
             alt="avatar"
           />
           <span className={styles.name}>{currentUser.UserName}</span>
