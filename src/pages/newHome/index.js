@@ -149,6 +149,7 @@ class NewHome extends PureComponent {
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
       selectValue: "", // 筛选
+      month: moment().get('month')
     };
 
   }
@@ -662,7 +663,7 @@ class NewHome extends PureComponent {
                   {/* 运行分析 */}
                   <RunAndAnalysis RegionCode={RegionCode} />
                   {/* 报警响应情况 */}
-                  <AlarmResponse RegionCode={RegionCode} />
+                  <AlarmResponse RegionCode={RegionCode} month={this.state.month} />
                 </div>
               </Spin>
             </Drawer>
@@ -728,6 +729,7 @@ class NewHome extends PureComponent {
                   }}>返回上级</Button>
                 }
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
+                  this.setState({ month: moment(date).get('month') })
                   this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), date.endOf("month").format("YYYY-MM-DD HH:mm:ss"));
                 }} />
                 <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {

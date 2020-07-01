@@ -106,8 +106,8 @@ class DrillDownAlarmResponseModel extends PureComponent {
   }
 
   getOption = () => {
-    const { taskModelType, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
-    const month = moment().get('month');
+    const { taskModelType, startTime, alarmResponseModalData, taskCountModalData, taskClassifyModalData, modelTitle } = this.props;
+    const month = moment(startTime).get('month');
     let series = [];
     if (modelTitle === "异常报警响应") {
       series = [
@@ -156,7 +156,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
           name: `${month}月超标报警核实`,
           type: 'bar',
           itemStyle: {
-            color: "#FF5722"
+            color: "#fd6c6c"
           },
           // barWidth: '40%',
           barMaxWidth: 60,
@@ -175,7 +175,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
           name: `${month + 1}月超标报警核实`,
           type: 'bar',
           itemStyle: {
-            color: "#fd6c6c"
+            color: "#FF5722"
           },
           // barWidth: '40%',
           barMaxWidth: 60,
@@ -194,7 +194,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
     }
 
     return {
-      color: ["#f6b322", "#0edaad"],
+      // color: ["#f6b322", "#0edaad"],
       tooltip: {
         trigger: 'axis',
         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -208,7 +208,9 @@ class DrillDownAlarmResponseModel extends PureComponent {
           return res;
         },
       },
-      legend: {},
+      legend: {
+        data: [`${month}月异常报警响应`, `${month + 1}月异常报警响应`, `${month}月超标报警核实`, `${month + 1}月超标报警核实`,]
+      },
       grid: {
         left: '3%',
         right: '4%',
@@ -378,13 +380,7 @@ class DrillDownAlarmResponseModel extends PureComponent {
                     initialValue: moment(startTime)
                   })(
                     <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                      this.props.dispatch({
-                        type: "newHome/updateState",
-                        payload: {
-                          startTime: date.format("YYYY-MM-01 00:00:00"),
-                          endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
-                        }
-                      })
+                      this.setState({ date })
                     }} />
                   )}
                 </Form.Item>
@@ -392,6 +388,13 @@ class DrillDownAlarmResponseModel extends PureComponent {
               <Col span={4}>
                 <Form.Item>
                   <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                      type: "newHome/updateState",
+                      payload: {
+                        startTime: this.state.date.format("YYYY-MM-01 00:00:00"),
+                        endTime: this.state.date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                      }
+                    })
                     this.props.chartClick();
                   }}>查询</Button>
                 </Form.Item>
