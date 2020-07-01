@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './ProcessFlowChart.less';
 import { Card, Descriptions, Popover, Badge, Avatar } from 'antd';
-const pollutantCodes = ['01', '02', '03', 's03', 's08', 's05', 's02', 's01'];
 class VocChart extends Component {
     constructor(props) {
         super(props);
@@ -124,7 +123,7 @@ class VocChart extends Component {
                             <Popover content={this.SystemParameters('i33101,i23001')} title="现场条件">
                                 <div style={{
                                     position: 'relative', left: '713px',
-                                    top: '-233px', fontWeight: '700', fontSize: '10px', width: 118, height: 100, zIndex: 1
+                                    top: '-241px', fontWeight: '700', fontSize: '10px', width: 118, height: 100, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
 
@@ -132,50 +131,37 @@ class VocChart extends Component {
                             <Popover content={this.SystemParameters('', 's03')} title="温度">
                                 <div style={{
                                     position: 'relative', left: '160px',
-                                    top: '-233px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                    top: '-239px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
                             <Popover content={this.SystemParameters('', 's08')} title="压力">
                                 <div style={{
                                     position: 'relative', left: '216px',
-                                    top: '-287px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                    top: '-294px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
                             <Popover content={this.SystemParameters('', 's02')} title="流速">
                                 <div style={{
                                     position: 'relative', left: '272px',
-                                    top: '-342px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
-                                }} className={styles.divClick}></div>
-                            </Popover>
-
-                            <Popover content={this.SystemParameters('', '02')} title="二氧化硫">
-                                <div style={{
-                                    position: 'relative', left: '1304px',
-                                    top: '-197px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
-                                }} className={styles.divClick}></div>
-                            </Popover>
-                            <Popover content={this.SystemParameters('', '03')} title="氮氧化物">
-                                <div style={{
-                                    position: 'relative', left: '1359px',
-                                    top: '-251px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
-                                }} className={styles.divClick}></div>
-                            </Popover>
-                            <Popover content={this.SystemParameters('', 's01')} title="氧含量">
-                                <div style={{
-                                    position: 'relative', left: '1414px',
-                                    top: '-307px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                    top: '-349px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
                             <Popover content={this.SystemParameters('', '01')} title="颗粒物">
                                 <div style={{
                                     position: 'relative', left: '160px',
-                                    top: '-482px', fontWeight: '700', fontSize: '10px', width: 170, height: 55, zIndex: 1
+                                    top: '-325px', fontWeight: '700', fontSize: '10px', width: 170, height: 55, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
-                            <Popover content={this.SystemParameters('', 's05')} title="湿度">
+                            <Popover content={this.SystemParameters('', 'm005')} title="VOC">
                                 <div style={{
-                                    position: 'relative', left: '619px',
-                                    top: '-419px', fontWeight: '700', fontSize: '10px', width: 55, height: 55, zIndex: 1
+                                    position: 'relative', left: '1304px',
+                                    top: '-261px', fontWeight: '700', fontSize: '10px', width: 70, height: 55, zIndex: 1
+                                }} className={styles.divClick}></div>
+                            </Popover>
+                            <Popover content={this.SystemParameters('', 'a24088')} title="非甲烷总烃">
+                                <div style={{
+                                    position: 'relative', left: '1374px',
+                                    top: '-316px', fontWeight: '700', fontSize: '10px', width: 96, height: 55, zIndex: 1
                                 }} className={styles.divClick}></div>
                             </Popover>
                         </div>

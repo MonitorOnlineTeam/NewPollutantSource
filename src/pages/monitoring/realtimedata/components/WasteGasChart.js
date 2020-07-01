@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './ProcessFlowChart.less';
 import { Card, Descriptions, Popover, Badge, Avatar } from 'antd';
-const pollutantCodes = ['01', '02', '03', 's03', 's08', 's05', 's02', 's01'];
 class WasteGasChart extends Component {
     constructor(props) {
         super(props);
@@ -23,10 +22,10 @@ class WasteGasChart extends Component {
     SystemParameters = (code, data) => {
         return this.props.getsystemparamNew(code, data);
     }
-   
+
     //监控数据
     pollutantMonitingData = (pList) => {
-      return this.props.pollutantMonitingDataNew(pList)
+        return this.props.pollutantMonitingDataNew(pList)
     }
 
     //获取系统状态
@@ -40,6 +39,7 @@ class WasteGasChart extends Component {
             <div>
                 <div className={styles.stateClass}>{this.getSystemStates()}</div>
                 <Descriptions className={styles.CardDataClass} bordered column={4}>
+                    {/* 废气常用污染物 */}
                     {this.pollutantMonitingData('01,02,03,s03,s08,s05,s02,s01')}
                 </Descriptions>
                 <div className={styles.mapClass}>
