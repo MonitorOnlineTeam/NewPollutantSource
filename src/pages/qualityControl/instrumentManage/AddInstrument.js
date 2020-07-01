@@ -281,6 +281,7 @@ class AddInstrument extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // 编辑页面
     if (this.props.qualityControlTableData !== nextProps.qualityControlTableData) {
       this.setState({
         dataSource: nextProps.qualityControlTableData,
@@ -302,6 +303,13 @@ class AddInstrument extends Component {
           currentWorkPatternValue: nextProps.workPatternList[0].ModelName
         })
       }
+    }
+
+    // 添加页面
+    if (this.props.entAndPointList !== nextProps.entAndPointList && !this._SELF_.id) {
+      this.setState({
+        entAndPointList: nextProps.entAndPointList
+      })
     }
   }
 
