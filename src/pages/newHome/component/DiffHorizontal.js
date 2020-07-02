@@ -76,7 +76,7 @@ class DiffHorizontal extends PureComponent {
           type: 'value',
           name: '（%）',
           position: 'left',
-          minInterval: 1,
+          minInterval: 1,  
           splitLine: {
             show: true,
             lineStyle: {
@@ -89,7 +89,7 @@ class DiffHorizontal extends PureComponent {
         {
           // name: '直接访问',
           type: 'bar',
-          barWidth: '40%',
+          barMaxWidth: 60,
           // data: [10, 52, 200, 334, 390, 330, 220]
           data: diffHorizontalData.map(item => item.BalanceDifferenceRate),
         }

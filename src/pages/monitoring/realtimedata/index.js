@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import NavigationTree from '../../../components/NavigationTree';
-import { Layout, Card, Col, Badge, Button, Avatar, Spin } from 'antd';
+import { Layout, Card, Col, Badge, Button, Avatar, Spin, Descriptions } from 'antd';
 import styles from '@/pages/monitoring/realtimedata/components/ProcessFlowChart.less';
 import { connect } from 'dva';
 import { MapInteractionCSS } from 'react-map-interaction';
@@ -51,11 +51,11 @@ class Index extends Component {
         const { stateInfo, paramsInfo, paramstatusInfo, DGIMN } = this.props;
         const { param, status, data, dgimn } = this.state;
         // 推送要渲染点击事件，当MN号不同时不渲染并把右侧布局清空，这个只是针对MN号相同时推送相关问题
-        if (dgimn === DGIMN) {
-            if (nextProps.stateInfo !== stateInfo || nextProps.paramsInfo !== paramsInfo || nextProps.paramstatusInfo !== paramstatusInfo) {
-                this.positionClick(param, status, data)
-            }
-        }
+        // if (dgimn === DGIMN) {
+        //     if (nextProps.stateInfo !== stateInfo || nextProps.paramsInfo !== paramsInfo || nextProps.paramstatusInfo !== paramstatusInfo) {
+        //         this.positionClick(param, status, data)
+        //     }
+        // }
     }
 
     changeDgimn = value => {
@@ -83,20 +83,6 @@ class Index extends Component {
             },
         });
     }
-    // /** dgimn改變時候切換數據源 */
-    // componentWillReceiveProps = nextProps => {
-    //     if (nextProps.DGIMN !== this.props.DGIMN) {
-    //         this.setState({
-    //             showSider: false
-    //         })
-    //         this.props.dispatch({
-    //             type: 'realtimeserver/GetProcessFlowChartStatus',
-    //             payload: {
-    //                 dgimn: nextProps.DGIMN
-    //             }
-    //         });
-    //     }
-    // }
 
     // 参数表盘
     getparamInfo = () => {
@@ -161,55 +147,68 @@ class Index extends Component {
         return null;
     }
 
-    // 系统参数
-    getsystemparam = (param, textname, unit) => {
-        const { paramstatusInfo } = this.props;
-        if (paramstatusInfo && paramstatusInfo.length) {
-            const nameInfo = paramstatusInfo.find(value => value.statename.indexOf(param) > -1)
-            if (nameInfo) { return `${textname}:${nameInfo.value}${unit}`; }
+    //监控数据
+    pollutantMonitingDataNew = (pList) => {
+        const { paramsInfo } = this.props;
+        const datalist = pList ? pList.split(',') : null;
+        const dataInfolist = [];
+        if (datalist && paramsInfo) {
+            datalist.map(item => {
+                const datas = paramsInfo.find(value => value.pollutantCode == item)
+                if (datas) { dataInfolist.push(datas); }
+            })
         }
-        return `${textname}:暂未上传`;
+        const res = [];
+        if (dataInfolist && dataInfolist.length > 0) {
+            dataInfolist.map((item, key) => {
+                let value = item.value ? item.value + item.Unit : item.value
+                res.push(
+                    <Descriptions.Item className={styles.gridStyle} label={item.pollutantName}>{value}</Descriptions.Item>
+                )
+            })
+        }
+        return res;
     }
 
-    // 系统状态
-    getsystemstate = param => {
+    // 系统参数
+    getsystemparamNew = (code, data) => {
+        return <div>
+            {
+                this.positionClickNew(code, data)
+            }
+        </div>
+    }
+    //获取系统状态
+    getSystemStatesNew = () => {
         const { stateInfo } = this.props;
-        if (stateInfo) {
-            const nameInfo = stateInfo.find(value => value.name.indexOf(param) > -1)
-            if (nameInfo) {
-                if (nameInfo.statename == '正常') {
-                    return (<span className={styles.normalstatus}><Badge status="processing" text="正常" /></span>)
-                }
-                return (<span className={styles.overstatus}><Badge status="processing" text="故障" /></span>)
+        let rtn = [];
+        if (stateInfo && stateInfo.length > 0) {
+            if (stateInfo[0].state === '1') {
+                rtn.push(
+                    <Badge status="error" text={stateInfo[0].statename} />
+                )
+            }
+            else {
+                rtn.push(
+                    <Badge status="processing" text={stateInfo[0].statename} />
+                )
             }
         }
+        return rtn;
     }
-
-    // 图片上的点击事件
-    positionClick = (param, status, data) => {
-        // 推送过来要调用参数，再此存储参数值
-        // this.setState({
-        //     param,
-        //     status,
-        //     data,
-        // })
-        const { paramstatusInfo, stateInfo, paramsInfo } = this.props;
+    // 渲染气泡内容（add by dongxiaoyun）
+    positionClickNew = (param, data) => {
+        const { paramstatusInfo, paramsInfo } = this.props;
         const paramlist = param ? param.split(',') : null;
-        const statuslist = status ? status.split(',') : null;
+        // const statuslist = status ? status.split(',') : null;
         const datalist = data ? data.split(',') : null;
         const paramInfolist = [];
-        const stateInfolist = [];
+        // const stateInfolist = [];
         const dataInfolist = [];
         if (paramlist && paramstatusInfo) {
             paramlist.map(item => {
                 const params = paramstatusInfo.find(value => value.statecode == item)
                 if (params) { paramInfolist.push(params); }
-            })
-        }
-        if (statuslist && stateInfo) {
-            statuslist.map(item => {
-                const statuses = stateInfo.find(value => value.code == item)
-                if (statuses) { stateInfolist.push(statuses); }
             })
         }
         if (datalist && paramsInfo) {
@@ -218,18 +217,32 @@ class Index extends Component {
                 if (datas) { dataInfolist.push(datas); }
             })
         }
-
-        if (paramInfolist.length > 0 || stateInfolist.length > 0 || dataInfolist.length > 0) {
-            this.imgClick(paramInfolist, stateInfolist, dataInfolist);
+        if (paramInfolist.length > 0 || dataInfolist.length > 0) {
+            const res = [];
+            //系统参数
+            if (paramInfolist && paramInfolist.length > 0) {
+                paramInfolist.map(item => {
+                    let unit = !item.unit ? "" : item.unit === "/" ? "" : item.unit;
+                    res.push(<div className={styles.datalist}> <Badge color="#3B91FF" status="success" text={`${item.statename} : ${item.value}${unit}`} /></div>)
+                })
+            }
+            //数据
+            if (dataInfolist && dataInfolist.length > 0) {
+                dataInfolist.map((item, key) => {
+                    if (item.pollutantParamInfo && item.pollutantParamInfo.length > 0) {
+                        item.pollutantParamInfo.map(param => {
+                            res.push(<div className={styles.datalist} style={{ marginLeft: 20 }}>
+                                <Badge color="#3B91FF" status="success" text={`${param.statename}: ${param.value}`} /> </div>)
+                        })
+                    }
+                })
+            }
+            return res ? res : <div>暂无数据</div>;
         }
-        // else {
-        //     this.setState({
-        //         showSider: false,
-        //         paramInfo: [],
-        //     })
-        // }
+        else {
+            return <div style={{ margin: 'auto', textAlign: 'center' }}>暂无数据</div>;
+        }
     }
-
     /**
      *获取工艺流程图类型
      *
@@ -246,66 +259,42 @@ class Index extends Component {
                         paramstatusInfo={paramstatusInfo}
                         stateInfo={stateInfo}
                         paramsInfo={paramsInfo}
-                        positionClick={(param, status, data) => {
-                            this.positionClick(param, status, data);
-                            this.setState({
-                                showSider: true
-                            })
-                        }}
+                        getsystemparamNew={this.getsystemparamNew}
+                        pollutantMonitingDataNew={this.pollutantMonitingDataNew}
+                        getSystemStatesNew={this.getSystemStatesNew}
                         DGIMN={dgimn}
                         pointName={pointName} entName={entName} />)
                     break;
                 case '2':
-                    return (<VocChart positionClick={(param, status, data) => {
-                        this.positionClick(param, status, data);
-                        this.setState({
-                            showSider: true
-                        })
-                    }} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
+                    return (<VocChart
+                        paramstatusInfo={paramstatusInfo}
+                        stateInfo={stateInfo}
+                        paramsInfo={paramsInfo}
+                        getsystemparamNew={this.getsystemparamNew}
+                        pollutantMonitingDataNew={this.pollutantMonitingDataNew}
+                        getSystemStatesNew={this.getSystemStatesNew}
+                        DGIMN={dgimn}
+                        pointName={pointName} entName={entName} />)
                     break;
                 case '3':
-                    return (<HgChart positionClick={(param, status, data) => {
-                        this.positionClick(param, status, data);
-                        this.setState({
-                            showSider: true
-                        })
-                    }} getsystemparam={this.getsystemparam}
-                        getsystemstate={this.getsystemstate} pointName={pointName} entName={entName} />)
+                    return (<HgChart
+                        paramstatusInfo={paramstatusInfo}
+                        stateInfo={stateInfo}
+                        paramsInfo={paramsInfo}
+                        getsystemparamNew={this.getsystemparamNew}
+                        pollutantMonitingDataNew={this.pollutantMonitingDataNew}
+                        getSystemStatesNew={this.getSystemStatesNew}
+                        DGIMN={dgimn}
+                        pointName={pointName} entName={entName} />)
                 case '5':
                     return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
                 default:
                     return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
-                // return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-                //     getsystemstate={this.getsystemstate} />)
             }
         } else if (dgimn) {
             console.log('datainfo=', dataInfo)
             return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
         }
-        // else
-        // {
-        //     return null;
-        // }
-        // if (dataInfo && dataInfo.equipmentType) {
-        //     dataInfo.equipmentType = '3';
-        //     switch (dataInfo.equipmentType) {
-        //         case "1":
-        //             return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-        //                 getsystemstate={this.getsystemstate} />)
-        //             break;
-        //         case "2":
-        //             return (<VocChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-        //                 getsystemstate={this.getsystemstate} />)
-        //             break;
-        //         case "3":
-        //             return (<HgChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-        //                 getsystemstate={this.getsystemstate} />)
-        //     }
-        // }
-        // else
-        //     return (<WasteGasChart positionClick={this.positionClick} getsystemparam={this.getsystemparam}
-        //         getsystemstate={this.getsystemstate} />)
     }
 
     // 图片点击事件
@@ -392,10 +381,6 @@ class Index extends Component {
         const { scale, translation } = this.state;
         const { isloading,
             stateInfo, paramsInfo, paramstatusInfo, dataInfo } = this.props;
-        {
-            // console.log(' this.props=',  this.props)
-            // console.log(' this.state=',this.state)
-        }
         return (
             <div id="realtimedata">
                 <BreadcrumbWrapper>
@@ -424,7 +409,6 @@ class Index extends Component {
 
                         </Layout>
                     </div>
-
                 </BreadcrumbWrapper>
                 <NavigationTree domId="#realtimedata" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {

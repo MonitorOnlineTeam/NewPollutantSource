@@ -25,7 +25,7 @@ class TaskStatistics extends PureComponent {
     this.props.dispatch({
       type: "newHome/getTaskStatisticsData",
       payload: {
-
+        
       }
     })
 

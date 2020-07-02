@@ -331,13 +331,7 @@ class DrillDownTaskStatisticsModal extends PureComponent {
                     initialValue: moment(startTime)
                   })(
                     <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                      this.props.dispatch({
-                        type: "newHome/updateState",
-                        payload: {
-                          startTime: date.format("YYYY-MM-01 00:00:00"),
-                          endTime: date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
-                        }
-                      })
+                      this.setState({ date })
                     }} />
                   )}
                 </Form.Item>
@@ -345,6 +339,13 @@ class DrillDownTaskStatisticsModal extends PureComponent {
               <Col span={4}>
                 <Form.Item>
                   <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                      type: "newHome/updateState",
+                      payload: {
+                        startTime: this.state.date.format("YYYY-MM-01 00:00:00"),
+                        endTime: this.state.date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                      }
+                    })
                     this.props.chartClick();
                   }}>查询</Button>
                 </Form.Item>
