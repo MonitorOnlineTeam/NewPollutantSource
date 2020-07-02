@@ -288,7 +288,6 @@ class AlarmRecord extends Component {
   handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
     form.validateFields((err, values) => {
-
       debugger;
       if (!err) {
         debugger;
@@ -339,7 +338,7 @@ class AlarmRecord extends Component {
     const columns = [{
       title: '报警时间',
       dataIndex: 'FirstTime',
-      // fixed: 'left',
+      align: 'center',
       width: 160,
       key: 'FirstTime',
     },
@@ -348,14 +347,14 @@ class AlarmRecord extends Component {
       width: 100,
       dataIndex: 'AlarmTypeName',
       key: 'AlarmTypeName',
-
+      align: 'center',
     },
     {
       title: '污染物',
       width: 100,
       dataIndex: 'PollutantName',
       key: 'PollutantName',
-
+      align: 'center',
     },
 
     {
@@ -363,7 +362,7 @@ class AlarmRecord extends Component {
       width: 100,
       dataIndex: 'AlarmCount',
       key: 'AlarmCount',
-
+      align: 'center',
     },
     // {
     //   title: '报警值',
@@ -376,7 +375,7 @@ class AlarmRecord extends Component {
       width: 100,
       dataIndex: 'State',
       key: 'State',
-
+      align: 'center',
       render: (text, record) => {
         if (text === '0') {
           return <span> <Badge status="error" text="未处置" /> </span>;
@@ -447,7 +446,6 @@ class AlarmRecord extends Component {
           }
 
         >
-          <Card.Grid style={{ width: '100%', ...this.props.style }}>
           <SdlTable
             loading={this.props.dataloading}
             columns={columns}
@@ -482,7 +480,6 @@ class AlarmRecord extends Component {
               },
             })}
           />
-          </Card.Grid>
 
           <Modal
             title="处置单详情"

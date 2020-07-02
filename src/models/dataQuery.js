@@ -1,5 +1,5 @@
 import Model from '@/utils/model';
-import { message } from "antd"
+import { message } from 'antd'
 import {
   queryhistorydatalist,
 } from '../services/monitordata';
@@ -27,8 +27,8 @@ export default Model.extend({
       DGIMNs: null,
       pageIndex: null,
       pageSize: null,
-      beginTime: moment().format("YYYY-MM-DD HH:mm:ss"),
-      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -41,7 +41,7 @@ export default Model.extend({
     tagTableTotal: 0,
   },
   effects: {
-    * querypollutantlist({ payload, callback
+    * querypollutantlist({ payload, callback,
     }, { call, update, put, take, select }) {
       const body = {
         DGIMNs: payload.dgimn,
@@ -76,7 +76,7 @@ export default Model.extend({
       }
     },
     * queryhistorydatalist({
-      payload, from
+      payload, from,
     }, { select, call, update }) {
       const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
       let _historyparams = { ...historyparams, ...payload };
@@ -168,11 +168,11 @@ export default Model.extend({
             // width,
             render: (value, record, index) => {
               let text = value;
-              if (item.PollutantName === "风向") {
+              if (item.PollutantName === '风向') {
                 text = getDirLevel(text)
               }
               return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
-            }
+            },
           });
         });
         columns = [{
@@ -187,15 +187,16 @@ export default Model.extend({
       } else {
         pollutantlist.map((item, key) => {
           const unit = item.Unit ? `(${item.Unit})` : ''
+          console.log('item.Unit', item.Unit.length);
           pollutantcols = pollutantcols.concat({
-            title: <>{item.PollutantName}<br />({item.Unit})</>,
+            title: <>{item.PollutantName}<br />{unit}</>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
             // width,
             render: (value, record, index) => {
               let text = value;
-              if (item.PollutantName === "风向") {
+              if (item.PollutantName === '风向') {
                 text = getDirLevel(text)
               }
               return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
@@ -229,9 +230,9 @@ export default Model.extend({
           },
           legend: {
             orient: 'vertical',
-            x: 'right',      //可设定图例在左、右、居中
-            y: 'top',     //可设定图例在上、下、居中
-            padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+            x: 'right', // 可设定图例在左、右、居中
+            y: 'top', // 可设定图例在上、下、居中
+            padding: [40, 40, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
             data: _historyparams.pollutantNames.split(','),
           },
           toolbox: {
@@ -250,8 +251,8 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                type: 'dashed'
-              }
+                type: 'dashed',
+              },
             },
           },
           yAxis: {
@@ -263,8 +264,8 @@ export default Model.extend({
             splitLine: {
               show: true,
               lineStyle: {
-                type: 'dashed'
-              }
+                type: 'dashed',
+              },
             },
           },
           grid: {
@@ -282,7 +283,7 @@ export default Model.extend({
     // 导出报表
     *exportHistoryReport({ payload }, { call, put, update, select }) {
       const { historyparams } = yield select(state => state.dataquery);
-      console.log("historyparams=", historyparams)
+      console.log('historyparams=', historyparams)
       const postData = {
         ...historyparams,
         DGIMNs: historyparams.DGIMN,
@@ -291,7 +292,7 @@ export default Model.extend({
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {
         window.open(result.Datas)
-        message.success("导出成功")
+        message.success('导出成功')
       } else {
         message.error(result.Message)
       }
@@ -301,7 +302,7 @@ export default Model.extend({
       const result = yield call(services.getDataGainRateDetailPollutantList, payload);
       if (result.IsSuccess) {
         yield update({
-          pollutantList: result.Datas
+          pollutantList: result.Datas,
         })
       } else {
         message.error(result.Message)
@@ -345,7 +346,7 @@ export default Model.extend({
         yield update({
           // dataAuditDataSource: result.Datas,
           dataFlagDataSource: result.Datas,
-          tagTableTotal: result.Total
+          tagTableTotal: result.Total,
         })
       } else {
         message.error(result.Message)
@@ -355,7 +356,7 @@ export default Model.extend({
     *updateDataWryFlag({ payload, callback }, { call, put, update }) {
       const result = yield call(services.updateDataWryFlag, payload);
       if (result.IsSuccess) {
-        message.success("修改成功")
+        message.success('修改成功')
         callback && callback()
       } else {
         message.error(result.Message)
@@ -365,7 +366,7 @@ export default Model.extend({
     *exportDataFlagReport({ payload, callback }, { call, put, update }) {
       const result = yield call(services.exportDataFlagReport, { ...payload, pageSize: null, pageIndex: null });
       if (result.IsSuccess) {
-        message.success("导出成功")
+        message.success('导出成功')
         window.open(result.Datas)
       } else {
         message.error(result.Message)

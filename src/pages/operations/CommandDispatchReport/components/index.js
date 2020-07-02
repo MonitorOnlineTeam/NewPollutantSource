@@ -75,7 +75,7 @@ class Dispatchreport extends Component {
         StepsList.map(item => {
                 returnStepList.push(
                     <>
-                        <Card.Grid style={{ width: '100%', marginTop: '10px', overflowX: 'scroll' }}>
+                        <Card.Grid style={{ width: '100%', marginTop: '10px', overflowX: 'scroll' }} >
                             <div className={this.CommandDispatchType('style', item.CommandDispatchType)}></div>
                             <div style={{ float: 'left', marginLeft: '5px', width: '95%' }}>
                                 <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden', lineHeight: '24px' }}>
@@ -127,6 +127,7 @@ class Dispatchreport extends Component {
             case '已调整': return 'check-square';
             case '超标报警': return 'bell';
             case '异常报警': return 'exclamation-circle-o';
+            case '系统关闭': return 'poweroff';
             default: return 'schedule';
         }
     }
@@ -134,7 +135,7 @@ class Dispatchreport extends Component {
 
     // 步骤条描述
     description = item => (
-                <div style={{ fontSize: '10' }}>
+                <div style={{ fontSize: '10' }} className={Style.hidpage}>
                     <div style={{ marginTop: 5 }}>
                         {item.Remark}
                     </div>

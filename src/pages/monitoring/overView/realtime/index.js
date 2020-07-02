@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { Card, Table, Row, Col, Radio, Popover, Select, Badge, Icon, Input, Tag, TimePicker, DatePicker, Popconfirm, Button, Checkbox, message } from 'antd';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
-import { formatPollutantPopover } from '@/utils/utils';
-import styles from '../index.less';
+import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
-import { getDirLevel } from '@/utils/utils';
+
 import $ from 'jquery'
+import styles from '../index.less';
 
 const CheckboxGroup = Checkbox.Group;
-const Option = Select.Option;
-const DateTypeList = ["RealTimeData", "MinuteData", "HourData", "DayData"]
+const { Option } = Select;
+const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
 
 
 @connect(({ loading, overview, global, common }) => ({
@@ -38,7 +38,7 @@ class index extends Component {
       realTimeDataView: [],
       filteredInfo: null,
       currentHour: moment().hour(),
-      time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format("YYYY-MM-DD HH:00:00") : moment(new Date()).format("YYYY-MM-DD HH:00:00"),
+      time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format('YYYY-MM-DD HH:00:00') : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
       dayTime: moment(new Date()).add(-1, 'day'),
     };
   }
@@ -48,11 +48,10 @@ class index extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
       // let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
-      let fixed = false;
-      let width = 200;
+      const fixed = false;
+      const width = 200;
 
-      let realtimeColumns = nextProps.realtimeColumns.map((item, idx) => {
-        return {
+      const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
           title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
           dataIndex: item.field,
           name: item.name,
@@ -61,26 +60,26 @@ class index extends Component {
           sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
           defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
           show: true,
+          align: 'center',
           wrw: item.wrw !== undefined ? item.wrw : true,
           render: (text, record) => {
             if (item.field === 'AQI') {
               return AQIPopover(text, record);
             }
-            if (record[item.field + '_Value'] !== undefined) {
+            if (record[`${item.field}_Value`] !== undefined) {
               return IAQIPopover(text, record, item.field);
             }
-            if (item.title === "空气质量") {
-              return text ? <span style={{ color: record['AQI_Color'] }}>{text}</span> : "-"
+            if (item.title === '空气质量') {
+              return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
             }
             // 风向转换
             if (item.name === '风向') {
-              let _text = text ? `${getDirLevel(text)}` : '-';
+              const _text = text ? `${getDirLevel(text)}` : '-';
               return formatPollutantPopover(_text, record[`${item.field}_params`]);
             }
             return formatPollutantPopover(text, record[`${item.field}_params`]);
           },
-        };
-      });
+        }));
 
       let statusFilters = [
         {
@@ -123,8 +122,7 @@ class index extends Component {
 
       // 大气站状态筛选
       if (this.state.pollutantCode === 5 || this.state.pollutantCode === 12) {
-        statusFilters = airLevel.map(item => {
-          return {
+        statusFilters = airLevel.map(item => ({
             text: (
               <span>
                 <LegendIcon style={{ color: item.color }} />
@@ -132,8 +130,7 @@ class index extends Component {
               </span>
             ),
             value: item.levelText,
-          };
-        });
+          }));
         statusFilters.unshift({
           text: (
             <span>
@@ -147,18 +144,16 @@ class index extends Component {
 
       let { sortedInfo, filteredInfo, pollutantCode } = this.state;
       filteredInfo = filteredInfo || {};
-      let columns = [
+      const columns = [
         {
           title: '序号',
           dataIndex: 'index',
           key: 'index',
           width: 50,
           align: 'center',
-          fixed: fixed,
+          fixed,
           show: true,
-          render: (value, record, index) => {
-            return index + 1;
-          },
+          render: (value, record, index) => index + 1,
         },
         {
           title: '状态',
@@ -167,7 +162,7 @@ class index extends Component {
           width: 70,
           // width: 120,
           align: 'center',
-          fixed: fixed,
+          fixed,
           show: true,
           filters: statusFilters,
           filteredValue: filteredInfo.Status || null,
@@ -175,9 +170,8 @@ class index extends Component {
             if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
               if (value != 0) {
                 return record.AirLevel == value;
-              } else {
-                return !record.AirLevel;
               }
+                return !record.AirLevel;
             }
             return record.status == value;
           },
@@ -201,19 +195,19 @@ class index extends Component {
           width: 210,
           // ellipsis: true,
           key: 'pointName',
-          fixed: fixed,
+          fixed,
           show: true,
           render: (text, record) => {
             if (this.state.pollutantCode == 5) {
               return (
                 <span>
-                  {text}{record.outPutFlag==1? <Tag color="#f50">停运</Tag>:""}
+                  {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
                 </span>
               );
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag==1? <Tag color="#f50">停运</Tag>:""}
+                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
               </span>
             );
           },
@@ -224,24 +218,23 @@ class index extends Component {
           // width: 10,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          fixed: fixed,
+          fixed,
           show: true,
+          align: 'center',
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
         },
         ...realtimeColumns,
       ];
       this.setState({
-        columns: columns,
+        columns,
       });
     }
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
-      let realTimeDataView = _.sortBy(nextProps.realTimeDataView, function (item) {
-        return -item.AQI;
-      });
+      const realTimeDataView = _.sortBy(nextProps.realTimeDataView, item => -item.AQI);
       this.setState({
-        realTimeDataView: realTimeDataView,
+        realTimeDataView,
       });
     }
   }
@@ -250,7 +243,7 @@ class index extends Component {
   getPageData = pollutantCode => {
     this.setState(
       {
-        pollutantCode: pollutantCode,
+        pollutantCode,
       },
       () => {
         this.getColumns();
@@ -262,7 +255,7 @@ class index extends Component {
   // 获取表格数据
   getRealTimeDataView = () => {
     const { pointName, currentDataType, pollutantCode, time, dayTime } = this.state;
-    let searchTime = undefined;
+    let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
       // 小时
@@ -275,7 +268,7 @@ class index extends Component {
     this.props.dispatch({
       type: 'overview/getRealTimeDataView',
       payload: {
-        pointName: pointName,
+        pointName,
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
@@ -306,11 +299,11 @@ class index extends Component {
   // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
   // 1-23之间：currentTime - 当天；nextDayTime - 第二天
   getHourTimeOptions = () => {
-    let options = [];
-    let currentTime = moment().hour() > 1 ? moment().format("YYYY-MM-DD") : moment().add(-1, "day").format("YYYY-MM-DD")
-    let nextDayTime = moment().hour() > 1 ? moment().add(1, "day").format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")
-    for (var i = 1; i < 24; i++) {
-      let label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
+    const options = [];
+    const currentTime = moment().hour() > 1 ? moment().format('YYYY-MM-DD') : moment().add(-1, 'day').format('YYYY-MM-DD')
+    const nextDayTime = moment().hour() > 1 ? moment().add(1, 'day').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
+    for (let i = 1; i < 24; i++) {
+      const label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
       options.push(<Option value={`${currentTime} ${label}`}>{label}</Option>)
     }
     return options.concat(<Option value={`${nextDayTime} 00:00:00`}>00:00:00</Option>);
@@ -318,35 +311,35 @@ class index extends Component {
 
   // 根据地址栏参数，判断显示时间类别
   getOptionByDateType = () => {
-    const pollutantCode = this.state.pollutantCode;
+    const { pollutantCode } = this.state;
     if (this.config[pollutantCode]) {
-      const dateTypeList = this.config[pollutantCode].split(",")
+      const dateTypeList = this.config[pollutantCode].split(',')
       //   this.setState({
       //     currentDataType
       //   })
       return <>
         {
-          dateTypeList.includes("1") && <Radio.Button key={1} value="RealTimeData">
+          dateTypeList.includes('1') && <Radio.Button key={1} value="RealTimeData">
             实时
         </Radio.Button>
         }
-        {(dateTypeList.includes("2") && this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+        {(dateTypeList.includes('2') && this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
           <Radio.Button key={2} value="MinuteData">
             分钟
           </Radio.Button>
         )}
         {
-          dateTypeList.includes("3") && <Radio.Button key={3} value="HourData">
+          dateTypeList.includes('3') && <Radio.Button key={3} value="HourData">
             小时
         </Radio.Button>
         }
         {
-          dateTypeList.includes("4") && <Radio.Button key={4} value="DayData">
+          dateTypeList.includes('4') && <Radio.Button key={4} value="DayData">
             日均
         </Radio.Button>
         }
       </>
-    } else {
+    }
       return <>
         {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
           <Radio.Button key={2} value="MinuteData">
@@ -360,7 +353,6 @@ class index extends Component {
           日均
                   </Radio.Button>
       </>
-    }
   }
 
   render() {
@@ -368,7 +360,7 @@ class index extends Component {
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading } = this.props;
     const _columns = columns.filter(item => item.show);
-    let scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
 
 
@@ -386,26 +378,24 @@ class index extends Component {
                   let dataType = this.state.currentDataType;
                   // 如果有config，切换时默认选择第一个
                   if (this.config && this.config[e.target.value]) {
-                    const dateTypeList = this.config[e.target.value].split(",")
+                    const dateTypeList = this.config[e.target.value].split(',')
                     this.setState({
-                      currentDataType: DateTypeList[dateTypeList[0] - 1]
+                      currentDataType: DateTypeList[dateTypeList[0] - 1],
                     })
                     dataType = DateTypeList[dateTypeList[0] - 1];
-                  } else {
-                    if (e.target.value == 5 || e.target.value == 12) {
+                  } else if (e.target.value == 5 || e.target.value == 12) {
                       this.setState({
                         currentDataType: 'HourData',
                         filteredInfo: null,
                       });
-                      dataType = "HourData";
+                      dataType = 'HourData';
                     }
-                  }
 
                   // 更新model - dataType 用来接收实时数据
                   this.props.dispatch({
                     type: 'overview/updateState',
                     payload: {
-                      dataType
+                      dataType,
                     },
                   });
                   // this.setState({
@@ -466,16 +456,16 @@ class index extends Component {
                         wrwList.map((item, index) => {
                           if (item.wrw) {
                             return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
-                              <Checkbox onChange={(e) => {
+                              <Checkbox onChange={e => {
                                 if (e.target.checked === false && wrwList.length < 2) {
-                                  message.warning("最少显示一个污染物");
+                                  message.warning('最少显示一个污染物');
                                   return;
                                 }
-                                let newColumns = columns;
-                                let num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+                                const newColumns = columns;
+                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
                                 newColumns[index + num].show = e.target.checked;
                                 this.setState({
-                                  columns: newColumns
+                                  columns: newColumns,
                                 })
                               }} checked={item.show}>{item.name}</Checkbox>
                             </Col>
@@ -514,10 +504,10 @@ class index extends Component {
                   placeholder="请选择时间"
                   defaultValue={time}
                   suffixIcon={<Icon type="clock-circle" />}
-                  onChange={(time) => {
+                  onChange={time => {
                     this.setState(
                       {
-                        time: time,
+                        time,
                       },
                       () => {
                         this.getRealTimeDataView();
@@ -569,12 +559,12 @@ class index extends Component {
         >
           <SdlTable
             rowClassName={(record, index, indent) => {
-              return;
+
             }}
             defaultWidth={94}
             loading={dataLoading || columnLoading}
             size="middle"
-            bordered={true}
+            bordered
             pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}

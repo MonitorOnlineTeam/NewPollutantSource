@@ -374,7 +374,9 @@ getTaskTypeInfo=() => {
           if (text === '2') {
             return <span>报警响应异常</span>;
           }
+          if (text === '3') {
           return <span>工作超时</span>;
+}
         },
       },
       {
@@ -391,7 +393,9 @@ getTaskTypeInfo=() => {
           if (text === 3) {
             return <span><Tag color="blue">监管派单</Tag></span>;
           }
+          if (text === 4) {
           return <span><Tag color="pink">自动派单</Tag></span>;
+          }
         },
       },
       {
@@ -406,9 +410,11 @@ getTaskTypeInfo=() => {
             return <span><Badge status="processing" text="进行中" /></span>;
           }
           if (text === 3) {
-            return <span><Badge status="processing" text="进行中" /></span>;
+            return <span><Badge status="success" text="已完成" /></span>;
           }
+          if (text === 10) {
           return <span><Badge status="error" text="系统关闭" /></span>;
+          }
         },
       },
       {
