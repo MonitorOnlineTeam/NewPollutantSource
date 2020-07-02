@@ -736,7 +736,11 @@ class NewHome extends PureComponent {
                 }
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
                   this.setState({ month: moment(date).get('month') })
-                  this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), date.endOf("month").format("YYYY-MM-DD HH:mm:ss"));
+                  let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                  if (moment().get('month') === moment(date).get('month')) {
+                    endTime = moment().format("YYYY-MM-DD 23:59:59");
+                  }
+                  this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), endTime);
                 }} />
                 <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
                   this.setState({ selectValue: val })
