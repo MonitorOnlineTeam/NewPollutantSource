@@ -162,7 +162,7 @@ class DrillDownRunModal extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "%"
+                return params.value
               }
             }
           },
