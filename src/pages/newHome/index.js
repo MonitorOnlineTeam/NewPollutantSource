@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, Select } from "antd"
 // import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
-import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
+// import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 import { getDirLevel } from "@/utils/utils"
 
@@ -47,7 +47,7 @@ const mapIconStyle = {
   background: "#fff",
   boxShadow: "0px 0px 3px 2px #fff"
 }
-
+let Map, Marker, Polygon, Markers, InfoWindow;
 let aMap = null;
 
 @connect(({ loading, newHome, global }) => ({
@@ -153,8 +153,28 @@ class NewHome extends PureComponent {
       selectValue: "", // 筛选
       month: moment().get('month')
     };
-
   }
+
+  componentWillMount() {
+    if (config.offlineMapUrl.domain) {
+      let amap = require('@/components/ReactAmap');
+      // Map, Marker, Polygon, Markers, InfoWindow;
+      Map = amap.Map
+      Marker = amap.Marker
+      Polygon = amap.Polygon
+      Markers = amap.Markers
+      InfoWindow = amap.InfoWindow
+    } else {
+      let amap = require('react-amap');
+      // Map, Marker, Polygon, Markers, InfoWindow;
+      Map = amap.Map
+      Marker = amap.Marker
+      Polygon = amap.Polygon
+      Markers = amap.Markers
+      InfoWindow = amap.InfoWindow
+    }
+  }
+
   componentDidMount() {
     // 获取显示级别
     this.props.dispatch({
@@ -736,7 +756,11 @@ class NewHome extends PureComponent {
                 }
                 <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
                   this.setState({ month: moment(date).get('month') })
-                  this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), date.endOf("month").format("YYYY-MM-DD HH:mm:ss"));
+                  let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                  if (moment().get('month') === moment(date).get('month')) {
+                    endTime = moment().format("YYYY-MM-DD 23:59:59");
+                  }
+                  this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), endTime);
                 }} />
                 <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
                   this.setState({ selectValue: val })

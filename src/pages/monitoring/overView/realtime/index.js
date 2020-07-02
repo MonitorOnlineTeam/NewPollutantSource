@@ -540,7 +540,7 @@ class index extends Component {
                 onSearch={val => {
                   this.getRealTimeDataView();
                 }}
-                placeholder="请输入监测点名称"
+                placeholder="请输入监控目标/监测点名称"
               />
             </>
           }
