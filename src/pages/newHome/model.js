@@ -42,6 +42,7 @@ export default Model.extend({
     END_TIME: moment().format("YYYY-MM-DD 23:59:59"),
     entName: "",
     regionCode: "660000000",
+    REGION_CODE: "660000000",
     monitoringData: [],
     runAndAnalysisData: {
       transmissionEfficiencyRate: 0,
@@ -309,7 +310,7 @@ export default Model.extend({
     // 点击师 - 改变RegionCode - 左右联动
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
-      yield update({ regionCode, level: 2, LEVEL: 2 })
+      yield update({ regionCode, level: 2, LEVEL: 2, REGION_CODE: regionCode})
       yield put({ type: "getMonitoringData" })
       yield put({
         type: "getRunAndAnalysisData",

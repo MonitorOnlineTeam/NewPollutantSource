@@ -311,24 +311,57 @@ class NewHome extends PureComponent {
   renderMarker = (extData) => {
     const { displayType } = this.state;
     if (extData.position.MonitorObjectType !== "师") {
-      return <div>
-        <Tooltip title={extData.position.title}>
-          {
-            displayType === 0 ?
-              this.getEntIcon(extData)
-              :
-              <div onClick={() => {
-                this.setState({
-                  currentClickObj: extData.position,
-                  infoWindowVisible: true,
-                  infoWindowPos: [extData.position.Longitude, extData.position.Latitude]
-                }, () => {
-                  this.getInfoWindowData()
-                })
-              }}>{this.getPollutantIcon(extData)}</div>
+      // return <div>
+      //   <Tooltip title={extData.position.title}>
+      //     {
+      //       displayType === 0 ?
+      //         this.getEntIcon(extData)
+      //         :
+      //         <div onClick={() => {
+      //           this.setState({
+      //             currentClickObj: extData.position,
+      //             infoWindowVisible: true,
+      //             infoWindowPos: [extData.position.Longitude, extData.position.Latitude]
+      //           }, () => {
+      //             this.getInfoWindowData()
+      //           })
+      //         }}>{this.getPollutantIcon(extData)}</div>
+      //     }
+      //   </Tooltip>
+      // </div>
+      return <div
+        onMouseEnter={() => {
+          if (this.state.infoWindowVisible === false) {
+            this.setState({
+              hoverMapCenter: extData.position,
+              currentTitle: extData.position.title,
+              infoWindowHoverVisible: true,
+            })
           }
-        </Tooltip>
+        }}
+        onMouseLeave={() => {
+          if (this.state.infoWindowVisible === false) {
+            this.setState({
+              infoWindowHoverVisible: false,
+            })
+          }
+        }}>
+        {
+          displayType === 0 ?
+            this.getEntIcon(extData)
+            :
+            <div onClick={() => {
+              this.setState({
+                currentClickObj: extData.position,
+                infoWindowVisible: true,
+                infoWindowPos: [extData.position.Longitude, extData.position.Latitude]
+              }, () => {
+                this.getInfoWindowData()
+              })
+            }}>{this.getPollutantIcon(extData)}</div>
+        }
       </div>
+
     } else {
       return <div>
         {
@@ -361,6 +394,7 @@ class NewHome extends PureComponent {
             this.setState({
               coordinateSet: extData.position.CoordinateSet,
               markersList: pointMarkers,
+              infoWindowHoverVisible: false,
               displayType: 1
             })
           }
@@ -851,6 +885,15 @@ class NewHome extends PureComponent {
                   render={this.renderMarker}
                 // content={<span>111</span>}
                 />
+                {/* hover 提示 */}
+                <InfoWindow
+                  position={this.state.hoverMapCenter}
+                  isCustom
+                  showShadow
+                  autoMove
+                  visible={this.state.infoWindowHoverVisible}
+                  offset={[4, -35]}
+                >{this.state.currentTitle}</InfoWindow>
                 <InfoWindow
                   events={this.infoWindowEvents}
                   position={infoWindowPos}

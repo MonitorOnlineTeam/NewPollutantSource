@@ -18,11 +18,11 @@ import {
   connect
 } from 'dva';
 // import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
-import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
+// import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
-import { getPointStatusImg } from '@/utils/getStatusImg';
+// import { getPointStatusImg } from '@/utils/getStatusImg';
 import { onlyOneEnt } from '../../config';
 import styles from './index.less';
 import { router } from 'umi';
@@ -35,6 +35,8 @@ import HomeCommon from '@/components/home/HomeCommon';
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
+let Map, Marker, Polygon, Markers, InfoWindow;
+
 
 @connect(({ loading, home }) => ({
   allEntAndPointLoading: loading.effects['home/getAllEntAndPoint'],
@@ -129,6 +131,23 @@ class index extends Component {
       type: 'home/getHomePage',
       payload: {}
     })
+    if (config.offlineMapUrl.domain) {
+      let amap = require('@/components/ReactAmap');
+      // Map, Marker, Polygon, Markers, InfoWindow;
+      Map = amap.Map
+      Marker = amap.Marker
+      Polygon = amap.Polygon
+      Markers = amap.Markers
+      InfoWindow = amap.InfoWindow
+    } else {
+      let amap = require('react-amap');
+      // Map, Marker, Polygon, Markers, InfoWindow;
+      Map = amap.Map
+      Marker = amap.Marker
+      Polygon = amap.Polygon
+      Markers = amap.Markers
+      InfoWindow = amap.InfoWindow
+    }
   }
 
   componentDidMount() {
