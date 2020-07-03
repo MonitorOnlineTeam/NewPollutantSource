@@ -389,7 +389,8 @@ class PlaybackPage extends PureComponent {
                     this.setState(
                       {
                         imgShow: false,
-                        selectIndex: -1
+                        selectIndex: -1,
+                        QCALineItem: {}
                       }
                     )
                   })
