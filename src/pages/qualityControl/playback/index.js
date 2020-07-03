@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import NavigationTree from '@/components/NavigationTree'
+import NavigationTreeQCA from '@/components/NavigationTreeQCA'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Card, DatePicker, Badge, Button, Modal, Timeline, Row, Col, Icon, Divider, Empty, Tag, Alert, Spin, Slider, message } from 'antd';
 import { connect } from 'dva'
@@ -51,6 +52,9 @@ class PlaybackPage extends PureComponent {
       imgShow: false,
       selectIndex: -1,
     };
+    this._SELF_ = {
+      treeType: this.props.history.location.query.treeType,
+    }
   }
 
   componentDidMount() {
@@ -126,7 +130,7 @@ class PlaybackPage extends PureComponent {
     this.setState({ currentTimeLineItem: undefined, count: 0 });
   }
 
-  clearData=()=>{
+  clearData = () => {
     this.props.dispatch({
       type: "qualityControl/updateState",
       payload: {
@@ -366,24 +370,52 @@ class PlaybackPage extends PureComponent {
     const { selectedTime, currentTimeLineItem, otherLoading, start, count, QCALineItem: { ID, QCType, DGIMN, QCAMN, QCTime, PollutantCode } } = this.state;
     return (
       <>
-        <NavigationTree QCAUse="1" domId="#remoteControl" onItemClick={value => {
-          if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
-            this.setState({
-              QCAMN: value[0].key
-            }, () => {
-              this.getCemsAndStandGasData();
-              this.getQCATimelineRecord();
-              this.initFlowChartData();
-              // this.clearData();
-              this.setState(
-                {
-                  imgShow: false,
-                  selectIndex: -1
+        {
+          this._SELF_.treeType === "MN" ? <NavigationTree domId="#remoteControl" onItemClick={value => {
+            if (value.length > 0 && !value[0].IsEnt) {
+              this.props.dispatch({
+                type: "qualityControl/getQCAMNByDGIMN",
+                payload: {
+                  DGIMN: value[0].key
+                },
+                callback: (QCAMN) => {
+                  this.setState({
+                    QCAMN: QCAMN
+                  }, () => {
+                    this.getCemsAndStandGasData();
+                    this.getQCATimelineRecord();
+                    this.initFlowChartData();
+                    // this.clearData();
+                    this.setState(
+                      {
+                        imgShow: false,
+                        selectIndex: -1
+                      }
+                    )
+                  })
                 }
-              )
-            })
-          }
-        }} />
+              })
+            }
+          }} /> :
+            <NavigationTreeQCA QCAUse="1" domId="#remoteControl" onItemClick={value => {
+              if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
+                this.setState({
+                  QCAMN: value[0].key
+                }, () => {
+                  this.getCemsAndStandGasData();
+                  this.getQCATimelineRecord();
+                  this.initFlowChartData();
+                  // this.clearData();
+                  this.setState(
+                    {
+                      imgShow: false,
+                      selectIndex: -1
+                    }
+                  )
+                })
+              }
+            }} />
+        }
         {/* <div id="remoteControl" className={styles.playbackWrapper}> */}
         <div id="remoteControl" className={styles.playbackWrapper}>
           <BreadcrumbWrapper>
@@ -449,7 +481,7 @@ class PlaybackPage extends PureComponent {
                           查看结果比对
                       </Button>
                       }
-                      {this.state.imgShow ? this.loadingImg(imgChartLoading): <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                      {this.state.imgShow ? this.loadingImg(imgChartLoading) : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                       {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
                         // {true ?
                         <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
