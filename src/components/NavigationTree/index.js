@@ -754,8 +754,6 @@ class NavigationTree extends Component {
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
-    console.log('expendKey=', expandedKeys)
-    console.log('useChioce=', this.state.useChioce)
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map((item, idx) => {
