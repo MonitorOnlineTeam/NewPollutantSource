@@ -606,7 +606,7 @@ class AddInstrument extends Component {
           if (record.StandardGasCode === "P") {
             return '-'
           }
-          <FormItem style={{ marginBottom: '0' }}>
+          return <FormItem style={{ marginBottom: '0' }}>
             {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
               rules: [
                 { required: true, message: '请输入总流量设定值' },
@@ -747,7 +747,7 @@ class AddInstrument extends Component {
               rules: [
                 { required: true, message: '请输入质控周期' },
               ],
-              initialValue: text ? `${text}` : undefined,
+              initialValue: text !== undefined ? `${text}` : undefined,
             })(
               <InputGroup compact>
                 <Input
