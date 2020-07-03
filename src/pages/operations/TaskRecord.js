@@ -493,18 +493,19 @@ getTaskTypeInfo=() => {
     } else {
       style.marginLeft = 20;
     }
-    if (LoadingData) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
-    }
+    console.log('LoadingData', LoadingData);
+    // if (LoadingData) {
+    //   return (<Spin
+    //     style={{
+    //       width: '100%',
+    //       height: 'calc(100vh/2)',
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       justifyContent: 'center',
+    //     }}
+    //     size="large"
+    //   />);
+    // }
     return (
       <BreadcrumbWrapper>
         <Card className="contentContainer">
@@ -672,7 +673,7 @@ getTaskTypeInfo=() => {
               </Row>
           </Form>
           <SdlTable
-              loading={this.props.LoadingData}
+              loading={LoadingData}
               dataSource={this.props.datatable}
               pagination={{
                 showSizeChanger: true,
@@ -684,7 +685,6 @@ getTaskTypeInfo=() => {
                 pageSizeOptions: ['20', '30', '40', '100'],
                 total: gettasklistqueryparams.total,
               }}
-              {...this.props}
               columns={columns}
         />
         </Card>

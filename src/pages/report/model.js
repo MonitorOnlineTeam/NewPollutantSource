@@ -1,8 +1,8 @@
-//运维任务列表
+// 运维任务列表
 import moment from 'moment';
+import { message } from 'antd';
 import * as services from './service';
 import Model from '@/utils/model';
-import { message } from 'antd';
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -17,7 +17,7 @@ export default Model.extend({
       ReportTime: moment().add(-1, 'day'),
       beginTime: null,
       endTime: null,
-      reportType: { value: "siteDaily" }
+      reportType: { value: 'siteDaily' },
 
       // Regions: ["110000000", "110100000", "110101000"],
       // EntCode: "",
@@ -25,7 +25,7 @@ export default Model.extend({
     },
     SmokeForm: {
       beginTime: null,
-      endTime: null
+      endTime: null,
     },
     entAndPontList: [],
     pollutantList: [],
@@ -41,9 +41,9 @@ export default Model.extend({
       PageIndex: 1,
       PageSize: 10,
       beginTime: moment().add(-1, 'month').format('YYYY-MM-01 00:00:00'),
-      endTime: moment(moment().format('YYYY-MM-01 00:00:00')).add(-1, "second").format('YYYY-MM-DD 23:59:59'),
+      endTime: moment(moment().format('YYYY-MM-01 00:00:00')).add(-1, 'second').format('YYYY-MM-DD 23:59:59'),
       // aaa:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,"month").format('YYYY-MM-01 23:59:59'),
-      total: 0
+      total: 0,
     },
     // 烟气报表 ----- 开始
     smokeReportFrom: {
@@ -52,7 +52,7 @@ export default Model.extend({
       total: 0,
     },
     smokeReportData: [],
-    pointName: "",
+    pointName: '',
     Total: 0,
     // 烟气报表 ----- 结束
   },
@@ -65,9 +65,11 @@ export default Model.extend({
       const result = yield call(services.getPollutantList, payload);
       if (result.IsSuccess) {
         const columns = result.Datas.map(item => {
+          const unit = item.unit ? `(${item.unit})` : ''
           return {
-            title: <>{item.name}<br />({item.unit})</>,
-            dataIndex: item.name
+            title: <>{item.name}<br />{unit}</>,
+            dataIndex: item.name,
+            align: 'center',
           }
         })
         yield update({
@@ -76,15 +78,15 @@ export default Model.extend({
             //   title: "时间",
             //   dataIndex: 'time',
             // },
-            ...columns
-          ]
+            ...columns,
+          ],
         })
         payload.callback && payload.callback()
       }
     },
     // 获取站点日报数据
     * getDateReportData({
-      payload, reportType
+      payload, reportType,
     }, { call, update, select }) {
       const dateReportForm = yield select(state => state.report.dateReportForm)
 
@@ -116,24 +118,22 @@ export default Model.extend({
       const postData = {
         PageIndex: dateReportForm.current,
         IsPage: 1,
-        ...payload
+        ...payload,
       }
-      let serviceApi = reportType === "siteDaily" ? services.getSiteDailyDayReport : (reportType === "monthly" ? services.getMonthlyReport : services.getAnnalsReport)
+      const serviceApi = reportType === 'siteDaily' ? services.getSiteDailyDayReport : (reportType === 'monthly' ? services.getMonthlyReport : services.getAnnalsReport)
       const result = yield call(serviceApi, postData);
       if (result.IsSuccess) {
         let data = [];
         if (result.Datas.length) {
           data = result.Datas.map(item => {
             let variate = [];
-            variate = item.Datas.map(itm => {
-              return { ...itm, pointName: item.PointName, entName: item.EntName, rowSpan: item.Datas.length + 3 }
-            })
+            variate = item.Datas.map(itm => ({ ...itm, pointName: item.PointName, entName: item.EntName, rowSpan: item.Datas.length + 3 }))
             // 大气和扬尘不显示最大最小平均值
             if (dateReportForm.PollutantSourceType.value != 5 && dateReportForm.PollutantSourceType.value != 12) {
               variate.concat([ // 将最大、最小、平均值放入数据源中
-                { ...item.MinVal[0], pointName: item.PointName, time: "最小值" },
-                { ...item.MaxVal[0], pointName: item.PointName, time: "最大值" },
-                { ...item.AvgVal[0], pointName: item.PointName, time: "平均值" },
+                { ...item.MinVal[0], pointName: item.PointName, time: '最小值' },
+                { ...item.MaxVal[0], pointName: item.PointName, time: '最大值' },
+                { ...item.AvgVal[0], pointName: item.PointName, time: '平均值' },
               ])
             }
             return variate;
@@ -145,8 +145,8 @@ export default Model.extend({
           dateReportData: data,
           dateReportForm: {
             ...dateReportForm,
-            total: result.Total
-          }
+            total: result.Total,
+          },
         })
       } else {
         message.error(result.Message)
@@ -155,7 +155,7 @@ export default Model.extend({
 
     // 获取系统污染物
     * getPollutantTypeList({
-      payload, callback
+      payload, callback,
     }, { call, update, select }) {
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
@@ -165,9 +165,9 @@ export default Model.extend({
           dateReportForm: {
             ...dateReportForm,
             PollutantSourceType: result.Datas.length && {
-              value: result.Datas[0]["pollutantTypeCode"]
-            }
-          }
+              value: result.Datas[0].pollutantTypeCode,
+            },
+          },
         })
         callback && callback(result)
       }
@@ -175,7 +175,7 @@ export default Model.extend({
 
     // 获取企业
     * getEnterpriseList({
-      payload
+      payload,
     }, { call, update, select }) {
       const result = yield call(services.getEnterpriseList, payload);
       if (result.IsSuccess) {
@@ -185,19 +185,19 @@ export default Model.extend({
           dateReportForm: {
             ...dateReportForm,
             EntCode: result.Datas.length && {
-              value: result.Datas[0]["ParentCode"]
-            }
-          }
+              value: result.Datas[0].ParentCode,
+            },
+          },
         })
         payload.callback && payload.callback(result)
       }
     },
     // 获取汇总日报数据
     * getDailySummaryDataList({
-      payload, reportType
+      payload, reportType,
     }, { call, update, select }) {
       // const summaryForm = yield select(state => state.report.summaryForm);
-      let serviceApi = reportType === "daily" ? services.getDailySummaryList : (reportType === "monthly" ? services.getSummaryMonthReport : services.getSummaryYearReport)
+      const serviceApi = reportType === 'daily' ? services.getDailySummaryList : (reportType === 'monthly' ? services.getSummaryMonthReport : services.getSummaryYearReport)
       const result = yield call(serviceApi, {
         ...payload,
         // BeginTime: summaryForm.beginTime,
@@ -206,10 +206,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         let data = [];
         if (result.Datas.length) {
-          data = result.Datas.map(item => {
+          data = result.Datas.map(item =>
             // return { ...item, EntName: item.EntName}
-            return { EntName: item.EntName, ...item.DatasItem }
-          })
+             ({ EntName: item.EntName, ...item.DatasItem }),
+          )
         }
         yield update({
           dailySummaryDataList: data,
@@ -219,7 +219,6 @@ export default Model.extend({
     },
     // 报表导出
     * reportExport({ payload }, { call, update, select }) {
-
       const dateReportForm = yield select(state => state.report.dateReportForm)
       const result = yield call(services.reportExcel, payload);
       if (result.IsSuccess) {
@@ -238,13 +237,13 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //数据上报报表
+    // 数据上报报表
     *getStatisticsReportDataList({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
       const result = yield call(services.getStatisticsReportDataList, params);
       yield update({ statisticsReportDataList: result.Datas, total: result.Total })
     },
-    //污水处理厂列表
+    // 污水处理厂列表
     *getEntSewageList({ payload }, { call, update }) {
       const result = yield call(services.getEntSewageList, payload);
       yield update({ EntSewageList: result.Datas })
@@ -266,30 +265,30 @@ export default Model.extend({
       if (result.IsSuccess) {
         const filterData = result.Datas.filter(item => {
           if (item.children.length) {
-            let children = item.children.map(itm => {
-              let obj = itm;
+            const children = item.children.map(itm => {
+              const obj = itm;
               delete obj.children;
               return { ...obj }
             })
             return {
               ...item,
-              children
+              children,
             }
           }
         })
         yield update({
           entAndPointList: filterData,
           defaultEntAndPoint: [filterData[0].key, filterData[0].children[0].key],
-          pointName: filterData[0].children[0].title
+          pointName: filterData[0].children[0].title,
         })
         // 获取数据
         yield put({
-          type: "getSmokeReportData",
+          type: 'getSmokeReportData',
           payload: {
             DGIMN: filterData[0].children[0].key,
-            time: moment().format("YYYY-MM-DD HH:mm:ss"),
-            dataType: payload.reportType
-          }
+            time: moment().format('YYYY-MM-DD HH:mm:ss'),
+            dataType: payload.reportType,
+          },
         })
       } else {
         message.error(result.Message)
@@ -303,7 +302,7 @@ export default Model.extend({
         { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
       if (result.IsSuccess) {
         yield update({
-          smokeReportData: result.Datas
+          smokeReportData: result.Datas,
         })
       } else {
         message.error(result.Message)
@@ -327,19 +326,19 @@ export default Model.extend({
       if (result.IsSuccess) {
         const filterData = result.Datas.filter(item => {
           if (item.children.length) {
-            let children = item.children.map(itm => {
-              let obj = itm;
+            const children = item.children.map(itm => {
+              const obj = itm;
               delete obj.children;
               return { ...obj }
             })
             return {
               ...item,
-              children
+              children,
             }
           }
         })
         yield update({
-          entAndPontList: filterData
+          entAndPontList: filterData,
         })
         callback && callback(result.Datas)
       } else {

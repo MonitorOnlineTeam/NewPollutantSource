@@ -524,8 +524,8 @@ class Dispatchreport extends Component {
                     onCancel={this.onCancel1}
                     >
                      <ExceptionAlarm
-                      initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={moment(this.state.btime)}
-                        lasttime={moment(this.state.etime)}/>
+                      initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={this.state.btime}
+                        lasttime={this.state.etime}/>
                     </Modal>
                     </Card>
             </div >

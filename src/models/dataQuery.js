@@ -160,8 +160,9 @@ export default Model.extend({
         }
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
+          const unit = item.Unit ? `(${item.Unit})` : ''
           pollutantcols = pollutantcols.concat({
-            title: <>{item.PollutantName}<br />({item.Unit})</>,
+            title: <>{item.PollutantName}<br />{unit}</>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
@@ -187,7 +188,6 @@ export default Model.extend({
       } else {
         pollutantlist.map((item, key) => {
           const unit = item.Unit ? `(${item.Unit})` : ''
-          console.log('item.Unit', item.Unit.length);
           pollutantcols = pollutantcols.concat({
             title: <>{item.PollutantName}<br />{unit}</>,
             dataIndex: item.PollutantCode,
