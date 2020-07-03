@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree'
+import NavigationTreeQCA from '@/components/NavigationTreeQCA'
 import { Form, Card, DatePicker, Row, Col, Select, Button, Radio, Popover, Icon } from 'antd'
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
@@ -182,7 +182,7 @@ class index extends Component {
      
     return (
       <div id="alarmMessage">
-        <NavigationTree QCAUse="1" domId="#alarmMessage" choice={false} onItemClick={value => {
+        <NavigationTreeQCA  domId="#alarmMessage" choice={false} onItemClick={value => {
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
             this.setState({
               QCAMN: value[0].key,

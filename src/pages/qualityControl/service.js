@@ -186,5 +186,11 @@ export async function workModelUps(params) {
   const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/WorkModelUps', params, null);
   return result;
 }
+// 根据mn查询QCAMN
+export async function getQCAMNByDGIMN(params) {
+  const result = await get('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAMNByDGIMN', params, null);
+  return result;
+}
+
 
 
