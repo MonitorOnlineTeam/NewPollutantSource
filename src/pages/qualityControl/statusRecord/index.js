@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree'
+import NavigationTreeQCA from '@/components/NavigationTreeQCA'
 import { Form, Card, DatePicker, Row, Col, Select, Button, Radio, Popover, Icon } from 'antd'
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
@@ -189,7 +189,7 @@ class Index extends Component {
     }
     return (
       <>
-        <NavigationTree QCAUse="1" onItemClick={value => {
+        <NavigationTreeQCA  onItemClick={value => {
           if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == '2') {
             this.changeDgimn(value[0].key);
           }
