@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree/index.js'
+import NavigationTreeQCA from '@/components/NavigationTreeQCA/index.js'
 import YsyShowVideo from '@/components/QCAVideo/QCAYsyShowVideo.js'
 
 /**
@@ -25,7 +25,7 @@ class Index extends Component {
     render() {
         return (
             <div id="ysyvideo">
-                 <NavigationTree QCAUse="1"  domId="#ysyvideo" choice={false} onItemClick={value => {
+                 <NavigationTreeQCA   domId="#ysyvideo" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt&&value[0].QCAType=="2") {
                             this.changeDgimn(value[0].VideoNo)
                             }

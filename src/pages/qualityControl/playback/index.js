@@ -288,7 +288,7 @@ class PlaybackPage extends PureComponent {
           <span style={{ fontSize: '13px', cursor: "pointer" }}
             className={this.setSelectHrpFactRowClassName(index)}
             onClick={() => { this.onTimeLineItemClick(item, index) }}>
-            {`${item.BeginTime}${item.EndTime ? " - " + item.EndTime : ""}进行`}
+             {`${item.UserName}在${item.BeginTime}发起${item.PollutantName}-${item.StandValue}${item.Unit}质控`}<span style={{color:item.Color}}>{item.Result}</span>
             <Tag style={{ cursor: "pointer" }} color={QCStatusColor[item.QCType]}>{item.Flag}</Tag>
           </span>
         </Timeline.Item>
@@ -298,27 +298,27 @@ class PlaybackPage extends PureComponent {
   }
 
   returnQCStatus = () => {
-    const { currentTimeLineItem } = this.state;
-    if (currentTimeLineItem) {
-      return <Alert
-        type={currentTimeLineItem.QCType == 1 ? "success" : (currentTimeLineItem.QCType == 3 ? "error" : "info")}
-        icon={<Icon type={iconTypeByQCType[currentTimeLineItem.QCType]} />}
-        style={{ marginBottom: 10 }}
-        message={<span style={{ color: QCStatusColor[currentTimeLineItem.QCType] }}>{currentTimeLineItem.Flag}</span>}
-        banner
-      />
-    }
-    // let DeviceStatus = this.props.oldPlaybackPageDate ? this.props.oldPlaybackPageDate.DeviceStatus
-    switch (this.props.oldPlaybackPageDate.DeviceStatus) {
-      case "0":
-        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", border: "#ddd" }} message={`质控仪离线中`} showIcon />
-      case "1":
-        return <Alert type="success" message={`质控仪在线中`} showIcon />
-      case "3":
-        return <Alert type="warning" message={`质控仪状态异常`} showIcon />
-      default:
-        return "";
-    }
+    // const { currentTimeLineItem } = this.state;
+    // if (currentTimeLineItem) {
+    //   return <Alert
+    //     type={currentTimeLineItem.QCType == 1 ? "success" : (currentTimeLineItem.QCType == 3 ? "error" : "info")}
+    //     icon={<Icon type={iconTypeByQCType[currentTimeLineItem.QCType]} />}
+    //     style={{ marginBottom: 10 }}
+    //     message={<span style={{ color: QCStatusColor[currentTimeLineItem.QCType] }}>{currentTimeLineItem.Flag}</span>}
+    //     banner
+    //   />
+    // }
+    // // let DeviceStatus = this.props.oldPlaybackPageDate ? this.props.oldPlaybackPageDate.DeviceStatus
+    // switch (this.props.oldPlaybackPageDate.DeviceStatus) {
+    //   case "0":
+    //     return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", border: "#ddd" }} message={`质控仪离线中`} showIcon />
+    //   case "1":
+    //     return <Alert type="success" message={`质控仪在线中`} showIcon />
+    //   case "3":
+    //     return <Alert type="warning" message={`质控仪状态异常`} showIcon />
+    //   default:
+    //     return "";
+    // }
     // return <Alert message="质控仪在线中" type="success" showIcon />
   }
 
