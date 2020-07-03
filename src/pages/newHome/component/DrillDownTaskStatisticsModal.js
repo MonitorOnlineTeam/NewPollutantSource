@@ -25,6 +25,7 @@ const Option = Select.Option
   taskModelType: newHome.taskModelType,
   currentDivisionName: newHome.currentDivisionName,
   currentEntName: newHome.currentEntName,
+  REGION_CODE: newHome.REGION_CODE,
 }))
 class DrillDownTaskStatisticsModal extends PureComponent {
   constructor(props) {
@@ -98,7 +99,12 @@ class DrillDownTaskStatisticsModal extends PureComponent {
         startTime: this.props.START_TIME,
         endTime: this.props.END_TIME,
         entName: "",
+        regionCode: this.props.REGION_CODE
       }
+    })
+    this.setState({
+      date: undefined,
+      endTime: undefined,
     })
     this.props.onClose && this.props.onClose();
   }
@@ -331,7 +337,11 @@ class DrillDownTaskStatisticsModal extends PureComponent {
                     initialValue: moment(startTime)
                   })(
                     <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                      this.setState({ date })
+                      let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                      if (moment().get('month') === moment(date).get('month')) {
+                        endTime = moment().format("YYYY-MM-DD 23:59:59");
+                      }
+                      this.setState({ date, endTime })
                     }} />
                   )}
                 </Form.Item>
@@ -342,8 +352,8 @@ class DrillDownTaskStatisticsModal extends PureComponent {
                     this.props.dispatch({
                       type: "newHome/updateState",
                       payload: {
-                        startTime: this.state.date.format("YYYY-MM-01 00:00:00"),
-                        endTime: this.state.date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                        startTime: this.state.date ? this.state.date.format("YYYY-MM-01 00:00:00") : startTime,
+                        endTime: this.state.endTime || endTime
                       }
                     })
                     this.props.chartClick();

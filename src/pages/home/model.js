@@ -245,7 +245,6 @@ export default Model.extend({
           dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
           dyhwdata.push(ele.Emissions.toFixed(2));
         });
-        debugger;
         yield update({
           AllMonthEmissionsByPollutant: {
             ...AllMonthEmissionsByPollutant,
