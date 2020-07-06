@@ -160,7 +160,7 @@ class AddInstrument extends Component {
     this.changeStandardGasData('DateType', value, idx)
   }}>
     <Option value="0">天</Option>
-    <Option value="1">小时</Option>
+    {/* <Option value="1">小时</Option> */}
   </Select>
 
   // 嵌套表格
