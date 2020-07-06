@@ -752,7 +752,7 @@ class AddInstrument extends Component {
               <InputGroup compact>
                 <Input
                   style={{ width: '50%' }}
-                  defaultValue={text ? `${text}` : undefined}
+                  defaultValue={text !== undefined ? `${text}` : undefined}
                   addonBefore="周期:"
                   addonAfter={this.selectAfter(index, idx, DateType)}
                   onChange={e => {
