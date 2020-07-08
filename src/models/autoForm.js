@@ -337,13 +337,14 @@ export default Model.extend({
     },
 
     * del({ payload }, { call, update, put }) {
-      const result = yield call(services.postAutoFromDataDelete, { ...payload });
+      const result = yield call(services.postAutoFromDataDelete, { ...payload, searchParams: undefined });
       if (result.IsSuccess) {
         message.success('删除成功！');
         yield put({
           type: 'getAutoFormData',
           payload: {
             configId: payload.configId,
+            searchParams: payload.searchParams,
           },
         });
       }

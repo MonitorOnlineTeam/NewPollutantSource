@@ -691,7 +691,7 @@ class AddInstrument extends Component {
               initialValue: text ? `${text}` : '3',
             })(
               <Select
-                onChange={value => { this.changeStandardGasData('VentilationTime', value, idx) }}
+                onChange={value => { this.changeStandardGasData(index, 'VentilationTime', value, idx) }}
               >
                 {
                   timeList.map(item => item)
