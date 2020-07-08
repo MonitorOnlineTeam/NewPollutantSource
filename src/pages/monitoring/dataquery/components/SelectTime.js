@@ -160,7 +160,7 @@ class SelectTime extends Component {
     let endTime = `${endTimeObj.year}-${endTimeObj.month}-${endTimeObj.day} ${endTimeObj.hour}:59:59`
     if (this.props.mode === "day") {
       startTime = `${startTimeObj.year}-${startTimeObj.month}-${startTimeObj.day} 00:00:00`
-      endTime = `${endTimeObj.year}-${endTimeObj.month}-${endTimeObj.day} 59:59:59`
+      endTime = `${endTimeObj.year}-${endTimeObj.month}-${endTimeObj.day} 23:59:59`
     }
     !reload && this.props.onChange && this.props.onChange(startTime, endTime)
     reload && this.props.reload(startTime, endTime)
