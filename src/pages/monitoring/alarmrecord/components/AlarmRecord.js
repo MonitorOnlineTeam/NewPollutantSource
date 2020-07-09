@@ -1,24 +1,15 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { formatMoment, handleFormData } from '@/utils/utils';
-import {
-  Card,
-  Spin,
-  Button,
-  Modal,
-  Form,
-  message,
-  Badge,
-  Icon,
-  Row,
-  Col,
-  Input,
-} from 'antd';
+import { SettingTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Button, Modal, message, Badge, Row, Col, Input } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import PollutantSelect from '@/components/PollutantSelect'
-import SdlTable from '@/components/SdlTable'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import PollutantSelect from '@/components/PollutantSelect';
+import SdlTable from '@/components/SdlTable';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import SdlDatePicker from '@/pages/AutoFormManager/SdlDatePicker';
 
@@ -62,29 +53,31 @@ class AlarmRecord extends Component {
   componentDidMount() {
     const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
     if (initLoadData) {
-      let {
-        overdataparams,
-      } = this.props;
+      let { overdataparams } = this.props;
       overdataparams = {
         ...overdataparams,
         DGIMN,
-        beginTime: firsttime ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss') : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: lasttime ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss') : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
-      }
+        beginTime: firsttime
+          ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss')
+          : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
+        endTime: lasttime
+          ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss')
+          : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
+      };
       console.log('firsttime=', firsttime);
       console.log('lasttime=', lasttime);
       console.log('this.props.DGIMN=', this.props.DGIMN);
       if (firsttime && lasttime) {
         this.setState({
           rangeDate: [firsttime, lasttime],
-        })
+        });
       } else {
         this.setState({
           rangeDate: this.state.rangeDate,
-        })
+        });
       }
 
-      this.changeDgimn(this.props.DGIMN, overdataparams)
+      this.changeDgimn(this.props.DGIMN, overdataparams);
     }
   }
 
@@ -92,12 +85,14 @@ class AlarmRecord extends Component {
     const { DGIMN, lasttime, firsttime } = this.props;
     if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
       // 如果传入参数有变化，则重新加载数据
-      if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss') !==
-        moment(lasttime).format('YYYY-MM-DD HH:mm:ss') ||
-        moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss') !== moment(firsttime).format('YYYY-MM-DD HH:mm:ss')) {
-        let {
-          overdataparams,
-        } = this.props;
+      if (
+        nextProps.DGIMN !== DGIMN ||
+        moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss') !==
+          moment(lasttime).format('YYYY-MM-DD HH:mm:ss') ||
+        moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss') !==
+          moment(firsttime).format('YYYY-MM-DD HH:mm:ss')
+      ) {
+        let { overdataparams } = this.props;
         overdataparams = {
           ...overdataparams,
           pageIndex: 1,
@@ -105,10 +100,10 @@ class AlarmRecord extends Component {
           DGIMN: nextProps.DGIMN,
           beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
           endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
-        }
+        };
         this.setState({
           rangeDate: [nextProps.firsttime, nextProps.lasttime],
-        })
+        });
         if (nextProps.DGIMN !== '') {
           this.changeDgimn(nextProps.DGIMN, overdataparams);
         }
@@ -117,45 +112,41 @@ class AlarmRecord extends Component {
       // 如果传入参数有变化，则重新加载数据
       if (nextProps.DGIMN !== DGIMN) {
         const { rangeDate } = this.state;
-        let {
-          overdataparams,
-        } = this.props;
+        let { overdataparams } = this.props;
         overdataparams = {
           ...overdataparams,
           DGIMN: nextProps.DGIMN,
           beginTime: moment(rangeDate[0]).format('YYYY-MM-DD HH:mm:ss'),
           endTime: moment(rangeDate[1]).format('YYYY-MM-DD HH:mm:ss'),
-        }
+        };
         if (nextProps.DGIMN !== '') {
           this.changeDgimn(nextProps.DGIMN, overdataparams);
         }
       }
     }
-  }
+  };
 
   /** 切换排口 */
   changeDgimn = (dgimn, params) => {
     this.setState({
       selectDisplay: true,
       selectedRowKeys: [],
-    })
-    const {
-      dispatch,
-    } = this.props;
+    });
+    const { dispatch } = this.props;
     params = {
       ...params,
       pollutantCode: '',
       pageIndex: 1,
       pageSize: 20,
-    }
+    };
     dispatch({
       type: 'alarmrecord/updateState',
       payload: {
         overdataparams: params,
       },
-    })
+    });
     this.getpointpollutants(dgimn);
-  }
+  };
 
   /** 获取污染物 */
   getpointpollutants = dgimn => {
@@ -165,7 +156,7 @@ class AlarmRecord extends Component {
         overdata: false,
         dgimn,
       },
-    })
+    });
   };
 
   /** 时间更改 */
@@ -177,33 +168,32 @@ class AlarmRecord extends Component {
       endTime: date[0] && formatMoment(date[1]),
       pageIndex: 1,
       pageSize: 20,
-    }
+    };
     this.setState({
       rangeDate: date,
-    })
+    });
     if (overdataparams.DGIMN !== null && overdataparams.DGIMN !== '') {
       this.reloaddatalist(overdataparams);
     }
   };
 
-
   /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
     const { pollutantlist } = this.props;
-    return (<PollutantSelect
-      optionDatas={pollutantlist}
-      allpollutant
-      style={{ width: 150, marginRight: 10 }}
-      onChange={this.ChangePollutant}
-      placeholder="请选择污染物"
-    />);
-  }
+    return (
+      <PollutantSelect
+        optionDatas={pollutantlist}
+        allpollutant
+        style={{ width: 150, marginRight: 10 }}
+        onChange={this.ChangePollutant}
+        placeholder="请选择污染物"
+      />
+    );
+  };
 
   /**切换污染物 */
   ChangePollutant = (value, selectedOptions) => {
-    let {
-      overdataparams,
-    } = this.props;
+    let { overdataparams } = this.props;
     if (value === -1) {
       value = null;
     }
@@ -212,17 +202,16 @@ class AlarmRecord extends Component {
       pollutantCode: value,
       pageIndex: 1,
       pageSize: 20,
-    }
+    };
     this.reloaddatalist(overdataparams);
   };
-
 
   /** 分页 */
   pageIndexChange = (page, pageSize) => {
     const { overdataparams } = this.props;
     overdataparams.pageIndex = page;
     this.reloaddatalist(overdataparams);
-  }
+  };
 
   /** 刷新数据 */
   reloaddatalist = overdataparams => {
@@ -232,13 +221,12 @@ class AlarmRecord extends Component {
       payload: {
         overdataparams,
       },
-    })
+    });
     dispatch({
       type: 'alarmrecord/queryoverdatalist',
-      payload: {
-      },
+      payload: {},
     });
-  }
+  };
 
   /** 多选 */
   onSelectChange = selectedRowKeys => {
@@ -253,15 +241,15 @@ class AlarmRecord extends Component {
     const { form } = this.props;
     form.setFieldsValue({
       VerifyTime: moment(),
-    })
+    });
     if (this.state.selectedRowKeys.length > 0) {
       this.setState({
         visible: true,
       });
     } else {
-      message.error('请选择报警记录！')
+      message.error('请选择报警记录！');
     }
-  }
+  };
 
   /** 分页 */
   onShowSizeChange = (pageIndex, pageSize) => {
@@ -270,9 +258,9 @@ class AlarmRecord extends Component {
       ...overdataparams,
       pageIndex,
       pageSize,
-    }
+    };
     this.reloaddatalist(overdataparams);
-  }
+  };
 
   onChange = (pageIndex, pageSize) => {
     let { overdataparams } = this.props;
@@ -280,15 +268,14 @@ class AlarmRecord extends Component {
       ...overdataparams,
       pageIndex,
       pageSize,
-    }
+    };
     this.reloaddatalist(overdataparams);
-  }
+  };
 
   /** 保存核实单 */
   handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
     form.validateFields((err, values) => {
-
       debugger;
       if (!err) {
         debugger;
@@ -309,7 +296,7 @@ class AlarmRecord extends Component {
                 this.setState({
                   visible: false,
                   selectedRowKeys: [],
-                })
+                });
               } else {
                 message.error(result.Message);
               }
@@ -319,7 +306,6 @@ class AlarmRecord extends Component {
       }
     });
   };
-
 
   render() {
     const userCookie = Cookie.get('currentUser');
@@ -335,82 +321,82 @@ class AlarmRecord extends Component {
       }),
       hideDefaultSelections: true,
     };
-    console.log('object')
-    const columns = [{
-      title: '报警时间',
-      dataIndex: 'FirstTime',
-      // fixed: 'left',
-      width: 160,
-      key: 'FirstTime',
-    },
-    {
-      title: '报警类型',
-      width: 100,
-      dataIndex: 'AlarmTypeName',
-      key: 'AlarmTypeName',
-
-    },
-    {
-      title: '污染物',
-      width: 100,
-      dataIndex: 'PollutantName',
-      key: 'PollutantName',
-
-    },
-
-    {
-      title: '报警次数',
-      width: 100,
-      dataIndex: 'AlarmCount',
-      key: 'AlarmCount',
-
-    },
-    // {
-    //   title: '报警值',
-    //   dataIndex: 'AlarmValue',
-    //   key: 'AlarmValue',
-
-    // },
-    {
-      title: '处置状态',
-      width: 100,
-      dataIndex: 'State',
-      key: 'State',
-
-      render: (text, record) => {
-        if (text === '0') {
-          return <span> <Badge status="error" text="未处置" /> </span>;
-        }
-        return <span> <Badge status="default" text="已处置" /> </span>;
+    console.log('object');
+    const columns = [
+      {
+        title: '报警时间',
+        dataIndex: 'FirstTime',
+        // fixed: 'left',
+        width: 160,
+        key: 'FirstTime',
       },
-      // filters: [{
-      //   text: '未核实',
-      //   value: '0',
-      // },
-      // {
-      //   text: '已核实',
-      //   value: '1',
-      // },
-      // ],
-      // onFilter: (value, record) => record.State.indexOf(value) === 0,
-    },
-    {
-      title: '报警信息',
-      dataIndex: 'AlarmMsg',
-      width: 350,
-      key: 'AlarmMsg',
+      {
+        title: '报警类型',
+        width: 100,
+        dataIndex: 'AlarmTypeName',
+        key: 'AlarmTypeName',
+      },
+      {
+        title: '污染物',
+        width: 100,
+        dataIndex: 'PollutantName',
+        key: 'PollutantName',
+      },
 
-    },
+      {
+        title: '报警次数',
+        width: 100,
+        dataIndex: 'AlarmCount',
+        key: 'AlarmCount',
+      },
+      // {
+      //   title: '报警值',
+      //   dataIndex: 'AlarmValue',
+      //   key: 'AlarmValue',
+
+      // },
+      {
+        title: '处置状态',
+        width: 100,
+        dataIndex: 'State',
+        key: 'State',
+
+        render: (text, record) => {
+          if (text === '0') {
+            return (
+              <span>
+                {' '}
+                <Badge status="error" text="未处置" />{' '}
+              </span>
+            );
+          }
+          return (
+            <span>
+              {' '}
+              <Badge status="default" text="已处置" />{' '}
+            </span>
+          );
+        },
+        // filters: [{
+        //   text: '未核实',
+        //   value: '0',
+        // },
+        // {
+        //   text: '已核实',
+        //   value: '1',
+        // },
+        // ],
+        // onFilter: (value, record) => record.State.indexOf(value) === 0,
+      },
+      {
+        title: '报警信息',
+        dataIndex: 'AlarmMsg',
+        width: 350,
+        key: 'AlarmMsg',
+      },
     ];
-    const {
-      isloading,
-      overdataparams,
-      form,
-      btnisloading,
-    } = this.props;
-    const {
-      getFieldDecorator,
-    } = this.props.form;
+    const { isloading, overdataparams, form, btnisloading } = this.props;
+    const { getFieldDecorator } = this.props.form;
     const formLayout = {
       labelCol: {
         span: 8,
@@ -437,25 +423,27 @@ class AlarmRecord extends Component {
           extra={
             <div>
               {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
+              <RangePicker_
+                style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
                 dataType="minute"
                 dateValue={this.state.rangeDate}
                 callback={dates => this._handleDateChange(dates)}
               />
-              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />处置</Button>
+              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}>
+                <SettingTwoTone />
+                处置
+              </Button>
             </div>
           }
-
         >
           <Card.Grid style={{ width: '100%', ...this.props.style }}>
-          <SdlTable
-            loading={this.props.dataloading}
-            columns={columns}
-            dataSource={this.props.data}
-            rowKey="ID"
-            rowSelection={rowSelection}
-            pagination={
-              {
+            <SdlTable
+              loading={this.props.dataloading}
+              columns={columns}
+              dataSource={this.props.data}
+              rowKey="ID"
+              rowSelection={rowSelection}
+              pagination={{
                 size: 'small',
                 // showSizeChanger: true,
                 showQuickJumper: true,
@@ -465,23 +453,22 @@ class AlarmRecord extends Component {
                 onChange: this.onChange,
                 onShowSizeChange: this.onShowSizeChange,
                 pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-              }
-            }
-            onRow={(record, index) => ({
-              onClick: event => {
-                const { selectedRowKeys } = this.state;
-                let keys = selectedRowKeys;
-                if (selectedRowKeys.some(item => item === record.ID)) {
-                  keys = keys.filter(item => item !== record.ID)
-                } else if (record.State !== '1') {
-                  keys.push(record.ID);
-                }
-                this.setState({
-                  selectedRowKeys: keys,
-                })
-              },
-            })}
-          />
+              }}
+              onRow={(record, index) => ({
+                onClick: event => {
+                  const { selectedRowKeys } = this.state;
+                  let keys = selectedRowKeys;
+                  if (selectedRowKeys.some(item => item === record.ID)) {
+                    keys = keys.filter(item => item !== record.ID);
+                  } else if (record.State !== '1') {
+                    keys.push(record.ID);
+                  }
+                  this.setState({
+                    selectedRowKeys: keys,
+                  });
+                },
+              })}
+            />
           </Card.Grid>
 
           <Modal
@@ -499,7 +486,7 @@ class AlarmRecord extends Component {
             }}
             width="50%"
           >
-            <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
+            <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns>
               <Row>
                 <Col span={12}>
                   <FormItem {...formLayout} label="处置人">
@@ -511,9 +498,7 @@ class AlarmRecord extends Component {
                           message: '处置人不能为空',
                         },
                       ],
-                    })(
-                      <Input></Input>,
-                    )}
+                    })(<Input></Input>)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
@@ -526,9 +511,7 @@ class AlarmRecord extends Component {
                           message: '处置时间不能为空',
                         },
                       ],
-                    })(
-                      <SdlDatePicker />,
-                    )}
+                    })(<SdlDatePicker />)}
                   </FormItem>
                 </Col>
               </Row>

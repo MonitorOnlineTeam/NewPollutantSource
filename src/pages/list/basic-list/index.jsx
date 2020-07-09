@@ -1,3 +1,6 @@
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Avatar,
   Button,
@@ -5,8 +8,6 @@ import {
   Col,
   DatePicker,
   Dropdown,
-  Form,
-  Icon,
   Input,
   List,
   Menu,
@@ -206,7 +207,7 @@ class BasicList extends Component {
         }
       >
         <a>
-          更多 <Icon type="down" />
+          更多 <DownOutlined />
         </a>
       </Dropdown>
     );
@@ -328,7 +329,7 @@ class BasicList extends Component {
                   width: '100%',
                   marginBottom: 8,
                 }}
-                icon="plus"
+                icon={<PlusOutlined />}
                 onClick={this.showModal}
                 ref={component => {
                   // eslint-disable-next-line  react/no-find-dom-node

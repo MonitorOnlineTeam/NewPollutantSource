@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Col,
   Row,
-  Form,
   message,
   Select,
   Card,
@@ -11,7 +13,6 @@ import {
   Button,
   Divider,
   Collapse,
-  Icon,
 } from 'antd';
 import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
@@ -109,8 +110,7 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
-              callback: (res) => {
-
+              callback: res => {
                 if (res.IsSuccess) {
                   message.success('编辑成功', 1).then(() => this.props.oncancel());
                 } else {
@@ -144,7 +144,7 @@ class EditPollutant extends Component {
           <Collapse
             bordered={false}
             defaultActiveKey={['1']}
-            expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
           >
             <Panel header="报警设置" key="1" style={customPanelStyle}>
               <Row gutter={48}>

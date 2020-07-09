@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Form, Modal, Row, Col, Select, Input, Radio } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Row, Col, Select, Input, Radio } from 'antd';
 import { connect } from 'dva';
 
 const { TextArea } = Input;
@@ -11,7 +13,7 @@ const FormItem = Form.Item;
 @connect(({ loading, operations }) => ({
   approveModalVisible: operations.approveModalVisible,
   approveModalData: operations.approveModalData,
-  loading: loading.effects["operations/approve"]
+  loading: loading.effects['operations/approve'],
 }))
 @Form.create()
 class ApproveModal extends PureComponent {
@@ -20,42 +22,44 @@ class ApproveModal extends PureComponent {
     this.state = {};
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   // 提交申请
   onSubmitForm = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('values=', values)
+        console.log('values=', values);
         this.props.dispatch({
-          type: "operations/approve",
+          type: 'operations/approve',
           payload: {
-            ID: this.props.approveModalData["dbo.View_VehicleApplication.ID"],
+            ID: this.props.approveModalData['dbo.View_VehicleApplication.ID'],
             type: values.type,
-            RefuseReason: values.RefuseReason || ""
-          }
-        })
+            RefuseReason: values.RefuseReason || '',
+          },
+        });
       }
     });
-  }
+  };
 
   closeModal = e => {
     this.props.dispatch({
-      type: "operations/updateState",
+      type: 'operations/updateState',
       payload: {
-        approveModalVisible: false
-      }
-    })
+        approveModalVisible: false,
+      },
+    });
   };
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, approveModalVisible, loading } = this.props;
+    const {
+      form: { getFieldDecorator, getFieldValue },
+      approveModalVisible,
+      loading,
+    } = this.props;
     const formLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 17 },
-    }
+    };
     return (
       <Modal
         title="车辆审批"
@@ -68,13 +72,13 @@ class ApproveModal extends PureComponent {
           <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
             <Col span={24}>
               <FormItem {...formLayout} label="审批状态" style={{ width: '100%' }}>
-                {getFieldDecorator("type", {
-                  initialValue: 1
+                {getFieldDecorator('type', {
+                  initialValue: 1,
                 })(
                   <Radio.Group>
                     <Radio value={1}>同意</Radio>
                     <Radio value={2}>拒绝</Radio>
-                  </Radio.Group>
+                  </Radio.Group>,
                 )}
               </FormItem>
             </Col>
@@ -82,21 +86,19 @@ class ApproveModal extends PureComponent {
           <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{ marginTop: 10 }}>
             <Col span={24}>
               <FormItem {...formLayout} label="审批备注" style={{ width: '100%' }}>
-                {getFieldDecorator("RefuseReason", {
+                {getFieldDecorator('RefuseReason', {
                   rules: [
                     {
-                      required: getFieldValue("type") === 2,
+                      required: getFieldValue('type') === 2,
                       message: '请填写拒绝原因!',
                     },
                   ],
-                })(
-                  <TextArea rows={4} />
-                )}
+                })(<TextArea rows={4} />)}
               </FormItem>
             </Col>
           </Row>
         </Form>
-      </Modal >
+      </Modal>
     );
   }
 }

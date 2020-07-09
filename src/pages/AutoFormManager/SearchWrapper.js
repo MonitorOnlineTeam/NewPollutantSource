@@ -11,6 +11,9 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Button,
   Input,
@@ -18,12 +21,20 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
   Radio,
   Checkbox,
   TimePicker,
-  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
+  Select,
+  Modal,
+  Tag,
+  Divider,
+  Dropdown,
+  Menu,
+  Popconfirm,
+  message,
+  DatePicker,
+  InputNumber,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -32,8 +43,8 @@ import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
 import SdlCheckbox from './SdlCheckbox';
-import CascaderMultiple from "@/components/CascaderMultiple"
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import CascaderMultiple from '@/components/CascaderMultiple';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -53,9 +64,11 @@ const { RangePicker, MonthPicker } = DatePicker;
     let obj = {};
     const configIdSearchForm = props.searchForm[props.configId] || [];
     const searchConditions = props.searchConfigItems[props.configId] || [];
-    searchConditions.map(item => obj[item.fieldName] = Form.createFormField(configIdSearchForm[item['fieldName']]));
+    searchConditions.map(
+      item => (obj[item.fieldName] = Form.createFormField(configIdSearchForm[item['fieldName']])),
+    );
     return {
-      ...obj
+      ...obj,
     };
   },
   onFieldsChange(props, fields, allFields) {
@@ -66,29 +79,32 @@ const { RangePicker, MonthPicker } = DatePicker;
           ...props.searchForm,
           [props.configId]: {
             ...props.searchForm[props.configId],
-            ...fields
-          }
-        }
-      }
+            ...fields,
+          },
+        },
+      },
     });
-  }
+  },
 })
-
 class SearchWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       // isHide:false
-      isShowExpand: props.searchConfigItems[props.configId] && props.searchConfigItems[props.configId].length > 2,
-      expand: props.searchConfigItems[props.configId] && props.searchConfigItems[props.configId].length > 2
+      isShowExpand:
+        props.searchConfigItems[props.configId] &&
+        props.searchConfigItems[props.configId].length > 2,
+      expand:
+        props.searchConfigItems[props.configId] &&
+        props.searchConfigItems[props.configId].length > 2,
     };
     this._SELF_ = {
       formLayout: props.formLayout || {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
       },
-      inputPlaceholder: "请输入",
-      selectPlaceholder: "请选择",
+      inputPlaceholder: '请输入',
+      selectPlaceholder: '请选择',
     };
     this._resetForm = this._resetForm.bind(this);
     this._renderFormItem = this._renderFormItem.bind(this);
@@ -97,11 +113,14 @@ class SearchWrapper extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.searchConfigItems[nextProps.configId] !== nextProps.searchConfigItems[nextProps.configId]) {
+    if (
+      this.props.searchConfigItems[nextProps.configId] !==
+      nextProps.searchConfigItems[nextProps.configId]
+    ) {
       this.setState({
         isShowExpand: nextProps.searchConfigItems[nextProps.configId].length > 2,
         expand: nextProps.searchConfigItems[nextProps.configId].length > 2,
-      })
+      });
     }
   }
 
@@ -117,32 +136,32 @@ class SearchWrapper extends Component {
     // TODO 主要用于 关联表业务  查询条件configId 与 列表configId不一样的问题  参考 维护监测点页面需求
     if (resultConfigId) {
       dispatch({
-        type: "autoForm/updateState",
+        type: 'autoForm/updateState',
         payload: {
           searchForm: {
             ...searchForm,
             [resultConfigId]: {
-              ...searchForm[configId]
-            }
+              ...searchForm[configId],
+            },
           },
           whereList: {
             [resultConfigId]: {
-              ...whereList[configId]
+              ...whereList[configId],
             },
             ...whereList,
-          }
-        }
-      })
+          },
+        },
+      });
     }
     setTimeout(() => {
       dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
           configId: resultConfigId || configId,
-          searchParams: searchParams
-        }
+          searchParams: searchParams,
+        },
       });
-    }, 0)
+    }, 0);
   }
 
   // 重置表单
@@ -154,9 +173,9 @@ class SearchWrapper extends Component {
         searchForm: {
           // ...this.props.searchForm,
           current: 1,
-          pageSize: 20
-        }
-      }
+          pageSize: 20,
+        },
+      },
     });
     setTimeout(() => {
       this.onSubmitForm();
@@ -164,15 +183,16 @@ class SearchWrapper extends Component {
     // this.props.resetForm();
   }
 
-  _rtnDateEl = (item) => {
+  _rtnDateEl = item => {
     const { dateFormat } = item;
     const format = dateFormat.toUpperCase();
-    if (format === "YYYY-MM" || format === "MM") {
+    if (format === 'YYYY-MM' || format === 'MM') {
       // 年月 、 月
-      return <MonthPicker style={{ width: "100%" }} format={format} />
-    } if (format === "YYYY") {
+      return <MonthPicker style={{ width: '100%' }} format={format} />;
+    }
+    if (format === 'YYYY') {
       // 年
-      return <DatePicker format={format} style={{ width: "100%" }} />
+      return <DatePicker format={format} style={{ width: '100%' }} />;
       // return <DatePicker
       //   mode="year"
       //   onPanelChange={(value, mode) => {
@@ -181,35 +201,57 @@ class SearchWrapper extends Component {
       //   format={format} />
     } else {
       // 年-月-日 时:分:秒
-      return <DatePicker showTime format={format} style={{ width: "100%" }} />
+      return <DatePicker showTime format={format} style={{ width: '100%' }} />;
     }
-  }
+  };
 
   // 时间范围控件
   _rtnRangePickerEl = item => {
     const { dateFormat } = item;
     const { fieldName } = item;
-    const format = dateFormat ? dateFormat.toUpperCase() : "";
+    const format = dateFormat ? dateFormat.toUpperCase() : '';
 
-    console.log("format=", format)
+    console.log('format=', format);
 
     switch (format) {
-      case "YYYY-MM-DD HH:MM:SS":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
+      case 'YYYY-MM-DD HH:MM:SS':
+        return (
+          <RangePicker_
+            fieldName={fieldName}
+            callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)}
+            style={{ width: '100%' }}
+          />
+        );
 
-      case "YYYY-MM-DD HH:MM":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
+      case 'YYYY-MM-DD HH:MM':
+        return (
+          <RangePicker_
+            fieldName={fieldName}
+            callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)}
+            style={{ width: '100%' }}
+            dataType="minute"
+          />
+        );
 
-      case "YYYY-MM-DD HH":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
+      case 'YYYY-MM-DD HH':
+        return (
+          <RangePicker_
+            fieldName={fieldName}
+            callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)}
+            style={{ width: '100%' }}
+            dataType="hour"
+          />
+        );
 
       default:
-        return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
-
+        return (
+          <RangePicker_
+            style={{ width: '100%' }}
+            fieldName={fieldName}
+            callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)}
+            dataType="day"
+          />
+        );
     }
 
     // return <RangePicker_ style={{ width: '100%' }} />
@@ -217,30 +259,34 @@ class SearchWrapper extends Component {
     //   return <RangePicker style={{ width: '100%' }} format={format} />
     // }
     // return <RangePicker style={{ width: '100%' }} />
-  }
+  };
 
   /**时间控件回调 */
   dateCallBack = (dates, type, fieldName) => {
-    const { form: { setFieldsValue } } = this.props;
-    if (dates[0] && dates[1])
-      setFieldsValue({ [fieldName]: dates });
+    const {
+      form: { setFieldsValue },
+    } = this.props;
+    if (dates[0] && dates[1]) setFieldsValue({ [fieldName]: dates });
     else {
       setFieldsValue({ [fieldName]: undefined });
     }
-  }
-
-
+  };
 
   // 渲染FormItem
   _renderFormItem() {
-    const { dispatch, form: { getFieldDecorator }, searchConfigItems, configId } = this.props;
+    const {
+      dispatch,
+      form: { getFieldDecorator },
+      searchConfigItems,
+      configId,
+    } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
     const searchConditions = searchConfigItems[configId] || [];
     let element = '';
     // const len = searchConditions.length;
     // const isHide = len > 2;
     return searchConditions.map((item, index) => {
-      let isHide = this.state.expand && index > 1 ? "none" : "";
+      let isHide = this.state.expand && index > 1 ? 'none' : '';
       let { placeholder } = item;
       const { fieldName } = item;
       const { labelText } = item;
@@ -256,18 +302,18 @@ class SearchWrapper extends Component {
           placeholder = placeholder || inputPlaceholder;
           zIndex = 2;
           let props = {};
-          if (item.DF_NAME === "DGIMN") {
+          if (item.DF_NAME === 'DGIMN') {
             props = {
-              rtnValType: "DGIMN",
-            }
+              rtnValType: 'DGIMN',
+            };
           }
           // element = <EnterprisePointCascadeMultiSelect {...props}/>
-          element = <CascaderMultiple {...this.props} />
+          element = <CascaderMultiple {...this.props} />;
           break;
         case '下拉列表框':
         case '下拉多选':
           placeholder = placeholder || selectPlaceholder;
-          const mode = item.type === "下拉多选" ? 'multiple' : '';
+          const mode = item.type === '下拉多选' ? 'multiple' : '';
           element = (
             <SearchSelect
               configId={item.configId}
@@ -278,8 +324,8 @@ class SearchWrapper extends Component {
             />
           );
           break;
-        case "多选下拉搜索树":
-        case "三级行政区下拉框":
+        case '多选下拉搜索树':
+        case '三级行政区下拉框':
           placeholder = placeholder || selectPlaceholder;
           element = (
             <SdlCascader
@@ -292,68 +338,60 @@ class SearchWrapper extends Component {
             />
           );
           break;
-        case "日期框":
+        case '日期框':
           placeholder = placeholder || inputPlaceholder;
           element = this._rtnDateEl(item);
           break;
-        case "日期范围":
+        case '日期范围':
           placeholder = placeholder || inputPlaceholder;
           element = this._rtnRangePickerEl(item);
           break;
-        case "单选":
-          element = (
-            <SdlRadio
-              data={item.value}
-              configId={item.configId}
-              all={true}
-            />
-          );
+        case '单选':
+          element = <SdlRadio data={item.value} configId={item.configId} all={true} />;
           break;
-        case "多选":
-          element = (
-            <SdlCheckbox
-              data={item.value}
-              configId={item.configId}
-            />
-          );
+        case '多选':
+          element = <SdlCheckbox data={item.value} configId={item.configId} />;
           break;
         default:
           element = null;
           break;
       }
       return (
-        element &&
-        <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
-          <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
-            {getFieldDecorator(`${fieldName}`, {})(
-              element
-            )}
-          </FormItem>
-        </Col>
+        element && (
+          <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
+            <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
+              {getFieldDecorator(`${fieldName}`, {})(element)}
+            </FormItem>
+          </Col>
+        )
       );
     });
   }
 
   // 展开折叠
   _handleExpand() {
-    this.setState({
-      expand: !this.state.expand
-    }, () => {
-      // 展开、收起重新计算table高度
-      let tableElement = document.getElementsByClassName("ant-table-wrapper");
-      if (tableElement.length) {
-        let tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
-        let scrollYHeight = this.props.clientHeight - tableOffsetTop;
-        let tableBodyEle = document.getElementById("sdlTable").getElementsByClassName("ant-table-body");
-        if(tableBodyEle && tableBodyEle.length) {
-          tableBodyEle[0].style.maxHeight = scrollYHeight + "px";
+    this.setState(
+      {
+        expand: !this.state.expand,
+      },
+      () => {
+        // 展开、收起重新计算table高度
+        let tableElement = document.getElementsByClassName('ant-table-wrapper');
+        if (tableElement.length) {
+          let tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
+          let scrollYHeight = this.props.clientHeight - tableOffsetTop;
+          let tableBodyEle = document
+            .getElementById('sdlTable')
+            .getElementsByClassName('ant-table-body');
+          if (tableBodyEle && tableBodyEle.length) {
+            tableBodyEle[0].style.maxHeight = scrollYHeight + 'px';
+          }
         }
-      }
-    });
-
+      },
+    );
   }
 
-  getOffsetTop = (obj) => {
+  getOffsetTop = obj => {
     let offsetCountTop = obj.offsetTop;
     let parent = obj.offsetParent;
     while (parent !== null) {
@@ -361,7 +399,7 @@ class SearchWrapper extends Component {
       parent = parent.offsetParent;
     }
     return offsetCountTop;
-  }
+  };
 
   render() {
     const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
@@ -369,7 +407,7 @@ class SearchWrapper extends Component {
     const searchConditions = searchConfigItems[configId] || [];
     const style = {};
     if (searchConditions.length % 3 === 0 && !this.state.expand) {
-      style.float = "right";
+      style.float = 'right';
     } else {
       style.marginLeft = 20;
     }
@@ -377,49 +415,51 @@ class SearchWrapper extends Component {
       <Form>
         {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}> */}
         <Row>
-          {
-            this._renderFormItem()
-          }
-          {
-            searchConditions.length ? <div style={{ marginTop: 6, display: 'inline-block', ...style }}>
-              <Button type="primary" onClick={() => {
-                // 重置分页并查询数据
-                this.props.dispatch({
-                  type: 'autoForm/updateState',
-                  payload: {
-                    searchForm: {
-                      ...this.props.searchForm,
-                      [configId]: {
-                        ...this.props.searchForm[configId],
-                        current: 1,
-                        pageSize: 20
-                      }
-                    }
-                  }
-                });
-                setTimeout(() => {
-                  this.onSubmitForm()
-                }, 0)
-              }}>
+          {this._renderFormItem()}
+          {searchConditions.length ? (
+            <div style={{ marginTop: 6, display: 'inline-block', ...style }}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  // 重置分页并查询数据
+                  this.props.dispatch({
+                    type: 'autoForm/updateState',
+                    payload: {
+                      searchForm: {
+                        ...this.props.searchForm,
+                        [configId]: {
+                          ...this.props.searchForm[configId],
+                          current: 1,
+                          pageSize: 20,
+                        },
+                      },
+                    },
+                  });
+                  setTimeout(() => {
+                    this.onSubmitForm();
+                  }, 0);
+                }}
+              >
                 查询
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
                 重置
-                          </Button>
-              {
-                this.state.isShowExpand &&
+              </Button>
+              {this.state.isShowExpand && (
                 <React.Fragment>
-                  {
-                    this.state.expand ? <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                      展开 <Icon type="down" />
-                    </a> : <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                        收起 <Icon type="up" />
-                      </a>
-                  }
+                  {this.state.expand ? (
+                    <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
+                      展开 <DownOutlined />
+                    </a>
+                  ) : (
+                    <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
+                      收起 <UpOutlined />
+                    </a>
+                  )}
                 </React.Fragment>
-              }
-            </div> : null
-          }
+              )}
+            </div>
+          ) : null}
         </Row>
         {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={16} sm={24} style={{ margin: '10px 0' }}>

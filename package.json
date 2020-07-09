@@ -44,11 +44,13 @@
     "not ie <= 10"
   ],
   "dependencies": {
-    "@ant-design/pro-layout": "4.5.16",
+    "@ant-design/compatible": "^1.0.4",
+    "@ant-design/icons": "^4.2.1",
+    "@ant-design/pro-layout": "4.11.4",
     "@antv/data-set": "0.10.2",
     "@types/lodash.debounce": "4.0.6",
     "@types/react-router": "5.0.3",
-    "antd": "3.20.0",
+    "antd": "^4.4.0",
     "aws-sdk": "^2.526.0",
     "axios": "^0.19.0",
     "bizcharts": "^3.5.4",
@@ -79,7 +81,7 @@
     "q": "^1.5.1",
     "qrcode.react": "^1.0.0",
     "qs": "^6.7.0",
-    "react": "^16.8.6",
+    "react": "^16.12.0",
     "react-amap": "^1.2.8",
     "react-container-query": "^0.11.0",
     "react-copy-to-clipboard": "^5.0.1",
@@ -103,7 +105,8 @@
     "umi-plugin-pro-block": "^1.3.2",
     "umi-plugin-react": "^1.9.5",
     "umi-request": "^1.0.8",
-    "uxcore": "^0.21.72"
+    "uxcore": "^0.21.72",
+    "webpack": "^4.43.0"
   },
   "devDependencies": {
     "@ant-design/colors": "^3.1.0",

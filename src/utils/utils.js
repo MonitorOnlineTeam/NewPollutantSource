@@ -1,5 +1,5 @@
-/* eslint no-useless-escape:0 import/prefer-default-export:0 */
-import { Icon, Badge, Popover, message } from 'antd';
+import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { Badge, Popover, message } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -72,7 +72,7 @@ export function formatPollutantPopover(value, additional) {
       const content = (
         <div>
           <div style={{ marginBottom: 10 }}>
-            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="warning" />
+            <WarningOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
             <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据超标</span>
           </div>
           <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -96,7 +96,7 @@ export function formatPollutantPopover(value, additional) {
       const content = (
         <div>
           <div style={{ marginBottom: 10 }}>
-            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="close-circle" />
+            <CloseCircleOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
             <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据异常</span>
           </div>
           <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -115,7 +115,13 @@ export function formatPollutantPopover(value, additional) {
       );
     }
   }
-  return value ? <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div> : (value === 0 ? 0 : '-');
+  return value ? (
+    <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div>
+  ) : value === 0 ? (
+    0
+  ) : (
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -131,16 +137,16 @@ export function asc(a, b) {
 export function handleFormData(values) {
   let formData = {};
   for (let key in values) {
-    if (values[key] && values[key]["fileList"]) {
+    if (values[key] && values[key]['fileList']) {
       // 处理附件列表
       if (values.cuid) {
         formData[key] = values.cuid;
       }
     } else if (values[key] && moment.isMoment(values[key])) {
       // 格式化moment对象
-      formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
+      formData[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss');
     } else {
-      formData[key] = values[key] && values[key].toString()
+      formData[key] = values[key] && values[key].toString();
     }
   }
 
@@ -193,45 +199,78 @@ export function downloadFile(sUrl) {
 }
 
 // 风向
-export const getDirLevel = (dir) => {
-  if (dir != undefined && dir != "-") {
-    let windDir = ["北", "东北偏北", "东北", "东北偏东", "东", "东南偏东", "东南", "东南偏南", "南", "西南偏南", "西南", "西南偏西", "西", "西北偏西", "西北", " 西北偏北"];
-    let dirBound = [11.25, 33.75, 56.25, 78.75, 101.25, 123.75, 146.25, 168.75, 191.25, 213.75, 236.25, 258.75, 281.25, 303.25, 326.25, 348.75];
+export const getDirLevel = dir => {
+  if (dir != undefined && dir != '-') {
+    let windDir = [
+      '北',
+      '东北偏北',
+      '东北',
+      '东北偏东',
+      '东',
+      '东南偏东',
+      '东南',
+      '东南偏南',
+      '南',
+      '西南偏南',
+      '西南',
+      '西南偏西',
+      '西',
+      '西北偏西',
+      '西北',
+      ' 西北偏北',
+    ];
+    let dirBound = [
+      11.25,
+      33.75,
+      56.25,
+      78.75,
+      101.25,
+      123.75,
+      146.25,
+      168.75,
+      191.25,
+      213.75,
+      236.25,
+      258.75,
+      281.25,
+      303.25,
+      326.25,
+      348.75,
+    ];
     if (348.75 <= dir && dir <= 360) {
-      return windDir[0]
+      return windDir[0];
     } else if (0 <= dir && dir <= 11.25) {
-      return windDir[0]
+      return windDir[0];
     } else {
       for (let i = 0; i < dirBound.length - 1; i++) {
-        if (dir > dirBound[i] && dir <= dirBound[i + 1])
-          return windDir[i + 1];
+        if (dir > dirBound[i] && dir <= dirBound[i + 1]) return windDir[i + 1];
       }
     }
     return windDir[1];
   }
-  return dir !== undefined ? dir : '-'
-}
+  return dir !== undefined ? dir : '-';
+};
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
 
 //格式化数据类型
-export const GetDataType = (dataType) => {
+export const GetDataType = dataType => {
   let res = dataType;
   if (dataType) {
     switch (dataType) {
-      case "realtime":
-        res = "RealTimeData";
+      case 'realtime':
+        res = 'RealTimeData';
         break;
-      case "minute":
-        res = "MinuteData";
+      case 'minute':
+        res = 'MinuteData';
         break;
-      case "hour":
-        res = "HourData";
+      case 'hour':
+        res = 'HourData';
         break;
-      case "day":
-        res = "DayData";
+      case 'day':
+        res = 'DayData';
         break;
     }
   }
   return res;
-}
+};

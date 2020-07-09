@@ -6,8 +6,8 @@
  * @Last Modified time: 2019-12-06 11:08:23
  */
 import React, { PureComponent } from 'react';
-import { Icon } from 'antd';
-import config from '@/config'
+import { createFromIconfontCN } from '@ant-design/icons';
+import config from '@/config';
 
 class index extends PureComponent {
   constructor(props) {
@@ -15,16 +15,14 @@ class index extends PureComponent {
     this.state = {};
     this._SELF_ = {
       scriptUrl: config.iconFontUrl,
-    }
+    };
   }
   render() {
-    const IconConfig = Icon.createFromIconfontCN({
+    const IconConfig = createFromIconfontCN({
       scriptUrl: this._SELF_.scriptUrl,
-    })
+    });
     const { style } = this.props;
-    return (
-      <IconConfig {...this.props} style={{ fontSize: 16, ...style }} />
-    );
+    return <IconConfig {...this.props} style={{ fontSize: 16, ...style }} />;
   }
 }
 

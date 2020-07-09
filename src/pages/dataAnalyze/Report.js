@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Table, Card, Form, Row, Col, DatePicker, Button, Icon } from "antd";
-import SdlTable from '@/components/SdlTable'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Card, Row, Col, DatePicker, Button } from 'antd';
+import SdlTable from '@/components/SdlTable';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import moment from 'moment';
@@ -43,7 +46,7 @@ const columns = [
             key: '03_IAQI',
             width: 105,
           },
-        ]
+        ],
       },
       {
         title: '二氧化硫（NO₂ ）24小时平均',
@@ -61,7 +64,7 @@ const columns = [
             key: '05_IAQI',
             width: 90,
           },
-        ]
+        ],
       },
       {
         title: '颗粒物（粒径小于等于10μm）24小时平均',
@@ -79,7 +82,7 @@ const columns = [
             key: '07_IAQI',
             width: 110,
           },
-        ]
+        ],
       },
       {
         title: '一氧化氮（CO）24小时平均',
@@ -97,7 +100,7 @@ const columns = [
             key: '02_IAQI',
             width: 90,
           },
-        ]
+        ],
       },
       {
         title: '臭氧（O₃）24小时平均',
@@ -115,7 +118,7 @@ const columns = [
             key: '01_IAQI',
             width: 90,
           },
-        ]
+        ],
       },
       {
         title: '颗粒物（粒径小于等于2.5μm）24小时平均',
@@ -133,9 +136,9 @@ const columns = [
             key: '08_IAQI',
             width: 110,
           },
-        ]
+        ],
       },
-    ]
+    ],
   },
   {
     title: '空气质量指数（AQI）',
@@ -166,8 +169,8 @@ const columns = [
         key: 'AirColorCN',
         width: 60,
         render: (text, record) => {
-          return <span style={{ color: record.AirColor }}>{text}</span>
-        }
+          return <span style={{ color: record.AirColor }}>{text}</span>;
+        },
       },
       {
         title: '等级',
@@ -179,71 +182,81 @@ const columns = [
   },
 ];
 
-
 @connect(({ loading, dataAnalyze }) => ({
   reportTableData: dataAnalyze.reportTableData,
-  searchLoading: loading.effects["dataAnalyze/getGasReport"],
-  exportLoading: loading.effects["dataAnalyze/exportGasReport"]
+  searchLoading: loading.effects['dataAnalyze/getGasReport'],
+  exportLoading: loading.effects['dataAnalyze/exportGasReport'],
 }))
 @Form.create()
 class Report extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      beginTime:moment().add(-1, "day").format('YYYY-MM-DD 00:00:00'),
-      endTime:moment().add(-1, "day").format('YYYY-MM-DD 23:59:59'),
-      time: moment().add(-1, "day"),
-      defalutPollutantType: props.match.params.type * 1
+      beginTime: moment()
+        .add(-1, 'day')
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment()
+        .add(-1, 'day')
+        .format('YYYY-MM-DD 23:59:59'),
+      time: moment().add(-1, 'day'),
+      defalutPollutantType: props.match.params.type * 1,
     };
     this.SELF = {
       formLayout: {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
       },
-    }
+    };
   }
 
   componentDidMount() {
-    this.queryReportData()
+    this.queryReportData();
   }
 
   queryReportData = () => {
-    const {beginTime,endTime}=this.state;
+    const { beginTime, endTime } = this.state;
     this.props.dispatch({
       type: 'dataAnalyze/getGasReport',
       payload: {
-        beginTime:beginTime,
-        endTime:endTime,
-        Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
-        PollutantType: this.state.defalutPollutantType
-      }
-    })
-  }
+        beginTime: beginTime,
+        endTime: endTime,
+        Time: moment(this.props.form.getFieldValue('ReportTime')).format('YYYY-MM-DD 00:00:00'),
+        PollutantType: this.state.defalutPollutantType,
+      },
+    });
+  };
 
   export = () => {
-    const {beginTime,endTime}=this.state;
+    const { beginTime, endTime } = this.state;
     this.props.dispatch({
       type: 'dataAnalyze/exportGasReport',
       payload: {
-        beginTime:beginTime,
-        endTime:endTime,
-        Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
-        PollutantType: this.state.defalutPollutantType
-      }
-    })
-  }
+        beginTime: beginTime,
+        endTime: endTime,
+        Time: moment(this.props.form.getFieldValue('ReportTime')).format('YYYY-MM-DD 00:00:00'),
+        PollutantType: this.state.defalutPollutantType,
+      },
+    });
+  };
 
-  dateOnchange=(dates,beginTime,endTime)=>{
-      const {form:{setFieldsValue}}=this.props;
-      setFieldsValue({"ReportTime":dates});
-      this.setState({
-        beginTime,
-        endTime
-      })
-  }
+  dateOnchange = (dates, beginTime, endTime) => {
+    const {
+      form: { setFieldsValue },
+    } = this.props;
+    setFieldsValue({ ReportTime: dates });
+    this.setState({
+      beginTime,
+      endTime,
+    });
+  };
 
   render() {
-    const { form: { getFieldDecorator }, reportTableData, searchLoading, exportLoading } = this.props;
+    const {
+      form: { getFieldDecorator },
+      reportTableData,
+      searchLoading,
+      exportLoading,
+    } = this.props;
     const { formLayout } = this.SELF;
     const { defalutPollutantType, time } = this.state;
 
@@ -254,37 +267,51 @@ class Report extends PureComponent {
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col xl={6} sm={24} md={12}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
-                  {getFieldDecorator("PollutantSourceType", {
+                  {getFieldDecorator('PollutantSourceType', {
                     // initialValue: defaultSearchForm.PollutantSourceType,
                     initialValue: defalutPollutantType,
-                    rules: [{
-                      required: true,
-                      message: '请选择污染物类型',
-                    }],
-                  })(
-                    <SelectPollutantType disabled placeholder="请选择污染物类型" />
-                  )}
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择污染物类型',
+                      },
+                    ],
+                  })(<SelectPollutantType disabled placeholder="请选择污染物类型" />)}
                 </FormItem>
               </Col>
               <Col xl={8} sm={24} md={12}>
                 <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
-                  {getFieldDecorator("ReportTime", {
+                  {getFieldDecorator('ReportTime', {
                     initialValue: time,
-                    rules: [{
-                      required: true,
-                      message: '请填写统计时间',
-                    }],
+                    rules: [
+                      {
+                        required: true,
+                        message: '请填写统计时间',
+                      },
+                    ],
                   })(
-                    <DatePickerTool  allowClear={false} style={{ width: "100%" }} callback={
-                      this.dateOnchange
-                    } />
+                    <DatePickerTool
+                      allowClear={false}
+                      style={{ width: '100%' }}
+                      callback={this.dateOnchange}
+                    />,
                   )}
                 </FormItem>
               </Col>
               <Col xl={10} md={12}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
-                  <Button type="primary" loading={searchLoading} style={{ marginRight: 10 }} onClick={this.queryReportData}>生成统计</Button>
-                  <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}><Icon type="export" />导出</Button>
+                  <Button
+                    type="primary"
+                    loading={searchLoading}
+                    style={{ marginRight: 10 }}
+                    onClick={this.queryReportData}
+                  >
+                    生成统计
+                  </Button>
+                  <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}>
+                    <ExportOutlined />
+                    导出
+                  </Button>
                 </FormItem>
               </Col>
             </Row>
@@ -295,7 +322,7 @@ class Report extends PureComponent {
             loading={searchLoading}
             scroll={{ x: '2000px' }}
             pagination={{
-              pageSize: 20
+              pageSize: 20,
             }}
           />
         </Card>

@@ -1,29 +1,55 @@
 import React, { PureComponent } from 'react';
-import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, Select, Divider } from "antd"
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import {
+  Card,
+  Drawer,
+  Tooltip,
+  Button,
+  Spin,
+  Input,
+  message,
+  DatePicker,
+  Select,
+  Divider,
+} from 'antd';
 // import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
 // import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
-import { getDirLevel } from "@/utils/utils"
+import { getDirLevel } from '@/utils/utils';
 
 // import "animate.css";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import MapUI from './component/MapUI'
-import config from "@/config"
-import styles from './index.less'
-import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
+import MapUI from './component/MapUI';
+import config from '@/config';
+import styles from './index.less';
+import {
+  EntIcon,
+  GasIcon,
+  GasOffline,
+  GasNormal,
+  GasExceed,
+  GasAbnormal,
+  WaterIcon,
+  WaterNormal,
+  WaterExceed,
+  WaterAbnormal,
+  WaterOffline,
+  VocIcon,
+  DustIcon,
+} from '@/utils/icon';
 import CustomIcon from '@/components/CustomIcon';
-import markersStyles from '@/pages/monitoring/mapview/styles.less'
+import markersStyles from '@/pages/monitoring/mapview/styles.less';
 import ReactEcharts from 'echarts-for-react';
-import Monitoring from './component/Monitoring'
-import RunAndAnalysis from "./component/RunAndAnalysis"
-import AlarmResponse from './component/AlarmResponse'
-import Operations from "./component/Operations"
-import DiffHorizontal from "./component/DiffHorizontal"
-import { router } from 'umi'
+import Monitoring from './component/Monitoring';
+import RunAndAnalysis from './component/RunAndAnalysis';
+import AlarmResponse from './component/AlarmResponse';
+import Operations from './component/Operations';
+import DiffHorizontal from './component/DiffHorizontal';
+import { router } from 'umi';
 import Cookie from 'js-cookie';
 import { connect } from 'dva';
-import OfficeModal from "./component/OfficeModal"
-import SiteDetailsModal from "./component/SiteDetailsModal"
+import OfficeModal from './component/OfficeModal';
+import SiteDetailsModal from './component/SiteDetailsModal';
 // const plugins = [
 //   'MapType', // 地图模式（卫星）
 //   'Scale', //
@@ -34,19 +60,19 @@ const { MonthPicker } = DatePicker;
 const { Search } = Input;
 const { Option } = Select;
 const iconStyle = {
-  color: "#3c99d8",
-  fontSize: "28px",
-  borderRadius: "50%",
-  background: "rgb(255, 255, 255)",
-  boxShadow: "rgb(255, 255, 255) 0px 0px 3px 2px",
-}
+  color: '#3c99d8',
+  fontSize: '28px',
+  borderRadius: '50%',
+  background: 'rgb(255, 255, 255)',
+  boxShadow: 'rgb(255, 255, 255) 0px 0px 3px 2px',
+};
 
 const mapIconStyle = {
   fontSize: 24,
-  borderRadius: "50%",
-  background: "#fff",
-  boxShadow: "0px 0px 3px 2px #fff"
-}
+  borderRadius: '50%',
+  background: '#fff',
+  boxShadow: '0px 0px 3px 2px #fff',
+};
 let Map, Marker, Polygon, Markers, InfoWindow;
 let aMap = null;
 
@@ -54,14 +80,14 @@ let aMap = null;
   allEntAndPointList: newHome.allEntAndPointList,
   configInfo: global.configInfo,
   infoWindowData: newHome.infoWindowData,
-  monitoringDataLoading: loading.effects["newHome/getMonitoringData"],
-  runAndAnalysisDataLoading: loading.effects["newHome/getRunAndAnalysisData"],
-  alarmResponseDataLoading: loading.effects["newHome/getAlarmResponseData"],
-  operationAnalysisLoading: loading.effects["newHome/getOperationAnalysis"],
-  taskStatisticsDataLoading: loading.effects["newHome/getTaskStatisticsData"],
-  diffHorizontalDataLoading: loading.effects["newHome/getDiffHorizontalData"],
+  monitoringDataLoading: loading.effects['newHome/getMonitoringData'],
+  runAndAnalysisDataLoading: loading.effects['newHome/getRunAndAnalysisData'],
+  alarmResponseDataLoading: loading.effects['newHome/getAlarmResponseData'],
+  operationAnalysisLoading: loading.effects['newHome/getOperationAnalysis'],
+  taskStatisticsDataLoading: loading.effects['newHome/getTaskStatisticsData'],
+  diffHorizontalDataLoading: loading.effects['newHome/getDiffHorizontalData'],
   drillDownLoading: newHome.drillDownLoading,
-  getAllEntAndPointLoading: loading.effects["newHome/getAllEntAndPoint"],
+  getAllEntAndPointLoading: loading.effects['newHome/getAllEntAndPoint'],
   officeVisible: newHome.officeVisible,
   siteDetailsVisible: newHome.siteDetailsVisible,
   monitorRegionDivision: newHome.monitorRegionDivision,
@@ -78,22 +104,24 @@ class NewHome extends PureComponent {
     super(props);
     // 地图事件
     this.amapEvents = {
-      created: (mapInstance) => {
-        console.log('高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
+      created: mapInstance => {
+        console.log(
+          '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
+        );
         aMap = mapInstance;
         if (config.offlineMapUrl.domain) {
           var Layer = new window.AMap.TileLayer({
             zIndex: 2,
-            getTileUrl: function (x, y, z) {
+            getTileUrl: function(x, y, z) {
               //return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil';
               return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
-            }
+            },
           });
           Layer.setMap(mapInstance);
           // mapInstance.setCity(650000, function () {
           //   mapInstance.setZoom(6)
           // })
-          mapInstance.setFitView()
+          mapInstance.setFitView();
         }
       },
     };
@@ -101,48 +129,52 @@ class NewHome extends PureComponent {
     this.markersEvents = {
       created: allMarkers => {
         this.setState({
-          allMarkers: allMarkers
+          allMarkers: allMarkers,
         });
       },
       clickable: true,
-      click: (MapsOption, marker) => {
-
-      },
-    }
+      click: (MapsOption, marker) => {},
+    };
     // 厂界事件
     this.polygonEvents = {
-      click: () => { console.log('clicked') },
-      created: (ins) => {
-        this.setState({
-          allPolygon: ins
-        })
+      click: () => {
+        console.log('clicked');
       },
-      mouseover: () => { console.log('mouseover') },
-      dblclick: () => { console.log('dbl clicked') }
+      created: ins => {
+        this.setState({
+          allPolygon: ins,
+        });
+      },
+      mouseover: () => {
+        console.log('mouseover');
+      },
+      dblclick: () => {
+        console.log('dbl clicked');
+      },
     };
     // 点弹窗事件
     this.infoWindowEvents = {
       close: () => {
-        console.log('close')
+        console.log('close');
         this.setState({
           infoWindowVisible: false,
-        })
-      }
-    }
+        });
+      },
+    };
 
     // 搜索结果弹窗事件
     this.searchWindowEvent = {
       close: () => {
-        console.log('close')
+        console.log('close');
         this.setState({
           searchResult: undefined,
-        })
-      }
-    }
+        });
+      },
+    };
     this.state = {
       leftVisible: true,
       rightVisible: true,
-      RegionCode: "660000000",
+      RegionCode: '660000000',
       displayType: 0, // 显示类型： 0企业，1监测点
       allPollutantTypes: [], // 所有污染物类型
       markersList: [], // 点集合
@@ -150,8 +182,8 @@ class NewHome extends PureComponent {
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
-      selectValue: "", // 筛选
-      month: moment().get('month')
+      selectValue: '', // 筛选
+      month: moment().get('month'),
     };
   }
 
@@ -159,91 +191,94 @@ class NewHome extends PureComponent {
     if (config.offlineMapUrl.domain) {
       let amap = require('@/components/ReactAmap');
       // Map, Marker, Polygon, Markers, InfoWindow;
-      Map = amap.Map
-      Marker = amap.Marker
-      Polygon = amap.Polygon
-      Markers = amap.Markers
-      InfoWindow = amap.InfoWindow
+      Map = amap.Map;
+      Marker = amap.Marker;
+      Polygon = amap.Polygon;
+      Markers = amap.Markers;
+      InfoWindow = amap.InfoWindow;
     } else {
       let amap = require('react-amap');
       // Map, Marker, Polygon, Markers, InfoWindow;
-      Map = amap.Map
-      Marker = amap.Marker
-      Polygon = amap.Polygon
-      Markers = amap.Markers
-      InfoWindow = amap.InfoWindow
+      Map = amap.Map;
+      Marker = amap.Marker;
+      Polygon = amap.Polygon;
+      Markers = amap.Markers;
+      InfoWindow = amap.InfoWindow;
     }
   }
 
   componentDidMount() {
     // 获取显示级别
     this.props.dispatch({
-      type: "newHome/getLevel"
-    })
+      type: 'newHome/getLevel',
+    });
     // 获取污染物列表
     this.props.dispatch({
-      type: "common/getPollutantTypeList",
+      type: 'common/getPollutantTypeList',
       callback: res => {
-        this.setState({
-          allPollutantTypes: res.map(item => item.pollutantTypeCode)
-        }, () => {
-          this.getAllEntAndPoint();
-        })
-      }
-    })
+        this.setState(
+          {
+            allPollutantTypes: res.map(item => item.pollutantTypeCode),
+          },
+          () => {
+            this.getAllEntAndPoint();
+          },
+        );
+      },
+    });
     // 获取行政区与师的关系
     this.props.dispatch({
-      type: "newHome/getMonitorRegionDivision",
-    })
+      type: 'newHome/getMonitorRegionDivision',
+    });
     // this.getConstructionCorpsList();
   }
   // 获取企业和监测点
   getAllEntAndPoint = () => {
     this.props.dispatch({
-      type: "newHome/getAllEntAndPoint",
+      type: 'newHome/getAllEntAndPoint',
       payload: {
         PollutantTypes: this.state.allPollutantTypes.toString(),
-        RegionCode: this.state.RegionCode
-      }
-    })
-  }
+        RegionCode: this.state.RegionCode,
+      },
+    });
+  };
 
   // 获取服务站信息
-  getOfficeModalData = (extData) => {
+  getOfficeModalData = extData => {
     const officeCode = extData.position.key;
     this.props.dispatch({
-      type: "newHome/getOfficeUserList",
-      payload: { officeCode }
-    })
+      type: 'newHome/getOfficeUserList',
+      payload: { officeCode },
+    });
     this.props.dispatch({
-      type: "newHome/getOfficeStockList",
-      payload: { officeCode }
-    })
+      type: 'newHome/getOfficeStockList',
+      payload: { officeCode },
+    });
     this.setState({
-      modalTitle: extData.position.title
-    })
-  }
+      modalTitle: extData.position.title,
+    });
+  };
 
   // 获取infoWindow数据
   getInfoWindowData = () => {
     const currentClickObj = this.state.currentClickObj;
     this.props.dispatch({
-      type: "newHome/getInfoWindowData",
+      type: 'newHome/getInfoWindowData',
       payload: {
         DGIMNs: currentClickObj.key,
-        dataType: "HourData",
+        dataType: 'HourData',
         isLastest: true,
         // type: PollutantType,
         isAirOrSite: true,
-        pollutantTypes: currentClickObj.PollutantType
-      }
-    })
-  }
+        pollutantTypes: currentClickObj.PollutantType,
+      },
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.allEntAndPointList !== nextProps.allEntAndPointList) {
-      this.renderEntMarkers(nextProps.allEntAndPointList)
-      this.setState({ filterEntAndPointList: nextProps.allEntAndPointList })
+      this.renderEntMarkers(nextProps.allEntAndPointList);
+      this.setState({ filterEntAndPointList: nextProps.allEntAndPointList });
     }
     if (this.props.currentDivisionPosition !== nextProps.currentDivisionPosition) {
       // this.renderEntMarkers(nextProps)
@@ -253,64 +288,71 @@ class NewHome extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     // if(this.state.displayType !== prevState.displayType && this.state.displayType === 1){
     if (this.state.allPolygon !== prevState.allPolygon && this.state.displayType === 1) {
-      let polygonList = aMap.getAllOverlays("polygon");
-      let markerList = aMap.getAllOverlays("marker");
-      aMap.setFitView(this.state.allPolygon)
+      let polygonList = aMap.getAllOverlays('polygon');
+      let markerList = aMap.getAllOverlays('marker');
+      aMap.setFitView(this.state.allPolygon);
       // aMap.setFitView([this.state.allMarkers, this.state.allPolygon])
     }
-    if (this.state.allMarkers !== prevState.allMarkers && !this.state.allPolygon && this.state.displayType === 1) {
-      aMap.setFitView(this.state.allMarkers)
+    if (
+      this.state.allMarkers !== prevState.allMarkers &&
+      !this.state.allPolygon &&
+      this.state.displayType === 1
+    ) {
+      aMap.setFitView(this.state.allMarkers);
     }
   }
 
   // 渲染所有企业
-  renderEntMarkers = (entAndPointList) => {
+  renderEntMarkers = entAndPointList => {
     const entMarkers = entAndPointList.map(item => {
       return {
         position: {
           longitude: item.Longitude,
           latitude: item.Latitude,
-          ...item
+          ...item,
         },
-        children: item.children
-      }
-    })
+        children: item.children,
+      };
+    });
 
-    this.setState({
-      markersList: entMarkers,
-      allPolygon: null,
-      displayType: 0
-    }, () => {
-      const timer = setInterval(() => {
-        if (aMap) {
-          aMap.setFitView();
-          clearInterval(timer)
-        }
-      }, 200);
-    })
-  }
+    this.setState(
+      {
+        markersList: entMarkers,
+        allPolygon: null,
+        displayType: 0,
+      },
+      () => {
+        const timer = setInterval(() => {
+          if (aMap) {
+            aMap.setFitView();
+            clearInterval(timer);
+          }
+        }, 200);
+      },
+    );
+  };
 
   // 左右抽屉
-  toggle = (left) => {
-    const pageContainer = document.querySelector(".antd-pro-pages-new-home-index-pageContainer");
+  toggle = left => {
+    const pageContainer = document.querySelector('.antd-pro-pages-new-home-index-pageContainer');
     const { leftVisible, rightVisible } = this.state;
     if (left) {
-      pageContainer.style.marginLeft = leftVisible ? "0" : "340px";
+      pageContainer.style.marginLeft = leftVisible ? '0' : '340px';
       this.setState({
-        leftVisible: !this.state.leftVisible
-      })
+        leftVisible: !this.state.leftVisible,
+      });
     } else {
-      pageContainer.style.marginRight = rightVisible ? "0" : "340px";
+      pageContainer.style.marginRight = rightVisible ? '0' : '340px';
       this.setState({
-        rightVisible: !this.state.rightVisible
-      })
+        rightVisible: !this.state.rightVisible,
+      });
     }
-  }
+  };
 
   // 渲染企业及监测点
-  renderMarker = (extData) => {
+  renderMarker = extData => {
     const { displayType } = this.state;
-    if (extData.position.MonitorObjectType !== "师") {
+    if (extData.position.MonitorObjectType !== '师') {
       // return <div>
       //   <Tooltip title={extData.position.title}>
       //     {
@@ -329,90 +371,110 @@ class NewHome extends PureComponent {
       //     }
       //   </Tooltip>
       // </div>
-      return <div
-        onMouseEnter={() => {
-          if (this.state.infoWindowVisible === false) {
-            this.setState({
-              hoverMapCenter: extData.position,
-              currentTitle: extData.position.title,
-              infoWindowHoverVisible: true,
-            })
-          }
-        }}
-        onMouseLeave={() => {
-          if (this.state.infoWindowVisible === false) {
-            this.setState({
-              infoWindowHoverVisible: false,
-            })
-          }
-        }}>
-        {
-          displayType === 0 ?
-            this.getEntIcon(extData)
-            :
-            <div onClick={() => {
+      return (
+        <div
+          onMouseEnter={() => {
+            if (this.state.infoWindowVisible === false) {
               this.setState({
-                currentClickObj: extData.position,
-                infoWindowVisible: true,
-                infoWindowPos: [extData.position.Longitude, extData.position.Latitude]
-              }, () => {
-                this.getInfoWindowData()
-              })
-            }}>{this.getPollutantIcon(extData)}</div>
-        }
-      </div>
-
+                hoverMapCenter: extData.position,
+                currentTitle: extData.position.title,
+                infoWindowHoverVisible: true,
+              });
+            }
+          }}
+          onMouseLeave={() => {
+            if (this.state.infoWindowVisible === false) {
+              this.setState({
+                infoWindowHoverVisible: false,
+              });
+            }
+          }}
+        >
+          {displayType === 0 ? (
+            this.getEntIcon(extData)
+          ) : (
+            <div
+              onClick={() => {
+                this.setState(
+                  {
+                    currentClickObj: extData.position,
+                    infoWindowVisible: true,
+                    infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
+                  },
+                  () => {
+                    this.getInfoWindowData();
+                  },
+                );
+              }}
+            >
+              {this.getPollutantIcon(extData)}
+            </div>
+          )}
+        </div>
+      );
     } else {
-      return <div>
-        {
-          this.getEntIcon(extData)
-        }
-      </div>
+      return <div>{this.getEntIcon(extData)}</div>;
     }
-  }
+  };
 
   // 渲染企业
-  getEntIcon = (extData) => {
+  getEntIcon = extData => {
     const { currentDivisionPosition } = this.props;
     // console.log('currentDivisionPosition=', currentDivisionPosition)
-    const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle }
+    const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle };
     switch (extData.position.MonitorObjectType) {
-      case "1":
+      case '1':
         // 企业
-        return <EntIcon style={{ fontSize: 28 }} onClick={() => {
-          // 企业点击显示监测点
-          if (extData.children) {
-            const pointMarkers = extData.children.map(item => {
-              return {
-                position: {
-                  longitude: item.Longitude,
-                  latitude: item.Latitude,
-                  ...item
-                },
+        return (
+          <EntIcon
+            style={{ fontSize: 28 }}
+            onClick={() => {
+              // 企业点击显示监测点
+              if (extData.children) {
+                const pointMarkers = extData.children.map(item => {
+                  return {
+                    position: {
+                      longitude: item.Longitude,
+                      latitude: item.Latitude,
+                      ...item,
+                    },
+                  };
+                });
+                this.setState({
+                  coordinateSet: extData.position.CoordinateSet,
+                  markersList: pointMarkers,
+                  infoWindowHoverVisible: false,
+                  displayType: 1,
+                });
               }
-            })
-            this.setState({
-              coordinateSet: extData.position.CoordinateSet,
-              markersList: pointMarkers,
-              infoWindowHoverVisible: false,
-              displayType: 1
-            })
-          }
-        }} />
-      case "2":
+            }}
+          />
+        );
+      case '2':
         // 大气站
-        let color = (extData.position.Color && extData.position.Color !== "-") ? extData.position.Color : "#999";
-        return <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color: color }} onClick={() => {
-          this.setState({
-            currentClickObj: extData.position,
-            infoWindowVisible: true,
-            infoWindowPos: [extData.position.Longitude, extData.position.Latitude]
-          }, () => {
-            this.getInfoWindowData()
-          })
-
-        }} />
-      case "师":
+        let color =
+          extData.position.Color && extData.position.Color !== '-'
+            ? extData.position.Color
+            : '#999';
+        return (
+          <CustomIcon
+            type="icon-fangwu"
+            style={{ ...iconStyle, color: color }}
+            onClick={() => {
+              this.setState(
+                {
+                  currentClickObj: extData.position,
+                  infoWindowVisible: true,
+                  infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
+                },
+                () => {
+                  this.getInfoWindowData();
+                },
+              );
+            }}
+          />
+        );
+      case '师':
         // #3c99d8
         // return <ReactCSSTransitionGroup
         //   transitionEnter={true}
@@ -421,57 +483,81 @@ class NewHome extends PureComponent {
         //   transitionLeaveTimeout={1500}
         //   transitionName="animated"
         // >
-        return <div style={{ color: "#525151", textAlign: "center" }}>
-          <div className={styles.pop}>{extData.position.title}</div>
-          <CustomIcon key="amache"
-            className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? "animate__animated animate__bounce animate__infinite" : ""}
-            type='icon-ditu' style={{ fontSize: 32 }}
+        return (
+          <div style={{ color: '#525151', textAlign: 'center' }}>
+            <div className={styles.pop}>{extData.position.title}</div>
+            <CustomIcon
+              key="amache"
+              className={
+                this.props.currentDivisionPosition.includes(
+                  `${extData.position.Longitude},${extData.position.Latitude}`,
+                )
+                  ? 'animate__animated animate__bounce animate__infinite'
+                  : ''
+              }
+              type="icon-ditu"
+              style={{ fontSize: 32 }}
+              onClick={() => {
+                this.setState({
+                  clickedDivision: extData.position,
+                });
+                this.props.dispatch({
+                  type: 'newHome/updateState',
+                  payload: {
+                    currentDivisionName: extData.position.title,
+                  },
+                });
+                this.props.dispatch({
+                  type: 'newHome/changeRegionCode',
+                  payload: { regionCode: extData.position.RegionCode },
+                });
+              }}
+            />
+            {/* </ReactCSSTransitionGroup> */}
+          </div>
+        );
+      case '服务站':
+        return (
+          <CustomIcon
+            type="icon-cangku"
+            style={{ ...style, fontSize: 28 }}
             onClick={() => {
-              this.setState({
-                clickedDivision: extData.position
-              })
-              this.props.dispatch({
-                type: "newHome/updateState",
-                payload: {
-                  currentDivisionName: extData.position.title
-                }
-              })
-              this.props.dispatch({ type: "newHome/changeRegionCode", payload: { regionCode: extData.position.RegionCode } })
-            }} />
-          {/* </ReactCSSTransitionGroup> */}
-        </div>
-      case "服务站":
-        return <CustomIcon type="icon-cangku" style={{ ...style, fontSize: 28 }} onClick={() => {
-          this.getOfficeModalData(extData)
-        }} />
+              this.getOfficeModalData(extData);
+            }}
+          />
+        );
       default:
         return null;
     }
-  }
+  };
 
   // 渲染企业下监测点
-  getPollutantIcon = (extData) => {
-    const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle }
+  getPollutantIcon = extData => {
+    const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle };
     if (extData.position.outPutFlag == 1) {
       //停产
-      return <CustomIcon type='icon-tingzhishangbao' style={{ ...style }} />
+      return <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />;
     } else {
       switch (extData.position.PollutantType) {
-        case "1":
-          return this.getWaterIcon(extData.position.Status)
-        case "2":
-          return this.getGasIcon(extData.position.Status)
-        case "10":
-          return <VocIcon style={style} />
-        case "12":
-          return <CustomIcon type='icon-yangchen1' style={{ ...style }} />
-        case "5":
-          return <a><CustomIcon type='icon-fangwu' style={style} /></a>
-        case "37":
-          return <CustomIcon type='icon-dian2' style={{ ...style }} />
+        case '1':
+          return this.getWaterIcon(extData.position.Status);
+        case '2':
+          return this.getGasIcon(extData.position.Status);
+        case '10':
+          return <VocIcon style={style} />;
+        case '12':
+          return <CustomIcon type="icon-yangchen1" style={{ ...style }} />;
+        case '5':
+          return (
+            <a>
+              <CustomIcon type="icon-fangwu" style={style} />
+            </a>
+          );
+        case '37':
+          return <CustomIcon type="icon-dian2" style={{ ...style }} />;
       }
     }
-  }
+  };
 
   // 绘制厂界
   drawPolygon = () => {
@@ -480,173 +566,218 @@ class NewHome extends PureComponent {
     if (coordinateSet && displayType === 1) {
       const arr = eval(coordinateSet);
       for (let i = 0; i < arr.length; i++) {
-        res.push(<Polygon
-          events={this.polygonEvents}
-          // key={item.entCode+i}
-          // extData={item}
-          style={{
-            strokeColor: '#FF33FF',
-            // strokeColor: '#0cffda',
-            strokeOpacity: 0.2,
-            strokeWeight: 3,
-            // fillColor: '#595959',
-            fillColor: '#908c8c',
-            fillOpacity: 0.35,
-          }}
-          path={arr[i]}
-        />);
+        res.push(
+          <Polygon
+            events={this.polygonEvents}
+            // key={item.entCode+i}
+            // extData={item}
+            style={{
+              strokeColor: '#FF33FF',
+              // strokeColor: '#0cffda',
+              strokeOpacity: 0.2,
+              strokeWeight: 3,
+              // fillColor: '#595959',
+              fillColor: '#908c8c',
+              fillOpacity: 0.35,
+            }}
+            path={arr[i]}
+          />,
+        );
       }
     }
     return res;
-  }
+  };
 
   // 获取筛选状态图标颜色
   getColor = status => {
-    let color = ''
+    let color = '';
     switch (status) {
-      case 0:// 离线
-        color = '#999999'
+      case 0: // 离线
+        color = '#999999';
         break;
-      case 1:// 正常
-        color = '#34c066'
+      case 1: // 正常
+        color = '#34c066';
         break;
-      case 2:// 超标
-        color = '#f04d4d'
+      case 2: // 超标
+        color = '#f04d4d';
         break;
-      case 3:// 异常
-        color = '#e94'
+      case 3: // 异常
+        color = '#e94';
         break;
     }
-    return color
-  }
+    return color;
+  };
 
   getStatusText = status => {
-    let statusText = ''
+    let statusText = '';
     switch (status) {
       case 0:
-        statusText = '离线'
+        statusText = '离线';
         break;
       case 1:
-        statusText = '正常'
+        statusText = '正常';
         break;
       case 2:
-        statusText = '超标'
+        statusText = '超标';
         break;
       case 3:
-        statusText = '异常'
+        statusText = '异常';
         break;
     }
-    return statusText
-  }
-
+    return statusText;
+  };
 
   getWaterIcon = status => {
-    let icon = ''
+    let icon = '';
     switch (status) {
-      case 0:// 离线
-        icon = <WaterOffline />
+      case 0: // 离线
+        icon = <WaterOffline />;
         break;
-      case 1:// 正常
-        icon = <WaterNormal />
+      case 1: // 正常
+        icon = <WaterNormal />;
         break;
-      case 2:// 超标
-        icon = <WaterExceed />
+      case 2: // 超标
+        icon = <WaterExceed />;
         break;
-      case 3:// 异常
-        icon = <WaterAbnormal />
+      case 3: // 异常
+        icon = <WaterAbnormal />;
         break;
     }
-    return icon
-  }
+    return icon;
+  };
 
   getGasIcon = status => {
-    let icon = ''
+    let icon = '';
     switch (status) {
-      case 0:// 离线
-        icon = <GasOffline />
+      case 0: // 离线
+        icon = <GasOffline />;
         break;
-      case 1:// 正常
-        icon = <GasNormal />
+      case 1: // 正常
+        icon = <GasNormal />;
         break;
-      case 2:// 超标
-        icon = <GasExceed />
+      case 2: // 超标
+        icon = <GasExceed />;
         break;
-      case 3:// 异常
-        icon = <GasAbnormal />
+      case 3: // 异常
+        icon = <GasAbnormal />;
         break;
     }
-    return icon
-  }
+    return icon;
+  };
 
   // 弹窗内容
   infoWindowContent = () => {
     const { currentClickObj } = this.state;
     const { infoWindowData } = this.props;
-    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    let imgName =
+      infoWindowData.pollutantTypeCode === 2
+        ? '/gasInfoWindow.png'
+        : infoWindowData.pollutantTypeCode === 1
+        ? '/water.jpg'
+        : '/infoWindowImg.png';
     if (infoWindowData.photo) {
-      imgName = "/upload/" + infoWindowData.photo[0];
+      imgName = '/upload/' + infoWindowData.photo[0];
     }
-    return <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
-      <div className={styles.header}>
-        <h2>{infoWindowData.Abbreviation} - {currentClickObj.title}</h2>
-        <Button type="primary" size="small" onClick={() => {
-          this.props.dispatch({ type: "newHome/updateState", payload: { siteDetailsVisible: true } })
-        }}>进入站房</Button>
-        <p>
-          站点状态：{
-            currentClickObj.outPutFlag === 1 ?
-              <span style={{ color: '#999999' }}>停运</span> :
-              <span style={{ color: this.getColor(currentClickObj.Status) }}>{this.getStatusText(currentClickObj.Status)}</span>
-          }
-        </p>
-      </div>
-      <div className={styles.desc}>
-        <div className={styles["desc-l"]}>
-          <h3>站点信息</h3>
-          <p>区域：{infoWindowData.regionName}</p>
-          <p>经度：{currentClickObj.Longitude}</p>
-          <p>纬度：{currentClickObj.Latitude}</p>
+    return (
+      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+        <div className={styles.header}>
+          <h2>
+            {infoWindowData.Abbreviation} - {currentClickObj.title}
+          </h2>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              this.props.dispatch({
+                type: 'newHome/updateState',
+                payload: { siteDetailsVisible: true },
+              });
+            }}
+          >
+            进入站房
+          </Button>
+          <p>
+            站点状态：
+            {currentClickObj.outPutFlag === 1 ? (
+              <span style={{ color: '#999999' }}>停运</span>
+            ) : (
+              <span style={{ color: this.getColor(currentClickObj.Status) }}>
+                {this.getStatusText(currentClickObj.Status)}
+              </span>
+            )}
+          </p>
         </div>
-        <div className={styles["desc-r"]}>
-          <img src={imgName} alt="" width="100%" height="100%" />
+        <div className={styles.desc}>
+          <div className={styles['desc-l']}>
+            <h3>站点信息</h3>
+            <p>区域：{infoWindowData.regionName}</p>
+            <p>经度：{currentClickObj.Longitude}</p>
+            <p>纬度：{currentClickObj.Latitude}</p>
+          </div>
+          <div className={styles['desc-r']}>
+            <img src={imgName} alt="" width="100%" height="100%" />
+          </div>
         </div>
-      </div>
-      <div className={styles.data}>
-        <h3>{infoWindowData.pollutantTypeCode === 2 ? "废气数据" : (infoWindowData.pollutantTypeCode === 1 ? "废水数据" : "空气质量数据")}</h3>
-        <div style={{ marginBottom: 10, fontSize: 13 }}>
-          <span>
-            AQI：
-            <span style={{ background: infoWindowData.AQI_Color, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: '20px' }}>
-              {infoWindowData.AQI}
+        <div className={styles.data}>
+          <h3>
+            {infoWindowData.pollutantTypeCode === 2
+              ? '废气数据'
+              : infoWindowData.pollutantTypeCode === 1
+              ? '废水数据'
+              : '空气质量数据'}
+          </h3>
+          <div style={{ marginBottom: 10, fontSize: 13 }}>
+            <span>
+              AQI：
+              <span
+                style={{
+                  background: infoWindowData.AQI_Color,
+                  display: 'inline-block',
+                  width: 30,
+                  textAlign: 'center',
+                  height: 20,
+                  lineHeight: '20px',
+                }}
+              >
+                {infoWindowData.AQI}
+              </span>
             </span>
-          </span>
-          <Divider type="vertical" />
-          <span>首要污染物：{infoWindowData.PrimaryPollutant}</span>
-          {/* <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span> */}
-        </div>
-        <ul>
-          {
-            infoWindowData.list.map(item => {
+            <Divider type="vertical" />
+            <span>首要污染物：{infoWindowData.PrimaryPollutant}</span>
+            {/* <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span> */}
+          </div>
+          <ul>
+            {infoWindowData.list.map(item => {
               let title = `${item.label}：${item.value}`;
-              if (item.label === "风向") {
+              if (item.label === '风向') {
                 title = `${item.label}：${getDirLevel(item.value)}`;
               }
-              return <Tooltip placement="topLeft" title={title}>
-                <li className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ""} title={title}>{title}</li>
-              </Tooltip>
-            })
-          }
-        </ul>
-        <p>监控时间：{infoWindowData.MonitorTime}</p>
+              return (
+                <Tooltip placement="topLeft" title={title}>
+                  <li
+                    className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ''}
+                    title={title}
+                  >
+                    {title}
+                  </li>
+                </Tooltip>
+              );
+            })}
+          </ul>
+          <p>监控时间：{infoWindowData.MonitorTime}</p>
+        </div>
       </div>
-    </div>
-  }
+    );
+  };
 
-  onSearch = (value) => {
+  onSearch = value => {
     if (value) {
       const filter = this.state.markersList.filter(item => {
         if (item.position.IsEnt === 1) {
-          if (item.position.title.indexOf(value) > -1 || item.position.EntName.indexOf(value) > -1) {
+          if (
+            item.position.title.indexOf(value) > -1 ||
+            item.position.EntName.indexOf(value) > -1
+          ) {
             return item;
           }
         }
@@ -654,63 +785,111 @@ class NewHome extends PureComponent {
       if (filter.length > 0) {
         this.setState({
           searchResult: filter[0].position,
-          searchInputVal: undefined
-        })
+          searchInputVal: undefined,
+        });
 
-        aMap.setZoomAndCenter(aMap.getZoom() + 2, [filter[0].position.Longitude, filter[0].position.Latitude])
+        aMap.setZoomAndCenter(aMap.getZoom() + 2, [
+          filter[0].position.Longitude,
+          filter[0].position.Latitude,
+        ]);
       } else {
-        message.error("未找到相关企业或空气站")
+        message.error('未找到相关企业或空气站');
       }
     }
-  }
+  };
 
   divisionInfoWindow = () => {
     const { currentDivision } = this.props;
     if (currentDivision && currentDivision.divisionList) {
       return currentDivision.divisionList.map(item => {
-        return <InfoWindow
-          position={[item.longitude, item.latitude]}
-          visible={true}
-          isCustom={true}
-          offset={[4, -36]}
-        >
-          {item.divisionName}
-        </InfoWindow>
-      })
+        return (
+          <InfoWindow
+            position={[item.longitude, item.latitude]}
+            visible={true}
+            isCustom={true}
+            offset={[4, -36]}
+          >
+            {item.divisionName}
+          </InfoWindow>
+        );
+      });
     }
-  }
+  };
 
   // 重新请求页面数据
   reloadPageData = (startTime = this.props.startTime, endTime = this.props.endTime) => {
     this.props.dispatch({
-      type: "newHome/changeDateTime",
+      type: 'newHome/changeDateTime',
       payload: {
-        startTime, endTime
-      }
-    })
-  }
-
+        startTime,
+        endTime,
+      },
+    });
+  };
 
   render() {
-    const { selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
-    const { allEntAndPointList, constructionCorpsList, INIT_LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
-    const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
-    const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
+    const {
+      selectValue,
+      filterEntAndPointList,
+      searchInputVal,
+      searchResult,
+      leftVisible,
+      rightVisible,
+      infoWindowPos,
+      infoWindowVisible,
+      RegionCode,
+      currentClickObj,
+      displayType,
+      modalTitle,
+      clickedDivision,
+    } = this.state;
+    const {
+      allEntAndPointList,
+      constructionCorpsList,
+      INIT_LEVEL,
+      getAllEntAndPointLoading,
+      drillDownLoading,
+      officeVisible,
+      siteDetailsVisible,
+      monitoringDataLoading,
+      runAndAnalysisDataLoading,
+      alarmResponseDataLoading,
+      operationAnalysisLoading,
+      taskStatisticsDataLoading,
+      diffHorizontalDataLoading,
+    } = this.props;
+    const isLeftLoading =
+      drillDownLoading ||
+      monitoringDataLoading ||
+      runAndAnalysisDataLoading ||
+      alarmResponseDataLoading;
+    const isRightLoading =
+      drillDownLoading ||
+      operationAnalysisLoading ||
+      taskStatisticsDataLoading ||
+      diffHorizontalDataLoading;
     // const bigLoading = drillDownLoading || getAllEntAndPointLoading;
     const loading = getAllEntAndPointLoading;
     // const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapStyle }
     let mapStaticAttribute = {};
     // 离线地图设置做大缩放级别
     if (config.offlineMapUrl.domain) {
-      mapStaticAttribute.zooms = [3, 14]
+      mapStaticAttribute.zooms = [3, 14];
     }
     return (
       <div className={styles.newHomeWrap}>
         <header className={styles.homeHeader}>
-          <p><span>SDL</span> 污染源智能分析系统</p>
-          <a className={styles.backMenu} onClick={() => {
-            router.push(Cookie.get("systemNavigateUrl"))
-          }}>系统功能</a>
+          <p>
+            <span>SDL</span> 污染源智能分析系统
+          </p>
+          <a
+            className={styles.backMenu}
+            onClick={() => {
+              router.push(Cookie.get('systemNavigateUrl'));
+            }}
+          >
+            系统功能
+          </a>
         </header>
         <Spin style={{ zIndex: 9999 }} spinning={loading}>
           <div className={styles.pageContainer}>
@@ -725,10 +904,13 @@ class NewHome extends PureComponent {
               bodyStyle={{ padding: 0 }}
             >
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
-                <Icon type={leftVisible ? "caret-left" : "caret-right"} className={styles.icon} />
+                <LegacyIcon
+                  type={leftVisible ? 'caret-left' : 'caret-right'}
+                  className={styles.icon}
+                />
               </div>
               <Spin spinning={isLeftLoading}>
-                <div className={styles["content"]}>
+                <div className={styles['content']}>
                   {/* 监控现状 */}
                   <Monitoring RegionCode={RegionCode} />
                   {/* 运行分析 */}
@@ -748,11 +930,17 @@ class NewHome extends PureComponent {
               style={{ marginTop: 64 }}
               bodyStyle={{ padding: 0 }}
             >
-              <div className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`} onClick={() => this.toggle()}>
-                <Icon type={rightVisible ? "caret-right" : "caret-left"} className={styles.icon} />
+              <div
+                className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`}
+                onClick={() => this.toggle()}
+              >
+                <LegacyIcon
+                  type={rightVisible ? 'caret-right' : 'caret-left'}
+                  className={styles.icon}
+                />
               </div>
               <Spin spinning={isRightLoading}>
-                <div className={styles["content"]}>
+                <div className={styles['content']}>
                   {/* 运维分析 */}
                   <Operations RegionCode={RegionCode} />
                   {/* 水平衡差 */}
@@ -762,102 +950,173 @@ class NewHome extends PureComponent {
             </Drawer>
             <div className={styles.mapContent}>
               <div className={styles.mapInnerBox}>
-                {
-                  displayType === 1 && <Button type="primary" style={{
-                    //  true && <Button type="primary" style={{
-                    float: 'right',
-                  }} onClick={() => {
-                    let filterList = allEntAndPointList;
-                    if (selectValue) {
-                      filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
-                    }
-                    this.setState({
-                      infoWindowVisible: false, // 关闭排口弹窗
-                    })
-                    this.renderEntMarkers(filterList)
-                    // aMap.setFitView();
-                    aMap.setZoom(6)
-                  }}>返回企业</Button>
-                }
-                {
-                  clickedDivision && <Button type="primary" style={{
-                    float: 'right',
-                    display: displayType === 1 ? "none" : "inline"
-                  }} onClick={() => {
-                    this.setState({ clickedDivision: undefined })
-                    this.props.dispatch({
-                      type: "newHome/updateState",
-                      payload: {
-                        level: INIT_LEVEL,
-                        LEVEL: INIT_LEVEL,
-                        regionCode: "660000000",
-                        currentDivisionName: ""
+                {displayType === 1 && (
+                  <Button
+                    type="primary"
+                    style={{
+                      //  true && <Button type="primary" style={{
+                      float: 'right',
+                    }}
+                    onClick={() => {
+                      let filterList = allEntAndPointList;
+                      if (selectValue) {
+                        filterList = filterEntAndPointList.filter(
+                          item => item.MonitorObjectType == selectValue,
+                        );
                       }
-                    })
-                    setTimeout(() => {
-                      this.reloadPageData();
-                    }, 0)
-                  }}>返回上级</Button>
-                }
-                <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
-                  this.setState({ month: moment(date).get('month') })
-                  let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
-                  if (moment().get('month') === moment(date).get('month')) {
-                    endTime = moment().format("YYYY-MM-DD 23:59:59");
-                  }
-                  this.reloadPageData(date.format("YYYY-MM-01 00:00:00"), endTime);
-                }} />
-                <Select className={styles.selectShowType} value={selectValue} onChange={(val) => {
-                  this.setState({ selectValue: val })
-                  if (val) {
-                    let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
-                    this.renderEntMarkers(filterList);
-                  } else {
-                    this.renderEntMarkers(allEntAndPointList);
-                  }
-                }}>
+                      this.setState({
+                        infoWindowVisible: false, // 关闭排口弹窗
+                      });
+                      this.renderEntMarkers(filterList);
+                      // aMap.setFitView();
+                      aMap.setZoom(6);
+                    }}
+                  >
+                    返回企业
+                  </Button>
+                )}
+                {clickedDivision && (
+                  <Button
+                    type="primary"
+                    style={{
+                      float: 'right',
+                      display: displayType === 1 ? 'none' : 'inline',
+                    }}
+                    onClick={() => {
+                      this.setState({ clickedDivision: undefined });
+                      this.props.dispatch({
+                        type: 'newHome/updateState',
+                        payload: {
+                          level: INIT_LEVEL,
+                          LEVEL: INIT_LEVEL,
+                          regionCode: '660000000',
+                          currentDivisionName: '',
+                        },
+                      });
+                      setTimeout(() => {
+                        this.reloadPageData();
+                      }, 0);
+                    }}
+                  >
+                    返回上级
+                  </Button>
+                )}
+                <MonthPicker
+                  defaultValue={moment()}
+                  allowClear={false}
+                  className={styles.monthPicker}
+                  onChange={(date, dateString) => {
+                    this.setState({ month: moment(date).get('month') });
+                    let endTime = date.endOf('month').format('YYYY-MM-DD HH:mm:ss');
+                    if (moment().get('month') === moment(date).get('month')) {
+                      endTime = moment().format('YYYY-MM-DD 23:59:59');
+                    }
+                    this.reloadPageData(date.format('YYYY-MM-01 00:00:00'), endTime);
+                  }}
+                />
+                <Select
+                  className={styles.selectShowType}
+                  value={selectValue}
+                  onChange={val => {
+                    this.setState({ selectValue: val });
+                    if (val) {
+                      let filterList = filterEntAndPointList.filter(
+                        item => item.MonitorObjectType == val,
+                      );
+                      this.renderEntMarkers(filterList);
+                    } else {
+                      this.renderEntMarkers(allEntAndPointList);
+                    }
+                  }}
+                >
                   <Option value="">全部</Option>
                   <Option value="服务站">服务站</Option>
                   <Option value="1">企业</Option>
                   <Option value="师">师</Option>
                   <Option value="2">空气站</Option>
                 </Select>
-                {
-                  displayType === 0 &&
-                  <Search value={searchInputVal} allowClear onSearch={value => this.onSearch(value)} onChange={(e) => {
-                    this.setState({ searchInputVal: e.target.value })
-                  }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
-                }
-                {
-                  clickedDivision && <div style={{
-                    display: displayType === 1 ? "none" : "block"
-                  }} className={styles.shibox}>
+                {displayType === 0 && (
+                  <Search
+                    value={searchInputVal}
+                    allowClear
+                    onSearch={value => this.onSearch(value)}
+                    onChange={e => {
+                      this.setState({ searchInputVal: e.target.value });
+                    }}
+                    placeholder="输入企业或空气站名称"
+                    className={styles.searchInput}
+                  />
+                )}
+                {clickedDivision && (
+                  <div
+                    style={{
+                      display: displayType === 1 ? 'none' : 'block',
+                    }}
+                    className={styles.shibox}
+                  >
                     {/* <span>师局</span><br /> */}
                     <span>{clickedDivision.title}</span>
                     {/* <span>第九师</span> */}
                   </div>
-                }
+                )}
               </div>
               <div className={styles.legendContent}>
                 <div className={styles.legendBox}>
                   <ul>
-                    <li><CustomIcon type="icon-cangku" style={{ ...mapIconStyle }} /><span>服务站</span></li>
-                    <li><EntIcon /><span>企业</span></li>
-                    <li><CustomIcon type='icon-ditu' style={{ fontSize: 28, marginLeft: -3 }} /> <span>师</span></li>
-                    <li><WaterOffline /> <span>废水</span></li>
-                    <li><GasOffline /> <span>废气</span></li>
-                    <li><CustomIcon type="icon-fangwu" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />空气站</li>
-                    <li><CustomIcon type="icon-tingzhishangbao" style={{ fontSize: 24, borderRadius: "50%", background: "#fff", boxShadow: "0px 0px 3px 2px #fff", color: "#999" }} />停运</li>
+                    <li>
+                      <CustomIcon type="icon-cangku" style={{ ...mapIconStyle }} />
+                      <span>服务站</span>
+                    </li>
+                    <li>
+                      <EntIcon />
+                      <span>企业</span>
+                    </li>
+                    <li>
+                      <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3 }} />{' '}
+                      <span>师</span>
+                    </li>
+                    <li>
+                      <WaterOffline /> <span>废水</span>
+                    </li>
+                    <li>
+                      <GasOffline /> <span>废气</span>
+                    </li>
+                    <li>
+                      <CustomIcon
+                        type="icon-fangwu"
+                        style={{
+                          fontSize: 24,
+                          borderRadius: '50%',
+                          background: '#fff',
+                          boxShadow: '0px 0px 3px 2px #fff',
+                          color: '#999',
+                        }}
+                      />
+                      空气站
+                    </li>
+                    <li>
+                      <CustomIcon
+                        type="icon-tingzhishangbao"
+                        style={{
+                          fontSize: 24,
+                          borderRadius: '50%',
+                          background: '#fff',
+                          boxShadow: '0px 0px 3px 2px #fff',
+                          color: '#999',
+                        }}
+                      />
+                      停运
+                    </li>
                   </ul>
                 </div>
-                {
-                  displayType === 1 && <div className={styles.stateBox}>
-                    <span style={{ backgroundColor: "#33c166" }}>在线</span>
-                    <span style={{ backgroundColor: "#a29d9d" }}>离线</span>
-                    <span style={{ backgroundColor: "#fe0100" }}>超标</span>
-                    <span style={{ backgroundColor: "#ed9b43" }}>异常</span>
+                {displayType === 1 && (
+                  <div className={styles.stateBox}>
+                    <span style={{ backgroundColor: '#33c166' }}>在线</span>
+                    <span style={{ backgroundColor: '#a29d9d' }}>离线</span>
+                    <span style={{ backgroundColor: '#fe0100' }}>超标</span>
+                    <span style={{ backgroundColor: '#ed9b43' }}>异常</span>
                   </div>
-                }
+                )}
               </div>
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
@@ -870,20 +1129,20 @@ class NewHome extends PureComponent {
                 useAMapUI={!config.offlineMapUrl.domain}
                 {...mapStaticAttribute}
               >
-                {
-                  !config.offlineMapUrl.domain && <MapUI
+                {!config.offlineMapUrl.domain && (
+                  <MapUI
                     renderEnt={() => {
                       this.renderEntMarkers(this.props);
                     }}
                   />
-                }
+                )}
 
                 {this.drawPolygon()}
                 <Markers
                   markers={this.state.markersList}
                   events={this.markersEvents}
                   render={this.renderMarker}
-                // content={<span>111</span>}
+                  // content={<span>111</span>}
                 />
                 {/* hover 提示 */}
                 <InfoWindow
@@ -893,7 +1152,9 @@ class NewHome extends PureComponent {
                   autoMove
                   visible={this.state.infoWindowHoverVisible}
                   offset={[4, -35]}
-                >{this.state.currentTitle}</InfoWindow>
+                >
+                  {this.state.currentTitle}
+                </InfoWindow>
                 <InfoWindow
                   events={this.infoWindowEvents}
                   position={infoWindowPos}
@@ -902,13 +1163,13 @@ class NewHome extends PureComponent {
                   autoMove
                   showShadow
                   closeWhenClickMap={false}
-                // isCustom
-                // content={this.infoWindowContent()}
+                  // isCustom
+                  // content={this.infoWindowContent()}
                 >
                   {this.infoWindowContent()}
                 </InfoWindow>
-                {
-                  searchResult && <InfoWindow
+                {searchResult && (
+                  <InfoWindow
                     events={this.searchWindowEvent}
                     position={[searchResult.Longitude, searchResult.Latitude]}
                     visible={searchResult}
@@ -917,11 +1178,11 @@ class NewHome extends PureComponent {
                     showShadow
                     closeWhenClickMap
                     isCustom
-                  // content={this.infoWindowContent()}
+                    // content={this.infoWindowContent()}
                   >
                     {searchResult.title}
                   </InfoWindow>
-                }
+                )}
                 {/* {
                   this.divisionInfoWindow()
                 } */}

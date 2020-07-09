@@ -1,11 +1,13 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-05 17:18:32 
+ * @Author: Jiaqi
+ * @Date: 2019-11-05 17:18:32
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-08 11:26:10
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
   Card,
@@ -15,7 +17,6 @@ import {
   Row,
   Col,
   Button,
-  Form,
   Input,
   InputNumber,
   Select,
@@ -23,16 +24,15 @@ import {
   Popconfirm,
   message,
   Upload,
-  Icon,
 } from 'antd';
-import NavigationTree from '@/components/NavigationTree'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import NavigationTree from '@/components/NavigationTree';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva';
-import SdlTable from '@/components/SdlTable'
-import SdlUpload from '@/pages/AutoFormManager/SdlUpload'
-import SelectPollutantType from '@/components/SelectPollutantType'
+import SdlTable from '@/components/SdlTable';
+import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
+import SelectPollutantType from '@/components/SelectPollutantType';
 import cuid from 'cuid';
-import config from '@/config'
+import config from '@/config';
 
 @Form.create()
 @connect(({ common, loading, standardLibraryManager, autoForm }) => {
@@ -41,7 +41,7 @@ import config from '@/config'
     pollutantCode: common.pollutantCode,
     libraryEditData: standardLibraryManager.libraryEditData,
     fileList: autoForm.fileList,
-  }
+  };
 })
 class AddLibrary extends Component {
   constructor(props) {
@@ -49,13 +49,13 @@ class AddLibrary extends Component {
     this.state = {
       libraryId: props.match.params.id,
       dataSource: [],
-      cuid: props.match.params.cuid !== "null" ? props.match.params.cuid : cuid(),
+      cuid: props.match.params.cuid !== 'null' ? props.match.params.cuid : cuid(),
       fileList: [],
       columns: [
         {
           title: '污染物编号',
           dataIndex: 'PollutantCode',
-          width: 120
+          width: 120,
         },
         {
           title: '污染物名称',
@@ -70,17 +70,29 @@ class AddLibrary extends Component {
               //     }],
               //     initialValue: text ? text : undefined
               //   })(
-              <Select value={text || record.PollutantCode} onChange={(value) => { this.changeDataSource(value, index, "PollutantName") }} >
-                {
-                  this.props.pollutantCode.map(item => {
-                    return <Option key={item.field} disabled={this.state.dataSource.find(itm => itm.PollutantName == item.field || itm.PollutantCode == item.field)}>{item.name}</Option>
-                  })
-                }
+              <Select
+                value={text || record.PollutantCode}
+                onChange={value => {
+                  this.changeDataSource(value, index, 'PollutantName');
+                }}
+              >
+                {this.props.pollutantCode.map(item => {
+                  return (
+                    <Option
+                      key={item.field}
+                      disabled={this.state.dataSource.find(
+                        itm => itm.PollutantName == item.field || itm.PollutantCode == item.field,
+                      )}
+                    >
+                      {item.name}
+                    </Option>
+                  );
+                })}
               </Select>
               //   )}
               // </Form.Item>
-            )
-          }
+            );
+          },
         },
         {
           title: '污染物类型',
@@ -92,10 +104,11 @@ class AddLibrary extends Component {
               //     return item.pollutantTypeName
               //   }
               // })
-              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == text)[0].pollutantTypeName
+              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == text)[0]
+                .pollutantTypeName;
             }
             // return "";
-          }
+          },
         },
         {
           title: '上限',
@@ -106,11 +119,19 @@ class AddLibrary extends Component {
               //   {this.props.form.getFieldDecorator('UpperLimit' + index, {
               //     initialValue: text ? text : undefined
               //   })(
-              <InputNumber value={text} min={0} max={10000} step={0.1} onChange={(value) => { this.changeDataSource(value, index, "UpperLimit") }} />
+              <InputNumber
+                value={text}
+                min={0}
+                max={10000}
+                step={0.1}
+                onChange={value => {
+                  this.changeDataSource(value, index, 'UpperLimit');
+                }}
+              />
               //   )}
               // </Form.Item>
-            )
-          }
+            );
+          },
         },
         {
           title: '下限',
@@ -121,11 +142,19 @@ class AddLibrary extends Component {
               //   {this.props.form.getFieldDecorator('LowerLimit' + index, {
               //     initialValue: text ? text : undefined
               //   })(
-              <InputNumber value={text} min={0} max={10000} step={0.1} onChange={(value) => { this.changeDataSource(value, index, "LowerLimit") }} />
+              <InputNumber
+                value={text}
+                min={0}
+                max={10000}
+                step={0.1}
+                onChange={value => {
+                  this.changeDataSource(value, index, 'LowerLimit');
+                }}
+              />
               //   )}
               // </Form.Item>
-            )
-          }
+            );
+          },
         },
         {
           title: '报警类型',
@@ -140,7 +169,12 @@ class AddLibrary extends Component {
               //     }],
               //     initialValue: text ? text : undefined
               //   })(
-              <Select value={text != null ? `${text}` : undefined} onChange={(value) => { this.changeDataSource(value, index, "AlarmType") }} >
+              <Select
+                value={text != null ? `${text}` : undefined}
+                onChange={value => {
+                  this.changeDataSource(value, index, 'AlarmType');
+                }}
+              >
                 <Option value="0">无报警</Option>
                 <Option value="1">上限报警</Option>
                 <Option value="2">下限报警</Option>
@@ -148,8 +182,8 @@ class AddLibrary extends Component {
               </Select>
               //   )}
               // </Form.Item>
-            )
-          }
+            );
+          },
         },
         {
           title: '操作',
@@ -179,20 +213,20 @@ class AddLibrary extends Component {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
-      title: props.match.params.id ? "编辑标准库" : "添加标准库"
-    }
+      title: props.match.params.id ? '编辑标准库' : '添加标准库',
+    };
   }
 
   componentDidMount() {
     const id = this.state.libraryId;
-    const cuid = this.state.cuid
+    const cuid = this.state.cuid;
     if (id) {
       this.props.dispatch({
-        type: "standardLibraryManager/getEditData",
+        type: 'standardLibraryManager/getEditData',
         payload: {
-          id: id
-        }
-      })
+          id: id,
+        },
+      });
       if (cuid) {
         // this.props.form.setFieldsValue({ cuid: cuid })
         this.props.dispatch({
@@ -200,48 +234,47 @@ class AddLibrary extends Component {
           payload: {
             FileUuid: cuid,
           },
-        })
+        });
       }
     }
-
-
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.libraryEditData !== nextProps.libraryEditData) {
-      this.setState({ dataSource: nextProps.libraryEditData.StandardLibraryPollutantData })
+      this.setState({ dataSource: nextProps.libraryEditData.StandardLibraryPollutantData });
     }
   }
 
   componentWillUnmount() {
     this.props.dispatch({
-      type: "standardLibraryManager/updateState",
+      type: 'standardLibraryManager/updateState',
       payload: {
-        libraryEditData: []
-      }
-    })
+        libraryEditData: [],
+      },
+    });
   }
-
 
   changeDataSource = (value, index, key) => {
     let dataSource = [...this.state.dataSource];
     // const key = value.currentTarget.id.replace(/\d+/g,'');
     dataSource[index][key] = value;
-    if (key === "PollutantName") {
-      dataSource[index]["PollutantCode"] = value
+    if (key === 'PollutantName') {
+      dataSource[index]['PollutantCode'] = value;
     }
-    this.setState({ dataSource })
-  }
+    this.setState({ dataSource });
+  };
 
   // 添加污染物
   handleAdd = () => {
     let dataSource = this.state.dataSource;
-    const pollutantType = this.props.form.getFieldValue("PollutantType");
+    const pollutantType = this.props.form.getFieldValue('PollutantType');
     if (!pollutantType) {
-      message.error("请先选择污染物类型");
+      message.error('请先选择污染物类型');
       return;
     }
-    const type = this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == pollutantType)[0];
+    const type = this.props.pollutantTypelist.filter(
+      item => item.pollutantTypeCode == pollutantType,
+    )[0];
     const key = dataSource.length + 1;
     dataSource.push({
       key: key,
@@ -250,22 +283,22 @@ class AddLibrary extends Component {
       Type: type.pollutantTypeCode ? type.pollutantTypeCode : null,
       UpperLimit: null,
       AlarmType: null,
-    })
-    this.setState({ dataSource })
-  }
+    });
+    this.setState({ dataSource });
+  };
 
   // 删除污染物
-  handleDelete = (index) => {
+  handleDelete = index => {
     let tempDataSource = this.state.dataSource;
     tempDataSource.splice(index, 1);
     let newId = this.state.id;
     this.setState({
       id: ++newId,
-    })
+    });
     this.setState({
-      dataSource: [...tempDataSource]
-    })
-  }
+      dataSource: [...tempDataSource],
+    });
+  };
 
   submitForm = () => {
     this.props.form.validateFields((err, fieldsValue) => {
@@ -275,16 +308,16 @@ class AddLibrary extends Component {
       let isErr = false;
       this.state.dataSource.map(item => {
         if (item.PollutantCode == null || item.PollutantCode == undefined) {
-          message.error("请选择污染物")
+          message.error('请选择污染物');
           isErr = true;
           return;
         }
         if (item.AlarmType == null || item.AlarmType == undefined) {
-          message.error("请选择报警类型")
+          message.error('请选择报警类型');
           isErr = true;
           return;
         }
-      })
+      });
       if (!isErr) {
         let payload = {
           AttachmentID: this.state.cuid,
@@ -292,31 +325,31 @@ class AddLibrary extends Component {
           IsUsed: fieldsValue.IsUsed ? 1 : 0,
           Type: fieldsValue.Type,
           PollutantType: fieldsValue.PollutantType,
-          StandardLibraryPollutantData: this.state.dataSource
-        }
-        let actionType = "standardLibraryManager/addLibrary"
+          StandardLibraryPollutantData: this.state.dataSource,
+        };
+        let actionType = 'standardLibraryManager/addLibrary';
 
         if (this.state.libraryId) {
           // 编辑
           payload.Guid = this.state.libraryId;
-          actionType = "standardLibraryManager/updateLibrary"
+          actionType = 'standardLibraryManager/updateLibrary';
         }
 
         this.props.dispatch({
           type: actionType,
           payload: {
-            ...payload
-          }
-        })
+            ...payload,
+          },
+        });
       }
-
-    })
-  }
-
-
+    });
+  };
 
   render() {
-    const { form: { getFieldDecorator, setFieldsValue }, libraryEditData } = this.props;
+    const {
+      form: { getFieldDecorator, setFieldsValue },
+      libraryEditData,
+    } = this.props;
     const { formItemLayout, title, uploadFormItemLayout } = this._SELF_;
     const { dataSource, columns, cuid, fileList } = this.state;
 
@@ -328,30 +361,32 @@ class AddLibrary extends Component {
               <Col span={12}>
                 <Form.Item label="标准库名称">
                   {getFieldDecorator('Name', {
-                    rules: [{
-                      required: true,
-                      message: '请填写标准库名称!',
-                    },],
-                    initialValue: libraryEditData.Name
-                  })(
-                    <Input placeholder="请填写标准库名称" />
-                  )}
+                    rules: [
+                      {
+                        required: true,
+                        message: '请填写标准库名称!',
+                      },
+                    ],
+                    initialValue: libraryEditData.Name,
+                  })(<Input placeholder="请填写标准库名称" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="标准库类型">
                   {getFieldDecorator('Type', {
-                    rules: [{
-                      required: true,
-                      message: '请选择标准库类型',
-                    }],
-                    initialValue: libraryEditData.Type ? libraryEditData.Type + "" : undefined
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择标准库类型',
+                      },
+                    ],
+                    initialValue: libraryEditData.Type ? libraryEditData.Type + '' : undefined,
                   })(
                     <Select placeholder="请选择标准库类型">
                       <Option value="1">国标</Option>
                       <Option value="2">地标</Option>
                       <Option value="3">行标</Option>
-                    </Select>
+                    </Select>,
                   )}
                 </Form.Item>
               </Col>
@@ -360,20 +395,24 @@ class AddLibrary extends Component {
               <Col span={12}>
                 <Form.Item label="污染物类型">
                   {getFieldDecorator('PollutantType', {
-                    rules: [{
-                      required: true,
-                      message: '请选择污染物类型!',
-                    },],
-                    initialValue: libraryEditData.PollutantType
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择污染物类型!',
+                      },
+                    ],
+                    initialValue: libraryEditData.PollutantType,
                   })(
-                    <SelectPollutantType onChange={(value) => {
-                      this.props.dispatch({
-                        type: "common/getAllPollutantCode",
-                        payload: {
-                          pollutantTypes: value
-                        }
-                      })
-                    }} />
+                    <SelectPollutantType
+                      onChange={value => {
+                        this.props.dispatch({
+                          type: 'common/getAllPollutantCode',
+                          payload: {
+                            pollutantTypes: value,
+                          },
+                        });
+                      }}
+                    />,
                   )}
                 </Form.Item>
               </Col>
@@ -382,9 +421,7 @@ class AddLibrary extends Component {
                   {getFieldDecorator('IsUsed', {
                     initialValue: !!libraryEditData.IsUsed,
                     valuePropName: 'checked',
-                  })(
-                    <Switch />
-                  )}
+                  })(<Switch />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -395,12 +432,16 @@ class AddLibrary extends Component {
                     // initialValue: libraryEditData.IsUsed,
                     // valuePropName: 'checked',
                   })(
-                    <SdlUpload fileList={this.props.fileList} cuid={cuid} uploadSuccess={(cuid) => {
-                      // setFieldsValue({ cuid: cuid })
-                      this.setState({
-                        cuid: cuid
-                      })
-                    }} />
+                    <SdlUpload
+                      fileList={this.props.fileList}
+                      cuid={cuid}
+                      uploadSuccess={cuid => {
+                        // setFieldsValue({ cuid: cuid })
+                        this.setState({
+                          cuid: cuid,
+                        });
+                      }}
+                    />,
                   )}
                 </Form.Item>
               </Col>
@@ -413,7 +454,7 @@ class AddLibrary extends Component {
             >
               <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                 添加
-            </Button>
+              </Button>
               <SdlTable
                 rowKey={record => record.index || record.Guid}
                 bordered
@@ -426,19 +467,23 @@ class AddLibrary extends Component {
             </Card>
             <Row>
               <Divider orientation="right">
-                <Button type="primary" onClick={this.submitForm}>保存</Button>
+                <Button type="primary" onClick={this.submitForm}>
+                  保存
+                </Button>
                 <Button
                   style={{ marginLeft: 8 }}
                   onClick={() => {
                     history.go(-1);
                   }}
-                >返回</Button>
+                >
+                  返回
+                </Button>
               </Divider>
             </Row>
           </Form>
         </Card>
       </BreadcrumbWrapper>
-    )
+    );
   }
 }
 

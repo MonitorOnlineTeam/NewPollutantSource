@@ -1,15 +1,33 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Form, Popconfirm, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon, Tooltip, DatePicker } from 'antd';
-import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
-import SdlTable from '@/components/SdlTable'
-import PageLoading from '@/components/PageLoading'
-import { router } from 'umi'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Popconfirm,
+  Row,
+  Col,
+  Input,
+  Select,
+  Button,
+  Table,
+  Cascader,
+  InputNumber,
+  Divider,
+  message,
+  Tooltip,
+  DatePicker,
+} from 'antd';
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon';
+import SdlTable from '@/components/SdlTable';
+import PageLoading from '@/components/PageLoading';
+import { router } from 'umi';
 
 @connect(({ loading, qualityControl }) => ({
   workPatternList: qualityControl.workPatternList,
-  loading: loading.effects["qualityControl/getWorkPatternList"],
+  loading: loading.effects['qualityControl/getWorkPatternList'],
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -19,19 +37,25 @@ class index extends PureComponent {
         {
           title: '工作模式',
           dataIndex: 'ModelName',
-          width: "70%"
+          width: '70%',
         },
         {
-          title: "操作",
-          width: "30%",
-          align: "center",
+          title: '操作',
+          width: '30%',
+          align: 'center',
           render: (text, record) => {
             return (
               <div>
                 <Tooltip title="编辑">
-                  <a onClick={() => {
-                    router.push("/qualityControl/qcaManager/workPattern/edit/" + record.ModelName)
-                  }}><EditIcon /></a>
+                  <a
+                    onClick={() => {
+                      router.push(
+                        '/qualityControl/qcaManager/workPattern/edit/' + record.ModelName,
+                      );
+                    }}
+                  >
+                    <EditIcon />
+                  </a>
                 </Tooltip>
                 <Divider type="vertical" />
                 <Tooltip title="删除">
@@ -42,34 +66,36 @@ class index extends PureComponent {
                       this.del(record);
                     }}
                     okText="是"
-                    cancelText="否">
-                    <a href="#"><DelIcon /></a>
+                    cancelText="否"
+                  >
+                    <a href="#">
+                      <DelIcon />
+                    </a>
                   </Popconfirm>
                 </Tooltip>
               </div>
-            )
-          }
-        }
-      ]
+            );
+          },
+        },
+      ],
     };
   }
 
   componentDidMount() {
     this.props.dispatch({
       type: 'qualityControl/getWorkPatternList',
-    })
+    });
   }
-
 
   // 删除工作模式
-  del = (record) => {
+  del = record => {
     this.props.dispatch({
-      type: "qualityControl/workPatternDelete",
+      type: 'qualityControl/workPatternDelete',
       payload: {
-        ModelName: record.ModelName
-      }
-    })
-  }
+        ModelName: record.ModelName,
+      },
+    });
+  };
 
   // 展开嵌套表格
   expandedRowRender = (record, index, indent, expanded) => {
@@ -84,15 +110,15 @@ class index extends PureComponent {
         dataIndex: 'StandardValue',
         width: 140,
         render: (text, record, idx) => {
-          let unit = "mg/m3";
-          if (record.StandardGasCode === "02" || record.StandardGasCode === "03") {
-            unit = "mg/m3"
+          let unit = 'mg/m3';
+          if (record.StandardGasCode === '02' || record.StandardGasCode === '03') {
+            unit = 'mg/m3';
           }
-          if (record.StandardGasCode === "s01") {
-            unit = "%"
+          if (record.StandardGasCode === 's01') {
+            unit = '%';
           }
-          return text ? text + unit : "-"
-        }
+          return text ? text + unit : '-';
+        },
       },
       {
         title: '总流量设定值',
@@ -104,24 +130,24 @@ class index extends PureComponent {
         dataIndex: 'Range',
         width: 140,
         render: (text, record, idx) => {
-          return text ? text : "-"
-        }
+          return text ? text : '-';
+        },
       },
       {
         title: '通气时间',
         dataIndex: 'VentilationTime',
         width: 100,
         render: (text, record, idx) => {
-          return text ? text + "分钟" : "-"
-        }
+          return text ? text + '分钟' : '-';
+        },
       },
       {
         title: '稳定时间',
         dataIndex: 'StabilizationTime',
         width: 100,
         render: (text, record, idx) => {
-          return text ? text + "分钟" : "-"
-        }
+          return text ? text + '分钟' : '-';
+        },
       },
       {
         title: '质控周期',
@@ -130,33 +156,47 @@ class index extends PureComponent {
         render: (text, record, idx) => {
           if (text !== undefined) {
             if (record.DateType === 0) {
-              return `周期：${text}天 ${record.Hour}:${record.Minutes}`
+              return `周期：${text}天 ${record.Hour}:${record.Minutes}`;
             } else {
-              return `周期：${text}小时 ${record.Minutes}分`
+              return `周期：${text}小时 ${record.Minutes}分`;
             }
           }
-          return "-"
-        }
-      }
-    ]
+          return '-';
+        },
+      },
+    ];
 
-    return <Table style={{ margin: "10px 0" }} size="middle" border={false} columns={columns} dataSource={record.ModelList} pagination={false} />;
-  }
-
+    return (
+      <Table
+        style={{ margin: '10px 0' }}
+        size="middle"
+        border={false}
+        columns={columns}
+        dataSource={record.ModelList}
+        pagination={false}
+      />
+    );
+  };
 
   render() {
     const { columns, dataSource } = this.state;
     const { workPatternList, loading } = this.props;
     if (loading) {
-      return <PageLoading />
+      return <PageLoading />;
     }
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Row style={{marginBottom: 10}}>
-            <Button icon="plus" type="primary" onClick={() => {
-              router.push("/qualityControl/qcaManager/workPattern/add")
-            }}>添加</Button>
+          <Row style={{ marginBottom: 10 }}>
+            <Button
+              icon={<PlusOutlined />}
+              type="primary"
+              onClick={() => {
+                router.push('/qualityControl/qcaManager/workPattern/add');
+              }}
+            >
+              添加
+            </Button>
           </Row>
           <Table
             size="small"
@@ -187,8 +227,7 @@ class index extends PureComponent {
             //     })
             //   }
             // }}
-            expandedRows={expandedRows => {
-            }}
+            expandedRows={expandedRows => {}}
             // bordered={false}
             pagination={false}
             size="middle"

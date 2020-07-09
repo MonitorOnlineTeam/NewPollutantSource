@@ -1,40 +1,33 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-05 17:18:49 
+ * @Author: Jiaqi
+ * @Date: 2019-11-05 17:18:49
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-12-09 15:17:22
  * @desc: 上传组件
  */
 
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { getBase64 } from './utils'
-import {
-  Upload,
-  Button,
-  Icon,
-  Modal,
-  Carousel,
-  message
-} from 'antd'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { getBase64 } from './utils';
+import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { Upload, Button, Modal, Carousel, message } from 'antd';
 import cuid from 'cuid';
 import config from '@/config';
 import { connect } from 'dva';
-import styles from './index.less'
+import styles from './index.less';
 import { MapInteractionCSS } from 'react-map-interaction';
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
 }))
-
 class SdlUpload extends Component {
   constructor(props) {
     super(props);
     this._SELF_ = {
-      cuid: this.props.cuid
-    }
+      cuid: this.props.cuid,
+    };
     this.state = {
-      previewVisible: false
+      previewVisible: false,
     };
   }
 
@@ -52,7 +45,7 @@ class SdlUpload extends Component {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
         fileList: nextProps.fileList,
-      })
+      });
     }
   }
 
@@ -62,46 +55,43 @@ class SdlUpload extends Component {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-    {
+    if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
       this.setState({
         previewImage: file.url || file.preview,
         previewVisible: true,
       });
     }
-
   };
-
 
   render() {
     const { configId, fileList, dispatch } = this.props;
     const { cuid } = this._SELF_;
-    console.log('fileList=', fileList)
+    console.log('fileList=', fileList);
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
-      onChange: (info) => {
+      onChange: info => {
         if (info.file.status === 'done') {
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
         } else if (info.file.status === 'error') {
-          message.error('上传文件失败！')
+          message.error('上传文件失败！');
         }
         this.setState({
-          fileList: info.fileList
-        })
+          fileList: info.fileList,
+        });
       },
       onRemove(file) {
         dispatch({
-          type: "autoForm/deleteAttach",
+          type: 'autoForm/deleteAttach',
           payload: {
             Guid: file.uid,
-          }
-        })
+          },
+        });
       },
       onPreview: this.handlePreview,
       multiple: true,
-      listType: "picture-card",
+      listType: 'picture-card',
       data: {
         FileUuid: cuid,
         FileActualType: '0',
@@ -112,50 +102,63 @@ class SdlUpload extends Component {
       <>
         <Upload {...props} fileList={this.state.fileList}>
           <div>
-            <Icon type="plus" />
+            <PlusOutlined />
             <div className="ant-upload-text">文件上传</div>
           </div>
         </Upload>
 
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-          this.setState({ previewVisible: false })
-        }}>
+        <Modal
+          visible={this.state.previewVisible}
+          footer={null}
+          onCancel={() => {
+            this.setState({ previewVisible: false });
+          }}
+        >
           {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-          <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <div className={styles.controller}>
-              <Icon type="left" onClick={() => {
-                this.carousel.prev()
-              }} />
-              <Icon type="right" onClick={() => {
-                this.carousel.next()
-              }} />
+              <LeftOutlined
+                onClick={() => {
+                  this.carousel.prev();
+                }}
+              />
+              <RightOutlined
+                onClick={() => {
+                  this.carousel.next();
+                }}
+              />
             </div>
             <MapInteractionCSS>
               <Carousel
                 dots={false}
-                ref={(carousel) => { this.carousel = carousel; }}
+                ref={carousel => {
+                  this.carousel = carousel;
+                }}
               >
-                {
-                  this.props.fileList && this.props.fileList.map(item => {
+                {this.props.fileList &&
+                  this.props.fileList.map(item => {
                     const nameSplit = item.name.split('.');
                     const postfix = nameSplit[nameSplit.length - 1];
-                    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-                    {
-                      return <div key={item.Guid}>
-                      <img alt="example" style={{ width: '100%' }} src={item.url} />
-                    </div>
+                    if (
+                      postfix === 'gif' ||
+                      postfix === 'jpg' ||
+                      postfix === 'png' ||
+                      postfix === 'bmp'
+                    ) {
+                      return (
+                        <div key={item.Guid}>
+                          <img alt="example" style={{ width: '100%' }} src={item.url} />
+                        </div>
+                      );
                     }
-                  })
-                }
+                  })}
               </Carousel>
             </MapInteractionCSS>
           </div>
         </Modal>
       </>
-
     );
   }
 }
-
 
 export default SdlUpload;

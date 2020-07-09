@@ -5,11 +5,13 @@
  * @Last Modified time: 2020-02-20 18:27:44
  * @desc
  */
-import React, { PureComponent } from 'react'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import React, { PureComponent } from 'react';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
-  Form,
   Row,
   Col,
   Input,
@@ -18,7 +20,6 @@ import {
   Button,
   DatePicker,
   message,
-  Icon,
   Spin,
   Cascader,
 } from 'antd';
@@ -29,7 +30,6 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 
-
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
 
@@ -39,9 +39,9 @@ const { MonthPicker } = DatePicker;
   entAndPointList: report.entAndPointList,
   defaultEntAndPoint: report.defaultEntAndPoint,
   smokeReportData: report.smokeReportData,
-  loading: loading.effects["report/getSmokeReportData"],
-  exportLoading: loading.effects["report/exportSmokeReport"],
-  pointName: report.pointName
+  loading: loading.effects['report/getSmokeReportData'],
+  exportLoading: loading.effects['report/exportSmokeReport'],
+  pointName: report.pointName,
 }))
 class SmokeReportPage extends PureComponent {
   constructor(props) {
@@ -60,64 +60,66 @@ class SmokeReportPage extends PureComponent {
         wrapperCol: { span: 17 },
       },
     };
-    this.switchInfo(props.match.params.reportType)
+    this.switchInfo(props.match.params.reportType);
   }
 
   componentDidMount() {
     this.getEntAndPoint();
   }
 
-  switchInfo = (reportType) => {
+  switchInfo = reportType => {
     let beginTime;
     let endTime;
     switch (reportType) {
-      case "day":
-        this.title = "烟气排放连续监测小时平均日报表";
-        this.format = "YYYY-MM-DD";
+      case 'day':
+        this.title = '烟气排放连续监测小时平均日报表';
+        this.format = 'YYYY-MM-DD';
         // this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气日排放总量单位：×10⁴m³/d";
-        this.unit1 = "kg/h";
-        this.unit2 = "m³/h";
+        this.tableFooter = '烟气日排放总量单位：×10⁴m³/d';
+        this.unit1 = 'kg/h';
+        this.unit2 = 'm³/h';
         beginTime = moment().format('YYYY-MM-DD 01:00:00');
-        endTime = moment().add(1, 'day').format('YYYY-MM-DD 00:00:00');
-        reportType = "dayanddate"
+        endTime = moment()
+          .add(1, 'day')
+          .format('YYYY-MM-DD 00:00:00');
+        reportType = 'dayanddate';
         break;
-      case "month":
-        this.title = "烟气排放连续监测日平均月报表";
-        this.format = "YYYY-MM"
+      case 'month':
+        this.title = '烟气排放连续监测日平均月报表';
+        this.format = 'YYYY-MM';
         // this.timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气月排放总量单位：×10⁴m³/月";
-        this.unit1 = "t/d";
-        this.unit2 = "×10⁴m³/h";
+        this.tableFooter = '烟气月排放总量单位：×10⁴m³/月';
+        this.unit1 = 't/d';
+        this.unit2 = '×10⁴m³/h';
         beginTime = moment().format('YYYY-MM-01 00:00:00');
-        endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        endTime = moment(moment().format('YYYY-MM-01 00:00:00'))
+          .add(1, 'month')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
         break;
-      case "quarter":
-        this.title = "烟气排放连续监测月平均季报表";
-        this.format = "YYYY-MM";
+      case 'quarter':
+        this.title = '烟气排放连续监测月平均季报表';
+        this.format = 'YYYY-MM';
         // this.timeEle = <DatePicker allowClear={false} style={{ width: '100%' }} />
-        this.tableFooter = "烟气季排放总量单位：×10⁴m³/季度";
+        this.tableFooter = '烟气季排放总量单位：×10⁴m³/季度';
         const month = moment().format('MM');
         if (month >= 1 && month <= 3) {
           beginTime = moment().format('YYYY-01-01 00:00:00');
-          endTime = moment().format('YYYY-03-31 23:59:59')
-        }
-        else if (month >= 4 && month <= 6) {
+          endTime = moment().format('YYYY-03-31 23:59:59');
+        } else if (month >= 4 && month <= 6) {
           beginTime = moment().format('YYYY-04-01 00:00:00');
-          endTime = moment().format('YYYY-06-30 23:59:59')
-        }
-        else if (month >= 7 && month <= 9) {
+          endTime = moment().format('YYYY-06-30 23:59:59');
+        } else if (month >= 7 && month <= 9) {
           beginTime = moment().format('YYYY-07-01 00:00:00');
-          endTime = moment().format('YYYY-09-30 23:59:59')
-        }
-        else if (month >= 10 && month <= 12) {
+          endTime = moment().format('YYYY-09-30 23:59:59');
+        } else if (month >= 10 && month <= 12) {
           beginTime = moment().format('YYYY-10-01 00:00:00');
-          endTime = moment().format('YYYY-12-31 23:59:59')
+          endTime = moment().format('YYYY-12-31 23:59:59');
         }
         break;
-      case "year":
-        this.title = "烟气排放连续监测月平均年报表";
-        this.format = "YYYY-MM"
+      case 'year':
+        this.title = '烟气排放连续监测月平均年报表';
+        this.format = 'YYYY-MM';
         // this.timeEle = <YearPicker
         //   allowClear={false}
         //   style={{ width: '100%' }}
@@ -126,60 +128,68 @@ class SmokeReportPage extends PureComponent {
         //   }}
         // />
         beginTime = moment().format('YYYY-01-01 00:00:00');
-        endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        this.tableFooter = "烟气年排放总量单位：×10⁴m³/a"
+        endTime = moment(moment().format('YYYY-01-01 00:00:00'))
+          .add(1, 'year')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
+        this.tableFooter = '烟气年排放总量单位：×10⁴m³/a';
         break;
     }
     this.props.dispatch({
-      type: "report/updateState",
+      type: 'report/updateState',
       payload: {
         SmokeForm: {
           beginTime,
-          endTime
-        }
-      }
-    })
-    this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
-  }
+          endTime,
+        },
+      },
+    });
+    this.timeEle = (
+      <DatePickerTool
+        allowClear={false}
+        picker={reportType}
+        style={{ width: '100%' }}
+        callback={this.dateOnchange}
+      />
+    );
+  };
 
   dateOnchange = (dates, beginTime, endTime) => {
-    this.props.form.setFieldsValue({ "time": dates });
+    this.props.form.setFieldsValue({ time: dates });
     this.props.dispatch({
-      type: "report/updateState",
+      type: 'report/updateState',
       payload: {
         SmokeForm: {
           beginTime,
-          endTime
-        }
-      }
-    })
-  }
+          endTime,
+        },
+      },
+    });
+  };
 
   // 获取企业及排口
-  getEntAndPoint = (payload) => {
-
+  getEntAndPoint = payload => {
     this.props.dispatch({
-      type: "report/getEntAndPoint",
+      type: 'report/getEntAndPoint',
       payload: {
-        "PollutantTypes": this._SELF_.pollutantType,
-        "RegionCode": "",
-        "Name": "",
-        "Status": [0, 1, 2, 3],
-        "QCAUse": "",
-        "RunState": "",
-        "isFilter": true,
+        PollutantTypes: this._SELF_.pollutantType,
+        RegionCode: '',
+        Name: '',
+        Status: [0, 1, 2, 3],
+        QCAUse: '',
+        RunState: '',
+        isFilter: true,
         reportType: this._SELF_.reportType,
-        ...payload
-      }
-    })
-  }
+        ...payload,
+      },
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
-
       this.switchInfo(nextProps.match.params.reportType);
       this.getSmokeReportData({
-        dataType: nextProps.match.params.reportType
+        dataType: nextProps.match.params.reportType,
       });
     }
     if (this.props.smokeReportData !== nextProps.smokeReportData) {
@@ -210,7 +220,7 @@ class SmokeReportPage extends PureComponent {
                   // }else{
                 }
                 return obj;
-              }
+              },
             },
             {
               title: '折算浓度(mg/m³)',
@@ -225,14 +235,14 @@ class SmokeReportPage extends PureComponent {
                   obj.props.colSpan = 0;
                 }
                 return obj;
-              }
+              },
             },
             {
               title: `排放量(${this.unit1})`,
               dataIndex: '01sum',
               width: 110,
             },
-          ]
+          ],
         },
         {
           title: 'SO₂',
@@ -252,7 +262,7 @@ class SmokeReportPage extends PureComponent {
                   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
                 }
                 return obj;
-              }
+              },
             },
             {
               title: '折算浓度(mg/m³)',
@@ -267,14 +277,14 @@ class SmokeReportPage extends PureComponent {
                   obj.props.colSpan = 0;
                 }
                 return obj;
-              }
+              },
             },
             {
               title: `排放量(${this.unit1})`,
               dataIndex: '02sum',
               width: 110,
             },
-          ]
+          ],
         },
         {
           title: 'NOx',
@@ -294,7 +304,7 @@ class SmokeReportPage extends PureComponent {
                   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
                 }
                 return obj;
-              }
+              },
             },
             {
               title: '折算浓度(mg/m³)',
@@ -309,14 +319,14 @@ class SmokeReportPage extends PureComponent {
                   obj.props.colSpan = 0;
                 }
                 return obj;
-              }
+              },
             },
             {
               title: `排放量(${this.unit1})`,
               dataIndex: '03sum',
               width: 110,
             },
-          ]
+          ],
         },
         {
           title: `标干流量(${this.unit2})`,
@@ -337,7 +347,7 @@ class SmokeReportPage extends PureComponent {
               obj.children = <div style={{ textAlign: 'center' }}>-</div>;
             }
             return obj;
-          }
+          },
         },
         {
           title: '烟温(°C)',
@@ -352,7 +362,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
         },
         {
           title: '含湿量(%)',
@@ -367,7 +377,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
         },
         {
           title: '负荷(%)',
@@ -382,7 +392,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
         },
         {
           title: '备注',
@@ -397,7 +407,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
         },
       ];
       let quarterColumns = [
@@ -439,7 +449,7 @@ class SmokeReportPage extends PureComponent {
               obj.children = <div style={{ textAlign: 'center' }}>-</div>;
             }
             return obj;
-          }
+          },
           // width: 200,
         },
         {
@@ -454,7 +464,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
           // width: 200,
         },
         {
@@ -469,7 +479,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
           // width: 200,
         },
         {
@@ -484,7 +494,7 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
           // width: 200,
         },
         {
@@ -499,58 +509,71 @@ class SmokeReportPage extends PureComponent {
               obj.props.colSpan = 0;
             }
             return obj;
-          }
+          },
           // width: 200,
         },
-      ]
+      ];
       this.setState({
         columns: {
           day: dayColumns,
-          quarter: quarterColumns
+          quarter: quarterColumns,
         },
-        pointName: nextProps.pointName
-      })
+        pointName: nextProps.pointName,
+      });
     }
   }
-
 
   // 导出报表
   exportReport = () => {
     this.props.dispatch({
-      type: "report/exportSmokeReport",
+      type: 'report/exportSmokeReport',
       payload: {
-        DGIMN: this.props.form.getFieldValue("DGIMN").slice(-1).toString(),
-        time: moment(this.props.form.getFieldValue("time")).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN: this.props.form
+          .getFieldValue('DGIMN')
+          .slice(-1)
+          .toString(),
+        time: moment(this.props.form.getFieldValue('time')).format('YYYY-MM-DD HH:mm:ss'),
         dataType: this.props.match.params.reportType,
-        pointName: this.props.pointName
-      }
-    })
-  }
+        pointName: this.props.pointName,
+      },
+    });
+  };
 
   //
   getSmokeReportData = (payload = {}) => {
     this.props.dispatch({
-      type: "report/getSmokeReportData",
+      type: 'report/getSmokeReportData',
       payload: {
-        DGIMN: this.props.form.getFieldValue("DGIMN").slice(-1).toString(),
-        time: moment(this.props.form.getFieldValue("time")).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN: this.props.form
+          .getFieldValue('DGIMN')
+          .slice(-1)
+          .toString(),
+        time: moment(this.props.form.getFieldValue('time')).format('YYYY-MM-DD HH:mm:ss'),
         dataType: this.props.match.params.reportType,
-        ...payload
-      }
-    })
-  }
+        ...payload,
+      },
+    });
+  };
 
   // 搜索
   filter = (inputValue, path) => {
     return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-  }
+  };
 
   render() {
     const { formLayout } = this._SELF_;
-    const { form: { getFieldDecorator }, smokeReportFrom, entAndPointList, defaultEntAndPoint, smokeReportData, loading, exportLoading } = this.props;
+    const {
+      form: { getFieldDecorator },
+      smokeReportFrom,
+      entAndPointList,
+      defaultEntAndPoint,
+      smokeReportData,
+      loading,
+      exportLoading,
+    } = this.props;
     const { dataSource, columns } = this.state;
-    const reportType = this.props.match.params.reportType
-    const _columns = (reportType === "day" || reportType === "month") ? columns.day : columns.quarter
+    const reportType = this.props.match.params.reportType;
+    const _columns = reportType === 'day' || reportType === 'month' ? columns.day : columns.quarter;
 
     // console.log("columns-", _columns)
     return (
@@ -576,13 +599,13 @@ class SmokeReportPage extends PureComponent {
                       showSearch={this.filter}
                       placeholder="请选择排放源"
                       onChange={(value, selectedOptions) => {
-                        console.log("selectedOptions=", selectedOptions)
+                        console.log('selectedOptions=', selectedOptions);
                         this.props.dispatch({
-                          type: "report/updateState",
+                          type: 'report/updateState',
                           payload: {
-                            pointName: selectedOptions.slice(-1)[0].title
-                          }
-                        })
+                            pointName: selectedOptions.slice(-1)[0].title,
+                          },
+                        });
                       }}
                     />,
                   )}
@@ -600,7 +623,7 @@ class SmokeReportPage extends PureComponent {
                     ],
                   })(
                     // <DatePicker />
-                    this.timeEle
+                    this.timeEle,
                   )}
                 </FormItem>
               </Col>
@@ -609,15 +632,17 @@ class SmokeReportPage extends PureComponent {
                   <Button
                     type="primary"
                     style={{ margin: '0 10px' }}
-                    onClick={() => { this.getSmokeReportData() }}
+                    onClick={() => {
+                      this.getSmokeReportData();
+                    }}
                     loading={loading}
                   >
                     生成统计
-                    </Button>
+                  </Button>
                   <Button onClick={this.exportReport} loading={exportLoading}>
-                    <Icon type="export" />
-                      导出
-                    </Button>
+                    <ExportOutlined />
+                    导出
+                  </Button>
                 </FormItem>
               </Col>
             </Row>
@@ -631,7 +656,7 @@ class SmokeReportPage extends PureComponent {
             pagination={false}
             // rowClassName={""}
             // defaultWidth={80}
-            scroll={{ x: "1800px" }}
+            scroll={{ x: '1800px' }}
             bordered
             footer={() => this.tableFooter}
           />

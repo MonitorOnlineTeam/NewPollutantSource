@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
-import {
-  Card,
-  Spin,
-  message, Empty, Radio, Row, Col,
-  Button, Form,
-  Select
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, message, Empty, Radio, Row, Col, Button, Select } from 'antd';
 import { connect } from 'dva';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import ButtonGroup_ from '@/components/ButtonGroup'
-import PollutantSelect from '@/components/PollutantSelect'
-import SdlTable from '@/components/SdlTable'
-import SelectTime from "@/pages/monitoring/dataquery/components/SelectTime"
-
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import ButtonGroup_ from '@/components/ButtonGroup';
+import PollutantSelect from '@/components/PollutantSelect';
+import SdlTable from '@/components/SdlTable';
+import SelectTime from '@/pages/monitoring/dataquery/components/SelectTime';
 
 const { Option } = Select;
 @Form.create()
@@ -35,7 +30,6 @@ const { Option } = Select;
   tablewidth: dataquery.tablewidth,
   historyparams: dataquery.historyparams,
 }))
-
 class DataQuery extends Component {
   constructor(props) {
     super(props);
@@ -49,14 +43,14 @@ class DataQuery extends Component {
       selectP: '',
       dgimn: '',
       dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      dataType: "realtime",
+      dataType: 'realtime',
       pollutantCodes: [],
-      pollutantNames: []
+      pollutantNames: [],
     };
   }
 
   componentDidMount() {
-    this.props.initLoadData && this.changeDgimn(this.props.DGIMN)
+    this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
   /** dgimn改變時候切換數據源 */
@@ -67,59 +61,62 @@ class DataQuery extends Component {
         type: 'dataquery/querypollutantlist',
         payload: {
           dgimn: nextProps.DGIMN,
-          notLoad: true
+          notLoad: true,
         },
-        callback: (historyparams) => {
-          this.setState({ dgimn: nextProps.DGIMN, pollutantCodes: historyparams.pollutantCodes, pollutantNames: historyparams.pollutantNames })
-        }
+        callback: historyparams => {
+          this.setState({
+            dgimn: nextProps.DGIMN,
+            pollutantCodes: historyparams.pollutantCodes,
+            pollutantNames: historyparams.pollutantNames,
+          });
+        },
       });
     }
     if (this.props.pollutantlist !== nextProps.pollutantlist) {
       this.setState({
-        pollutantCodes: nextProps.pollutantlist.map((item) => item.PollutantCode)
-      })
+        pollutantCodes: nextProps.pollutantlist.map(item => item.PollutantCode),
+      });
     }
-
-  }
+  };
 
   diffTime = () => {
     let isSearch = true;
     let ranges = null;
-    const { historyparams: { beginTime, endTime } } = this.props;
+    const {
+      historyparams: { beginTime, endTime },
+    } = this.props;
     switch (this.state.dataType) {
-      case "realtime":
+      case 'realtime':
         ranges = moment(endTime).add(-7, 'day');
         if (ranges > moment(beginTime)) {
           message.info('实时数据时间间隔不能超过7天');
-          isSearch = false
+          isSearch = false;
         }
         break;
-      case "minute":
+      case 'minute':
         ranges = moment(endTime).add(-1, 'month');
         if (ranges > moment(beginTime)) {
           message.info('分钟数据时间间隔不能超过1个月');
-          isSearch = false
+          isSearch = false;
         }
         break;
-      case "hour":
+      case 'hour':
         ranges = moment(endTime).add(-6, 'month');
         if (ranges > moment(beginTime)) {
           message.info('小时数据时间间隔不能超过6个月');
-          isSearch = false
+          isSearch = false;
         }
         break;
-      case "day":
+      case 'day':
         ranges = moment(endTime).add(-12, 'month');
         if (ranges > moment(beginTime)) {
           message.info('日数据时间间隔不能超过1年');
-          isSearch = false
+          isSearch = false;
         }
         break;
     }
     return isSearch;
-  }
-
-
+  };
 
   /** 根据排口dgimn获取它下面的所有污染物 */
   getpointpollutants = dgimn => {
@@ -127,23 +124,22 @@ class DataQuery extends Component {
       type: 'dataquery/querypollutantlist',
       payload: {
         dgimn,
-        notLoad: true
+        notLoad: true,
       },
       callback: () => {
         // this.children.onDataTypeChange(this.state.dataType);
-        this.reloaddatalist()
-      }
+        this.reloaddatalist();
+      },
     });
-  }
+  };
 
   /** 数据类型切换 */
-  _handleDateTypeChange = (e) => {
+  _handleDateTypeChange = e => {
     const { historyparams } = this.props;
     const dataType = e.target.value;
     this.setState({ dataType });
     // this.children.onDataTypeChange(dataType)
-  }
-
+  };
 
   /** 图表转换 */
   displayChange = checked => {
@@ -162,15 +158,11 @@ class DataQuery extends Component {
 
   /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
-    const {
-      displayType,
-      selectP,
-      pollutantCodes
-    } = this.state;
+    const { displayType, selectP, pollutantCodes } = this.state;
     const { pollutantlist } = this.props;
     let value = pollutantCodes;
     if (typeof pollutantCodes === 'string' && pollutantCodes) {
-      value = pollutantCodes.split(",")
+      value = pollutantCodes.split(',');
     }
     return (
       <Select
@@ -183,17 +175,16 @@ class DataQuery extends Component {
         maxTagPlaceholder="..."
         style={{ width: 160 }}
       >
-        {
-          pollutantlist.map((item, key) => {
-            return <Option
-              key={key}
-              value={item.PollutantCode}
-            >{item.PollutantName}</Option>
-          })
-        }
+        {pollutantlist.map((item, key) => {
+          return (
+            <Option key={key} value={item.PollutantCode}>
+              {item.PollutantName}
+            </Option>
+          );
+        })}
       </Select>
     );
-  }
+  };
 
   /**切换污染物 */
   handlePollutantChange = (value, selectedOptions) => {
@@ -202,48 +193,46 @@ class DataQuery extends Component {
     if (selectedOptions.length > 0) {
       selectedOptions.map((item, key) => {
         res.push(item.props.children);
-      })
+      });
     }
     historyparams = {
       ...historyparams,
       pollutantCodes: value.length > 0 ? value.toString() : '',
       pollutantNames: res.length > 0 ? res.toString() : '',
-
-    }
+    };
     this.setState({
       selectP: value.length > 0 ? value : [],
       pollutantCodes: value.length > 0 ? value : [],
       pollutantNames: res.length > 0 ? res : [],
-    })
+    });
 
     dispatch({
       type: 'dataquery/updateState',
       payload: {
         historyparams,
       },
-    })
+    });
     // this.reloaddatalist(historyparams);
   };
 
   /** 获取第一个污染物 */
   getpropspollutantcode = () => {
     if (this.props.pollutantlist[0]) {
-      return this.props.pollutantlist.map((item) => item.PollutantCode);
+      return this.props.pollutantlist.map(item => item.PollutantCode);
     }
     return null;
-  }
+  };
 
   /** 后台请求数据 */
   reloaddatalist = (historyparams, payload = {}) => {
-    const {
-      dispatch,
-    } = this.props;
-    historyparams && dispatch({
-      type: 'dataquery/updateState',
-      payload: {
-        historyparams,
-      },
-    })
+    const { dispatch } = this.props;
+    historyparams &&
+      dispatch({
+        type: 'dataquery/updateState',
+        payload: {
+          historyparams,
+        },
+      });
     dispatch({
       type: 'dataquery/queryhistorydatalist',
       payload: {
@@ -251,10 +240,10 @@ class DataQuery extends Component {
         DGIMN: this.state.dgimn,
         datatype: this.state.dataType,
         pollutantCodes: this.state.pollutantCodes.toString(),
-        pollutantNames: this.state.pollutantNames.toString()
+        pollutantNames: this.state.pollutantNames.toString(),
       },
     });
-  }
+  };
 
   /** 切换排口 */
   changeDgimn = dgimn => {
@@ -262,13 +251,10 @@ class DataQuery extends Component {
       selectDisplay: true,
       selectP: '',
       dgimn,
-    })
-    const {
-      dispatch,
-    } = this.props;
+    });
+    const { dispatch } = this.props;
     this.getpointpollutants(dgimn);
-  }
-
+  };
 
   /** 渲染数据展示 */
 
@@ -276,16 +262,18 @@ class DataQuery extends Component {
     const { dataloading, option, datatable, columns, chartHeight } = this.props;
     const { displayType } = this.state;
     if (dataloading) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: chartHeight ? chartHeight : 'calc(100vh - 400px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
+      return (
+        <Spin
+          style={{
+            width: '100%',
+            height: chartHeight ? chartHeight : 'calc(100vh - 400px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          size="large"
+        />
+      );
     }
 
     if (displayType === 'chart') {
@@ -304,7 +292,11 @@ class DataQuery extends Component {
         );
       }
 
-      return (<div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>);
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        </div>
+      );
     }
     return (
       // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
@@ -316,22 +308,20 @@ class DataQuery extends Component {
         defaultWidth={80}
         // scroll={{ y: this.props.tableHeight || 'calc(100vh - 550px)' }}
         pagination={{ pageSize: 20 }}
-
       />
       // </Card.Grid>
-
     );
-  }
+  };
 
   exportReport = () => {
     this.props.dispatch({
-      type: "dataquery/exportHistoryReport",
+      type: 'dataquery/exportHistoryReport',
       payload: {
         DGIMNs: this.state.dgimn,
-        datatype: this.state.dataType
-      }
-    })
-  }
+        datatype: this.state.dataType,
+      },
+    });
+  };
   /**
    * 回调获取时间并重新请求数据
    */
@@ -368,9 +358,7 @@ class DataQuery extends Component {
           // className={!this.props.style ? 'contentContainer' : null}
           title={
             <div>
-              <div>
-                {pollutantTypes === '5' ? entName : entName + "-" + pointName}
-              </div>
+              <div>{pollutantTypes === '5' ? entName : entName + '-' + pointName}</div>
               <Row style={{ marginTop: 10 }}>
                 {!this.props.isloading && this.getpollutantSelect()}
                 {/* <RangePicker_ style={{ width: 325, textAlign: 'left' }} dateValue={dateValue}
@@ -381,43 +369,74 @@ class DataQuery extends Component {
                                             // onChange={this._handleDateChange}
                                             callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                             allowClear={false} showTime={this.state.format} /> */}
-                <SelectTime size={"default"} mode={dataType} reloadKey={dgimn} style={{ margin: "0 10px" }} reload={(startTime, endTime) => {
-                  let { historyparams } = this.props;
-                  historyparams = {
-                    ...historyparams,
-                    beginTime: startTime,
-                    endTime: endTime,
-                  }
-                  this.reloaddatalist(historyparams, {
-                    startTime, endTime
-                  });
-                }} onChange={(startTime, endTime) => {
-                  let { historyparams, dispatch } = this.props;
-                  historyparams = {
-                    ...historyparams,
-                    beginTime: startTime,
-                    endTime: endTime,
-                  }
-                  dispatch({
-                    type: 'dataquery/updateState',
-                    payload: {
-                      historyparams,
-                    },
-                  })
-                  // this.reloaddatalist(historyparams);
-                }} />
-                <Button type="primary" loading={false} onClick={() => {
-                  if (this.diffTime()) {
-                    this.reloaddatalist()
-                  }
-                }} style={{ marginRight: 10 }}>查询</Button>
-                <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
+                <SelectTime
+                  size={'default'}
+                  mode={dataType}
+                  reloadKey={dgimn}
+                  style={{ margin: '0 10px' }}
+                  reload={(startTime, endTime) => {
+                    let { historyparams } = this.props;
+                    historyparams = {
+                      ...historyparams,
+                      beginTime: startTime,
+                      endTime: endTime,
+                    };
+                    this.reloaddatalist(historyparams, {
+                      startTime,
+                      endTime,
+                    });
+                  }}
+                  onChange={(startTime, endTime) => {
+                    let { historyparams, dispatch } = this.props;
+                    historyparams = {
+                      ...historyparams,
+                      beginTime: startTime,
+                      endTime: endTime,
+                    };
+                    dispatch({
+                      type: 'dataquery/updateState',
+                      payload: {
+                        historyparams,
+                      },
+                    });
+                    // this.reloaddatalist(historyparams);
+                  }}
+                />
+                <Button
+                  type="primary"
+                  loading={false}
+                  onClick={() => {
+                    if (this.diffTime()) {
+                      this.reloaddatalist();
+                    }
+                  }}
+                  style={{ marginRight: 10 }}
+                >
+                  查询
+                </Button>
+                <Button
+                  type="primary"
+                  loading={this.props.exportLoading}
+                  onClick={() => {
+                    this.exportReport();
+                  }}
+                >
+                  导出
+                </Button>
               </Row>
               <Row style={{ marginTop: 10 }}>
-                <ButtonGroup_ style={{ marginRight: 10 }} checked="realtime" onChange={this._handleDateTypeChange} />
-                <Radio.Group defaultValue={displayType} buttonStyle="solid" onChange={e => {
-                  this.displayChange(e.target.value)
-                }}>
+                <ButtonGroup_
+                  style={{ marginRight: 10 }}
+                  checked="realtime"
+                  onChange={this._handleDateTypeChange}
+                />
+                <Radio.Group
+                  defaultValue={displayType}
+                  buttonStyle="solid"
+                  onChange={e => {
+                    this.displayChange(e.target.value);
+                  }}
+                >
                   <Radio.Button value="chart">图表</Radio.Button>
                   <Radio.Button value="data">数据</Radio.Button>
                 </Radio.Group>
@@ -426,10 +445,8 @@ class DataQuery extends Component {
           }
         >
           {this.loaddata()}
-
-
         </Card>
-      </div >
+      </div>
     );
   }
 }

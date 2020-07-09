@@ -1,4 +1,5 @@
-import { Col, Icon, Row, Tooltip } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { Col, Row, Tooltip } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import numeral from 'numeral';
@@ -37,7 +38,7 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <InfoCircleOutlined />
           </Tooltip>
         }
         loading={loading}
@@ -85,7 +86,7 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <InfoCircleOutlined />
           </Tooltip>
         }
         total={numeral(8846).format('0,0')}
@@ -121,7 +122,7 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <InfoCircleOutlined />
           </Tooltip>
         }
         total={numeral(6560).format('0,0')}
@@ -160,7 +161,7 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <InfoCircleOutlined />
           </Tooltip>
         }
         total="78%"

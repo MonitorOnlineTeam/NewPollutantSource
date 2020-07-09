@@ -1,9 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
-import {
-  List, Card, Divider, Button, message
-} from 'antd';
+import { PrinterOutlined } from '@ant-design/icons';
+import { List, Card, Divider, Button, message } from 'antd';
 import { connect } from 'dva';
-import SdlTable from './AutoFormTable'
+import SdlTable from './AutoFormTable';
 import AutoFormAdd from './AutoFormAdd';
 import AutoFormEdit from './AutoFormEdit';
 import AutoFormView from './AutoFormView';
@@ -34,9 +33,9 @@ class Test extends PureComponent {
       type: 'autoForm/getPageConfig',
       payload: {
         configId: this.props.match.params.configId,
-        test: true
-      }
-    })
+        test: true,
+      },
+    });
   }
   render() {
     return (
@@ -62,7 +61,7 @@ class Test extends PureComponent {
       //     // uid={null}
       //     breadcrumb={false}
       //   />
-      //   <AutoFormView 
+      //   <AutoFormView
       //     configId="TestCommonPoint"
       //     keysParams={{ "dbo.T_Bas_CommonPoint.PointCode": "0EB9F198-A195-48F3-B476-AE0B9EA8FFDD" }}
       //     breadcrumb={false}
@@ -88,26 +87,33 @@ class Test extends PureComponent {
             configId="TestCommonPoint"
             rowChange={(key, row) => {
               this.setState({
-                key, row
-              })
+                key,
+                row,
+              });
             }}
-          // searchParams={[
-          //   {
-          //     Key: "test",
-          //     Value: false,
-          //     Where: "$like"
-          //   }
-          // ]}
+            // searchParams={[
+            //   {
+            //     Key: "test",
+            //     Value: false,
+            //     Where: "$like"
+            //   }
+            // ]}
           >
             <Fragment key="top">
-              <Button icon="printer" type="primary" onClick={() => {
-                // dispatch(routerRedux.push(`/autoformmanager/test/TestCommonPoint`))
-                if(this.state.row) {
-                  message.success('成功获取数据：'+ JSON.stringify(this.state.row));
-                  return;
-                }
-                message.error('至少选择一行！')
-              }}>获取数据</Button>
+              <Button
+                icon={<PrinterOutlined />}
+                type="primary"
+                onClick={() => {
+                  // dispatch(routerRedux.push(`/autoformmanager/test/TestCommonPoint`))
+                  if (this.state.row) {
+                    message.success('成功获取数据：' + JSON.stringify(this.state.row));
+                    return;
+                  }
+                  message.error('至少选择一行！');
+                }}
+              >
+                获取数据
+              </Button>
             </Fragment>
           </SdlTable>
         </Card>

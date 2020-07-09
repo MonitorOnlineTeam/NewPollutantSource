@@ -6,16 +6,19 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio, Popover, Icon,Spin } from 'antd'
-import { connect } from 'dva'
-import RangePicker_ from '@/components/RangePicker'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Alert, Row, Col, Select, Button, message, Input, Radio, Popover, Spin } from 'antd';
+import { connect } from 'dva';
+import RangePicker_ from '@/components/RangePicker';
 import ReactEcharts from 'echarts-for-react';
-import SdlTable from '@/components/SdlTable'
+import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
-import PageLoading from '@/components/PageLoading'
+import PageLoading from '@/components/PageLoading';
 import styles from './ResultContrastPage.less';
-import stylesFor from '../remoteControl/index.less'
-import CustomIcon from '@/components/CustomIcon'
+import stylesFor from '../remoteControl/index.less';
+import CustomIcon from '@/components/CustomIcon';
 
 const Option = Select.Option;
 const content = (
@@ -43,16 +46,15 @@ const columns = [
   },
 ];
 @Form.create()
-
 @connect(({ loading, qualityControl }) => ({
   // standardGasList: qualityControl.standardGasList,
   resultContrastData: qualityControl.resultContrastData,
   qcaReportList: qualityControl.qcaReportList,
   qcaLoading: loading.effects['qualityControl/GetQCAReport'],
   // resultContrastTimeList: qualityControl.resultContrastTimeList,
-  standardGasLoading: loading.effects["qualityControl/getStandardGas"],
-  QCAResultCheckByDGIMNLoading: loading.effects["qualityControl/QCAResultCheckByDGIMN"],
-  QCAResultCheckSelectListLoading: loading.effects["qualityControl/QCAResultCheckSelectList"],
+  standardGasLoading: loading.effects['qualityControl/getStandardGas'],
+  QCAResultCheckByDGIMNLoading: loading.effects['qualityControl/QCAResultCheckByDGIMN'],
+  QCAResultCheckSelectListLoading: loading.effects['qualityControl/QCAResultCheckSelectList'],
   stabilizationTime: qualityControl.stabilizationTime,
   chartMax: qualityControl.chartMax,
 }))
@@ -64,7 +66,7 @@ class ResultContrastPage extends Component {
       DGIMN: props.DGIMN,
       QCAMN: props.QCAMN,
       PollutantCode: props.PollutantCode,
-      showType: "chart"
+      showType: 'chart',
     };
     this._SELF_ = {
       formItemLayout: {
@@ -77,7 +79,7 @@ class ResultContrastPage extends Component {
           sm: { span: 12 },
         },
       },
-    }
+    };
   }
 
   componentDidMount() {
@@ -99,7 +101,7 @@ class ResultContrastPage extends Component {
 
   componentWillUnmount() {
     this.props.dispatch({
-      type: "qualityControl/updateState",
+      type: 'qualityControl/updateState',
       payload: {
         // standardGasList: [],
         resultContrastTimeList: [],
@@ -110,8 +112,8 @@ class ResultContrastPage extends Component {
           standValue: 0,
           errorStr: undefined,
         },
-      }
-    })
+      },
+    });
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -156,21 +158,21 @@ class ResultContrastPage extends Component {
   // }
 
   // 获取页面数据
-  getPageData = (isSearch) => {
+  getPageData = isSearch => {
     const { dateValue, DGIMN, PollutantCode } = this.state;
     if (isSearch) {
       if (!dateValue) {
-        message.error("请选择时间");
+        message.error('请选择时间');
         return;
       }
       if (!PollutantCode) {
-        message.error("请选择污染物");
+        message.error('请选择污染物');
         return;
       }
     }
     if (dateValue && DGIMN && PollutantCode) {
       this.props.dispatch({
-        type: "qualityControl/QCAResultCheckByDGIMN",
+        type: 'qualityControl/QCAResultCheckByDGIMN',
         payload: {
           DGIMN: DGIMN,
           QCAMN: this.props.QCAMN,
@@ -178,73 +180,81 @@ class ResultContrastPage extends Component {
           QCTime: this.props.QCTime,
           // BeginTime: moment(dateValue[0]).format("YYYY-MM-DD HH:mm:ss"),
           // EndTime: moment(dateValue[1]).format("YYYY-MM-DD HH:mm:ss"),
-          ID: dateValue
+          ID: dateValue,
         },
         otherParams: {
-          isSearch
-        }
-      })
+          isSearch,
+        },
+      });
       // this.setState({
       //   showType: "data"
       // })
       this.props.dispatch({
-        type: "qualityControl/GetQCAReport",
+        type: 'qualityControl/GetQCAReport',
         payload: {
           DGIMN: DGIMN,
           QCAMN: this.props.QCAMN,
           QCTime: this.props.QCTime,
           StandardGasCode: PollutantCode,
-        }
-      })
+        },
+      });
     }
-  }
+  };
 
   // 顶部查询条件
   searchWhere = () => {
-    const { StandardPollutantName, QCTime, StopTime, QCType, QCExecuType, pointName, entName } = this.props;
+    const {
+      StandardPollutantName,
+      QCTime,
+      StopTime,
+      QCType,
+      QCExecuType,
+      pointName,
+      entName,
+    } = this.props;
     const { formItemLayout } = this._SELF_;
     //质控类型
     let getQCTypes = [
       {
         id: 1,
-        description: "配气开始质控"
+        description: '配气开始质控',
       },
       {
         id: 2,
-        description: "配气结束质控"
+        description: '配气结束质控',
       },
       {
         id: 3,
-        description: "质控仪重启"
+        description: '质控仪重启',
       },
       {
         id: 4,
-        description: "质控仪吹扫"
+        description: '质控仪吹扫',
       },
       {
         id: 5,
-        description: "质控仪开锁"
+        description: '质控仪开锁',
       },
     ];
     //质控执行类型
     let getQCExecuTypes = [
       {
         id: 1,
-        description: "手动"
+        description: '手动',
       },
       {
         id: 2,
-        description: "定时"
+        description: '定时',
       },
       {
         id: 3,
-        description: "周期"
+        description: '周期',
       },
     ];
 
     // const type = getQCExecuTypes.find(n => n.id === QCExecuType).description;
     const result = this.props.resultContrastData.errorStr;
-    const color = result === "不合格" ? "#f5232d" : "#51c41b";
+    const color = result === '不合格' ? '#f5232d' : '#51c41b';
     return (
       // <Row>
       //   <RangePicker_ style={{ width: 340 }} showTime dateValue={dateValue} placeholder="请选择时间" onChange={(date, dateString) => {
@@ -314,10 +324,10 @@ class ResultContrastPage extends Component {
       //     </Col>
       //   </Row>
       <></>
-    )
-  }
+    );
+  };
 
-  renderData = (record) => {
+  renderData = record => {
     const rtnVal = [];
     var count = record.length;
     if (record !== null && record.length > 0) {
@@ -325,93 +335,132 @@ class ResultContrastPage extends Component {
         if (index == 0) {
           rtnVal.push(
             <tr>
-              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              <td
+                style={{
+                  width: '12%',
+                  minWidth: 100,
+                  height: '50px',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                }}
+              >
                 {index + 1}
               </td>
-              <td rowSpan={count} style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+              <td
+                rowSpan={count}
+                style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}
+              >
                 {item.StandValue}
               </td>
-              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              <td
+                style={{
+                  width: '13%',
+                  minWidth: 100,
+                  height: '50px',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                }}
+              >
                 {item.ShowValue}
               </td>
-              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              <td
+                rowSpan={count}
+                style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+              >
                 {item.AvgValue}
               </td>
-              <td rowSpan={count} style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+              <td
+                rowSpan={count}
+                style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+              >
                 {item.Error}
               </td>
-              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-
-              </td>
-            </tr>
+              <td
+                style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+              ></td>
+            </tr>,
           );
         } else {
           rtnVal.push(
             <tr>
-              <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              <td
+                style={{
+                  width: '12%',
+                  minWidth: 100,
+                  height: '50px',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                }}
+              >
                 {index + 1}
               </td>
-              <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+              <td
+                style={{
+                  width: '13%',
+                  minWidth: 100,
+                  height: '50px',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                }}
+              >
                 {item.ShowValue}
               </td>
               {/* <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
               </td>
               <td  style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
               </td> */}
-              <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-
-              </td>
-            </tr>
+              <td
+                style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+              ></td>
+            </tr>,
           );
         }
-
       });
     }
 
     return rtnVal;
-  }
+  };
 
   onAlertClose = () => {
     this.props.dispatch({
-      type: "qualityControl/updateState",
+      type: 'qualityControl/updateState',
       payload: {
         resultContrastData: {
           ...this.props.resultContrastData,
-          errorStr: undefined
-        }
-      }
-    })
-  }
+          errorStr: undefined,
+        },
+      },
+    });
+  };
 
   // 折线图配置项
   lineOption = () => {
     const { resultContrastData, stabilizationTime, chartMax } = this.props;
-    let stabilizationTimeSeries = stabilizationTime ? {
-      name: '稳定时间',
-      type: 'bar',
-      markLine: {
-        name: 'aa',
-        data: [[
-          { coord: [stabilizationTime, 0] },
-          { coord: [stabilizationTime, chartMax] }
-        ]],
-        label: {
-          normal: {
-            formatter: '稳定时间' // 基线名称
-          }
-        },
-      }
-    } : { type: 'bar', };
+    let stabilizationTimeSeries = stabilizationTime
+      ? {
+          name: '稳定时间',
+          type: 'bar',
+          markLine: {
+            name: 'aa',
+            data: [[{ coord: [stabilizationTime, 0] }, { coord: [stabilizationTime, chartMax] }]],
+            label: {
+              normal: {
+                formatter: '稳定时间', // 基线名称
+              },
+            },
+          },
+        }
+      : { type: 'bar' };
     let option = {
-      color: ["#56f485", "#c23531"],
+      color: ['#56f485', '#c23531'],
       legend: {
-        data: ["测量浓度", "配比标气浓度"],
+        data: ['测量浓度', '配比标气浓度'],
       },
       grid: {
         left: '10px',
         right: '10px',
         bottom: '10px',
-        containLabel: true
+        containLabel: true,
       },
       tooltip: {
         trigger: 'axis',
@@ -419,8 +468,8 @@ class ResultContrastPage extends Component {
           type: 'cross',
           label: {
             backgroundColor: '#6a7985',
-          }
-        }
+          },
+        },
       },
       xAxis: {
         type: 'category',
@@ -428,8 +477,8 @@ class ResultContrastPage extends Component {
         splitLine: {
           show: true,
           lineStyle: {
-            type: 'dashed'
-          }
+            type: 'dashed',
+          },
         },
       },
       yAxis: [
@@ -440,124 +489,141 @@ class ResultContrastPage extends Component {
           max: chartMax ? Math.ceil(chartMax) : 10,
           // interval: 50,
           axisLabel: {
-            formatter: '{value}'
-          }
+            formatter: '{value}',
+          },
         },
         {
           type: 'value',
           name: '',
-        }
+        },
       ],
-      dataZoom: [{
-        type: 'inside',
-        start: 0,
-        end: 100
-      }, {
-        start: 0,
-        end: 100,
-        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-        handleSize: '80%',
-        handleStyle: {
-          color: '#fff',
-          shadowBlur: 3,
-          shadowColor: 'rgba(0, 0, 0, 0.6)',
-          shadowOffsetX: 2,
-          shadowOffsetY: 2
-        }
-      }],
-      series: [{
-        name: '测量浓度',
-        data: resultContrastData.valueList,
-        smooth: true,
-        type: 'line',
-      },
-      {
-        name: '配比标气浓度',
-        data: resultContrastData.standValue,
-        smooth: true,
-        type: 'line',
-
-      },
-      { ...stabilizationTimeSeries }
-      ]
+      dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 100,
+        },
+        {
+          start: 0,
+          end: 100,
+          handleIcon:
+            'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2,
+          },
+        },
+      ],
+      series: [
+        {
+          name: '测量浓度',
+          data: resultContrastData.valueList,
+          smooth: true,
+          type: 'line',
+        },
+        {
+          name: '配比标气浓度',
+          data: resultContrastData.standValue,
+          smooth: true,
+          type: 'line',
+        },
+        { ...stabilizationTimeSeries },
+      ],
     };
 
     return option;
-  }
+  };
 
   render() {
-    const { resultContrastData, resultContrastTimeList, standardGasLoading, QCAResultCheckByDGIMNLoading, QCAResultCheckSelectListLoading,qcaLoading } = this.props;
+    const {
+      resultContrastData,
+      resultContrastTimeList,
+      standardGasLoading,
+      QCAResultCheckByDGIMNLoading,
+      QCAResultCheckSelectListLoading,
+      qcaLoading,
+    } = this.props;
     const { dateValue, showType } = this.state;
     if (standardGasLoading || QCAResultCheckByDGIMNLoading || QCAResultCheckSelectListLoading) {
-      return <PageLoading />
+      return <PageLoading />;
     }
-    const echartEle = document.querySelector(".echarts-for-react");
-    const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + "px" : 200 + "px"
+    const echartEle = document.querySelector('.echarts-for-react');
+    const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + 'px' : 200 + 'px';
     return (
       <>
         {/* <div style={{ marginBottom: 10 }}>
-          {
-            (resultContrastData.errorStr === "合格" && dateValue) ? (
-              <Alert
-                type="success"
-                message={
-                  <div>
-                    本次结果比对<span style={{ color: "#51c41b" }}>合格!</span>
-                  </div>
-                }
-                onClose={this.onAlertClose}
-                banner
-              // closable
-              />
-            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
-              <Alert
-                type="error"
-                message={
-                  <div>
-                    本次结果比对<span style={{ color: "#f5232d" }}>不合格!</span>
-                  </div>
-                }
-                onClose={this.onAlertClose}
-                banner
-              // closable
-              /> : null
-              )
-          }
-        </div> */}
+        {
+          (resultContrastData.errorStr === "合格" && dateValue) ? (
+            <Alert
+              type="success"
+              message={
+                <div>
+                  本次结果比对<span style={{ color: "#51c41b" }}>合格!</span>
+                </div>
+              }
+              onClose={this.onAlertClose}
+              banner
+            // closable
+            />
+          ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
+            <Alert
+              type="error"
+              message={
+                <div>
+                  本次结果比对<span style={{ color: "#f5232d" }}>不合格!</span>
+                </div>
+              }
+              onClose={this.onAlertClose}
+              banner
+            // closable
+            /> : null
+            )
+        }
+      </div> */}
 
         <Card
-          bodyStyle={{ maxHeight: 'calc(100vh - 400px)', overflowY: "auto", padding: "10px 14px 10px" }}
+          bodyStyle={{
+            maxHeight: 'calc(100vh - 400px)',
+            overflowY: 'auto',
+            padding: '10px 14px 10px',
+          }}
           footer={null}
         >
-          {
+          {resultContrastData.errorStr === '合格' && dateValue ? (
+            <CustomIcon className={styles.QCResult} type="icon-hege" />
+          ) : resultContrastData.errorStr === '不合格' && dateValue ? (
+            <CustomIcon className={styles.QCResult} type="icon-buhege" />
+          ) : (
+            <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+          )}
 
-            (resultContrastData.errorStr === "合格" && dateValue) ? (
-              <CustomIcon className={styles.QCResult} type="icon-hege" />
-            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
-              <CustomIcon className={styles.QCResult} type="icon-buhege" /> : <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
-              )
-          }
-
-
-
-          <Radio.Group style={{
-            position: "absolute",
-            right: 10,
-            zIndex: 1,
-            float: "right",
-            height: 8,
-            position: "relative",
-            marginTop: -2
-          }} defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-            this.setState({
-              showType: e.target.value
-            })
-          }}>
+          <Radio.Group
+            style={{
+              position: 'absolute',
+              right: 10,
+              zIndex: 1,
+              float: 'right',
+              height: 8,
+              position: 'relative',
+              marginTop: -2,
+            }}
+            defaultValue="chart"
+            buttonStyle="solid"
+            onChange={e => {
+              this.setState({
+                showType: e.target.value,
+              });
+            }}
+          >
             <Radio.Button value="chart">图表</Radio.Button>
             <Radio.Button value="data">报表</Radio.Button>
           </Radio.Group>
-          {
-            showType === "chart" ? <ReactEcharts
+          {showType === 'chart' ? (
+            <ReactEcharts
               // theme="line"
               // option={() => { this.lightOption() }}
               option={this.lineOption()}
@@ -565,7 +631,9 @@ class ResultContrastPage extends Component {
               notMerge
               id="rightLine"
               style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
-            /> :(qcaLoading ? <Spin
+            />
+          ) : qcaLoading ? (
+            <Spin
               style={{
                 width: '100%',
                 height: 'calc(100vh/2)',
@@ -574,60 +642,92 @@ class ResultContrastPage extends Component {
                 justifyContent: 'center',
               }}
               size="large"
-            /> : <table
-              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 400px)', minHeight: '300px', marginTop: 38 }}
-            > 
-                <tbody >
-                  <tr>
-                    <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                      序号
+            />
+          ) : (
+            <table
+              className={stylesFor.FormTable}
+              style={{
+                width: '100%',
+                height: 'calc(100vh - 400px)',
+                minHeight: '300px',
+                marginTop: 38,
+              }}
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style={{
+                      width: '12%',
+                      minWidth: 100,
+                      height: '50px',
+                      textAlign: 'center',
+                      fontSize: '14px',
+                    }}
+                  >
+                    序号
                   </td>
-                    <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-                      标准气体或校准器件参考值
+                  <td
+                    style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}
+                  >
+                    标准气体或校准器件参考值
                   </td>
-                    <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                      CEMS显示值
+                  <td
+                    style={{
+                      width: '13%',
+                      minWidth: 100,
+                      height: '50px',
+                      textAlign: 'center',
+                      fontSize: '14px',
+                    }}
+                  >
+                    CEMS显示值
                   </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      CEMS显示值的平均值
+                  <td
+                    style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+                  >
+                    CEMS显示值的平均值
                   </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      示值误差（%）
+                  <td
+                    style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+                  >
+                    示值误差（%）
                     <Popover content={content} title="计算规则" placement="bottom">
-                        <Icon type="exclamation-circle" />
-                      </Popover>
-
-                    </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      备注
+                      <ExclamationCircleOutlined />
+                    </Popover>
                   </td>
-                  </tr>
-                  {
-                    this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
-                  }
-                  {/* <tr> */}
-                  {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    测定值
+                  <td
+                    style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}
+                  >
+                    备注
                   </td>
-                  <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    平均值
-                  </td> */}
-                  {/* </tr> */}
-                  {/* <tr> */}
-                  {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T1
-                  </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T2
-                  </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T=T1+T2
-                  </td> */}
-                  {/* </tr> */}
-                  {}
-                </tbody>
-              </table>)
-            // scroll={{ y: echartsHeight }}
+                </tr>
+                {this.renderData(
+                  this.props.qcaReportList !== null ? this.props.qcaReportList : null,
+                )}
+                {/* <tr> */}
+                {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  测定值
+                </td>
+                <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  平均值
+                </td> */}
+                {/* </tr> */}
+                {/* <tr> */}
+                {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T1
+                </td>
+                <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T2
+                </td>
+                <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T=T1+T2
+                </td> */}
+                {/* </tr> */}
+                {}
+              </tbody>
+            </table>
+          )
+          // scroll={{ y: echartsHeight }}
           }
         </Card>
       </>

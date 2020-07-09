@@ -1,4 +1,7 @@
-import { Button, Card, Col, Form, Icon, List, Row, Select, Tag } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Card, Col, List, Row, Select, Tag } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import ArticleListContent from './components/ArticleListContent';
@@ -68,7 +71,7 @@ class Articles extends Component {
 
     const IconText = ({ type, text }) => (
       <span>
-        <Icon
+        <LegacyIcon
           type={type}
           style={{
             marginRight: 8,
@@ -108,7 +111,7 @@ class Articles extends Component {
           >
             {loading ? (
               <span>
-                <Icon type="loading" /> 加载中...
+                <LoadingOutlined /> 加载中...
               </span>
             ) : (
               '加载更多'

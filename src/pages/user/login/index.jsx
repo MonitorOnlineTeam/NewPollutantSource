@@ -1,4 +1,4 @@
-import { Alert, Checkbox, Icon } from 'antd';
+import { Alert, Checkbox } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
@@ -91,10 +91,7 @@ class Login extends Component {
             this.loginForm = form;
           }}
         >
-          <Tab
-            key="account"
-            tab="账户密码登录"
-          >
+          <Tab key="account" tab="账户密码登录">
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
@@ -193,9 +190,7 @@ class Login extends Component {
               <FormattedMessage id="user-login.login.forgot-password" />
             </a> */}
           </div>
-          <Submit loading={submitting}>
-            登录
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
           {/* <div className={styles.other}>
             <FormattedMessage id="user-login.login.sign-in-with" />
             <Icon type="alipay-circle" className={styles.icon} theme="outlined" />

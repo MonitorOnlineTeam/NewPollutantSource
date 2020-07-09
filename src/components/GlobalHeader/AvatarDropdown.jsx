@@ -1,4 +1,5 @@
-import { Avatar, Icon, Menu, Spin, Modal } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Menu, Spin, Modal } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import { connect } from 'dva';
@@ -7,7 +8,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import Cookie from 'js-cookie';
 import ChangePwdView from './ChangePwdView';
-import configToken from '@/config'
+import configToken from '@/config';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
@@ -69,11 +70,11 @@ class AvatarDropdown extends React.Component {
         </Menu.Item>
         <Menu.Divider /> */}
         <Menu.Item key="center">
-          <Icon type="user" />
+          <UserOutlined />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
         <Menu.Item key="logout">
-          <Icon type="logout" />
+          <LogoutOutlined />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
         </Menu.Item>
       </Menu>
@@ -94,14 +95,14 @@ class AvatarDropdown extends React.Component {
         </span>
       </HeaderDropdown>
     ) : (
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      );
+      <Spin
+        size="small"
+        style={{
+          marginLeft: 8,
+          marginRight: 8,
+        }}
+      />
+    );
   }
 }
 

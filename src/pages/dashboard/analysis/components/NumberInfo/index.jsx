@@ -1,4 +1,4 @@
-import { Icon } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.less';
@@ -40,7 +40,7 @@ const NumberInfo = ({ theme, title, subTitle, total, subTotal, status, suffix, g
       {(status || subTotal) && (
         <span className={styles.subTotal}>
           {subTotal}
-          {status && <Icon type={`caret-${status}`} />}
+          {status && <LegacyIcon type={`caret-${status}`} />}
         </span>
       )}
     </div>

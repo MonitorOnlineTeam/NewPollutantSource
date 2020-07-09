@@ -12,7 +12,7 @@ body,
 // }
 
 .clickRowStyl {
-  background-color: #a3ccfd
+  background-color: #a3ccfd;
 }
 
 .colorWeak {
@@ -45,7 +45,6 @@ ol {
 }
 
 :global {
-
   .react-resizable {
     position: relative;
     background-clip: padding-box;
@@ -60,7 +59,6 @@ ol {
     cursor: col-resize;
     z-index: 1;
   }
-
 
   .ant-layout {
     .ant-pro-fixed-header {
@@ -77,7 +75,6 @@ ol {
       margin: 14px 10px 0;
     }
 
-
     // table没有数据时，隐藏表头滚动条
     .ant-table-empty .ant-table-body {
       overflow-x: hidden !important;
@@ -92,21 +89,21 @@ ol {
     }
   }
 
-  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content>.ant-tabs-tabpane,
-  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content>.ant-tabs-tabpane {
+  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane,
+  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
     transition: opacity 0.45s !important;
   }
 
-  .ant-pro-sider-menu-logo+.ant-menu-light {
+  .ant-pro-sider-menu-logo + .ant-menu-light {
     height: calc(100vh - 64px);
     overflow: hidden;
     overflow-y: auto;
   }
 
-  .ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #e6f7ff !important;
   }
 }
@@ -131,14 +128,13 @@ a:hover {
     width: 100%;
     overflow-x: auto;
 
-    &-thead>tr,
-    &-tbody>tr {
-
-      >th,
-      >td {
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
         white-space: pre;
 
-        >span {
+        > span {
           display: block;
         }
       }
@@ -162,7 +158,6 @@ a:hover {
   transition: width 0.2s;
 }
 
-
 ::-webkit-scrollbar-track-piece {
   -webkit-border-radius: 0;
 }
@@ -173,7 +168,6 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-
   border-radius: 10px;
   background-color: @scrollbar-track-color;
 }
@@ -192,9 +186,8 @@ a:hover {
   -webkit-border-radius: 4px;
 }
 
-
 .light {
-  background-color: #f0f2f5
+  background-color: #f0f2f5;
 }
 
 #contentWrapper {
@@ -203,7 +196,6 @@ a:hover {
 }
 
 :global {
-
   // 多选下拉样式
   .ant-form-item-control {
     // line-height: normal;
@@ -212,37 +204,124 @@ a:hover {
   .ant-select-selection--multiple {
     height: 32px;
     overflow: hidden;
-    margin-bottom: -10px
+    margin-bottom: -10px;
   }
 
   // table样式
-  .ant-table-middle>.ant-table-title,
-  .ant-table-middle>.ant-table-footer {
+  .ant-table-middle > .ant-table-title,
+  .ant-table-middle > .ant-table-footer {
     padding: 10px 8px !important;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th {
+  .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th,
+  .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-body
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-thead
+    > tr
+    > th {
     padding: 5px !important;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td {
+  .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td,
+  .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-body
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-tbody
+    > tr
+    > td {
     padding: 8px !important;
   }
-
 
   // 菜单选中样式
   .ant-menu-dark .ant-menu-item:hover,
@@ -262,8 +341,8 @@ a:hover {
     background-color: transparent;
     /* background-color: white; */
     font-weight: 900;
-    color: #1890FF !important;
-    border-bottom: 2px solid #1890FF !important;
+    color: #1890ff !important;
+    border-bottom: 2px solid #1890ff !important;
   }
 
   // 地图气泡样式
@@ -284,22 +363,20 @@ a:hover {
     top: 6px;
 
     ::after {
-      display: none
+      display: none;
     }
 
     ::before {
-      display: none
+      display: none;
     }
   }
 
   .amap-info .amap_markers_pop_window::before,
   .amap-info .amap_markers_pop_window::after {
-    display: none
+    display: none;
   }
 
-
   .ant-layout {
-
     // 面包屑样式 - start
     .ant-page-header {
       padding: 10px 14px;
@@ -307,7 +384,7 @@ a:hover {
 
       .ant-page-header-heading {
         float: left;
-        margin-top: 1px;
+        margin-top: -8px;
         margin-right: 6px;
         margin-left: 6px;
       }
@@ -345,7 +422,7 @@ a:hover {
 
     .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
       height: 33px;
-      color: #2F54EB;
+      color: #2f54eb;
       background: #fff;
       border-color: #e8e8e8;
       border-bottom: 1px solid #fff;
@@ -406,7 +483,6 @@ a:hover {
     height: calc(100vh - 116px);
 
     .ant-tabs-tabpane-active {
-
       .ant-card:not(.notAdaptive):not(.antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maincard):not(.ant-card-type-inner),
       .contentContainer {
         height: calc(100vh - 116px);
@@ -421,7 +497,6 @@ a:hover {
       }
     }
   }
-
 }
 
 #basicLayout,
@@ -462,10 +537,15 @@ a:hover {
 .notBorder {
   .ant-table-small {
     border: 0;
-
   }
 
   .ant-table-header {
-    background-color: #f0f2f5
+    background-color: #f0f2f5;
+  }
+}
+
+.searchForm {
+  .ant-legacy-form-item {
+    margin-bottom: 0;
   }
 }

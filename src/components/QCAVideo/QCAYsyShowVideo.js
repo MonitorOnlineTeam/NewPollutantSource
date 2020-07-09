@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import {
-  Row,
-  Col,
-  Button,
-  Card,
-  Divider,
-  DatePicker,
-  message,
-  Tooltip,
-  Tabs,
-  Empty,
-} from 'antd';
+  FileImageOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
+import { Row, Col, Button, Card, Divider, DatePicker, message, Tooltip, Tabs, Empty } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
@@ -33,10 +28,10 @@ class QCAYsyShowVideo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      defaultActiveKey: props.defaultActiveKey || "1",
+      defaultActiveKey: props.defaultActiveKey || '1',
       endOpen: false,
-      startdateString: props.startTime || "",
-      enddateString: props.endTime || "",
+      startdateString: props.startTime || '',
+      enddateString: props.endTime || '',
       startValue: null,
       endValue: null,
       displayR: 'block',
@@ -49,7 +44,7 @@ class QCAYsyShowVideo extends Component {
       playtime: '',
       selectDisplay: false,
       dgimn: props.DGIMN,
-      VideoNo: "",
+      VideoNo: '',
       // dgimn: '',
       tabsKey: props.showModal ? 2 : 1,
       VedioID: '',
@@ -67,19 +62,18 @@ class QCAYsyShowVideo extends Component {
 
   componentDidMount() {
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
-    this.getVideoIp(this.state.tabsKey, this.props.VideoNo)
-
+    this.getVideoIp(this.state.tabsKey, this.props.VideoNo);
   }
 
   componentWillReceiveProps = nextProps => {
     if (nextProps.VideoNo !== this.props.VideoNo) {
       this.setState({
         VideoNo: nextProps.VideoNo,
-      })
+      });
       nextProps.showModal ? this.tabsChange('2') : this.tabsChange('1');
-      this.getVideoIp(this.state.tabsKey, nextProps.VideoNo)
+      this.getVideoIp(this.state.tabsKey, nextProps.VideoNo);
     }
-  }
+  };
 
   receiveMessage = event => {
     if (event !== undefined) {
@@ -106,11 +100,9 @@ class QCAYsyShowVideo extends Component {
           displayHStartBtn: 'block',
           displayHEndBtn: 'none',
         });
-        if(event.data.value=="ezopen协议格式有误!")
-        {
-          message.error("摄像头ID找不到,请重新配置")
-        }else
-        {
+        if (event.data.value == 'ezopen协议格式有误!') {
+          message.error('摄像头ID找不到,请重新配置');
+        } else {
           message.error(event.data.value);
         }
       }
@@ -150,16 +142,14 @@ class QCAYsyShowVideo extends Component {
     }
   };
 
-
   /** 获取url */
   getVideoIp = (type, id) => {
     const { match, dispatch } = this.props;
-    if (id == "")
-      return
+    if (id == '') return;
     dispatch({
       type: 'videodata/qcaysyvideourl',
       payload: {
-        VedioCameraID: id,//id
+        VedioCameraID: id, //id
         type,
       },
     });
@@ -250,7 +240,7 @@ class QCAYsyShowVideo extends Component {
   };
 
   /** 时间控件 */
-  onChange = (value) => {
+  onChange = value => {
     this.setState({
       stoptime: '',
     });
@@ -295,25 +285,33 @@ class QCAYsyShowVideo extends Component {
     }
   };
 
-
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (ysyrealtimevideofullurl === '') {
-      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style={
-        {
-          textAlign: 'center',
-        }
-      } > <Empty image={
-        Empty.PRESENTED_IMAGE_SIMPLE
-      } description="暂无视频数据"
-        /></div ></Card>);
+      return (
+        <Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>
+          <div
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            {' '}
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无视频数据" />
+          </div>
+        </Card>
+      );
     }
     return (
-      <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
+      <div
+        style={{
+          height: 'calc(100vh - 230px)',
+          width: '100%',
+          margin: '20px 0px 20px 0px',
+          ...this.props.style,
+        }}
+      >
         <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
-          <div
-            className={styles.divv}
-          >
+          <div className={styles.divv}>
             <iframe
               title="实时视频"
               id="ifm"
@@ -324,102 +322,101 @@ class QCAYsyShowVideo extends Component {
               scrolling="no"
             />
           </div>
-          <div className={styles.divc}
-          >
+          <div className={styles.divc}>
             <Card className={styles.card}>
-                {
-                  //<TabPane tab="实时" key="1">
-                  !this.props.showModal && <>
-                    <Row>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayRStartBtn }}
-                      >
-                        <Tooltip placement="top" title="开始播放">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="play-circle"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 1)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
-                          开始播放
+              {//<TabPane tab="实时" key="1">
+              !this.props.showModal && (
+                <>
+                  <Row>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayRStartBtn }}
+                    >
+                      <Tooltip placement="top" title="开始播放">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon={<PlayCircleOutlined />}
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 1)}
+                        />
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
+                        开始播放
                       </a>
-                      </Col>
-                      <Col
-                        className={styles.gutterleft}
-                        span={8}
-                        style={{ display: this.state.displayREndBtn }}
-                      >
-                        <Tooltip placement="top" title="暂停播放">
-                          <Button
-                            type="danger"
-                            shape="circle"
-                            icon="pause-circle"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 2)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'red' }}
+                    </Col>
+                    <Col
+                      className={styles.gutterleft}
+                      span={8}
+                      style={{ display: this.state.displayREndBtn }}
+                    >
+                      <Tooltip placement="top" title="暂停播放">
+                        <Button
+                          type="danger"
+                          shape="circle"
+                          icon={<PauseCircleOutlined />}
+                          size="Small"
                           onClick={this.btnClick.bind(this, 2)}
-                        >
-                          暂停播放
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'red' }}
+                        onClick={this.btnClick.bind(this, 2)}
+                      >
+                        暂停播放
                       </a>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="刷新视频">
-                          <Button
-                            type="primary"
-                            shape="circle"
-                            icon="redo"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 1)}
-                          />
-                        </Tooltip>
-                        <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
-                          刷新视频
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="刷新视频">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon={<RedoOutlined />}
+                          size="Small"
+                          onClick={this.btnClick.bind(this, 1)}
+                        />
+                      </Tooltip>
+                      <a style={{ marginLeft: '10px' }} onClick={this.btnClick.bind(this, 1)}>
+                        刷新视频
                       </a>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className={styles.gutterleft} span={8}>
-                        <Tooltip placement="top" title="抓取图片">
-                          <Button
-                            type="dashed"
-                            shape="circle"
-                            icon="file-image"
-                            size="Small"
-                            onClick={this.btnClick.bind(this, 3)}
-                          />
-                        </Tooltip>
-                        <a
-                          style={{ marginLeft: '10px', color: 'black' }}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className={styles.gutterleft} span={8}>
+                      <Tooltip placement="top" title="抓取图片">
+                        <Button
+                          type="dashed"
+                          shape="circle"
+                          icon={<FileImageOutlined />}
+                          size="Small"
                           onClick={this.btnClick.bind(this, 3)}
-                        >
-                          抓取图片
+                        />
+                      </Tooltip>
+                      <a
+                        style={{ marginLeft: '10px', color: 'black' }}
+                        onClick={this.btnClick.bind(this, 3)}
+                      >
+                        抓取图片
                       </a>
-                      </Col>
-                    </Row>
-                    <Divider type="dashed" />
-                    {/* <Row gutter={48} style={{ display: this.state.displayR }}>
+                    </Col>
+                  </Row>
+                  <Divider type="dashed" />
+                  {/* <Row gutter={48} style={{ display: this.state.displayR }}>
                     <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
                       {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                     </Col>
                   </Row> */}
-                    <Divider type="dashed" />
-                    {/* <Row gutter={48} style={{ display: this.state.displayR }}>
+                  <Divider type="dashed" />
+                  {/* <Row gutter={48} style={{ display: this.state.displayR }}>
                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                       {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
                     </Col>
                   </Row> */}
-                  </>
-                }
+                </>
+              )}
             </Card>
           </div>
         </Row>

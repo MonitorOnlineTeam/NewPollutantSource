@@ -5,71 +5,71 @@
  * @LastEditTime: 2019-09-18 10:56:46
  * @Description: 用户详情
  */
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-    Form,
-    Input,
-    Button,
-    Icon,
-    Card,
-    Spin,
-    Row,
-    Col,
-} from 'antd';
-import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { LeftOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Card, Spin, Row, Col } from 'antd';
+import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 
 @connect(({ userinfo, loading }) => ({
-    UserRolesName: userinfo.UserRolesName,
-    UserDepName: userinfo.UserDepName
+  UserRolesName: userinfo.UserRolesName,
+  UserDepName: userinfo.UserDepName,
 }))
 class UserInfoView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount() {
-        this.props.dispatch({
-            type: 'userinfo/getrolebyuserid',
-            payload: {
-                User_ID: this.props.match.params.userid,
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'userinfo/getrolebyuserid',
+      payload: {
+        User_ID: this.props.match.params.userid,
+      },
+    });
+    this.props.dispatch({
+      type: 'userinfo/getdepbyuserid',
+      payload: {
+        User_ID: this.props.match.params.userid,
+      },
+    });
+  }
+  render() {
+    return (
+      <Fragment>
+        <BreadcrumbWrapper title="详情">
+          <Card
+            bordered={false}
+            title="详情"
+            extra={
+              <Button
+                style={{ float: 'right', marginRight: 10 }}
+                onClick={() => {
+                  history.go(-1);
+                }}
+              >
+                <LeftOutlined />
+                返回
+              </Button>
             }
-        })
-        this.props.dispatch({
-            type: 'userinfo/getdepbyuserid',
-            payload: {
-                User_ID: this.props.match.params.userid,
-            }
-        })
-    }
-    render() {
-        return (
-            <Fragment>
-                <BreadcrumbWrapper title="详情">
-                    <Card bordered={false} title="详情" extra={
-                        <Button
-                            style={{ float: "right", marginRight: 10 }}
-                            onClick={() => {
-                                history.go(-1);
-                            }}
-                        ><Icon type="left" />返回
-                            </Button>
-                    }>
-                        <AutoFormViewItems
-                            configId="UserInfoAdd"
-                            keysParams={{ "dbo.Base_UserInfo.User_ID": this.props.match.params.userid }}
-                            appendDataSource={[
-                                { label: "角色", value: this.props.UserRolesName },
-                                { label: "部门", value: this.props.UserDepName }
-                            ]}
-                        />
-                    </Card>
-                </BreadcrumbWrapper>
-            </Fragment>
-        );
-    }
+          >
+            <AutoFormViewItems
+              configId="UserInfoAdd"
+              keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
+              appendDataSource={[
+                { label: '角色', value: this.props.UserRolesName },
+                { label: '部门', value: this.props.UserDepName },
+              ]}
+            />
+          </Card>
+        </BreadcrumbWrapper>
+      </Fragment>
+    );
+  }
 }
 
 export default UserInfoView;

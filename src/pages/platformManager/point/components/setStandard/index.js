@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import { ExclamationCircleOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import {
   Card,
-  Icon,
   Divider,
   Table,
   message,
@@ -13,7 +13,7 @@ import {
   Row,
   Col,
   Empty,
-  Tooltip
+  Tooltip,
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -22,8 +22,8 @@ import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
 import SdlTable from '@/components/SdlTable';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { EditIcon } from '@/utils/icon'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { EditIcon } from '@/utils/icon';
 
 @connect(({ loading, standardlibrary, autoForm }) => ({
   ...loading,
@@ -98,7 +98,7 @@ class UseStandardLibrary extends Component {
       payload: {
         DGIMN: this.state.DGIMN,
         StandardLibraryID: StandardLibraryID,
-        callback: (res) => {
+        callback: res => {
           this.setState({
             standardlibraryModal: false,
           });
@@ -123,7 +123,6 @@ class UseStandardLibrary extends Component {
       },
     });
   };
-
 
   render() {
     const columns = [
@@ -258,7 +257,7 @@ class UseStandardLibrary extends Component {
                     style={{ color: '#D1D1D1' }}
                     onClick={() => this.IsEnabled(1, record)}
                   >
-                    <Icon type="exclamation-circle" /> 未监测
+                    <ExclamationCircleOutlined /> 未监测
                   </a>
                 </Button>
               </span>
@@ -270,7 +269,7 @@ class UseStandardLibrary extends Component {
               <Button size="small" color="blue">
                 {' '}
                 <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
-                  <Icon type="setting" spin={true} /> 监测中
+                  <SettingOutlined spin={true} /> 监测中
                 </a>
               </Button>
             </span>
@@ -284,7 +283,6 @@ class UseStandardLibrary extends Component {
         render: (text, record) => {
           if (record.IsUse === '1') {
             return (
-
               <Tooltip title="编辑污染物">
                 <a
                   onClick={() =>
@@ -295,14 +293,19 @@ class UseStandardLibrary extends Component {
                       PollutantCode: record.PollutantCode,
                     })
                   }
-                ><EditIcon /></a>
+                >
+                  <EditIcon />
+                </a>
               </Tooltip>
-
             );
           }
-          return <Tooltip >
-            <a style={{ color: '#D1D1D1' }}><EditIcon /></a>
-          </Tooltip>;
+          return (
+            <Tooltip>
+              <a style={{ color: '#D1D1D1' }}>
+                <EditIcon />
+              </a>
+            </Tooltip>
+          );
         },
       },
     ];
@@ -318,11 +321,10 @@ class UseStandardLibrary extends Component {
       pointDataWhere,
       isEdit,
       pollutantType,
-      PollutantListByDGIMN
+      PollutantListByDGIMN,
     } = this.props;
     return (
       <BreadcrumbWrapper title="监测点维护-设置标准">
-
         <Card
           bordered={false}
           // title={
@@ -349,7 +351,7 @@ class UseStandardLibrary extends Component {
                   standardlibraryModal: true,
                 });
               }}
-              icon="search"
+              icon={<SearchOutlined />}
             >
               查看标准库
             </Button>

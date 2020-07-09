@@ -1,15 +1,7 @@
-import {
-  Button,
-  Card,
-  DatePicker,
-  Form,
-  Icon,
-  Input,
-  InputNumber,
-  Radio,
-  Select,
-  Tooltip,
-} from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Card, DatePicker, Input, InputNumber, Radio, Select, Tooltip } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -190,8 +182,7 @@ class BasicForm extends Component {
                   <em className={styles.optional}>
                     <FormattedMessage id="form-basic-form.form.optional" />
                     <Tooltip title={<FormattedMessage id="form-basic-form.label.tooltip" />}>
-                      <Icon
-                        type="info-circle-o"
+                      <InfoCircleOutlined
                         style={{
                           marginRight: 4,
                         }}

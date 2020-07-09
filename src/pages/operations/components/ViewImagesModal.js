@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
+import { Card, Select, Timeline, Tag, Pagination, Empty, Modal, Upload, message } from 'antd';
 import { connect } from 'dva';
-import Lightbox from "react-image-lightbox-rotate";
-import "react-image-lightbox/style.css";
+import Lightbox from 'react-image-lightbox-rotate';
+import 'react-image-lightbox/style.css';
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -21,7 +21,7 @@ class ViewImagesModal extends PureComponent {
     super(props);
     this.state = {
       previewVisible: false,
-      MainFormID: "",
+      MainFormID: '',
       photoIndex: 0,
       previewVisible: false,
     };
@@ -32,11 +32,11 @@ class ViewImagesModal extends PureComponent {
     //   visible: false,
     // });
     this.props.dispatch({
-      type: "common/updateState",
+      type: 'common/updateState',
       payload: {
-        imageListVisible: false
-      }
-    })
+        imageListVisible: false,
+      },
+    });
   };
 
   // handlePreview = async file => {
@@ -60,7 +60,7 @@ class ViewImagesModal extends PureComponent {
       previewVisible: true,
       photoIndex: ImageList,
     });
-  }
+  };
 
   render() {
     const { imageList } = this.props;
@@ -70,9 +70,7 @@ class ViewImagesModal extends PureComponent {
     if (imageList) {
       //拼接放大的图片地址列表
       imageList.map((item, key) => {
-        UrlList.push(
-          item.url
-        );
+        UrlList.push(item.url);
       });
     }
 
@@ -82,7 +80,6 @@ class ViewImagesModal extends PureComponent {
       fileList: [...imageList],
     };
 
-
     return (
       <Modal
         title="详情"
@@ -91,7 +88,7 @@ class ViewImagesModal extends PureComponent {
         // onOk={this.handleOk}
         onCancel={this.modalHandleCancel}
       >
-        <div style={{ overflow: "hidden" }}>
+        <div style={{ overflow: 'hidden' }}>
           {/* <Upload
             action=""
             listType="picture-card"
@@ -125,12 +122,12 @@ class ViewImagesModal extends PureComponent {
               onCloseRequest={() => this.setState({ previewVisible: false })}
               onPreMovePrevRequest={() =>
                 this.setState({
-                  photoIndex: (photoIndex + UrlList.length - 1) % UrlList.length
+                  photoIndex: (photoIndex + UrlList.length - 1) % UrlList.length,
                 })
               }
               onPreMoveNextRequest={() =>
                 this.setState({
-                  photoIndex: (photoIndex + 1) % UrlList.length
+                  photoIndex: (photoIndex + 1) % UrlList.length,
                 })
               }
             />

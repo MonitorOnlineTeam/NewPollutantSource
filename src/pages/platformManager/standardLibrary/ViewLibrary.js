@@ -1,22 +1,23 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-06 14:32:53 
+ * @Author: Jiaqi
+ * @Date: 2019-11-06 14:32:53
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-06 14:33:15
  * @desc: 标准库详情页面
  */
 import React, { Component } from 'react';
-import { Card, Button, Icon } from 'antd';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
-import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
+import { LeftOutlined } from '@ant-design/icons';
+import { Card, Button } from 'antd';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 
 class ViewLibrary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      configId: "StandardLibrary",
-      tableConfigId: "StandardLibraryPollutant"
+      configId: 'StandardLibrary',
+      tableConfigId: 'StandardLibraryPollutant',
     };
   }
   render() {
@@ -28,23 +29,21 @@ class ViewLibrary extends Component {
           className="contentContainer"
           extra={
             <Button
-              style={{ float: "right", marginRight: 10 }}
+              style={{ float: 'right', marginRight: 10 }}
               onClick={() => {
                 history.go(-1);
               }}
-            ><Icon type="left" />返回
+            >
+              <LeftOutlined />
+              返回
             </Button>
-          }>
+          }
+        >
           <AutoFormViewItems
             configId={configId}
-            keysParams={{ "dbo.T_Base_StandardLibrary.Guid": this.props.match.params.guid }}
+            keysParams={{ 'dbo.T_Base_StandardLibrary.Guid': this.props.match.params.guid }}
           />
-          <Card
-            style={{ marginTop: 16 }}
-            type="inner"
-            title="污染物列表"
-            bordered={false}
-          >
+          <Card style={{ marginTop: 16 }} type="inner" title="污染物列表" bordered={false}>
             <AutoFormTable
               configId={tableConfigId}
               getPageConfig

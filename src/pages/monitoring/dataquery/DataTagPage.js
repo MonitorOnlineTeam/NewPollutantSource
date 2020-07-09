@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
-import moment from 'moment'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Row,
+  Col,
+  Radio,
+  Select,
+  DatePicker,
+  Empty,
+  message,
+  Spin,
+  Divider,
+} from 'antd';
+import moment from 'moment';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree'
-import DataTagTable from "./components/DataTagTable"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import NavigationTree from '@/components/NavigationTree';
+import DataTagTable from './components/DataTagTable';
 
 const { RangePicker } = DatePicker;
 
@@ -20,19 +34,17 @@ class DataTagPage extends Component {
     super(props);
     this.state = {
       time: [moment(new Date()).subtract(1, 'hours'), moment()],
-      dataType: "mins",
-      format: "YYYY-MM-DD HH:mm",
-      DGIMN: "",
+      dataType: 'mins',
+      format: 'YYYY-MM-DD HH:mm',
+      DGIMN: '',
       isShowFlag: true,
-      defalutPollutantType: "1,2",
+      defalutPollutantType: '1,2',
       pageSize: 10,
       pageIndex: 1,
     };
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   getPollutantList = () => {
     this.props.dispatch({
@@ -41,11 +53,14 @@ class DataTagPage extends Component {
         DGIMNs: this.state.DGIMN,
       },
     });
-  }
+  };
 
   getPageData = (queryType, payload) => {
-    const format = this.state.dataType === "hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD HH:mm:00";
-    const actionType = queryType === "export" ? "dataquery/exportDataFlagReport" : "dataquery/getAllTypeDataForWryFlag";
+    const format = this.state.dataType === 'hour' ? 'YYYY-MM-DD HH:00:00' : 'YYYY-MM-DD HH:mm:00';
+    const actionType =
+      queryType === 'export'
+        ? 'dataquery/exportDataFlagReport'
+        : 'dataquery/getAllTypeDataForWryFlag';
     const { time, pollutantValue, pollutantNames, isShowFlag, pageSize, pageIndex } = this.state;
     this.props.dispatch({
       type: actionType,
@@ -59,25 +74,24 @@ class DataTagPage extends Component {
         endTime: moment(time[1]).format(format),
         pollutantCodes: pollutantValue.toString(),
         pollutantNames: pollutantNames.toString(),
-        unit: "μg/m3",
+        unit: 'μg/m3',
         isAsc: true,
         DGIMN: this.state.DGIMN,
         // DGIMN: "62020131jhdp02",
         IsShowFlag: isShowFlag,
-        ...payload
-      }
-    })
-    console.log("this.table=", this.table)
-
-  }
+        ...payload,
+      },
+    });
+    console.log('this.table=', this.table);
+  };
 
   // 分页
   onTableChange = (pageIndex, pageSize) => {
     this.setState({ pageSize, pageIndex }, () => {
-      this.getPageData("", {
-        pageIndex: this.state.pageIndex
+      this.getPageData('', {
+        pageIndex: this.state.pageIndex,
       });
-    })
+    });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -85,18 +99,21 @@ class DataTagPage extends Component {
       this.props.dispatch({
         type: 'dataquery/updateState',
         payload: {
-          pollutantList: nextProps.pollutantList
-        }
-      })
+          pollutantList: nextProps.pollutantList,
+        },
+      });
       const pollutantValue = nextProps.pollutantList.map(item => item.PollutantCode);
       const pollutantNames = nextProps.pollutantList.map(item => item.PollutantName);
-      this.setState({
-        pollutantValue: pollutantValue,
-        pollutantNames: pollutantNames,
-        pageIndex: 1,
-      }, () => {
-        this.getPageData()
-      })
+      this.setState(
+        {
+          pollutantValue: pollutantValue,
+          pollutantNames: pollutantNames,
+          pageIndex: 1,
+        },
+        () => {
+          this.getPageData();
+        },
+      );
     }
   }
 
@@ -114,41 +131,67 @@ class DataTagPage extends Component {
             maxTagCount={2}
             maxTagPlaceholder="..."
             onChange={(value, option) => {
-              console.log('option=', option)
+              console.log('option=', option);
               this.setState({
                 pollutantValue: value,
-                pollutantNames: option.map(item => item.props.pollutantName)
-              })
+                pollutantNames: option.map(item => item.props.pollutantName),
+              });
             }}
           >
-            {
-              pollutantList.map((item, index) => {
-                return <Option key={item.PollutantCode} pollutantName={item.PollutantName}>{item.PollutantName}</Option>
-              })
-            }
+            {pollutantList.map((item, index) => {
+              return (
+                <Option key={item.PollutantCode} pollutantName={item.PollutantName}>
+                  {item.PollutantName}
+                </Option>
+              );
+            })}
           </Select>
         </Col>
         <Col span={7}>
-          <RangePicker style={{ width: '100%' }} value={time} showTime format={format} onChange={(dates) => {
-            this.setState({
-              time: dates
-            })
-          }} />
+          <RangePicker
+            style={{ width: '100%' }}
+            value={time}
+            showTime
+            format={format}
+            onChange={dates => {
+              this.setState({
+                time: dates,
+              });
+            }}
+          />
         </Col>
         <Col span={8}>
-          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
-            this.setState({
-              pageIndex: 1
-            }, () => {
-              this.getPageData();
-            })
-            this.myTable.resetCheckedRowList()
-          }}>查询</Button>
-          <Button onClick={() => { this.getPageData("export") }} loading={exportLoading} style={{ marginLeft: 10 }}><Icon type="export" />导出</Button>
+          <Button
+            type="primary"
+            style={{ marginLeft: 10 }}
+            onClick={() => {
+              this.setState(
+                {
+                  pageIndex: 1,
+                },
+                () => {
+                  this.getPageData();
+                },
+              );
+              this.myTable.resetCheckedRowList();
+            }}
+          >
+            查询
+          </Button>
+          <Button
+            onClick={() => {
+              this.getPageData('export');
+            }}
+            loading={exportLoading}
+            style={{ marginLeft: 10 }}
+          >
+            <ExportOutlined />
+            导出
+          </Button>
         </Col>
-      </Row >
-    )
-  }
+      </Row>
+    );
+  };
 
   render() {
     const { loading, dataFlagDataSource, pollutantList, tagTableTotal } = this.props;
@@ -163,13 +206,16 @@ class DataTagPage extends Component {
           domId="#dataFlag"
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
-              this.setState({
-                DGIMN: value[0].key,
-                pageIndex: 1,
-              }, () => {
-                this.myTable.resetCheckedRowList()
-                this.getPollutantList()
-              })
+              this.setState(
+                {
+                  DGIMN: value[0].key,
+                  pageIndex: 1,
+                },
+                () => {
+                  this.myTable.resetCheckedRowList();
+                  this.getPollutantList();
+                },
+              );
             }
           }}
         />
@@ -180,16 +226,26 @@ class DataTagPage extends Component {
               title={this.getCardTitle()}
               extra={
                 <>
-                  <Radio.Group defaultValue={dataType} style={{ marginRight: 10 }} onChange={(e) => {
-                    this.setState({
-                      dataType: e.target.value,
-                      format: e.target.value === "hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD HH:mm",
-                      time: e.target.value === "mins" ? [moment(new Date()).subtract(1, 'hours'), moment()] : [moment().add(-23, "hour"), moment()]
-                    }, () => {
-                      this.getPageData()
-                      this.myTable.resetCheckedRowList()
-                    })
-                  }}>
+                  <Radio.Group
+                    defaultValue={dataType}
+                    style={{ marginRight: 10 }}
+                    onChange={e => {
+                      this.setState(
+                        {
+                          dataType: e.target.value,
+                          format: e.target.value === 'hour' ? 'YYYY-MM-DD HH' : 'YYYY-MM-DD HH:mm',
+                          time:
+                            e.target.value === 'mins'
+                              ? [moment(new Date()).subtract(1, 'hours'), moment()]
+                              : [moment().add(-23, 'hour'), moment()],
+                        },
+                        () => {
+                          this.getPageData();
+                          this.myTable.resetCheckedRowList();
+                        },
+                      );
+                    }}
+                  >
                     <Radio.Button value="mins">分钟</Radio.Button>
                     <Radio.Button value="hour">小时</Radio.Button>
                   </Radio.Group>
@@ -197,18 +253,20 @@ class DataTagPage extends Component {
               }
             >
               <DataTagTable
-                onRef={(ref) => { this.myTable = ref; }}
+                onRef={ref => {
+                  this.myTable = ref;
+                }}
                 dataType={dataType}
                 // dataSource={dataFlagDataSource}
                 columnsData={pollutantList}
                 pagination={{ pageSize: 20 }}
-                scroll={{ y: "calc(100vh - 500px)" }}
+                scroll={{ y: 'calc(100vh - 500px)' }}
                 loading={loading}
                 className=" "
                 updateData={() => {
-                  this.getPageData("", {
-                    pageIndex: this.state.pageIndex
-                  })
+                  this.getPageData('', {
+                    pageIndex: this.state.pageIndex,
+                  });
                 }}
                 pagination={{
                   // showSizeChanger: true,

@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
-import moment from 'moment'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Row,
+  Col,
+  Radio,
+  Select,
+  DatePicker,
+  Empty,
+  message,
+  Spin,
+  Divider,
+} from 'antd';
+import moment from 'moment';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree'
-import DataAuditTable from "./components/DataAuditTable";
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import NavigationTree from '@/components/NavigationTree';
+import DataAuditTable from './components/DataAuditTable';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 
@@ -19,18 +33,16 @@ class DataAuditPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: [moment().add(-23, "hour"), moment()],
-      dataType: "hour",
-      format: "YYYY-MM-DD HH",
-      DGIMN: "",
+      time: [moment().add(-23, 'hour'), moment()],
+      dataType: 'hour',
+      format: 'YYYY-MM-DD HH',
+      DGIMN: '',
       isShowFlag: true,
-      defalutPollutantType: props.match.params.type
+      defalutPollutantType: props.match.params.type,
     };
   }
 
-  componentDidMount() {
-     
-  }
+  componentDidMount() {}
 
   getPollutantList = () => {
     this.props.dispatch({
@@ -39,11 +51,14 @@ class DataAuditPage extends Component {
         DGIMNs: this.state.DGIMN,
       },
     });
-  }
+  };
 
-  getPageData = (queryType) => {
-    const format = this.state.dataType === "hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00";
-    const actionType = queryType === "export" ? "dataquery/exportDataAuditReport" : "dataquery/getAllTypeDataForFlag";
+  getPageData = queryType => {
+    const format = this.state.dataType === 'hour' ? 'YYYY-MM-DD HH:00:00' : 'YYYY-MM-DD 00:00:00';
+    const actionType =
+      queryType === 'export'
+        ? 'dataquery/exportDataAuditReport'
+        : 'dataquery/getAllTypeDataForFlag';
     this.props.dispatch({
       type: actionType,
       payload: {
@@ -55,35 +70,38 @@ class DataAuditPage extends Component {
         endTime: moment(this.state.time[1]).format(format),
         pollutantCodes: this.state.pollutantValue.toString(),
         pollutantNames: this.state.pollutantNames.toString(),
-        unit: "μg/m3",
+        unit: 'μg/m3',
         isAsc: true,
         DGIMN: this.state.DGIMN,
-        IsShowFlag: this.state.isShowFlag
-      }
-    })
-  }
+        IsShowFlag: this.state.isShowFlag,
+      },
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.pollutantList !== nextProps.pollutantList) {
       this.props.dispatch({
         type: 'dataquery/updateState',
         payload: {
-          pollutantList: nextProps.pollutantList
-        }
-      })
+          pollutantList: nextProps.pollutantList,
+        },
+      });
       const pollutantValue = nextProps.pollutantList.map(item => item.PollutantCode);
       const pollutantNames = nextProps.pollutantList.map(item => item.PollutantName);
-      this.setState({
-        pollutantValue: pollutantValue,
-        pollutantNames: pollutantNames
-      }, () => {
-        this.getPageData()
-      })
+      this.setState(
+        {
+          pollutantValue: pollutantValue,
+          pollutantNames: pollutantNames,
+        },
+        () => {
+          this.getPageData();
+        },
+      );
     }
   }
-  onRef1=(ref)=>{
-    this.children=ref;
-  }
+  onRef1 = ref => {
+    this.children = ref;
+  };
   getCardTitle = () => {
     const { pollutantList, exportLoading } = this.props;
     const { pollutantValue, time, dataType, format, isShowFlag } = this.state;
@@ -98,43 +116,70 @@ class DataAuditPage extends Component {
             maxTagCount={2}
             maxTagPlaceholder="..."
             onChange={(value, option) => {
-              console.log('option=', option)
+              console.log('option=', option);
               this.setState({
                 pollutantValue: value,
-                pollutantNames: option.map(item => item.props.pollutantName)
-              })
+                pollutantNames: option.map(item => item.props.pollutantName),
+              });
             }}
           >
-            {
-              pollutantList.map((item, index) => {
-                return <Option key={item.PollutantCode} pollutantName={item.PollutantName}>{item.PollutantName}</Option>
-              })
-            }
+            {pollutantList.map((item, index) => {
+              return (
+                <Option key={item.PollutantCode} pollutantName={item.PollutantName}>
+                  {item.PollutantName}
+                </Option>
+              );
+            })}
           </Select>
         </Col>
         <Col span={7}>
-        <RangePicker_ style={{ width: '100%' }} dateValue={time} onRef={this.onRef1}   dataType={dataType}  callback={(dates,dataType) => {
-            this.setState({
-              time: dates,
-              dataType:dataType
-            })
-          }} />
+          <RangePicker_
+            style={{ width: '100%' }}
+            dateValue={time}
+            onRef={this.onRef1}
+            dataType={dataType}
+            callback={(dates, dataType) => {
+              this.setState({
+                time: dates,
+                dataType: dataType,
+              });
+            }}
+          />
         </Col>
         <Col span={8}>
-          <Checkbox defaultChecked={true} onChange={(e) => {
-            this.setState({
-              isShowFlag: e.target.checked
-            }, () => {
-              this.getPageData()
-            })
-          }}>显示数据标识</Checkbox>
-          <Button type="primary" style={{ marginLeft: 10 }} onClick={this.getPageData}>查询</Button>
-          <Button onClick={() => { this.getPageData("export") }} loading={exportLoading} style={{ marginLeft: 10 }}><Icon type="export" />导出</Button>
+          <Checkbox
+            defaultChecked={true}
+            onChange={e => {
+              this.setState(
+                {
+                  isShowFlag: e.target.checked,
+                },
+                () => {
+                  this.getPageData();
+                },
+              );
+            }}
+          >
+            显示数据标识
+          </Checkbox>
+          <Button type="primary" style={{ marginLeft: 10 }} onClick={this.getPageData}>
+            查询
+          </Button>
+          <Button
+            onClick={() => {
+              this.getPageData('export');
+            }}
+            loading={exportLoading}
+            style={{ marginLeft: 10 }}
+          >
+            <ExportOutlined />
+            导出
+          </Button>
           {/* <Divider type="vertical" /> */}
         </Col>
-      </Row >
-    )
-  }
+      </Row>
+    );
+  };
 
   render() {
     const { loading, dataAuditDataSource, pollutantList } = this.props;
@@ -149,11 +194,14 @@ class DataAuditPage extends Component {
           domId="#dataAudit"
           onItemClick={value => {
             if (value.length && !value[0].IsEnt) {
-              this.setState({
-                DGIMN: value[0].key
-              }, () => {
-                this.getPollutantList()
-              })
+              this.setState(
+                {
+                  DGIMN: value[0].key,
+                },
+                () => {
+                  this.getPollutantList();
+                },
+              );
             }
           }}
         />
@@ -164,16 +212,26 @@ class DataAuditPage extends Component {
               title={this.getCardTitle()}
               extra={
                 <>
-                  <Radio.Group defaultValue={dataType} style={{ marginRight: 10 }} onChange={(e) => {
+                  <Radio.Group
+                    defaultValue={dataType}
+                    style={{ marginRight: 10 }}
+                    onChange={e => {
                       this.children.onDataTypeChange(e.target.value);
-                    this.setState({
-                      dataType: e.target.value,
-                      format: e.target.value === "hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD",
-                      time: e.target.value === "day" ? [moment(new Date()).subtract(1, 'months'), moment()] : [moment().add(-23, "hour"), moment()]
-                    }, () => {
-                      this.getPageData()
-                    })
-                  }}>
+                      this.setState(
+                        {
+                          dataType: e.target.value,
+                          format: e.target.value === 'hour' ? 'YYYY-MM-DD HH' : 'YYYY-MM-DD',
+                          time:
+                            e.target.value === 'day'
+                              ? [moment(new Date()).subtract(1, 'months'), moment()]
+                              : [moment().add(-23, 'hour'), moment()],
+                        },
+                        () => {
+                          this.getPageData();
+                        },
+                      );
+                    }}
+                  >
                     <Radio.Button value="hour">小时</Radio.Button>
                     <Radio.Button value="day">日均</Radio.Button>
                   </Radio.Group>
@@ -191,7 +249,7 @@ class DataAuditPage extends Component {
                 loading={loading}
                 className=" "
                 updateData={() => {
-                  this.getPageData()
+                  this.getPageData();
                 }}
               />
               {/* </Spin> */}

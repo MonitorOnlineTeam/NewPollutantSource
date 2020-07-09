@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Card, Table, Icon, Tag } from 'antd';
+import { Card, Table, Tag } from 'antd';
 import { connect } from 'dva';
 @connect(({ loading, standardlibrary }) => ({
   ...loading,

@@ -1,4 +1,5 @@
-import { Icon, Tooltip, Popover } from 'antd';
+import { QrcodeOutlined } from '@ant-design/icons';
+import { Tooltip, Popover } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -7,7 +8,7 @@ import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
-import NoticeIconView from './NoticeIconView'
+import NoticeIconView from './NoticeIconView';
 
 const GlobalHeaderRight = props => {
   const { theme, layout, configInfo, appFlag } = props;
@@ -20,12 +21,11 @@ const GlobalHeaderRight = props => {
 
   var QRCode = require('qrcode.react');
   //获取当前ip地址和端口号
-  var getIp = "";
+  var getIp = '';
   if (appFlag) {
     getIp = appFlag;
-  }
-  else {
-    getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
+  } else {
+    getIp = 'http://' + window.location.host + '/appoperation/appqrcodemain';
   }
 
   return (
@@ -67,24 +67,26 @@ const GlobalHeaderRight = props => {
           <Icon type="question-circle-o" />
         </a>
       </Tooltip> */}
-      {
-        configInfo && configInfo.IsShowQRcode === 'true' &&
-        <Popover content={<div>
-          {/* <img
+      {configInfo && configInfo.IsShowQRcode === 'true' && (
+        <Popover
+          content={
+            <div>
+              {/* <img
           width={272}
           alt="logo"
           src={`/api/upload/phoneQRCode.png`}
         /> */}
-          <QRCode value={getIp} size={200} />
-        </div>} title="手机端下载" trigger="hover">
-          <a
-            rel="noopener noreferrer"
-            className={styles.action}
-          >
-            <Icon type="qrcode" />
+              <QRCode value={getIp} size={200} />
+            </div>
+          }
+          title="手机端下载"
+          trigger="hover"
+        >
+          <a rel="noopener noreferrer" className={styles.action}>
+            <QrcodeOutlined />
           </a>
         </Popover>
-      }
+      )}
 
       {/** 污水处理厂权限去掉铃铛 */}
       <NoticeIconView />
@@ -97,5 +99,5 @@ const GlobalHeaderRight = props => {
 export default connect(({ settings, login }) => ({
   theme: settings.navTheme,
   layout: settings.layout,
-  appFlag: login.appFlag
+  appFlag: login.appFlag,
 }))(GlobalHeaderRight);

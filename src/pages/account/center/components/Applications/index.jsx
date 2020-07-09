@@ -1,4 +1,10 @@
-import { Avatar, Card, Dropdown, Icon, List, Menu, Tooltip } from 'antd';
+import {
+  DownloadOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  ShareAltOutlined,
+} from '@ant-design/icons';
+import { Avatar, Card, Dropdown, List, Menu, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import numeral from 'numeral';
@@ -92,16 +98,16 @@ class Applications extends Component {
               }}
               actions={[
                 <Tooltip key="download" title="下载">
-                  <Icon type="download" />
+                  <DownloadOutlined />
                 </Tooltip>,
                 <Tooltip title="编辑" key="edit">
-                  <Icon type="edit" />
+                  <EditOutlined />
                 </Tooltip>,
                 <Tooltip title="分享" key="share">
-                  <Icon type="share-alt" />
+                  <ShareAltOutlined />
                 </Tooltip>,
                 <Dropdown overlay={itemMenu} key="ellipsis">
-                  <Icon type="ellipsis" />
+                  <EllipsisOutlined />
                 </Dropdown>,
               ]}
             >

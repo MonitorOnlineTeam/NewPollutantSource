@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Button,
   Input,
@@ -6,14 +8,22 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
-  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
+  Select,
+  Modal,
+  Tag,
+  Divider,
+  Dropdown,
+  Menu,
+  Popconfirm,
+  message,
+  DatePicker,
+  InputNumber,
 } from 'antd';
 import styles from './index.less';
 import MonitorContent from '../../components/MonitorContent/index';
 import { routerRedux } from 'dva/router';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva';
 import SdlTable from './AutoFormTable';
 import SearchWrapper from './SearchWrapper';
@@ -25,15 +35,13 @@ import SearchWrapper from './SearchWrapper';
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
-  routerConfig: autoForm.routerConfig
+  routerConfig: autoForm.routerConfig,
 }))
-
 export default class AutoFormIndex extends Component {
   constructor(props) {
     super(props);
 
     this.state = {};
-
   }
 
   componentDidMount() {
@@ -48,37 +56,47 @@ export default class AutoFormIndex extends Component {
     }
   }
 
-  reloadPage = (configId) => {
+  reloadPage = configId => {
     const { dispatch } = this.props;
     dispatch({
       type: 'autoForm/updateState',
       payload: {
-        routerConfig: configId
-      }
+        routerConfig: configId,
+      },
     });
     dispatch({
       type: 'autoForm/getPageConfig',
       payload: {
-        configId: configId
-      }
-    })
-  }
+        configId: configId,
+      },
+    });
+  };
 
   render() {
-    const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-    const searchConditions = searchConfigItems[configId] || []
-    const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
+    const {
+      searchConfigItems,
+      searchForm,
+      tableInfo,
+      match: {
+        params: { configId },
+      },
+      dispatch,
+    } = this.props;
+    const searchConditions = searchConfigItems[configId] || [];
+    const columns = tableInfo[configId] ? tableInfo[configId]['columns'] : [];
     if (this.props.loading) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-        size="large"
-      />);
+      return (
+        <Spin
+          style={{
+            width: '100%',
+            height: 'calc(100vh/2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          size="large"
+        />
+      );
     }
     return (
       // <MonitorContent breadCrumbList={
@@ -96,15 +114,15 @@ export default class AutoFormIndex extends Component {
               // formChangeActionType=""
               // searchFormState={{
               // }}
-              onSubmitForm={(form) => this.loadReportList(form)}
+              onSubmitForm={form => this.loadReportList(form)}
               configId={configId}
-            // loadDataSourceParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
+              // loadDataSourceParams={[
+              //   {
+              //     Key: "test",
+              //     Value: false,
+              //     Where: "$like"
+              //   }
+              // ]}
             ></SearchWrapper>
             <SdlTable
               style={{ marginTop: 10 }}
@@ -112,8 +130,9 @@ export default class AutoFormIndex extends Component {
               configId={configId}
               rowChange={(key, row) => {
                 this.setState({
-                  key, row
-                })
+                  key,
+                  row,
+                });
               }}
               {...this.props}
               // onAdd={()=>{
@@ -135,18 +154,18 @@ export default class AutoFormIndex extends Component {
               //     }}>维护点信息</Button>
               //   </Fragment>
               // }}
-            // searchParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
-            // dataSource={dataSource}
+              // searchParams={[
+              //   {
+              //     Key: "test",
+              //     Value: false,
+              //     Where: "$like"
+              //   }
+              // ]}
+              // dataSource={dataSource}
             />
           </Card>
         </div>
-        </BreadcrumbWrapper>
+      </BreadcrumbWrapper>
       // </MonitorContent>
     );
   }

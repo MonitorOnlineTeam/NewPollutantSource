@@ -8,21 +8,15 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Form,
-  Input,
-  Button,
-  Icon,
-  Card,
-  Spin,
-  Row,
-  Col,
-} from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Card, Spin, Row, Col } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 // import MonitorContent from '../../components/MonitorContent/index';
-import AutoFormViewItems from './AutoFormViewItems'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import AutoFormViewItems from './AutoFormViewItems';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 
 @connect()
 // @Form.create()
@@ -33,20 +27,22 @@ class AutoFormView extends Component {
     this._SELF_ = {
       configId: props.configId || props.match.params.configId,
       keysParams: props.keysParams || JSON.parse(props.match.params.keysParams),
-    }
+    };
     this.renderContent = this.renderContent.bind(this);
   }
 
   renderContent() {
     const { configId, keysParams } = this._SELF_;
-    return <AutoFormViewItems
-      configId={configId}
-      keysParams={keysParams}
-    // appendDataSource={[
-    //   { label: "追加", value: "text" },
-    //   { label: "追加2", value: "text2" }
-    // ]}
-    />
+    return (
+      <AutoFormViewItems
+        configId={configId}
+        keysParams={keysParams}
+        // appendDataSource={[
+        //   { label: "追加", value: "text" },
+        //   { label: "追加2", value: "text2" }
+        // ]}
+      />
+    );
   }
 
   render() {
@@ -54,25 +50,31 @@ class AutoFormView extends Component {
     const { configId, keysParams } = this._SELF_;
     return (
       <Fragment>
-        {
-          breadcrumb ? <BreadcrumbWrapper title="详情">
-            <Card bordered={false} title="详情" extra={
-              <Button
-                style={{ float: "right", marginRight: 10 }}
-                onClick={() => {
-                  history.goBack(-1);
-                }}
-              ><Icon type="left" />返回
-    </Button>
-            }>
+        {breadcrumb ? (
+          <BreadcrumbWrapper title="详情">
+            <Card
+              bordered={false}
+              title="详情"
+              extra={
+                <Button
+                  style={{ float: 'right', marginRight: 10 }}
+                  onClick={() => {
+                    history.goBack(-1);
+                  }}
+                >
+                  <LeftOutlined />
+                  返回
+                </Button>
+              }
+            >
               {this.renderContent()}
             </Card>
-          </BreadcrumbWrapper> : <Fragment>
-              <Card>
-                {this.renderContent()}
-              </Card>
-            </Fragment>
-        }
+          </BreadcrumbWrapper>
+        ) : (
+          <Fragment>
+            <Card>{this.renderContent()}</Card>
+          </Fragment>
+        )}
       </Fragment>
     );
   }
@@ -88,8 +90,7 @@ AutoFormView.propTypes = {
 };
 
 AutoFormView.defaultProps = {
-  breadcrumb: true
-}
-
+  breadcrumb: true,
+};
 
 export default AutoFormView;

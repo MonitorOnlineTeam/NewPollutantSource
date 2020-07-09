@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
 import {
-  Row,
-  Col,
-  Button,
-  Card,
-  Divider,
-  DatePicker,
-  message,
-  Tooltip,
-  Tabs,
-  Empty,
-} from 'antd';
+  FileImageOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
+import { Row, Col, Button, Card, Divider, DatePicker, message, Tooltip, Tabs, Empty } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
 import HistoryVideo from './YsyHisVideoData';
 import YsyRealVideoData from './YsyRealVideoData';
 import config from '@/config';
-import VideoSelect from '../VideoSelect'
+import VideoSelect from '../VideoSelect';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -75,11 +70,11 @@ class YsyShowVideo extends Component {
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.setState({
         dgimn: nextProps.DGIMN,
-      })
+      });
       this.tabsChange('1');
       this.changeDgimn(nextProps.DGIMN);
     }
-  }
+  };
 
   receiveMessage = event => {
     if (event !== undefined) {
@@ -145,40 +140,45 @@ class YsyShowVideo extends Component {
   };
 
   /** 切换排口 */
-  changeDgimn=DGIMN => {
+  changeDgimn = DGIMN => {
     this.getvideolist(DGIMN);
-  }
+  };
 
   /** 根据排口dgimn获取它下面的摄像头 */
-  getvideolist= dgimn => {
+  getvideolist = dgimn => {
     this.props.dispatch({
       type: 'videodata/getvideolist',
       payload: {
         dgimn,
         callback: data => {
           if (data.length > 0) {
-            this.setState({
-              selectDisplay: true,
-              VedioID: data[0].VedioID,
-            }, () => {
-              this.getVideoIp(this.state.tabsKey, data[0].VedioID);
-            })
+            this.setState(
+              {
+                selectDisplay: true,
+                VedioID: data[0].VedioID,
+              },
+              () => {
+                this.getVideoIp(this.state.tabsKey, data[0].VedioID);
+              },
+            );
           }
         },
       },
     });
-  }
+  };
 
   /** 获取摄像头 */
   getpollutantSelect = () => {
     const { videoList } = this.props;
-    return (<VideoSelect
-      optionDatas={videoList}
-      defaultValue={this.getpropspollutantcode()}
-      style={{ width: 200, marginRight: 5 }}
-      onChange={this.handlePollutantChange}
-    />);
-  }
+    return (
+      <VideoSelect
+        optionDatas={videoList}
+        defaultValue={this.getpropspollutantcode()}
+        style={{ width: 200, marginRight: 5 }}
+        onChange={this.handlePollutantChange}
+      />
+    );
+  };
   /**切换摄像头  */
   handlePollutantChange = (value, selectedOptions) => {
     let { historyparams } = this.props;
@@ -186,7 +186,7 @@ class YsyShowVideo extends Component {
       ...historyparams,
       payloadpollutantCode: value,
       payloadpollutantName: selectedOptions.props.children,
-    }
+    };
     this.reloaddatalist(historyparams);
   };
 
@@ -196,7 +196,7 @@ class YsyShowVideo extends Component {
       return this.props.videoList[0].VedioID;
     }
     return null;
-  }
+  };
 
   /** 获取url */
   getVideoIp = (type, id) => {
@@ -340,25 +340,33 @@ class YsyShowVideo extends Component {
     }
   };
 
-
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
-      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
-        {
-          textAlign: 'center',
-        }
-      } > <Empty image = {
-        Empty.PRESENTED_IMAGE_SIMPLE
-      } description="暂无视频数据"
-      /></div ></Card>);
+      return (
+        <Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>
+          <div
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            {' '}
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无视频数据" />
+          </div>
+        </Card>
+      );
     }
     return (
-      <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
+      <div
+        style={{
+          height: 'calc(100vh - 230px)',
+          width: '100%',
+          margin: '20px 0px 20px 0px',
+          ...this.props.style,
+        }}
+      >
         <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
-          <div
-            className={styles.divv}
-          >
+          <div className={styles.divv}>
             <iframe
               title="实时视频"
               id="ifm"
@@ -369,8 +377,7 @@ class YsyShowVideo extends Component {
               scrolling="no"
             />
           </div>
-          <div className={styles.divc}
-          >
+          <div className={styles.divc}>
             <Card className={styles.card}>
               <Tabs
                 defaultActiveKey="1"
@@ -389,7 +396,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="play-circle"
+                          icon={<PlayCircleOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 1)}
                         />
@@ -407,7 +414,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="danger"
                           shape="circle"
-                          icon="pause-circle"
+                          icon={<PauseCircleOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 2)}
                         />
@@ -424,7 +431,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="redo"
+                          icon={<RedoOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 1)}
                         />
@@ -438,7 +445,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="dashed"
                           shape="circle"
-                          icon="file-image"
+                          icon={<FileImageOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 3)}
                         />
@@ -453,8 +460,11 @@ class YsyShowVideo extends Component {
                   </Row>
                   <Divider type="dashed" />
                   <Row gutter={48} style={{ display: this.state.displayR }}>
-                    <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
-                      {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
+                    <Col xl={24} lg={24} md={24} sm={18} xs={18}>
+                      选择摄像头：
+                      {!this.props.vIsLoading &&
+                        this.state.selectDisplay &&
+                        this.getpollutantSelect()}
                     </Col>
                   </Row>
                   <Divider type="dashed" />
@@ -487,7 +497,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="play-circle"
+                          icon={<PlayCircleOutlined />}
                           size="Small"
                           onClick={this.backplay.bind(this)}
                         />
@@ -505,7 +515,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="danger"
                           shape="circle"
-                          icon="pause-circle"
+                          icon={<PauseCircleOutlined />}
                           size="Small"
                           onClick={this.backbtnClick.bind(this, 2)}
                         />
@@ -522,7 +532,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="redo"
+                          icon={<RedoOutlined />}
                           size="Small"
                           onClick={this.backplay.bind(this)}
                         />
@@ -536,7 +546,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="dashed"
                           shape="circle"
-                          icon="file-image"
+                          icon={<FileImageOutlined />}
                           size="Small"
                           onClick={this.backbtnClick.bind(this, 3)}
                         />

@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 
+import { UploadOutlined } from '@ant-design/icons';
 
-import { Upload, Button, Icon } from 'antd';
+import { Upload, Button } from 'antd';
 
 class MyUpload extends React.Component {
   state = {
@@ -33,22 +34,21 @@ class MyUpload extends React.Component {
       // action: 'http://172.16.9.52:8096/rest/PollutantSourceApi/UploadApi/PostFiles',
       action: 'http://172.16.9.52:8096/rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
       onChange: this.handleChange,
-      multiple: true, 
+      multiple: true,
       data: {
         // FileUuid: '12345',
         // FileActualType: "1"
-        ConfigID: "TestCommonPoint",
-        
-      }
+        ConfigID: 'TestCommonPoint',
+      },
     };
     return (
       <Upload {...props} fileList={this.state.fileList}>
         <Button>
-          <Icon type="upload" /> Upload
+          <UploadOutlined /> Upload
         </Button>
       </Upload>
     );
   }
 }
 
-export default MyUpload
+export default MyUpload;

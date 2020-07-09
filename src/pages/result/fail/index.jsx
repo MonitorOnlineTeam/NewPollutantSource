@@ -1,4 +1,5 @@
-import { Button, Card, Icon, Result } from 'antd';
+import { CloseCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Card, Result } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Fragment } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
@@ -16,12 +17,11 @@ const Content = (
         marginBottom: 16,
       }}
     >
-      <Icon
+      <CloseCircleOutlined
         style={{
           marginRight: 8,
         }}
         className={styles.error_icon}
-        type="close-circle-o"
       />
       <FormattedMessage
         id="result-fail.error.hint-text1"
@@ -33,16 +33,15 @@ const Content = (
         }}
       >
         <FormattedMessage id="result-fail.error.hint-btn1" defaultMessage="Thaw immediately" />
-        <Icon type="right" />
+        <RightOutlined />
       </a>
     </div>
     <div>
-      <Icon
+      <CloseCircleOutlined
         style={{
           marginRight: 8,
         }}
         className={styles.error_icon}
-        type="close-circle-o"
       />
       <FormattedMessage
         id="result-fail.error.hint-text2"
@@ -54,7 +53,7 @@ const Content = (
         }}
       >
         <FormattedMessage id="result-fail.error.hint-btn2" defaultMessage="Upgrade immediately" />
-        <Icon type="right" />
+        <RightOutlined />
       </a>
     </div>
   </Fragment>

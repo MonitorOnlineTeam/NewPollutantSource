@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Table, Card, Tag, Modal, Form } from 'antd';
-import NavigationTree from '@/components/NavigationTree'
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Card, Tag, Modal } from 'antd';
+import NavigationTree from '@/components/NavigationTree';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import { connect } from 'dva';
 import { router } from 'umi';
@@ -14,8 +16,8 @@ class EquipmentCategoryPage extends Component {
       DGIMN: null,
     };
     this._SELF_ = {
-      configId: "Equipment"
-    }
+      configId: 'Equipment',
+    };
   }
 
   componentDidMount() {
@@ -23,7 +25,7 @@ class EquipmentCategoryPage extends Component {
       type: 'autoForm/getPageConfig',
       payload: {
         configId: this._SELF_.configId,
-      }
+      },
     });
   }
 
@@ -32,33 +34,42 @@ class EquipmentCategoryPage extends Component {
     const { DGIMN } = this.state;
     return (
       <>
-        <NavigationTree choice={false} onItemClick={value => {
-          console.log('value=', value)
-          if (value && value[0]) {
-            this.setState({
-              DGIMN: value[0].key
-            })
-          }
-        }} />
+        <NavigationTree
+          choice={false}
+          onItemClick={value => {
+            console.log('value=', value);
+            if (value && value[0]) {
+              this.setState({
+                DGIMN: value[0].key,
+              });
+            }
+          }}
+        />
         <div id="contentWrapper">
           <BreadcrumbWrapper>
             <Card>
-              {
-                DGIMN && <AutoFormTable
+              {DGIMN && (
+                <AutoFormTable
                   configId={configId}
-                  searchParams={[{
-                    Key: "dbo.T_Bas_Equipment.DGIMN",
-                    Value: DGIMN,
-                    Where: '$=',
-                  },]}
+                  searchParams={[
+                    {
+                      Key: 'dbo.T_Bas_Equipment.DGIMN',
+                      Value: DGIMN,
+                      Where: '$=',
+                    },
+                  ]}
                   onAdd={() => {
-                    router.push(`/platformconfig/equipmentManage/${DGIMN}/${null}`)
+                    router.push(`/platformconfig/equipmentManage/${DGIMN}/${null}`);
                   }}
-                  onEdit={(record) => {
-                    router.push(`/platformconfig/equipmentManage/${DGIMN}/${record["dbo.T_Bas_Equipment.ID"]}`)
+                  onEdit={record => {
+                    router.push(
+                      `/platformconfig/equipmentManage/${DGIMN}/${
+                        record['dbo.T_Bas_Equipment.ID']
+                      }`,
+                    );
                   }}
                 />
-              }
+              )}
             </Card>
           </BreadcrumbWrapper>
         </div>
@@ -67,5 +78,4 @@ class EquipmentCategoryPage extends Component {
   }
 }
 
-
-export default EquipmentCategoryPage
+export default EquipmentCategoryPage;

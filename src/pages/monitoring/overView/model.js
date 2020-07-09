@@ -8,7 +8,7 @@
 import React from 'react';
 import moment from 'moment';
 // import { message } from 'antd';
-import { Popover, Badge, Icon, Divider, message } from 'antd';
+import { Popover, Badge, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
 import { getPollutantTypeList } from '@/services/baseapi';
 import {
@@ -110,20 +110,20 @@ export default Model.extend({
 
       let realtimeColumns = [];
       if (selectpollutantTypeCode == 5 || selectpollutantTypeCode == 12) {
-        realtimeColumns = [{
-          field: 'PrimaryPollutant',
-          title: '首要污染物',
-        }, {
-          title: 'AQI',
-          field: 'AQI',
-        }]
+        realtimeColumns = [
+          {
+            field: 'PrimaryPollutant',
+            title: '首要污染物',
+          },
+          {
+            title: 'AQI',
+            field: 'AQI',
+          },
+        ];
       }
 
       yield update({
-        columns: [
-          ...realtimeColumns,
-          ...data,
-        ] || [],
+        columns: [...realtimeColumns, ...data] || [],
         gwidth,
       });
     },
@@ -227,7 +227,8 @@ export default Model.extend({
           dataIndex: item.pollutantCode,
           key: item.pollutantCode,
           align: 'center',
-          render: (value, record, index) => formatPollutantPopover(value, record[`${item.pollutantCode}_params`]),
+          render: (value, record, index) =>
+            formatPollutantPopover(value, record[`${item.pollutantCode}_params`]),
         });
       });
       yield update({ mainpcol: col });
@@ -540,9 +541,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           realTimeDataView: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取实时数据一览表头
@@ -550,31 +551,32 @@ export default Model.extend({
       const result = yield call(getRealTimeColumn, payload);
       let realtimeColumns = [];
       if (payload.pollutantTypes == 5 || payload.pollutantTypes == 12) {
-        realtimeColumns = realtimeColumns.concat([{
-          title: 'AQI',
-          field: 'AQI',
-          wrw: false,
-        }, {
-          field: 'AirQuality',
-          title: '空气质量',
-          width: 70,
-          wrw: false,
-        }, {
-          field: 'PrimaryPollutant',
-          title: '首要污染物',
-          width: 120,
-          wrw: false,
-        }])
+        realtimeColumns = realtimeColumns.concat([
+          {
+            title: 'AQI',
+            field: 'AQI',
+            wrw: false,
+          },
+          {
+            field: 'AirQuality',
+            title: '空气质量',
+            width: 70,
+            wrw: false,
+          },
+          {
+            field: 'PrimaryPollutant',
+            title: '首要污染物',
+            width: 120,
+            wrw: false,
+          },
+        ]);
       }
       if (result.IsSuccess) {
         yield update({
-          realtimeColumns: [
-            ...realtimeColumns,
-            ...result.Datas,
-          ],
-        })
+          realtimeColumns: [...realtimeColumns, ...result.Datas],
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
   },
@@ -596,14 +598,18 @@ export default Model.extend({
               // 数据异常
               // 异常§异常类别编号§异常类别名称
               if (item.IsException) {
-                newRealTimeDataView[idx][`${item.PollutantCode}_params`] = `1§${item.IsException}§${item.ExceptionType}`;
+                newRealTimeDataView[idx][
+                  `${item.PollutantCode}_params`
+                ] = `1§${item.IsException}§${item.ExceptionType}`;
               } else {
                 delete newRealTimeDataView[idx][`${item.PollutantCode}_params`];
               }
               // 数据超标
               // 超标§报警颜色§标准值§超标倍数
               if (item.IsOver > -1) {
-                newRealTimeDataView[idx][`${item.PollutantCode}_params`] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
+                newRealTimeDataView[idx][
+                  `${item.PollutantCode}_params`
+                ] = `0§null§${item.StandardValue}§${item.OverStandValue}`;
               } else {
                 delete newRealTimeDataView[idx][`${item.PollutantCode}_params`];
               }
@@ -614,14 +620,14 @@ export default Model.extend({
               // newRealTimeDataView[idx]["IsOver"] = item.IsOver;
               // newRealTimeDataView[idx]["OverStandValue"] = item.OverStandValue;
             }
-          })
-        })
+          });
+        });
       }
       // console.log("newRealTimeDataView=", newRealTimeDataView)
       return {
         ...state,
         realTimeDataView: [...newRealTimeDataView],
-      }
+      };
     },
   },
 });

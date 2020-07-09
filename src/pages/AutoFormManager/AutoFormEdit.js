@@ -8,16 +8,15 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Form,
-} from 'antd';
-import moment from "moment";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import moment from 'moment';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
 import MonitorContent from '../../components/MonitorContent/index';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import SdlForm from "./SdlForm"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import SdlForm from './SdlForm';
 
 const FormItem = Form.Item;
 
@@ -26,7 +25,7 @@ const FormItem = Form.Item;
   loadingAdd: loading.effects['autoForm/add'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
-  tableInfo: autoForm.tableInfo
+  tableInfo: autoForm.tableInfo,
 }))
 @Form.create()
 class AutoFormEdit extends Component {
@@ -39,7 +38,7 @@ class AutoFormEdit extends Component {
       EditPolygon: false,
       longitude: 0,
       latitude: 0,
-      polygon: []
+      polygon: [],
     };
     this._SELF_ = {
       formLayout: props.formLayout || {
@@ -53,11 +52,11 @@ class AutoFormEdit extends Component {
           md: { span: 10 },
         },
       },
-      inputPlaceholder: "请输入",
-      selectPlaceholder: "请选择",
+      inputPlaceholder: '请输入',
+      selectPlaceholder: '请选择',
       configId: props.configId || props.match.params.configId,
       keysParams: props.keysParams || JSON.parse(props.match.params.keysParams),
-      uid: props.uid || (props.match && props.match.params.uid) || null
+      uid: props.uid || (props.match && props.match.params.uid) || null,
     };
     this.onSubmitForm = this.onSubmitForm.bind(this);
     this._renderForm = this._renderForm.bind(this);
@@ -105,14 +104,14 @@ class AutoFormEdit extends Component {
       payload: {
         configId: configId,
         FormData: {
-          ...formData
+          ...formData,
         },
-        callback: (res) => {
+        callback: res => {
           if (res.IsSuccess) {
             successCallback ? successCallback(res) : history.go(-1);
           }
-        }
-      }
+        },
+      },
     });
     //   }
     // });
@@ -120,14 +119,16 @@ class AutoFormEdit extends Component {
 
   _renderForm() {
     const { configId, keysParams } = this._SELF_;
-    return <SdlForm
-      configId={configId}
-      onSubmitForm={this.onSubmitForm}
-      form={this.props.form}
-      isEdit={true}
-      keysParams={keysParams}
-      {...this.props}
-    ></SdlForm>
+    return (
+      <SdlForm
+        configId={configId}
+        onSubmitForm={this.onSubmitForm}
+        form={this.props.form}
+        isEdit={true}
+        keysParams={keysParams}
+        {...this.props}
+      ></SdlForm>
+    );
   }
 
   render() {
@@ -136,30 +137,27 @@ class AutoFormEdit extends Component {
 
     return (
       <Fragment>
-        {
-          breadcrumb ?
-            // <MonitorContent breadCrumbList={
-            //   [
-            //     { Name: '首页', Url: '/' },
-            //     { Name: '系统管理', Url: '' },
-            //     { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
-            //     { Name: '编辑', Url: '' }
-            //   ]
-            // }
-            // >
-            <BreadcrumbWrapper title="编辑">
-              {this._renderForm()}
-              {/* </MonitorContent> : */}
-            </BreadcrumbWrapper> :
-            <Fragment>
-              {this._renderForm()}
-            </Fragment>
-        }
+        {breadcrumb ? (
+          // <MonitorContent breadCrumbList={
+          //   [
+          //     { Name: '首页', Url: '/' },
+          //     { Name: '系统管理', Url: '' },
+          //     { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
+          //     { Name: '编辑', Url: '' }
+          //   ]
+          // }
+          // >
+          <BreadcrumbWrapper title="编辑">
+            {this._renderForm()}
+            {/* </MonitorContent> : */}
+          </BreadcrumbWrapper>
+        ) : (
+          <Fragment>{this._renderForm()}</Fragment>
+        )}
       </Fragment>
     );
   }
 }
-
 
 AutoFormEdit.propTypes = {
   // 请求成功回调
@@ -173,7 +171,7 @@ AutoFormEdit.propTypes = {
 };
 
 AutoFormEdit.defaultProps = {
-  breadcrumb: true
-}
+  breadcrumb: true,
+};
 
 export default AutoFormEdit;

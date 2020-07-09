@@ -8,23 +8,18 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
-import {
-  Form,
-  Input,
-  Button,
-  Card,
-  Spin,
-  Icon,
-  Upload
-} from 'antd';
-import moment from "moment";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { Input, Button, Card, Spin, Upload } from 'antd';
+import moment from 'moment';
 import cuid from 'cuid';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 // import MonitorContent from '../../components/MonitorContent/index';
-import SdlForm from "./SdlForm"
+import SdlForm from './SdlForm';
 
 const FormItem = Form.Item;
 
@@ -38,17 +33,16 @@ class AutoFormAdd extends Component {
     super(props);
     this.state = {};
     this._SELF_ = {
-      configId: props.configId || props.match.params.configId
+      configId: props.configId || props.match.params.configId,
     };
     this.onSubmitForm = this.onSubmitForm.bind(this);
     this._renderForm = this._renderForm.bind(this);
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   onSubmitForm(formData) {
-    console.log("formData=", formData)
+    console.log('formData=', formData);
     const { dispatch, successCallback, form } = this.props;
     const { uid, configId } = this._SELF_;
     // form.validateFields((err, values) => {
@@ -73,19 +67,22 @@ class AutoFormAdd extends Component {
           ...formData,
           // uid: uid
         },
-        callback: (res) => {
+        callback: res => {
           if (res.IsSuccess) {
             successCallback ? successCallback(res) : history.go(-1); //dispatch(routerRedux.push(`/sysmanage/autoformmanager/${configId}`));
           }
-        }
-      }
+        },
+      },
     });
     //   }
     // });
   }
 
   _renderForm() {
-    const { form: { getFieldDecorator }, form } = this.props;
+    const {
+      form: { getFieldDecorator },
+      form,
+    } = this.props;
     const { configId } = this._SELF_;
     const submitFormLayout = {
       wrapperCol: {
@@ -104,15 +101,16 @@ class AutoFormAdd extends Component {
         sm: { span: 12 },
         md: { span: 10 },
       },
-    }
+    };
 
-    return <SdlForm
-      configId={configId}
-      // hideBtns={true}
-      onSubmitForm={this.onSubmitForm}
-      form={form}
-    >
-    </SdlForm>
+    return (
+      <SdlForm
+        configId={configId}
+        // hideBtns={true}
+        onSubmitForm={this.onSubmitForm}
+        form={form}
+      ></SdlForm>
+    );
   }
 
   render() {
@@ -121,10 +119,9 @@ class AutoFormAdd extends Component {
 
     return (
       <Fragment>
-        {
-          breadcrumb ?
-            <BreadcrumbWrapper title="添加">
-              {/* // <MonitorContent breadCrumbList={
+        {breadcrumb ? (
+          <BreadcrumbWrapper title="添加">
+            {/* // <MonitorContent breadCrumbList={
             //   [
             //     { Name: '首页', Url: '/' },
             //     { Name: '系统管理', Url: '' },
@@ -133,18 +130,16 @@ class AutoFormAdd extends Component {
             //   ]
             // }
             // > */}
-              {this._renderForm()}
-            </BreadcrumbWrapper> :
-            // </MonitorContent> :
-            <Fragment>
-              {this._renderForm()}
-            </Fragment>
-        }
+            {this._renderForm()}
+          </BreadcrumbWrapper>
+        ) : (
+          // </MonitorContent> :
+          <Fragment>{this._renderForm()}</Fragment>
+        )}
       </Fragment>
     );
   }
 }
-
 
 AutoFormAdd.propTypes = {
   // 请求成功回调
@@ -156,7 +151,7 @@ AutoFormAdd.propTypes = {
 };
 
 AutoFormAdd.defaultProps = {
-  breadcrumb: true
-}
+  breadcrumb: true,
+};
 
 export default AutoFormAdd;
