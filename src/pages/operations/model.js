@@ -4,7 +4,7 @@ import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
-import config from '@/config'
+import config from '@/config';
 
 export default Model.extend({
   namespace: 'operations',
@@ -12,7 +12,12 @@ export default Model.extend({
     calendarList: [],
     logForm: {
       RecordType: undefined,
-      dateTime: [moment().subtract(3, 'month').startOf('day'), moment().endOf('day')],
+      dateTime: [
+        moment()
+          .subtract(3, 'month')
+          .startOf('day'),
+        moment().endOf('day'),
+      ],
     },
     abnormalDetailList: [],
     futureDetailList: [],
@@ -58,37 +63,34 @@ export default Model.extend({
     targetInfoList: [],
     pointInfoList: [],
     // 指挥调度报表
-     datatable: [],
-       queryparams: {
-         DGIMN: '',
-         pageIndex: 1,
-         pageSize: 10,
-         total: 0,
-         UserID: '',
-         BTime: '',
-         ETime: '',
-         CommandDispatchType: '',
-       },
+    datatable: [],
+    queryparams: {
+      DGIMN: '',
+      pageIndex: 1,
+      pageSize: 10,
+      total: 0,
+      UserID: '',
+      BTime: '',
+      ETime: '',
+      CommandDispatchType: '',
+    },
   },
   effects: {
     // 获取日历信息
-    * getCalendarInfo({ payload }, { call, put, update }) {
+    *getCalendarInfo({ payload }, { call, put, update }) {
       const result = yield call(services.getCalendarInfo, payload);
       if (result.IsSuccess) {
         const excetionTotal = result.Datas.excetionTotal || [];
         const FutureTotal = result.Datas.FutureTotal || [];
         yield update({
-          calendarList: [
-            ...excetionTotal,
-            ...FutureTotal,
-          ],
-        })
+          calendarList: [...excetionTotal, ...FutureTotal],
+        });
       }
     },
 
     // 获取异常详细信息 - 表格数据
-    * getAbnormalDetailList({ payload }, { call, put, update, select }) {
-      const abnormalForm = yield select(state => state.operations.abnormalForm)
+    *getAbnormalDetailList({ payload }, { call, put, update, select }) {
+      const abnormalForm = yield select(state => state.operations.abnormalForm);
       const result = yield call(services.getAbnormalDetailList, payload);
       if (result.IsSuccess) {
         let newState = {};
@@ -96,12 +98,12 @@ export default Model.extend({
           // 之后
           newState = {
             futureDetailList: result.Datas || [],
-          }
+          };
         } else {
           // 之前
           newState = {
             abnormalDetailList: result.Datas || [],
-          }
+          };
         }
         yield update({
           abnormalForm: {
@@ -109,12 +111,12 @@ export default Model.extend({
             total: result.Total,
           },
           ...newState,
-        })
+        });
       }
     },
 
     // 获取运维日志信息
-    * getOperationLogList({ payload }, { call, put, update, select }) {
+    *getOperationLogList({ payload }, { call, put, update, select }) {
       const logForm = yield select(state => state.operations.logForm);
       const time = yield select(state => state.operationform.currentDate);
       const recordTypeList = yield select(state => state.operations.recordTypeList);
@@ -123,7 +125,7 @@ export default Model.extend({
         beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
         endTime: time[1].format('YYYY-MM-DD 23:59:59'),
         ...payload,
-      }
+      };
       const result = yield call(services.getOperationLogList, postData);
       if (result.IsSuccess) {
         // if(JSON.stringify(result.Datas.RecordType) != JSON.stringify(recordTypeList)){
@@ -134,53 +136,59 @@ export default Model.extend({
               ...logForm,
               RecordType: '',
             },
-          })
+          });
         }
         yield update({
           recordTypeList: result.Datas.RecordType,
           timeLineList: result.Datas.FormList,
           timeLineTotal: result.Total,
-        })
+        });
       }
     },
     // 获取运维日志详情图片
-    * getOperationImageList({ payload, callback }, { call, put, update }) {
+    *getOperationImageList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getOperationImageList, payload);
       if (result.IsSuccess) {
         let imageList = [];
         if (result.Datas) {
           imageList = result.Datas.map((item, index) => ({
-              uid: index,
-              name: item,
-              status: 'done',
-              url: `/uploadplantform/${item}`,
-            }))
+            uid: index,
+            name: item,
+            status: 'done',
+            url: `/uploadplantform/${item}`,
+          }));
           yield update({
             imageListVisible: true,
-          })
-          callback && callback(result)
+          });
+          callback && callback(result);
         } else {
-          message.error('暂无数据')
+          message.error('暂无数据');
         }
         yield update({
           imageList,
-        })
+        });
       }
     },
     // 车辆申请
-    * getVehicleApplicationList({ payload }, { call, put, update, select }) {
+    *getVehicleApplicationList({ payload }, { call, put, update, select }) {
       const searchForm = yield select(state => state.operations.vehicleApplicationForm);
       const postData = {
         Applicant: searchForm.Applicant,
         ApplicationCode: searchForm.ApplicationCode && searchForm.ApplicationCode.value,
         VehicleName: searchForm.VehicleName && searchForm.VehicleName.value,
         LicensePlateNumber: searchForm.LicensePlateNumber && searchForm.LicensePlateNumber.value,
-        ApplicationBTime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[0] && moment(searchForm.ApplicationTime.value[0]).format('YYYY-MM-DD'),
-        ApplicationETime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[1] && moment(searchForm.ApplicationTime.value[1]).format('YYYY-MM-DD'),
+        ApplicationBTime:
+          searchForm.ApplicationTime &&
+          searchForm.ApplicationTime.value[0] &&
+          moment(searchForm.ApplicationTime.value[0]).format('YYYY-MM-DD'),
+        ApplicationETime:
+          searchForm.ApplicationTime &&
+          searchForm.ApplicationTime.value[1] &&
+          moment(searchForm.ApplicationTime.value[1]).format('YYYY-MM-DD'),
         pageIndex: searchForm.current,
         pageSize: searchForm.pageSize,
         ...payload,
-      }
+      };
       const result = yield call(services.getVehicleApplicationList, postData);
       if (result.IsSuccess) {
         yield update({
@@ -189,25 +197,31 @@ export default Model.extend({
             ...searchForm,
             total: result.Total,
           },
-        })
+        });
       }
     },
 
     // 车辆审批列表
-    * getVehicleApproveList({ payload }, { call, put, update, select }) {
+    *getVehicleApproveList({ payload }, { call, put, update, select }) {
       const searchForm = yield select(state => state.operations.vehicleApproveForm);
       const postData = {
         ApplicantID: searchForm.ApplicantID && searchForm.ApplicantID.value,
         ApplicationCode: searchForm.ApplicationCode && searchForm.ApplicationCode.value,
         VehicleName: searchForm.VehicleName && searchForm.VehicleName.value,
         LicensePlateNumber: searchForm.LicensePlateNumber && searchForm.LicensePlateNumber.value,
-        ApplicationBTime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[0] && moment(searchForm.ApplicationTime.value[0]).format('YYYY-MM-DD'),
-        ApplicationETime: searchForm.ApplicationTime && searchForm.ApplicationTime.value[1] && moment(searchForm.ApplicationTime.value[1]).format('YYYY-MM-DD'),
+        ApplicationBTime:
+          searchForm.ApplicationTime &&
+          searchForm.ApplicationTime.value[0] &&
+          moment(searchForm.ApplicationTime.value[0]).format('YYYY-MM-DD'),
+        ApplicationETime:
+          searchForm.ApplicationTime &&
+          searchForm.ApplicationTime.value[1] &&
+          moment(searchForm.ApplicationTime.value[1]).format('YYYY-MM-DD'),
         ApprovalStatus: searchForm.ApprovalStatus && searchForm.ApprovalStatus.value,
         pageIndex: searchForm.current,
         pageSize: searchForm.pageSize,
         ...payload,
-      }
+      };
       const result = yield call(services.getVehicleApplicationList, postData);
       if (result.IsSuccess) {
         yield update({
@@ -216,29 +230,30 @@ export default Model.extend({
             ...searchForm,
             total: result.Total,
           },
-        })
+        });
       }
     },
 
     // 获取车辆列表
-    * getVehicleList({ payload }, { call, put, update }) {
+    *getVehicleList({ payload }, { call, put, update }) {
       const result = yield call(services.getVehicleList, payload);
       if (result.IsSuccess) {
-        payload.type === '0' ?
-          yield update({
-            applyVehicleList: result.Datas,
-          }) : yield update({
-            vehicleList: result.Datas,
-          })
+        payload.type === '0'
+          ? yield update({
+              applyVehicleList: result.Datas,
+            })
+          : yield update({
+              vehicleList: result.Datas,
+            });
       }
     },
 
     // 申请车辆
-    * addVehicleApplication({ payload }, { call, put, update }) {
+    *addVehicleApplication({ payload }, { call, put, update }) {
       const postData = {
         Applicant: JSON.parse(Cookie.get('currentUser')).UserId,
         ...payload,
-      }
+      };
       const result = yield call(services.addVehicleApplication, postData);
       if (result.IsSuccess) {
         yield put({
@@ -246,17 +261,17 @@ export default Model.extend({
           payload: {
             configId: 'VehicleApplication',
           },
-        })
+        });
         yield update({
           applicationModalVisible: false,
-        })
+        });
         message.success('申请成功');
       } else {
-        message.error('申请失败')
+        message.error('申请失败');
       }
     },
     // 撤销申请
-    * cancelApplication({ payload }, { call, put, update }) {
+    *cancelApplication({ payload }, { call, put, update }) {
       const result = yield call(services.cancelApplication, payload);
       if (result.IsSuccess) {
         yield put({
@@ -264,10 +279,10 @@ export default Model.extend({
           payload: {
             configId: 'VehicleApplication',
           },
-        })
-        message.success('撤销成功')
+        });
+        message.success('撤销成功');
       } else {
-        message.error('失败')
+        message.error('失败');
       }
     },
     // 审批
@@ -276,14 +291,14 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           approveModalVisible: false,
-        })
+        });
         message.success('操作成功');
         yield put({
           type: 'autoForm/getAutoFormData',
           payload: {
             configId: 'VehicleApproval',
           },
-        })
+        });
       }
     },
 
@@ -291,13 +306,13 @@ export default Model.extend({
     *returnVehicle({ payload }, { call, put, update }) {
       const result = yield call(services.returnVehicle, payload);
       if (result.IsSuccess) {
-        message.success('操作成功')
+        message.success('操作成功');
         yield put({
           type: 'autoForm/getAutoFormData',
           payload: {
             configId: 'VehicleApproval',
           },
-        })
+        });
       }
     },
 
@@ -307,7 +322,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           applicantList: result.Datas,
-        })
+        });
       }
     },
 
@@ -321,7 +336,7 @@ export default Model.extend({
           payload: {
             configId: 'TaskRecord',
           },
-        })
+        });
 
         callback && callback(result.Datas);
       } else {
@@ -338,7 +353,7 @@ export default Model.extend({
           payload: {
             configId: 'TaskRecord',
           },
-        })
+        });
       }
     },
 
@@ -348,7 +363,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           operationsUserList: result.Datas,
-        })
+        });
       }
     },
     // 获取运维更换记录
@@ -358,7 +373,7 @@ export default Model.extend({
         yield update({
           modalTableDataSource: result.Datas,
           modalTableTotal: result.Total,
-        })
+        });
       }
     },
     // 获取车辆轨迹数据
@@ -375,46 +390,46 @@ export default Model.extend({
           longlatList.push([item.Longitude, item.Latitude]);
           speedList.push(item.Speed);
           recordingTimeList.push(item.RecordingTime);
-        })
+        });
         if (!result.Datas.VehicleInfo.length) {
           message.error('暂无车辆轨迹信息');
         } else {
-          router.push(`/operations/carmanager/vehicleApplication/trajectory/${payload.ApplicantID}`);
+          router.push(
+            `/operations/carmanager/vehicleApplication/trajectory/${payload.ApplicantID}`,
+          );
         }
         yield update({
           longlatList,
           speedList,
           recordingTimeList,
           railData: result.Datas.Enclosure,
-        })
+        });
       }
     },
 
-        // 获取任务类型
-        *getTaskType({ payload }, { call, update }) {
-          const result = yield call(services.getTaskType, payload);
-            yield update({
-              recordType: result.Datas,
-            })
-          },
-        // 获取监控标列表
-        *getTargetInfoList({ payload }, { call, update }) {
-          const result = yield call(services.getTargetInfoList, payload);
-            yield update({
-              targetInfoList: result.Datas,
-            })
-          },
-       // 获取站点列表
-        *getPointInfoList({ payload }, { call, update }) {
-          const result = yield call(services.getPointInfoList, payload);
-            yield update({
-              pointInfoList: result.Datas,
-            })
-          },
-      /** 获取指挥调度数据 */
-    * getcommanddispatchreport({
-      payload,
-    }, { call, update, select }) {
+    // 获取任务类型
+    *getTaskType({ payload }, { call, update }) {
+      const result = yield call(services.getTaskType, payload);
+      yield update({
+        recordType: result.Datas,
+      });
+    },
+    // 获取监控标列表
+    *getTargetInfoList({ payload }, { call, update }) {
+      const result = yield call(services.getTargetInfoList, payload);
+      yield update({
+        targetInfoList: result.Datas,
+      });
+    },
+    // 获取站点列表
+    *getPointInfoList({ payload }, { call, update }) {
+      const result = yield call(services.getPointInfoList, payload);
+      yield update({
+        pointInfoList: result.Datas,
+      });
+    },
+    /** 获取指挥调度数据 */
+    *getcommanddispatchreport({ payload }, { call, update, select }) {
       const { queryparams } = yield select(_ => _.operations);
       const result = yield call(services.getcommanddispatchreport, queryparams);
       if (result.IsSuccess) {
@@ -423,11 +438,10 @@ export default Model.extend({
             ...queryparams,
             total: result.Total,
           },
-         datatable: result.Datas,
-        })
+          datatable: result.Datas,
+        });
       }
     },
-
   },
   reducers: {
     // 更新车辆申请state
@@ -441,4 +455,4 @@ export default Model.extend({
       };
     },
   },
-})
+});
