@@ -373,7 +373,7 @@ class index extends Component {
 
 
     return (
-      <BreadcrumbWrapper title="数据一览">
+      <BreadcrumbWrapper title="数据总览">
         <Card
           title={
             <>
