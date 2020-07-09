@@ -325,7 +325,7 @@ class AutoFormTable extends PureComponent {
   export = () => {
     const { dispatch, configId, searchParams } = this.props;
     let conditionWhere = {};
-    if(searchParams){
+    if (searchParams) {
       conditionWhere = {
         ConditionWhere: JSON.stringify(
           {
@@ -424,7 +424,7 @@ class AutoFormTable extends PureComponent {
             {type == '小圆点' && <Badge status="warning" text={text} />}
             {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
-            {!type && text }
+            {!type && text}
           </div>
 
 
@@ -645,17 +645,20 @@ class AutoFormTable extends PureComponent {
             onClick: event => {
               const { selectedRowKeys } = this.state;
               let rowkey = `${current}-${index}`;
+              let rows = this.state.selectedRows || [];
               let keys = selectedRowKeys;
               if (selectedRowKeys.some(item => item == rowkey)) {
                 keys = keys.filter(item => item !== rowkey)
+                rows = rows.filter(item => item.rn !== (index + 1))
                 // keys.splice(index, 1)
               } else {
                 // keys = keys.concat([index])
                 keys = checkboxOrRadio === 1 ? [rowkey] : keys.concat([rowkey]);
+                rows = checkboxOrRadio === 1 ? [record] : rows.concat([record]);
               }
               this.setState({
                 selectedRowKeys: keys,
-                selectedRows: record
+                selectedRows: rows
               }, () => {
                 this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record)
               })
