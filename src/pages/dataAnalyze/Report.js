@@ -263,7 +263,7 @@ class Report extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Form className="searchForm" style={{ marginBottom: 20 }}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
               <Col xl={6} sm={24} md={12}>
                 <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>

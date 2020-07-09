@@ -257,7 +257,7 @@ class StatisticsReportDataList extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entloading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form className="searchForm" style={{ marginBottom: 20 }}>
               <Row>
                 <Col xxl={5} xl={7} sm={24} lg={7}>
                   <FormItem {...formLayout} label="统计月份" style={{ width: '100%' }}>

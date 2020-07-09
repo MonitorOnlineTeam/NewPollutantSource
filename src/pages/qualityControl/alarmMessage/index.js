@@ -211,7 +211,7 @@ class index extends Component {
           <Card
             className="contentContainer"
             title={
-              <Form layout="inline">
+              <Form className="searchForm">
                 <Form.Item>
                   {getFieldDecorator('time', {
                     initialValue: defaultValue,

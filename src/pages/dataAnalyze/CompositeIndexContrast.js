@@ -310,7 +310,7 @@ class CompositeIndexContrast extends Component {
       <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form className="searchForm" style={{ marginBottom: 20 }}>
               <Row>
                 <Col span={7}>
                   <FormItem {...formLayout} label="时间段1" style={{ width: '100%' }}>

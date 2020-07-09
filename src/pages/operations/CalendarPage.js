@@ -397,7 +397,7 @@ class CalendarPage extends PureComponent {
       </div>
     }
     return (
-      <ul className="events" style={{ width: "104%", height: "96%", overflow: "auto" }}>
+      <ul className="events">
         {listData.map(item => {
           // if (item.notAbnormal) {  // 无异常
           //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>

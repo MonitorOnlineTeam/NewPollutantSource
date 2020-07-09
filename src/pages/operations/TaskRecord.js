@@ -593,7 +593,7 @@ class TaskRecord extends Component {
     return (
       <BreadcrumbWrapper>
         <Card className="contentContainer">
-          <Form layout="inline" style={{ marginBottom: '10' }}>
+          <Form className="searchForm" style={{ marginBottom: '10' }}>
             <Row>
               <Col md={8} sm={24}>
                 <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
@@ -832,7 +832,7 @@ class TaskRecord extends Component {
             this.setState({ visible: false });
           }}
         >
-          <Form layout="inline">
+          <Form className="searchForm">
             <Row>
               <FormItem
                 {...formLayout}

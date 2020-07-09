@@ -2,15 +2,22 @@
 
 .login {
 
-  
+
   :global {
+    .ant-tabs-nav-list {
+      width: 100%;
+      justify-content: center;
+    }
+
     .ant-tabs-tab {
       font-size: 16px;
       line-height: 24px;
     }
+
     .ant-input-affix-wrapper .ant-input:not(:first-child) {
-      padding-left: 34px;
+      padding-left: 4px;
     }
+
     .ant-tabs .ant-tabs-bar {
       font-size: 16px;
       margin-bottom: 24px;
@@ -53,7 +60,7 @@
 
   .prefixIcon {
     color: @disabled-color;
-    font-size: @font-size-base;
+    // font-size: @font-size-base;
   }
 
   .submit {

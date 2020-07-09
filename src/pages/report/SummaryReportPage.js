@@ -398,7 +398,7 @@ class SummaryReportPage extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form className="searchForm" style={{ marginBottom: 20 }}>
               <Row>
                 <Col md={5} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>

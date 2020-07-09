@@ -281,7 +281,7 @@ class TaskRecord extends Component {
             this.setState({ visible: false });
           }}
         >
-          <Form layout="inline">
+          <Form className="searchForm">
             {/* <Row>
               <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("DGIMNs", {
