@@ -347,7 +347,7 @@ class index extends Component {
   }
 
   render() {
-    const { valueList, standardValueList, timeList, tableData, PollutantCode, QCAResult,qcaLoading } = this.props;
+    const { valueList, standardValueList, timeList, tableData, PollutantCode, QCAResult, qcaLoading } = this.props;
     const { showType } = this.state;
     return (
       <Card
@@ -372,8 +372,8 @@ class index extends Component {
                 this.setState({
                   showType: e.target.value
                 })
-                
-                  
+
+
               }}>
               <Radio.Button value="chart">图表</Radio.Button>
               <Radio.Button value="data">报表</Radio.Button>
@@ -386,8 +386,10 @@ class index extends Component {
             <>
               <div className={styles.legendNumBox}>
                 <span>
-                  <span style={{ color: "#56f485" }}>{valueList[valueList.length - 1]}</span>
+                  <span style={{ color: "#56f485", paddingLeft: 10 }}>{valueList[valueList.length - 1]}</span>
                   <span style={{ color: "#c23531" }}>{standardValueList[standardValueList.length - 1]}</span>
+                  {/* <span style={{ color: "#56f485", paddingLeft: 10 }}>123</span>
+                  <span style={{ color: "#c23531" }}>33.22</span> */}
                 </span>
               </div>
               <ReactEcharts

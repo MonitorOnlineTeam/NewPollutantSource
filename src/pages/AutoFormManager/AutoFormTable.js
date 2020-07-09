@@ -165,7 +165,7 @@ class AutoFormTable extends PureComponent {
   }
   //行删除
   delRowData(record) {
-    const { keys, dispatch, configId } = this.props;
+    const { keys, dispatch, searchParams, configId } = this.props;
     if (this.props.onDelete) {
       this.props.onDelete(record, record(keys[configId][0]));
       return;
@@ -181,6 +181,7 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId,
         FormData: JSON.stringify(postData),
+        searchParams: searchParams
       },
     })
   }

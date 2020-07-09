@@ -47,9 +47,9 @@ class index extends Component {
           />
           <AutoFormTable
             configId={this._SELF_.configId}
-            onDelete={(record, key) => {
-              this.onDelete(record, key);
-            }}
+            // onDelete={(record, key) => {
+            //   this.onDelete(record, key);
+            // }}
             onAdd={() => {
               router.push({
                 pathname: "/platformconfig/StandardLibrary/addLibrary",

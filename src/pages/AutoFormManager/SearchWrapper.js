@@ -324,7 +324,7 @@ class SearchWrapper extends Component {
       return (
         element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
-          <FormItem {...formLayout} label={labelText} style={{ width: '100%'}}>
+          <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
             {getFieldDecorator(`${fieldName}`, {})(
               element
             )}
@@ -374,7 +374,7 @@ class SearchWrapper extends Component {
       style.marginLeft = 20;
     }
     return (
-      <Form layout="inline" >
+      <Form>
         {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}> */}
         <Row>
           {

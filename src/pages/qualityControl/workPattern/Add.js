@@ -160,7 +160,7 @@ class AddInstrument extends Component {
     this.changeStandardGasData('DateType', value, idx)
   }}>
     <Option value="0">天</Option>
-    <Option value="1">小时</Option>
+    {/* <Option value="1">小时</Option> */}
   </Select>
 
   // 嵌套表格
@@ -221,8 +221,7 @@ class AddInstrument extends Component {
               this.changeStandardGasData('Range', defaultValue, idx);
               // 设置标气名称
               this.changeStandardGasData('StandardGasName', StandardGasName, idx);
-              if(value=="P")
-              {
+              if (value == "P") {
                 this.changeStandardGasData('StabilizationTime', 0, idx);
               }
             }}>
@@ -254,7 +253,7 @@ class AddInstrument extends Component {
         dataIndex: 'StandardValue',
         width: 180,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code||record.StandardGasCode==="P") {
+          if (record.StandardGasCode === n2Code || record.StandardGasCode === "P") {
             return '-'
           }
           return <FormItem style={{ marginBottom: '0' }}>
@@ -279,25 +278,26 @@ class AddInstrument extends Component {
         title: '总流量设定值',
         dataIndex: 'TotalFlowSetVal',
         width: 180,
-        render: (text, record, idx) =>{
+        render: (text, record, idx) => {
           if (record.StandardGasCode === "P") {
             return '-'
           }
-          <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
-            rules: [
-              { required: true, message: '请输入总流量设定值' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <InputNumber
-              // formatter={value => `${value}${record.unit}`}
-              // parser={value => value.replace(`${record.unit}`, '')}
-              min={0}
-              onChange={value => { this.changeStandardGasData('TotalFlowSetVal', value, idx) }}
-            />,
-          )}
-        </FormItem>},
+          return <FormItem style={{ marginBottom: '0' }}>
+            {this.props.form.getFieldDecorator(`TotalFlowSetVal${record.key}`, {
+              rules: [
+                { required: true, message: '请输入总流量设定值' },
+              ],
+              initialValue: text || undefined,
+            })(
+              <InputNumber
+                // formatter={value => `${value}${record.unit}`}
+                // parser={value => value.replace(`${record.unit}`, '')}
+                min={0}
+                onChange={value => { this.changeStandardGasData('TotalFlowSetVal', value, idx) }}
+              />,
+            )}
+          </FormItem>
+        },
       },
       {
         title: '满量程值',
@@ -325,7 +325,7 @@ class AddInstrument extends Component {
         dataIndex: 'VentilationTime',
         width: 100,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code ) {
+          if (record.StandardGasCode === n2Code) {
             return '-'
           }
           let i = 0;
@@ -357,7 +357,7 @@ class AddInstrument extends Component {
         dataIndex: 'StabilizationTime',
         width: 100,
         render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code|| record.StandardGasCode === "P") {
+          if (record.StandardGasCode === n2Code || record.StandardGasCode === "P") {
             return '-'
           }
           let i = 0;
