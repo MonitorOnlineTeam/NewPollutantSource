@@ -613,17 +613,19 @@ class NewHome extends PureComponent {
       </div>
       <div className={styles.data}>
         <h3>{infoWindowData.pollutantTypeCode === 2 ? "废气数据" : (infoWindowData.pollutantTypeCode === 1 ? "废水数据" : "空气质量数据")}</h3>
-        <div style={{ marginBottom: 10, fontSize: 13 }}>
-          <span>
-            AQI：
+        {
+          infoWindowData.pollutantTypeCode === 5 && <div style={{ marginBottom: 10, fontSize: 13 }}>
+            <span>
+              AQI：
             <span style={{ background: infoWindowData.AQI_Color, display: 'inline-block', width: 30, textAlign: 'center', height: 20, lineHeight: '20px' }}>
-              {infoWindowData.AQI}
+                {infoWindowData.AQI}
+              </span>
             </span>
-          </span>
-          <Divider type="vertical" />
-          <span>首要污染物：{infoWindowData.PrimaryPollutant}</span>
-          {/* <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span> */}
-        </div>
+            <Divider type="vertical" />
+            <span>首要污染物：{infoWindowData.PrimaryPollutant}</span>
+            {/* <span>浓度值：{curPointData[curPointData.PrimaryPollutantCode]}</span> */}
+          </div>
+        }
         <ul>
           {
             infoWindowData.list.map(item => {
