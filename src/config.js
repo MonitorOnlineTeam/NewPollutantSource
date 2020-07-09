@@ -19,8 +19,8 @@
 // 新疆系统的废气要显示成图片
 const XinJiang = true;
 
-// const apiHost = 'http://localhost:52198/';
-const apiHost = 'http://172.16.12.183:50059/';
+const apiHost = 'http://localhost:52198/';
+// const apiHost = 'http://172.16.12.183:50059/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
