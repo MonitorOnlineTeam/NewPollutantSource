@@ -365,7 +365,7 @@ class index extends Component {
 
 
     return (
-      <BreadcrumbWrapper title="数据一览">
+      <BreadcrumbWrapper title="数据总览">
         <Card
           title={
             <>
@@ -549,7 +549,7 @@ class index extends Component {
               value="data"
               buttonStyle="solid"
               onChange={e => {
-                e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据一览 - 地图');
+                e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据总览 - 地图');
               }}
             >
               <Radio.Button value="data">数据</Radio.Button>
