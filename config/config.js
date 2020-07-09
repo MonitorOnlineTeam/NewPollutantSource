@@ -6,7 +6,7 @@ import config from '@/config';
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const defaultNavigateUrl = Cookie.get("defaultNavigateUrl");
+const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
 const plugins = [
@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -71,14 +71,13 @@ if (isAntDesignProPreview) {
   ]);
 }
 
-
 export default {
   plugins,
   block: {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
-  base: "/",
-  publicPath: "/",
+  base: '/',
+  publicPath: '/',
   hash: true,
   targets: {
     ie: 11,
@@ -89,13 +88,9 @@ export default {
     {
       path: '/hrefLogin',
       component: '../layouts/BlankLayout',
-      routes: [
-        { path: '/hrefLogin', component: './user/login/hrefLogin' },
-      ]
+      routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
     },
     {
-
-
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
@@ -115,37 +110,79 @@ export default {
           component: '../layouts/BlankLayout',
           routes: [
             /* 维修记录 */
-            { path: '/appoperation/apprepairrecord/:TaskID/:TypeID', component: './AppOperation/AppRepairRecord' },
+            {
+              path: '/appoperation/apprepairrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppRepairRecord',
+            },
             /* 停机记录 */
-            { path: '/appoperation/appstopcemsrecord/:TaskID/:TypeID', component: './AppOperation/AppStopCemsRecord' },
+            {
+              path: '/appoperation/appstopcemsrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppStopCemsRecord',
+            },
             /* 易耗品更换记录 */
-            { path: '/appoperation/appconsumablesreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppConsumablesReplaceRecord' },
+            {
+              path: '/appoperation/appconsumablesreplacerecord/:TaskID/:TypeID',
+              component: './AppOperation/AppConsumablesReplaceRecord',
+            },
             /* 标气更换记录 */
-            { path: '/appoperation/appstandardgasrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppStandardGasRepalceRecord' },
+            {
+              path: '/appoperation/appstandardgasrepalcerecord/:TaskID/:TypeID',
+              component: './AppOperation/AppStandardGasRepalceRecord',
+            },
             /* 完全抽取法CEMS巡检记录表 */
-            { path: '/appoperation/appcompleteextractionrecord/:TaskID/:TypeID', component: './AppOperation/AppCompleteExtractionRecord' },
+            {
+              path: '/appoperation/appcompleteextractionrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppCompleteExtractionRecord',
+            },
             /* 稀释采样法CEMS巡检记录表 */
-            { path: '/appoperation/appdilutionsamplingrecord/:TaskID/:TypeID', component: './AppOperation/AppDilutionSamplingRecord' },
+            {
+              path: '/appoperation/appdilutionsamplingrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppDilutionSamplingRecord',
+            },
             /* 直接测量法CEMS巡检记录表 */
-            { path: '/appoperation/appdirectmeasurementrecord/:TaskID/:TypeID', component: './AppOperation/AppDirectMeasurementRecord' },
+            {
+              path: '/appoperation/appdirectmeasurementrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppDirectMeasurementRecord',
+            },
             /* CEMS零点量程漂移与校准记录表记录表 */
-            { path: '/appoperation/appjzrecord/:TaskID/:TypeID', component: './AppOperation/AppJzRecord' },
+            {
+              path: '/appoperation/appjzrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppJzRecord',
+            },
             /* CEMS校验测试记录 */
-            { path: '/appoperation/appbdtestrecord/:TaskID/:TypeID', component: './AppOperation/AppBdTestRecord' },
+            {
+              path: '/appoperation/appbdtestrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppBdTestRecord',
+            },
             /* CEMS设备异常记录表 */
-            { path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID', component: './AppOperation/AppDeviceExceptionRecord' },
-             /* 故障小时数记录表 */
-             { path: '/appoperation/appfailurehoursrecord/:TaskID/:TypeID', component: './AppOperation/AppFailureHoursRecord' },
+            {
+              path: '/appoperation/appdeviceexceptionrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppDeviceExceptionRecord',
+            },
+            /* 故障小时数记录表 */
+            {
+              path: '/appoperation/appfailurehoursrecord/:TaskID/:TypeID',
+              component: './AppOperation/AppFailureHoursRecord',
+            },
             /* 保养项更换记录表 */
-            { path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID', component: './AppOperation/AppMaintainRepalceRecord' },
+            {
+              path: '/appoperation/appmaintainrepalcerecord/:TaskID/:TypeID',
+              component: './AppOperation/AppMaintainRepalceRecord',
+            },
             /* 备件更换记录表 */
-            { path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID', component: './AppOperation/AppSparePartReplaceRecord' },
+            {
+              path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID',
+              component: './AppOperation/AppSparePartReplaceRecord',
+            },
             /* 手机端二维码 */
             { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
             /* 扫码查运维页面 */
             { path: '/appoperation/scanningCode/:DGIMN', component: './AppOperation/ScanningCode' },
             /* 扫码查运维页面(更多) */
-            { path: '/appoperation/operationFormDetail/:DGIMN/:TaskID', component: './AppOperation/OperationFormDetail' },
+            {
+              path: '/appoperation/operationFormDetail/:DGIMN/:TaskID',
+              component: './AppOperation/OperationFormDetail',
+            },
           ],
         },
         {
@@ -230,12 +267,14 @@ export default {
                 },
                 {
                   name: 'edit',
-                  path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                  path:
+                    '/:parentcode/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
                   component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
-                  path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                  path:
+                    '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
@@ -297,7 +336,8 @@ export default {
                 },
                 {
                   name: 'dischargepermit',
-                  path: '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                  path:
+                    '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
                   component: './platformManager/dischargepermit',
                 },
                 {
@@ -375,7 +415,6 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-
 
                 {
                   name: 'certificatemanage',
@@ -461,7 +500,7 @@ export default {
                 //   component: './report/summaryReportPage',
                 // },
                 {
-                  name: "wryReport",
+                  name: 'wryReport',
                   path: '/report/wry',
                   // component: "./operations/CalendarPage",
                   routes: [
@@ -479,7 +518,7 @@ export default {
                       path: '/report/wry/summary',
                       component: './report/summaryReportPage',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'smokeReportPage',
@@ -494,27 +533,27 @@ export default {
                       path: '/report/smoke/:reportType',
                       component: './report/SmokeReportPage',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'statisticsReportDataList',
                   path: '/report/dataReportList/statisticsReportDataList',
                   component: './report/StatisticsReportDataList',
-                }
+                },
               ],
             },
 
             {
-              path: "/operations",
-              name: "operations",
+              path: '/operations',
+              name: 'operations',
               routes: [
                 {
                   path: '/operations',
-                  redirect: '/operations/operationrecord',
+                  redirect: '/operations/log', // 重定向 默认为 运维日志页面
                 },
                 {
                   path: '/operations/calendar',
-                  name: "calendar",
+                  name: 'calendar',
                   // component: "./operations/CalendarPage",
                   routes: [
                     {
@@ -523,21 +562,21 @@ export default {
                     },
                     {
                       path: '/operations/calendar/index',
-                      name: "index",
-                      component: "./operations/CalendarPage",
+                      name: 'index',
+                      component: './operations/CalendarPage',
                     },
                     {
                       path: '/operations/calendar/details/:TaskID/:DGIMN',
-                      name: "calendar",
-                      component: "./EmergencyTodoList/EmergencyDetailInfoLayout",
-                    }
-                  ]
+                      name: 'calendar',
+                      component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+                    },
+                  ],
                 },
 
                 {
-                  path: '/operations/log',
-                  name: "log",
-                  component: "./operations/LogPage"
+                  path: '/operations/log', //运维日志
+                  name: 'log',
+                  component: './operations/operationRecord',
                 },
                 {
                   name: 'materielmanager',
@@ -567,7 +606,7 @@ export default {
                       path: '/operations/materielmanager/sparepartsstation/:configId',
                       component: './OperationSysManager/SparePartsStation/',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'usermanager',
@@ -582,7 +621,7 @@ export default {
                       path: '/operations/usermanager/certificatemanage/:configId',
                       component: './OperationSysManager/CertificateManage/',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'carmanager',
@@ -593,66 +632,66 @@ export default {
                       redirect: '/operations/carmanager/vehicleApplication',
                     },
                     {
-                      path: "/operations/carmanager/vehicleApplication",
-                      name: "vehicleApplication",
-                      component: "./operations/VehicleApplication",
+                      path: '/operations/carmanager/vehicleApplication',
+                      name: 'vehicleApplication',
+                      component: './operations/VehicleApplication',
                     },
                     {
-                      path: "/operations/carmanager/:parentName/trajectory/:ApplicantID",
-                      name: "trajectory",
-                      component: "./operations/vehicleTrajectory"
+                      path: '/operations/carmanager/:parentName/trajectory/:ApplicantID',
+                      name: 'trajectory',
+                      component: './operations/vehicleTrajectory',
                     },
                     {
-                      path: "/operations/carmanager/vehicleApprove",
-                      name: "vehicleApprove",
-                      component: "./operations/VehicleApprove"
+                      path: '/operations/carmanager/vehicleApprove',
+                      name: 'vehicleApprove',
+                      component: './operations/VehicleApprove',
                     },
                     {
                       name: 'vehiclemanage',
                       path: '/operations/carmanager/vehiclemanage/:configId',
                       component: './OperationSysManager/VehicleManage/',
                     },
-                  ]
+                  ],
                 },
 
-                {
-                  path: '/operations/operationRecord',
-                  name: "operationRecord",
-                  component: "./operations/operationRecord"
-                },
+                // {
+                //   path: '/operations/operationRecord',
+                //   name: "operationRecord",
+                //   component: "./operations/operationRecord"
+                // },
                 {
                   path: '/operations/taskRecord',
-                  name: "taskRecord",
-                  component: "./operations/TaskRecord"
+                  name: 'taskRecord',
+                  component: './operations/TaskRecord',
                 },
 
                 {
                   path: '/operations/taskRecord/details/:TaskID/:DGIMN',
-                  name: "taskRecordDetail",
-                  component: "./EmergencyTodoList/EmergencyDetailInfoLayout"
+                  name: 'taskRecordDetail',
+                  component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
 
                 {
                   path: '/operations/:from/recordForm/:typeID/:taskID',
-                  name: "recordForm",
-                  component: "./operations/recordForm"
+                  name: 'recordForm',
+                  component: './operations/recordForm',
                 },
                 {
                   path: '/operations/recordForm/:typeID/:taskID',
-                  name: "recordForm",
-                  component: "./operations/recordForm"
+                  name: 'recordForm',
+                  component: './operations/recordForm',
                 },
                 {
                   path: '/operations/CommandDispatchReport',
-                  name: "CommandDispatchReport",
-                  component: "./operations/CommandDispatchReport"
+                  name: 'CommandDispatchReport',
+                  component: './operations/CommandDispatchReport',
                 },
                 {
                   path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
-                  name: "CommandDispatchReportDetails",
-                  component: "./EmergencyTodoList/EmergencyDetailInfoLayout"
+                  name: 'CommandDispatchReportDetails',
+                  component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
-              ]
+              ],
             },
             {
               path: '/rolesmanager',
@@ -766,7 +805,7 @@ export default {
                   path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
                 },
-              ]
+              ],
             },
             {
               name: 'dataquerymanager',
@@ -801,7 +840,7 @@ export default {
                   path: '/dataquerymanager/dataFlag',
                   component: './monitoring/dataquery/DataTagPage',
                 },
-              ]
+              ],
             },
             {
               path: '/monitoring',
@@ -835,7 +874,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0 ? './monitoring/videopreview/hkvideo/index' : './monitoring/videopreview/ysyvideo/index'}`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -857,10 +900,6 @@ export default {
                 //   path: '/monitoring/overrecord',
                 //   component: './monitoring/overRecord',
                 // },
-
-
-
-
               ],
             },
             {
@@ -890,7 +929,8 @@ export default {
                 },
                 {
                   name: 'dischargepermit',
-                  path: '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                  path:
+                    '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
                   component: './platformManager/dischargepermit',
                 },
                 {
@@ -968,7 +1008,6 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-
 
                 {
                   name: 'certificatemanage',
@@ -1054,30 +1093,33 @@ export default {
                     // 数据上报列表
                     {
                       name: 'DataReporting',
-                      path: '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                      path:
+                        '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
                       ///:monitortime/:entcode
                       component: './platformManager/dataReport/',
                     },
                     // 数据上报添加或修改
                     {
                       name: 'DataReportingAdd',
-                      path: '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                      path:
+                        '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
                       component: './platformManager/dataReport/components/addDataReport',
                     },
                     //统计报表
                     {
                       name: 'statisticsReportDataList',
-                      path: '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
+                      path:
+                        '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList',
                       component: './report/StatisticsReportDataList',
                     },
                     {
                       name: 'statisticsReportDataListView',
-                      path: '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList/statisticsReportDataListView/:configId/:monitortime/:entcode',
+                      path:
+                        '/Intelligentanalysis/SewagePlant/dataReportList/statisticsReportDataList/statisticsReportDataListView/:configId/:monitortime/:entcode',
                       ///:monitortime/:entcode
                       component: './platformManager/dataReport/components/dataReportView',
                     },
-
-                  ]
+                  ],
                 },
                 {
                   name: 'Intelligentanalysis',
@@ -1177,7 +1219,7 @@ export default {
                   path: '/monitoring/alarmverifyrecord',
                   component: './monitoring/alarmverifyrecord/index',
                 },
-              ]
+              ],
             },
             {
               path: '/account/settings',
@@ -1261,8 +1303,7 @@ export default {
                       path: '/qualityControl/qcaManager/workPattern/edit/:modelName',
                       component: './qualityControl/workPattern/Add',
                     },
-
-                  ]
+                  ],
                 },
                 // 质控记录
                 {
@@ -1303,7 +1344,7 @@ export default {
                       path: '/qualityControl/qcaRecord/alarmMessage',
                       component: './qualityControl/alarmMessage',
                     },
-                  ]
+                  ],
                 },
                 //质控仪视频
                 {
@@ -1335,10 +1376,13 @@ export default {
                   path: '/qualityControl/realTimeContrast',
                   component: './qualityControl/realTimeContrast',
                 },
-              ]
+              ],
             },
             /* 任务详情 */
-            { path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN', component: './EmergencyTodoList/EmergencyDetailInfoLayout' },
+            {
+              path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
+              component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+            },
 
             {
               component: '404',
@@ -1346,7 +1390,6 @@ export default {
           ],
         },
       ],
-
     },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn

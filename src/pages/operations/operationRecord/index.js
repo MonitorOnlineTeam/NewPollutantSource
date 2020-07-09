@@ -6,44 +6,56 @@
  * @Description: 运维记录页面
  */
 import React, { Component } from 'react';
-import {
-    Table,
-} from 'antd';
-import { PointIcon } from '@/utils/icon'
+import { Table } from 'antd';
+import { PointIcon } from '@/utils/icon';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '../../../components/NavigationTree'
-import OperationRecord from '@/components/OperationRecord'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import NavigationTree from '@/components/NavigationTree';
+import OperationRecord from '@/components/OperationRecord';
 
-
-@connect()
-
+@connect(({ operationform, loading }) => ({
+  breadTitle: operationform.breadTitle,
+}))
 class Index extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            dgimn: "",
-            type: ""
-        };
-    }
-    render() {
-        return (
-            <div id="record">
-                <NavigationTree domId="#record" choice={false} onItemClick={value => {
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        this.setState({
-                            dgimn: value[0].key,
-                            type: value[0].Type
-                        })
-                    }
-                }} />
-                <BreadcrumbWrapper title="运维记录">
-                    {this.state.dgimn && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} />}
-                </BreadcrumbWrapper>
+  constructor(props) {
+    super(props);
+    this.state = {
+      dgimn: '',
+      type: '',
+      breadTitle: props.breadTitle,
+    };
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.breadTitle !== nextProps.breadTitle) {
+      const breadTitle = { breadTitle: nextProps.breadTitle };
 
-            </div>
-        );
+      this.setState({ ...this.state, ...breadTitle });
     }
+  }
+  render() {
+    const { breadTitle } = this.state;
+    return (
+      <div id="record">
+        <NavigationTree
+          domId="#record"
+          choice={false}
+          onItemClick={value => {
+            if (value.length > 0 && !value[0].IsEnt) {
+              this.setState({
+                dgimn: value[0].key,
+                type: value[0].Type,
+              });
+            }
+          }}
+        />
+        <BreadcrumbWrapper title={breadTitle}>
+          {this.state.dgimn && (
+            <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} />
+          )}
+        </BreadcrumbWrapper>
+      </div>
+    );
+  }
 }
 export default Index;

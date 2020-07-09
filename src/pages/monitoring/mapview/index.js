@@ -154,7 +154,7 @@ class MapView extends Component {
   // 渲染坐标点
   renderMarker = extData =>
     // let extData = extData;
-     <div
+    <div
       onMouseEnter={() => {
         if (this.state.infoWindowVisible === false && !this.state.airVisible) {
           this.setState({
@@ -236,6 +236,9 @@ class MapView extends Component {
             this.getPointInfo(extData.position.PollutantType, isAirOrSite)
           })
         }
+        this.setState({
+          chartTitle: '',
+        })
       }}>
       {
         // extData.position && <Popover content={extData.position.title}>
@@ -326,21 +329,21 @@ class MapView extends Component {
     {
       return <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />
     }
-      switch (extData.position.PollutantType) {
-        case '1':
-          // return <WaterIcon style={style} />
-          return this.getWaterIcon(extData.position.Status)
-        case '2':
-          return this.getGasIcon(extData.position.Status)
-        case '10':
-          return <VocIcon style={style} />
-        case '12':
-          return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
-        case '5':
-          return <a><CustomIcon type="icon-fangwu" style={style} /></a>
-        case '37':
-          return <CustomIcon type="icon-dian2" style={{ ...style }} />
-      }
+    switch (extData.position.PollutantType) {
+      case '1':
+        // return <WaterIcon style={style} />
+        return this.getWaterIcon(extData.position.Status)
+      case '2':
+        return this.getGasIcon(extData.position.Status)
+      case '10':
+        return <VocIcon style={style} />
+      case '12':
+        return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+      case '5':
+        return <a><CustomIcon type="icon-fangwu" style={style} /></a>
+      case '37':
+        return <CustomIcon type="icon-dian2" style={{ ...style }} />
+    }
   }
 
 
@@ -854,6 +857,7 @@ class MapView extends Component {
             this.setState({
               pointName: val[0].pointName,
               entName: val[0].entName,
+              chartTitle: '',
             })
           }
         }} />
@@ -869,7 +873,7 @@ class MapView extends Component {
             // center={this.state.mapCenter}
             events={this.mapEvents}
             {...mapStaticAttribute}
-            // useAMapUI
+          // useAMapUI
           >
             {/* {_thismap && <MapUI />} */}
             {this.drawPolygon()}
@@ -1070,10 +1074,10 @@ class MapView extends Component {
               <ul>
                 {
                   airLevel.map(item => <li>
-                      <span>{item.text}</span>
-                      <span style={{ backgroundColor: item.color }}></span>
-                      <span>{item.standardValue}</span>
-                    </li>)
+                    <span>{item.text}</span>
+                    <span style={{ backgroundColor: item.color }}></span>
+                    <span>{item.standardValue}</span>
+                  </li>)
                 }
               </ul>
             </div>
