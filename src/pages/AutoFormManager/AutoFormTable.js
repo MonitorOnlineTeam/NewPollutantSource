@@ -654,7 +654,8 @@ class AutoFormTable extends PureComponent {
                 keys = checkboxOrRadio === 1 ? [rowkey] : keys.concat([rowkey]);
               }
               this.setState({
-                selectedRowKeys: keys
+                selectedRowKeys: keys,
+                selectedRows: record
               }, () => {
                 this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record)
               })
