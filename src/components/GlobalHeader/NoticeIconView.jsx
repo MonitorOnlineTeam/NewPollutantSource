@@ -199,6 +199,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 firsttime={moment(moment().format('YYYY-MM-DD 01:00:00'))}
                 lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
                 noticeState={1}
+                noticeState={0}
                 maxHeight={200}
               />
               : this.state.flag === 'exception' ?
