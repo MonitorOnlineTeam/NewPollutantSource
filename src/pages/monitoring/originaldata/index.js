@@ -22,7 +22,7 @@ import {
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SdlTable from '@/components/SdlTable';
 import styles from './index.less';
 import NavigationTree from '@/components/NavigationTree'
@@ -76,16 +76,17 @@ class Index extends Component {
                 type: 'originalData/updateState',
                 payload: {
                     beginTime: date[0] ? date[0].format('YYYY-MM-DD HH:mm:ss') : null,
-                    endTime: date[1] ? date[1].format('YYYY-MM-DD HH:mm:ss') : null
+                    endTime: date[1] ? date[1].format('YYYY-MM-DD HH:mm:ss') : null,
                 },
             });
             this.setState({
                 rangeDate: date,
             });
-            if (this.props.dgimn)
-                setTimeout(() => {
+            if (this.props.dgimn) {
+ setTimeout(() => {
                     this.reloaddatalist();
                 }, 0);
+}
         }
     };
 
@@ -121,8 +122,8 @@ class Index extends Component {
         }, 0);
     }
 
-    //下拉数据类型事件
-    SelectHandleChange = (value) => {
+    // 下拉数据类型事件
+    SelectHandleChange = value => {
         const { dispatch } = this.props;
         const { disabledFourDataTypes, disabledOthers } = this.state;
         let disDisabledFourDataTypes = false;
@@ -130,8 +131,7 @@ class Index extends Component {
         if (value.length !== 0) {
             if (value.indexOf('other') !== -1) {
                 disDisabledFourDataTypes = true;
-            }
-            else {
+            } else {
                 disDisabledOthers = true;
             }
         }
@@ -140,26 +140,25 @@ class Index extends Component {
             disabledFourDataTypes: disDisabledFourDataTypes,
             disabledOthers: disDisabledOthers,
         })
-        var dataTypeList = '';
+        let dataTypeList = '';
         if (value) {
-            value.map((item) => {
-                var code = item;
+            value.map(item => {
+                const code = item;
                 if (code) {
-                    dataTypeList += code + ','
+                    dataTypeList += `${code},`
                 }
             })
             dataTypeList = dataTypeList.substr(0, dataTypeList.length - 1);
             dispatch({
                 type: 'originalData/updateState',
                 payload: {
-                    dataType: dataTypeList
-                }
+                    dataType: dataTypeList,
+                },
             });
         }
         setTimeout(() => {
             this.reloaddatalist();
         }, 0);
-
     }
 
     // 分页页数change
@@ -223,6 +222,7 @@ class Index extends Component {
                 <BreadcrumbWrapper>
                     <div className={styles.cardTitle}>
                         <NavigationTree domId="#originaldata" choice={false} onItemClick={value => {
+                            console.log('value', value);
                             if (value.length > 0 && !value[0].IsEnt) {
                                 this.changeDgimn(value[0].key)
                             }
@@ -234,8 +234,8 @@ class Index extends Component {
                                         mode="multiple"
                                         style={{ width: 280 }}
                                         placeholder="请选择数据类型"
-                                        filterOption={true}
-                                        allowClear={true}
+                                        filterOption
+                                        allowClear
                                         maxTagCount={2}
                                         maxTagTextLength={5}
                                         maxTagPlaceholder="..."
@@ -249,10 +249,10 @@ class Index extends Component {
                                         <Option value="other" disabled={disabledOthers}>其它</Option>
                                     </Select>
 
-                                    <RangePicker_ style={{ marginRight: 10,marginLeft: 10  }}
+                                    <RangePicker_ style={{ marginRight: 10, marginLeft: 10 }}
                                         dateValue={this.state.rangeDate} format={this.state.format}
                                         callback={this._handleDateChange}
-                                        //    onChange={this._handleDateChange} 
+                                        //    onChange={this._handleDateChange}
                                         showTime={this.state.format} />
                                 </div>
                             }

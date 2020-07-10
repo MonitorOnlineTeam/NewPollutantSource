@@ -374,7 +374,9 @@ getTaskTypeInfo=() => {
           if (text === '2') {
             return <span>报警响应异常</span>;
           }
+          if (text === '3') {
           return <span>工作超时</span>;
+}
         },
       },
       {
@@ -391,7 +393,9 @@ getTaskTypeInfo=() => {
           if (text === 3) {
             return <span><Tag color="blue">监管派单</Tag></span>;
           }
+          if (text === 4) {
           return <span><Tag color="pink">自动派单</Tag></span>;
+          }
         },
       },
       {
@@ -406,9 +410,11 @@ getTaskTypeInfo=() => {
             return <span><Badge status="processing" text="进行中" /></span>;
           }
           if (text === 3) {
-            return <span><Badge status="processing" text="进行中" /></span>;
+            return <span><Badge status="success" text="已完成" /></span>;
           }
+          if (text === 10) {
           return <span><Badge status="error" text="系统关闭" /></span>;
+          }
         },
       },
       {
@@ -487,18 +493,19 @@ getTaskTypeInfo=() => {
     } else {
       style.marginLeft = 20;
     }
-    if (LoadingData) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
-    }
+    console.log('LoadingData', LoadingData);
+    // if (LoadingData) {
+    //   return (<Spin
+    //     style={{
+    //       width: '100%',
+    //       height: 'calc(100vh/2)',
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       justifyContent: 'center',
+    //     }}
+    //     size="large"
+    //   />);
+    // }
     return (
       <BreadcrumbWrapper>
         <Card className="contentContainer">
@@ -666,7 +673,7 @@ getTaskTypeInfo=() => {
               </Row>
           </Form>
           <SdlTable
-              loading={this.props.LoadingData}
+              loading={LoadingData}
               dataSource={this.props.datatable}
               pagination={{
                 showSizeChanger: true,
@@ -678,7 +685,6 @@ getTaskTypeInfo=() => {
                 pageSizeOptions: ['20', '30', '40', '100'],
                 total: gettasklistqueryparams.total,
               }}
-              {...this.props}
               columns={columns}
         />
         </Card>

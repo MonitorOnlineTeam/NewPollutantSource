@@ -47,26 +47,32 @@ class Index extends Component {
                 {
                     title: '污染物',
                     dataIndex: 'PollutantCode',
+                    align: 'center',
                 },
                 {
                     title: '监测时间',
                     dataIndex: 'OverTime',
+                    align: 'center',
                 },
                 {
                     title: '监测数值',
                     dataIndex: 'MonitorValue',
+                    align: 'center',
                 },
                 {
                     title: '标准值',
                     dataIndex: 'StandValue',
+                    align: 'center',
                 },
                 {
                     title: '超标倍数',
                     dataIndex: 'OverShoot',
+                    align: 'center',
                 },
                 {
                     title: '超标类型',
                     dataIndex: 'AlarmType',
+                    align: 'center',
                 },
             ],
         };
