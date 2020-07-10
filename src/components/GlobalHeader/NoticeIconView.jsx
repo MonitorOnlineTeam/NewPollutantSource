@@ -196,8 +196,9 @@ export default class GlobalHeaderRight extends PureComponent {
                 // initLoadData
                 style={{ maxHeight: '70vh' }}
                 DGIMN={this.state.DGIMN}
-                firsttime={moment(moment().format('YYYY-MM-DD 01:00:00'))}
-                lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
+               //按理来说时间段按照之前定好的逻辑应该是当天一点到第二天零点，但是联网判断逻辑是将当天零点数据计算到当天次数中了，为了不动联网将此处时间段改成当天零点到当天23:59:59
+               firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+               lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
                 noticeState={1}
                 noticeState={0}
                 maxHeight={200}
