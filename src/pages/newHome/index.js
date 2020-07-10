@@ -707,13 +707,13 @@ class NewHome extends PureComponent {
       mapStaticAttribute.zooms = [3, 14]
     }
     return (
-      <div className={styles.newHomeWrap}>
-        <header className={styles.homeHeader}>
+      <div className={styles.newHomeWrap} style={{margin: "-24px -24px 0 -24px"}}>
+        {/* <header className={styles.homeHeader}>
           <p><span>SDL</span> 污染源智能分析系统</p>
           <a className={styles.backMenu} onClick={() => {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>
-        </header>
+        </header> */}
         <Spin style={{ zIndex: 9999 }} spinning={loading}>
           <div className={styles.pageContainer}>
             <Drawer

@@ -99,11 +99,7 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        {
-          name: 'home',
-          path: '/home',
-          component: './newHome',
-        },
+        
         // appoperation
         {
           path: '/appoperation',
@@ -216,6 +212,11 @@ export default {
           // authority: ['admin', 'user'],
           routes: [
             { path: '/', redirect: defaultNavigateUrl },
+            {
+              name: 'home',
+              path: '/home',
+              component: './newHome',
+            },
             // {
             //   name: 'test',
             //   path: '/test',
