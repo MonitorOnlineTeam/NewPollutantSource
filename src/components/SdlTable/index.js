@@ -9,10 +9,10 @@ import React, { PureComponent } from 'react';
 import {
   Table,
 } from 'antd';
-import styles from './index.less'
 import { Resizable } from 'react-resizable';
 import { connect } from 'dva'
 import $ from 'jquery'
+import styles from './index.less'
 
 // const DEFAULT_WIDTH = 180;
 
@@ -57,7 +57,7 @@ class SdlTable extends PureComponent {
     };
   }
 
-  getOffsetTop = (obj) => {
+  getOffsetTop = obj => {
     let offsetCountTop = obj.offsetTop;
     let parent = obj.offsetParent;
     while (parent !== null) {
@@ -75,7 +75,7 @@ class SdlTable extends PureComponent {
         // let otherHeight = this.props.pagination ? 136 : 96;
 
         this.setState({
-          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0),
         }, () => {
           // console.log("computeHeight=", this.state.computeHeight)
         });
@@ -95,62 +95,58 @@ class SdlTable extends PureComponent {
     });
   };
 
-  getInitialColWidth = (col) => {
-    const title = col.title;
+  getInitialColWidth = col => {
+    const { title } = col;
     if (col.title.constructor === String) {
       if (title.indexOf('时间') != -1) {
         return col.width || 160;
-      } else if (title.indexOf('状态') != -1) {
+      } if (title.indexOf('状态') != -1) {
         return col.width || 150;
-      } else if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
+      } if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
         return 80;
-      } else if (title == '行政区') {
+      } if (title == '行政区') {
         return col.width || 200;
-      } else if (title == '企业名称') {
+      } if (title == '企业名称') {
         return col.width || 240;
-      } else if (title == 'AQI') {
+      } if (title == 'AQI') {
         return 60;
-      } else if (title.indexOf('流量') != -1) {
+      } if (title.indexOf('流量') != -1) {
         return 130;
-      } else {
-        return col.width || this.props.defaultWidth;
       }
-    } else {
-      if(title.props.children.includes("流量")) {
+        return col.width || this.props.defaultWidth;
+    }
+      if (title.props.children.includes('流量')) {
         return col.width || 130;
       }
       return col.width || this.props.defaultWidth;
-    }
-
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.dataSource !== nextProps.dataSource) {
-      let _props = {};
+      const _props = {};
       if (nextProps.dataSource && nextProps.dataSource.length > 4 && !nextProps.className) {
-        _props.className = "sdlTable"
+        _props.className = 'sdlTable'
       }
       this.setState({
-        _props
+        _props,
       })
-
     }
     if (this.props.columns !== nextProps.columns) {
       this.setState({
-        columns: nextProps.columns
+        columns: nextProps.columns,
       })
     }
 
     if (this.props.loading !== nextProps.loading && nextProps.loading === false) {
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0),
       }, () => {
       });
     }
 
     if (this.props.autoFormTableLoading !== nextProps.autoFormTableLoading && nextProps.autoFormTableLoading === false) {
       this.setState({
-        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0)
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0),
       }, () => {
       });
     }
@@ -158,13 +154,13 @@ class SdlTable extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.columns !== prevState.columns) {
-      let tableThead = this.sdlTableFrame.getElementsByClassName("ant-table-thead");
-      let tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
-      let tableFooter = this.sdlTableFrame.getElementsByClassName("ant-table-footer");
-      let tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-      let count = tableTheadHeight + 65 + tableFooterHeight;
+      const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+      const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+      const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+      const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+      const count = tableTheadHeight + 65 + tableFooterHeight;
       this.setState({
-        headAndFooterHeight: count > 110 ? count : 110
+        headAndFooterHeight: count > 110 ? count : 110,
       })
     }
   }
@@ -173,35 +169,31 @@ class SdlTable extends PureComponent {
     const { defaultWidth, resizable, clientHeight, pagination } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
 
-    let fixedHeight = this.state.computeHeight;
-    let scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight - headAndFooterHeight : "");
+    const fixedHeight = this.state.computeHeight;
+    const scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight - headAndFooterHeight : '');
     // 没有分页高度 + 40
-    let scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
+    const scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
-    let _columns = (columns || []).map((col, index) => {
-      return {
-        render: (text, record) => {
-          return text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+    const _columns = (columns || []).map((col, index) => ({
+        render: (text, record) => text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
             {text}
-          </div>
-        },
+          </div>,
         ...col,
         width: this.getInitialColWidth(col),
         onHeaderCell: column => ({
           width: column.width,
           onResize: resizable ? this.handleResize(index) : undefined,
-        })
-      }
-    })
+        }),
+      }))
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <div ref={el => this.sdlTableFrame = el}>
         <Table
-          ref={(table) => { this.sdlTable = table }}
+          ref={table => { this.sdlTable = table }}
           id="sdlTable"
           rowKey={record => record.id || record.ID}
-          size="small"
+          size="middle"
           components={resizable ? this.components : undefined}
           // className={styles.dataTable}
           rowClassName={
@@ -229,7 +221,7 @@ class SdlTable extends PureComponent {
 
 SdlTable.defaultProps = {
   defaultWidth: 130,
-  resizable: false
+  resizable: false,
 }
 
 export default SdlTable;

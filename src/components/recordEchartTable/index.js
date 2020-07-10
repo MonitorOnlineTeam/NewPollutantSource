@@ -47,18 +47,22 @@ class Index extends Component {
                 {
                     title: '污染物',
                     dataIndex: 'PollutantCode',
+                    align: 'center',
                 },
                 {
                     title: '监测时间',
                     dataIndex: 'ExceptionTime',
+                    align: 'center',
                 },
                 {
                     title: '监测数值',
                     dataIndex: 'MonitorValue',
+                    align: 'center',
                 },
                 {
                     title: '异常类型',
                     dataIndex: 'ExceptionType',
+                    align: 'center',
                 },
             ],
 
@@ -276,8 +280,8 @@ class Index extends Component {
                 pageIndex: 1,
             },
         })
-        let { name } = e
-        let { seriesName } = e
+        const { name } = e
+        const { seriesName } = e
         this.setState({
             Pollutant: name,
             ExceptionType: seriesName,
@@ -320,8 +324,9 @@ class Index extends Component {
             })
         }, 0)
     }
+
     /** 数据类型切换 */
-    _handleDateTypeChange = (e) => {
+    _handleDateTypeChange = e => {
         const dataType = e.target.value;
         this.setState({ dataType });
         this.children.onDataTypeChange(dataType);
@@ -332,8 +337,7 @@ class Index extends Component {
    * 回调获取时间并重新请求数据
    */
     dateCallback = (dates, dataType) => {
-        if (!this.props.DGIMN)
-            return;
+        if (!this.props.DGIMN) { return; }
         this.setState({
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -350,13 +354,13 @@ class Index extends Component {
             payload: {
                 beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
-                dataType: dataType,
+                dataType,
                 DGIMN: [this.props.DGIMN],
             },
         })
     }
 
-    onRef1 = (ref) => {
+    onRef1 = ref => {
         this.children = ref;
     }
 
@@ -366,9 +370,9 @@ class Index extends Component {
         const option = {
             legend: {
                 orient: 'vertical',
-                x: 'right',      //可设定图例在左、右、居中
-                y: 'top',     //可设定图例在上、下、居中
-                padding: [15, 30, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+                x: 'right', // 可设定图例在左、右、居中
+                y: 'top', // 可设定图例在上、下、居中
+                padding: [15, 30, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
 
             },
             tooltip: {},
@@ -376,7 +380,7 @@ class Index extends Component {
                 x: 35,
                 y: 10,
                 x2: 1,
-                y2: 35
+                y2: 35,
             },
             dataset: {
                 dimensions: this.props.exlist,
@@ -406,8 +410,8 @@ class Index extends Component {
                 splitLine: {
                     show: true,
                     lineStyle: {
-                        type: 'dashed'
-                    }
+                        type: 'dashed',
+                    },
                 },
             },
             // Declare several bar series, each will be mapped
@@ -426,7 +430,7 @@ class Index extends Component {
                                 dataType={this.state.dataType}
                                 format={this.state.format}
                                 onRef={this.onRef1}
-                                isVerification={true}
+                                isVerification
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
@@ -460,7 +464,7 @@ class Index extends Component {
                                                 style={{
                                                     width: '100%',
                                                     height: 'calc(100vh - 520px)',
-                                                    maxHeight: 280
+                                                    maxHeight: 280,
                                                     // height:130
                                                 }}
                                             />
@@ -485,7 +489,7 @@ class Index extends Component {
                                                     pagination={{
                                                         // showSizeChanger: true,
                                                         showQuickJumper: true,
-                                                        pageSize: 20,//this.props.pageSize,
+                                                        pageSize: 20, // this.props.pageSize,
                                                         current: this.props.pageIndex,
                                                         onChange: this.onTableChange,
                                                         total: this.props.ExceptionTotal,

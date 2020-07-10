@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import styles from '../index.less'
-import { Popover, Icon } from "antd";
+import { Popover, Icon } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
+import styles from '../index.less'
 
 
 @connect(({ loading, newHome }) => ({
@@ -13,9 +13,10 @@ class DiffHorizontal extends PureComponent {
     super(props);
     this.state = {};
   }
+
   componentDidMount() {
     this.props.dispatch({
-      type: "newHome/getDiffHorizontalData"
+      type: 'newHome/getDiffHorizontalData',
     })
   }
 
@@ -35,24 +36,24 @@ class DiffHorizontal extends PureComponent {
         left: '6%',
         right: '6%',
         bottom: '3%',
-        containLabel: true
+        containLabel: true,
       },
       xAxis: [
         {
           type: 'category',
-          data: diffHorizontalData.map(item => item.Abbreviation),
+          data: diffHorizontalData.map(item => item.Abbreviation.replace('(', '︵').replace('（', '︵').replace('）', '︶').replace(')', '︶')),
           // data: ['阿拉尔艾特水务', '首创水务（一期）', '首创水务（二期）', '藤原水务', '绿环水务', '西山污水厂', '阿拉尔供排水公司'],
           axisTick: {
-            alignWithLabel: true
+            alignWithLabel: true,
           },
           nameTextStyle: {
             rich: {
-              height: 100
+              height: 100,
             },
 
           },
           axisLabel: {
-            formatter: function (value) {
+            formatter(value) {
               // console.log('value=', value)
               // let val = value;
               // if (value === "(") {
@@ -61,29 +62,29 @@ class DiffHorizontal extends PureComponent {
               // if (value === ")") {
               //   val = "︶"
               // }
-              let val = value.split("").join("\n");
+              const val = value.split('').join('\n');
               return val
-            }
+            },
           },
           // axisLabel: {
           //   interval: 0,
           //   rotate: 40
           // },
-        }
+        },
       ],
       yAxis: [
         {
           type: 'value',
           name: '（%）',
           position: 'left',
-          minInterval: 1,  
+          minInterval: 1,
           splitLine: {
             show: true,
             lineStyle: {
-              type: 'dashed'
-            }
-          }
-        }
+              type: 'dashed',
+            },
+          },
+        },
       ],
       series: [
         {
@@ -92,17 +93,18 @@ class DiffHorizontal extends PureComponent {
           barMaxWidth: 60,
           // data: [10, 52, 200, 334, 390, 330, 220]
           data: diffHorizontalData.map(item => item.BalanceDifferenceRate),
-        }
-      ]
+        },
+      ],
     }
   };
+
   render() {
     const { diffHorizontalData } = this.props;
     return (
-      <div className={styles["group-item"]}>
-        <div className={styles["item-title"]}>
+      <div className={styles['group-item']}>
+        <div className={styles['item-title']}>
           水平衡差
-          <Popover title={"污水处理厂水平衡差计算公式"} content={
+          <Popover title="污水处理厂水平衡差计算公式" content={
             <div>
               {/* 污水处理厂水平衡差计算公式：<br /> */}
               ((进水口流量 - 回水口流量 - 出水口流量) / 进水口流量) * 100%
@@ -119,7 +121,7 @@ class DiffHorizontal extends PureComponent {
             theme="my_theme"
           /> : <div className={styles.noData}>
               <img src="/nodata1.png" style={{ width: 120 }} />
-              <p style={{ color: "rgb(166, 166, 167)", fontSize: 16, fontWeight: 500 }}>无企业</p>
+              <p style={{ color: 'rgb(166, 166, 167)', fontSize: 16, fontWeight: 500 }}>无企业</p>
             </div>
         }
       </div>
