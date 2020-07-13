@@ -51,17 +51,17 @@ class CascaderMultiple extends PureComponent {
     })
 
     if (!this.props.options) {
-      this.getDataList(this.props.pollutantTypes)
+      this.getDataList(this.props.pollutantTypes, this.props.regionCode)
     }
   }
 
 
-  getDataList = (pollutantTypes) => {
+  getDataList = (pollutantTypes, RegionCode) => {
     this.props.dispatch({
       type: "common/getEntAndPointList",
       payload: {
         "PollutantTypes": pollutantTypes,
-        "RegionCode": "",
+        "RegionCode": RegionCode,
         "Name": "",
         "Status": [0, 1, 2, 3],
         "QCAUse": "",
@@ -90,7 +90,6 @@ class CascaderMultiple extends PureComponent {
           },
           ...entAndPointList,
         ];
-
 
         let checkedLabels = [];
         entAndPointList.map((item, index) => {
@@ -169,8 +168,9 @@ class CascaderMultiple extends PureComponent {
     }
 
     // 传入的污染物类型发生变化，重新请求数据
-    if (this.props.pollutantTypes !== nextProps.pollutantTypes) {
-      this.getDataList(nextProps.pollutantTypes)
+    if (this.props.pollutantTypes !== nextProps.pollutantTypes || this.props.regionCode !== nextProps.regionCode) {
+      this.props.form.setFieldsValue({ [nextProps.id]: [] });
+      this.getDataList(nextProps.pollutantTypes, nextProps.regionCode)
     }
 
     // if (this.props.entAndPointList !== nextProps.entAndPointList) {

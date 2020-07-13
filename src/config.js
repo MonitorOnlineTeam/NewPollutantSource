@@ -20,6 +20,7 @@
 const XinJiang = true;
 
 const apiHost = 'http://localhost:52198/';
+// const apiHost = 'http://172.16.12.183:50059/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
@@ -44,13 +45,8 @@ module.exports = {
   },
   // 离线地图配置：
   // offlineMapUrl: {
-  //   domain: 'http://10.66.1.72:8184',
+  //   domain: 'http://10.230.28.70:8184',
   //   srcPath: '/amap-master/amap/js/maps.js',
-  // },
-  // 内网离线地图配置：
-  // offlineMapUrl: {
-  //   domain: "http://172.16.9.20:808",
-  //   srcPath: "/amap/js/maps.js"
   // },
   isShowTabs: true,
   centerlongitude: '118.510962',
