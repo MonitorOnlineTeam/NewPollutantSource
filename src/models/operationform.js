@@ -94,7 +94,7 @@ export default Model.extend({
   reducers: {
     //   mainSelectDates(state, { payload }){
     //     //return新的state,这样页面就会更新 es6语法，就是把state全部展开，然后把payload重新赋值，这样后面赋值的payload的值就会覆盖前面的。也是es6语法，相同名字可以写成一个，所以上面接收处写了num
-    // 　　　　return { ...state, payload}
+    // 　　　　return { ...state, ...payload}
     //    },
   },
 });
