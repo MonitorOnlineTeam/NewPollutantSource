@@ -267,7 +267,7 @@ class NewHome extends PureComponent {
   }
 
   // 渲染所有企业
-  renderEntMarkers = entAndPointList => {
+  renderEntMarkers = (entAndPointList, notFitView) => {
     const entMarkers = entAndPointList.map(item => ({
       position: {
         longitude: item.Longitude,
@@ -284,7 +284,7 @@ class NewHome extends PureComponent {
     }, () => {
       const timer = setInterval(() => {
         if (aMap) {
-          aMap.setFitView();
+          !notFitView && aMap.setFitView();
           clearInterval(timer)
         }
       }, 200);
@@ -705,7 +705,7 @@ class NewHome extends PureComponent {
         }
       }
     })
-    this.renderEntMarkers(filterEntList);
+    this.renderEntMarkers(filterEntList, true);
     this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: item.RegionCode } })
   }
 

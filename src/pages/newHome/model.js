@@ -119,7 +119,7 @@ export default Model.extend({
         filterList.map(item => {
           if (item.children) {
             let childrenList = item.children.map(itm => {
-              return { ...itm, MonitorObjectType: item.MonitorObjectType, children: [] }
+              return { ...itm, MonitorObjectType: item.MonitorObjectType, RegionCode: item.RegionCode, children: [] }
             })
             allEntAndPointList = allEntAndPointList.concat(childrenList);
           }
@@ -310,7 +310,7 @@ export default Model.extend({
     // 点击师 - 改变RegionCode - 左右联动
     *changeRegionCode({ payload }, { put, update, select }) {
       const regionCode = payload.regionCode;
-      yield update({ regionCode, level: 2, LEVEL: 2, REGION_CODE: regionCode})
+      yield update({ regionCode, level: 2, LEVEL: 2, REGION_CODE: regionCode })
       yield put({ type: "getMonitoringData" })
       yield put({
         type: "getRunAndAnalysisData",
