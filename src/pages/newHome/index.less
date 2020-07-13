@@ -684,7 +684,7 @@
 .divisionSelect {
   width: 340px;
   float: left;
-  margin-left: 10px;
+  margin-left: 6px;
 
   .selectDivision {
     background: @bgColor;
@@ -695,6 +695,7 @@
     font-size: 15px;
     padding-left: 6px;
     cursor: pointer;
+    border-radius: 3px;
 
     i {
       margin-right: 6px
@@ -715,7 +716,8 @@
   .dropDownContent {
     background: @bgColor;
     transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
-
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
     ul {
       overflow: hidden;
       border-top: 1px solid #fff;
