@@ -91,7 +91,6 @@ class CascaderMultiple extends PureComponent {
           ...entAndPointList,
         ];
 
-
         let checkedLabels = [];
         entAndPointList.map((item, index) => {
           if (item.children) {
@@ -170,6 +169,7 @@ class CascaderMultiple extends PureComponent {
 
     // 传入的污染物类型发生变化，重新请求数据
     if (this.props.pollutantTypes !== nextProps.pollutantTypes || this.props.regionCode !== nextProps.regionCode) {
+      this.props.form.setFieldsValue({ [nextProps.id]: [] });
       this.getDataList(nextProps.pollutantTypes, nextProps.regionCode)
     }
 
