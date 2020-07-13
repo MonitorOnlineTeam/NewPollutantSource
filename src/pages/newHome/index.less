@@ -1,4 +1,5 @@
 @color: #114fa1;
+@bgColor: rgba(11, 26, 48, .5);
 
 .newHomeWrap {
 
@@ -539,25 +540,31 @@
   text-align: center;
   padding-top: 10px;
   padding-left: 10px;
-  padding-right: 100px;
+  // padding-right: 100px;
 
   .shibox {
-    width: 88px;
-    background-color: rgba(0, 0, 0, .5);
+    width: 60px;
+    padding: 4px 0;
+    background-color: #fff;
     float: right;
     position: absolute;
-    right: 6px;
-    top: 0;
-    height: 64px;
-    border-bottom-left-radius: 44px;
-    border-bottom-right-radius: 44px;
-    color: #fff;
+    left: 0;
+    top: 46px;
+    border-bottom-right-radius: 46px;
+    border-top-right-radius: 46px;
 
     span {
-      line-height: 60px;
-      font-size: 18px;
-      font-weight: 500;
-      color: #fff;
+      float: left;
+      display: flex;
+      width: 20px;
+      font-size: 16px;
+      word-wrap: break-word;
+      word-break: nomal;
+      margin-left: 16px;
+      line-height: 26px;
+      line-height: 24px;
+      line-height: 20px;
+      color: #232323d9;
     }
   }
 }
@@ -569,24 +576,58 @@
   // top: 10px;
   float: left;
 
+  input {
+    background: @bgColor;
+    color: #fff;
+    border: 0;
+  }
+
+  :global {
+    .ant-input-suffix {
+      color: #fff;
+    }
+  }
 }
 
 .selectShowType {
-  width: 120px;
+  width: 110px;
   // position: absolute;
   // left: 430px;
   // top: 10px;
   float: left;
   margin-right: 6px;
+
+  :global {
+    .ant-select-selection {
+      background: @bgColor;
+      color: #fff;
+      border: 1px solid #fff;
+    }
+
+    .ant-select-arrow {
+      color: #fff;
+    }
+  }
+
 }
 
 .monthPicker {
-  width: 120px;
+  width: 110px;
   // position: absolute;
   // left: 10px;
   // top: 10px;
   float: left;
   margin-right: 6px;
+
+  input {
+    background: @bgColor;
+    color: #fff;
+    border: 0;
+  }
+
+  i {
+    color: #fff;
+  }
 }
 
 .basisInfo {
@@ -624,4 +665,76 @@
   text-align: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.searchStyle {
+
+  input,
+  .ant-select-selection {
+    background: @bgColor;
+    color: #fff;
+    border: 0;
+  }
+
+  i {
+    color: #fff;
+  }
+}
+
+.divisionSelect {
+  width: 340px;
+  float: left;
+  margin-left: 10px;
+
+  .selectDivision {
+    background: @bgColor;
+    height: 32px;
+    line-height: 32px;
+    color: #fff;
+    text-align: left;
+    font-size: 15px;
+    padding-left: 6px;
+    cursor: pointer;
+
+    i {
+      margin-right: 6px
+    }
+
+    .icon {
+      float: right;
+      border-left: 1px solid #fff;
+      width: 32px;
+      line-height: 36px;
+      height: 100%;
+      text-align: center;
+      margin-right: 0;
+    }
+
+  }
+
+  .dropDownContent {
+    background: @bgColor;
+    transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+
+    ul {
+      overflow: hidden;
+      border-top: 1px solid #fff;
+      font-size: 14px;
+      padding: 20px 10px 0;
+
+      li {
+        color: #fff;
+        width: 25%;
+        float: left;
+        margin-bottom: 20px;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover,
+        &.current {
+          background: #b1b1b1;
+        }
+      }
+    }
+  }
 }

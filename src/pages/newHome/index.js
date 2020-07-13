@@ -48,7 +48,7 @@ const mapIconStyle = {
   boxShadow: '0px 0px 3px 2px #fff',
 }
 let Map; let Marker; let Polygon; let Markers; let
-InfoWindow;
+  InfoWindow;
 let aMap = null;
 
 @connect(({ loading, newHome, global }) => ({
@@ -153,6 +153,7 @@ class NewHome extends PureComponent {
       filterEntAndPointList: [], // 用于筛选的
       selectValue: '', // 筛选
       month: moment().get('month'),
+      toggleSelect: false, //
     };
   }
 
@@ -268,13 +269,13 @@ class NewHome extends PureComponent {
   // 渲染所有企业
   renderEntMarkers = entAndPointList => {
     const entMarkers = entAndPointList.map(item => ({
-        position: {
-          longitude: item.Longitude,
-          latitude: item.Latitude,
-          ...item,
-        },
-        children: item.children,
-      }))
+      position: {
+        longitude: item.Longitude,
+        latitude: item.Latitude,
+        ...item,
+      },
+      children: item.children,
+    }))
 
     this.setState({
       markersList: entMarkers,
@@ -362,11 +363,11 @@ class NewHome extends PureComponent {
         }
       </div>
     }
-      return <div>
-        {
-          this.getEntIcon(extData)
-        }
-      </div>
+    return <div>
+      {
+        this.getEntIcon(extData)
+      }
+    </div>
   }
 
   // 渲染企业
@@ -381,12 +382,12 @@ class NewHome extends PureComponent {
           // 企业点击显示监测点
           if (extData.children) {
             const pointMarkers = extData.children.map(item => ({
-                position: {
-                  longitude: item.Longitude,
-                  latitude: item.Latitude,
-                  ...item,
-                },
-              }))
+              position: {
+                longitude: item.Longitude,
+                latitude: item.Latitude,
+                ...item,
+              },
+            }))
             this.setState({
               coordinateSet: extData.position.CoordinateSet,
               markersList: pointMarkers,
@@ -422,16 +423,16 @@ class NewHome extends PureComponent {
             className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? 'animate__animated animate__bounce animate__infinite' : ''}
             type="icon-ditu" style={{ fontSize: 32 }}
             onClick={() => {
-              this.setState({
-                clickedDivision: extData.position,
-              })
-              this.props.dispatch({
-                type: 'newHome/updateState',
-                payload: {
-                  currentDivisionName: extData.position.title,
-                },
-              })
-              this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: extData.position.RegionCode } })
+              // this.setState({
+              //   clickedDivision: extData.position,
+              // })
+              // this.props.dispatch({
+              //   type: 'newHome/updateState',
+              //   payload: {
+              //     currentDivisionName: extData.position.title,
+              //   },
+              // })
+              // this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: extData.position.RegionCode } })
             }} />
           {/* </ReactCSSTransitionGroup> */}
         </div>
@@ -451,20 +452,20 @@ class NewHome extends PureComponent {
       // 停产
       return <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />
     }
-      switch (extData.position.PollutantType) {
-        case '1':
-          return this.getWaterIcon(extData.position.Status)
-        case '2':
-          return this.getGasIcon(extData.position.Status)
-        case '10':
-          return <VocIcon style={style} />
-        case '12':
-          return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
-        case '5':
-          return <a><CustomIcon type="icon-fangwu" style={style} /></a>
-        case '37':
-          return <CustomIcon type="icon-dian2" style={{ ...style }} />
-      }
+    switch (extData.position.PollutantType) {
+      case '1':
+        return this.getWaterIcon(extData.position.Status)
+      case '2':
+        return this.getGasIcon(extData.position.Status)
+      case '10':
+        return <VocIcon style={style} />
+      case '12':
+        return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+      case '5':
+        return <a><CustomIcon type="icon-fangwu" style={style} /></a>
+      case '37':
+        return <CustomIcon type="icon-dian2" style={{ ...style }} />
+    }
   }
 
   // 绘制厂界
@@ -664,13 +665,13 @@ class NewHome extends PureComponent {
     const { currentDivision } = this.props;
     if (currentDivision && currentDivision.divisionList) {
       return currentDivision.divisionList.map(item => <InfoWindow
-          position={[item.longitude, item.latitude]}
-          visible
-          isCustom
-          offset={[4, -36]}
-        >
-          {item.divisionName}
-        </InfoWindow>)
+        position={[item.longitude, item.latitude]}
+        visible
+        isCustom
+        offset={[4, -36]}
+      >
+        {item.divisionName}
+      </InfoWindow>)
     }
   }
 
@@ -684,9 +685,33 @@ class NewHome extends PureComponent {
     })
   }
 
+  // 师点击
+  divisionClick = (item) => {
+    this.setState({
+      clickedDivision: item,
+    })
+    this.props.dispatch({
+      type: 'newHome/updateState',
+      payload: {
+        currentDivisionName: item.title,
+      },
+    })
+
+    let filterEntList = this.props.allEntAndPointList.filter(itm => {
+      if (itm.RegionCode) {
+        let RegionCode = itm.RegionCode.split(",");
+        if (RegionCode.includes(item.RegionCode)) {
+          return itm;
+        }
+      }
+    })
+    this.renderEntMarkers(filterEntList);
+    this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: item.RegionCode } })
+  }
+
 
   render() {
-    const { selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
+    const { toggleSelect, selectValue, filterEntAndPointList, searchInputVal, searchResult, leftVisible, rightVisible, infoWindowPos, infoWindowVisible, RegionCode, currentClickObj, displayType, modalTitle, clickedDivision } = this.state;
     const { allEntAndPointList, constructionCorpsList, INIT_LEVEL, getAllEntAndPointLoading, drillDownLoading, officeVisible, siteDetailsVisible, monitoringDataLoading, runAndAnalysisDataLoading, alarmResponseDataLoading, operationAnalysisLoading, taskStatisticsDataLoading, diffHorizontalDataLoading } = this.props;
     const isLeftLoading = drillDownLoading || monitoringDataLoading || runAndAnalysisDataLoading || alarmResponseDataLoading;
     const isRightLoading = drillDownLoading || operationAnalysisLoading || taskStatisticsDataLoading || diffHorizontalDataLoading;
@@ -699,7 +724,7 @@ class NewHome extends PureComponent {
       mapStaticAttribute.zooms = [3, 14]
     }
     return (
-      <div className={styles.newHomeWrap} style={{margin: "-24px -24px 0 -24px"}}>
+      <div className={styles.newHomeWrap} style={{ margin: "-24px -24px 0 -24px" }}>
         {/* <header className={styles.homeHeader}>
           <p><span>SDL</span> 污染源智能分析系统</p>
           <a className={styles.backMenu} onClick={() => {
@@ -760,10 +785,21 @@ class NewHome extends PureComponent {
                   displayType === 1 && <Button type="primary" style={{
                     //  true && <Button type="primary" style={{
                     float: 'right',
+                    marginRight: 10
                   }} onClick={() => {
                     let filterList = allEntAndPointList;
                     if (selectValue) {
                       filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == selectValue);
+                    }
+                    if (clickedDivision) {
+                      filterList = filterList.filter(itm => {
+                        if (itm.RegionCode) {
+                          let RegionCode = itm.RegionCode.split(",");
+                          if (RegionCode.includes(clickedDivision.RegionCode)) {
+                            return itm;
+                          }
+                        }
+                      })
                     }
                     this.setState({
                       infoWindowVisible: false, // 关闭排口弹窗
@@ -773,7 +809,7 @@ class NewHome extends PureComponent {
                     aMap.setZoom(6)
                   }}>返回企业</Button>
                 }
-                {
+                {/* {
                   clickedDivision && <Button type="primary" style={{
                     float: 'right',
                     display: displayType === 1 ? 'none' : 'inline',
@@ -792,35 +828,75 @@ class NewHome extends PureComponent {
                       this.reloadPageData();
                     }, 0)
                   }}>返回上级</Button>
+                } */}
+                <MonthPicker
+                  defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
+                    this.setState({ month: moment(date).get('month') })
+                    let endTime = date.endOf('month').format('YYYY-MM-DD HH:mm:ss');
+                    if (moment().get('month') === moment(date).get('month')) {
+                      endTime = moment().format('YYYY-MM-DD 23:59:59');
+                    }
+                    this.reloadPageData(date.format('YYYY-MM-01 00:00:00'), endTime);
+                  }} />
+                {
+                  displayType === 0 && <Select className={styles.selectShowType} value={selectValue} onChange={val => {
+                    this.setState({ selectValue: val })
+                    if (val) {
+                      const filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
+                      this.renderEntMarkers(filterList);
+                    } else {
+                      this.renderEntMarkers(allEntAndPointList);
+                    }
+                  }}>
+                    <Option value="">全部</Option>
+                    <Option value="服务站">服务站</Option>
+                    <Option value="1">企业</Option>
+                    <Option value="师">师</Option>
+                    <Option value="2">空气站</Option>
+                  </Select>
                 }
-                <MonthPicker defaultValue={moment()} allowClear={false} className={styles.monthPicker} onChange={(date, dateString) => {
-                  this.setState({ month: moment(date).get('month') })
-                  let endTime = date.endOf('month').format('YYYY-MM-DD HH:mm:ss');
-                  if (moment().get('month') === moment(date).get('month')) {
-                    endTime = moment().format('YYYY-MM-DD 23:59:59');
-                  }
-                  this.reloadPageData(date.format('YYYY-MM-01 00:00:00'), endTime);
-                }} />
-                <Select className={styles.selectShowType} value={selectValue} onChange={val => {
-                  this.setState({ selectValue: val })
-                  if (val) {
-                    const filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
-                    this.renderEntMarkers(filterList);
-                  } else {
-                    this.renderEntMarkers(allEntAndPointList);
-                  }
-                }}>
-                  <Option value="">全部</Option>
-                  <Option value="服务站">服务站</Option>
-                  <Option value="1">企业</Option>
-                  <Option value="师">师</Option>
-                  <Option value="2">空气站</Option>
-                </Select>
                 {
                   displayType === 0 &&
                   <Search value={searchInputVal} allowClear onSearch={value => this.onSearch(value)} onChange={e => {
                     this.setState({ searchInputVal: e.target.value })
                   }} placeholder="输入企业或空气站名称" className={styles.searchInput} />
+                }
+                {
+                  displayType === 0 && <div className={styles.divisionSelect}>
+                    <div className={styles.selectDivision} onClick={() => { this.setState({ toggleSelect: !this.state.toggleSelect }) }}>
+                      <Icon type="environment" />
+                      <span>当前范围：{clickedDivision ? clickedDivision.title : "全部"}</span>
+                      {toggleSelect ? <Icon type="caret-up" className={styles.icon} /> : <Icon type="caret-down" className={styles.icon} />}
+                    </div>
+                    {
+                      toggleSelect &&
+                      <div className={styles.dropDownContent}>
+                        <ul>
+                          <li className={(!clickedDivision || clickedDivision && clickedDivision.title === "全部") ? styles.current : ""} onClick={() => {
+                            this.setState({ clickedDivision: undefined })
+                            this.renderEntMarkers(allEntAndPointList);
+                            this.props.dispatch({
+                              type: 'newHome/updateState',
+                              payload: {
+                                level: INIT_LEVEL,
+                                LEVEL: INIT_LEVEL,
+                                regionCode: '660000000',
+                                currentDivisionName: '',
+                              },
+                            })
+                            setTimeout(() => {
+                              this.reloadPageData();
+                            }, 0)
+                          }}>全部</li>
+                          {
+                            constructionCorpsList.map(item => {
+                              return <li className={(clickedDivision && clickedDivision.title === item.title) && styles.current} onClick={() => { this.divisionClick(item) }}>{item.title}</li>
+                            })
+                          }
+                        </ul>
+                      </div>
+                    }
+                  </div>
                 }
                 {
                   clickedDivision && <div style={{
@@ -830,6 +906,11 @@ class NewHome extends PureComponent {
                     <span>{clickedDivision.title}</span>
                     {/* <span>第九师</span> */}
                   </div>
+                  // true && <div className={styles.shibox}>
+                  //   {/* <span>师局</span><br /> */}
+                  //   <span>第九师</span>
+                  //   {/* <span>第九师</span> */}
+                  // </div>
                 }
               </div>
               <div className={styles.legendContent}>
