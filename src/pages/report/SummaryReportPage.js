@@ -163,24 +163,24 @@ class SummaryReportPage extends PureComponent {
         ...nextProps.pollutantList,
       ]
       const columns = _columns.map(item => ({
-          ...item,
-          render: (text, row, index) => {
-            if (text) {
-              const _text = text.split('|');
-              let val = _text[0];
-              const status = _text[1];
-              // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
-              if (item.dataIndex === '风向') {
-                val = getDirLevel(text)
-              }
-              if (val) {
-                return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val
-              }
-              return '-';
+        ...item,
+        render: (text, row, index) => {
+          if (text) {
+            const _text = text.split('|');
+            let val = _text[0];
+            const status = _text[1];
+            // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
+            if (item.dataIndex === '风向') {
+              val = getDirLevel(text)
             }
-            return '-'
-          },
-        }))
+            if (val) {
+              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val
+            }
+            return '-';
+          }
+          return '-'
+        },
+      }))
       columns.unshift({
         title: '企业名称',
         dataIndex: 'EntName',
@@ -230,7 +230,7 @@ class SummaryReportPage extends PureComponent {
     const pollutantType = type || this.props.form.getFieldValue('PollutantSourceType')
     const reportTime = this.props.form.getFieldValue('ReportTime');
     let beginTime; let
-endTime;
+      endTime;
 
     const time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
@@ -411,6 +411,9 @@ endTime;
                         changeOnSelect={false}
                         data={regionList}
                         placeholder="请选择行政区"
+                        onChange={(value, selectedOptions) => {
+                          this.setState({ regions: value.join(',') })
+                        }}
                       />,
                     )}
                   </FormItem>
@@ -429,7 +432,7 @@ endTime;
                           },
                         ],
                       })(
-                        <CascaderMultiple pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')} {...this.props} />,
+                        <CascaderMultiple regionCode={this.state.regions} pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')} {...this.props} />,
                       )}
                     </FormItem>
                   </Col>
