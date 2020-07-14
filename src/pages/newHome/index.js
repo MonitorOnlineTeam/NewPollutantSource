@@ -219,8 +219,13 @@ class NewHome extends PureComponent {
 
   showEntName = () => {
     let filterEntList = this.props.allEntAndPointList;
+    // 过滤企业筛选
+    if (this.state.selectValue) {
+      filterEntList = this.props.allEntAndPointList.filter(item => item.MonitorObjectType == this.state.selectValue);
+    }
+    // 过滤师筛选
     if (this.state.clickedDivision) {
-      filterEntList = this.props.allEntAndPointList.filter(itm => {
+      filterEntList = filterEntList.filter(itm => {
         if (itm.RegionCode) {
           let RegionCode = itm.RegionCode.split(",");
           if (RegionCode.includes(this.state.clickedDivision.RegionCode)) {
