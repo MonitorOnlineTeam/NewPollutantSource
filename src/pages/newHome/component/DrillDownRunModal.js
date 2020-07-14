@@ -25,11 +25,13 @@ const { MonthPicker } = DatePicker;
   modelTitle: newHome.modelTitle,
   currentDivisionName: newHome.currentDivisionName,
   currentEntName: newHome.currentEntName,
+  REGION_CODE: newHome.REGION_CODE,
 }))
 class DrillDownRunModal extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      endTime: "",
       formItemLayout: {
         labelCol: {
           span: 6,
@@ -52,7 +54,12 @@ class DrillDownRunModal extends PureComponent {
         startTime: this.props.START_TIME,
         endTime: this.props.END_TIME,
         entName: "",
+        regionCode: this.props.REGION_CODE
       }
+    })
+    this.setState({
+      date: undefined,
+      endTime: undefined,
     })
   }
 
@@ -66,36 +73,38 @@ class DrillDownRunModal extends PureComponent {
           var pointInPixel = [rest.offsetX, rest.offsetY];
           var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
           var index = parseInt(xIndex);
-
-          if (this.props.level === 1) {
-            // 点击师，显示企业
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                regionCode: this.props.paramsList[index],
-                currentDivisionName: this.props.xData[index]
-              }
-            })
-          }
-          if (this.props.level === 2) {
-            // 点击企业，显示排口
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                entCode: this.props.paramsList[index],
-                currentEntName: this.props.xData[index]
-              }
-            })
-          }
-          if (this.props.level < 3) {
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                level: this.props.level + 1
-              }
-            })
-            this.setState({ dataIndex: index })
-            this.props.chartClick();
+          console.log('xIndex=', xIndex)
+          if (index >= 0) {
+            if (this.props.level === 1) {
+              // 点击师，显示企业
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  regionCode: this.props.paramsList[index],
+                  currentDivisionName: this.props.xData[index]
+                }
+              })
+            }
+            if (this.props.level === 2) {
+              // 点击企业，显示排口
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  entCode: this.props.paramsList[index],
+                  currentEntName: this.props.xData[index]
+                }
+              })
+            }
+            if (this.props.level < 3) {
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  level: this.props.level + 1
+                }
+              })
+              this.setState({ dataIndex: index })
+              this.props.chartClick();
+            }
           }
         });
       }
@@ -162,7 +171,7 @@ class DrillDownRunModal extends PureComponent {
             position: 'top',
             formatter: (params) => {
               if (params.value) {
-                return params.value + "%"
+                return params.value
               }
             }
           },
@@ -314,7 +323,11 @@ class DrillDownRunModal extends PureComponent {
                     initialValue: moment(startTime)
                   })(
                     <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                      this.setState({ date })
+                      let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                      if (moment().get('month') === moment(date).get('month')) {
+                        endTime = moment().format("YYYY-MM-DD 23:59:59");
+                      }
+                      this.setState({ date, endTime })
                     }} />
                   )}
                 </Form.Item>
@@ -325,8 +338,8 @@ class DrillDownRunModal extends PureComponent {
                     this.props.dispatch({
                       type: "newHome/updateState",
                       payload: {
-                        startTime: this.state.date.format("YYYY-MM-01 00:00:00"),
-                        endTime: this.state.date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                        startTime: this.state.date ? this.state.date.format("YYYY-MM-01 00:00:00") : startTime,
+                        endTime: this.state.endTime || endTime
                       }
                     })
                     this.props.chartClick();

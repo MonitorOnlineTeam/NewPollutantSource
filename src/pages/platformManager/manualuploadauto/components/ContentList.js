@@ -335,6 +335,30 @@ export default class ContentList extends Component {
         });
     }
 
+     counterConfirm=()=> {
+        const {  manualUploadautoParameters } = this.props;
+        var type= manualUploadautoParameters.Type=="day"?"日数据":"小时数据";
+        Modal.confirm({
+          title: '提示?',
+          okText: '确认',
+          cancelText: '取消',
+          width: 500,
+          content: '确认补发'+manualUploadautoParameters.BeginTime+'至'+manualUploadautoParameters.EndTime+'的'+type+'吗？',
+          onOk() {
+            dispatch({
+                type: 'manualuploadauto/CounterSendCMDMsg',
+                payload: {
+                    DGIMN: manualUploadautoParameters.DGIMN,
+                    BeginTime: manualUploadautoParameters.BeginTime,
+                    EndTime: manualUploadautoParameters.EndTime,
+                    DataType: manualUploadautoParameters.Type,
+                }
+            });
+        },
+          onCancel() {},
+        });
+      }
+
     //统计AQI
     StatisticsAQI = e => {
         const { dispatch, manualUploadautoParameters } = this.props;
@@ -416,9 +440,10 @@ export default class ContentList extends Component {
                             {/* <Button type="primary" onClick={this.uploadConfirm} >
                                 <Icon type="upload" /> 文件导入
                             </Button> */
-                                this.upload()}
+                            // this.upload()
+                                }
 
-                            <Spin
+                            {/* <Spin
                                 delay={500}
                                 spinning={this.state.uploadLoading}
                                 style={{
@@ -428,7 +453,10 @@ export default class ContentList extends Component {
                                     alignItems: 'center',
                                     justifyContent: 'center'
                                 }}
-                            />
+                            /> */}
+                            <Button onClick={this.counterConfirm}>
+                                补发数据
+                            </Button>
                         </Form.Item>
                         <Form.Item>
                             <Button onClick={this.confirm}>

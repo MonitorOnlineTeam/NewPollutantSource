@@ -224,7 +224,6 @@ export default Model.extend({
             unit: itm.StandardGasCode === "s01" ? "%" : 'mg/m3',
           }))
         }
-        console.log('qualityControlTableData=', qualityControlTableData)
         yield update({
           qualityControlFormData: result.Datas.Info,
           qualityControlTableData,
@@ -445,7 +444,6 @@ export default Model.extend({
         status: paramsRecordForm.status && paramsRecordForm.status.value,
         ...payload,
       }
-      console.log('postData=', postData)
       const result = yield call(services.getParamsTableData, postData);
       if (result.IsSuccess) {
         yield update({
@@ -693,7 +691,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    // 根据mn查询QCAMN
+    *getQCAMNByDGIMN({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getQCAMNByDGIMN, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
   reducers: {
     // 质控仪流程图 - 状态
@@ -731,13 +737,11 @@ export default Model.extend({
             ValveStatus.purge = value
           }
            if (code === "32018") {
-            console.log("32018#@!@#=", payload)
             // 泵配气阀状态
             ValveStatus.Air = value
           }
 
           if (code === "32019") {
-            console.log("32019#@!@#=", payload)
             // 泵通电状态
             ValveStatus.Pump = value
           }
@@ -749,7 +753,6 @@ export default Model.extend({
 
           // 质控结果
           if (code === "QCAResult") {
-            console.log("QCAResult=", payload.Value)
             QCAResult = payload.Value
           }
 
@@ -777,7 +780,6 @@ export default Model.extend({
           }
 
           if (code === "33516") {
-            console.log('p3=', payload)
             // p3气瓶压力
             p3Pressure = {
               value: payload.Value + "",
@@ -787,7 +789,6 @@ export default Model.extend({
           }
 
           if (code === "33517") {
-            console.log('p4=', payload)
             // p4气瓶压力
             p4Pressure = {
               value: payload.Value + "",
@@ -796,7 +797,7 @@ export default Model.extend({
             };
           }
 
-         
+
 
 
           let flowList = state.flowList;

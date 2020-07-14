@@ -25,6 +25,7 @@ const Option = Select.Option
   taskModelType: newHome.taskModelType,
   currentDivisionName: newHome.currentDivisionName,
   currentEntName: newHome.currentEntName,
+  REGION_CODE: newHome.REGION_CODE,
 }))
 class DrillDownTaskStatisticsModal extends PureComponent {
   constructor(props) {
@@ -50,38 +51,40 @@ class DrillDownTaskStatisticsModal extends PureComponent {
         this.zr.on('click', (...rest) => {
           var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
           var index = parseInt(xIndex);
+          console.log('rest=',rest)
           console.log('index=', index)
 
-
-          if (this.props.level === 1) {
-            // 点击师，显示企业
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                regionCode: this.props.codeList[index],
-                currentDivisionName: this.props.taskCountModalData.x[index]
-              }
-            })
-          }
-          if (this.props.level === 2) {
-            // 点击企业，显示排口
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                entCode: this.props.codeList[index],
-                currentEntName: this.props.taskCountModalData.x[index]
-              }
-            })
-          }
-          if (this.props.level < 3) {
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                level: this.props.level + 1
-              }
-            })
-            this.setState({ showBack: true, dataIndex: index })
-            this.props.chartClick();
+          if (index >= 0) {
+            if (this.props.level === 1) {
+              // 点击师，显示企业
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  regionCode: this.props.codeList[index],
+                  currentDivisionName: this.props.taskCountModalData.x[index]
+                }
+              })
+            }
+            if (this.props.level === 2) {
+              // 点击企业，显示排口
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  entCode: this.props.codeList[index],
+                  currentEntName: this.props.taskCountModalData.x[index]
+                }
+              })
+            }
+            if (this.props.level < 3) {
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  level: this.props.level + 1
+                }
+              })
+              this.setState({ showBack: true, dataIndex: index })
+              this.props.chartClick();
+            }
           }
         })
       }
@@ -98,7 +101,12 @@ class DrillDownTaskStatisticsModal extends PureComponent {
         startTime: this.props.START_TIME,
         endTime: this.props.END_TIME,
         entName: "",
+        regionCode: this.props.REGION_CODE
       }
+    })
+    this.setState({
+      date: undefined,
+      endTime: undefined,
     })
     this.props.onClose && this.props.onClose();
   }
@@ -331,7 +339,11 @@ class DrillDownTaskStatisticsModal extends PureComponent {
                     initialValue: moment(startTime)
                   })(
                     <MonthPicker allowClear={false} onChange={(date, dateString) => {
-                      this.setState({ date })
+                      let endTime = date.endOf("month").format("YYYY-MM-DD HH:mm:ss");
+                      if (moment().get('month') === moment(date).get('month')) {
+                        endTime = moment().format("YYYY-MM-DD 23:59:59");
+                      }
+                      this.setState({ date, endTime })
                     }} />
                   )}
                 </Form.Item>
@@ -342,8 +354,8 @@ class DrillDownTaskStatisticsModal extends PureComponent {
                     this.props.dispatch({
                       type: "newHome/updateState",
                       payload: {
-                        startTime: this.state.date.format("YYYY-MM-01 00:00:00"),
-                        endTime: this.state.date.endOf("month").format("YYYY-MM-DD HH:mm:ss")
+                        startTime: this.state.date ? this.state.date.format("YYYY-MM-01 00:00:00") : startTime,
+                        endTime: this.state.endTime || endTime
                       }
                     })
                     this.props.chartClick();

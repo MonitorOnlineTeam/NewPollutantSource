@@ -203,7 +203,6 @@ class MonitoringStatus extends Component {
       dyhwLink = dyhwAnalData.monthSum;
       eyhlLink = eyhlAnalData.monthSum;
     }
-    debugger;
         return (
            <>
              {

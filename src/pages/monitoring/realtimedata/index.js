@@ -16,7 +16,7 @@ import WasteGasChart from '@/pages/monitoring/realtimedata/components//WasteGasC
 import VocChart from '@/pages/monitoring/realtimedata/components//VocChart';
 import HgChart from '@/pages/monitoring/realtimedata/components//HgChart';
 import CommonChart from '@/pages/monitoring/realtimedata/components//CommonChart';
-
+import { formatPollutantPopover } from '@/utils/utils';
 const { Header, Footer, Sider, Content } = Layout;
 @connect(({ realtimeserver, loading }) => ({
     isloading: loading.effects['realtimeserver/GetProcessFlowChartStatus'],
@@ -161,9 +161,12 @@ class Index extends Component {
         const res = [];
         if (dataInfolist && dataInfolist.length > 0) {
             dataInfolist.map((item, key) => {
+                debugger
                 let value = item.value ? item.value + item.Unit : item.value
                 res.push(
-                    <Descriptions.Item className={styles.gridStyle} label={item.pollutantName}>{value}</Descriptions.Item>
+                    <Descriptions.Item className={styles.gridStyle} label={item.pollutantName}>
+                        {formatPollutantPopover(value, item.dataparam)}
+                    </Descriptions.Item>
                 )
             })
         }

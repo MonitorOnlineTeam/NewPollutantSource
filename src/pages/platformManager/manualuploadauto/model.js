@@ -14,6 +14,7 @@ import {
     UpdateManualSupplementData,
     getPollutantTypeList,
     CalculationAQIData,
+    CounterSendCMDMsg,
 } from './services';
 import config from '@/config';
 import {
@@ -162,6 +163,24 @@ export default Model.extend({
             }
         },
 
+         //补发数据
+         * CounterSendCMDMsg({
+            payload
+        }, {
+            call,
+            put,
+            update,
+            select,
+        }) {
+            const { manualUploadautoParameters } = yield select(a => a.manualuploadauto);
+            const result = yield call(CounterSendCMDMsg, { ...manualUploadautoParameters });
+            if (result.IsSuccess) {
+                message.info("操作成功！");
+            }
+            else {
+                message.error("统计失败！");
+            }
+        },
 
         //统计AQI
         * CalculationAQIData({

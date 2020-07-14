@@ -192,7 +192,7 @@ class AddEditEquipmentPage extends PureComponent {
                 <Form.Item label="测量参数">
                   {getFieldDecorator('Measurement', {
                     rules: [{ required: true, message: '请填写测量参数' }],
-                    initialValue: Measurement,
+                    initialValue: equipmentData.Measurement,
                   })(
                     <Input placeholder="测量参数" />,
                   )}

@@ -102,7 +102,7 @@ class NavigationTree extends Component {
           render: (text, record) => (
             <>
               {
-                record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), height: 10, margin: '0 4px' }} /> : ''
+                record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), fontSize: '20px', height: 10, margin: '0 4px' }} /> : ''
               }
               {
                 !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, color: 'red', marginTop: 8 }} /></div>
@@ -319,7 +319,7 @@ class NavigationTree extends Component {
           checkedKeys: nowKey,
           overAll,
           expandedKeys: nowExpandKey,
-          useChioce: nowExpandKey[0] === undefined ? true : false
+          useChioce: nowExpandKey[0] === undefined,
         })
 
         const hisData = this.state.dataList.find(m => m.key == nowKey[0].toString());
@@ -424,22 +424,31 @@ class NavigationTree extends Component {
 
   // 搜索框改变查询数据
   onChangeSearch = e => {
-
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.tilingData()
     const { value } = e.target;
-    console.log('ex=', value)
-    const expandedKeys = this.state.dataList
-      .map(item => {
-        if (item.title.indexOf(value) > -1) {
-          return this.getParentKey(item.key, this.state.EntAndPoint);
-        }
-        return null;
-      })
-      .filter((item, i, self) => item && self.indexOf(item) === i);
+    // console.log('ex=', value)
+    // const expandedKeys = this.state.dataList
+    //   .map(item => {
+    //     // console.log('item1',item);
+    //     if (item.title.indexOf(value) > -1) {
+    //       return this.getParentKey(item.key, this.state.EntAndPoint);
+    //     }
+    //     return null;
+    //   })
+    //   .filter((item, i, self) => item && self.indexOf(item) === i);
+    // const entList=this.state.EntAndPoint.map(item => {
+    //   if (item.title.indexOf(value) > -1&&item.IsEnt=1) {
+    //     return item;
+    //   }
+    //   return null;
+    // })
+    const entList = this.props.EntAndPoint.filter(item => item.title.indexOf(value) > -1 && item.IsEnt == 1);
+    // console.log('ent=', entList);
     const filterList = this.state.panelDataList.filter(item => item.pointName.indexOf(value) > -1 || item.entName.indexOf(value) > -1);
     this.setState({
-      expandedKeys,
+      // expandedKeys,
+      EntAndPoint: entList,
       useChioce: false,
       searchValue: value,
       autoExpandParent: true,
@@ -502,7 +511,7 @@ class NavigationTree extends Component {
     this.setState({
       expandedKeys,
       autoExpandParent: false,
-      useChioce: false
+      useChioce: false,
     });
     this.props.dispatch({
       type: 'navigationtree/updateState',
@@ -544,8 +553,8 @@ class NavigationTree extends Component {
     let { normalState } = this.state
     let { overState } = this.state
     let { exceState } = this.state
-    let { zState } = this.state
-    let { cState } = this.state
+    const { zState } = this.state
+    const { cState } = this.state
     switch (type) {
       case 0:// 离线
         offState = !offState
@@ -754,8 +763,6 @@ class NavigationTree extends Component {
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
-    console.log('expendKey=', expandedKeys)
-    console.log('useChioce=', this.state.useChioce)
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map((item, idx) => {
@@ -775,7 +782,7 @@ class NavigationTree extends Component {
         if (item.Type == '0') {
           return (
             <TreeNode style={{ width: '100%' }} data-index={idx} title={
-              <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), width: 10, height: 10, float: 'right', marginTop: 5, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}</div>
+              <div style={{}}><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', width: 10, height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}</div>
             } key={item.key} dataRef={item}>
               {loop(item.children)}
             </TreeNode>
@@ -783,7 +790,7 @@ class NavigationTree extends Component {
         } if (item.Type == '1') {
           return <TreeNode style={{ width: '100%' }} title={
             <div style={{ width: '253px', position: 'relative' }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), height: 10, float: 'right', marginTop: 5, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>
@@ -799,7 +806,7 @@ class NavigationTree extends Component {
     if (this.state.useChioce) {
       _props = { defaultExpandAll: true }
     } else {
-      _props = { expandedKeys: expandedKeys }
+      _props = { expandedKeys }
     }
     return (
       <div >
@@ -821,17 +828,17 @@ class NavigationTree extends Component {
         >
           <div style={{ marginBottom: 15 }}>
             <Row style={{ textAlign: 'center' }}>
-              <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: '#34c066' }} />正常</Col>
+              <Col span={5} style={this.state.normalState ? styleNor : styleFor} onClick={() => this.screenData(1)}><LegendIcon style={{ color: '#34c066', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />正常</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: '#999999' }} />离线</Col>
+              <Col span={5} style={this.state.offState ? styleTrue : styleFalse} onClick={() => this.screenData(0)}> <LegendIcon style={{ color: '#999999', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />离线</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: '#f04d4d' }} />超标</Col>
+              <Col span={5} style={this.state.overState ? styleTrue : styleFalse} onClick={() => this.screenData(2)}><LegendIcon style={{ color: '#f04d4d', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />超标</Col>
               <Col span={1}></Col>
-              <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: '#e94' }} />异常</Col>
+              <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: '#e94', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />异常</Col>
             </Row>
           </div>
 
-          { !this.props.polShow ? <SelectPollutantType
+          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
             showDefaultValue={this.props.defaultPollutant === 'undefined'}
@@ -889,7 +896,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={ { marginTop: '5%', maxHeight: 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' } }
+                style={{ marginTop: '5%', maxHeight: 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 {..._props}

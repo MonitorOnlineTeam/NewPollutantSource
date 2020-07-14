@@ -128,11 +128,11 @@ class index extends PureComponent {
         dataIndex: 'Cycle',
         width: 140,
         render: (text, record, idx) => {
-          if (text) {
+          if (text !== undefined) {
             if (record.DateType === 0) {
               return `周期：${text}天 ${record.Hour}:${record.Minutes}`
             } else {
-              return `周期：${record.Hour}小时 ${record.Minutes}分`
+              return `周期：${text}小时 ${record.Minutes}分`
             }
           }
           return "-"
