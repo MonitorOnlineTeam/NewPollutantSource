@@ -115,7 +115,13 @@ export function formatPollutantPopover(value, additional) {
       );
     }
   }
-  return value ? <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div> : (value === 0 ? 0 : '-');
+  return value ? (
+    <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div>
+  ) : value === 0 ? (
+    0
+  ) : (
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -131,16 +137,16 @@ export function asc(a, b) {
 export function handleFormData(values) {
   let formData = {};
   for (let key in values) {
-    if (values[key] && values[key]["fileList"]) {
+    if (values[key] && values[key]['fileList']) {
       // 处理附件列表
       if (values.cuid) {
         formData[key] = values.cuid;
       }
     } else if (values[key] && moment.isMoment(values[key])) {
       // 格式化moment对象
-      formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
+      formData[key] = moment(values[key]).format('YYYY-MM-DD HH:mm:ss');
     } else {
-      formData[key] = values[key] && values[key].toString()
+      formData[key] = values[key] && values[key].toString();
     }
   }
 
@@ -193,45 +199,109 @@ export function downloadFile(sUrl) {
 }
 
 // 风向
-export const getDirLevel = (dir) => {
-  if (dir != undefined && dir != "-") {
-    let windDir = ["北", "东北偏北", "东北", "东北偏东", "东", "东南偏东", "东南", "东南偏南", "南", "西南偏南", "西南", "西南偏西", "西", "西北偏西", "西北", " 西北偏北"];
-    let dirBound = [11.25, 33.75, 56.25, 78.75, 101.25, 123.75, 146.25, 168.75, 191.25, 213.75, 236.25, 258.75, 281.25, 303.25, 326.25, 348.75];
+export const getDirLevel = dir => {
+  if (dir != undefined && dir != '-') {
+    let windDir = [
+      '北',
+      '东北偏北',
+      '东北',
+      '东北偏东',
+      '东',
+      '东南偏东',
+      '东南',
+      '东南偏南',
+      '南',
+      '西南偏南',
+      '西南',
+      '西南偏西',
+      '西',
+      '西北偏西',
+      '西北',
+      ' 西北偏北',
+    ];
+    let dirBound = [
+      11.25,
+      33.75,
+      56.25,
+      78.75,
+      101.25,
+      123.75,
+      146.25,
+      168.75,
+      191.25,
+      213.75,
+      236.25,
+      258.75,
+      281.25,
+      303.25,
+      326.25,
+      348.75,
+    ];
     if (348.75 <= dir && dir <= 360) {
-      return windDir[0]
+      return windDir[0];
     } else if (0 <= dir && dir <= 11.25) {
-      return windDir[0]
+      return windDir[0];
     } else {
       for (let i = 0; i < dirBound.length - 1; i++) {
-        if (dir > dirBound[i] && dir <= dirBound[i + 1])
-          return windDir[i + 1];
+        if (dir > dirBound[i] && dir <= dirBound[i + 1]) return windDir[i + 1];
       }
     }
     return windDir[1];
   }
-  return dir !== undefined ? dir : '-'
-}
+  return dir !== undefined ? dir : '-';
+};
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
 
 //格式化数据类型
-export const GetDataType = (dataType) => {
+export const GetDataType = dataType => {
   let res = dataType;
   if (dataType) {
     switch (dataType) {
-      case "realtime":
-        res = "RealTimeData";
+      case 'realtime':
+        res = 'RealTimeData';
         break;
-      case "minute":
-        res = "MinuteData";
+      case 'minute':
+        res = 'MinuteData';
         break;
-      case "hour":
-        res = "HourData";
+      case 'hour':
+        res = 'HourData';
         break;
-      case "day":
-        res = "DayData";
+      case 'day':
+        res = 'DayData';
         break;
     }
   }
   return res;
+};
+
+//判断时间范围前后不超过两个月
+export function timeDifference(beginDates, endDates) {
+  //时间格式为yyyy-mm-dd时
+
+  const beginDate = new Date(beginDates.replace(/-/g, '/')),
+    endDate = new Date(endDates.replace(/-/g, '/'));
+
+  const newYear = beginDate.getFullYear(),
+    newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
+  if (newMonth >= 11) {
+    newYear += 1;
+
+    newMonth -= 11;
+
+    beginDate.setFullYear(newYear);
+
+    beginDate.setMonth(newMonth - 1);
+  } else {
+    beginDate.setFullYear(newYear);
+
+    beginDate.setMonth(newMonth);
+  }
+  if (beginDate.getTime() >= endDate.getTime()) {
+    //不超过2个月  开始时间加两个月的基础上不超过结束时间说明时间范围未超过
+
+    return true;
+  } else {
+    return false;
+  }
 }

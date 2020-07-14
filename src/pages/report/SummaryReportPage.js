@@ -1,22 +1,24 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin } from 'antd'
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import moment from 'moment'
-import style from './index.less'
-import SdlCascader from '../AutoFormManager/SdlCascader'
-import SdlTable from '@/components/SdlTable'
-import SelectPollutantType from '@/components/SelectPollutantType'
-import YearPicker from '@/components/YearPicker'
+import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import moment from 'moment';
+import style from './index.less';
+import SdlCascader from '../AutoFormManager/SdlCascader';
+import SdlTable from '@/components/SdlTable';
+import SelectPollutantType from '@/components/SelectPollutantType';
+import YearPicker from '@/components/YearPicker';
 import { getDirLevel } from '@/utils/utils';
-import CascaderMultiple from '@/components/CascaderMultiple'
+import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
+import { timeDifference } from '@/utils/utils';
+
 const FormItem = Form.Item;
 const { Option } = Select;
-const { MonthPicker, RangePicker } = DatePicker
+const { MonthPicker, RangePicker } = DatePicker;
 
 @Form.create()
 @connect(({ loading, report, autoForm, global }) => ({
@@ -41,8 +43,12 @@ class SummaryReportPage extends PureComponent {
       currentYear: moment().format('YYYY'),
       defaultRegionCode: [],
       currentDate: moment(),
-      beginTime: moment().add(-1, 'day').format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().add(-1, 'day').format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment()
+        .add(-1, 'day')
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment()
+        .add(-1, 'day')
+        .format('YYYY-MM-DD 23:59:59'),
       pageIndex: 1,
       pageSize: 20,
     };
@@ -58,7 +64,7 @@ class SummaryReportPage extends PureComponent {
         ReportTime: moment().add(-1, 'day'),
         airReportTime: [moment(this.state.beginTime), moment(this.state.endTime)],
       },
-    }
+    };
 
     this.export = this.export.bind(this);
     this.statisticsReport = this.statisticsReport.bind(this);
@@ -71,7 +77,7 @@ class SummaryReportPage extends PureComponent {
       type: 'report/getPollutantTypeList',
       callback: data => {
         const defalutVal = data.Datas[0].pollutantTypeCode;
-        this.props.form.setFieldsValue({ PollutantSourceType: defalutVal })
+        this.props.form.setFieldsValue({ PollutantSourceType: defalutVal });
         this.props.dispatch({
           type: 'common/getEnterpriseAndPoint',
           payload: {
@@ -110,14 +116,14 @@ class SummaryReportPage extends PureComponent {
                     break;
                   }
                 }
-                this.props.form.setFieldsValue({ DGIMN })
-                this.statisticsReport()
+                this.props.form.setFieldsValue({ DGIMN });
+                this.statisticsReport();
               },
-            })
+            });
           },
-        })
+        });
       },
-    })
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -126,26 +132,31 @@ class SummaryReportPage extends PureComponent {
       const pollutantSourceType = nextProps.form.getFieldValue('PollutantSourceType');
       // 汇总报表 - 扬尘和大气站显示AQI
       if (pollutantSourceType == 5 || pollutantSourceType == 12) {
-        AQIColumn = [{
-          title: 'AQI',
-          dataIndex: 'AQI',
-          align: 'center',
-        }, {
-          title: '首要污染物',
-          dataIndex: '首要污染物',
-          align: 'center',
-          width: 120,
-        }, {
-          title: '指数类别',
-          dataIndex: '空气质量指数类别',
-          align: 'center',
-          width: 80,
-        }, {
-          title: '指数级别',
-          dataIndex: '空气质量指数级别',
-          align: 'center',
-          width: 80,
-        }]
+        AQIColumn = [
+          {
+            title: 'AQI',
+            dataIndex: 'AQI',
+            align: 'center',
+          },
+          {
+            title: '首要污染物',
+            dataIndex: '首要污染物',
+            align: 'center',
+            width: 120,
+          },
+          {
+            title: '指数类别',
+            dataIndex: '空气质量指数类别',
+            align: 'center',
+            width: 80,
+          },
+          {
+            title: '指数级别',
+            dataIndex: '空气质量指数级别',
+            align: 'center',
+            width: 80,
+          },
+        ];
       }
 
       const _columns = [
@@ -161,7 +172,7 @@ class SummaryReportPage extends PureComponent {
         },
         ...AQIColumn,
         ...nextProps.pollutantList,
-      ]
+      ];
       const columns = _columns.map(item => ({
         ...item,
         render: (text, row, index) => {
@@ -171,23 +182,23 @@ class SummaryReportPage extends PureComponent {
             const status = _text[1];
             // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
             if (item.dataIndex === '风向') {
-              val = getDirLevel(text)
+              val = getDirLevel(text);
             }
             if (val) {
-              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val
+              return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
             }
             return '-';
           }
-          return '-'
+          return '-';
         },
-      }))
+      }));
       columns.unshift({
         title: '企业名称',
         dataIndex: 'EntName',
-      })
+      });
       this.setState({
         columns,
-      })
+      });
     }
   }
 
@@ -218,19 +229,19 @@ class SummaryReportPage extends PureComponent {
                   //  ..._payload
                 },
                 reportType: values.reportType,
-              })
+              });
             },
           },
-        })
+        });
       }
-    })
+    });
   }
 
   changeReportType = (reportType, type) => {
-    const pollutantType = type || this.props.form.getFieldValue('PollutantSourceType')
+    const pollutantType = type || this.props.form.getFieldValue('PollutantSourceType');
     const reportTime = this.props.form.getFieldValue('ReportTime');
-    let beginTime; let
-      endTime;
+    let beginTime;
+    let endTime;
 
     const time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
@@ -240,40 +251,61 @@ class SummaryReportPage extends PureComponent {
         break;
       case 'monthly':
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
-        endTime = moment(moment(time).format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        endTime = moment(moment(time).format('YYYY-MM-01 00:00:00'))
+          .add(1, 'month')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
         break;
       default:
         beginTime = moment(time).format('YYYY-01-01 00:00:00');
-        endTime = moment(moment(time).format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        endTime = moment(moment(time).format('YYYY-01-01 00:00:00'))
+          .add(1, 'year')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
     }
     // 大气站重置时间
     if (pollutantType == 5) {
-      this.props.form.setFieldsValue({ airReportTime: [moment(beginTime), moment(endTime)] })
+      this.props.form.setFieldsValue({ airReportTime: [moment(beginTime), moment(endTime)] });
     }
-    this.setState({
-      beginTime,
-      endTime,
-    }, () => { this.statisticsReport() })
-  }
+    this.setState(
+      {
+        beginTime,
+        endTime,
+      },
+      () => {
+        this.statisticsReport();
+      },
+    );
+  };
 
   export() {
-    const { form, match: { params: { reportType } } } = this.props;
+    const {
+      form,
+      match: {
+        params: { reportType },
+      },
+    } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        this.props.dispatch({
-          type: 'report/summaryReportExcel',
-          payload: {
-            DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
-            PollutantSourceType: values.PollutantSourceType,
-            Regions: '', // values.Regions.toString(),
-            ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
-            BeginTime: this.state.beginTime,
-            EndTime: this.state.endTime,
-            Type: values.reportType,
-          },
-        })
+        if (timeDifference(this.state.beginTime, this.state.endTime)) {
+          this.props.dispatch({
+            type: 'report/summaryReportExcel',
+            payload: {
+              DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
+              PollutantSourceType: values.PollutantSourceType,
+              Regions: '', // values.Regions.toString(),
+              ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
+              BeginTime: this.state.beginTime,
+              EndTime: this.state.endTime,
+              Type: values.reportType,
+            },
+          });
+          console.log(666);
+        } else {
+          message.error('导出时间范围不能超过两个月');
+        }
       }
-    })
+    });
   }
 
   dateOnchange = (dates, beginTime, endTime) => {
@@ -281,8 +313,8 @@ class SummaryReportPage extends PureComponent {
     this.setState({
       beginTime,
       endTime,
-    })
-  }
+    });
+  };
 
   rangeOnchange = dates => {
     this.props.form.setFieldsValue({ airReportTime: dates });
@@ -290,32 +322,51 @@ class SummaryReportPage extends PureComponent {
       beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
       endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
     });
-  }
+  };
 
   // 分页
   onTableChange = (pageIndex, pageSize) => {
     this.setState({
       pageIndex,
       pageSize,
-    })
+    });
     // 获取表格数据
-    this.statisticsReport()
+    this.statisticsReport();
   };
 
   render() {
-    const { loading, dailySummaryDataList, exportLoading, regionList, summaryForm, entAndPointLoading, form: { getFieldDecorator, getFieldValue }, pollutantTypeList, enterpriseList, configInfo, entAndPontList, Total } = this.props;
+    const {
+      loading,
+      dailySummaryDataList,
+      exportLoading,
+      regionList,
+      summaryForm,
+      entAndPointLoading,
+      form: { getFieldDecorator, getFieldValue },
+      pollutantTypeList,
+      enterpriseList,
+      configInfo,
+      entAndPontList,
+      Total,
+    } = this.props;
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
-    const { pageSize, pageIndex } = this.state
-    const reportType = getFieldValue('reportType')
-    const reportText = reportType === 'daily' ? '汇总日报' : (reportType === 'monthly' ? '汇总月报' : '汇总年报');
-    const format = reportType === 'daily' ? 'YYYY-MM-DD' : (reportType === 'monthly' ? 'YYYY-MM' : 'YYYY');
+    const { pageSize, pageIndex } = this.state;
+    const reportType = getFieldValue('reportType');
+    const reportText =
+      reportType === 'daily' ? '汇总日报' : reportType === 'monthly' ? '汇总月报' : '汇总年报';
+    const format =
+      reportType === 'daily' ? 'YYYY-MM-DD' : reportType === 'monthly' ? 'YYYY-MM' : 'YYYY';
     const pollutantSourceType = this.props.form.getFieldValue('PollutantSourceType');
     let picker = '';
     let dateType = '';
     let mode;
-    debugger
-    const IfShowRegionInReport = configInfo.IfShowRegionInReport ? configInfo.IfShowRegionInReport === '1' ? '' : 'none' : 'none';
-    console.log(IfShowRegionInReport)
+    debugger;
+    const IfShowRegionInReport = configInfo.IfShowRegionInReport
+      ? configInfo.IfShowRegionInReport === '1'
+        ? ''
+        : 'none'
+      : 'none';
+    console.log(IfShowRegionInReport);
     switch (reportType) {
       case 'monthly':
         picker = 'month';
@@ -333,8 +384,24 @@ class SummaryReportPage extends PureComponent {
         mode = [];
         break;
     }
-    const airTimeEle = <RangePicker_ allowClear={false} style={{ width: '100%' }} mode={mode} callback={this.rangeOnchange} dataType={dateType} dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]} />
-    const timeEle = <DatePickerTool allowClear={false} picker={picker} style={{ width: '100%' }} callback={this.dateOnchange} />
+    const airTimeEle = (
+      <RangePicker_
+        allowClear={false}
+        style={{ width: '100%' }}
+        mode={mode}
+        callback={this.rangeOnchange}
+        dataType={dateType}
+        dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
+      />
+    );
+    const timeEle = (
+      <DatePickerTool
+        allowClear={false}
+        picker={picker}
+        style={{ width: '100%' }}
+        callback={this.dateOnchange}
+      />
+    );
 
     return (
       <BreadcrumbWrapper>
@@ -347,9 +414,11 @@ class SummaryReportPage extends PureComponent {
                     {getFieldDecorator('reportType', {
                       initialValue: 'daily',
                     })(
-                      <Select onChange={value => {
-                        this.changeReportType(value)
-                      }}>
+                      <Select
+                        onChange={value => {
+                          this.changeReportType(value);
+                        }}
+                      >
                         <Option key="daily">汇总日报</Option>
                         <Option key="monthly">汇总月报</Option>
                         <Option key="annals">汇总年报</Option>
@@ -361,38 +430,48 @@ class SummaryReportPage extends PureComponent {
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,
-                      initialValue: pollutantTypeList.length ? pollutantTypeList[0].pollutantTypeCode : undefined,
-                      rules: [{
-                        required: true,
-                        message: '请选择污染物类型',
-                      }],
+                      initialValue: pollutantTypeList.length
+                        ? pollutantTypeList[0].pollutantTypeCode
+                        : undefined,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择污染物类型',
+                        },
+                      ],
                     })(
-                      <SelectPollutantType placeholder="请选择污染物类型" onChange={value => {
-                        //   this.getAirDefaultTime()
-                        this.props.dispatch({
-                          type: 'report/getPointReportEntAndPointList',
-                          payload: {
-                            PollutantTypes: value,
-                            RegionCode: '',
-                            Name: '',
-                            Status: [0, 1, 2, 3],
-                            QCAUse: '',
-                            RunState: '',
-                            isFilter: true,
-                          },
-                          callback: res => {
-                            let DGIMN = [];
-                            for (let i = 0; i < res.length; i++) {
-                              if (res[i].children.length) {
-                                DGIMN = [res[i].children[0].key];
-                                break;
+                      <SelectPollutantType
+                        placeholder="请选择污染物类型"
+                        onChange={value => {
+                          //   this.getAirDefaultTime()
+                          this.props.dispatch({
+                            type: 'report/getPointReportEntAndPointList',
+                            payload: {
+                              PollutantTypes: value,
+                              RegionCode: '',
+                              Name: '',
+                              Status: [0, 1, 2, 3],
+                              QCAUse: '',
+                              RunState: '',
+                              isFilter: true,
+                            },
+                            callback: res => {
+                              let DGIMN = [];
+                              for (let i = 0; i < res.length; i++) {
+                                if (res[i].children.length) {
+                                  DGIMN = [res[i].children[0].key];
+                                  break;
+                                }
                               }
-                            }
-                            this.props.form.setFieldsValue({ DGIMN })
-                            this.changeReportType(this.props.form.getFieldValue('reportType'), value)
-                          },
-                        });
-                      }} />,
+                              this.props.form.setFieldsValue({ DGIMN });
+                              this.changeReportType(
+                                this.props.form.getFieldValue('reportType'),
+                                value,
+                              );
+                            },
+                          });
+                        }}
+                      />,
                     )}
                   </FormItem>
                 </Col>
@@ -412,14 +491,13 @@ class SummaryReportPage extends PureComponent {
                         data={regionList}
                         placeholder="请选择行政区"
                         onChange={(value, selectedOptions) => {
-                          this.setState({ regions: value.join(',') })
+                          this.setState({ regions: value.join(',') });
                         }}
                       />,
                     )}
                   </FormItem>
                 </Col>
-                {
-                  getFieldValue('PollutantSourceType') == 5 &&
+                {getFieldValue('PollutantSourceType') == 5 && (
                   // 大气站显示监控目标
                   <Col sm={24} md={5}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
@@ -432,12 +510,20 @@ class SummaryReportPage extends PureComponent {
                           },
                         ],
                       })(
-                        <CascaderMultiple regionCode={this.state.regions} pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')} {...this.props} />,
+                        <CascaderMultiple
+                          regionCode={this.state.regions}
+                          pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')}
+                          {...this.props}
+                        />,
                       )}
                     </FormItem>
                   </Col>
-                }
-                <Col sm={24} md={5} style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}>
+                )}
+                <Col
+                  sm={24}
+                  md={5}
+                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}
+                >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('airReportTime', {
                       initialValue: defaultSearchForm.airReportTime,
@@ -450,24 +536,37 @@ class SummaryReportPage extends PureComponent {
                     })(airTimeEle)}
                   </FormItem>
                 </Col>
-                <Col sm={24} md={5} style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'none' : 'block' }}>
+                <Col
+                  sm={24}
+                  md={5}
+                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'none' : 'block' }}
+                >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: defaultSearchForm.ReportTime,
-                      rules: [{
-                        required: true,
-                        message: '请填写统计时间',
-                      }],
-                    })(
-                      timeEle,
-                    )}
+                      rules: [
+                        {
+                          required: true,
+                          message: '请填写统计时间',
+                        },
+                      ],
+                    })(timeEle)}
                   </FormItem>
                 </Col>
                 <Col md={5} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
                     {/* {getFieldDecorator("", {})( */}
-                    <Button type="primary" style={{ marginRight: 10 }} onClick={this.statisticsReport}>生成统计</Button>
-                    <Button onClick={this.export} loading={exportLoading}><Icon type="export" />导出</Button>
+                    <Button
+                      type="primary"
+                      style={{ marginRight: 10 }}
+                      onClick={this.statisticsReport}
+                    >
+                      生成统计
+                    </Button>
+                    <Button onClick={this.export} loading={exportLoading}>
+                      <Icon type="export" />
+                      导出
+                    </Button>
                     {/* )} */}
                   </FormItem>
                 </Col>
@@ -481,15 +580,12 @@ class SummaryReportPage extends PureComponent {
               columns={this.state.columns}
               dataSource={dailySummaryDataList}
               defaultWidth={80}
-              rowClassName={
-                (record, index, indent) => {
-                  if (index === 0 || record.time === '0时') {
-
-                  } else if (index % 2 !== 0 || record.time === '0时') {
-                    return style.light;
-                  }
+              rowClassName={(record, index, indent) => {
+                if (index === 0 || record.time === '0时') {
+                } else if (index % 2 !== 0 || record.time === '0时') {
+                  return style.light;
                 }
-              }
+              }}
               pagination={{
                 // showSizeChanger: true,
                 showQuickJumper: true,
@@ -498,8 +594,8 @@ class SummaryReportPage extends PureComponent {
                 onChange: this.onTableChange,
                 total: Total,
               }}
-            // bordered
-            // pagination={true}
+              // bordered
+              // pagination={true}
             />
           </Card>
         </Spin>
