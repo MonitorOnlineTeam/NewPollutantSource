@@ -73,36 +73,38 @@ class DrillDownRunModal extends PureComponent {
           var pointInPixel = [rest.offsetX, rest.offsetY];
           var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
           var index = parseInt(xIndex);
-
-          if (this.props.level === 1) {
-            // 点击师，显示企业
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                regionCode: this.props.paramsList[index],
-                currentDivisionName: this.props.xData[index]
-              }
-            })
-          }
-          if (this.props.level === 2) {
-            // 点击企业，显示排口
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                entCode: this.props.paramsList[index],
-                currentEntName: this.props.xData[index]
-              }
-            })
-          }
-          if (this.props.level < 3) {
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                level: this.props.level + 1
-              }
-            })
-            this.setState({ dataIndex: index })
-            this.props.chartClick();
+          console.log('xIndex=', xIndex)
+          if (index >= 0) {
+            if (this.props.level === 1) {
+              // 点击师，显示企业
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  regionCode: this.props.paramsList[index],
+                  currentDivisionName: this.props.xData[index]
+                }
+              })
+            }
+            if (this.props.level === 2) {
+              // 点击企业，显示排口
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  entCode: this.props.paramsList[index],
+                  currentEntName: this.props.xData[index]
+                }
+              })
+            }
+            if (this.props.level < 3) {
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  level: this.props.level + 1
+                }
+              })
+              this.setState({ dataIndex: index })
+              this.props.chartClick();
+            }
           }
         });
       }

@@ -97,6 +97,19 @@ class NewHome extends PureComponent {
           mapInstance.setFitView()
         }
       },
+      zoomchange: value => {
+        const zoom = aMap.getZoom();
+        if (zoom >= 10 && this.state.hideEntName) {
+          this.setState({ hideEntName: false })
+          this.renderEntMarkers(this.props.allEntAndPointList, true)
+        }
+        if (zoom < 10 && !this.state.hideEntName) {
+          this.setState({
+            hideEntName: true
+          })
+          this.renderEntMarkers(this.props.allEntAndPointList, true)
+        }
+      }
     };
     // markers事件
     this.markersEvents = {
@@ -154,6 +167,7 @@ class NewHome extends PureComponent {
       selectValue: '', // 筛选
       month: moment().get('month'),
       toggleSelect: false, //
+      hideEntName: true,
     };
   }
 
@@ -332,7 +346,7 @@ class NewHome extends PureComponent {
       // </div>
       return <div
         onMouseEnter={() => {
-          if (this.state.infoWindowVisible === false) {
+          if (this.state.infoWindowVisible === false && aMap.getZoom() < 10) {
             this.setState({
               hoverMapCenter: extData.position,
               currentTitle: extData.position.title,
@@ -378,24 +392,29 @@ class NewHome extends PureComponent {
     switch (extData.position.MonitorObjectType) {
       case '1':
         // 企业
-        return <EntIcon style={{ fontSize: 28 }} onClick={() => {
-          // 企业点击显示监测点
-          if (extData.children) {
-            const pointMarkers = extData.children.map(item => ({
-              position: {
-                longitude: item.Longitude,
-                latitude: item.Latitude,
-                ...item,
-              },
-            }))
-            this.setState({
-              coordinateSet: extData.position.CoordinateSet,
-              markersList: pointMarkers,
-              infoWindowHoverVisible: false,
-              displayType: 1,
-            })
+        return <div style={{ color: '#525151' }}>
+          {
+            aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
           }
-        }} />
+          <EntIcon style={{ fontSize: 28 }} onClick={() => {
+            // 企业点击显示监测点
+            if (extData.children) {
+              const pointMarkers = extData.children.map(item => ({
+                position: {
+                  longitude: item.Longitude,
+                  latitude: item.Latitude,
+                  ...item,
+                },
+              }))
+              this.setState({
+                coordinateSet: extData.position.CoordinateSet,
+                markersList: pointMarkers,
+                infoWindowHoverVisible: false,
+                displayType: 1,
+              })
+            }
+          }} />
+        </div>
       case '2':
         // 大气站
         const color = (extData.position.Color && extData.position.Color !== '-') ? extData.position.Color : '#999';
@@ -417,7 +436,7 @@ class NewHome extends PureComponent {
         //   transitionLeaveTimeout={1500}
         //   transitionName="animated"
         // >
-        return <div style={{ color: '#525151', textAlign: 'center' }}>
+        return <div style={{ color: '#525151' }}>
           <div className={styles.pop}>{extData.position.title}</div>
           <CustomIcon key="amache"
             className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? 'animate__animated animate__bounce animate__infinite' : ''}
