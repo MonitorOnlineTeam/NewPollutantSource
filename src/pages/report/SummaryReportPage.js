@@ -300,7 +300,6 @@ class SummaryReportPage extends PureComponent {
               Type: values.reportType,
             },
           });
-          console.log(666);
         } else {
           message.error('导出时间范围不能超过两个月');
         }
