@@ -336,7 +336,7 @@ export default class ContentList extends Component {
     }
 
      counterConfirm=()=> {
-        const {  manualUploadautoParameters } = this.props;
+        const {  dispatch,manualUploadautoParameters } = this.props;
         var type= manualUploadautoParameters.Type=="day"?"日数据":"小时数据";
         Modal.confirm({
           title: '提示?',
