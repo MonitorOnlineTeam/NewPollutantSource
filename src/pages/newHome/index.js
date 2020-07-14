@@ -96,6 +96,7 @@ class NewHome extends PureComponent {
           // })
           mapInstance.setFitView()
         }
+        // this.setState({ initZoom: aMap.getZoom()})
       },
       zoomchange: value => {
         const zoom = aMap.getZoom();
@@ -170,6 +171,8 @@ class NewHome extends PureComponent {
       month: moment().get('month'),
       toggleSelect: false, //
       hideEntName: true,
+      initCenter: [85.35803,42.229502],
+      initZoom: 6
     };
   }
 
@@ -304,7 +307,7 @@ class NewHome extends PureComponent {
   }
 
   // 渲染所有企业
-  renderEntMarkers = (entAndPointList, notFitView) => {
+  renderEntMarkers = (entAndPointList, notFitView, division) => {
     const entMarkers = entAndPointList.map(item => ({
       position: {
         longitude: item.Longitude,
@@ -322,6 +325,9 @@ class NewHome extends PureComponent {
       const timer = setInterval(() => {
         if (aMap) {
           !notFitView && aMap.setFitView();
+          if (division) {
+            aMap.setZoomAndCenter(this.state.initZoom, this.state.initCenter)
+          }
           clearInterval(timer)
         }
       }, 200);
@@ -753,7 +759,7 @@ class NewHome extends PureComponent {
         }
       }
     })
-    this.renderEntMarkers(filterEntList, true);
+    this.renderEntMarkers(filterEntList, true, true);
     this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: item.RegionCode } })
   }
 
