@@ -28,7 +28,7 @@ class Index extends Component {
                 <BreadcrumbWrapper>
                  <YsyShowVideo DGIMN={this.state.dgimn} />
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#ysyvideo" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#ysyvideo" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)
                             }
