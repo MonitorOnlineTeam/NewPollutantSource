@@ -297,7 +297,7 @@ class Index extends Component {
         return (
             <div id="overrecord">
                 {/* selKeys="010000a8900016" */}
-            <NavigationTree  domId="#overrecord" choice={false} onItemClick={value => {
+            <NavigationTree runState='1'  domId="#overrecord" choice={false} onItemClick={value => {
                 if (value.length > 0 && !value[0].IsEnt) {
                     this.setState({
                         dgimn:value[0].key
