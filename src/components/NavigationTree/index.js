@@ -427,18 +427,28 @@ class NavigationTree extends Component {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
     this.tilingData()
     const { value } = e.target;
-    console.log('ex=', value)
-    const expandedKeys = this.state.dataList
-      .map(item => {
-        if (item.title.indexOf(value) > -1) {
-          return this.getParentKey(item.key, this.state.EntAndPoint);
-        }
-        return null;
-      })
-      .filter((item, i, self) => item && self.indexOf(item) === i);
+    // console.log('ex=', value)
+    // const expandedKeys = this.state.dataList
+    //   .map(item => {
+    //     // console.log('item1',item);
+    //     if (item.title.indexOf(value) > -1) {
+    //       return this.getParentKey(item.key, this.state.EntAndPoint);
+    //     }
+    //     return null;
+    //   })
+    //   .filter((item, i, self) => item && self.indexOf(item) === i);
+    // const entList=this.state.EntAndPoint.map(item => {
+    //   if (item.title.indexOf(value) > -1&&item.IsEnt=1) {
+    //     return item;
+    //   }
+    //   return null;
+    // })
+    const entList = this.props.EntAndPoint.filter(item => item.title.indexOf(value) > -1 && item.IsEnt == 1);
+    // console.log('ent=', entList);
     const filterList = this.state.panelDataList.filter(item => item.pointName.indexOf(value) > -1 || item.entName.indexOf(value) > -1);
     this.setState({
-      expandedKeys,
+      // expandedKeys,
+      EntAndPoint: entList,
       useChioce: false,
       searchValue: value,
       autoExpandParent: true,
@@ -828,7 +838,7 @@ class NavigationTree extends Component {
             </Row>
           </div>
 
-          { !this.props.polShow ? <SelectPollutantType
+          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
             showDefaultValue={this.props.defaultPollutant === 'undefined'}
@@ -886,7 +896,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={ { marginTop: '5%', maxHeight: 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' } }
+                style={{ marginTop: '5%', maxHeight: 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 {..._props}

@@ -65,6 +65,15 @@ export async function UpdateManualSupplementData(params) {
 }
 
 /**
+ * 补发数据
+ * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
+ */
+export async function CounterSendCMDMsg(params) {
+  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/CounterSendCMDMsg', params, null);
+  return result;
+}
+
+/**
  * 统计AQI
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
