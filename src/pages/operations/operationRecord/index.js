@@ -38,6 +38,7 @@ class Index extends Component {
     return (
       <div id="record">
         <NavigationTree
+          runState='1'
           domId="#record"
           choice={false}
           onItemClick={value => {

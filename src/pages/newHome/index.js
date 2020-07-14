@@ -96,7 +96,23 @@ class NewHome extends PureComponent {
           // })
           mapInstance.setFitView()
         }
+        // this.setState({ initZoom: aMap.getZoom()})
       },
+      zoomchange: value => {
+        const zoom = aMap.getZoom();
+        if (this.state.displayType === 0) {
+          if (zoom >= 10 && this.state.hideEntName) {
+            this.setState({ hideEntName: false })
+            this.showEntName();
+          }
+          if (zoom < 10 && !this.state.hideEntName) {
+            this.setState({
+              hideEntName: true
+            })
+            this.showEntName();
+          }
+        }
+      }
     };
     // markers事件
     this.markersEvents = {
@@ -154,6 +170,9 @@ class NewHome extends PureComponent {
       selectValue: '', // 筛选
       month: moment().get('month'),
       toggleSelect: false, //
+      hideEntName: true,
+      initCenter: [85.35803,42.229502],
+      initZoom: 6
     };
   }
 
@@ -198,6 +217,27 @@ class NewHome extends PureComponent {
       type: 'newHome/getMonitorRegionDivision',
     })
     // this.getConstructionCorpsList();
+  }
+
+
+  showEntName = () => {
+    let filterEntList = this.props.allEntAndPointList;
+    // 过滤企业筛选
+    if (this.state.selectValue) {
+      filterEntList = this.props.allEntAndPointList.filter(item => item.MonitorObjectType == this.state.selectValue);
+    }
+    // 过滤师筛选
+    if (this.state.clickedDivision) {
+      filterEntList = filterEntList.filter(itm => {
+        if (itm.RegionCode) {
+          let RegionCode = itm.RegionCode.split(",");
+          if (RegionCode.includes(this.state.clickedDivision.RegionCode)) {
+            return itm;
+          }
+        }
+      })
+    }
+    this.renderEntMarkers(filterEntList, true)
   }
 
   // 获取企业和监测点
@@ -267,7 +307,7 @@ class NewHome extends PureComponent {
   }
 
   // 渲染所有企业
-  renderEntMarkers = (entAndPointList, notFitView) => {
+  renderEntMarkers = (entAndPointList, notFitView, division) => {
     const entMarkers = entAndPointList.map(item => ({
       position: {
         longitude: item.Longitude,
@@ -285,6 +325,9 @@ class NewHome extends PureComponent {
       const timer = setInterval(() => {
         if (aMap) {
           !notFitView && aMap.setFitView();
+          if (division) {
+            aMap.setZoomAndCenter(this.state.initZoom, this.state.initCenter)
+          }
           clearInterval(timer)
         }
       }, 200);
@@ -332,7 +375,7 @@ class NewHome extends PureComponent {
       // </div>
       return <div
         onMouseEnter={() => {
-          if (this.state.infoWindowVisible === false) {
+          if (this.state.infoWindowVisible === false && aMap.getZoom() < 10) {
             this.setState({
               hoverMapCenter: extData.position,
               currentTitle: extData.position.title,
@@ -378,36 +421,46 @@ class NewHome extends PureComponent {
     switch (extData.position.MonitorObjectType) {
       case '1':
         // 企业
-        return <EntIcon style={{ fontSize: 28 }} onClick={() => {
-          // 企业点击显示监测点
-          if (extData.children) {
-            const pointMarkers = extData.children.map(item => ({
-              position: {
-                longitude: item.Longitude,
-                latitude: item.Latitude,
-                ...item,
-              },
-            }))
-            this.setState({
-              coordinateSet: extData.position.CoordinateSet,
-              markersList: pointMarkers,
-              infoWindowHoverVisible: false,
-              displayType: 1,
-            })
+        return <div style={{ color: '#525151' }}>
+          {
+            aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
           }
-        }} />
+          <EntIcon style={{ fontSize: 28 }} onClick={() => {
+            // 企业点击显示监测点
+            if (extData.children) {
+              const pointMarkers = extData.children.map(item => ({
+                position: {
+                  longitude: item.Longitude,
+                  latitude: item.Latitude,
+                  ...item,
+                },
+              }))
+              this.setState({
+                coordinateSet: extData.position.CoordinateSet,
+                markersList: pointMarkers,
+                infoWindowHoverVisible: false,
+                displayType: 1,
+              })
+            }
+          }} />
+        </div>
       case '2':
         // 大气站
         const color = (extData.position.Color && extData.position.Color !== '-') ? extData.position.Color : '#999';
-        return <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color }} onClick={() => {
-          this.setState({
-            currentClickObj: extData.position,
-            infoWindowVisible: true,
-            infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
-          }, () => {
-            this.getInfoWindowData()
-          })
-        }} />
+        return <div style={{ color: '#525151' }}>
+          {
+            aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
+          }
+          <CustomIcon type="icon-fangwu" style={{ ...iconStyle, color }} onClick={() => {
+            this.setState({
+              currentClickObj: extData.position,
+              infoWindowVisible: true,
+              infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
+            }, () => {
+              this.getInfoWindowData()
+            })
+          }} />
+        </div>
       case '师':
         // #3c99d8
         // return <ReactCSSTransitionGroup
@@ -417,7 +470,7 @@ class NewHome extends PureComponent {
         //   transitionLeaveTimeout={1500}
         //   transitionName="animated"
         // >
-        return <div style={{ color: '#525151', textAlign: 'center' }}>
+        return <div style={{ color: '#525151' }}>
           <div className={styles.pop}>{extData.position.title}</div>
           <CustomIcon key="amache"
             className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? 'animate__animated animate__bounce animate__infinite' : ''}
@@ -689,6 +742,7 @@ class NewHome extends PureComponent {
   divisionClick = (item) => {
     this.setState({
       clickedDivision: item,
+      selectValue: ''
     })
     this.props.dispatch({
       type: 'newHome/updateState',
@@ -705,7 +759,7 @@ class NewHome extends PureComponent {
         }
       }
     })
-    this.renderEntMarkers(filterEntList, true);
+    this.renderEntMarkers(filterEntList, true, true);
     this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: item.RegionCode } })
   }
 
@@ -841,11 +895,33 @@ class NewHome extends PureComponent {
                 {
                   displayType === 0 && <Select className={styles.selectShowType} value={selectValue} onChange={val => {
                     this.setState({ selectValue: val })
+
                     if (val) {
-                      const filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
+                      let filterList = filterEntAndPointList.filter(item => item.MonitorObjectType == val);
+                      if (clickedDivision) {
+                        filterList = filterList.filter(itm => {
+                          if (itm.RegionCode) {
+                            let RegionCode = itm.RegionCode.split(",");
+                            if (RegionCode.includes(clickedDivision.RegionCode)) {
+                              return itm;
+                            }
+                          }
+                        })
+                      }
                       this.renderEntMarkers(filterList);
                     } else {
-                      this.renderEntMarkers(allEntAndPointList);
+                      let filterList = allEntAndPointList;
+                      if (clickedDivision) {
+                        filterList = allEntAndPointList.filter(itm => {
+                          if (itm.RegionCode) {
+                            let RegionCode = itm.RegionCode.split(",");
+                            if (RegionCode.includes(clickedDivision.RegionCode)) {
+                              return itm;
+                            }
+                          }
+                        })
+                      }
+                      this.renderEntMarkers(filterList);
                     }
                   }}>
                     <Option value="">全部</Option>

@@ -54,38 +54,38 @@ class DrillDownAlarmResponseModel extends PureComponent {
           var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
           var index = parseInt(xIndex);
 
-
-          if (this.props.level === 1) {
-            // 点击师，显示企业
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                regionCode: this.props.codeList[index],
-                currentDivisionName: this.props.alarmResponseModalData.x[index]
-              }
-            })
+          if (index >= 0) {
+            if (this.props.level === 1) {
+              // 点击师，显示企业
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  regionCode: this.props.codeList[index],
+                  currentDivisionName: this.props.alarmResponseModalData.x[index]
+                }
+              })
+            }
+            if (this.props.level === 2) {
+              // 点击企业，显示排口
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  entCode: this.props.codeList[index],
+                  currentEntName: this.props.alarmResponseModalData.x[index]
+                }
+              })
+            }
+            if (this.props.level < 3) {
+              this.props.dispatch({
+                type: "newHome/updateState",
+                payload: {
+                  level: this.props.level + 1
+                }
+              })
+              this.setState({ showBack: true, dataIndex: index })
+              this.props.chartClick();
+            }
           }
-          if (this.props.level === 2) {
-            // 点击企业，显示排口
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                entCode: this.props.codeList[index],
-                currentEntName: this.props.alarmResponseModalData.x[index]
-              }
-            })
-          }
-          if (this.props.level < 3) {
-            this.props.dispatch({
-              type: "newHome/updateState",
-              payload: {
-                level: this.props.level + 1
-              }
-            })
-            this.setState({ showBack: true, dataIndex: index })
-            this.props.chartClick();
-          }
-
         })
       }
     }
@@ -215,7 +215,8 @@ class DrillDownAlarmResponseModel extends PureComponent {
         },
       },
       legend: {
-        data: [`${month}月异常报警响应`, `${month + 1}月异常报警响应`, `${month}月超标报警核实`, `${month + 1}月超标报警核实`,]
+        data: [`${month}月异常报警响应`, `${month + 1}月异常报警响应`, `${month}月超标报警核实`, `${month + 1}月超标报警核实`,],
+        selectedMode:false
       },
       grid: {
         left: '3%',

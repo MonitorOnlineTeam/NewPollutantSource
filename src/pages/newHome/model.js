@@ -298,7 +298,7 @@ export default Model.extend({
           officeList,
           allEntAndPointList: [
             ...state.allEntAndPointList,
-            ...state.constructionCorpsList,
+            // ...state.constructionCorpsList,
             ...officeList,
           ],
         })

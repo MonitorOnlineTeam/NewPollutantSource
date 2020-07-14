@@ -42,7 +42,7 @@ class Index extends Component {
                             : <PageLoading />
                     }
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#dataquery" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value)
                     }

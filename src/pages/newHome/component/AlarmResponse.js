@@ -46,8 +46,10 @@ class AlarmResponse extends PureComponent {
       var index = parseInt(xIndex);
       // console.log(index);
       // console.log('App:onClickChart', rest);
-      this._SELF_.dataIndex = index
-      this.getTrippingAlarmResponse(index)
+      if(index >= 0) {
+        this._SELF_.dataIndex = index
+        this.getTrippingAlarmResponse(index)
+      }
     });
   }
 

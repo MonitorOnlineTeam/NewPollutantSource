@@ -52,6 +52,7 @@ class Index extends Component {
             checkedYC: false,
             checkedCB: false,
             checkedYJ: false,
+            checkedCS: false
         };
     }
 
@@ -114,7 +115,7 @@ class Index extends Component {
                 type: 'user/getAlarmPushAuthor',
                 payload: {},
             })
-            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
          } else {
          this.props.dispatch({
             type: 'user/getEnterpriseList',
@@ -138,7 +139,7 @@ class Index extends Component {
                     type: 'user/getAlarmPushAuthor',
                     payload: {},
                 })
-                this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+                this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
             },
             },
         })
@@ -172,7 +173,7 @@ class Index extends Component {
         })
         this.setState({ currentData });
 
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
         // console.log('currentData=', currentData);
     }
 
@@ -195,7 +196,7 @@ class Index extends Component {
             type: 'user/insertAlarmPushAuthor',
             payload: data,
         });
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
     }
 
     // 分页
@@ -218,7 +219,7 @@ class Index extends Component {
             payload: {},
         })
 
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
     }
 
     // 显示条数
@@ -240,7 +241,7 @@ class Index extends Component {
             type: 'user/getAlarmPushAuthor',
             payload: {},
         });
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
     }
 
     // 搜索
@@ -264,7 +265,7 @@ class Index extends Component {
             type: 'user/getAlarmPushAuthor',
             payload: {},
         })
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
         // }
     }
 
@@ -304,13 +305,16 @@ class Index extends Component {
         } else if (target.AlarmTypes === '5') {
             this.setState({ checkedYJ: target.checked });
         }
+        else if(target.AlarmTypes === '6') {
+            this.setState({ checkedCS: target.checked });
+        }
 
         this.setState({ currentData });
     }
 
     render() {
         const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
-        const { currentData, checkedYC, checkedCB, checkedYJ } = this.state;
+        const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
 
         return (
             <div>
@@ -340,7 +344,7 @@ class Index extends Component {
                                     />
                                         {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={10} xl={7} xxl={5}>
+                                    <Col xs={24} sm={24} md={24} lg={10} xl={15} xxl={7}>
                                     <Checkbox
                                         AlarmTypes="1"
                                         checked={checkedYC}
@@ -357,6 +361,12 @@ class Index extends Component {
                                             checked={checkedYJ}
                                             onChange={this.changeCheckboxGroup}
                                         >预警</Checkbox>
+                                    }{
+                                        <Checkbox
+                                            AlarmTypes="6"
+                                            checked={checkedCS}
+                                            onChange={this.changeCheckboxGroup}
+                                        >超标核实推送</Checkbox>
                                     }
                                     </Col>
                                 </Row>
@@ -403,6 +413,14 @@ class Index extends Component {
                                                     checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
                                                     onChange={this.onChangeDGINM}
                                                 >预警</Checkbox>
+                                            }
+                                             {
+                                              <Checkbox
+                                                    DGIMN={item.DGIMN}
+                                                    AlarmTypes="6"
+                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('6') > -1)).length > 0}
+                                                    onChange={this.onChangeDGINM}
+                                                >超标核实推送</Checkbox>
                                             }
 
                                             {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}

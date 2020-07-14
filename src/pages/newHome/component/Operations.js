@@ -34,8 +34,11 @@ class Operations extends PureComponent {
     this.zr.on('click', (...rest) => {
       var indexArr = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
       var index = indexArr[1];
-      dataIndex = index;
-      this.getTrippingOperationAnalysis(index)
+      console.log('index=',index)
+      if(index >= 0 && TASK_TYPE[index]) {
+        dataIndex = index;
+        this.getTrippingOperationAnalysis(index)
+      }
     });
 
   }
@@ -56,7 +59,7 @@ class Operations extends PureComponent {
       grid: {
         left: '-18%',
         top: "4%",
-        right: '4%',
+        right: '9%',
         bottom: '-6%',
         containLabel: true
       },

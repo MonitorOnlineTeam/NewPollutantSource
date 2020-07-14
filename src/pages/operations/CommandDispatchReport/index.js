@@ -28,7 +28,7 @@ class Index extends Component {
                 <BreadcrumbWrapper>
                  {this.state.dgimn ? <CommandDispatchReport DGIMN={this.state.dgimn} initLoadData/> : <PageLoading/>}
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#CommandDispatchReport" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#CommandDispatchReport" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)
                             }

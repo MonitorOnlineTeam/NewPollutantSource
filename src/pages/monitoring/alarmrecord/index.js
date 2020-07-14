@@ -30,7 +30,7 @@ class Index extends Component {
                 <BreadcrumbWrapper>
                  <AlarmRecord DGIMN={this.state.dgimn} EntCode={this.state.EntCode}/>
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#alarmrecord" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#alarmrecord" choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key, value[0].EntCode)
                             }
