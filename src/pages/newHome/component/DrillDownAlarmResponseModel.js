@@ -215,7 +215,8 @@ class DrillDownAlarmResponseModel extends PureComponent {
         },
       },
       legend: {
-        data: [`${month}月异常报警响应`, `${month + 1}月异常报警响应`, `${month}月超标报警核实`, `${month + 1}月超标报警核实`,]
+        data: [`${month}月异常报警响应`, `${month + 1}月异常报警响应`, `${month}月超标报警核实`, `${month + 1}月超标报警核实`,],
+        selectedMode:false
       },
       grid: {
         left: '3%',
