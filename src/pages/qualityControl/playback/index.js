@@ -419,7 +419,9 @@ class PlaybackPage extends PureComponent {
         }
         {/* <div id="remoteControl" className={styles.playbackWrapper}> */}
         <div id="remoteControl" className={styles.playbackWrapper}>
-          <BreadcrumbWrapper>
+          <BreadcrumbWrapper
+           title="质控纪要"
+          >
             <Card
               className="contentContainer"
               title={
