@@ -171,7 +171,7 @@ class NewHome extends PureComponent {
       month: moment().get('month'),
       toggleSelect: false, //
       hideEntName: true,
-      initCenter: [85.35803,42.229502],
+      initCenter: [85.35803, 42.229502],
       initZoom: 6
     };
   }
@@ -217,6 +217,23 @@ class NewHome extends PureComponent {
       type: 'newHome/getMonitorRegionDivision',
     })
     // this.getConstructionCorpsList();
+  }
+
+
+  componentWillUnmount() {
+    // 重置model
+    this.props.dispatch({
+      type: "newHome/updateState",
+      payload: {
+        startTime: moment().format("YYYY-MM-01 00:00:00"),
+        START_TIME: moment().format("YYYY-MM-01 00:00:00"),
+        endTime: moment().format("YYYY-MM-DD 23:59:59"),
+        END_TIME: moment().format("YYYY-MM-DD 23:59:59"),
+        entName: "",
+        regionCode: "660000000",
+        REGION_CODE: "660000000",
+      }
+    })
   }
 
 
