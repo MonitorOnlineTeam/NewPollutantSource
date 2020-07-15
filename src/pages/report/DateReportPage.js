@@ -280,7 +280,7 @@ class DateReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (timeDifference(this.state.beginTime, this.state.endTime)) {
+        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"]==="annals") {
           this.props.dispatch({
             type: 'report/reportExport',
             payload: {

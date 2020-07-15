@@ -78,6 +78,7 @@ class NavigationTree extends Component {
       panelVis: 'none',
       panelData: [],
       panelDataList: [],
+      panelDataListAys:[],
       RunState: '',
       useChioce: true,
       // panelSelKey:"",
@@ -265,6 +266,7 @@ class NavigationTree extends Component {
         // if(panelDataList.filter(item=>item.key==key).length==0)
         // {
         this.state.panelDataList.push(pushItem)
+        this.state.panelDataListAys.push(pushItem)
         // }
       }
       if (node.children) {
@@ -424,9 +426,14 @@ class NavigationTree extends Component {
 
   // 搜索框改变查询数据
   onChangeSearch = e => {
-    this.state.panelDataList.splice(0, this.state.panelDataList.length)
-    this.tilingData()
+    // this.state.panelDataList.splice(0, this.state.panelDataList.length)
+    // console.log('1111')
+    // console.log('pan1=',this.state.panelDataList);
+    // this.tilingData(this.props.EntAndPoint)
+    // console.log('2222')
+    // console.log('pan2=',this.state.panelDataList);
     const { value } = e.target;
+    var msg=value.toUpperCase();
     // console.log('ex=', value)
     // const expandedKeys = this.state.dataList
     //   .map(item => {
@@ -443,9 +450,9 @@ class NavigationTree extends Component {
     //   }
     //   return null;
     // })
-    const entList = this.props.EntAndPoint.filter(item => item.title.indexOf(value) > -1 && item.IsEnt == 1);
+    const entList = this.props.EntAndPoint.filter(item => item.title.toUpperCase().indexOf(msg) > -1 && item.IsEnt == 1);
     // console.log('ent=', entList);
-    const filterList = this.state.panelDataList.filter(item => item.pointName.indexOf(value) > -1 || item.entName.indexOf(value) > -1);
+    const filterList = this.state.panelDataListAys.filter(item => item.pointName.toUpperCase().indexOf(msg) > -1 || item.entName.toUpperCase().indexOf(msg) > -1);
     this.setState({
       // expandedKeys,
       EntAndPoint: entList,
@@ -918,7 +925,7 @@ class NavigationTree extends Component {
                     justifyContent: 'center',
                   }}
                   size="large"
-                /> : <div> {this.state.EntAndPoint.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                /> : <div> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
                   style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
