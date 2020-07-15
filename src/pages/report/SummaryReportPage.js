@@ -287,7 +287,7 @@ class SummaryReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (timeDifference(this.state.beginTime, this.state.endTime)) {
+        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"]!=="daily") {
           this.props.dispatch({
             type: 'report/summaryReportExcel',
             payload: {
