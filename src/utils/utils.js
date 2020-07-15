@@ -282,16 +282,16 @@ export function timeDifference(beginDates, endDates) {
   const beginDate = new Date(beginDates.replace(/-/g, '/')),
     endDate = new Date(endDates.replace(/-/g, '/'));
 
-  const newYear = beginDate.getFullYear(),
+  let newYear = beginDate.getFullYear(),
     newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
   if (newMonth >= 11) {
     newYear += 1;
 
     newMonth -= 11;
-
+  
     beginDate.setFullYear(newYear);
 
-    beginDate.setMonth(newMonth - 1);
+    beginDate.setMonth(newMonth  - 1);
   } else {
     beginDate.setFullYear(newYear);
 
