@@ -279,29 +279,24 @@ export const GetDataType = dataType => {
 export function timeDifference(beginDates, endDates) {
   //时间格式为yyyy-mm-dd时
 
-  const beginDate = new Date(beginDates.replace(/-/g, '/')),
-    endDate = new Date(endDates.replace(/-/g, '/'));
+  const beginDate = new Date(beginDates.replace(/-/g, '/')),endDate = new Date(endDates.replace(/-/g, '/'));
 
-  let newYear = beginDate.getFullYear(),
-    newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
-  if (newMonth >= 11) {
-    newYear += 1;
+  let newYear = beginDate.getFullYear(), newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
 
-    newMonth -= 11;
-  
-    beginDate.setFullYear(newYear);
+  if (newMonth >= 11) { // 当年月份设置范围为0 ~ 11
 
-    beginDate.setMonth(newMonth  - 1);
-  } else {
-    beginDate.setFullYear(newYear);
-
-    beginDate.setMonth(newMonth);
+      newYear += 1;
+      newMonth -= 12;
   }
-  if (beginDate.getTime() >= endDate.getTime()) {
-    //不超过2个月  开始时间加两个月的基础上不超过结束时间说明时间范围未超过
+    beginDate.setFullYear(newYear);
+    beginDate.setMonth(newMonth);
 
-    return true;
+  if (beginDate.getTime() >= endDate.getTime()) {
+
+    return true; //不超过2个月  开始时间加两个月的基础上不超过结束时间说明时间范围未超过
   } else {
+
     return false;
+    
   }
 }
