@@ -1256,6 +1256,12 @@ export default {
                       path: '/qualityControl/qcaManager',
                       redirect: '/qualityControl/qcaManager/maintainRecord',
                     },
+                    // 运维人管理
+                    {
+                      name: 'QCAnalyzeOperator',
+                      path: '/qualityControl/qcaManager/QCAnalyzeOperator',
+                      component: './qualityControl/QCAnalyzeOperator',
+                    },
                     // 质控仪维护记录
                     {
                       name: 'maintainRecord',
