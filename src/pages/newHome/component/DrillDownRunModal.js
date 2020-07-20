@@ -73,7 +73,7 @@ class DrillDownRunModal extends PureComponent {
           var pointInPixel = [rest.offsetX, rest.offsetY];
           var xIndex = this.echartsInstance.convertFromPixel({ seriesIndex: 0 }, [rest[0].offsetX, rest[0].offsetY]);
           var index = parseInt(xIndex);
-          console.log('xIndex=', xIndex)
+          console.log('rest=', rest)
           if (index >= 0) {
             if (this.props.level === 1) {
               // 点击师，显示企业
@@ -116,7 +116,9 @@ class DrillDownRunModal extends PureComponent {
     const { seriesData, xData } = this.props;
     return {
       color: ['#3398DB'],
-      legend: {},
+      legend: {
+        selectedMode:false,//取消图例上的点击事件
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {            // 坐标轴指示器，坐标轴触发有效

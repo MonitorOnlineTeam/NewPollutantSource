@@ -130,7 +130,8 @@ class DrillDownTaskStatisticsModal extends PureComponent {
         },
       },
       legend: {
-        data: ['计划运维次数', '实际运维次数']
+        data: ['计划运维次数', '实际运维次数'],
+        selectedMode:false,//取消图例上的点击事件
       },
       grid: {
         left: '2%',

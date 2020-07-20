@@ -126,7 +126,9 @@ class DrillDownTaskModal extends PureComponent {
           return res;
         },
       },
-      legend: {},
+      legend: {
+        selectedMode:false,//取消图例上的点击事件
+      },
       grid: {
         left: '3%',
         right: '4%',

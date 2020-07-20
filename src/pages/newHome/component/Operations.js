@@ -59,7 +59,7 @@ class Operations extends PureComponent {
       grid: {
         left: '-18%',
         top: "4%",
-        right: '4%',
+        right: '9%',
         bottom: '-6%',
         containLabel: true
       },

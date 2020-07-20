@@ -413,7 +413,7 @@ class Index extends Component {
                         </Layout>
                     </div>
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#realtimedata" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#realtimedata" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value)
                     }

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { connect } from 'dva';
 import config from '@/config';
 import defaultSettings from '../../../config/defaultSettings'
+import styles from './index.less'
 
 let oldOptions = [];
 @connect(({ common }) => ({
@@ -39,7 +40,7 @@ class CascaderMultiple extends PureComponent {
     if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
       activeElement = document.getElementsByClassName("ant-tabs-tabpane-active")[0];
     }
-    let cascaderMultiple = activeElement.getElementsByClassName('cascaderMultiple')[0];
+    let cascaderMultiple = activeElement.getElementsByClassName('cascaderMultipleBox')[0];
     document.body.addEventListener("click", (e) => {
       if (!cascaderMultiple.contains(e.target)) {
         this.setState({ visible: false, inputValue: "", options: this.oldOptions })
@@ -220,7 +221,7 @@ class CascaderMultiple extends PureComponent {
       showLabel = checkedLabels.length > 1 ? [...checkedLabels.slice(0, showNum), "..."] : [...checkedLabels.slice(0, showNum)]
     }
     return (
-      <div className="cascaderMultiple" onClick={(e) => { e.stopPropagation(); }} style={{ ...style, maxHeight: 40 }}>
+      <div className={`${styles.cascaderMultiple} cascaderMultipleBox`} onClick={(e) => { e.stopPropagation(); }} style={{ ...style, maxHeight: 40 }}>
         {/* <p>[{checkedValues.toString()}]</p> */}
         <div className="ant-select ant-select-enabled" style={{ width: "100%" }} onClick={(e) => {
           e.stopPropagation();
