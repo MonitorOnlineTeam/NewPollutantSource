@@ -18,6 +18,7 @@ import config from '@/config'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
+import _ from "lodash"
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -765,6 +766,15 @@ class NavigationTree extends Component {
       case '37':
         return <a><CustomIcon type="icon-dian2" style={{ fontSize: size }} /></a>
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      return false
+    }
+    if(_.isEqual(this.props, nextProps) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      return false
+    }
+    return true;
   }
 
   render() {
