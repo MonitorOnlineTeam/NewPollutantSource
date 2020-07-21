@@ -65,7 +65,7 @@ class Index extends Component {
                 <BreadcrumbWrapper >
                     <ContentList DGIMN={DGIMN} />
                 </BreadcrumbWrapper>
-                <NavigationTree runState='0' domId="#manualupload" choice={false} onItemClick={value => {
+                <NavigationTree runState='1' domId="#manualupload" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }

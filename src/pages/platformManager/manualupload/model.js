@@ -120,14 +120,15 @@ export default Model.extend({
         },
         //获取Excel模板
         * getUploadTemplate({
-            payload
+            payload,
+            callback
         }, {
             call,
             update,
         }) {
             const result = yield call(getUploadTemplate, payload);
             if (result.IsSuccess) {
-                payload.callback(result.Datas);
+                callback(result.Datas);
             }
 
         },
