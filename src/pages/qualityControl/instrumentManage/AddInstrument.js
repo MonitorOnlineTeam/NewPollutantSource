@@ -127,7 +127,7 @@ class AddInstrument extends Component {
                 <a
                   onClick={() => {
                     // 删除时disabled重置为false
-                    const tempEntAndPointList = this.state.entAndPointList;
+                    let tempEntAndPointList = [...this.state.entAndPointList];
                     tempEntAndPointList.map(item => {
                       item.children.map(child => {
                         if (child.key === record.DGIMN) {
@@ -135,7 +135,7 @@ class AddInstrument extends Component {
                         }
                       });
                     });
-                    const tempDataSource = this.state.dataSource;
+                    let tempDataSource = [...this.state.dataSource];
                     tempDataSource.splice(index, 1);
                     this.setState({
                       dataSource: [...tempDataSource],
@@ -181,7 +181,7 @@ class AddInstrument extends Component {
                             </Select>
                           ),
                           onOk() {
-                            let tempDataSource = that.state.dataSource;
+                            let tempDataSource = [...that.state.dataSource];
                             let component = that.state.currentWorkPatternList.map(item => {
                               return {
                                 key: Math.floor(Math.random() * 65535),
@@ -199,7 +199,7 @@ class AddInstrument extends Component {
                               expandedRowKeys: [...that.state.expandedRowKeys, index + 1],
                             });
                           },
-                          onCancel() {},
+                          onCancel() { },
                         });
                       }}
                     >
@@ -207,8 +207,8 @@ class AddInstrument extends Component {
                     </a>
                   </>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </>
             );
           },
@@ -385,7 +385,7 @@ class AddInstrument extends Component {
   };
 
   changeStandardGasData = (parentIndex, key, value, index) => {
-    const tempDataSource = this.state.dataSource;
+    const tempDataSource = [...this.state.dataSource];
     // if (key === "OffsetValue1") {
     //   tempDataSource[parentIndex]["Component"][index]["OffsetValue"][0] = value;
     // }
@@ -400,7 +400,7 @@ class AddInstrument extends Component {
   };
 
   changeStandardGasDataR = (key, value, index) => {
-    const tempDataSource = this.state.dataSourceR;
+    const tempDataSource = [...this.state.dataSourceR];
 
     tempDataSource[index][key] = value;
     this.setState({
@@ -499,7 +499,7 @@ class AddInstrument extends Component {
 
   // 添加污染物
   handleAdd = () => {
-    const { dataSource } = this.state;
+    let dataSource = [...this.state.dataSource];
     if (dataSource.length === 4) {
       message.error('最多只能关联4个排口');
       return;
@@ -543,7 +543,7 @@ class AddInstrument extends Component {
         render: (text, record, idx) => (
           <a
             onClick={() => {
-              const tempDataSource = this.state.dataSource;
+              let tempDataSource = _.cloneDeep(this.state.dataSource);
               tempDataSource[index].Component.splice(idx, 1);
               this.setState({
                 dataSource: [...tempDataSource],
@@ -595,7 +595,7 @@ class AddInstrument extends Component {
                     value == 'P'
                       ? '空气'
                       : this.props.standardGasList.find(item => item.PollutantCode == value)
-                          .PollutantName;
+                        .PollutantName;
                   // 设置满量程值
                   this.changeStandardGasData(index, 'Range', defaultValue, idx);
                   // 设置标气名称
@@ -734,8 +734,8 @@ class AddInstrument extends Component {
               )}
             </FormItem>
           ) : (
-            '-'
-          );
+              '-'
+            );
         },
       },
       {
@@ -802,112 +802,112 @@ class AddInstrument extends Component {
           );
         },
       },
-      {
-        title: '质控周期',
-        dataIndex: 'Cycle',
-        width: 360,
-        render: (text, record, idx) => {
-          if (record.StandardGasCode === n2Code) {
-            return '-';
-          }
-          const { DateType, Cycle, Hour, Minutes } = this.state.dataSource[index].Component[idx];
-          return (
-            <FormItem style={{ marginBottom: '6px' }}>
-              {this.props.form.getFieldDecorator(`Cycle${record.key}`, {
-                rules: [{ required: true, message: '请输入质控周期' }],
-                initialValue: text !== undefined ? `${text}` : undefined,
-              })(
-                <InputGroup compact>
-                  <Input
-                    style={{ width: '50%' }}
-                    defaultValue={text !== undefined ? `${text}` : undefined}
-                    addonBefore="周期:"
-                    addonAfter={this.selectAfter(index, idx, DateType)}
-                    onChange={e => {
-                      this.changeStandardGasData(index, 'Cycle', e.target.value, idx);
-                    }}
-                  />
-                  {DateType == '0' ? (
-                    <>
-                      <TimePicker
-                        format="HH:mm"
-                        defaultValue={
-                          Hour != undefined && Minutes != undefined
-                            ? moment(`${Hour}:${Minutes}`, 'HH:mm')
-                            : undefined
-                        }
-                        onChange={(time, timeString) => {
-                          if (time && timeString) {
-                            const hour = timeString.split(':')[0];
-                            const minutes = timeString.split(':')[1];
-                            this.changeStandardGasData(index, 'Hour', hour, idx);
-                            this.changeStandardGasData(index, 'Minutes', minutes, idx);
-                            this.setState({
-                              predictTime: timeString,
-                            });
-                          }
-                        }}
-                      />
-                      {!this._SELF_.id && text && Hour && Minutes ? (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            bottom: -18,
-                            left: 0,
-                            width: '100%',
-                            fontSize: 12,
-                            color: 'rgba(0, 0, 0, 0.6)',
-                          }}
-                        >
-                          <InfoCircleOutlined style={{ marginRight: 6 }} />
-                          预计下次质控时间：
-                          {`${moment()
-                            .add(text, 'day')
-                            .format('YYYY-MM-DD')} ${Hour}:${Minutes}:00`}
-                        </div>
-                      ) : null}
-                    </>
-                  ) : (
-                    <>
-                      <TimePicker
-                        format="mm"
-                        defaultValue={Minutes != undefined ? moment(`${Minutes}`, 'mm') : undefined}
-                        onChange={(time, timeString) => {
-                          if (time && timeString) {
-                            this.changeStandardGasData(index, 'Hour', undefined, idx);
-                            this.changeStandardGasData(index, 'Minutes', timeString, idx);
-                            this.setState({
-                              predictTime: timeString,
-                            });
-                          }
-                        }}
-                      />
-                      {!this._SELF_.id && text && Minutes ? (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            bottom: -18,
-                            left: 0,
-                            width: '100%',
-                            fontSize: 12,
-                            color: 'rgba(0, 0, 0, 0.6)',
-                          }}
-                        >
-                          <InfoCircleOutlined style={{ marginRight: 6 }} />
-                          预计下次质控时间：
-                          {`${moment()
-                            .add(text, 'hours')
-                            .format('YYYY-MM-DD HH')}:${Minutes}:00`}
-                        </div>
-                      ) : null}
-                    </>
-                  )}
-                </InputGroup>,
-              )}
-            </FormItem>
-          );
-        },
-      },
+      // {
+      //   title: '质控周期',
+      //   dataIndex: 'Cycle',
+      //   width: 360,
+      //   render: (text, record, idx) => {
+      //     if (record.StandardGasCode === n2Code) {
+      //       return '-';
+      //     }
+      //     const { DateType, Cycle, Hour, Minutes } = this.state.dataSource[index].Component[idx];
+      //     return (
+      //       <FormItem style={{ marginBottom: '6px' }}>
+      //         {this.props.form.getFieldDecorator(`Cycle${record.key}`, {
+      //           rules: [{ required: true, message: '请输入质控周期' }],
+      //           initialValue: text !== undefined ? `${text}` : undefined,
+      //         })(
+      //           <InputGroup compact>
+      //             <Input
+      //               style={{ width: '50%' }}
+      //               defaultValue={text !== undefined ? `${text}` : undefined}
+      //               addonBefore="周期:"
+      //               addonAfter={this.selectAfter(index, idx, DateType)}
+      //               onChange={e => {
+      //                 this.changeStandardGasData(index, 'Cycle', e.target.value, idx);
+      //               }}
+      //             />
+      //             {DateType == '0' ? (
+      //               <>
+      //                 <TimePicker
+      //                   format="HH:mm"
+      //                   defaultValue={
+      //                     Hour != undefined && Minutes != undefined
+      //                       ? moment(`${Hour}:${Minutes}`, 'HH:mm')
+      //                       : undefined
+      //                   }
+      //                   onChange={(time, timeString) => {
+      //                     if (time && timeString) {
+      //                       const hour = timeString.split(':')[0];
+      //                       const minutes = timeString.split(':')[1];
+      //                       this.changeStandardGasData(index, 'Hour', hour, idx);
+      //                       this.changeStandardGasData(index, 'Minutes', minutes, idx);
+      //                       this.setState({
+      //                         predictTime: timeString,
+      //                       });
+      //                     }
+      //                   }}
+      //                 />
+      //                 {!this._SELF_.id && text && Hour && Minutes ? (
+      //                   <div
+      //                     style={{
+      //                       position: 'absolute',
+      //                       bottom: -18,
+      //                       left: 0,
+      //                       width: '100%',
+      //                       fontSize: 12,
+      //                       color: 'rgba(0, 0, 0, 0.6)',
+      //                     }}
+      //                   >
+      //                     <InfoCircleOutlined style={{ marginRight: 6 }} />
+      //                     预计下次质控时间：
+      //                     {`${moment()
+      //                       .add(text, 'day')
+      //                       .format('YYYY-MM-DD')} ${Hour}:${Minutes}:00`}
+      //                   </div>
+      //                 ) : null}
+      //               </>
+      //             ) : (
+      //               <>
+      //                 <TimePicker
+      //                   format="mm"
+      //                   defaultValue={Minutes != undefined ? moment(`${Minutes}`, 'mm') : undefined}
+      //                   onChange={(time, timeString) => {
+      //                     if (time && timeString) {
+      //                       this.changeStandardGasData(index, 'Hour', undefined, idx);
+      //                       this.changeStandardGasData(index, 'Minutes', timeString, idx);
+      //                       this.setState({
+      //                         predictTime: timeString,
+      //                       });
+      //                     }
+      //                   }}
+      //                 />
+      //                 {!this._SELF_.id && text && Minutes ? (
+      //                   <div
+      //                     style={{
+      //                       position: 'absolute',
+      //                       bottom: -18,
+      //                       left: 0,
+      //                       width: '100%',
+      //                       fontSize: 12,
+      //                       color: 'rgba(0, 0, 0, 0.6)',
+      //                     }}
+      //                   >
+      //                     <InfoCircleOutlined style={{ marginRight: 6 }} />
+      //                     预计下次质控时间：
+      //                     {`${moment()
+      //                       .add(text, 'hours')
+      //                       .format('YYYY-MM-DD HH')}:${Minutes}:00`}
+      //                   </div>
+      //                 ) : null}
+      //               </>
+      //             )}
+      //           </InputGroup>,
+      //         )}
+      //       </FormItem>
+      //     );
+      //   },
+      // },
       // {
       //   title: '气瓶标气浓度',
       //   dataIndex: 'Concentration',
@@ -1040,31 +1040,34 @@ class AddInstrument extends Component {
 
   // 添加标气
   addStandardGas = index => {
-    const { dataSource } = this.state;
-    const key = dataSource[index].Component.length + 1;
-    dataSource[index].Component.push({
-      // key: `${index}${key}`,
-      key: Math.floor(Math.random() * 65535),
-      StandardGasCode: undefined, // 标气code
-      Range: undefined, // 满量程值
-      StandardValue: undefined, // 标准值
-      TotalFlowSetVal: undefined, // 总流量设定值
-      Cycle: undefined, // 周期数
-      DateType: 0, // 周期类型(0:天 1:小时)
-      Hour: undefined, // 小时
-      Minutes: undefined, // 分钟
-      VentilationTime: '5', // 通气时间
-      StabilizationTime: '3', // 稳定时间
-      // ExpirationDate: undefined, // 过期时间
-      // Concentration: undefined, // 气瓶浓度
-      unit: 'mg/m3',
-      // GasInitPower: undefined, // 标气初始压力
-    });
-    this.setState({ dataSource });
+    let tempDataSource = [...this.state.dataSource];
+    const key = tempDataSource[index].Component.length + 1;
+    tempDataSource[index].Component = [
+      ...tempDataSource[index].Component,
+      {
+        // key: `${index}${key}`,
+        key: Math.floor(Math.random() * 65535),
+        StandardGasCode: undefined, // 标气code
+        Range: undefined, // 满量程值
+        StandardValue: undefined, // 标准值
+        TotalFlowSetVal: undefined, // 总流量设定值
+        Cycle: undefined, // 周期数
+        DateType: 0, // 周期类型(0:天 1:小时)
+        Hour: undefined, // 小时
+        Minutes: undefined, // 分钟
+        VentilationTime: '5', // 通气时间
+        StabilizationTime: '3', // 稳定时间
+        // ExpirationDate: undefined, // 过期时间
+        // Concentration: undefined, // 气瓶浓度
+        unit: 'mg/m3',
+        // GasInitPower: undefined, // 标气初始压力
+      }
+    ];
+    this.setState({ dataSource: [...tempDataSource] });
   };
 
   addStandardGasR = () => {
-    const { dataSourceR } = this.state;
+    let dataSourceR = [...this.state.dataSourceR];
     dataSourceR.push({
       // key: `${index}${key}`,
       key: Math.floor(Math.random() * 655321),
@@ -1080,6 +1083,7 @@ class AddInstrument extends Component {
   render() {
     const { columns, dataSource, expandedRowKeys, dataSourceR } = this.state;
     const { formItemLayout, id, title, scrollXWidth, n2Code } = this._SELF_;
+    console.log('dataSource=', dataSource)
     const {
       form: { getFieldDecorator },
       qualityControlFormData,
@@ -1093,7 +1097,7 @@ class AddInstrument extends Component {
         render: (text, record, idx) => (
           <a
             onClick={() => {
-              const tempDataSource = this.state.dataSourceR;
+              const tempDataSource = [...this.state.dataSourceR];
               tempDataSource.splice(idx, 1);
               this.setState({
                 dataSourceR: [...tempDataSource],
@@ -1378,28 +1382,47 @@ class AddInstrument extends Component {
               </Button>
               <Table
                 rowKey={record => record.key}
-                expandedRowKeys={expandedRowKeys}
-                defaultExpandAllRows={!!id}
+                // expandedRowKeys={expandedRowKeys}
+                // defaultExpandAllRows={!!id}
                 columns={columns}
                 dataSource={dataSource}
                 scroll={{ x: 300 }}
-                expandedRowRender={this.expandedRowRender}
-                onExpand={(expanded, record) => {
-                  if (expanded) {
-                    this.setState({
-                      expandedRowKeys: [...expandedRowKeys, record.key],
-                    });
-                  } else {
-                    const rowKeys = _.remove(expandedRowKeys, n => n != record.key);
-                    console.log('rowKeys=', rowKeys);
-                    this.setState({
-                      expandedRowKeys: [...rowKeys],
-                    });
-                  }
+                expandable={{
+                  expandedRowKeys: expandedRowKeys,
+                  defaultExpandAllRows: !!id,
+                  expandedRowRender: this.expandedRowRender,
+                  onExpand: (expanded, record) => {
+                    if (expanded) {
+                      this.setState({
+                        expandedRowKeys: [...expandedRowKeys, record.key],
+                      });
+                    } else {
+                      const rowKeys = _.remove(expandedRowKeys, n => n != record.key);
+                      console.log('rowKeys=', rowKeys);
+                      this.setState({
+                        expandedRowKeys: [...rowKeys],
+                      });
+                    }
+                  },
+                  rowExpandable: record => record.name !== 'Not Expandable',
                 }}
-                expandedRows={expandedRows => {
-                  console.log('expandedRows=', expandedRows);
-                }}
+                // expandedRowRender={this.expandedRowRender}
+                // onExpand={(expanded, record) => {
+                //   if (expanded) {
+                //     this.setState({
+                //       expandedRowKeys: [...expandedRowKeys, record.key],
+                //     });
+                //   } else {
+                //     const rowKeys = _.remove(expandedRowKeys, n => n != record.key);
+                //     console.log('rowKeys=', rowKeys);
+                //     this.setState({
+                //       expandedRowKeys: [...rowKeys],
+                //     });
+                //   }
+                // }}
+                // expandedRows={expandedRows => {
+                //   console.log('expandedRows=', expandedRows);
+                // }}
                 bordered={false}
                 pagination={false}
                 size="middle"

@@ -54,6 +54,7 @@ import config from '@/config';
 import styles from './index.less';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import CustomIcon from '@/components/CustomIcon';
+import _ from 'lodash';
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -120,8 +121,8 @@ class NavigationTree extends Component {
       PollutantTypes: this.props.checkpPol
         ? this.props.checkpPol
         : this.props.defaultPollutant === 'undefined'
-        ? 'undefined'
-        : '',
+          ? 'undefined'
+          : '',
       Status: '',
       RegionCode: '',
       right: floats == 'topmenu' ? 'caret-left' : 'caret-right',
@@ -169,8 +170,8 @@ class NavigationTree extends Component {
                     停运
                   </Tag>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </span>
             </div>
           ),
@@ -187,8 +188,8 @@ class NavigationTree extends Component {
                   style={{ color: this.getColor(record.Status), height: 10, margin: '0 4px' }}
                 />
               ) : (
-                ''
-              )}
+                  ''
+                )}
               {!!props.noticeList.find(m => m.DGIMN === record.key) && (
                 <div className={styles.bell}>
                   <BellIcon
@@ -600,7 +601,7 @@ class NavigationTree extends Component {
             'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)';
           tabsElement
             ? (tabsElement.style.transition =
-                'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)')
+              'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)')
             : undefined;
         }
       },
@@ -952,6 +953,16 @@ class NavigationTree extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      return false
+    }
+    if (_.isEqual(this.props, nextProps) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      return false
+    }
+    return true;
+  }
+
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
@@ -969,8 +980,8 @@ class NavigationTree extends Component {
               {afterStr}
             </span>
           ) : (
-            <span style={{ marginLeft: 3 }}>{item.title}</span>
-          );
+              <span style={{ marginLeft: 3 }}>{item.title}</span>
+            );
         if (item.Type == '0') {
           return (
             <TreeNode
@@ -996,8 +1007,8 @@ class NavigationTree extends Component {
                       }}
                     />
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </div>
               }
               key={item.key}
@@ -1021,8 +1032,8 @@ class NavigationTree extends Component {
                         停运
                       </Tag>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
                   </div>
                   {item.IsEnt == 0 && item.Status != -1 ? (
                     <LegendIcon
@@ -1037,8 +1048,8 @@ class NavigationTree extends Component {
                       }}
                     />
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                   {this.props.noticeList.find(m => m.DGIMN === item.key) ? (
                     <div className={styles.bell}>
                       <BellIcon
@@ -1053,8 +1064,8 @@ class NavigationTree extends Component {
                       />
                     </div>
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </div>
               }
               key={item.key}
@@ -1140,8 +1151,8 @@ class NavigationTree extends Component {
               onChange={this.handleChange}
             />
           ) : (
-            ''
-          )}
+              ''
+            )}
           {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
           {false ? (
             <EnterprisePointCascadeMultiSelect
@@ -1150,8 +1161,8 @@ class NavigationTree extends Component {
               placeholder="请选择区域"
             />
           ) : (
-            ''
-          )}
+              ''
+            )}
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
@@ -1216,77 +1227,77 @@ class NavigationTree extends Component {
                   size="large"
                 />
               ) : (
-                <div>
-                  {this.state.EntAndPoint.length ? (
-                    <Tree
-                      data-id="mytree"
-                      selectable={!this.props.choice}
-                      checkable={this.props.choice}
-                      onCheck={this.onCheck}
-                      checkedKeys={this.state.checkedKeys}
-                      onSelect={this.onSelect}
-                      selectedKeys={this.state.selectedKeys}
-                      style={{
-                        marginTop: '5%',
-                        maxHeight: 'calc(100vh - 290px)',
-                        overflow: 'hidden',
-                        overflowY: 'auto',
-                        width: '100%',
-                      }}
-                      onExpand={this.onExpand}
-                      // expandedKeys={expandedKeys}
-                      {..._props}
-                      autoExpandParent={autoExpandParent}
-                    >
-                      {loop(this.state.EntAndPoint)}
-                    </Tree>
-                  ) : (
-                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                  )}
-                </div>
-              )}
+                  <div>
+                    {this.state.EntAndPoint.length ? (
+                      <Tree
+                        data-id="mytree"
+                        selectable={!this.props.choice}
+                        checkable={this.props.choice}
+                        onCheck={this.onCheck}
+                        checkedKeys={this.state.checkedKeys}
+                        onSelect={this.onSelect}
+                        selectedKeys={this.state.selectedKeys}
+                        style={{
+                          marginTop: '5%',
+                          maxHeight: 'calc(100vh - 290px)',
+                          overflow: 'hidden',
+                          overflowY: 'auto',
+                          width: '100%',
+                        }}
+                        onExpand={this.onExpand}
+                        // expandedKeys={expandedKeys}
+                        {..._props}
+                        autoExpandParent={autoExpandParent}
+                      >
+                        {loop(this.state.EntAndPoint)}
+                      </Tree>
+                    ) : (
+                        <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                      )}
+                  </div>
+                )}
             </div>
           ) : (
-            <div>
-              {this.props.EntAndPointLoading ? (
-                <Spin
-                  style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  size="large"
-                />
-              ) : (
-                <div>
-                  {' '}
-                  {this.state.EntAndPoint.length ? (
-                    <Table
-                      id="treeTable"
-                      rowKey="tabKey"
-                      columns={this.state.panelColumn}
-                      dataSource={this.state.panelDataList}
-                      showHeader={false}
-                      pagination={false}
-                      style={{
-                        marginTop: '5%',
-                        maxHeight: 730,
-                        overflow: 'auto',
-                        cursor: 'pointer',
-                        maxHeight: 'calc(100vh - 290px)',
-                      }}
-                      onRow={this.onClickRow}
-                      rowClassName={this.setRowClassName}
-                    ></Table>
-                  ) : (
-                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              <div>
+                {this.props.EntAndPointLoading ? (
+                  <Spin
+                    style={{
+                      width: '100%',
+                      height: 'calc(100vh/2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    size="large"
+                  />
+                ) : (
+                    <div>
+                      {' '}
+                      {this.state.EntAndPoint.length ? (
+                        <Table
+                          id="treeTable"
+                          rowKey="tabKey"
+                          columns={this.state.panelColumn}
+                          dataSource={this.state.panelDataList}
+                          showHeader={false}
+                          pagination={false}
+                          style={{
+                            marginTop: '5%',
+                            maxHeight: 730,
+                            overflow: 'auto',
+                            cursor: 'pointer',
+                            maxHeight: 'calc(100vh - 290px)',
+                          }}
+                          onRow={this.onClickRow}
+                          rowClassName={this.setRowClassName}
+                        ></Table>
+                      ) : (
+                          <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        )}
+                    </div>
                   )}
-                </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
         </Drawer>
       </div>
     );
