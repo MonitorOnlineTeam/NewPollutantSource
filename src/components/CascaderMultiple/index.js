@@ -211,7 +211,7 @@ class CascaderMultiple extends PureComponent {
     const { style } = this.props;
     const ele = document.querySelector(".ant-select-selection--multiple")
     let width = 200;
-    let showNum = 2;
+    let showNum = 2; 
     let showLabel = checkedLabels;
     if (ele && checkedLabels.length) {
       width = ele.clientWidth;

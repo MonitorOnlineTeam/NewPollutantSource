@@ -266,7 +266,7 @@ class AddLibrary extends Component {
 
   // 添加污染物
   handleAdd = () => {
-    let dataSource = this.state.dataSource;
+    let dataSource = [...this.state.dataSource];
     const pollutantType = this.props.form.getFieldValue('PollutantType');
     if (!pollutantType) {
       message.error('请先选择污染物类型');
