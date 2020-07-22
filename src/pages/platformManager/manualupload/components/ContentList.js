@@ -159,10 +159,10 @@ export default class ContentList extends Component {
         type: 'manualupload/getUploadTemplate',
         payload: {
           PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
-          callback: data => {
-            downloadFile(data);
-          },
         },
+        callback: data => {
+          downloadFile(data);
+        }
       });
     }
   };
