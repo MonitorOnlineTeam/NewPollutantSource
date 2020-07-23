@@ -79,7 +79,7 @@ class NavigationTree extends Component {
       panelVis: 'none',
       panelData: [],
       panelDataList: [],
-      panelDataListAys:[],
+      panelDataListAys: [],
       RunState: '',
       useChioce: true,
       // panelSelKey:"",
@@ -434,7 +434,7 @@ class NavigationTree extends Component {
     // console.log('2222')
     // console.log('pan2=',this.state.panelDataList);
     const { value } = e.target;
-    var msg=value.toUpperCase();
+    var msg = value.toUpperCase();
     // console.log('ex=', value)
     // const expandedKeys = this.state.dataList
     //   .map(item => {
@@ -768,10 +768,15 @@ class NavigationTree extends Component {
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
-    if(_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
-      return false
+    // if (_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+    //   return false
+    // }
+    // console.log('this.props.noticeList=',this.props.noticeList)
+    // console.log('this.props.noticeList=',this.props.noticeList)
+    if(_.isEqual(this.state, nextState) && this.props.noticeList.length && (this.props.noticeList.length === nextProps.noticeList.length) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      return false;
     }
-    if(_.isEqual(this.props, nextProps) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+    if (_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
       return false
     }
     return true;
