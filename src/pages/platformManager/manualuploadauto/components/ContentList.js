@@ -402,11 +402,11 @@ export default class ContentList extends Component {
         console.log(uploaddata)
         return (
             <Card
-                extra={
-                    <Button onClick={() => this.Template()}>
-                        <Icon type="download" />模板下载
-                    </Button>
-                }
+                // extra={
+                //     <Button onClick={() => this.Template()}>
+                //         <Icon type="download" />模板下载
+                //     </Button>
+                // }
                 title={
                     <Form layout="inline">
                         <Form.Item>
