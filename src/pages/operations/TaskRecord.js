@@ -533,7 +533,7 @@ getTaskTypeInfo=() => {
     return (
       <BreadcrumbWrapper>
         <Card className="contentContainer">
-          <Form  className="search-form-container" style={{ marginBottom: '10' }}>
+          <Form style={{ marginBottom: '10' }}>
               <Row>
                   <Col md={8} sm={24}>
                       <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
