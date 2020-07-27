@@ -4,6 +4,7 @@ import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, 
 // import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 import { getDirLevel } from '@/utils/utils'
+import mapStyles from "@/pages/monitoring/mapview/styles.less"
 
 import "animate.css";
 import ReactEcharts from 'echarts-for-react';
@@ -72,6 +73,7 @@ let aMap = null;
   LEVEL: newHome.LEVEL,
   INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
+  noticeList: global.notices,
 }))
 class NewHome extends PureComponent {
   constructor(props) {
@@ -434,7 +436,14 @@ class NewHome extends PureComponent {
     switch (extData.position.MonitorObjectType) {
       case '1':
         // 企业
+        let isShow = 'none';
+        extData.position.children && extData.position.children.map(item => {
+          if (this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
+            isShow = 'block';
+          }
+        })
         return <div style={{ color: '#525151' }}>
+          <div className={mapStyles.pulse1} style={{ left: '-11px', top: -12, display: isShow }}></div>
           {
             aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
           }
@@ -475,7 +484,7 @@ class NewHome extends PureComponent {
           }} />
         </div>
       case '师':
-        return <div className={this.state.clickedDivision ? "animate__animated animate__bounce animate__infinite animate__slow" : ""} style={{ color:'#525151' }}>
+        return <div className={this.state.clickedDivision ? "animate__animated animate__bounce animate__infinite animate__slow" : ""} style={{ color: '#525151' }}>
           <div className={styles.pop}>{extData.position.title}</div>
           <CustomIcon key="amache"
             className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? 'animate__animated animate__bounce animate__infinite' : ''}
