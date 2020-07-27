@@ -6,9 +6,7 @@ import { connect } from 'dva';
 import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import { router } from 'umi'
-import {
-    Icon, Spin
-} from 'antd';
+import { Spin } from 'antd';
 const Item = List.Item;
 @connect(({ task, loading }) => ({
     loading: loading.effects['task/GetOperationFormDetail'],

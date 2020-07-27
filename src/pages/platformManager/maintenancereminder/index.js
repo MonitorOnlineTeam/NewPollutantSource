@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
-import {
-  Form,
-  DatePicker,
-  Row,
-  Col,
-  message,
-  Tabs,
-  InputNumber,
-  Divider,
-  Button,
-  Spin,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { DatePicker, Row, Col, message, Tabs, InputNumber, Divider, Button, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 

@@ -6,10 +6,28 @@
  * @Description: 导航树
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin, Tag } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Select,
+  Input,
+  Button,
+  Drawer,
+  Radio,
+  Collapse,
+  Table,
+  Badge,
+  Divider,
+  Row,
+  Tree,
+  Empty,
+  Col,
+  Tooltip,
+  Spin,
+  Tag,
+} from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
 import Center from '@/pages/account/center';
@@ -868,12 +886,6 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ''}
-          {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
-          {false ? <EnterprisePointCascadeMultiSelect
-            searchRegion
-            onChange={this.regionChange}
-            placeholder="请选择区域"
-          /> : ''}
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
@@ -898,7 +910,7 @@ class NavigationTree extends Component {
             background: '#1890FF',
             borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
             cursor: 'pointer',
-          }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
+          }} onClick={this.changeState}><a href="#"><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
           {this.state.treeVis ? <div >
             {
               this.props.EntAndPointLoading ? <Spin
@@ -952,8 +964,6 @@ class NavigationTree extends Component {
         </Drawer>
 
       </div>
-
-
     );
   }
 }

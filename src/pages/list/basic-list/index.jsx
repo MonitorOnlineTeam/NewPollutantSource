@@ -1,3 +1,6 @@
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Avatar,
   Button,
@@ -5,8 +8,6 @@ import {
   Col,
   DatePicker,
   Dropdown,
-  Form,
-  Icon,
   Input,
   List,
   Menu,
@@ -206,7 +207,7 @@ class BasicList extends Component {
         }
       >
         <a>
-          更多 <Icon type="down" />
+          更多 <DownOutlined />
         </a>
       </Dropdown>
     );
@@ -292,106 +293,104 @@ class BasicList extends Component {
       );
     };
 
-    return (
-      <>
-        <PageHeaderWrapper>
-          <div className={styles.standardList}>
-            <Card bordered={false}>
-              <Row>
-                <Col sm={8} xs={24}>
-                  <Info title="我的待办" value="8个任务" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周任务平均处理时间" value="32分钟" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周完成任务数" value="24个任务" />
-                </Col>
-              </Row>
-            </Card>
+    return <>
+      <PageHeaderWrapper>
+        <div className={styles.standardList}>
+          <Card bordered={false}>
+            <Row>
+              <Col sm={8} xs={24}>
+                <Info title="我的待办" value="8个任务" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周任务平均处理时间" value="32分钟" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周完成任务数" value="24个任务" />
+              </Col>
+            </Row>
+          </Card>
 
-            <Card
-              className={styles.listCard}
-              bordered={false}
-              title="基本列表"
+          <Card
+            className={styles.listCard}
+            bordered={false}
+            title="基本列表"
+            style={{
+              marginTop: 24,
+            }}
+            bodyStyle={{
+              padding: '0 32px 40px 32px',
+            }}
+            extra={extraContent}
+          >
+            <Button
+              type="dashed"
               style={{
-                marginTop: 24,
+                width: '100%',
+                marginBottom: 8,
               }}
-              bodyStyle={{
-                padding: '0 32px 40px 32px',
+              icon={<PlusOutlined />}
+              onClick={this.showModal}
+              ref={component => {
+                // eslint-disable-next-line  react/no-find-dom-node
+                this.addBtn = findDOMNode(component);
               }}
-              extra={extraContent}
             >
-              <Button
-                type="dashed"
-                style={{
-                  width: '100%',
-                  marginBottom: 8,
-                }}
-                icon="plus"
-                onClick={this.showModal}
-                ref={component => {
-                  // eslint-disable-next-line  react/no-find-dom-node
-                  this.addBtn = findDOMNode(component);
-                }}
-              >
-                添加
-              </Button>
-              <List
-                size="large"
-                rowKey="id"
-                loading={loading}
-                pagination={paginationProps}
-                dataSource={list}
-                renderItem={item => (
-                  <List.Item
-                    actions={[
-                      <a
-                        key="edit"
-                        onClick={e => {
-                          e.preventDefault();
-                          this.showEditModal(item);
-                        }}
-                      >
-                        编辑
-                      </a>,
-                      <MoreBtn key="more" item={item} />,
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                      title={<a href={item.href}>{item.title}</a>}
-                      description={item.subDescription}
-                    />
-                    <ListContent data={item} />
-                  </List.Item>
-                )}
-              />
-            </Card>
-          </div>
-        </PageHeaderWrapper>
+              添加
+            </Button>
+            <List
+              size="large"
+              rowKey="id"
+              loading={loading}
+              pagination={paginationProps}
+              dataSource={list}
+              renderItem={item => (
+                <List.Item
+                  actions={[
+                    <a
+                      key="edit"
+                      onClick={e => {
+                        e.preventDefault();
+                        this.showEditModal(item);
+                      }}
+                    >
+                      编辑
+                    </a>,
+                    <MoreBtn key="more" item={item} />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                    title={<a href={item.href}>{item.title}</a>}
+                    description={item.subDescription}
+                  />
+                  <ListContent data={item} />
+                </List.Item>
+              )}
+            />
+          </Card>
+        </div>
+      </PageHeaderWrapper>
 
-        <Modal
-          title={done ? null : `任务${current ? '编辑' : '添加'}`}
-          className={styles.standardListForm}
-          width={640}
-          bodyStyle={
-            done
-              ? {
-                  padding: '72px 0',
-                }
-              : {
-                  padding: '28px 0 0',
-                }
-          }
-          destroyOnClose
-          visible={visible}
-          {...modalFooter}
-        >
-          {getModalContent()}
-        </Modal>
-      </>
-    );
+      <Modal
+        title={done ? null : `任务${current ? '编辑' : '添加'}`}
+        className={styles.standardListForm}
+        width={640}
+        bodyStyle={
+          done
+            ? {
+                padding: '72px 0',
+              }
+            : {
+                padding: '28px 0 0',
+              }
+        }
+        destroyOnClose
+        visible={visible}
+        {...modalFooter}
+      >
+        {getModalContent()}
+      </Modal>
+    </>;
   }
 }
 

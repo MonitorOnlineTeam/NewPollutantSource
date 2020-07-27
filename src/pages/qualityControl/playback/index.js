@@ -2,7 +2,25 @@ import React, { PureComponent } from 'react';
 import NavigationTree from '@/components/NavigationTree'
 import NavigationTreeQCA from '@/components/NavigationTreeQCA'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, DatePicker, Badge, Button, Modal, Timeline, Row, Col, Icon, Divider, Empty, Tag, Alert, Spin, Slider, message } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { ClockCircleOutlined, PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import {
+  Card,
+  DatePicker,
+  Badge,
+  Button,
+  Modal,
+  Timeline,
+  Row,
+  Col,
+  Divider,
+  Empty,
+  Tag,
+  Alert,
+  Spin,
+  Slider,
+  message,
+} from 'antd';
 import { connect } from 'dva'
 import moment from 'moment';
 import styles from './index.less'
@@ -281,7 +299,7 @@ class PlaybackPage extends PureComponent {
     QCPlaybackTimeLine.map((item, index) => {
       timelineItems.push(
         <Timeline.Item
-          dot={<Icon type={iconTypeByQCType[item.QCType]} style={{ fontSize: '16px', color: QCStatusColor[item.QCType] }} />}
+          dot={<LegacyIcon type={iconTypeByQCType[item.QCType]} style={{ fontSize: '16px', color: QCStatusColor[item.QCType] }} />}
           color="red"
           style={{ paddingBottom: 30 }}
         >
@@ -368,40 +386,18 @@ class PlaybackPage extends PureComponent {
   render() {
     const { playbackPageDate, timeLineLoading, imgChartLoading, flowChartLoading, QCPlaybackTimeLine, QCAFlowChartAllData, playbackPageDate: { gasData, cemsList, QCStatus, valveStatus, totalFlow, standardValueUtin, p1Pressure, p2Pressure, flowList, standardValue, qualityControlName, thisTime } } = this.props;
     const { selectedTime, currentTimeLineItem, otherLoading, start, count, QCALineItem: { ID, QCType, DGIMN, QCAMN, QCTime, PollutantCode } } = this.state;
-    return (
-      <>
-        {
-          this._SELF_.treeType === "MN" ? <NavigationTree domId="#remoteControl" onItemClick={value => {
-            if (value.length > 0 && !value[0].IsEnt) {
-              this.props.dispatch({
-                type: "qualityControl/getQCAMNByDGIMN",
-                payload: {
-                  DGIMN: value[0].key
-                },
-                callback: (QCAMN) => {
-                  this.setState({
-                    QCAMN: QCAMN
-                  }, () => {
-                    this.getCemsAndStandGasData();
-                    this.getQCATimelineRecord();
-                    this.initFlowChartData();
-                    // this.clearData();
-                    this.setState(
-                      {
-                        imgShow: false,
-                        selectIndex: -1,
-                        QCALineItem: {}
-                      }
-                    )
-                  })
-                }
-              })
-            }
-          }} /> :
-            <NavigationTreeQCA QCAUse="1" domId="#remoteControl" onItemClick={value => {
-              if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
+    return <>
+      {
+        this._SELF_.treeType === "MN" ? <NavigationTree domId="#remoteControl" onItemClick={value => {
+          if (value.length > 0 && !value[0].IsEnt) {
+            this.props.dispatch({
+              type: "qualityControl/getQCAMNByDGIMN",
+              payload: {
+                DGIMN: value[0].key
+              },
+              callback: (QCAMN) => {
                 this.setState({
-                  QCAMN: value[0].key
+                  QCAMN: QCAMN
                 }, () => {
                   this.getCemsAndStandGasData();
                   this.getQCATimelineRecord();
@@ -410,128 +406,152 @@ class PlaybackPage extends PureComponent {
                   this.setState(
                     {
                       imgShow: false,
-                      selectIndex: -1
+                      selectIndex: -1,
+                      QCALineItem: {}
                     }
                   )
                 })
               }
-            }} />
-        }
-        {/* <div id="remoteControl" className={styles.playbackWrapper}> */}
-        <div id="remoteControl" className={styles.playbackWrapper}>
-          <BreadcrumbWrapper
-           title="质控纪要"
+            })
+          }
+        }} /> :
+          <NavigationTreeQCA QCAUse="1" domId="#remoteControl" onItemClick={value => {
+            if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
+              this.setState({
+                QCAMN: value[0].key
+              }, () => {
+                this.getCemsAndStandGasData();
+                this.getQCATimelineRecord();
+                this.initFlowChartData();
+                // this.clearData();
+                this.setState(
+                  {
+                    imgShow: false,
+                    selectIndex: -1
+                  }
+                )
+              })
+            }
+          }} />
+      }
+      {/* <div id="remoteControl" className={styles.playbackWrapper}> */}
+      <div id="remoteControl" className={styles.playbackWrapper}>
+        <BreadcrumbWrapper
+         title="质控纪要"
+        >
+          <Card
+            className="contentContainer"
+            title={
+              <RangePicker
+                value={selectedTime}
+                showTime={true}
+                // format="YYYY-MM-DD HH:mm"
+                placeholder={['开始时间', '结束时间']}
+                onChange={(value) => {
+                  this.setState({
+                    selectedTime: value
+                  })
+                }}
+                onOk={(value) => {
+                  this.setState({
+                    selectedTime: value
+                  }, () => {
+                    this.initFlowChartData();
+                    this.getQCATimelineRecord();
+                  })
+                }}
+              // onOk={onOk}
+              />
+            }
           >
-            <Card
-              className="contentContainer"
-              title={
-                <RangePicker
-                  value={selectedTime}
-                  showTime={true}
-                  // format="YYYY-MM-DD HH:mm"
-                  placeholder={['开始时间', '结束时间']}
-                  onChange={(value) => {
-                    this.setState({
-                      selectedTime: value
-                    })
-                  }}
-                  onOk={(value) => {
-                    this.setState({
-                      selectedTime: value
-                    }, () => {
-                      this.initFlowChartData();
-                      this.getQCATimelineRecord();
-                    })
-                  }}
-                // onOk={onOk}
-                />
-              }
-            >
-              <Row gutter={10} style={{ height: 'calc(100vh - 284px)' }}>
-                <Col xxl={7} xl={9} style={{ height: '100%' }}>
-                  <Card type="inner" size="small" title="质控记录" bodyStyle={{ overflowY: "auto", overflowX: "hidden", height: 'calc(100vh - 308px)' }}>
-                    <Spin spinning={timeLineLoading}>
-                      {
-                        !timeLineLoading && !QCPlaybackTimeLine.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
-                          <Timeline style={{ margin: "22px 0 0 22px" }}>
-                            {
-                              QCPlaybackTimeLine.length && <Timeline.Item
-                                dot={<Icon type="clock-circle" style={{ fontSize: '20px', color: "#52c41a" }} />}
-                                position="left"
-                                style={{ paddingBottom: 50 }}
-                              >
-                                <Tag className={styles.dateContent}>{moment(this.state.selectedTime[0]).format("YYYY-MM-DD")} - {moment(this.state.selectedTime[1]).format("YYYY-MM-DD")}</Tag>
-                              </Timeline.Item>
-                            }
-                            {this.renderTimeLineItem()}
-                          </Timeline>
-                      }
-                    </Spin>
-                  </Card>
-                </Col>
-
-                <Col xxl={17} xl={15} style={{ height: '100%' }}>
-                  <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
-                    <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
-                      {this.returnQCStatus()}
-                      {
-                        PollutantCode && PollutantCode !== "P" && <Button
-                          // size="small"
-                          style={{ position: 'absolute', right: 0, top: 47, zIndex: 1 }}
-                          type="primary"
-                          onClick={() => { this.setState({ visible: true }) }}
-                        >
-                          查看结果比对
-                      </Button>
-                      }
-                      {this.state.imgShow ? this.loadingImg(imgChartLoading) : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                      {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
-                        // {true ?
-                        <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
+            <Row gutter={10} style={{ height: 'calc(100vh - 284px)' }}>
+              <Col xxl={7} xl={9} style={{ height: '100%' }}>
+                <Card type="inner" size="small" title="质控记录" bodyStyle={{ overflowY: "auto", overflowX: "hidden", height: 'calc(100vh - 308px)' }}>
+                  <Spin spinning={timeLineLoading}>
+                    {
+                      !timeLineLoading && !QCPlaybackTimeLine.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+                        <Timeline style={{ margin: "22px 0 0 22px" }}>
                           {
-                            !start ? <Icon type="play-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.start} /> :
-                              <Icon type="pause-circle" style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }} onClick={this.pause} />
+                            QCPlaybackTimeLine.length && <Timeline.Item
+                              dot={<ClockCircleOutlined style={{ fontSize: '20px', color: "#52c41a" }} />}
+                              position="left"
+                              style={{ paddingBottom: 50 }}
+                            >
+                              <Tag className={styles.dateContent}>{moment(this.state.selectedTime[0]).format("YYYY-MM-DD")} - {moment(this.state.selectedTime[1]).format("YYYY-MM-DD")}</Tag>
+                            </Timeline.Item>
                           }
-                          <Slider
-                            value={count}
-                            max={QCAFlowChartAllData.length}
-                            // max={100}
-                            style={{ float: 'left', width: 'calc(100% - 60px)' }}
-                            tooltipVisible
-                            tipFormatter={(value => {
-                              return thisTime
-                            })}
-                            onChange={(value) => { this.onSliderChange(value) }}
-                            onAfterChange={(value) => { this.onSliderAfterChange(value) }}
-                          />
-                        </Row>
-                        : ""}
-                    </Spin>
-                  </Card>
-                </Col>
-              </Row>
-            </Card>
-            <Modal
-              width={"90%"}
-              title="质控结果比对"
-              destroyOnClose
-              visible={this.state.visible}
-              footer={null}
-              onOk={this.handleOk}
-              onCancel={() => {
-                this.setState({ visible: false })
-              }}
-            >
-              {
-                (ID && DGIMN && PollutantCode && QCType && QCTime && QCAMN) &&
-                <ResultContrastPage dateValue={ID} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
-                  QCTime={QCTime} QCAMN={QCAMN} />
-              }
-            </Modal>
-          </BreadcrumbWrapper>
-        </div>
-      </>
-    );
+                          {this.renderTimeLineItem()}
+                        </Timeline>
+                    }
+                  </Spin>
+                </Card>
+              </Col>
+
+              <Col xxl={17} xl={15} style={{ height: '100%' }}>
+                <Card type="inner" size="small" title="质控流程图" bodyStyle={{ height: 'calc(100vh - 308px)', overflow: 'hidden' }}>
+                  <Spin spinning={!!(flowChartLoading || otherLoading)} wrapperClassName={styles.spinWrapper} style={{ position: "relative", height: '100%' }}>
+                    {this.returnQCStatus()}
+                    {
+                      PollutantCode && PollutantCode !== "P" && <Button
+                        // size="small"
+                        style={{ position: 'absolute', right: 0, top: 47, zIndex: 1 }}
+                        type="primary"
+                        onClick={() => { this.setState({ visible: true }) }}
+                      >
+                        查看结果比对
+                    </Button>
+                    }
+                    {this.state.imgShow ? this.loadingImg(imgChartLoading) : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                    {currentTimeLineItem && currentTimeLineItem.QCType == 1 && QCAFlowChartAllData.length ?
+                      // {true ?
+                      <Row style={{ position: "absolute", bottom: "0", width: "100%" }}>
+                        {
+                          !start ? <PlayCircleOutlined
+                            style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }}
+                            onClick={this.start} /> :
+                            <PauseCircleOutlined
+                              style={{ fontSize: 24, float: "left", marginTop: 8, marginRight: 12, cursor: "pointer" }}
+                              onClick={this.pause} />
+                        }
+                        <Slider
+                          value={count}
+                          max={QCAFlowChartAllData.length}
+                          // max={100}
+                          style={{ float: 'left', width: 'calc(100% - 60px)' }}
+                          tooltipVisible
+                          tipFormatter={(value => {
+                            return thisTime
+                          })}
+                          onChange={(value) => { this.onSliderChange(value) }}
+                          onAfterChange={(value) => { this.onSliderAfterChange(value) }}
+                        />
+                      </Row>
+                      : ""}
+                  </Spin>
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+          <Modal
+            width={"90%"}
+            title="质控结果比对"
+            destroyOnClose
+            visible={this.state.visible}
+            footer={null}
+            onOk={this.handleOk}
+            onCancel={() => {
+              this.setState({ visible: false })
+            }}
+          >
+            {
+              (ID && DGIMN && PollutantCode && QCType && QCTime && QCAMN) &&
+              <ResultContrastPage dateValue={ID} DGIMN={DGIMN} PollutantCode={PollutantCode} QCType={QCType}
+                QCTime={QCTime} QCAMN={QCAMN} />
+            }
+          </Modal>
+        </BreadcrumbWrapper>
+      </div>
+    </>;
   }
 }
 

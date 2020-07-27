@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
+import { CarOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Select,
-  Form,
   Row,
   Input,
   Button,
   Popconfirm,
   Tooltip,
   Divider,
-  DatePicker, Icon, Tag, Col, Empty, Modal, Upload, message
+  DatePicker,
+  Tag,
+  Col,
+  Empty,
+  Modal,
+  Upload,
+  message,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -106,7 +114,7 @@ class VehicleApprove extends Component {
                       okText="确认"
                       cancelText="取消"
                     >
-                      <a><Icon type="rollback" /></a>
+                      <a><RollbackOutlined /></a>
                     </Popconfirm>
                   </Tooltip>
                 </>
@@ -123,9 +131,9 @@ class VehicleApprove extends Component {
                         ApplicantID: key
                       }
                     })
-                  }}><Icon type="car" /></a>
+                  }}><CarOutlined /></a>
                 </Tooltip>
-              </>
+              </>;
             }}
           />
         </Card>

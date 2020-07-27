@@ -19,12 +19,15 @@
 // 新疆系统的废气要显示成图片
 const XinJiang = true;
 
-const apiHost = 'http://localhost:52198/';
-// const apiHost = 'http://172.16.12.183:50059/';
+// const apiHost = 'http://172.16.12.152:50080/';
+// const apiHost = 'http://172.16.12.135:50206/';
+// const apiHost = 'http://172.16.9.53:8036/';
+// const apiHost = 'http://220.171.32.30:8180/';  // 运维
+// const apiHost = 'http://172.16.12.61:9090/';
+// const apiHost = 'http://172.16.12.152:60060/';
+const apiHost = 'http://172.16.12.183:50059/';
 // 文件上传地址
 const uploadHost = apiHost;
-// 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
-const webSocketPush = '172.16.12.55:50083,111.53.101.207:1501';
 // GBS国标视频接口地址
 const GBSVideoApiUrl = 'http://121.40.50.44:10000/';
 module.exports = {
@@ -39,40 +42,20 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  offlineMapUrl: {
-    domain: '',
-    srcPath: '/amap-master/amap/js/maps.js',
-  },
-  // 离线地图配置：
   // offlineMapUrl: {
-  //   domain: 'http://10.230.28.70:8184',
+  //   domain: '',
   //   srcPath: '/amap-master/amap/js/maps.js',
   // },
+  // 离线地图配置：
+  offlineMapUrl: {
+    domain: 'http://172.16.12.135:50209',
+    srcPath: '/amap-master/amap/js/maps.js',
+  },
   isShowTabs: true,
-  centerlongitude: '118.510962',
-  centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
   iconFontUrl: '//at.alicdn.com/t/font_1298443_vc1qjv19g1.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
-  logo: '/sdlicon.png',
-  iconFontCSS: '/iconfont.css',
-  iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
-  CORS: [],
   cookieName: 'ssToken9001',
-  openPages: ['/login'],
-  enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
-  isMultiEnterprise: false,
-  apiPrefix: '/mock',
-  webSocketPushURL: webSocketPush,
-  imgaddress: `${apiHost}/upload/`,
-  // 年度检测报告路径
-  annualmonitoringreportaddress: 'http://172.16.12.152:8066/api/upload/report/pdf/year/',
-  // 使用文档路径
-  documentationaddress: 'http://172.16.12.152:8066/api/upload/documentation/',
-  // 实时视频地址
-  realtimevideourl: `${apiHost}/Web/HkVideo/RealtimeCamera.html`,
-  // 历史视频地址
-  hisvideourl: `${apiHost}/Web/HkVideo/HistoryCamera.html`,
   // 萤石云视频地址
   ysyvideourl: `${apiHost}/Web/YsyVideo/YsyVideo.html`,
   // 视频选择萤石云或海康威视(0：海康，1：萤石云)
@@ -104,38 +87,6 @@ module.exports = {
       unit: 'mg/m³',
     },
   ],
-  zspollutantInfo: [
-    {
-      pollutantCode: 'zs01',
-      pollutantName: '烟尘',
-      unit: 'mg/m³',
-    },
-    {
-      pollutantCode: 'zs02',
-      pollutantName: 'SO2',
-      unit: 'mg/m³',
-    },
-    {
-      pollutantCode: 'zs03',
-      pollutantName: 'NOx',
-      unit: 'mg/m³',
-    },
-  ],
-  // szpollutantInfo: [{
-  //     pollutantCode: '001',
-  //     pollutantName: 'pH值',
-  //     unit: ''
-  // }, {
-  //     pollutantCode: '011',
-  //     pollutantName: 'COD',
-  //     unit: 'mg/L'
-  // }, {
-  //     pollutantCode: '060',
-  //     pollutantName: '氨氮',
-  //     unit: 'mg/L'
-  // }
-  // ],
-
   mainpoll: [
     {
       pollutantCode: 1,
@@ -258,6 +209,5 @@ module.exports = {
         },
       ],
     },
-  ],
-  summaryPolluntantCode: 'zs01,zs02,zs03',
+  ]
 };

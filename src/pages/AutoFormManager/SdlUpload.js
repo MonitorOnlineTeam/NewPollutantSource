@@ -9,14 +9,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getBase64 } from './utils'
-import {
-  Upload,
-  Button,
-  Icon,
-  Modal,
-  Carousel,
-  message
-} from 'antd'
+import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { Upload, Button, Modal, Carousel, message } from 'antd';
 import cuid from 'cuid';
 import config from '@/config';
 import { connect } from 'dva';
@@ -108,52 +102,51 @@ class SdlUpload extends Component {
       },
     };
 
-    return (
-      <>
-        <Upload {...props} fileList={this.state.fileList}>
-          <div>
-            <Icon type="plus" />
-            <div className="ant-upload-text">文件上传</div>
-          </div>
-        </Upload>
+    return <>
+      <Upload {...props} fileList={this.state.fileList}>
+        <div>
+          <PlusOutlined />
+          <div className="ant-upload-text">文件上传</div>
+        </div>
+      </Upload>
 
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-          this.setState({ previewVisible: false })
-        }}>
-          {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-          <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
-            <div className={styles.controller}>
-              <Icon type="left" onClick={() => {
+      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
+        this.setState({ previewVisible: false })
+      }}>
+        {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
+        <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
+          <div className={styles.controller}>
+            <LeftOutlined
+              onClick={() => {
                 this.carousel.prev()
               }} />
-              <Icon type="right" onClick={() => {
+            <RightOutlined
+              onClick={() => {
                 this.carousel.next()
               }} />
-            </div>
-            <MapInteractionCSS>
-              <Carousel
-                dots={false}
-                ref={(carousel) => { this.carousel = carousel; }}
-              >
-                {
-                  this.props.fileList && this.props.fileList.map(item => {
-                    const nameSplit = item.name.split('.');
-                    const postfix = nameSplit[nameSplit.length - 1];
-                    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-                    {
-                      return <div key={item.Guid}>
-                      <img alt="example" style={{ width: '100%' }} src={item.url} />
-                    </div>
-                    }
-                  })
-                }
-              </Carousel>
-            </MapInteractionCSS>
           </div>
-        </Modal>
-      </>
-
-    );
+          <MapInteractionCSS>
+            <Carousel
+              dots={false}
+              ref={(carousel) => { this.carousel = carousel; }}
+            >
+              {
+                this.props.fileList && this.props.fileList.map(item => {
+                  const nameSplit = item.name.split('.');
+                  const postfix = nameSplit[nameSplit.length - 1];
+                  if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
+                  {
+                    return <div key={item.Guid}>
+                    <img alt="example" style={{ width: '100%' }} src={item.url} />
+                  </div>
+                  }
+                })
+              }
+            </Carousel>
+          </MapInteractionCSS>
+        </div>
+      </Modal>
+    </>;
   }
 }
 

@@ -7,11 +7,22 @@
  */
 import React, { Component, Fragment } from 'react'
 import { connect } from 'dva';
+
 import {
-    Form,
+    BellOutlined,
+    DatabaseOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    FilterOutlined,
+    UsergroupAddOutlined,
+} from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import {
     Input,
     Button,
-    Icon,
     Card,
     Spin,
     Row,
@@ -24,7 +35,12 @@ import {
     Divider,
     Popconfirm,
     Empty,
-    Transfer, Switch, Tag, Tree, Radio, Tooltip,
+    Transfer,
+    Switch,
+    Tag,
+    Tree,
+    Radio,
+    Tooltip,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -229,7 +245,7 @@ class DepartIndex extends Component {
                                         },
                                     })
                                     this.showModalEdit()
-                                }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                                }}><EditOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="删除">
@@ -259,7 +275,7 @@ class DepartIndex extends Component {
                                     okText="是"
                                     cancelText="否"
                                 >
-                                    <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                                    <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
 
                                 </Popconfirm>
                             </Tooltip>
@@ -271,7 +287,7 @@ class DepartIndex extends Component {
                                     }, () => {
                                         this.showUserModal()
                                     })
-                                }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
+                                }}><UsergroupAddOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             {
@@ -285,7 +301,7 @@ class DepartIndex extends Component {
                                             }, () => {
                                                 this.showRegionModal()
                                             })
-                                        }}><Icon type="filter" style={{ fontSize: 16 }} /></a>
+                                        }}><FilterOutlined style={{ fontSize: 16 }} /></a>
                                     </Tooltip>
                                     <Divider type="vertical" />
                                 </>
@@ -297,7 +313,7 @@ class DepartIndex extends Component {
                                     }, () => {
                                         this.showDataModal()
                                     })
-                                }}><Icon type="database" style={{ fontSize: 16 }} /></a>
+                                }}><DatabaseOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="报警关联">
@@ -308,7 +324,7 @@ class DepartIndex extends Component {
                                     }, () => {
                                         this.showAlarmModal(record)
                                     })
-                                }}><Icon type="bell" style={{ fontSize: 16 }} /></a>
+                                }}><BellOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                         </span>,
                 },

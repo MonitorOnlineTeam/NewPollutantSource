@@ -6,7 +6,8 @@
  * @desc: 车辆轨迹地图ui
  */
 import React, { Component } from 'react';
-import { Table, Card, Tag, Row, DatePicker, Radio, Button, Icon } from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { Table, Card, Tag, Row, DatePicker, Radio, Button } from 'antd';
 import { Map, Marker, Polygon } from 'react-amap';
 import { connect } from 'dva'
 
@@ -171,24 +172,26 @@ class MapUI extends Component {
 
   render() {
     const { pauseDisabled, resumeDisabled, reloadDisabled } = this.state;
-    return <div>
-      <div style={{ position: "absolute", top: '20px', left: '150px' }}>
-        <Radio.Group defaultValue="a" buttonStyle="solid" defaultValue={undefined} onChange={(e) => {
-          this.navigatorChange(e);
+    return (
+      <div>
+        <div style={{ position: "absolute", top: '20px', left: '150px' }}>
+          <Radio.Group defaultValue="a" buttonStyle="solid" defaultValue={undefined} onChange={(e) => {
+            this.navigatorChange(e);
+          }}>
+            <Radio.Button value="start">开始巡航</Radio.Button>
+            <Radio.Button value="pause" disabled={pauseDisabled}>暂停</Radio.Button>
+            <Radio.Button value="resume" disabled={resumeDisabled}>恢复</Radio.Button>
+            <Radio.Button value="reload" disabled={reloadDisabled}>重新播放</Radio.Button>
+          </Radio.Group>
+        </div>
+        <Button style={{ position: "absolute", top: '20px', left: '20px' }} onClick={() => {
+          history.go(-1)
         }}>
-          <Radio.Button value="start">开始巡航</Radio.Button>
-          <Radio.Button value="pause" disabled={pauseDisabled}>暂停</Radio.Button>
-          <Radio.Button value="resume" disabled={resumeDisabled}>恢复</Radio.Button>
-          <Radio.Button value="reload" disabled={reloadDisabled}>重新播放</Radio.Button>
-        </Radio.Group>
+          <LeftOutlined />
+          返回
+        </Button>
       </div>
-      <Button style={{ position: "absolute", top: '20px', left: '20px' }} onClick={() => {
-        history.go(-1)
-      }}>
-        <Icon type="left" />
-        返回
-      </Button>
-    </div>
+    );
   }
 }
 

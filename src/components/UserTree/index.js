@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
+import { MobileTwoTone } from '@ant-design/icons';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-  Form,
   Select,
   Input,
   Button,
@@ -9,7 +11,6 @@ import {
   Collapse,
   Table,
   Col,
-  Icon,
   Divider,
   Row,
   Spin,
@@ -18,7 +19,6 @@ import {
   TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import {
   ManIcon,
@@ -329,7 +329,7 @@ class UserTree extends Component {
           const itemlist = [];
           itemlist.push(<div style={{ fontSize: '14px', fontWeight: 'bolder' }}>
           <div style={{ float: 'left' }}>{record.UserName.length > 0 ? record.UserName.substring(0, 10) : `${record.UserName}...`}</div>
-          {record.Phone && <div style={{ float: 'right', marginRight: '10px' }}><Icon type="mobile" theme="twoTone"style={{ marginRight: '5px' }} />{record.Phone}</div>}
+          {record.Phone && <div style={{ float: 'right', marginRight: '10px' }}><MobileTwoTone style={{ marginRight: '5px' }} />{record.Phone}</div>}
           </div>)
           record.UserGroupName && itemlist.push(<br></br>);
 
@@ -420,7 +420,7 @@ class UserTree extends Component {
             background: '#1890FF',
             borderRadius: floats === 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
             cursor: 'pointer',
-          }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
+          }} onClick={this.changeState}><a href="#"><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
               {
                 this.props.IsLoading ? <Spin
                   style={{
@@ -443,8 +443,6 @@ class UserTree extends Component {
         </Drawer>
 
       </div>
-
-
     );
   }
 }

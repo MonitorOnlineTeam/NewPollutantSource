@@ -1,5 +1,18 @@
 import React, { Component } from 'react';
-import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, Radio, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Input,
+    Select,
+    InputNumber,
+    Button,
+    Upload,
+    DatePicker,
+    Row,
+    Col,
+    Radio,
+    message,
+} from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';

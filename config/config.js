@@ -2,7 +2,7 @@ import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 import Cookie from 'js-cookie';
 import slash from 'slash2';
 import webpackPlugin from './plugin.config';
-import config from '@/config';
+import config from '../src/config';
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。

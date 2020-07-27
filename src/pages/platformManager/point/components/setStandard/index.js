@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import { ExclamationCircleOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import {
   Card,
-  Icon,
   Divider,
   Table,
   message,
@@ -13,7 +13,7 @@ import {
   Row,
   Col,
   Empty,
-  Tooltip
+  Tooltip,
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -258,7 +258,7 @@ class UseStandardLibrary extends Component {
                     style={{ color: '#D1D1D1' }}
                     onClick={() => this.IsEnabled(1, record)}
                   >
-                    <Icon type="exclamation-circle" /> 未监测
+                    <ExclamationCircleOutlined /> 未监测
                   </a>
                 </Button>
               </span>
@@ -270,7 +270,7 @@ class UseStandardLibrary extends Component {
               <Button size="small" color="blue">
                 {' '}
                 <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
-                  <Icon type="setting" spin={true} /> 监测中
+                  <SettingOutlined spin={true} /> 监测中
                 </a>
               </Button>
             </span>
@@ -349,7 +349,7 @@ class UseStandardLibrary extends Component {
                   standardlibraryModal: true,
                 });
               }}
-              icon="search"
+              icon={<SearchOutlined />}
             >
               查看标准库
             </Button>

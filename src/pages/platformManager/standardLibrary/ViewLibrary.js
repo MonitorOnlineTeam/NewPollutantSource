@@ -6,7 +6,8 @@
  * @desc: 标准库详情页面
  */
 import React, { Component } from 'react';
-import { Card, Button, Icon } from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { Card, Button } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
@@ -32,7 +33,7 @@ class ViewLibrary extends Component {
               onClick={() => {
                 history.go(-1);
               }}
-            ><Icon type="left" />返回
+            ><LeftOutlined />返回
             </Button>
           }>
           <AutoFormViewItems

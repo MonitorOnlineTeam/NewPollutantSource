@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
-import {
-  Form,
-  Input,
-  Button,
-  Row,
-  Col,
-  Card,
-  Radio,
-  Avatar,
-  Select,
-  message,
-  Divider
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Row, Col, Card, Radio, Avatar, Select, message, Divider } from 'antd';
 import { connect } from 'dva';
 import styles from './BaseView.less';
 import SdlForm from "@/pages/AutoFormManager/SdlForm"

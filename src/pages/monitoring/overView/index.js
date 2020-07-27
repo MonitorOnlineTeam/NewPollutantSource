@@ -8,13 +8,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import InfiniteScroll from 'react-infinite-scroller';
 import {
     Table,
     Radio,
     Card,
     TimePicker,
-    Icon,
     Button,
     Spin,
     Popover,
@@ -22,7 +20,7 @@ import {
     Divider,
     Popconfirm,
     Input,
-    List
+    List,
 } from 'antd';
 import moment from 'moment';
 import { routerRedux } from 'dva/router';

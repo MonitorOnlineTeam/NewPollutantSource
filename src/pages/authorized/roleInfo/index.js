@@ -7,11 +7,21 @@
  */
 import React, { Component, Fragment } from 'react'
 import { connect } from 'dva';
+
 import {
-    Form,
+    BellOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    MenuUnfoldOutlined,
+    UserAddOutlined,
+} from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import {
     Input,
     Button,
-    Icon,
     Card,
     Spin,
     Row,
@@ -24,7 +34,11 @@ import {
     Divider,
     Popconfirm,
     Tooltip,
-    Transfer, Switch, Tag, Select, Pagination,
+    Transfer,
+    Switch,
+    Tag,
+    Select,
+    Pagination,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
@@ -267,7 +281,7 @@ class RoleIndex extends Component {
                                         },
                                     })
                                     this.showModalEdit()
-                                }}><Icon type="edit" style={{ fontSize: 16 }} /></a>
+                                }}><EditOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="删除">
@@ -297,7 +311,7 @@ class RoleIndex extends Component {
                                     okText="是"
                                     cancelText="否"
                                 >
-                                    <a href="#" style={{ cursor: 'pointer' }} ><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                                    <a href="#" style={{ cursor: 'pointer' }} ><DeleteOutlined style={{ fontSize: 16 }} /></a>
                                 </Popconfirm>
                             </Tooltip>
                             <Divider type="vertical" />
@@ -309,7 +323,7 @@ class RoleIndex extends Component {
                                     }, () => {
                                         this.showUserModal()
                                     })
-                                }}><Icon type="user-add" style={{ fontSize: 16 }}/></a>
+                                }}><UserAddOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="菜单权限">
@@ -320,7 +334,7 @@ class RoleIndex extends Component {
                                     }, () => {
                                         this.showMenuModal()
                                     })
-                                }}><Icon type="menu-unfold" style={{ fontSize: 16 }} /></a>
+                                }}><MenuUnfoldOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                             <Divider type="vertical" />
                             <Tooltip title="报警关联">
@@ -331,7 +345,7 @@ class RoleIndex extends Component {
                                     }, () => {
                                         this.showAlarmModal(record)
                                     })
-                                }}><Icon type="bell" style={{ fontSize: 16 }} /></a>
+                                }}><BellOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
                         </span>,
                 },

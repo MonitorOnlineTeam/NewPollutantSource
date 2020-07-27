@@ -1,5 +1,24 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin } from 'antd';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Button,
+    Table,
+    Select,
+    Card,
+    Row,
+    Col,
+    Upload,
+    message,
+    Modal,
+    Divider,
+    Tabs,
+    Input,
+    Tag,
+    Tooltip,
+    Spin,
+} from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
@@ -318,11 +337,10 @@ export default class ContentList extends Component {
         return (
             <Upload {...props} >
                 <Button >
-                    <Icon type="upload" /> 文件导入
+                    <UploadOutlined /> 文件导入
                 </Button>
             </Upload>
-
-        )
+        );
     }
     render() {
         const { manualUploadParameters, DGIMN } = this.props;
@@ -424,7 +442,7 @@ export default class ContentList extends Component {
             <Card
                 extra={
                     <Button type="primary" onClick={() => this.Template()}>
-                        <Icon type="download" />模板下载
+                        <DownloadOutlined />模板下载
                     </Button>
                 }
                 title={

@@ -1,5 +1,18 @@
 import React, { PureComponent } from 'react';
-import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, Select, Divider } from 'antd'
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { CaretDownOutlined, CaretUpOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import {
+  Card,
+  Drawer,
+  Tooltip,
+  Button,
+  Spin,
+  Input,
+  message,
+  DatePicker,
+  Select,
+  Divider,
+} from 'antd';
 // import { Map, Marker, Polygon, Markers, InfoWindow } from 'react-amap';
 // import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
@@ -46,7 +59,7 @@ const mapIconStyle = {
   background: '#fff',
   boxShadow: '0px 0px 3px 2px #fff',
 }
-let Map; let Marker; let Polygon; let Markers; let
+let Map;let Marker;let Polygon;let Markers;let
   InfoWindow;
 let aMap = null;
 
@@ -805,7 +818,7 @@ class NewHome extends PureComponent {
               bodyStyle={{ padding: 0 }}
             >
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
-                <Icon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
+                <LegacyIcon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
               </div>
               <Spin spinning={isLeftLoading}>
                 <div className={styles.content}>
@@ -829,7 +842,7 @@ class NewHome extends PureComponent {
               bodyStyle={{ padding: 0 }}
             >
               <div className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`} onClick={() => this.toggle()}>
-                <Icon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
+                <LegacyIcon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
               </div>
               <Spin spinning={isRightLoading}>
                 <div className={styles.content}>
@@ -947,9 +960,9 @@ class NewHome extends PureComponent {
                 {
                   displayType === 0 && <div className={styles.divisionSelect}>
                     <div className={styles.selectDivision} onClick={() => { this.setState({ toggleSelect: !this.state.toggleSelect }) }}>
-                      <Icon type="environment" />
+                      <EnvironmentOutlined />
                       <span>当前范围：{clickedDivision ? clickedDivision.title : "全部"}</span>
-                      {toggleSelect ? <Icon type="caret-up" className={styles.icon} /> : <Icon type="caret-down" className={styles.icon} />}
+                      {toggleSelect ? <CaretUpOutlined className={styles.icon} /> : <CaretDownOutlined className={styles.icon} />}
                     </div>
                     {
                       toggleSelect &&

@@ -6,8 +6,10 @@
  * @Description: 运维记录
  */
 import React, { Component } from 'react';
+import { ProfileOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-  Form,
   Select,
   Input,
   Button,
@@ -16,7 +18,6 @@ import {
   Collapse,
   Table,
   Badge,
-  Icon,
   Divider,
   Row,
   Tree,
@@ -97,7 +98,7 @@ class OperationRecord extends Component {
                     router.push('/operations/recordForm/' + record.TypeID + '/' + record.TaskID);
                   }}
                 >
-                  <Icon type="profile" style={{ fontSize: 16 }} />
+                  <ProfileOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
             );
@@ -493,7 +494,7 @@ class OperationRecord extends Component {
                             // }
                           }}
                         >
-                          <Icon type="profile" style={{ fontSize: 16 }} />
+                          <ProfileOutlined style={{ fontSize: 16 }} />
                         </a>
                       </Tooltip>
                     );

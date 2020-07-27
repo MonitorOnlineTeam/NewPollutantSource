@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
-import {
-    Card,
-    Spin,
-    message, Empty, Radio, Row, Col,
-    Button, Form,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, message, Empty, Radio, Row, Col, Button } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'

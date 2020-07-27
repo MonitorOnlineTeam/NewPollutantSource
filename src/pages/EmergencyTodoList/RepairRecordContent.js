@@ -6,7 +6,7 @@
  * @Description: 维修记录表
  */
 import React, { Component } from 'react';
-import { Spin, Button, Icon, Card } from 'antd';
+import { Spin, Button, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '../../components/MonitorContent/index';

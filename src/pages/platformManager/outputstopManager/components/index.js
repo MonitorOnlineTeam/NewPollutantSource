@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card, Spin, Modal, Button, Form, Divider, Tooltip, Popconfirm, message,
-} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Modal, Button, Divider, Tooltip, Popconfirm, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '../../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../../AutoFormManager/SearchWrapper';
@@ -196,65 +197,65 @@ import {
             />);
         }
         return (
-                <div>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                            searchParams={this.state.DataWhere}
-                        ></SearchWrapper>
-                        <SdlTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            parentcode="ddd"
-                            searchParams={DataWhere}
-                            appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
-                                <Button icon="plus" type="primary" onClick={() => {
-                                    this.setState({
-                                        visible: true,
-                                    })
-                                }}>添加</Button>
-                              </Fragment>}
-                               appendHandleRows={row => <Fragment>
-                                   <Divider type="vertical" />
-                                    <Tooltip title="删除">
-                                    <Popconfirm
-                                        title="确认要删除吗?"
-                                        onConfirm={() => {
-                                        this.delete(
-                                            row['dbo.T_Bas_OutputStop.OutputStopID'],
-                                        );
-                                        }}
-                                        onCancel={this.cancel}
-                                        okText="是"
-                                        cancelText="否"
-                                    >
-                                        <a href="#"><DelIcon /></a>
-                                    </Popconfirm>
-                                    </Tooltip>
-                                </Fragment>}
-                            {...this.props}
-                        >
-                        </SdlTable>
-                        <Modal
-                              title="添加"
-                              visible={this.state.visible}
-                              destroyOnClose // 清除上次数据
-                              onOk={this.handleOk}
-                              confirmLoading={btnloading}
-                              okText="保存"
-                              cancelText="关闭"
-                              onCancel={() => {
-                                this.setState({
-                                  visible: false,
-                                });
-                              }}
-                              width="50%"
-                            >
-                              <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
-                        </Modal>
-                    </Card>
-                </div>
+          <div>
+              <Card>
+                  <SearchWrapper
+                      onSubmitForm={form => this.loadReportList(form)}
+                      configId={configId}
+                      searchParams={this.state.DataWhere}
+                  ></SearchWrapper>
+                  <SdlTable
+                      style={{ marginTop: 10 }}
+                      configId={configId}
+                      parentcode="ddd"
+                      searchParams={DataWhere}
+                      appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
+                          <Button icon={<PlusOutlined />} type="primary" onClick={() => {
+                              this.setState({
+                                  visible: true,
+                              })
+                          }}>添加</Button>
+                        </Fragment>}
+                         appendHandleRows={row => <Fragment>
+                             <Divider type="vertical" />
+                              <Tooltip title="删除">
+                              <Popconfirm
+                                  title="确认要删除吗?"
+                                  onConfirm={() => {
+                                  this.delete(
+                                      row['dbo.T_Bas_OutputStop.OutputStopID'],
+                                  );
+                                  }}
+                                  onCancel={this.cancel}
+                                  okText="是"
+                                  cancelText="否"
+                              >
+                                  <a href="#"><DelIcon /></a>
+                              </Popconfirm>
+                              </Tooltip>
+                          </Fragment>}
+                      {...this.props}
+                  >
+                  </SdlTable>
+                  <Modal
+                        title="添加"
+                        visible={this.state.visible}
+                        destroyOnClose // 清除上次数据
+                        onOk={this.handleOk}
+                        confirmLoading={btnloading}
+                        okText="保存"
+                        cancelText="关闭"
+                        onCancel={() => {
+                          this.setState({
+                            visible: false,
+                          });
+                        }}
+                        width="50%"
+                      >
+                        <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
+                  </Modal>
+              </Card>
+          </div>
         );
     }
 }

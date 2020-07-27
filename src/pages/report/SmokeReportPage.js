@@ -7,9 +7,11 @@
  */
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
-  Form,
   Row,
   Col,
   Input,
@@ -18,7 +20,6 @@ import {
   Button,
   DatePicker,
   message,
-  Icon,
   Spin,
   Cascader,
 } from 'antd';
@@ -632,7 +633,7 @@ class SmokeReportPage extends PureComponent {
                     生成统计
                     </Button>
                   <Button onClick={this.exportReport} loading={exportLoading}>
-                    <Icon type="export" />
+                    <ExportOutlined />
                       导出
                     </Button>
                 </FormItem>

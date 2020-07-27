@@ -6,6 +6,9 @@
  * @Description: 用户管理
  */
 import React, { Component, Fragment } from 'react';
+import { DeleteOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Button,
   Input,
@@ -13,14 +16,12 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
   Select,
   Modal,
   Tag,
   Divider,
   Dropdown,
-  Icon,
   Menu,
   Popconfirm,
   message,
@@ -204,7 +205,7 @@ export default class UserInfoIndex extends Component {
                           );
                         }}
                       >
-                        <Icon type="edit" style={{ fontSize: 16 }} />
+                        <EditOutlined style={{ fontSize: 16 }} />
                       </a>
                     </Tooltip>
                     <Divider type="vertical" />
@@ -218,7 +219,7 @@ export default class UserInfoIndex extends Component {
                           );
                         }}
                       >
-                        <Icon type="profile" style={{ fontSize: 16 }} />
+                        <ProfileOutlined style={{ fontSize: 16 }} />
                       </a>
                     </Tooltip>
                     <Divider type="vertical" />
@@ -232,7 +233,7 @@ export default class UserInfoIndex extends Component {
                         okText="是"
                         cancelText="否"
                       >
-                        <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
+                        <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
                       </Popconfirm>
                     </Tooltip>
                   </Fragment>

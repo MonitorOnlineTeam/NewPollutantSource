@@ -1,4 +1,5 @@
-import { Icon, List, Tag } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { List, Tag } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import ArticleListContent from '../ArticleListContent';
@@ -13,7 +14,7 @@ class Articles extends Component {
 
     const IconText = ({ type, text }) => (
       <span>
-        <Icon
+        <LegacyIcon
           type={type}
           style={{
             marginRight: 8,

@@ -7,14 +7,27 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin } from 'antd';
+import { CloseCircleOutlined, PlusOutlined, ProfileOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Button,
+  Tooltip,
+  Popconfirm,
+  Divider,
+  Modal,
+  Select,
+  Input,
+  Row,
+  Spin,
+} from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import { routerRedux } from 'dva/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import EnterprisePointCascadeMultiSelect from '@/components/EnterprisePointCascadeMultiSelect'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -24,9 +37,9 @@ const { Option } = Select;
   operationsUserList: operations.operationsUserList,
   loading: loading.effects["operations/addTask"],
   autoFormLoading: loading.effects['autoForm/getPageConfig'],
-  recordType:operations.recordType,
-  pointInfoList:operations.pointInfoList,
-  targetInfoList:operations.targetInfoList
+  recordType: operations.recordType,
+  pointInfoList: operations.pointInfoList,
+  targetInfoList: operations.targetInfoList
 
 }))
 @Form.create()
@@ -34,8 +47,8 @@ class TaskRecord extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ParentType:'企业',
-    //  EntCode:null,
+      ParentType: '企业',
+      //  EntCode:null,
     };
     this._SELF_ = {
       configId: "TaskRecord",
@@ -61,7 +74,7 @@ class TaskRecord extends Component {
         RolesID: "eec719c2-7c94-4132-be32-39fe57e738c9"
       }
     })
-  
+
   }
 
   // 派单
@@ -92,7 +105,7 @@ class TaskRecord extends Component {
     });
 
   }
-   
+
 
 
 
@@ -107,89 +120,85 @@ class TaskRecord extends Component {
   }
 
   // 监控类型选择
-  taskParentTypeChange=(val)=>{
-      this.props.dispatch({
-        type:"operations/getTargetInfoList",
-        payload:{
-          ParentType:val
-        }
-      })
-      let ParentType="企业";
-      if(val!=1)
-      {
-        ParentType="大气站"
+  taskParentTypeChange = (val) => {
+    this.props.dispatch({
+      type: "operations/getTargetInfoList",
+      payload: {
+        ParentType: val
       }
-      this.setState({
-        ParentType,
+    })
+    let ParentType = "企业";
+    if (val != 1) {
+      ParentType = "大气站"
+    }
+    this.setState({
+      ParentType,
       //  EntCode:null
 
-      });
+    });
 
-      this.props.form.setFieldsValue({ "taskparent": undefined,"taskpoint":undefined })
+    this.props.form.setFieldsValue({ "taskparent": undefined, "taskpoint": undefined })
   }
 
-   // 监控标选择
-   taskParentChange=(val)=>{
+  // 监控标选择
+  taskParentChange = (val) => {
     this.props.dispatch({
-      type:"operations/getPointInfoList",
-      payload:{
-        EntCode:val
+      type: "operations/getPointInfoList",
+      payload: {
+        EntCode: val
       }
     })
 
 
-}
+  }
 
-// 站点选择
-taskPointChange=(val)=>{
-  this.props.dispatch({
-    type:"operations/getTaskType",
-    payload:{
-      DGIMN:val
+  // 站点选择
+  taskPointChange = (val) => {
+    this.props.dispatch({
+      type: "operations/getTaskType",
+      payload: {
+        DGIMN: val
+      }
+    })
+
+  }
+
+  //获取监控标下拉框
+  getTargetInfoList = () => {
+    const { targetInfoList } = this.props;
+    let res = [];
+    if (targetInfoList) {
+      targetInfoList.map(item => {
+        res.push(<Option value={item.code}>{item.name}</Option>)
+      })
     }
-  })
- 
-}
-
-//获取监控标下拉框
-getTargetInfoList=()=>{
-  const {targetInfoList}=this.props;
-  let res=[];
-  if(targetInfoList)
-  {
-    targetInfoList.map(item=>{
-      res.push(<Option value={item.code}>{item.name}</Option>)
-    })
+    return res;
   }
-  return res;
-}
 
-//获取站点下拉框
-getPointInfoList=()=>{
-  const {pointInfoList}=this.props;
-  let res=[];
-  if(pointInfoList)
-  {
-    pointInfoList.map(item=>{
-      res.push(<Option value={item.DGIMN}>{item.PointName}</Option>)
-    })
+  //获取站点下拉框
+  getPointInfoList = () => {
+    const { pointInfoList } = this.props;
+    let res = [];
+    if (pointInfoList) {
+      pointInfoList.map(item => {
+        res.push(<Option value={item.DGIMN}>{item.PointName}</Option>)
+      })
+    }
+    return res;
   }
-  return res;
-}
 
-//获取任务类型下拉框
-getTaskTypeInfo=()=>{
-  const {recordType}=this.props;
-  let res=[];
-  if(recordType)
-  {
-    recordType.map(item=>{
-      res.push(<Option value={item.ID}>{item.TypeName}</Option>)
-    })
+  //获取任务类型下拉框
+  getTaskTypeInfo = () => {
+    const { recordType } = this.props;
+    let res = [];
+    if (recordType) {
+      recordType.map(item => {
+        res.push(<Option value={item.ID}>{item.TypeName}</Option>)
+      })
+    }
+    return res;
+
   }
-  return res;
-
-}
 
 
 
@@ -217,45 +226,48 @@ getTaskTypeInfo=()=>{
             configId={configId}
             appendHandleRows={(row, key) => {
               const text = row["dbo.T_Bas_Task.CompleteTime"];
-              const DGIMN=row["dbo.T_Bas_Task.DGIMN"];
-              const TaskID=row["dbo.T_Bas_Task.ID"];
-              let reslist=[];
+              const DGIMN = row["dbo.T_Bas_Task.DGIMN"];
+              const TaskID = row["dbo.T_Bas_Task.ID"];
+              let reslist = [];
               reslist.push(
                 <Tooltip title="详情">
-                <a><Icon onClick={()=>this.props.dispatch(routerRedux.push
-                  (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
-                   </Tooltip>
+                  <a><ProfileOutlined
+                    onClick={() => this.props.dispatch(routerRedux.push
+                      (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
+                </Tooltip>
               )
               if (text) {
                 // 当前时间 > 完成时间显示驳回
                 if (moment().diff(text, 'days') > 7) {
                   reslist.push(
-                  <>
-                  <Divider type="vertical" />
-                  <Tooltip title="驳回">
-                    <Popconfirm
-                      placement="left"
-                      title="确认是否驳回?"
-                      onConfirm={() => {
-                        this.rejectTask(key);
-                      }}
-                      okText="是"
-                      cancelText="否">
-                      <a><Icon type="close-circle" /></a>
-                    </Popconfirm>
-                  </Tooltip></>)
+                    <>
+                      <Divider type="vertical" />
+                      <Tooltip title="驳回">
+                        <Popconfirm
+                          placement="left"
+                          title="确认是否驳回?"
+                          onConfirm={() => {
+                            this.rejectTask(key);
+                          }}
+                          okText="是"
+                          cancelText="否">
+                          <a><CloseCircleOutlined /></a>
+                        </Popconfirm>
+                      </Tooltip></>)
                 }
               }
               return reslist;
             }}
             appendHandleButtons={(keys, rows) => {
-              return <Button icon="plus" type="primary" onClick={() => {
-                this.setState({
-                  visible: true,
-                })
+              return (
+                <Button icon={<PlusOutlined />} type="primary" onClick={() => {
+                  this.setState({
+                    visible: true,
+                  })
 
-                
-              }}>派单</Button>
+
+                }}>派单</Button>
+              );
             }}
           />
         </Card>
@@ -271,29 +283,8 @@ getTaskTypeInfo=()=>{
           }}
         >
           <Form layout="inline">
-            {/* <Row>
-              <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
-                {getFieldDecorator("DGIMNs", {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择监测点!',
-                    },
-                  ]
-                })(
-                  <EnterprisePointCascadeMultiSelect rtnValType={"DGIMN"} placeholder="请选择监测点" onChange={(val) => {
-                    debugger;
-                    this.props.dispatch({
-                      type: 'operations/getTaskTypeInfo',
-                      payload:{}
-                    })
-                  }} />
-                )}
-              </FormItem>
-            </Row> */}
-
             <Row>
-            <FormItem {...formLayout} label="监控类型" style={{ width: '100%', marginBottom: 10 }}>
+              <FormItem {...formLayout} label="监控类型" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskParentType", {
                   rules: [
                     {
@@ -311,9 +302,9 @@ getTaskTypeInfo=()=>{
             </Row>
 
             <Row>
-            <FormItem {...formLayout} label={this.state.ParentType} style={{ width: '100%', marginBottom: 10 }}>
+              <FormItem {...formLayout} label={this.state.ParentType} style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskparent", {
-                 //  initialValue: this.state.EntCode,
+                  //  initialValue: this.state.EntCode,
                   rules: [
                     {
                       required: true,
@@ -322,13 +313,13 @@ getTaskTypeInfo=()=>{
                   ]
                 })(
                   <Select placeholder={`请选择${this.state.ParentType}`} onChange={this.taskParentChange}>
-                     {this.getTargetInfoList()}
+                    {this.getTargetInfoList()}
                   </Select>
                 )}
               </FormItem>
             </Row>
             <Row>
-            <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
+              <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator("taskpoint", {
                   rules: [
                     {
@@ -338,7 +329,7 @@ getTaskTypeInfo=()=>{
                   ]
                 })(
                   <Select placeholder={`请选择监测点`} onChange={this.taskPointChange}>
-                     {this.getPointInfoList()}
+                    {this.getPointInfoList()}
                   </Select>
                 )}
               </FormItem>

@@ -5,7 +5,8 @@
  * @Last Modified time: 2020-06-23 14:34:03
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Icon, Popover } from 'antd'
+import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Card, Alert, Row, Col, Select, Button, message, Radio, Spin, Popover } from 'antd';
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -335,7 +336,7 @@ class index extends Component {
     switch (this.props.QCAResult) {
       // switch ('1') {
       case "0":
-        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
       // return <CustomIcon className={styles.QCResult} type="icon-hege" />
       case "1":
         return <CustomIcon className={styles.QCResult} type="icon-hege" />
@@ -432,7 +433,7 @@ class index extends Component {
                     <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
                       示值误差（%）
                     <Popover content={content} title="计算规则" placement="bottom">
-                        <Icon type="exclamation-circle" />
+                        <ExclamationCircleOutlined />
                       </Popover>
 
                     </td>

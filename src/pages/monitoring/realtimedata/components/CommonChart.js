@@ -9,7 +9,8 @@ import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Card, Col, Row, Tabs, Badge, Icon, Divider, Tooltip, Spin, Popover, Empty } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Tabs, Badge, Divider, Tooltip, Spin, Popover, Empty } from 'antd';
 import { Xiangshang, Xiangxia } from '@/utils/icon';
 
 import styles from './ProcessFlowChart.less';
@@ -165,7 +166,7 @@ class CommonChart extends Component {
                         }
                         res.push(<TabPane tab={
                             <div size="small" className={styles.maincard} bordered={false} >
-                                <p style={{ marginBottom: 1 }} ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title="详细参数" content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><Icon style={{ float: 'right', fontSize: '15px' }} type="exclamation-circle" /></Popover></p>
+                                <p style={{ marginBottom: 1 }} ><span style={{ color: '#00000073' }}>{pollutantParam.pollutantName}</span><Popover placement="rightTop" title="详细参数" content={this.getDeials(pollutantParam.pollutantParamInfo)} trigger="hover"><ExclamationCircleOutlined style={{ float: 'right', fontSize: '15px' }} /></Popover></p>
                                 <p style={{ marginBottom: 1 }} >浓度：<span style={{ color: flag === '0' ? 'red' : flag === '1' ? '#ffbe00e3' : '' }} className={styles.cardfonttype}>{pollutantParam.value}</span>
                                     {
                                         pollutantParam.state ? pollutantParam.state === '1' ?

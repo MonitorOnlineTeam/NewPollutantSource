@@ -1,4 +1,5 @@
-import { Icon, Tooltip, Popover } from 'antd';
+import { QrcodeOutlined } from '@ant-design/icons';
+import { Tooltip, Popover } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -81,7 +82,7 @@ const GlobalHeaderRight = props => {
             rel="noopener noreferrer"
             className={styles.action}
           >
-            <Icon type="qrcode" />
+            <QrcodeOutlined />
           </a>
         </Popover>
       }

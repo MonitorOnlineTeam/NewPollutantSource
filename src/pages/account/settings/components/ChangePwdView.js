@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Modal, Spin, Divider, Button } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Modal, Spin, Divider, Button } from 'antd';
 import Cookie from 'js-cookie';
 
 const FormItem = Form.Item;

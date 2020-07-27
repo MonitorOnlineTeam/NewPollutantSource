@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Modal, Tabs, Descriptions, Spin, Empty } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Input, Button, Card, Modal, Tabs, Descriptions, Spin, Empty } from 'antd';
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 import { connect } from 'dva';
 import moment from 'moment';

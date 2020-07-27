@@ -8,9 +8,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Form,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import moment from "moment";
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';

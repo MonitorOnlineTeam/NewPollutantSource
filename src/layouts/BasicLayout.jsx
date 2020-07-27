@@ -13,7 +13,8 @@ import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { Tabs, Dropdown, Menu, Icon } from 'antd'
+import { DownOutlined } from '@ant-design/icons';
+import { Tabs, Dropdown, Menu } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
@@ -274,7 +275,7 @@ class BasicLayout extends Component {
     const operations = (
       <Dropdown overlay={menu} >
         <a className="ant-dropdown-link" href="#">
-          更多<Icon type="down" />
+          更多<DownOutlined />
         </a>
       </Dropdown>
     );

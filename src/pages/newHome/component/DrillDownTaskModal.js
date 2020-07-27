@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Modal, Tabs, Spin, Input, Icon, Button, Row, Col, Form, Divider, DatePicker, Select } from "antd";
+import { RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Tabs, Spin, Input, Button, Row, Col, Divider, DatePicker, Select } from "antd";
 import { connect } from 'dva'
 import moment from 'moment'
 import SdlTable from '@/components/SdlTable'
@@ -293,7 +296,7 @@ class DrillDownTaskModal extends PureComponent {
               type="link"
               size="small"
             >
-              <Icon type="rollback" />
+              <RollbackOutlined />
                   返回上级
                 </Button>
           }

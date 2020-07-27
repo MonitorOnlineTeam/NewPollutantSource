@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Table, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import moment from 'moment';
 import style from './index.less';
@@ -406,7 +409,7 @@ class SummaryReportPage extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form className="search-form-container" style={{ marginBottom: 20 }}>
               <Row>
                 <Col md={5} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
@@ -563,7 +566,7 @@ class SummaryReportPage extends PureComponent {
                       生成统计
                     </Button>
                     <Button onClick={this.export} loading={exportLoading}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                     {/* )} */}

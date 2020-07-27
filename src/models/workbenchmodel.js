@@ -22,7 +22,6 @@ import {
 //     querypolluntantentinfolist
 // } from '../services/entApi';
 import { queryhistorydatalist } from '@/services/monitordata';
-// import { enterpriceid } from '../config';
 
 export default Model.extend({
     namespace: 'workbenchmodel',

@@ -5,7 +5,30 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin, Col, Tag, Badge } from 'antd';
+import {
+  CloseCircleOutlined,
+  DownOutlined,
+  PlusOutlined,
+  ProfileOutlined,
+  UpOutlined,
+} from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Button,
+  Tooltip,
+  Popconfirm,
+  Divider,
+  Modal,
+  Select,
+  Input,
+  Row,
+  Spin,
+  Col,
+  Tag,
+  Badge,
+} from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import { routerRedux } from 'dva/router';
@@ -458,7 +481,8 @@ getTaskTypeInfo=() => {
               const reslist = [];
               reslist.push(
                 <Tooltip title="详情">
-                <a><Icon onClick={() => this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} type="profile" /></a>
+                <a><ProfileOutlined
+                  onClick={() => this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
                    </Tooltip>,
               )
               if (time) {
@@ -477,7 +501,7 @@ getTaskTypeInfo=() => {
                       }}
                       okText="是"
                       cancelText="否">
-                      <a><Icon type="close-circle" /></a>
+                      <a><CloseCircleOutlined /></a>
                     </Popconfirm>
                   </Tooltip></>)
                 }
@@ -509,7 +533,7 @@ getTaskTypeInfo=() => {
     return (
       <BreadcrumbWrapper>
         <Card className="contentContainer">
-          <Form layout="inline" style={{ marginBottom: '10' }}>
+          <Form  className="search-form-container" style={{ marginBottom: '10' }}>
               <Row>
                   <Col md={8} sm={24}>
                       <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
@@ -654,17 +678,17 @@ getTaskTypeInfo=() => {
                       {
                           this.state.expand ?
                               <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                                  收起 <Icon type="up" />
+                                  收起 <UpOutlined />
                               </a> :
                               <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                                  展开 <Icon type="down" />
+                                  展开 <DownOutlined />
                               </a>
                       }
                   </div>
               </Row>
               <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                   <Col md={16} sm={24} style={{ margin: '10px 0' }}>
-                    <Button icon="plus" type="primary" onClick={() => {
+                    <Button icon={<PlusOutlined />} type="primary" onClick={() => {
                       this.setState({
                         visible: true,
                       })

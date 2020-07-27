@@ -7,7 +7,25 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Form, Row, Col, Input, Select, Modal, Button, Table, Cascader, InputNumber, Divider, message, Icon, TimePicker, DatePicker } from 'antd';
+import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Row,
+  Col,
+  Input,
+  Select,
+  Modal,
+  Button,
+  Table,
+  Cascader,
+  InputNumber,
+  Divider,
+  message,
+  TimePicker,
+  DatePicker,
+} from 'antd';
 import { connect } from 'dva';
 import _ from 'lodash';
 import moment from 'moment';
@@ -742,66 +760,68 @@ class AddInstrument extends Component {
             return '-'
           }
           const { DateType, Cycle, Hour, Minutes } = this.state.dataSource[index].Component[idx];
-          return <FormItem style={{ marginBottom: '6px' }}>
-            {this.props.form.getFieldDecorator(`Cycle${record.key}`, {
-              rules: [
-                { required: true, message: '请输入质控周期' },
-              ],
-              initialValue: text !== undefined ? `${text}` : undefined,
-            })(
-              <InputGroup compact>
-                <Input
-                  style={{ width: '50%' }}
-                  defaultValue={text !== undefined ? `${text}` : undefined}
-                  addonBefore="周期:"
-                  addonAfter={this.selectAfter(index, idx, DateType)}
-                  onChange={e => {
-                    this.changeStandardGasData(index, 'Cycle', e.target.value, idx)
-                  }}
-                />
-                {
-                  DateType == '0' ? <>
-                    <TimePicker format="HH:mm" defaultValue={(Hour != undefined && Minutes != undefined) ? moment(`${Hour}:${Minutes}`, 'HH:mm') : undefined} onChange={(time, timeString) => {
-                      if (time && timeString) {
-                        const hour = timeString.split(':')[0];
-                        const minutes = timeString.split(':')[1];
-                        this.changeStandardGasData(index, 'Hour', hour, idx)
-                        this.changeStandardGasData(index, 'Minutes', minutes, idx)
-                        this.setState({
-                          predictTime: timeString,
-                        })
-                      }
-                    }} />
-                    {
-                      (!this._SELF_.id && text && Hour && Minutes) ?
-                        <div style={{ position: 'absolute', bottom: -18, left: 0, width: '100%', fontSize: 12, color: 'rgba(0, 0, 0, 0.6)' }}>
-                          <Icon type="info-circle" style={{ marginRight: 6 }} />
-                          预计下次质控时间：{`${moment().add(text, 'day').format('YYYY-MM-DD')} ${Hour}:${Minutes}:00`}
-                        </div> : null
-                    }
-                  </>
-                    : <>
-                      <TimePicker format="mm" defaultValue={(Minutes != undefined) ? moment(`${Minutes}`, 'mm') : undefined} onChange={(time, timeString) => {
+          return (
+            <FormItem style={{ marginBottom: '6px' }}>
+              {this.props.form.getFieldDecorator(`Cycle${record.key}`, {
+                rules: [
+                  { required: true, message: '请输入质控周期' },
+                ],
+                initialValue: text !== undefined ? `${text}` : undefined,
+              })(
+                <InputGroup compact>
+                  <Input
+                    style={{ width: '50%' }}
+                    defaultValue={text !== undefined ? `${text}` : undefined}
+                    addonBefore="周期:"
+                    addonAfter={this.selectAfter(index, idx, DateType)}
+                    onChange={e => {
+                      this.changeStandardGasData(index, 'Cycle', e.target.value, idx)
+                    }}
+                  />
+                  {
+                    DateType == '0' ? <>
+                      <TimePicker format="HH:mm" defaultValue={(Hour != undefined && Minutes != undefined) ? moment(`${Hour}:${Minutes}`, 'HH:mm') : undefined} onChange={(time, timeString) => {
                         if (time && timeString) {
-                          this.changeStandardGasData(index, 'Hour', undefined, idx)
-                          this.changeStandardGasData(index, 'Minutes', timeString, idx)
+                          const hour = timeString.split(':')[0];
+                          const minutes = timeString.split(':')[1];
+                          this.changeStandardGasData(index, 'Hour', hour, idx)
+                          this.changeStandardGasData(index, 'Minutes', minutes, idx)
                           this.setState({
                             predictTime: timeString,
                           })
                         }
                       }} />
                       {
-                        (!this._SELF_.id && text && Minutes) ?
+                        (!this._SELF_.id && text && Hour && Minutes) ?
                           <div style={{ position: 'absolute', bottom: -18, left: 0, width: '100%', fontSize: 12, color: 'rgba(0, 0, 0, 0.6)' }}>
-                            <Icon type="info-circle" style={{ marginRight: 6 }} />
-                            预计下次质控时间：{`${moment().add(text, 'hours').format('YYYY-MM-DD HH')}:${Minutes}:00`}
+                            <InfoCircleOutlined style={{ marginRight: 6 }} />
+                            预计下次质控时间：{`${moment().add(text, 'day').format('YYYY-MM-DD')} ${Hour}:${Minutes}:00`}
                           </div> : null
                       }
                     </>
-                }
-              </InputGroup>,
-            )}
-          </FormItem>
+                      : <>
+                        <TimePicker format="mm" defaultValue={(Minutes != undefined) ? moment(`${Minutes}`, 'mm') : undefined} onChange={(time, timeString) => {
+                          if (time && timeString) {
+                            this.changeStandardGasData(index, 'Hour', undefined, idx)
+                            this.changeStandardGasData(index, 'Minutes', timeString, idx)
+                            this.setState({
+                              predictTime: timeString,
+                            })
+                          }
+                        }} />
+                        {
+                          (!this._SELF_.id && text && Minutes) ?
+                            <div style={{ position: 'absolute', bottom: -18, left: 0, width: '100%', fontSize: 12, color: 'rgba(0, 0, 0, 0.6)' }}>
+                              <InfoCircleOutlined style={{ marginRight: 6 }} />
+                              预计下次质控时间：{`${moment().add(text, 'hours').format('YYYY-MM-DD HH')}:${Minutes}:00`}
+                            </div> : null
+                        }
+                      </>
+                  }
+                </InputGroup>,
+              )}
+            </FormItem>
+          );
         },
       },
       // {
@@ -892,14 +912,14 @@ class AddInstrument extends Component {
       props = {
         locale: {
           emptyText: <div className={styles.addContent} onClick={() => { this.addStandardGas(index) }}>
-            <Icon type="plus" /> 添加标气
+            <PlusOutlined /> 添加标气
           </div>,
         },
       };
     } else {
       props = {
         footer: () => <div className={styles.addContent} onClick={() => { this.addStandardGas(index) }}>
-          <Icon type="plus" /> 添加标气
+          <PlusOutlined /> 添加标气
         </div>,
       };
     }
@@ -1075,14 +1095,14 @@ class AddInstrument extends Component {
       locale = {
         locale: {
           emptyText: <div className={styles.addContent} onClick={() => { this.addStandardGasR() }}>
-            <Icon type="plus" /> 添加标气
+            <PlusOutlined /> 添加标气
           </div>,
         },
       };
     } else {
       locale = {
         footer: () => <div className={styles.addContent} onClick={() => { this.addStandardGasR() }}>
-          <Icon type="plus" /> 添加标气
+          <PlusOutlined /> 添加标气
         </div>,
       };
     }
