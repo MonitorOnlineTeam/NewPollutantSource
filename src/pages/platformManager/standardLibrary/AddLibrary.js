@@ -251,7 +251,7 @@ class AddLibrary extends Component {
       UpperLimit: null,
       AlarmType: null,
     })
-    this.setState({ dataSource })
+    this.setState({dataSource: [...dataSource]})
   }
 
   // 删除污染物
