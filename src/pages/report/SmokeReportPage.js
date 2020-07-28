@@ -575,7 +575,7 @@ class SmokeReportPage extends PureComponent {
       <BreadcrumbWrapper title={this.title}>
         {/* <Spin spinning={loading} delay={500}> */}
         <Card className="contentContainer">
-          <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Form style={{ marginBottom: 20 }}>
             <Row>
               <Col xxl={5} xl={7} sm={24} lg={9}>
                 <FormItem {...formLayout} label="排放源" style={{ width: '100%' }}>
