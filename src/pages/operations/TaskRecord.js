@@ -723,7 +723,7 @@ getTaskTypeInfo=() => {
             this.setState({ visible: false })
           }}
         >
-          <Form layout="inline">
+          <Form>
             <Row>
             <FormItem {...formLayout} label="监控类型" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator('taskParentType', {

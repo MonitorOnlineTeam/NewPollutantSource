@@ -33,6 +33,7 @@ import SdlUpload from '@/pages/AutoFormManager/SdlUpload'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import cuid from 'cuid';
 import config from '@/config'
+import _ from 'lodash'
 
 @Form.create()
 @connect(({ common, loading, standardLibraryManager, autoForm }) => {
@@ -235,7 +236,7 @@ class AddLibrary extends Component {
 
   // 添加污染物
   handleAdd = () => {
-    let dataSource = this.state.dataSource;
+    let dataSource = _.cloneDeep(this.state.dataSource);
     const pollutantType = this.props.form.getFieldValue("PollutantType");
     if (!pollutantType) {
       message.error("请先选择污染物类型");
@@ -256,7 +257,7 @@ class AddLibrary extends Component {
 
   // 删除污染物
   handleDelete = (index) => {
-    let tempDataSource = this.state.dataSource;
+    let tempDataSource =  _.cloneDeep(this.state.dataSource);
     tempDataSource.splice(index, 1);
     let newId = this.state.id;
     this.setState({

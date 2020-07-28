@@ -117,7 +117,7 @@ class AddInstrument extends Component {
               <>
                 <a onClick={() => {
                   // 删除时disabled重置为false
-                  const tempEntAndPointList = this.state.entAndPointList;
+                  const tempEntAndPointList = [...this.state.entAndPointList];
                   tempEntAndPointList.map(item => {
                     item.children.map(child => {
                       if (child.key === record.DGIMN) {
@@ -125,7 +125,7 @@ class AddInstrument extends Component {
                       }
                     })
                   })
-                  const tempDataSource = this.state.dataSource;
+                  const tempDataSource = [...this.state.dataSource];
                   tempDataSource.splice(index, 1);
                   this.setState({
                     dataSource: [...tempDataSource],
@@ -478,7 +478,7 @@ class AddInstrument extends Component {
 
   // 添加污染物
   handleAdd = () => {
-    const { dataSource } = this.state;
+    let dataSource = [...this.state.dataSource];
     if (dataSource.length === 4) {
       message.error('最多只能关联4个排口')
       return;
@@ -515,7 +515,7 @@ class AddInstrument extends Component {
         // fixed: 'left',
         width: 80,
         render: (text, record, idx) => <a onClick={() => {
-          const tempDataSource = this.state.dataSource;
+          const tempDataSource = _.cloneDeep(this.state.dataSource);
           tempDataSource[index].Component.splice(idx, 1);
           this.setState({
             dataSource: [...tempDataSource],
@@ -939,14 +939,14 @@ class AddInstrument extends Component {
 
   // 添加标气
   addStandardGas = index => {
-    const { dataSource } = this.state;
+    let dataSource = _.cloneDeep(this.state.dataSource);
     const key = dataSource[index].Component.length + 1;
     dataSource[index].Component.push({
       // key: `${index}${key}`,
       key: Math.floor(Math.random() * 65535),
       StandardGasCode: undefined, // 标气code
       Range: undefined, // 满量程值
-      StandardValue: undefined, // 标准值
+      StandardValue: undefined, // 标准值åƒ
       TotalFlowSetVal: undefined, // 总流量设定值
       Cycle: undefined, // 周期数
       DateType: 0, // 周期类型(0:天 1:小时)
@@ -963,7 +963,7 @@ class AddInstrument extends Component {
   }
 
   addStandardGasR = () => {
-    const { dataSourceR } = this.state;
+    let dataSourceR = _.cloneDeep(this.state.dataSourceR)
     dataSourceR.push({
       // key: `${index}${key}`,
       key: Math.floor(Math.random() * 655321),
@@ -986,7 +986,7 @@ class AddInstrument extends Component {
         // fixed: 'left',
         width: 80,
         render: (text, record, idx) => <a onClick={() => {
-          const tempDataSource = this.state.dataSourceR;
+          const tempDataSource = [...this.state.dataSourceR];
           tempDataSource.splice(idx, 1);
           this.setState({
             dataSourceR: [...tempDataSource],
