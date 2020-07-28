@@ -509,7 +509,7 @@ class AddInstrument extends Component {
 
   // 添加标气
   addStandardGas = () => {
-    const { dataSource } = this.state;
+    let dataSource = _.cloneDeep(this.state.dataSource);
     const key = dataSource;
     dataSource.push({
       // key: `${index}${key}`,

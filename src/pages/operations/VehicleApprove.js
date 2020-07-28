@@ -78,7 +78,7 @@ class VehicleApprove extends Component {
             appendHandleRows={(row, key) => {
               const ApprovalStatus = row["dbo.View_VehicleApplication.ApprovalStatus"];
               const IsReturn = row["dbo.View_VehicleApplication.IsReturn"]
-              const ele = null;
+              let ele = null;
               // 待审批时显示审批
               if (ApprovalStatus === 0) {
                 ele = <>

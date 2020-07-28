@@ -65,7 +65,7 @@ class ApplicationModal extends PureComponent {
         onOk={this.onSubmitForm}
         onCancel={this.closeModal}
       >
-        <Form layout="inline">
+        <Form>
           <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
             <Col span={24}>
               <FormItem {...formLayout} label="车辆名称" style={{ width: '100%' }}>
