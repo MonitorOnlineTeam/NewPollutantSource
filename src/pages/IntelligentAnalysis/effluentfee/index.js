@@ -87,26 +87,45 @@ export default class effluentfeeIndex extends Component {
         });
     }
     handleTableChange = (pagination, filters, sorter) => {
-        if (sorter.order) {
+        // if (sorter.order) {
+        //     this.updateState({
+        //         transmissionEffectiveRate: sorter.order,
+        //         pageIndex: pagination.current,
+        //         pageSize: pagination.pageSize
+        //     });
+        // } else {
+        //     this.updateState({
+        //         transmissionEffectiveRate: 'ascend',
+        //         pageIndex: pagination.current,
+        //         pageSize: pagination.pageSize
+        //     });
+        // }
+        // this.getTableData(pagination.current);
+        const { target } = this.props;
             this.updateState({
-                transmissionEffectiveRate: sorter.order,
-                pageIndex: pagination.current,
-                pageSize: pagination.pageSize
+                target: {
+                    ...target,
+                    ...{
+                        pageIndex: pagination.current,
+                        pageSize: pagination.pageSize
+                    }
+                }
             });
-        } else {
-            this.updateState({
-                transmissionEffectiveRate: 'ascend',
-                pageIndex: pagination.current,
-                pageSize: pagination.pageSize
-            });
-        }
-        this.getTableData(pagination.current);
+        this.getTargetTableData();
     }
 
 
     handlePanelChange = (value, mode) => {
+        const { target } = this.props;
         if (value && value[0]) {
             this.updateState({
+                target: {
+                    ...target,
+                    ...{
+                        pageIndex: 1,
+                        pageSize: 20
+                    }
+                },
                 begin: value[0].format("YYYY-MM-DD HH:mm:ss"),
                 end: value[1].format("YYYY-MM-DD HH:mm:ss"),
             });
@@ -538,15 +557,15 @@ export default class effluentfeeIndex extends Component {
                                     //   scroll={{ y: 'calc(100vh - 450px)' }}
                                     title={() => entName}
                                     // scroll={{ y: 550 }}
-                                    pagination={{
-                                        showSizeChanger: true,
-                                        showQuickJumper: true,
-                                        sorter: true,
-                                        'total': this.props.total,
-                                        'pageSize': this.props.pageSize || 20,
-                                        'current': this.props.pageIndex || 1,
-                                        pageSizeOptions: ['10', '20', '30', '40', '50']
-                                    }}
+                                    // pagination={{
+                                    //     showSizeChanger: true,
+                                    //     showQuickJumper: true,
+                                    //     sorter: true,
+                                    //     'total': this.props.total,
+                                    //     'pageSize': this.props.pageSize || 20,
+                                    //     'current': this.props.pageIndex || 1,
+                                    //     pageSizeOptions: ['10', '20', '30', '40', '50']
+                                    // }}
                                 />
                             }
 
