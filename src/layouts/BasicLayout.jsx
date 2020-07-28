@@ -20,7 +20,7 @@ import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
 import routerConfig from "../../config/config"
 import webConfig from "../../public/webConfig"
-
+import SdlMenu from "@/components/SdlMenu"
 
 
 
@@ -232,10 +232,10 @@ class BasicLayout extends Component {
 
     const handleMenuCollapse = payload =>
       dispatch &&
-        dispatch({
-          type: 'global/changeLayoutCollapsed',
-          payload,
-        });
+      dispatch({
+        type: 'global/changeLayoutCollapsed',
+        payload,
+      });
 
     const menuDataRender = list => {
       let menuList = currentMenu;
@@ -290,6 +290,7 @@ class BasicLayout extends Component {
     }
     return (
       <>
+        <SdlMenu match={this.props.match} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}
@@ -305,14 +306,14 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => [
-              {
-                path: '/',
-                breadcrumbName: formatMessage({
-                  id: 'menu.home',
-                  defaultMessage: 'Home',
-                }),
-              },
-              ...routers,
+            {
+              path: '/',
+              breadcrumbName: formatMessage({
+                id: 'menu.home',
+                defaultMessage: 'Home',
+              }),
+            },
+            ...routers,
           ]}
           footerRender={() => {
             return <div></div>;
