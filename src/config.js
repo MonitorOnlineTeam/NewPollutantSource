@@ -43,6 +43,7 @@ module.exports = {
     domain: '',
     srcPath: '/amap-master/amap/js/maps.js',
   },
+  
   // 离线地图配置：
   // offlineMapUrl: {
   //   domain: 'http://10.230.28.70:8184',
