@@ -54,7 +54,7 @@ class DiffHorizontal extends PureComponent {
           },
           axisLabel: {
             formatter(value) {
-              let val = value.replace('（', '︵').replace('）', '︶')
+              const val = value.replace('（', '︵').replace('(', '︵').replace('）', '︶').replace(')', '︶')
               const label = val.split('').join('\n');
               return label
             },
