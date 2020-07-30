@@ -382,7 +382,7 @@ class Index extends Component {
                 </div>
 
                 <div style={{ background: '#ECECEC', padding: 15, overflow: 'auto', overflowY: 'scorll', minHeight: 350, height: 480 }}>
-                    <Row gutter={16}>
+                    <Row gutter={16} style={{  justifyContent:(alarmPushData != null && alarmPushData.length > 0) ? null : 'center'  }}>
                         {
                             (loadingGetData || loadingGetAlarmState) ? <Spin
                                 style={{
