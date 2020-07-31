@@ -805,6 +805,7 @@ class NewHome extends PureComponent {
           <div className={styles.pageContainer}>
             <Drawer
               // getContainer={false}
+              zIndex={1}
               placement="left"
               closable={false}
               width={340}
@@ -829,6 +830,7 @@ class NewHome extends PureComponent {
             </Drawer>
             <Drawer
               // getContainer={false}
+              zIndex={1}
               placement="right"
               closable={false}
               width={340}
