@@ -30,9 +30,9 @@ const children = [];
 let floats = Setting.layout
 floats = floats === 'sidemenu' ? 'leftmenu' : floats;
 const styleTrue = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#1990fc', cursor: 'pointer' }
-const styleFalse = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#fff', cursor: 'pointer' }
+const styleFalse = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#001529', cursor: 'pointer' }
 const styleNor = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#1990fc', cursor: 'pointer', marginLeft: 5 }
-const styleFor = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#fff', cursor: 'pointer', marginLeft: 5 }
+const styleFor = { border: '1px solid', borderRadius: 4, padding: 3, borderColor: '#001529', cursor: 'pointer', marginLeft: 5 }
 
 
 @connect(({ navigationtree, loading, global }) => ({
@@ -68,13 +68,13 @@ class NavigationTree extends Component {
       selectedKeys: this.props.overallselkeys,
       searchValue: '',
       placement: 'right',
-      normalState: true,
-      offState: true,
-      overState: true,
-      exceState: true,
+      normalState: false,
+      offState: false,
+      overState: false,
+      exceState: false,
       zState: true,
       cState: true,
-      screenList: [0, 1, 2, 3],
+      screenList: [],//0, 1, 2, 3
       treeVis: this.props.IsTree,
       panelVis: 'none',
       panelData: [],
@@ -170,6 +170,7 @@ class NavigationTree extends Component {
       this.clearData()
       this.tilingData(data)
       this.generateList(data)
+      this.onChangeSearch({ target: { value: this.state.searchValue } }, data)
     })
   }
 
@@ -252,6 +253,7 @@ class NavigationTree extends Component {
   // 清除面板数据
   clearData = () => {
     this.state.panelDataList.splice(0, this.state.panelDataList.length)
+    this.state.panelDataListAys.splice(0, this.state.panelDataListAys.length)
     this.state.dataList.splice(0, this.state.dataList.length)
   }
 
@@ -426,16 +428,16 @@ class NavigationTree extends Component {
   // }
 
   // 搜索框改变查询数据
-  onChangeSearch = e => {
+  onChangeSearch =(e, data) => {
     // this.state.panelDataList.splice(0, this.state.panelDataList.length)
     // console.log('1111')
     // console.log('pan1=',this.state.panelDataList);
     // this.tilingData(this.props.EntAndPoint)
     // console.log('2222')
     // console.log('pan2=',this.state.panelDataList);
+    var entAndPoint = data || this.props.EntAndPoint;
     const { value } = e.target;
     var msg = value.toUpperCase();
-    // console.log('ex=', value)
     // const expandedKeys = this.state.dataList
     //   .map(item => {
     //     // console.log('item1',item);
@@ -451,8 +453,7 @@ class NavigationTree extends Component {
     //   }
     //   return null;
     // })
-    const entList = this.props.EntAndPoint.filter(item => item.title.toUpperCase().indexOf(msg) > -1 && item.IsEnt == 1);
-    // console.log('ent=', entList);
+    const entList = entAndPoint.filter(item => item.title.toUpperCase().indexOf(msg) > -1 && item.IsEnt == 1);
     const filterList = this.state.panelDataListAys.filter(item => item.pointName.toUpperCase().indexOf(msg) > -1 || item.entName.toUpperCase().indexOf(msg) > -1);
     this.setState({
       // expandedKeys,
@@ -768,15 +769,12 @@ class NavigationTree extends Component {
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
-    // if (_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+    // if(_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+    //   console.log('1111')
     //   return false
     // }
-    // console.log('this.props.noticeList=',this.props.noticeList)
-    // console.log('this.props.noticeList=',this.props.noticeList)
-    if(_.isEqual(this.state, nextState) && this.props.noticeList.length && (this.props.noticeList.length === nextProps.noticeList.length) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
-      return false;
-    }
-    if (_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+    if (((nextProps.noticeList.length && this.props.noticeList.length === nextProps.noticeList.length) && _.isEqual(this.state, nextState)) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
+      console.log('2222')
       return false
     }
     return true;
@@ -878,6 +876,7 @@ class NavigationTree extends Component {
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
             style={{ marginTop: 10, width: '60%' }}
+
           />
           <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: 'pointer', width: '35%' }} onChange={this.onRadioChange}>
             <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>

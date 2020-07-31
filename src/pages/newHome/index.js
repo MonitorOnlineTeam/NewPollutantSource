@@ -442,29 +442,29 @@ class NewHome extends PureComponent {
             isShow = 'block';
           }
         })
-        return <div style={{ color: '#525151' }}>
-          <div className={mapStyles.pulse1} style={{ left: '-11px', top: -12, display: isShow }}></div>
+        return <div style={{ color: '#525151', position: "relative" }} onClick={() => {
+          // 企业点击显示监测点
+          if (extData.children) {
+            const pointMarkers = extData.children.map(item => ({
+              position: {
+                longitude: item.Longitude,
+                latitude: item.Latitude,
+                ...item,
+              },
+            }))
+            this.setState({
+              coordinateSet: extData.position.CoordinateSet,
+              markersList: pointMarkers,
+              infoWindowHoverVisible: false,
+              displayType: 1,
+            })
+          }
+        }}>
+          <div className={mapStyles.pulse1} style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}></div>
           {
             aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
           }
-          <EntIcon style={{ fontSize: 28 }} onClick={() => {
-            // 企业点击显示监测点
-            if (extData.children) {
-              const pointMarkers = extData.children.map(item => ({
-                position: {
-                  longitude: item.Longitude,
-                  latitude: item.Latitude,
-                  ...item,
-                },
-              }))
-              this.setState({
-                coordinateSet: extData.position.CoordinateSet,
-                markersList: pointMarkers,
-                infoWindowHoverVisible: false,
-                displayType: 1,
-              })
-            }
-          }} />
+          <EntIcon style={{ fontSize: 28 }} />
         </div>
       case '2':
         // 大气站
@@ -532,6 +532,14 @@ class NewHome extends PureComponent {
     }
 
     return <div style={{ color: '#525151' }}>
+      {/* {true && */}
+      {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
+
+        <>
+          {/* <div className={styles.pulse}></div> */}
+          <div className={mapStyles.pulse1} style={{ top: 17 }}></div>
+        </>
+      }
       <div className={styles.pop}>{extData.position.title}</div>
       {pollutantElement}
     </div>
