@@ -22,13 +22,13 @@ class BreadcrumbWrapper extends Component {
             })
           }
         </Breadcrumb>
-        【京能集团-脱硫入口】
+        {this.props.extraName ? `【${this.props.extraName}】` : ""}
       </>
     }
   }
 
   render() {
-    let title = this.props.title + this.props.entName
+    let title = this.props.title + this.props.extraName
     return (
       <PageHeaderWrapper
         title={title}
@@ -44,7 +44,7 @@ class BreadcrumbWrapper extends Component {
 }
 
 BreadcrumbWrapper.defaultProps = {
-  entName: "",
+  extraName: "京能集团-脱硫入口",
 }
 
 export default BreadcrumbWrapper;
