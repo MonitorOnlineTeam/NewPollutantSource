@@ -223,6 +223,11 @@ export default {
             //   component: './Test/Test',
             // },
             {
+              name: 'HistoryData',
+              path: 'dataQuery/monitorData/historyData',
+              component: './dataQuery/monitorData/historyData',
+            },            
+            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
