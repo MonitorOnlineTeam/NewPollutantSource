@@ -67,11 +67,11 @@ class UserTree extends Component {
     }
     this.getroles();
     this.getdepart();
-    const { dispatch,RoleID } = this.props;
+    const { dispatch, RoleID } = this.props;
     dispatch({
       type: 'usertree/GetUserList',
       payload: {
-        RolesID:RoleID?RoleID:null,
+        RolesID: RoleID || null,
         callback: model => {
             if (model.length > 0) {
               this.generateList();
@@ -96,21 +96,21 @@ class UserTree extends Component {
       type: 'usertree/getrolestreeandobj',
       payload: {
         Type: '0',
-        RoleID:this.props.RoleID?this.props.RoleID:null
+        RoleID: this.props.RoleID ? this.props.RoleID : null,
       },
     })
   }
 
   /** 选中角色加载树 */
   onRolesChange=value => {
-    const { dispatch,RoleID } = this.props;
+    const { dispatch, RoleID } = this.props;
     this.setState({
       Roles: value,
     }, () => {
     dispatch({
         type: 'usertree/GetUserList',
         payload: {
-          RolesID: this.state.Roles? this.state.Roles:(RoleID?RoleID:null),
+          RolesID: this.state.Roles ? this.state.Roles : (RoleID || null),
           UserGroupID: this.state.Depart,
           UserName: this.state.UserName,
           callback: model => {
@@ -135,14 +135,14 @@ class UserTree extends Component {
 
   /** 选中部门加载树 */
   onDepartChange = value => {
-    const { dispatch,RoleID } = this.props;
+    const { dispatch, RoleID } = this.props;
     this.setState({
       Depart: value,
     }, () => {
       dispatch({
         type: 'usertree/GetUserList',
         payload: {
-          RolesID: this.state.Roles? this.state.Roles:(RoleID?RoleID:null),
+          RolesID: this.state.Roles ? this.state.Roles : (RoleID || null),
           UserGroupID: this.state.Depart,
           UserName: this.state.UserName,
           callback: model => {
@@ -332,16 +332,6 @@ class UserTree extends Component {
           {record.Phone && <div style={{ float: 'right', marginRight: '10px' }}><Icon type="mobile" theme="twoTone"style={{ marginRight: '5px' }} />{record.Phone}</div>}
           </div>)
           record.UserGroupName && itemlist.push(<br></br>);
-
-            record.UserGroupName &&
-            record.UserGroupName.split(',').map((m, index) => {
-              if (index < 2) {
-                itemlist.push(<Tag title={m} color="geekblue" styles={{ fontSize: 5 }}>{m.length > 5 ? `${m.substring(0, 5)}...` : m}</Tag>);
-              }
-              if (index === 2) {
-                itemlist.push(<Tag title={record.UserGroupName} color="geekblue" styles={{ fontSize: 5 }}>...</Tag>);
-              }
-            })
             record.RolesName && itemlist.push(<br></br>);
 
             record.RolesName &&
@@ -375,7 +365,7 @@ class UserTree extends Component {
          <TreeSelect
           // showSearch
           style={{ width: 300 }}
-          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
+          // value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
           dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
           placeholder="请选择部门"
           allowClear
@@ -389,7 +379,7 @@ class UserTree extends Component {
           <TreeSelect
           // showSearch
           style={{ marginTop: '10px', width: 300 }}
-          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
+          // value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
           dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
           placeholder="请选择角色"
           allowClear
