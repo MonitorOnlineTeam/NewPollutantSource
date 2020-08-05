@@ -1,25 +1,50 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import config from '@/config'
-import defaultSettings from '../../../config/defaultSettings'
+import { Breadcrumb } from "antd"
 import webConfig from '../../../public/webConfig'
 
-class index extends Component {
+class BreadcrumbWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  render() {
-    // 多标签 - 不显示面包屑
-    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
-      return <>{this.props.children}</>
+
+  pageHeaderRender = (props) => {
+    if (props.breadcrumb.routes) {
+      return <>
+        当前位置：
+        <Breadcrumb>
+          {
+            props.breadcrumb.routes.map(item => {
+              return <Breadcrumb.Item>
+                <a href={item.path}>{item.breadcrumbName}</a>
+              </Breadcrumb.Item>
+            })
+          }
+        </Breadcrumb>
+        {this.props.extraName ? `【${this.props.extraName}】` : ""}
+      </>
     }
+  }
+
+  render() {
+    let title = this.props.title + this.props.extraName
     return (
-      <PageHeaderWrapper title={this.props.title} className={!webConfig.isShowBreadcrumb ? "hideBreadcrumb" : ""}>
+      <PageHeaderWrapper
+        title={title}
+        className={!webConfig.isShowBreadcrumb ? "hideBreadcrumb" : ""}
+        pageHeaderRender={(PageHeaderWrapperProps) => {
+          return this.pageHeaderRender(PageHeaderWrapperProps);
+        }}
+      >
         {this.props.children}
       </PageHeaderWrapper>
     );
   }
 }
 
-export default index;
+BreadcrumbWrapper.defaultProps = {
+  extraName: "京能集团-脱硫入口",
+}
+
+export default BreadcrumbWrapper;

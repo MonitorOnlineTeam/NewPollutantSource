@@ -40,15 +40,44 @@ ol {
   padding: 0;
 }
 
-.sdlTable {
-  .ant-table-body {
-    // min-height: 100px;
-  }
-}
-
 :global {
+
+  // 面包屑 -- start
+  .ant-pro-page-header-wrap-page-header-warp {
+    background-color: transparent;
+    line-height: 46px;
+    margin-left: 20px;
+  }
+
+  .ant-breadcrumb {
+    display: inline-block;
+
+    a {
+      color: #666;
+    }
+  }
+
+  // 面包屑 -- end
+
+
+  // 内容区域样式
+  .ant-pro-page-header-wrap-children-content {
+    margin: 0 20px;
+  }
+
+  // formItem 样式
   .ant-legacy-form-item {
     margin-bottom: 8px;
+  }
+
+  // 隐藏系统默认菜单
+  .ant-pro-top-nav-header-main .ant-pro-top-nav-header-menu .ant-menu {
+    display: none;
+  }
+
+  // table 表格
+  .ant-table-tbody {
+    font-size: 13px !important;
   }
 
   .react-resizable {
@@ -78,9 +107,7 @@ ol {
       // padding-top: 64px;
     }
 
-    .ant-pro-page-header-wrap-children-content {
-      margin: 14px 10px 0;
-    }
+
 
 
     // table没有数据时，隐藏表头滚动条
@@ -119,11 +146,6 @@ ol {
 a:hover {
   text-decoration: none !important;
 }
-
-// .contentContainer {
-//   height: calc(100vh - 170px);
-//   overflow-y: auto;
-// }
 
 .center {
   display: flex !important;
@@ -208,74 +230,6 @@ a:hover {
 }
 
 :global {
-
-  // 多选下拉样式
-  .ant-form-item-control {
-    // line-height: normal;
-  }
-
-  .ant-select-selection--multiple,
-  .ant-select-selector {
-    height: 32px;
-    overflow: hidden;
-    // margin-bottom: -10px
-  }
-
-  // table样式
-  .ant-table-middle>.ant-table-title,
-  .ant-table-middle>.ant-table-footer {
-    padding: 10px 8px !important;
-  }
-
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th {
-    padding: 5px !important;
-  }
-
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td {
-    padding: 8px !important;
-  }
-
-  // 隐藏系统默认菜单
-  .ant-pro-top-nav-header-main .ant-pro-top-nav-header-menu .ant-menu{
-    display: none;
-  }
-
-  // 菜单选中样式
-  // .ant-menu-dark .ant-menu-item:hover,
-  // .ant-menu-dark .ant-menu-item-active,
-  // .ant-menu-dark .ant-menu-submenu-active,
-  // .ant-menu-dark .ant-menu-submenu-open,
-  // .ant-menu-dark .ant-menu-submenu-title:hover {
-  //   font-weight: 900;
-  //   // border-bottom: 2px solid #1890FF;
-  // }
-
-  .ant-table {
-    font-size: 13px !important;
-  }
-
-  // .ant-menu-dark .ant-menu-submenu-selected {
-  //   background-color: transparent;
-  //   /* background-color: white; */
-  //   font-weight: 900;
-  //   color: #1890FF !important;
-  //   border-bottom: 2px solid #1890FF !important;
-  // }
-
   // 地图气泡样式
   .amap-logo {
     display: none !important;
@@ -309,38 +263,6 @@ a:hover {
 
 
   .ant-layout {
-
-    // 面包屑样式 - start
-    .ant-page-header {
-      padding: 10px 14px;
-      min-height: 44px;
-
-      .ant-page-header-heading {
-        float: left;
-        margin-top: -8px;
-        margin-right: 6px;
-        margin-left: 6px;
-      }
-
-      .ant-page-header-heading-title {
-        font-size: 16px;
-      }
-    }
-
-    .ant-breadcrumb {
-      display: inline-block;
-    }
-
-    .ant-page-header .ant-breadcrumb {
-      margin-top: 2px;
-    }
-
-    .ant-breadcrumb-separator {
-      margin: 0 4px;
-    }
-
-    // 面包屑样式 - end
-
     // tab标签样式
     .ant-tabs-extra-content {
       line-height: 34px;

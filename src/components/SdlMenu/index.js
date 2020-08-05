@@ -58,7 +58,7 @@ class Test extends Component {
                     <ul className={styles.menu_item_list}>
                       {
                         menuItem.children.map(itm => {
-                          return <li style={{ color: pathName === itm.NavigateUrl ? "#1890ff" : "" }} onClick={() => { this.onMenuItemClick(itm, menuKey) }}>
+                          return <li style={{ cursor: 'pointer', color: pathName === itm.NavigateUrl ? "#1890ff" : "" }} onClick={() => { this.onMenuItemClick(itm, menuKey) }}>
                             {this.getIcon(itm.icon)}
                             <span className={styles.menu_name}>{itm.name}</span>
                           </li>
