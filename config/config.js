@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -99,7 +99,6 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        
         // appoperation
         {
           path: '/appoperation',
@@ -217,11 +216,11 @@ export default {
               path: '/home',
               component: './newHome',
             },
-            // {
-            //   name: 'test',
-            //   path: '/test',
-            //   component: './Test/Test',
-            // },
+            {
+              name: 'test',
+              path: '/test',
+              component: './Test/Test',
+            },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -280,36 +279,27 @@ export default {
                 },
               ],
             },
-            //污水处理台
-            // {
-            //   path: '/SewagePlant',
-            //   name: 'SewagePlant',
-            //   routes: [
-            //     {
-            //       path: '/SewagePlant',
-            //       redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
-            //     },
-            //     // 数据上报列表
-            //     {
-            //         name: 'DataReporting',
-            //         path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
-            //         ///:monitortime/:entcode
-            //         component: './platformManager/dataReport/',
-            //     },
-            //     // 数据上报添加或修改
-            //     {
-            //         name: 'DataReportingAdd',
-            //         path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
-            //         component: './platformManager/dataReport/components/addDataReport',
-            //     },
-            //     //统计报表
-            //     {
-            //       name:'statisticsReportDataList',
-            //       path:'/SewagePlant/dataReportList/statisticsReportDataList',
-            //       component: './report/StatisticsReportDataList',
-            //     }
-            //   ]
-            // },
+            // 数据查询
+            {
+              path: '/dataSearch',
+              name: 'dataSearch',
+              routes: [
+                {
+                  // 监测数据
+                  path: '/dataSearch/monitor',
+                  name: 'monitor',
+                  routes: [
+                    {
+                      // 工况模拟
+                      name: 'working',
+                      path: '/dataSearch/monitor/working',
+                      component: './dataSearch/monitor/working',
+                    },
+                    
+                  ]
+                },
+              ]
+            },
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -879,7 +869,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',

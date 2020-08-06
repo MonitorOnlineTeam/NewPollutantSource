@@ -1,4 +1,5 @@
 @import '~antd/es/style/themes/default.less';
+@contentMargin: 20px; // 内容区域左右边距
 
 html,
 body,
@@ -46,7 +47,7 @@ ol {
   .ant-pro-page-header-wrap-page-header-warp {
     background-color: transparent;
     line-height: 46px;
-    margin-left: 20px;
+    margin-left: @contentMargin;
   }
 
   .ant-breadcrumb {
@@ -62,7 +63,7 @@ ol {
 
   // 内容区域样式
   .ant-pro-page-header-wrap-children-content {
-    margin: 0 20px;
+    margin: 0 @contentMargin;
   }
 
   // formItem 样式
@@ -230,6 +231,7 @@ a:hover {
 }
 
 :global {
+
   // 地图气泡样式
   .amap-logo {
     display: none !important;
@@ -263,6 +265,7 @@ a:hover {
 
 
   .ant-layout {
+
     // tab标签样式
     .ant-tabs-extra-content {
       line-height: 34px;
