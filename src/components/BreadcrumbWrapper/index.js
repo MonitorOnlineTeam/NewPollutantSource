@@ -44,7 +44,7 @@ class BreadcrumbWrapper extends Component {
 }
 
 BreadcrumbWrapper.defaultProps = {
-  extraName: "京能集团-脱硫入口",
+  extraName: "",
 }
 
 export default BreadcrumbWrapper;
