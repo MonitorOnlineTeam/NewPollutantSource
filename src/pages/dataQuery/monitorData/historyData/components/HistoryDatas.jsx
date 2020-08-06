@@ -3,11 +3,11 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
-import ReactEcharts from 'echarts-for-react';
+
 import PageLoading from '@/components/PageLoading'
 import CemsTabs from '@/components/CemsTabs'
 
@@ -22,6 +22,9 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import PollutantSelect from '@/components/PollutantSelect'
 
 import TableData from './TableData'
+import MultiChart from  './MultiChart'
+import SingleChart from './SingleChart'
+
 /**
  * 历史数据组件
  * jab 2020.07.30
@@ -66,15 +69,15 @@ class HistoryDatas extends React.Component {
       panes: [{
         key: 'tableData',
         title: '数据列表',
-        name: TableData
+        name: <TableData />
       }, {
         key: 'singleChart',
         title: '单参数图表',
-        name: this.singleChart
+        name: <SingleChart />
       }, {
         key: 'multiChart',
         title: '多参数图表',
-        name: this.multiChart
+        name: <MultiChart />
       }],
       historyparams: {
         datatype: 'realtime',
@@ -87,8 +90,9 @@ class HistoryDatas extends React.Component {
         pollutantNames: null,
         unit: null,
         isAsc: true,
-        DGIMN: '',
+        DGIMN: ''
       },
+      isSwitch:false,
       pollutantlist : [{"PollutantName":"COD","PollutantCode":1},{"PollutantName":"氨氮","PollutantCode":2}]
     };
   }
@@ -97,6 +101,7 @@ class HistoryDatas extends React.Component {
     this.changeDgimn(this.props.DGIMN)
   }
   changeDgimn = () =>{
+   
     this.onRbChange();
    const { dispatch } = this.props;
 
@@ -149,6 +154,21 @@ class HistoryDatas extends React.Component {
     }
     </>
   }
+
+//   tableData = () =>{
+//     return (
+//       <SdlTable
+//          // rowKey={(record, index) => `complete${index}`}
+//          // dataSource={datatable}
+//          // columns={columns}
+//          resizable
+//          defaultWidth={80}
+//          scroll={{ y: this.props.tableHeight || undefined}}
+//          pagination={{ pageSize: 20 }}
+
+//      />
+// );
+//   }
   pollutantChange = (e) =>{
      console.log(e)
   }
@@ -190,7 +210,7 @@ class HistoryDatas extends React.Component {
   }
 
   changeReportType=(key)=>{
-     console.log(key)
+
   }
   // handlePollutantChange=(value)=>{
 
@@ -200,6 +220,13 @@ class HistoryDatas extends React.Component {
   // }
   onFinish = () => {
     console.log(111)
+  }
+  tabChange = (key) =>{
+    if(key ==='tableData'){
+      this.setState({isSwitch:false})
+    }else{
+    this.setState({isSwitch:true})
+   }
   }
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
@@ -222,7 +249,7 @@ class HistoryDatas extends React.Component {
   // }
   //查询条件
   queryCriteria = () => {
-    const { dataType, dateValue, displayType, formLayout,pollutantlist } = this.state;
+    const { dataType, dateValue, displayType, formLayout,pollutantlist,isSwitch } = this.state;
     const GetpollutantSelect = this.getpollutantSelect;
     const formItemLayout = {
       labelCol: {
@@ -242,8 +269,8 @@ class HistoryDatas extends React.Component {
       </div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
-          <Row gutter={16} style={{flex:1}}> 
-            <Col xl={8} md={12} sm={24} xs={24}>
+          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1}} > 
+            <Col  xl={8}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
                  <RangePicker_ 
                   dateValue={dateValue}
@@ -255,8 +282,8 @@ class HistoryDatas extends React.Component {
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-            <Col xl={6} md={12} sm={24} xs={24}>
-              <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm' >
+            <Col  xl={5}  md={12} sm={24} xs={24}>
+              <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
                   <Select onChange={this.changeReportType } >
                     <Select.Option key="siteDaily">小时</Select.Option>
                     <Select.Option key="monthly">分钟</Select.Option>
@@ -266,15 +293,20 @@ class HistoryDatas extends React.Component {
                 
               </Form.Item>
               </Col>
-              <Col xl={6} md={12} sm={24} xs={24}>
+              <Col  xl={5}  md={12} sm={24} xs={24}>
               <Form.Item label="污染类型" {...formItemLayout} className='queryConditionForm'>
                <GetpollutantSelect />
               </Form.Item>
             </Col>
-            <Col xl={4} md={12} sm={24} xs={24}>
-              <Form.Item {...formItemLayout} className='queryConditionForm'>
-                <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 10 }}>查询</Button>
-                <Button type="primary" loading={false} onClick={() => { this.exoprtData() }} style={{ marginRight: 10 }}>导出</Button>
+            <Col  xl={2}   md={12} sm={24} xs={12}>
+              <Form.Item label="标识" {...formItemLayout} className='queryConditionForm'>
+              <Switch  disabled={this.state.isSwitch} checkedChildren="开启" unCheckedChildren="关闭" style={{ marginRight: 10 }} defaultChecked />
+              </Form.Item>
+            </Col>
+            <Col  xl={4}   md={12} sm={24} xs={12}>
+              <Form.Item {...formItemLayout} className='queryConditionForm'> 
+                <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
+                <Button type="primary" loading={false} onClick={() => { this.exoprtData() }} style={{ marginRight: 5 }}>导出</Button>
               </Form.Item>
             </Col>
           </Row>
@@ -301,16 +333,14 @@ class HistoryDatas extends React.Component {
     }
     </>
   }
-  callbackChange = (key) =>{
-      console.log(key)
-  }
+
 
   render() {
     const QueryCriteria = this.queryCriteria;
     return (
       <div id="dataquery">
         <Card title={<QueryCriteria />} >
-          <CemsTabs panes={this.state.panes}  callback={this.callbackChange}/>
+          <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
         </Card>
 
       </div>

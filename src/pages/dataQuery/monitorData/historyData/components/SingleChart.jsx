@@ -9,10 +9,10 @@ import { connect } from 'dva';
 
 import SdlTable from '@/components/SdlTable'
 
-
+import ReactEcharts from 'echarts-for-react';
 
 /**
- * 表格数据组件
+ * 单图表数据组件
  * jab 2020.07.30
  */
 @connect(({ loading, dataquery,historyData }) => ({
@@ -30,7 +30,7 @@ import SdlTable from '@/components/SdlTable'
     testData:historyData.testData
 }))
 
-class TableData extends React.Component {
+class SingleChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,18 +48,18 @@ class TableData extends React.Component {
     }
   render() {
     return (
-           <SdlTable
-              // rowKey={(record, index) => `complete${index}`}
-              // dataSource={datatable}
-              // columns={columns}
-              resizable
-              defaultWidth={80}
-              scroll={{ y: this.props.tableHeight || undefined}}
-              pagination={{ pageSize: 20 }}
-
-          />
+        <>
+            <p>这是单参数图表</p>
+            {/* <ReactEcharts
+             option={this.getOptions()}
+             lazyUpdate={true}
+             style={{ height: 'calc(100vh - 250px)', width: '100%' }}
+             className="echarts-for-echarts"
+             theme="my_theme"
+         />  */}
+        </>
     );
   }
 }
 
-export default TableData;
+export default SingleChart;
