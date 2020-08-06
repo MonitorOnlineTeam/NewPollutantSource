@@ -300,7 +300,12 @@ export default {
                       path: '/dataSearch/monitor/working',
                       component: './dataSearch/monitor/working',
                     },
-                    
+                    {
+                      // 历史数据
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/historyData',
+                      component: './dataSearch/monitor/historyData',
+                    },                    
                   ]
                 },
               ]
