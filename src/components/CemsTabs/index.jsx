@@ -17,19 +17,29 @@ class CemsTabs extends React.Component {
     }
     static defaultProps = {
         key: 0,
-        title: ''
+        title: '',
+        defaultKey:''
     }
     constructor(props) {
         super(props);
         this.state = { panes: '' };
     }
+    tabChanges = (key)=> {
+         const { tabChange } = this.props;
+         tabChange(key)
+    }
     componentDidMount() {
+        const { defaultKey,tabChange,panes } = this.props;
+
+        const defaultActiveKey = defaultKey || panes[0].key;
+
+        tabChange(defaultActiveKey)
     }
     render() {
-        const { panes } = this.props;
+        const { panes,defaultKey } = this.props;
         return (
             <>
-                <Tabs  type="card" onChange={this.props.callback}>
+                <Tabs  type="card" defaultActiveKey={defaultKey} onChange={this.tabChanges}>
                     {panes.length > 0 ? panes.map(pane =>
                         <TabPane tab={pane.title} key={pane.key}>
                               {  pane.name.constructor ? pane.name.constructor == Object? pane.name : <TabContent name={pane.name}/> : null  }
