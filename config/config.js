@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -99,11 +99,6 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        /* 董晓云添加2 */
-        /* 用户基本信息管理 */
-        { path: '/rolesmanager/userinfo', component: './Userinfo' },
-        /* 用户基本信息管理-用户基本管理 */
-        { path: '/rolesmanager/userdetail/:UserId', component: './Userinfo/AddUser' },
         // appoperation
         {
           path: '/appoperation',
@@ -776,6 +771,17 @@ export default {
                     },
                   ],
                 },
+                /* 董晓云添加2 */
+                /* 用户基本信息管理 */
+                {
+                  path: '/rolesmanager/userinfo',
+                  component: './Userinfo'
+                },
+                /* 用户基本信息管理-用户基本管理 */
+                {
+                  path: '/rolesmanager/userdetail/:UserId',
+                  component: './Userinfo/AddUser'
+                },
                 {
                   name: 'roleInfo',
                   path: '/rolesmanager/role',
@@ -916,7 +922,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
