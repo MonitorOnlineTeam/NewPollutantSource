@@ -3,13 +3,13 @@ import DocumentTitle from 'react-document-title';
 import Link from 'umi/link';
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'dva';
-import { Icon, Modal, Popover, } from 'antd';
+import { Icon, Modal, Popover } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
+import Cookie from 'js-cookie';
 import logo from '../../public/sdlicon.png';
 import config from '@/config';
 import styles from './UserLayout.less';
-import Cookie from 'js-cookie';
 
 const UserLayout = props => {
   const {
@@ -30,7 +30,6 @@ const UserLayout = props => {
         type: 'login/IfSpecial',
         payload: {},
       });
-
     }
   }, []);
   const { routes = [] } = route;
@@ -40,19 +39,18 @@ const UserLayout = props => {
       pathname: configInfo && configInfo.SystemName,
     },
     configInfo,
-    appFlag
+    appFlag,
   } = props;
   const { breadcrumb } = getMenuData(routes);
-  const title = configInfo ? `登录 - ${configInfo.SystemName}` : "登录";
+  const title = configInfo ? `登录 - ${configInfo.SystemName}` : '登录';
 
-  var QRCode = require('qrcode.react');
-  //获取当前ip地址和端口号
-  var getIp = "";
+  const QRCode = require('qrcode.react');
+  // 获取当前ip地址和端口号
+  let getIp = '';
   if (appFlag) {
     getIp = appFlag;
-  }
-  else {
-    getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
+  } else {
+    getIp = `http://${window.location.host}/appoperation/appqrcodemain`;
   }
 
   return (
@@ -71,7 +69,7 @@ const UserLayout = props => {
 
           <div className={styles.lang}>
             {
-              configInfo && configInfo.IsShowQRcode === "true" &&
+              configInfo && configInfo.IsShowQRcode === 'true' &&
               <SelectLang />
             }
 
@@ -84,7 +82,7 @@ const UserLayout = props => {
               <Link to="/">
 
                 {
-                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/api/upload/${configInfo.Logo}` : logo} />
+                  configInfo && configInfo.IsShowLogo === 'true' && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/upload/${configInfo.Logo}` : logo} />
                 }
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}
@@ -98,7 +96,7 @@ const UserLayout = props => {
         </div>
         {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
         {
-          configInfo && configInfo.IsShowQRcode === "true" &&
+          configInfo && configInfo.IsShowQRcode === 'true' &&
           <Popover
             content={
               <div>
@@ -111,11 +109,11 @@ const UserLayout = props => {
               </div>
             }
             title="手机端下载" trigger="hover">
-            <Icon type="qrcode" style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }} />
+            <Icon type="qrcode" style={{ position: 'absolute', cursor: 'pointer', right: '58px', top: '22px', fontSize: 16 }} />
           </Popover>
         }
         {
-          configInfo && configInfo.IsShowFooterMessages === "true" && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
+          configInfo && configInfo.IsShowFooterMessages === 'true' && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
         }
         {configInfo && configInfo.TechnicalSupport && <p style={{ fontSize: 14, textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', marginTop: -13 }}>{configInfo.TechnicalSupport}</p>}
       </div>

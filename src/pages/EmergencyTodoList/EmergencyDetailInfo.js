@@ -5,7 +5,7 @@ import { routerRedux } from 'dva/router';
 import { CALL_HISTORY_METHOD } from 'react-router-redux';
 import { async } from 'q';
 import moment from 'moment';
-import Lightbox from "react-image-lightbox-rotate";
+import Lightbox from 'react-image-lightbox-rotate';
 import { router } from 'umi'
 import styles from './EmergencyDetailInfo.less';
 import DescriptionList from '../../components/DescriptionList';
@@ -16,7 +16,7 @@ import MonitorContent from '../../components/MonitorContent/index';
 import { get, post, authorpost } from '@/utils/request';
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 import ViewImagesListModal from '../../components/ImgView';
-import "react-image-lightbox/style.css";
+import 'react-image-lightbox/style.css';
 import config from '@/config';
 import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
 
@@ -259,7 +259,7 @@ class EmergencyDetailInfo extends Component {
         return returnStepList;
     }
 
-    //图标
+    // 图标
     showIcon = TaskStatusText => {
         switch (TaskStatusText) {
             case '待执行': return 'minus-circle';
@@ -485,7 +485,7 @@ class EmergencyDetailInfo extends Component {
                                         ExceptionName = '零值异常';
                                         break;
                                     case EnumDataException.OverRun:
-                                        ExceptionName = '超限异常';
+                                        ExceptionName = '超量程异常';
                                         break;
                                     case EnumDataException.Series:
                                         ExceptionName = '连续值异常';
@@ -674,7 +674,7 @@ class EmergencyDetailInfo extends Component {
             }
         }
         const upload = {
-      
+
             showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
             listType: 'picture-card',
             fileList: [...fileList],
@@ -807,12 +807,12 @@ class EmergencyDetailInfo extends Component {
                         onCloseRequest={() => this.setState({ previewVisible: false })}
                         onPreMovePrevRequest={() =>
                             this.setState({
-                                photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
+                                photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length,
                             })
                         }
                         onPreMoveNextRequest={() =>
                             this.setState({
-                                photoIndex: (photoIndex + 1) % ImageList.length
+                                photoIndex: (photoIndex + 1) % ImageList.length,
                             })
                         }
                     />

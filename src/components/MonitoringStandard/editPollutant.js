@@ -52,6 +52,7 @@ class EditPollutant extends Component {
           DGIMN,
           PollutantCode: Id,
           callback: () => {
+            console.log('this.props.editpollutant====', this.props.editpollutant);
             this.props.form.setFieldsValue({
               UpperLimit: this.props.editpollutant.UpperLimit,
               LowerLimit: this.props.editpollutant.LowerLimit,
@@ -63,6 +64,7 @@ class EditPollutant extends Component {
               AlarmDescription: this.props.editpollutant.AlarmDescription,
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
+              ExceptionType: this.props.editpollutant.ExceptionType == '' ? [] : this.props.editpollutant.ExceptionType.split(','),
             });
           },
         },
@@ -74,6 +76,8 @@ class EditPollutant extends Component {
     e.preventDefault();
     let flag = true;
     this.props.form.validateFieldsAndScroll((err, values) => {
+      debugger;
+      console.log('values=====', values);
       const that = this;
       if (this.state.PollutantCode !== null && this.state.DGIMN !== null) {
         if (values.AbnormalUpperLimit < values.AbnormalLowerLimit) {
@@ -110,6 +114,7 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
+              ExceptionType: values.ExceptionType.length > 0 ? values.ExceptionType.join(',') : '',
               callback: res => {
                 if (res.IsSuccess) {
                   this.props.oncancel();
@@ -205,7 +210,25 @@ class EditPollutant extends Component {
               </Row>
             </Panel>
             <Panel header="异常设置" key="2" style={customPanelStyle}>
-              <Row gutter={48}>
+              <Row>
+              <Col span={24}>
+                  <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 15 }} label="异常类型">
+                    {getFieldDecorator('ExceptionType', {
+                    })(
+                      <Select
+                      mode="multiple"
+                      style={{ width: '100%' }}
+                      placeholder="请选择异常类型"
+                      >
+                        <Option value="1">零值异常</Option>
+                        <Option value="2">超量程异常</Option>
+                        <Option value="3">连续值异常</Option>
+                      </Select>,
+                    )}
+                  </FormItem>
+              </Col>
+              </Row>
+              <Row>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出上限">
                     {getFieldDecorator('AbnormalUpperLimit', {
@@ -221,7 +244,7 @@ class EditPollutant extends Component {
                   </FormItem>
                 </Col>
               </Row>
-              <Row gutter={48}>
+              <Row>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
@@ -236,8 +259,6 @@ class EditPollutant extends Component {
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-              </Row>
-              <Row gutter={48}>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超限计数">
                     {getFieldDecorator('OverrunContinuityCount', {
