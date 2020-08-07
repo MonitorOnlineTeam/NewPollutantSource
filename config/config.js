@@ -99,7 +99,11 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        
+        /* 董晓云添加2 */
+        /* 用户基本信息管理 */
+        { path: '/rolesmanager/userinfo', component: './Userinfo' },
+        /* 用户基本信息管理-用户基本管理 */
+        { path: '/rolesmanager/userdetail/:UserId', component: './Userinfo/AddUser' },
         // appoperation
         {
           path: '/appoperation',
@@ -686,6 +690,39 @@ export default {
                   path: '/operations/CommandDispatchReport',
                   name: 'CommandDispatchReport',
                   component: './operations/CommandDispatchReport',
+                },
+                {
+                  path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                  name: 'CommandDispatchReportDetails',
+                  component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+                },
+                /* 董晓云添加4 */
+                /* 智能运维-审批单记录 */
+                {
+                  path: '/operations/AllTaskAuditRecord',
+                  name: 'AllTaskAuditRecord',
+                  component: './operations/AllTaskAuditRecord',
+                },
+                {
+                  path:
+                    '/operations/AllTaskAuditRecord/components/TaskAuditRecordDetail/:auditId/:taskId/:DGIMN',
+                  name: 'TaskAuditRecordDetail',
+                  component: './operations/AllTaskAuditRecord/components/TaskAuditRecordDetail',
+                },
+                {
+                  path: '/operations/MaintenanceTaskHistoryList',
+                  name: 'MaintenanceTaskHistoryList',
+                  component: './operations/MaintenanceTaskHistoryList',
+                },
+                {
+                  path: '/operations/WorkingDailyReport',
+                  name: 'WorkingDailyReport',
+                  component: './operations/WorkingDailyReport',
+                },
+                {
+                  path: '/operations/EquipmentIntactRate',
+                  name: 'EquipmentIntactRate',
+                  component: './operations/WorkingDailyReport/EquipmentIntactRate',
                 },
                 {
                   path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',

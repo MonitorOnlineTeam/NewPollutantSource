@@ -7,7 +7,7 @@ import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
-import configToken from '@/config'
+import configToken from '@/config';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -40,7 +40,7 @@ export function getAuthHeader(ssoToken) {
   return {
     headers: {
       Accept: 'application/json',
-      Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
+      Authorization: ssoToken != 'null' && ssoToken != '' && `Bearer ${ssoToken}`,
       'Content-Type': 'application/json',
     },
   };
@@ -51,7 +51,7 @@ const checkStatus = response => {
     // console.log(`
     //     接口返回${response.status}：
     //     url: ${response.url}
-    //     ssToken: ${getCookie(configToken.cookieName)} 
+    //     ssToken: ${getCookie(configToken.cookieName)}
     //     `)
     return response;
   }
@@ -74,7 +74,7 @@ async function requestMy(url, options) {
   const ssoToken = `${getCookie(configToken.cookieName)}`;
   // console.log(`
   // ${url} - ssToken:
-  // ${getCookie(configToken.cookieName)} 
+  // ${getCookie(configToken.cookieName)}
   // `)
   const authHeader = getAuthHeader(ssoToken);
 
@@ -89,14 +89,14 @@ async function requestMy(url, options) {
         // console.log(`
         // 接口401报错1：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         // console.log(`
         // 接口401报错2：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         router.push('/user/login');
         return;
@@ -144,6 +144,36 @@ export async function post(url, params) {
   });
 }
 
+export async function upload(url, data, options, tooken) {
+  url = await geturl(url, tooken);
+  return request(url, {
+    method: 'POST',
+    headers: {
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    body: JSON.stringify(data),
+    ...options,
+  });
+}
+
+async function geturl(url, tooken) {
+  const usertoken = Cookie.get('token');
+  let newurl = url;
+  if (!tooken) {
+    if (usertoken) {
+      const user = JSON.parse(usertoken);
+      if (user !== null) {
+        newurl += `?authorCode=${user.User_ID}`;
+      }
+    } else {
+      return;
+    }
+  } else if (tooken !== 'notooken') {
+    newurl += `?authorCode=${tooken}`;
+  }
+  return newurl;
+}
 /**
  * 异常处理程序
  */

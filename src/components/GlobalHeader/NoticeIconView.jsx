@@ -9,10 +9,10 @@ import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import { asc } from '../../utils/utils';
 import AlarmRecord from '../../pages/monitoring/alarmrecord/components/AlarmRecord';
-import RecordEchartTable from '@/components/recordEchartTable'
+import RecordEchartTable from '@/components/recordEchartTable';
 import RealTimeWarning from '../RealTimeWarning/RealTimeWarning';
 import ExceptionAlarm from '../ExceptionAlarm/ExceptionAlarm';
-import RecordEchartTableOver from '@/components/recordEchartTableOver'
+import RecordEchartTableOver from '@/components/recordEchartTableOver';
 import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningModal';
 
 @connect(({ loading, global }) => ({
@@ -27,7 +27,6 @@ import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningMo
  * 修改人：dongxiaoyun
  * 创建时间：2019.08.9
  */
-
 export default class GlobalHeaderRight extends PureComponent {
   constructor(props) {
     super(props);
@@ -38,11 +37,12 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'global/fetchNotices',
-      payload: {},
-    });
+    //先注释（dongxiaoyun2020-8-5）
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'global/fetchNotices',
+    //   payload: {},
+    // });
   }
 
   // 格式化添加标签和标识icon
@@ -71,19 +71,15 @@ export default class GlobalHeaderRight extends PureComponent {
         if (!newNotice.avatar) {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/over.png">
-              </Avatar>
-
+              <Avatar style={{ verticalAlign: 'middle' }} src="/over.png"></Avatar>
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/earlywarning.png">
-              </Avatar>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/earlywarning.png"></Avatar>
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
-              </Avatar>
+              <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png"></Avatar>
             );
           }
         }
@@ -91,9 +87,8 @@ export default class GlobalHeaderRight extends PureComponent {
       });
       return groupBy(newNotices, 'type');
     }
-    
-      return {};
-    
+
+    return {};
   }
 
   // 报警总次数
@@ -118,12 +113,10 @@ export default class GlobalHeaderRight extends PureComponent {
 
   // 取消Model
   onCancel = () => {
-   
     this.setState({
       visible: false,
     });
-
-  }
+  };
 
   render() {
     const { fetchingNotices, currentUserNoticeCnt, dispatch, notices } = this.props;
@@ -137,7 +130,12 @@ export default class GlobalHeaderRight extends PureComponent {
           count={notices.length}
           onItemClick={(item, tabProps) => {
             // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗
-            if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9) {
+            if (
+              item.AlarmType == 6 ||
+              item.AlarmType == 7 ||
+              item.AlarmType == 8 ||
+              item.AlarmType == 9
+            ) {
               return;
             }
             this.setState({
@@ -152,19 +150,19 @@ export default class GlobalHeaderRight extends PureComponent {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: `实时预警-${  item.PointName}`,
+                    title: `实时预警-${item.PointName}`,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: `超标记录-${  item.PointName}`,
+                    title: `超标记录-${item.PointName}`,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: `异常报警-${  item.PointName}`,
+                    title: `异常报警-${item.PointName}`,
                     flag: 'exception',
                   });
                   break;
@@ -190,30 +188,32 @@ export default class GlobalHeaderRight extends PureComponent {
           footer={null}
           onCancel={this.onCancel}
         >
-          {
-            this.state.flag === 'over' ?
-              <RecordEchartTableOver
-                // initLoadData
-                style={{ maxHeight: '70vh' }}
-                DGIMN={this.state.DGIMN}
-               //按理来说时间段按照之前定好的逻辑应该是当天一点到第二天零点，但是联网判断逻辑是将当天零点数据计算到当天次数中了，为了不动联网将此处时间段改成当天零点到当天23:59:59
-               firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
-               lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
-                noticeState={1}
-                noticeState={0}
-                maxHeight={200}
-              />
-              : this.state.flag === 'exception' ?
-                <ExceptionAlarm
-                  initLoadData DGIMN={this.state.DGIMN} Types=""/>
-                :
-                <RealTimeWarningModal
-                  style={{ maxHeight: '70vh' }}
-                  DGIMN={this.state.DGIMN}
-                  firsttime={moment(moment().format('YYYY-MM-DD 00:00:01'))}
-                  lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
-                />
-          }
+          {this.state.flag === 'over' ? (
+            <RecordEchartTableOver
+              // initLoadData
+              style={{ maxHeight: '70vh' }}
+              DGIMN={this.state.DGIMN}
+              //按理来说时间段按照之前定好的逻辑应该是当天一点到第二天零点，但是联网判断逻辑是将当天零点数据计算到当天次数中了，为了不动联网将此处时间段改成当天零点到当天23:59:59
+              firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+              lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+              noticeState={1}
+              noticeState={0}
+              maxHeight={200}
+            />
+          ) : this.state.flag === 'exception' ? (
+            <ExceptionAlarm initLoadData DGIMN={this.state.DGIMN} Types="" />
+          ) : (
+            <RealTimeWarningModal
+              style={{ maxHeight: '70vh' }}
+              DGIMN={this.state.DGIMN}
+              firsttime={moment(moment().format('YYYY-MM-DD 00:00:01'))}
+              lasttime={moment(
+                moment()
+                  .add('day', 1)
+                  .format('YYYY-MM-DD 00:00:00'),
+              )}
+            />
+          )}
         </Modal>
       </div>
     );
