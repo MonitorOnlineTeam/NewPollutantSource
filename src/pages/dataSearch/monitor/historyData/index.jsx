@@ -32,14 +32,10 @@ class Index extends Component {
         return (
             <div id="historyData">
 
-              <NavigationTree runState='1' domId="#dataquery" choice={false} onItemClick={value => {
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value)
-                    }
-                }} />
+               <NavigationTree  domId="#dataquery" choice={false} /> 
 
 
-                <BreadcrumbWrapper>
+                <BreadcrumbWrapper extraName="京能集团-脱硫入口">
                     {/* {
                         this.state.dgimn ?
                             (

@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select,Switch } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch,Tabs } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
@@ -13,7 +13,7 @@ import CemsTabs from '@/components/CemsTabs'
 
 import SdlTable from '@/components/SdlTable'
 
-import TimeRadioButton from '@/components/TimeRadioButton'
+import TimeRadioButton from '@/components/RadioButton'
 
 import DropDownSelect from '@/components/DropDownSelect'
 
@@ -24,6 +24,7 @@ import PollutantSelect from '@/components/PollutantSelect'
 import TableData from './TableData'
 import MultiChart from  './MultiChart'
 import SingleChart from './SingleChart'
+
 
 /**
  * 历史数据组件
@@ -337,10 +338,21 @@ class HistoryDatas extends React.Component {
 
   render() {
     const QueryCriteria = this.queryCriteria;
+    const { TabPane } = Tabs;
     return (
       <div id="dataquery">
         <Card title={<QueryCriteria />} >
           <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
+
+          {/* <Tabs  type="card" >
+          
+                        <TabPane tab={"111"} key={111}>
+                          <SingleChart />
+                        </TabPane>
+                        <TabPane tab={"22"} key={222} >
+                        <SingleChart />
+                        </TabPane>
+                </Tabs>  */}
         </Card>
 
       </div>
