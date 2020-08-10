@@ -5,7 +5,8 @@ import { Radio } from 'antd';
 
 class Index extends Component {
   render() {
-    let showOtherTypes = this.props.showOtherTypes;
+    let { showOtherTypes, ifShowOther } = this.props;
+    debugger
     return (
       <Radio.Group
         defaultValue={this.props.checked}
@@ -24,15 +25,22 @@ class Index extends Component {
         <Radio.Button key={4} value="day">
           日均
         </Radio.Button>
-        <Radio.Button key={5} style={{ display: showOtherTypes }} value="month">
-          月均
+        {ifShowOther ?
+          <span>
+            <Radio.Button key={5} style={{ display: showOtherTypes }} value="month">
+              月均
         </Radio.Button>
-        <Radio.Button key={6} style={{ display: showOtherTypes }} value="quarter">
-          季均
+            <Radio.Button key={6} style={{ display: showOtherTypes }} value="quarter">
+              季均
         </Radio.Button>
-        <Radio.Button key={7} style={{ display: showOtherTypes }} value="year">
-          年均
+            <Radio.Button key={7} style={{ display: showOtherTypes }} value="year">
+              年均
         </Radio.Button>
+          </span>
+          :
+          null
+        }
+
       </Radio.Group>
     );
   }

@@ -534,6 +534,7 @@ class DataQuery extends Component {
                     style={{ width: '100%' }}
                     checked="realtime"
                     showOtherTypes={flag}
+                    ifShowOther={true}
                     onChange={this._handleDateTypeChange}
                   />
                 </div>
