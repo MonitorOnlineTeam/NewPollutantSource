@@ -709,20 +709,36 @@ export default {
                   name: 'MaintenanceTaskHistoryList',
                   component: './operations/MaintenanceTaskHistoryList',
                 },
-                {
-                  path: '/operations/WorkingDailyReport',
-                  name: 'WorkingDailyReport',
-                  component: './operations/WorkingDailyReport',
-                },
-                {
-                  path: '/operations/EquipmentIntactRate',
-                  name: 'EquipmentIntactRate',
-                  component: './operations/WorkingDailyReport/EquipmentIntactRate',
-                },
+                // {
+                //   path: '/operations/WorkingDailyReport',
+                //   name: 'WorkingDailyReport',
+                //   component: './operations/WorkingDailyReport',
+                // },
+                // {
+                //   path: '/operations/EquipmentIntactRate',
+                //   name: 'EquipmentIntactRate',
+                //   component: './operations/WorkingDailyReport/EquipmentIntactRate',
+                // },
                 {
                   path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
                   name: 'CommandDispatchReportDetails',
                   component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+                },
+              ],
+            },
+            {
+              path: '/statistics',
+              name: 'statistics',
+              routes: [
+                {
+                  path: '/statistics/WorkingDailyReport',
+                  name: 'WorkingDailyReport',
+                  component: './operations/WorkingDailyReport',
+                },
+                {
+                  path: '/statistics/EquipmentIntactRate',
+                  name: 'EquipmentIntactRate',
+                  component: './operations/WorkingDailyReport/EquipmentIntactRate',
                 },
               ],
             },
