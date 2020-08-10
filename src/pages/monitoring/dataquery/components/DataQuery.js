@@ -19,7 +19,7 @@ import SdlTable from '@/components/SdlTable';
   exportLoading: loading.effects['dataquery/exportHistoryReport'],
   option: dataquery.chartdata,
   selectpoint: dataquery.selectpoint,
-  isloading: loading.effects['dataquery/querypollutantlist'],
+  loadingPollutant: loading.effects['dataquery/querypollutantlist'],
   columns: dataquery.columns,
   datatable: dataquery.datatable,
   total: dataquery.total,
@@ -297,9 +297,9 @@ class DataQuery extends Component {
   /** 渲染数据展示 */
 
   loaddata = () => {
-    const { dataloading, option, datatable, columns, chartHeight } = this.props;
+    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant } = this.props;
     const { displayType } = this.state;
-    if (dataloading) {
+    if (dataloading || loadingPollutant) {
       return (
         <Spin
           style={{
@@ -465,7 +465,7 @@ class DataQuery extends Component {
                       // mode.length !== 0 ?
                       <RangePicker_
                         style={{ width: 360 }}
-                        dateValue={dateValue}
+                        // dateValue={dateValue}
                         dataType={dataType}
                         format={this.state.format}
                         onRef={this.onRef1}

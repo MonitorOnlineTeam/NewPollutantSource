@@ -6,7 +6,6 @@ import { Radio } from 'antd';
 class Index extends Component {
   render() {
     let { showOtherTypes, ifShowOther } = this.props;
-    debugger
     return (
       <Radio.Group
         defaultValue={this.props.checked}
