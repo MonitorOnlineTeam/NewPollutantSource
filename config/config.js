@@ -305,7 +305,13 @@ export default {
                       name: 'historyData',
                       path: '/dataSearch/monitor/historyData',
                       component: './dataSearch/monitor/historyData',
-                    },                    
+                    },        
+                    {
+                      // 历史数据
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/RealTimeData',
+                      component: './Test/Test',
+                    },                
                   ]
                 },
               ]
