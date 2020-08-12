@@ -7,7 +7,10 @@ import  HistoryDatas from './components/HistoryDatas'
  * 数据查询 历史数据
  * jab 2020.07.30
  */
-
+import { connect } from 'dva';
+@connect(({ loading,historyData }) => ({
+    dgimn:historyData.dgimn
+}))
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -19,23 +22,31 @@ class Index extends Component {
     }
 
     changeDgimn = value => {
-        debugger
+        // console.log(value)
         this.setState({
             dgimn: value[0].key,
             pointName: value[0].pointName,
             entName: value[0].entName,
         })
+        let { dgimn, dispatch } = this.props;
+         dgimn = value[0].key;
+        
+         dispatch({ type: 'historyData/updateState', payload: { dgimn  } })
     }
 
     render() {
-        const { pointName, entName } = this.state;
+        const { pointName, entName,dgimn } = this.state;
         return (
             <div id="historyData">
 
-               <NavigationTree  domId="#dataquery" choice={false} /> 
+               <NavigationTree  domId="#dataquery" choice={false} runState='1' domId="#dataquery" choice={false} onItemClick={value => {
+                    if (value.length > 0 && !value[0].IsEnt) {
+                        this.changeDgimn(value)
+                    }
+                }} /> 
 
 
-                <BreadcrumbWrapper extraName="京能集团-脱硫入口">
+                <BreadcrumbWrapper extraName={ `${entName} - ${ pointName}`}>
                     {/* {
                         this.state.dgimn ?
                             (
@@ -44,7 +55,7 @@ class Index extends Component {
                             )
                             : <PageLoading />
                     } */}
-                    <HistoryDatas />
+                    <HistoryDatas  DGIMN={dgimn} initLoadData/>
                 </BreadcrumbWrapper>
             </div>
         );
