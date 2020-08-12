@@ -81,6 +81,15 @@ ol {
     font-size: 13px !important;
   }
 
+  .ant-table.ant-table-middle .ant-table-title,
+  .ant-table.ant-table-middle .ant-table-footer,
+  .ant-table.ant-table-middle .ant-table-thead>tr>th,
+  .ant-table.ant-table-middle .ant-table-tbody>tr>td,
+  .ant-table.ant-table-middle tfoot>tr>th,
+  .ant-table.ant-table-middle tfoot>tr>td {
+    padding: 8px;
+  }
+
   .react-resizable {
     position: relative;
     background-clip: padding-box;
@@ -94,6 +103,14 @@ ol {
     right: -5px;
     cursor: col-resize;
     z-index: 1;
+  }
+
+  // tabs样式
+  .ant-tabs-top>.ant-tabs-nav,
+  .ant-tabs-bottom>.ant-tabs-nav,
+  .ant-tabs-top>div>.ant-tabs-nav,
+  .ant-tabs-bottom>div>.ant-tabs-nav {
+    margin-bottom: 10px;
   }
 
 
@@ -411,8 +428,9 @@ a:hover {
 .queryConditionForm{
   width: 100%;
 }
-.ant-picker-input > input{
-  white-space: nowrap; 
+
+.ant-picker-input>input {
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
 }

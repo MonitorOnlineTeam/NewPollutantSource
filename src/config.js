@@ -55,7 +55,7 @@ module.exports = {
   },
   isShowTabs: true,
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_vc1qjv19g1.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_08xzknxg44oo.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   onlyOneEnt: false,
   cookieName: 'ssToken9001',
   // 萤石云视频地址

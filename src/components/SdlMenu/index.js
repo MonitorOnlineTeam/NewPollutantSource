@@ -41,7 +41,6 @@ class Test extends Component {
   }
   // #1890ff
   menuItemContent = (currentMenuData) => {
-    console.log('currentMenuData=', currentMenuData)
     let pathName = window.location.pathname;
     let menuKey = currentMenuData.id;
     return (

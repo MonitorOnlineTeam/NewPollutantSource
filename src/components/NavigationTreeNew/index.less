@@ -1,0 +1,122 @@
+.status_box {
+  // border: 1px solid #ccc;
+  text-align: center;
+  padding: 1px 2px;
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, .65);
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  // border-color: #ccc;
+  // padding: 1px 0;
+  cursor: pointer;
+}
+
+// 正常
+.green {
+  color: #52c41a;
+  background: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+// 离线
+.default {
+  color: rgb(0 0 0 / 79%);
+  background: #efefef;
+  border: 1px solid #a0a0a0;
+}
+
+// 超标
+.red {
+  color: #f5222d;
+  background: #fff1f0;
+  border-color: #ffa39e;
+}
+
+// 备案不符
+.volcano {
+  color: #fa541c;
+  background: #fff2e8;
+  border-color: #ffbb96;
+}
+
+// 监测不合格
+.magenta {
+  color: #eb2f96;
+  background: #fff0f6;
+  border-color: #ffadd2;
+}
+
+// 异常
+.orange {
+  color: #fa8c16;
+  background: #fff7e6;
+  border-color: #ffd591;
+}
+
+.treeTitleBox {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .icon {
+    color: #1890FF;
+    margin-right: 8px;
+    font-size: 20px;
+  }
+
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 190px;
+    float: left;
+  }
+}
+
+.industryIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgb(60, 153, 216);
+  /* text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+
+  .icon {
+    color: #fff;
+    margin-right: 0;
+  }
+}
+
+.treeSpin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20vh;
+}
+
+
+.statusWrapper {
+  display: flex;
+
+  div.stateItem {
+    display: inline-block;
+    padding: 0 3px;
+    color: #52c41a;
+    background: #f6ffed;
+    border-color: #b7eb8f;
+    margin-right: 7px;
+    padding: 0 4px;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    background: #fafafa;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+  }
+}

@@ -28,7 +28,7 @@ const plugins = [
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
         webpackChunkName: true,
-        level: 3,
+        level: 4,
       },
       pwa: pwa
         ? {
@@ -298,14 +298,20 @@ export default {
                       // 工况模拟
                       name: 'working',
                       path: '/dataSearch/monitor/working',
-                      component: './dataSearch/monitor/working',
+                      component: './dataSearch/monitor/working/index',
                     },
                     {
                       // 历史数据
                       name: 'historyData',
                       path: '/dataSearch/monitor/history',
                       component: './dataSearch/monitor/historyData',
-                    },                    
+                    },        
+                    {
+                      // 历史数据
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/RealTimeData',
+                      component: './Test/Test',
+                    },                
                   ]
                 },
               ]
