@@ -44,7 +44,8 @@ import SingleChart from './SingleChart'
   chartparams:historyData.chartparams,
   dgimn:historyData.dgimn,
   alreadySelect:historyData.alreadySelect,
-  pollutantDefault:historyData.pollutantDefault
+  pollutantDefault:historyData.pollutantDefault,
+  pollType:historyData.pollType
 }))
 // loadingAll:loading.models.mySpace,
 // //当mySpace这个models有数据请求行为的时候，loading为true，没有请求的时候为false
@@ -276,11 +277,16 @@ componentDidUpdate(prevProps) {
 
   }
   onFinish = () => { //查询
-    let { historyparams,chartparams, dispatch } = this.props;
+    let { historyparams,chartparams, dispatch,pollType } = this.props;
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
      })
+
+     chartparams = {
+      ...chartparams,
+      PollutantType: pollType
+    }
      dispatch({
       type: "historyData/getAllChatDataList",
       payload: {...chartparams},

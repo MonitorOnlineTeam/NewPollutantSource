@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import NavigationTree from '@/components/NavigationTree'
+// import NavigationTree from '@/components/NavigationTree'
 import PageLoading from '@/components/PageLoading'
 import  HistoryDatas from './components/HistoryDatas'
+
+import NavigationTree from '@/components/NavigationTreeNew'
 /**
  * 数据查询 历史数据
  * jab 2020.07.30
  */
 import { connect } from 'dva';
 @connect(({ loading,historyData }) => ({
-    dgimn:historyData.dgimn
+    dgimn:historyData.dgimn,
+    pollType:historyData.pollType
 }))
 class Index extends Component {
     constructor(props) {
@@ -17,21 +20,18 @@ class Index extends Component {
         this.state = {
             dgimn: '',
             pointName: '',
-            entName: '',
         };
     }
 
-    changeDgimn = value => {
-        // console.log(value)
+    changeDgimn = (value, selectItem)=> {
         this.setState({
-            dgimn: value[0].key,
-            pointName: value[0].pointName,
-            entName: value[0].entName,
+            dgimn: value,
+            name: selectItem.name,
         })
-        let { dgimn, dispatch } = this.props;
-         dgimn = value[0].key;
-        
-         dispatch({ type: 'historyData/updateState', payload: { dgimn  } })
+        let { dgimn, dispatch,pollType} = this.props;
+         dgimn = value;
+         pollType = selectItem.PointType;
+         dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
     }
 
     render() {
@@ -39,12 +39,12 @@ class Index extends Component {
         return (
             <div id="historyData">
 
-               <NavigationTree  domId="#dataquery" choice={false} runState='1' domId="#dataquery" choice={false} onItemClick={value => {
+               {/* <NavigationTree  domId="#dataquery" choice={false} runState='1' domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value)
                     }
-                }} /> 
-
+                }} />  */}
+          <NavigationTree domId="working" onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${entName} - ${ pointName}`}>
                     {/* {

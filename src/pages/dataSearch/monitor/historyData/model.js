@@ -42,7 +42,8 @@ export default Model.extend({
     timeList:[],
     chartList:[],
     alreadySelect:[],
-    pollutantDefault:[]
+    pollutantDefault:[],
+    pollType:""
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
