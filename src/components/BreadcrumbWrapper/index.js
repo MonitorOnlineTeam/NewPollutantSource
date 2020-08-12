@@ -11,7 +11,7 @@ class BreadcrumbWrapper extends Component {
 
   pageHeaderRender = (props) => {
     if (props.breadcrumb.routes) {
-      return <div style={{paddingLeft:"320px"}} >
+      return <div>
         当前位置：
         <Breadcrumb>
           {

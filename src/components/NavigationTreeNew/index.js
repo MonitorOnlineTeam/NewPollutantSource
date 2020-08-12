@@ -1,12 +1,12 @@
 /*
  * @Author: Jiaqi 
  * @Date: 2020-08-12 17:01:17 
- * @Last Modified by:   Jiaqi 
- * @Last Modified time: 2020-08-12 17:01:17 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2020-08-12 17:18:29
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
-import { Drawer, Button, Radio, Row, Col, Badge, Tabs, Input, Tree, Spin } from 'antd';
+import { Drawer, Button, Radio, Row, Col, Badge, Tabs, Input, Tree, Spin, Tooltip } from 'antd';
 import { CarryOutOutlined, FormOutlined } from "@ant-design/icons"
 import styles from './index.less';
 import { connect } from "dva"
@@ -174,7 +174,9 @@ class index extends PureComponent {
     if (nodeData.NodeType === "ent") {
       return <div className={styles.treeTitleBox}>
         <EntIcon className={styles.icon} style={{ fontSize: 18 }} />
-        <span className={styles.text}>{nodeData.title}</span>
+        {/* <Tooltip title={nodeData.name}> */}
+        <span className={styles.text} title={nodeData.name}>{nodeData.title}</span>
+        {/* </Tooltip> */}
       </div>
     }
 
@@ -182,8 +184,8 @@ class index extends PureComponent {
     if (nodeData.NodeType === "point") {
       return <div className={styles.treeTitleBox}>
         {
-          nodeData.PointType === '1' ? <a><WaterIcon className={styles.icon} style={{ fontSize: 18 }} /></a> :
-            <a><GasIcon className={styles.icon} style={{ fontSize: 18 }} /></a>
+          nodeData.PointType === '1' ? <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> :
+            <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
         }
         {/* <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> */}
         <span className={styles.text}>{nodeData.title}</span>
@@ -197,15 +199,15 @@ class index extends PureComponent {
     if (nodeData.NodeType === "ent") {
       return <div className={styles.treeTitleBox}>
         <EntIcon className={styles.icon} style={{ fontSize: 18 }} />
-        <span className={styles.text}>{nodeData.title}</span>
+        <span title={nodeData.name} className={styles.text}>{nodeData.title}</span>
       </div>
     }
     // 排口
     if (nodeData.NodeType === "point") {
       return <div className={styles.treeTitleBox}>
         {
-          nodeData.PointType === '1' ? <a><WaterIcon className={styles.icon} style={{ fontSize: 18 }} /></a> :
-            <a><GasIcon className={styles.icon} style={{ fontSize: 18 }} /></a>
+          nodeData.PointType === '1' ? <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> :
+            <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
         }
         <span className={styles.text}>{nodeData.title}</span>
       </div>
