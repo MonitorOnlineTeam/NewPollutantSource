@@ -21,8 +21,8 @@ class Index extends Component {
         placeholder:"请选择污染物",
         mode:"multiple",
         allowClear:false,
-        maxTagCount:5,//选择项最大个数
-        maxTagTextLength:10,//单个选择项文本长度 超出则是省略号显示
+        maxTagCount:2,//选择项最大个数
+        maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
         isPollutant:true
     }
     constructor(props) {
@@ -33,16 +33,15 @@ class Index extends Component {
     getOption=() => {
         const { optionDatas,isPollutant } = this.props;
         const res = [];
-        if (optionDatas.length>0) {
+        if (optionDatas&&optionDatas.length>0) {
             optionDatas.map((item, key) => {
-                 res.push(<Option key={key} value={item.value} >{item.name}</Option>);
+                isPollutant?   res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>) : res.push(<Option key={key} value={item.value} >{item.name}</Option>);
               })
-            }else{
-               res.push(<Option key={-1} value={-1} >全部</Option>)
-           }
+            }
             return res;
     }
-
+     componentDidMount(){
+     }
     render() {
         const {
           mode,
@@ -60,7 +59,7 @@ class Index extends Component {
         } = this.props;
         
         return (
-            <Select maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style }} placeholder={placeholder} onChange={onChange}>
+            <Select  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
             {this.getOption()}
           </Select>
         );

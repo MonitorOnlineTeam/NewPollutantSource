@@ -3,14 +3,14 @@
 
 import React from 'react';
 
-import { Card} from 'antd';
+import { Card,Empty } from 'antd';
 
 import { connect } from 'dva';
 
 import moment from 'moment'
 
 import ReactEcharts from 'echarts-for-react';
-
+import PageLoading from '@/components/PageLoading'
 
 /**
  * 多图表数据组件
@@ -18,19 +18,10 @@ import ReactEcharts from 'echarts-for-react';
  */
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
 
-@connect(({ loading, dataquery,historyData }) => ({
-    pollutantlist: dataquery.pollutantlist,
-    dataloading: loading.effects['dataquery/queryhistorydatalist'],
-    exportLoading: loading.effects['dataquery/exportHistoryReport'],
-    option: dataquery.chartdata,
-    selectpoint: dataquery.selectpoint,
-    isloading: loading.effects['dataquery/querypollutantlist'],
-    columns: dataquery.columns,
-    datatable: dataquery.datatable,
-    total: dataquery.total,
-    tablewidth: dataquery.tablewidth,
-    historyparams: dataquery.historyparams,
-    testData:historyData.testData
+@connect(({ loading, historyData }) => ({
+  isloading: loading.effects['historyData/getAllChatDataList'],
+  timeList:historyData.timeList,
+  chartList:historyData.chartList
 }))
 
 class MultiChart extends React.Component {
@@ -39,19 +30,25 @@ class MultiChart extends React.Component {
         this.state = {
           format:"YYYY-MM-DD",
           dataType: "Hour",
-          timeList:["2020-07-06 00:00:00","2020-07-07 00:00:00","2020-07-08 00:00:00","2020-07-09 00:00:00","2020-07-10 00:00:00","2020-07-11 00:00:00","2020-07-12 00:00:00","2020-07-13 00:00:00"],
-          chartList:[{"PollutantName":"AQI","PollutantCode":"AQI","DataList":["75","56","57","76","85","103","103","98"]},{"PollutantName":"O3","DataList":["157","163","163","141","130","101","106","129"]},{"PollutantName":"CO","DataList":["0.3","0.7","0.8","0.4","0.4","0.5","0.4","0.7"]},{"PollutantName":"SO2","DataList":["7","7","6","3","3","3","3","10"]},{"PollutantName":"NO2","DataList":["24","34","26","15","16","22","13","19"]},{"PollutantName":"PM10","DataList":["40","66","71","39","58","48","20","42"]},{"PollutantName":"PM2.5","DataList":["16","36","54","31","55","40","12","22"]}]
+          timeList:[],
+          chartList:[]
         };
     }
     static getDerivedStateFromProps(props, state) {
-      // 只要当前 testData 变化，
-      // 重置所有跟 testData 相关的状态。
-      if (props.testData !== state.testData) {
-        return {
-          testData: props.testData,
-        };
-      }
-      return null;
+      if (props.timeList !== state.timeList) {
+
+        const chartLists = [];
+        props.chartList.map(item=>{
+          chartLists.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.DataList })
+       })
+   
+      return {
+        timeList: props.timeList,
+        chartList: chartLists,
+      };
+    
+    }
+    return null;
     }
 
     // 图表Option
@@ -222,16 +219,25 @@ class MultiChart extends React.Component {
     return {}
   }
   render() {
+    const { isloading,chartList} = this.props;
+ 
     return (
       <>
-      <p>这是多参数图表</p>
+                   { isloading ?
+                 <PageLoading />:
+                 <div>
+                 {
+                  chartList.length>0 ?        
        <ReactEcharts
        option={this.getOptions()}
        lazyUpdate={true}
        style={{ height: 'calc(100vh - 400px)', width: '100%' }}
        className="echarts-for-echarts"
        theme="my_theme"
-   />  
+   />  : <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>
+                 }
+                 </div>
+                   }
   </>
     );
   }
