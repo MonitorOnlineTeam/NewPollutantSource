@@ -13,7 +13,8 @@ class Index extends Component {
         optionDatas: PropTypes.array,
         changeCallback:PropTypes.func,
         maxTagCount:PropTypes.number,
-        maxTagTextLength:PropTypes.number
+        maxTagTextLength:PropTypes.number,
+        isPollutant: PropTypes.bool,
     }
     static defaultProps = {
         style: {width:"100%"},
@@ -22,6 +23,7 @@ class Index extends Component {
         allowClear:false,
         maxTagCount:5,//选择项最大个数
         maxTagTextLength:10,//单个选择项文本长度 超出则是省略号显示
+        isPollutant:true
     }
     constructor(props) {
         super(props);
@@ -29,11 +31,11 @@ class Index extends Component {
     }
 
     getOption=() => {
-        const { optionDatas } = this.props;
+        const { optionDatas,isPollutant } = this.props;
         const res = [];
         if (optionDatas.length>0) {
             optionDatas.map((item, key) => {
-                res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>);
+                 res.push(<Option key={key} value={item.value} >{item.name}</Option>);
               })
             }else{
                res.push(<Option key={-1} value={-1} >全部</Option>)

@@ -8,19 +8,21 @@ class Index extends Component {
         defaultValue: PropTypes.string,
         style: PropTypes.object,
         className: PropTypes.string,
-        options: PropTypes.array,
-        changeCallback:PropTypes.func
+        getOptions: PropTypes.array,
+        changeCallback:PropTypes.func,
+        isTime:PropTypes.bool
     }
     static defaultProps = {
         style: {},
-        options: [ { label: '小时', value: 'hour' }, { label: '日均', value: 'day' }],
-        defaultValue:"hour"
+        defaultValue:"hour",
+        getOptions:[],
+        isTime:true
     }
     constructor(props) {
         super(props);
         this.state = {
-            options: [
-            
+            defaultOptions: [
+              { label: '小时', value: 'hour' }, { label: '日均', value: 'day' }
           ]};
     }
     onChange(value){
@@ -34,10 +36,12 @@ class Index extends Component {
           changeCallback(defaultValue)
       }
     render() {
-        const { defaultValue,options,style,className } = this.props;
+        const { defaultValue,getOptions,style,className,isTime } = this.props;
+        const { defaultOptions } = this.state;
+        const options = isTime?  [...defaultOptions, ...getOptions] : [...getOptions]
         return (
           <>
-            <Radio.Group className={className}  style={{...style}} options={[...this.props.options]} defaultValue={defaultValue} onChange={(e)=>{this.onChange(e.target.value)}}   optionType="button"/>
+            <Radio.Group className={className}  style={{...style}} options={options} defaultValue={defaultValue} onChange={(e)=>{this.onChange(e.target.value)}}   optionType="button"/>
           </>
         );
       }

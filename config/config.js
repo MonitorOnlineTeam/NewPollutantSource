@@ -221,11 +221,11 @@ export default {
               path: '/test',
               component: './Test/Test',
             },
-            {
-              name: 'HistoryData',
-              path: 'dataQuery/monitorData/historyData',
-              component: './dataQuery/monitorData/historyData',
-            },            
+            // {
+            //   name: 'HistoryData',
+            //   path: 'dataQuery/monitorData/historyData',
+            //   component: './dataQuery/monitorData/historyData',
+            // },            
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -303,7 +303,7 @@ export default {
                     {
                       // 历史数据
                       name: 'historyData',
-                      path: '/dataSearch/monitor/historyData',
+                      path: '/dataSearch/monitor/history',
                       component: './dataSearch/monitor/historyData',
                     },        
                     {
