@@ -316,6 +316,26 @@ export default {
                 },
               ]
             },
+            //质控核查
+            {
+              path: '/qualityCheck',
+              name: 'qualityCheck',
+              routes: [
+                {
+                  // 质控管理
+                  path: '/qualityCheck/qualityMange',
+                  name: 'qualityMange',
+                  routes: [
+                      {
+                      // 标准气管理
+                      name: 'working',
+                      path: '/qualityCheck/qualityMange/standardAtmosMange',
+                      component: './qualityCheck/qualityMange/standardAtmosMange/index',
+                    },               
+                  ]
+                },
+              ]
+            },
             {
               path: '/platformconfig',
               name: 'platformconfig',

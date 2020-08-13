@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select,Switch,Tabs } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
@@ -22,6 +22,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import TableData from './TableData'
 import MultiChart from  './MultiChart'
 import SingleChart from './SingleChart'
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 
 /**
@@ -33,6 +34,7 @@ import SingleChart from './SingleChart'
 @connect(({ loading, historyData }) => ({
   isloading: loading.effects['historyData/getAllTypeDataList'],//当historyData的effects中的getAllTypeDataList有异步请求行为时为true，没有请求行为时为false
   exportLoading: loading.effects['historyData/exportHistoryReport'],
+  pollLoading: loading.effects['historyData/getPollutantList'],
   // option: historyData.chartdata,
   // selectpoint: historyData.selectpoint,
   // columns: historyData.columns,
@@ -61,16 +63,16 @@ class HistoryDatas extends React.Component {
       displayType: 'data',
       format: 'YYYY-MM-DD HH:mm:ss',
       selectP: '',   
-      defaultSearchForm: {
-        PollutantSourceType: 1,
-        EntCode: '',
-        ReportTime: moment().add(-1, 'day'),
-        airReportTime: [moment().add(-1, 'day'), moment()],
-        pollDefaultCode:"",
-        dataType: "",
-      },
-      dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      dataType: "",
+      // defaultSearchForm: {
+      //   PollutantSourceType: 1,
+      //   EntCode: '',
+      //   ReportTime: moment().add(-1, 'day'),
+      //   airReportTime: [moment().add(-1, 'day'), moment()],
+      //   pollDefaultCode:"",
+      //   dataType: "",
+      // },
+      dateValue: [moment(new Date()).add(-1, 'day'), moment(new Date())],
+      dataType: "hour",
       dgimn:'',
       panes: [{
         key: 'tableData',
@@ -87,7 +89,7 @@ class HistoryDatas extends React.Component {
       }],
       isSwitch:false,
       pollSelectCode:[],
-      pollutantDetault:[]
+      pollutantSelect:[]
     };
   }
 
@@ -107,7 +109,7 @@ class HistoryDatas extends React.Component {
     //  if (props.pollutantlist !== state.pollutantlist) {
       
     //   return {
-    //     pollutantDefault: props.pollutantlist.map((item,index)=>{
+    //     pollutantSelect: props.pollutantlist.map((item,index)=>{
     //                       return  item.PollutantCode
     //                     })
     //   };
@@ -167,9 +169,7 @@ componentDidUpdate(prevProps) {
     /** 切换排口 */
     changeDgimn = (dgimn) => {
       this.setState({
-          selectDisplay: true,
-          selectP: '',
-          dgimn,
+          dgimn
       })
       this.getpointpollutants(dgimn);
 
@@ -196,6 +196,7 @@ componentDidUpdate(prevProps) {
         res.push(item.props.children);
     })
 }
+//  this.forceUpdate() // 强制刷新数据
   historyparams = {
     ...historyparams,
     pollutantCodes: value.length > 0 ? value.toString() : null,
@@ -212,10 +213,10 @@ componentDidUpdate(prevProps) {
   }
 
 
-
-  exportData = () => {
+  //导出数据
+  exportData = () => { 
     this.props.dispatch({
-      type: "historyData/exportHistoryReport",
+      type: "historyData/exportHistoryReports",
       payload: {DGIMNs: this.state.dgimn }
   })
   }
@@ -246,10 +247,10 @@ componentDidUpdate(prevProps) {
       type: 'historyData/updateState',
       payload: { historyparams},
     })
-    // dispatch({
-    //   type: 'historyData/updateState',
-    //   payload: { chartparams},
-    // })
+    dispatch({
+      type: 'historyData/updateState',
+      payload: { chartparams},
+    })
   }
   
   changeReportType=(value)=>{
@@ -270,10 +271,10 @@ componentDidUpdate(prevProps) {
     }
 
 
-    // dispatch({
-    //   type: 'historyData/updateState',
-    //   payload: { chartparams},
-    // })
+    dispatch({
+      type: 'historyData/updateState',
+      payload: { chartparams},
+    })
 
   }
   onFinish = () => { //查询
@@ -304,26 +305,26 @@ componentDidUpdate(prevProps) {
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
       const { pollutantlist } = this.props;
-      const pollutantSelect = pollutantlist ? pollutantlist.map((item,index)=>{
-        return  item.PollutantCode
-   }) : [];
-      // alert(pollutantDefault.toString())
-      return (<DropDownSelect
-        mode="multiple"
-        optionDatas={pollutantlist}
-        defaultValue={ pollutantSelect}
-        onChange={this.handlePollutantChange} //父组件事件回调子组件的值
-    />);
-
-       
-
+      // const { pollutantSelect } = this.state;
+        const pollDefaultSelect = pollutantlist.map((item,index)=>{
+          return  item.PollutantCode
+         });
+        return (<DropDownSelect
+          mode="multiple"
+          optionDatas={pollutantlist}
+          defaultValue={pollDefaultSelect}
+          // value = {pollutantSelect}
+          onChange={this.handlePollutantChange} //父组件事件回调子组件的值
+      /> );
     }
-    onRef1 = (ref) => {
-      this.children = ref;
-  }
+
+    onRef1 = ref =>{
+      this.children = ref;  // -> 获取整个Child元素
+    }
   //查询条件
   queryCriteria = () => {
     const { dataType,dateValue, displayType,isSwitch } = this.state;
+    const { pollLoading,pollutantlist } = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     const formItemLayout = {
       labelCol: { },
@@ -337,11 +338,11 @@ componentDidUpdate(prevProps) {
             <Col  xl={8}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
                   <RangePicker_ 
-                   onRef={this.onRef1}
                   dateValue={dateValue}
                   dataType={dataType}
                   isVerification={true}
                   className='textEllipsis'
+                  onRef={this.onRef1}
                   callback={(dates, dataType) => this.dateCallback(dates,dataType)} //父组件事件回调子组件的值
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
@@ -359,7 +360,7 @@ componentDidUpdate(prevProps) {
               </Col>
               <Col  xl={5}  md={12} sm={24} xs={24}>
               <Form.Item label="污染类型" {...formItemLayout} className='queryConditionForm'>
-               <GetpollutantSelect />
+               { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
             <Col  xl={2}   md={12} sm={24} xs={12}>
@@ -403,7 +404,7 @@ componentDidUpdate(prevProps) {
     const QueryCriteria = this.queryCriteria;
     const { TabPane } = Tabs;
     return (
-      <div id="dataquery">
+      <div id="HistoryDatas">
         <Card title={<QueryCriteria />} >
           <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
         </Card>

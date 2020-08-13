@@ -4,10 +4,11 @@
  * @Date: 2020.07.30
  */
 import Model from '@/utils/model';
-import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,querypollutantlist } from './service';
+import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,querypollutantlist,exportHistoryReport } from './service';
 import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
-
+import {  message } from 'antd';
+import { red } from '@ant-design/colors';
 export default Model.extend({
   namespace: 'historyData',
   state: {
@@ -24,8 +25,8 @@ export default Model.extend({
       DGIMNs: "51052216080301",
       pageIndex: null,
       pageSize: null,
-      beginTime: moment().startOf('day').format("YYYY-MM-DD HH:mm:ss"),
-      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:mm:00'),
+      endTime: moment(moment(new Date()).format('YYYY-MM-DD HH:mm:59')),
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -43,7 +44,8 @@ export default Model.extend({
     chartList:[],
     alreadySelect:[],
     pollutantDefault:[],
-    pollType:""
+    pollType:"",
+    tableloading:true
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
@@ -67,7 +69,7 @@ export default Model.extend({
       }
       const result = yield call(getAllTypeDataList, { ...body });
 
-      
+      yield update({tableloading:true}); //更新state的值
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
         let columns = [{title: '时间', dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center'}]
@@ -98,7 +100,7 @@ export default Model.extend({
 
              
         });
-        yield update({columns: columns, tableDatas: result.Datas, total: result.Total}); //更新state的值
+        yield update({columns: columns, tableDatas: result.Datas, total: result.Total,tableloading:false}); //更新state的值
       }
     },
     * getAllChatDataList( { payload},{  call, update, put, take, select}) {
@@ -117,11 +119,11 @@ export default Model.extend({
 
     // },
     // 导出报表
-        *exportHistoryReport({ payload }, { call, put, update, select }) {
+        *exportHistoryReports({ payload }, { call, put, update, select }) {
           const { historyparams } = yield select(state => state.historyData);
           const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
           }
-          const result = yield call(services.exportHistoryReport, postData);
+          const result = yield call(exportHistoryReport, postData);
           if (result.IsSuccess) {
             window.open(result.Datas)
             message.success('导出成功')

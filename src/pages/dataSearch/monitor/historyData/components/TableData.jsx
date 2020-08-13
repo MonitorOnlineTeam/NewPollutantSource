@@ -22,7 +22,8 @@ import SdlTable from '@/components/SdlTable'
     datatable: historyData.datatable,
     total: historyData.total,
     tablewidth: historyData.tablewidth,
-    isloading: loading.effects['historyData/getAllTypeDataList'],//当historyData的effects中的getAllTypeDataList有异步请求行为时为true，没有请求行为时为false
+    tableloading: historyData.tableloading,
+    // isloading: loading.effects['historyData/getAllTypeDataList'],//当historyData的effects中的getAllTypeDataList有异步请求行为时为true，没有请求行为时为false
 }))
 
 class TableData extends React.Component {
@@ -31,43 +32,48 @@ class TableData extends React.Component {
         this.state = {
         tableDatas:[],
         columns:[],
-        summary:[]
+        tableloading:true
+        // summary:[]
         };
     }
     static getDerivedStateFromProps(props, state) {
      
       // 只要当前 tableDatas 变化，
       // 重置所有跟 tableDatas 相关的状态。
-      if (props.tableDatas !== state.tableDatas) {
-        return {
-          tableDatas: props.tableDatas,
-          columns: props.columns,
-          summary:props.summary
-        };
-      }
-      return null;
+      // if (props.tableDatas !== state.tableDatas) {
+      //   return {
+      //     tableDatas: props.tableDatas,
+      //     columns: props.columns,
+      //     tableloading:props.tableloading,
+      //     // summary:props.summary
+      //   };
+      // }
+      // return null;
 
     }
     componentDidMount(){
     }
   render() {
 
-    const { isloading,columns} = this.props;
-    const { tableDatas,summary } = this.state;
-    return (<>{
-      isloading?
+    const { tableloading,total,tableDatas,columns} = this.props;
+    // const { tableDatas,columns } = this.state;
+    return (<>
+    {
+      tableloading ?
         <PageLoading />:
           <>
-          {
-            columns.length >= 2?
+           {
+            columns&&columns.length >= 2?  
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              dataSource={tableDatas}
+              dataSource={ tableDatas}
               columns={columns}
               resizable
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}
-              pagination={{ pageSize: 10 }}
+              pagination={{ total:total, showSizeChanger:true , showQuickJumper:true}}
+              
+              // loading={ tableloading }
               // summary={() => (
               //   <Table.Summary.Row>
               //     {  
@@ -78,10 +84,12 @@ class TableData extends React.Component {
               //     }
               //   </Table.Summary.Row>
               // )}
-          /> : <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div> 
-  }
-  </>
-      }</>);
+          /> 
+           : <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>   
+   } 
+   </>
+      }
+      </>);
   }
 }
 

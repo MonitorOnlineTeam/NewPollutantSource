@@ -27,9 +27,20 @@ class Index extends Component {
     }
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            defaultValues:""
+        };
     }
-
+    // static getDerivedStateFromProps(props, state) {
+    //     if (props.defaultValue !== state.defaultValues) {
+    
+    //       return {
+    //         defaultValues:props.defaultValue
+    //       };
+    //     }
+    //     return null;
+    
+    //   }
     getOption=() => {
         const { optionDatas,isPollutant } = this.props;
         const res = [];
@@ -40,6 +51,7 @@ class Index extends Component {
             }
             return res;
     }
+
      componentDidMount(){
      }
     render() {
@@ -55,11 +67,13 @@ class Index extends Component {
           showSearch,
           maxTagPlaceholder,//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... "
           maxTagTextLength,
+          value
        //   allpollutant,
         } = this.props;
-        
+        // const { defaultValues } = this.state;
+        console.log(value)
         return (
-            <Select  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
+            <Select   value={value}  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
             {this.getOption()}
           </Select>
         );
