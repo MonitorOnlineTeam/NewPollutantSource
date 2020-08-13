@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-08-12 17:01:17 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-12 17:18:29
+ * @Last Modified time: 2020-08-13 09:18:00
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
@@ -151,7 +151,7 @@ class index extends PureComponent {
           selectTreeItem: e.node
         }
       })
-      this.props.onTreeSelect && this.props.onTreeSelect(selectedKeys, e.node)
+      // this.props.onTreeSelect && this.props.onTreeSelect(selectedKeys, e.node)
     }
   }
 
