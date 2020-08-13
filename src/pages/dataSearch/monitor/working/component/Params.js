@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-08-12 16:44:25 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-12 17:01:09
+ * @Last Modified time: 2020-08-13 09:11:59
  * @Description: 工况参数页面
  */
 import React, { PureComponent } from 'react';
@@ -14,7 +14,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons"
 
 @connect(({ loading, working }) => ({
   flowTableData: working.flowTableData,
-  rowSpan1: working.rowSpan1,
+  loading: loading.effects["working/getFlowTableData"]
 }))
 class FlowChart extends PureComponent {
   constructor(props) {
@@ -112,10 +112,10 @@ class FlowChart extends PureComponent {
   }
   
   render() {
-    const { flowTableData } = this.props;
+    const { flowTableData, loading } = this.props;
     const { columns } = this.state;
     return (
-      <SdlTable dataSource={flowTableData} columns={columns} />
+      <SdlTable loading={loading} dataSource={flowTableData} columns={columns} />
     );
   }
 }

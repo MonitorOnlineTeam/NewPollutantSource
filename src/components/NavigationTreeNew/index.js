@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-08-12 17:01:17 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-12 17:18:29
+ * @Last Modified time: 2020-08-13 09:26:04
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
@@ -30,6 +30,7 @@ class index extends PureComponent {
     this.state = {
       visible: true,
       placement: "left",
+      autoExpandParent: true,
       tabsCurrentKey: "region",
       selectedKeys: [props.selectTreeItem.value],
       expandedKeys: [props.selectTreeItem.value],
@@ -151,7 +152,7 @@ class index extends PureComponent {
           selectTreeItem: e.node
         }
       })
-      this.props.onTreeSelect && this.props.onTreeSelect(selectedKeys, e.node)
+      // this.props.onTreeSelect && this.props.onTreeSelect(selectedKeys, e.node)
     }
   }
 
@@ -244,12 +245,7 @@ class index extends PureComponent {
         // const scrollTop = selEleOffsetTop - treeHeight + (treeHeight / 4.5);
         const scrollTop = (selEleOffsetTop - 184) / 2;
         treeElement.scrollTop(scrollTop)
-
-        console.log('treeHeight=', treeHeight)
-        console.log('selEleOffsetTop=', selEleOffsetTop)
-        console.log('treeScrollTop=', treeScrollTop)
       }
-
     }
   }
 
@@ -257,8 +253,7 @@ class index extends PureComponent {
     const { visible, placement, statusList, tabsCurrentKey, selectedKeys, expandedKeys, autoExpandParent } = this.state;
     const { treeRegionData, treeIndustryData, loading, selectTreeItem } = this.props;
     const { } = this._SELF_;
-    console.log('selectTreeItem=', selectTreeItem)
-    console.log('selectedKeys=', selectedKeys)
+    console.log('expandedKeys=', expandedKeys)
     return (
       <Drawer
         placement={placement}

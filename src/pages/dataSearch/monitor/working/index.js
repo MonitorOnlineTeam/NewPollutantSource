@@ -24,15 +24,16 @@ class working extends Component {
   }
 
   render() {
-    const { DGIMN } = this.state;
+    const { DGIMN, entName } = this.state;
     return (
       <>
-        <NavigationTree domId="working" onTreeSelect={(value) => {
+        <NavigationTree domId="working" onTreeSelect={(value, item) => {
           this.setState({
-            DGIMN: value
+            DGIMN: value,
+            entName: item.title
           })
         }} />
-        <BreadcrumbWrapper id="working">
+        <BreadcrumbWrapper extraName={entName} id="working">
           <Card>
             <Tabs type="card">
               <TabPane tab="工艺流程图" key="1">
