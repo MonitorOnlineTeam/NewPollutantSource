@@ -840,6 +840,7 @@ class NavigationTree extends Component {
           visible={this.state.visible}
           width={320}
           mask={false}
+          keyboard={false}
           zIndex={1}
           getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
           bodyStyle={{ padding: '18px 8px' }}
