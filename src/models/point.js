@@ -9,7 +9,7 @@ import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
 import MonitoringStandard from '@/components/MonitoringStandard';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest,getEnterpriseCorporationCode } from '@/services/pointApi';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -17,12 +17,12 @@ export default Model.extend({
     state: {
         pollutantType: 'all',
         pointDataWhere: [],
-        pollutantTypelist: [],delPoint
+        pollutantTypelist: [],
         isEdit: false,
         TestComponent: [], // 测试项目
         MainInstrumentName: [], // 主要仪器名称
         CemsList: [], //
-        CorporationCode:null,
+        CorporationCode: null,
     },
     effects: {
 
@@ -33,7 +33,7 @@ export default Model.extend({
             const dd = yield select(state => state.common);
             const result = yield call(getEnterpriseCorporationCode, payload);
             yield update({
-                CorporationCode:result.Datas
+                CorporationCode: result.Datas,
             })
             payload.callback(dd.defaultPollutantCode);
         },
