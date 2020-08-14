@@ -71,7 +71,7 @@ class HistoryDatas extends React.Component {
       //   pollDefaultCode:"",
       //   dataType: "",
       // },
-      dateValue: [moment(new Date()).add(-1, 'day'), moment(new Date())],
+      dateValue: [moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment(new Date())],
       dataType: "hour",
       dgimn:'',
       panes: [{
@@ -91,7 +91,8 @@ class HistoryDatas extends React.Component {
       isSingerChat:false,
       pollSelectCode:[],
       pollutantSelect:[],
-      defaultChecked:true
+      defaultChecked:true,
+      chatDatatype:"hour"
     };
   }
 
@@ -256,8 +257,10 @@ componentDidUpdate(prevProps) {
   }
   
   changeReportType=(value)=>{
-    // this.setState({dataType:value})
-    this.children.onDataTypeChange(value)//修改日期选择日期
+    
+    this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
+
+    this.children.onDataTypeChange(value)//修改日期选择日期  
     let { historyparams,chartparams, dispatch } = this.props;
     historyparams = {
       ...historyparams,
@@ -319,7 +322,6 @@ componentDidUpdate(prevProps) {
           return  item.PollutantCode
          });
         return (<DropDownSelect
-          mode="multiple"
           optionDatas={pollutantlist}
           defaultValue={pollDefaultSelect}
           // value = {pollutantSelect}
@@ -332,7 +334,7 @@ componentDidUpdate(prevProps) {
     }
   //查询条件
   queryCriteria = () => {
-    const { dataType,dateValue, displayType,isSwitch,defaultChecked,isSingerChat } = this.state;
+    const { dataType,dateValue, displayType,isSwitch,defaultChecked,isSingerChat,chatDatatype } = this.state;
     const { pollLoading,pollutantlist } = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     const formItemLayout = {
@@ -346,13 +348,20 @@ componentDidUpdate(prevProps) {
           <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
           <Col  xxl={4} xl={5}  md={12} sm={24} xs={24}>
               <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
-                  <Select onChange={this.changeReportType } defaultValue={dataType}>
-                  {!isSingerChat? <Select.Option key="realtime">实时</Select.Option> : null}
-                  {!isSingerChat?  <Select.Option key="minute">分钟</Select.Option>: null}
+                   {isSingerChat ?
+                  
+                   <Select onChange={this.changeReportType } value={chatDatatype}> 
+                     <Select.Option key="hour">小时</Select.Option>      
+                     <Select.Option key="day">日均</Select.Option>  
+                   </Select> 
+                   : 
+                   <Select onChange={this.changeReportType } value={dataType}> 
+                   <Select.Option key="realtime">实时</Select.Option> 
+                    <Select.Option key="minute">分钟</Select.Option> 
                     <Select.Option key="hour">小时</Select.Option>      
                     <Select.Option key="day">日均</Select.Option>  
-                  </Select>
-                
+                  </Select> 
+            }
               </Form.Item>
               </Col>
             <Col  xxl={8} xl={8}    md={12} sm={24} xs={24}>

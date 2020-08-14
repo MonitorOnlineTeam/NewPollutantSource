@@ -25,8 +25,8 @@ export default Model.extend({
       DGIMNs: "51052216080301",
       pageIndex: null,
       pageSize: null,
-      beginTime: moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:mm:00'),
-      endTime: moment(moment(new Date()).format('YYYY-MM-DD HH:mm:59')),
+      beginTime:  moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')),
+      endTime: moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss')),
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -81,8 +81,8 @@ export default Model.extend({
         //     width = 200;
         //   }
         //   tablewidth = width * pollutantlist.length + 200;
-        pollutantlist.map((item,index)=>{
-            Object.keys(result.Datas[1]).map(items =>{
+        pollutantlist.length>0? pollutantlist.map((item,index)=>{
+          result.Datas.length > 0 ? Object.keys(result.Datas[1]).map(items =>{
               if(item.PollutantCode == items){
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `, dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
                 children: [
@@ -111,12 +111,12 @@ export default Model.extend({
                   }],      
                 })
               }
-            })
+            }) : null;
            
 
 
              
-        });
+        }) : null;
         yield update({columns: columns, tableDatas: result.Datas, total: result.Total,tableloading:false}); //更新state的值
       }
     },

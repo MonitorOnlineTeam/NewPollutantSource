@@ -248,12 +248,27 @@ componentDidMount(){
   const {chartList,selectedIndex} = this.state;
   chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
 }
+static getDerivedStateFromProps(props, state) {
+     
+  // 只要当前 tableDatas 变化，
+  // 重置所有跟 tableDatas 相关的状态。
+  // if (props.tableDatas !== state.tableDatas) {
+  //   return {
+  //     tableDatas: props.tableDatas,
+  //     columns: props.columns,
+  //     tableloading:props.tableloading,
+  //     // summary:props.summary
+  //   };
+  // }
+  // return null;
+
+}
   render() {
 
     let onEvents = {
       'legendselectchanged': this.onChartLegendselectchanged.bind(this)
     }
-    const { isloading , chartList} = this.props;
+    const {  chartList , isloading} = this.props;
     return (
         <> 
                { isloading ?

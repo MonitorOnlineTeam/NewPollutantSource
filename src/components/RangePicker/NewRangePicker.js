@@ -89,8 +89,8 @@ class NewRangePicker extends Component {
                     beginTime = moment(moment(new Date()).add(-4, 'hour').format('YYYY-MM-DD HH:mm:ss'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
                 } else {
-                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:mm:00'));
-                    endTime = moment(endTime.format('YYYY-MM-DD HH:mm:59'));
+                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:mm:ss'));
+                    endTime = moment(endTime.format('YYYY-MM-DD HH:mm:ss'));
                 }
                 if (isVerification) {
                     const ranges = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-1, 'month');
@@ -104,10 +104,10 @@ class NewRangePicker extends Component {
             case 'hour':
             case 'Hour':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-1, 'day').format('YYYY-MM-DD 00:00:00'));
+                    beginTime = moment(moment(new Date()).format('YYYY-MM-DD 00:00:00'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
                 } else {
-                    beginTime = moment(moment(new Date()).format('YYYY-MM-DD 00:00:00'));
+                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:mm:ss'));
                     endTime = moment(endTime.format('YYYY-MM-DD HH:mm:ss'));
                 }
                 if (isVerification) {
@@ -124,8 +124,8 @@ class NewRangePicker extends Component {
                     beginTime = moment(moment(new Date()).format('YYYY-MM-01 00:00:00'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
                 } else {
-                    beginTime = moment(moment(new Date()).add(-1, 'month').format('YYYY-MM-DD 00:00:00'));
-                    endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+                    beginTime = moment(beginTime.format('YYYY-MM-DD HH:mm:ss'));
+                    endTime = moment(endTime.format('YYYY-MM-DD HH:mm:ss'));
                 }
                 if (isVerification) {
                     const ranges = moment(endTime.format('YYYY-MM-DD HH:mm:ss')).add(-12, 'month');
