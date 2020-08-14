@@ -31,7 +31,7 @@ class Index extends Component {
         let { dgimn, dispatch,pollType} = this.props;
          dgimn = value;
          pollType = selectItem.PointType;
-         dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
+        //  dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
     }
 
     render() {

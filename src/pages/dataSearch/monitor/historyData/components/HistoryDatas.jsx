@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin,Checkbox } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
@@ -88,8 +88,10 @@ class HistoryDatas extends React.Component {
         name: <MultiChart />
       }],
       isSwitch:false,
+      isSingerChat:false,
       pollSelectCode:[],
-      pollutantSelect:[]
+      pollutantSelect:[],
+      defaultChecked:true
     };
   }
 
@@ -277,6 +279,9 @@ componentDidUpdate(prevProps) {
     })
 
   }
+  identChange = () =>{
+    let { dispatch } = this.props;
+  }
   onFinish = () => { //查询
     let { historyparams,chartparams, dispatch,pollType } = this.props;
      dispatch({
@@ -296,9 +301,13 @@ componentDidUpdate(prevProps) {
   }
   tabChange = (key) =>{
     if(key ==='tableData'){
-      this.setState({isSwitch:false})
+      this.setState({isSwitch:false,isSingerChat:false})
     }else{
-    this.setState({isSwitch:true})
+      this.setState({isSwitch:true,isSingerChat:false})
+      if(key === "singleChart"){
+        this.setState({isSingerChat:true})
+      }
+   
    }
   }
 
@@ -323,7 +332,7 @@ componentDidUpdate(prevProps) {
     }
   //查询条件
   queryCriteria = () => {
-    const { dataType,dateValue, displayType,isSwitch } = this.state;
+    const { dataType,dateValue, displayType,isSwitch,defaultChecked,isSingerChat } = this.state;
     const { pollLoading,pollutantlist } = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     const formItemLayout = {
@@ -334,8 +343,19 @@ componentDidUpdate(prevProps) {
     return <div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
-          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1}} > 
-            <Col  xl={8}    md={12} sm={24} xs={24}>
+          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
+          <Col  xxl={4} xl={5}  md={12} sm={24} xs={24}>
+              <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
+                  <Select onChange={this.changeReportType } defaultValue={dataType}>
+                  {!isSingerChat? <Select.Option key="realtime">实时</Select.Option> : null}
+                  {!isSingerChat?  <Select.Option key="minute">分钟</Select.Option>: null}
+                    <Select.Option key="hour">小时</Select.Option>      
+                    <Select.Option key="day">日均</Select.Option>  
+                  </Select>
+                
+              </Form.Item>
+              </Col>
+            <Col  xxl={8} xl={8}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
                   <RangePicker_ 
                   dateValue={dateValue}
@@ -347,28 +367,18 @@ componentDidUpdate(prevProps) {
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-            <Col  xl={5}  md={12} sm={24} xs={24}>
-              <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
-                  <Select onChange={this.changeReportType } defaultValue={dataType}>
-                    <Select.Option key="hour">小时</Select.Option>
-                    <Select.Option key="minute">分钟</Select.Option>
-                    <Select.Option key="day">日均</Select.Option>
-                    <Select.Option key="realtime">实时</Select.Option>
-                  </Select>
-                
-              </Form.Item>
-              </Col>
-              <Col  xl={5}  md={12} sm={24} xs={24}>
+              <Col  xxl={6} xl={5}  md={12} sm={24} xs={24}>
               <Form.Item label="污染类型" {...formItemLayout} className='queryConditionForm'>
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
-            <Col  xl={2}   md={12} sm={24} xs={12}>
-              <Form.Item label="标识" {...formItemLayout} className='queryConditionForm'>
+            <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}>
+              {/* <Form.Item label="标识" {...formItemLayout} className='queryConditionForm'>
               <Switch  disabled={this.state.isSwitch} checkedChildren="开启" unCheckedChildren="关闭" style={{ marginRight: 10 }} defaultChecked />
-              </Form.Item>
+              </Form.Item> */}
+              <Checkbox  checked={defaultChecked} v-show={this.state.isSwitch} onChange={this.identChange}>标识</Checkbox>
             </Col>
-            <Col  xl={4}   md={12} sm={24} xs={12}>
+            <Col  xxl={3} xl={3}   md={12} sm={24} xs={12}>
               <Form.Item {...formItemLayout} className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>

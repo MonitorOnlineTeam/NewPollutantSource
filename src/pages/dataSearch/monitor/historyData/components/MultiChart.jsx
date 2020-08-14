@@ -55,6 +55,7 @@ class MultiChart extends React.Component {
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { format, dataType,chartList,timeList} = this.state;
+    const { chartparams : {DataType }} = this.props;
     const legendData = chartList.map(item => item.PollutantName);
 
     // series
@@ -66,7 +67,8 @@ class MultiChart extends React.Component {
       return {
         name: item.PollutantName,
         type: 'line',
-        animation: false,
+        // animation: false,
+        markPoint:  {  data:[{type:'min',name:'最小值'},{type:'max',name:'最大值'     }　]  },
         data: item.DataList,
         ...otherProps
       }
@@ -159,7 +161,14 @@ class MultiChart extends React.Component {
         ...otherProps
       }
     })
-    const appendText = dataType === "Hour" ? "时" : "";
+    const appendText = "";
+    if(DataType === "hour"){
+      appendText = "时"
+      format = 'YYYY-MM-DD HH'
+    }else {
+      appendText = ""
+      format = 'YYYY-MM-DD'
+    }
 
     if (yAxis.length) {
       // alert(111)

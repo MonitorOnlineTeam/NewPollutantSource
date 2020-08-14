@@ -19,7 +19,7 @@ import styles from "../index.less";
  */
 
 
-const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
+const COLOR =  '#1890ff';
 
 
 @connect(({ loading, historyData }) => ({
@@ -59,11 +59,10 @@ pollutantSelect=(index,item)=>{ //自定义图例点击事件
         <>
    <Row justify="center" gutter={[16,16]}  style={{margin:0}}>
     {alreadySelect.map((item,index)=>{
-     const textColor = index  === this.props.selectedIndex ? 'red' : 'black';
-     const colorBlockCol = index  === this.state.selectedIndex ?  COLOR[2] : '#e6e6e6';
+     const colorBlockCol = index  === this.state.selectedIndex ?  COLOR : '#e6e6e6';
        return  (<Col onClick={this.pollutantSelect.bind(this,index,item)}>
          <span className={styles.colorBlock} style={{backgroundColor:colorBlockCol}}></span>
-        <span style={{  color: textColor  }}>{item.PollutantName}</span>
+        <span>{item.PollutantName}</span>
       </Col>)
      })}
 </Row>

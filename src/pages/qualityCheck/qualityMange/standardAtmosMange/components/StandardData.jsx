@@ -38,31 +38,35 @@ const columns = [
     title: '证书编号',
     dataIndex: 'CertificateNo',
     key: 'CertificateNo',
-    align: 'center'
+    align: 'center',
+    width:120
   },
   {
     title: '生产日期',
     dataIndex: 'ProductDate',
     key: 'ProductDate',
-    align: 'center'
+    align: 'center',
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
   },
   {
     title: '有效日期',
     dataIndex: 'LoseDate',
     key: 'LoseDate',
-    align: 'center'
+    align: 'center',
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
   },
   {
-    title: '气瓶体积',
+    title: '气瓶体积(L)',
     dataIndex: 'Volume',
     key: 'Volume',
     align: 'center'
   },
   {
-    title: '初始压力',
+    title: '初始压力(MPa)',
     dataIndex: 'Pressure',
     key: 'Pressure',
-    align: 'center'
+    align: 'center',
+    width:115
   },
   {
     title: '录入时间',
@@ -107,7 +111,7 @@ class TableData extends React.Component {
         this.state = {
         tableDatas:[],
         columns:[],
-        dateValue: [ moment(new Date()).add(-1, 'day'), moment(new Date())],
+        dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
         };
     }
     static getDerivedStateFromProps(props, state) {
@@ -196,8 +200,8 @@ dateCallback = (dates, dataType) => { //更新日期
     return <div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
-          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1}} > 
-            <Col  xl={8}    md={12} sm={24} xs={24}>
+          <Row gutter={[8,8]} style={{flex:1}} > 
+            <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
               <Form.Item label="监测时间" className='queryConditionForm'>
                   <RangePicker_ 
                    onRef={this.onRef1}
@@ -208,7 +212,7 @@ dateCallback = (dates, dataType) => { //更新日期
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-            <Col  xl={4}   md={12} sm={24} xs={12}>
+            <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>

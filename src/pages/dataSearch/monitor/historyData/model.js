@@ -7,7 +7,7 @@ import Model from '@/utils/model';
 import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,querypollutantlist,exportHistoryReport } from './service';
 import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
-import {  message } from 'antd';
+import {  message,Tooltip } from 'antd';
 import { red } from '@ant-design/colors';
 export default Model.extend({
   namespace: 'historyData',
@@ -44,7 +44,7 @@ export default Model.extend({
     chartList:[],
     alreadySelect:[],
     pollutantDefault:[],
-    pollType:"",
+    pollType:"5",
     tableloading:true
   },
   effects: {
@@ -67,12 +67,14 @@ export default Model.extend({
       const body = {
         ...payload
       }
+      yield update({tableloading:true}); //更新state的值
+
       const result = yield call(getAllTypeDataList, { ...body });
 
-      yield update({tableloading:true}); //更新state的值
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
-        let columns = [{title: '时间', dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center'}]
+        let columns = [{title: '监测时间', dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', children: [
+                         { title: '标准值', dataIndex: 'MonitorTime',key: 'MonitorTime',align: 'center'}]}]
         // if (pollutantlist.length > 6) {
         //   width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
         //   if (width < 200) {
@@ -82,17 +84,32 @@ export default Model.extend({
         pollutantlist.map((item,index)=>{
             Object.keys(result.Datas[1]).map(items =>{
               if(item.PollutantCode == items){
-                columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `, dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center', 
-                        render: (value, record, index) => {
-                              if(value && value[`${item.PollutantCode}_over`]){
-                                return <span style={{color:"red"}}>{value}</span>
-                              }else if(value && value[`${item.PollutantCode}_warning`]){
-                                return <span style={{color:"yellow"}}>{value}</span>
-                              } else{
-                                return <span>{value} </span> 
-                              }
-  
-               }})
+                columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `, dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
+                children: [
+                  {
+                    title: item.PollutantName,
+                    dataIndex: item.PollutantCode,
+                    key: item.PollutantCode,
+                    align: 'center',
+                    render: (value, row, index) => {
+                      if(index == 1){
+                        return <span>{"哈哈哈"} </span> 
+                      }else {
+                        return <Tooltip placement="right" title={value}>
+                               <span style={{color:"red"}}>{value}</span>
+                               </Tooltip>
+                      }
+                    // if(row && row[`${item.PollutantCode}_over`]){
+                    //   return <span style={{color:"red"}}>{value}</span>
+                    // }else if(row && row[`${item.PollutantCode}_warning`]){
+                    //   return <span style={{color:"yellow"}}>{value}</span>
+                    // } else{
+                    //   return <span>{"哈哈哈"} </span> 
+                    // }
+
+                    }
+                  }],      
+                })
               }
             })
            

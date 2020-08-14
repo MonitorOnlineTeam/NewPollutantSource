@@ -20,7 +20,7 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
  * jab 2020.07.30
  */
 
-
+// import { green } from '@ant-design/colors';
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
 
 @connect(({ loading, historyData }) => ({
@@ -33,8 +33,7 @@ class SingleChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          format:"YYYY-MM-DD",
-          dataType: "Hour",
+          format:"YYYY-MM-DD HH",
           timeList:[],
           totalList:[{"name":"同比","DataList":[]},{"name":"环比","DataList":[]},{"name":"标准","DataList":[]}],
           chartList:[],
@@ -73,8 +72,12 @@ class SingleChart extends React.Component {
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { format, dataType,totalList,timeList} = this.state;
-    const legendData = ['同比', '环比', '标准'];
 
+    const { chartparams : {DataType }} = this.props;
+  
+    const yName = "监测值";
+    const legendData = ['同比', '环比', '标准'];
+    
     // series
     const series = totalList.map((item, index) => {
       
@@ -82,13 +85,13 @@ class SingleChart extends React.Component {
         name: item.name,
         type: 'line',
         data: item.DataList,
-        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最低值'},{type:'max',name:'最高值'     }　]  } : null,
+        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值'},{type:'max',name:'最大值'}　]  } : null,
         markLine: item.name == "标准"? {data: [ {yAxis: 145 ,name:'标准值',lineStyle:{type:"solid",color:"red" }} ,{type:'average',name:'平均值' }  ]} : null
         }
     })
     const yAxis = {
         type: 'value',
-        name: "监测值",
+        name: yName,
         axisLine: {
           lineStyle: {
             color: COLOR[1],
@@ -99,9 +102,17 @@ class SingleChart extends React.Component {
           show: false
         }
       }
-    const appendText = dataType === "Hour" ? "时" : "";
+      const appendText = "";
+      if(DataType === "hour"){
+        appendText = "时"
+        format = 'YYYY-MM-DD HH'
+      }else {
+        appendText = ""
+        format = 'YYYY-MM-DD'
+      }   
     if (yAxis) {
       // alert(111)
+
       return {
         grid: {x: 50, y: 50,  x2: 50,  y2: 50  },
         toolbox: {
@@ -114,7 +125,6 @@ class SingleChart extends React.Component {
           trigger: 'item',
           // trigger: 'axis',
           formatter: function (params, ticket, callback) {
- 
             let formats = `${params.marker} `
             if (params.seriesName === "同比") {
               formats += `${moment(params.name.replace(/时/, "")).add(-1, 'y').format(format) + appendText}: ${params.value}`
@@ -203,6 +213,7 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
     chartList.map(items=>{
       if(items.PollutantCode == item.PollutantCode ){
         selectData = items.DataList;
+        this.echartsReact.props.option.yAxis[0].name =  `${yName}(${item.PollutantCode})`;
       // _this.setState({selectItem:item}) //记录选中的值    
       }
    })
