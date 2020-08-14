@@ -9,6 +9,7 @@ import React, { Component } from 'react'
 import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin, Tag } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
+import _ from 'lodash'
 import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
@@ -18,7 +19,6 @@ import config from '@/config'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
-import _ from "lodash"
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -74,7 +74,7 @@ class NavigationTree extends Component {
       exceState: false,
       zState: true,
       cState: true,
-      screenList: [],//0, 1, 2, 3
+      screenList: [], // 0, 1, 2, 3
       treeVis: this.props.IsTree,
       panelVis: 'none',
       panelData: [],
@@ -94,7 +94,7 @@ class NavigationTree extends Component {
           title: 'Age',
           dataIndex: 'pointName',
           width: '40%',
-          render: (text, record) => <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}{record.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</span></div>,
+          render: (text, record) => <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b>{record.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}<br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}</span></div>,
         },
         {
           title: 'Age',
@@ -435,9 +435,9 @@ class NavigationTree extends Component {
     // this.tilingData(this.props.EntAndPoint)
     // console.log('2222')
     // console.log('pan2=',this.state.panelDataList);
-    var entAndPoint = data || this.props.EntAndPoint;
+    const entAndPoint = data || this.props.EntAndPoint;
     const { value } = e.target;
-    var msg = value.toUpperCase();
+    const msg = value.toUpperCase();
     // const expandedKeys = this.state.dataList
     //   .map(item => {
     //     // console.log('item1',item);
@@ -768,6 +768,7 @@ class NavigationTree extends Component {
         return <a><CustomIcon type="icon-dian2" style={{ fontSize: size }} /></a>
     }
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     // if(_.isEqual(this.state, nextState) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
     //   console.log('1111')

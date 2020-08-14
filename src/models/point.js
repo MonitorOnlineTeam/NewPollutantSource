@@ -17,7 +17,7 @@ export default Model.extend({
     state: {
         pollutantType: 'all',
         pointDataWhere: [],
-        pollutantTypelist: [],
+        pollutantTypelist: [],delPoint
         isEdit: false,
         TestComponent: [], // 测试项目
         MainInstrumentName: [], // 主要仪器名称
