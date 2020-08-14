@@ -65,7 +65,7 @@ class NewRangePicker extends Component {
         const { isVerification, callback, callbackDataQuery, fieldName } = this.props;
         const dataType = Type || this.props.dataType;
         if (!beginTime || !endTime) {
-            callback && callback([beginTime, endTime], dataType, fieldName);
+            // callback && callback([beginTime, endTime], dataType, fieldName);
             return;
         }
 
