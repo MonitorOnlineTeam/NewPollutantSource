@@ -21,7 +21,7 @@ class Index extends Component {
         placeholder:"请选择污染物",
         mode:"multiple",
         allowClear:false,
-        maxTagCount:2,//选择项最大个数
+        maxTagCount:1,//选择项最大个数
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
         isPollutant:true
     }
@@ -71,7 +71,6 @@ class Index extends Component {
        //   allpollutant,
         } = this.props;
         // const { defaultValues } = this.state;
-        console.log(value)
         return (
             <Select   value={value}  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
             {this.getOption()}

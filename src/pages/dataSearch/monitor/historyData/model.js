@@ -8,7 +8,7 @@ import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,queryp
 import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
 import {  message,Tooltip } from 'antd';
-import { red } from '@ant-design/colors';
+import { red,yellow } from '@ant-design/colors';
 export default Model.extend({
   namespace: 'historyData',
   state: {
@@ -18,11 +18,11 @@ export default Model.extend({
     summary:[],
     total:"",
     loading:true,
-    dgimn:"140100000224001",
+    dgimn:"yastqsn0000002",
     historyparams: {
       datatype: 'hour',
-      DGIMN: "51052216080301",
-      DGIMNs: "51052216080301",
+      DGIMN: "yastqsn0000002",
+      DGIMNs: "yastqsn0000002",
       pageIndex: null,
       pageSize: null,
       beginTime:  moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')),
@@ -87,25 +87,26 @@ export default Model.extend({
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `, dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
                 children: [
                   {
-                    title: item.PollutantName,
+                    title: item.StandardValue,
                     dataIndex: item.PollutantCode,
                     key: item.PollutantCode,
                     align: 'center',
                     render: (value, row, index) => {
-                      if(index == 1){
-                        return <span>{"哈哈哈"} </span> 
-                      }else {
-                        return <Tooltip placement="right" title={value}>
-                               <span style={{color:"red"}}>{value}</span>
+                   // 1§1§0值异常   
+                         if(row[`${item.PollutantCode}_params`]){ // 数据异常 异常§异常类别编号§异常类别名称
+                          return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split["§"][2]}>
+                                <span style={{color:red.primary}}>{ `1§${item.IsException}§${item.ExceptionType}`}</span>
                                </Tooltip>
+                         }
+                        if(row[`${item.PollutantCode}_params`]){ // 数据超标  超标§报警颜色§标准值§超标倍数
+                          return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split["§"][3]}>
+                                 <span style={{color:yellow.primary}}>{ `0§null§${item.StandardValue}§${item.OverStandValue}`}</span>
+                                 </Tooltip>
+
+                      } else {
+                        return  <span>{value}</span>
+
                       }
-                    // if(row && row[`${item.PollutantCode}_over`]){
-                    //   return <span style={{color:"red"}}>{value}</span>
-                    // }else if(row && row[`${item.PollutantCode}_warning`]){
-                    //   return <span style={{color:"yellow"}}>{value}</span>
-                    // } else{
-                    //   return <span>{"哈哈哈"} </span> 
-                    // }
 
                     }
                   }],      
