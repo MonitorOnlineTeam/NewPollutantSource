@@ -27,7 +27,7 @@ const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83',
     isloading: loading.effects['historyData/getAllChatDataList'],
     timeList:historyData.timeList,
     chartList:historyData.chartList,
-    
+    chartparams:historyData.chartparams
 }))
 class SingleChart extends React.Component {
     constructor(props) {
@@ -71,13 +71,14 @@ class SingleChart extends React.Component {
   // 图表Option
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
-    const { format, dataType,totalList,timeList} = this.state;
+    const { dataType,totalList,timeList} = this.state;
 
     const { chartparams : {DataType }} = this.props;
   
     const yName = "监测值";
     const legendData = ['同比', '环比', '标准'];
-    
+    let _this = this;
+    let  formatDate = "YYYY-MM-DD HH";
     // series
     const series = totalList.map((item, index) => {
       
@@ -102,13 +103,14 @@ class SingleChart extends React.Component {
           show: false
         }
       }
-      const appendText = "";
+      let appendText = "";
       if(DataType === "hour"){
         appendText = "时"
-        format = 'YYYY-MM-DD HH'
+        formatDate  = 'YYYY-MM-DD HH'
+       
       }else {
         appendText = ""
-        format = 'YYYY-MM-DD'
+        formatDate  =  'YYYY-MM-DD';
       }   
     if (yAxis) {
       // alert(111)
@@ -127,9 +129,9 @@ class SingleChart extends React.Component {
           formatter: function (params, ticket, callback) {
             let formats = `${params.marker} `
             if (params.seriesName === "同比") {
-              formats += `${moment(params.name.replace(/时/, "")).add(-1, 'y').format(format) + appendText}: ${params.value}`
+              formats += `${moment(params.name.replace(/时/, "")).add(-1, 'y').format(formatDate) + appendText}: ${params.value}`
             } else if(params.seriesName === "环比") {
-              formats += `${moment(params.name.replace(/时/, "")).add(-1, 'month').format(format) + appendText}: ${params.value}`
+              formats += `${moment(params.name.replace(/时/, "")).add(-1, 'month').format(formatDate) + appendText}: ${params.value}`
             }else{
               formats += `${params.name}: ${params.value}`
             }
@@ -147,7 +149,7 @@ class SingleChart extends React.Component {
             type: 'category',
             boundaryGap: false,
             axisLine: { onZero: false },
-            data: timeList.map(item => moment(item).format(format) + appendText),
+            data: timeList.map(item => moment(item).format(formats) + appendText),
             splitLine: {
               show: false
             },
@@ -268,7 +270,7 @@ static getDerivedStateFromProps(props, state) {
     let onEvents = {
       'legendselectchanged': this.onChartLegendselectchanged.bind(this)
     }
-    const {  chartList , isloading} = this.props;
+    const {  chartList , isloading ,timeList} = this.props;
     return (
         <> 
                { isloading ?
@@ -276,7 +278,7 @@ static getDerivedStateFromProps(props, state) {
                   <div>
                   
                   {
-                  chartList.length > 0? 
+                  chartList.length > 0 && timeList.length >0 ? 
                   <div>
                <ColorBlock pollutantSelect = { this.pollutantSelect.bind(this) }/>
               <ReactEcharts

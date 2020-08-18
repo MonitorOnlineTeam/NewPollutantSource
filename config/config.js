@@ -330,7 +330,19 @@ export default {
                       // 标准气管理
                       name: 'working',
                       path: '/qualityCheck/qualityMange/standardAtmosMange',
-                      component: './qualityCheck/qualityMange/standardAtmosMange/index',
+                      component: './qualityCheck/qualityMange/standardAtmosMange',
+                    },               
+                  ]
+                },
+                {
+                  // 质控核查设置
+                  path: '/qualityCheck/qualitySetting',
+                  name: 'qualitySetting',
+                  routes: [
+                      {
+                      name: 'zeroPointSet',  //零点核查设置
+                      path: '/qualityCheck/qualitySetting/zeroPointSet',
+                      component: './qualityCheck/qualitySetting/zeroPointSet',
                     },               
                   ]
                 },

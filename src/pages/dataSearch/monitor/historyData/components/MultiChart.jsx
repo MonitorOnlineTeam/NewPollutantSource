@@ -21,7 +21,8 @@ const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83',
 @connect(({ loading, historyData }) => ({
   isloading: loading.effects['historyData/getAllChatDataList'],
   timeList:historyData.timeList,
-  chartList:historyData.chartList
+  chartList:historyData.chartList,
+  chartparams:historyData.chartparams
 }))
 
 class MultiChart extends React.Component {
@@ -54,10 +55,10 @@ class MultiChart extends React.Component {
     // 图表Option
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
-    const { format, dataType,chartList,timeList} = this.state;
+    const {  dataType,chartList,timeList} = this.state;
     const { chartparams : {DataType }} = this.props;
     const legendData = chartList.map(item => item.PollutantName);
-
+    let  format = "YYYY-MM-DD HH";
     // series
     const series = chartList.map((item, index) => {
       let otherProps = {}
@@ -228,15 +229,15 @@ class MultiChart extends React.Component {
     return {}
   }
   render() {
-    const { isloading,chartList} = this.props;
+    const { isloading,chartList,timeList} = this.props;
  
     return (
       <>
-                   { isloading ?
+                   { isloading?
                  <PageLoading />:
                  <div>
                  {
-                  chartList.length>0 ?        
+                  chartList.length >0 && timeList.length >0 ?        
        <ReactEcharts
        option={this.getOptions()}
        lazyUpdate={true}

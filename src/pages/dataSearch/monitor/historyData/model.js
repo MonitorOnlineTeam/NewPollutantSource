@@ -17,12 +17,13 @@ export default Model.extend({
     columns:[],
     summary:[],
     total:"",
-    loading:true,
-    dgimn:"yastqsn0000002",
+    pollLoading:true,
+    // dgimn:"aq140421009",
+    dgimn:"",
     historyparams: {
       datatype: 'hour',
-      DGIMN: "yastqsn0000002",
-      DGIMNs: "yastqsn0000002",
+      DGIMN: "",
+      DGIMNs: "",
       pageIndex: null,
       pageSize: null,
       beginTime:  moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')),
@@ -31,14 +32,15 @@ export default Model.extend({
       pollutantNames: null,
       unit: null,
       isAsc: true,
+      Flag:"0"//1 显示 0 不显示
     },
     chartparams:{
-      DGIMN:["aq140421008"],
-      PollutantCode:["08","07","01","02","03","05"],
-      BeginTime:"2020-05-01 00:00:00",
-      EndTime:"2020-08-31 23:00:00",
-      DataType:"hour",
-      PollutantType:"5"
+      DGIMN:[""],
+      PollutantCode:[],
+      BeginTime:"",
+      EndTime:"",
+      DataType:"",
+      PollutantType:""
     },
     timeList:[],
     chartList:[],
@@ -50,20 +52,20 @@ export default Model.extend({
   effects: {
      // 获取数据获取率 - 详情污染物列表
         *getPollutantList({callback, payload }, { call, update }) {
+          yield update({ pollLoading:true  })
           const result = yield call(querypollutantlist, payload);
           if (result.IsSuccess) {
-            yield update({ pollutantlist: result.Datas  })
+            yield update({ pollutantlist: result.Datas,pollLoading:false  })
             callback(result.IsSuccess)
 
           } else {
-            // message.error(result.Message)
+            message.error(result.Message)
           }
         },
 
 
 
     * getAllTypeDataList( { payload},{  call, update, put, take, select}) { //表格数据
-      // console.log("dgimn=", dgimn);
       const body = {
         ...payload
       }
@@ -92,16 +94,19 @@ export default Model.extend({
                     key: item.PollutantCode,
                     align: 'center',
                     render: (value, row, index) => {
-                   // 1§1§0值异常   
-                         if(row[`${item.PollutantCode}_params`]){ // 数据异常 异常§异常类别编号§异常类别名称
-                          return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split["§"][2]}>
-                                <span style={{color:red.primary}}>{ `1§${item.IsException}§${item.ExceptionType}`}</span>
-                               </Tooltip>
-                         }
-                        if(row[`${item.PollutantCode}_params`]){ // 数据超标  超标§报警颜色§标准值§超标倍数
-                          return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split["§"][3]}>
-                                 <span style={{color:yellow.primary}}>{ `0§null§${item.StandardValue}§${item.OverStandValue}`}</span>
+                     // 1§1§0值异常   
+                         if(row[`${item.PollutantCode}_params`]){// 数据超标  超标§报警颜色§标准值§超标倍数
+                              if(row[`${item.PollutantCode}_params`].split("§")[0]==="0"){
+                                return <Tooltip placement="right" title={`数据超标：${row[`${item.PollutantCode}_params`].split("§")[2]}`}>
+                                <span style={{color:yellow.primary}}>{ value }</span>
+                                </Tooltip>
+                              }
+                            if(row[`${item.PollutantCode}_params`].split("§")[0] === "1"){   // 数据异常 异常§异常类别编号§异常类别名称 
+                              return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split("§")[2]}>
+                                 <span style={{color:red.primary}}>{ value}</span>
                                  </Tooltip>
+                                 }
+                
 
                       } else {
                         return  <span>{value}</span>
@@ -119,6 +124,8 @@ export default Model.extend({
              
         }) : null;
         yield update({columns: columns, tableDatas: result.Datas, total: result.Total,tableloading:false}); //更新state的值
+      }else {
+        message.error(result.Message)
       }
     },
     * getAllChatDataList( { payload},{  call, update, put, take, select}) {

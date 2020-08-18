@@ -4,6 +4,13 @@ import React, { Component } from 'react';
 import { Select } from 'antd';
 import PropTypes from 'prop-types';
 const { Option } = Select;
+
+@connect(({loading,pollutantListData,qualitySet }) => ({
+    pollLoading: loading.effects['pollutantListData/getPollutantList'],
+    dgimn:qualitySet.dgimn,
+    pollutantlist:pollutantListData.pollutantlist,
+}))
+
 class Index extends Component {
 
     static propTypes = {
@@ -14,7 +21,6 @@ class Index extends Component {
         changeCallback:PropTypes.func,
         maxTagCount:PropTypes.number,
         maxTagTextLength:PropTypes.number,
-        isPollutant: PropTypes.bool,
     }
     static defaultProps = {
         style: {width:"100%"},
@@ -23,7 +29,6 @@ class Index extends Component {
         allowClear:false,
         maxTagCount:1,//选择项最大个数
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
-        isPollutant:true
     }
     constructor(props) {
         super(props);
@@ -32,11 +37,11 @@ class Index extends Component {
         };
     }
     getOption=() => {
-        const { optionDatas,isPollutant } = this.props;
+        const { optionDatas } = this.props;
         const res = [];
         if (optionDatas&&optionDatas.length>0) {
             optionDatas.map((item, key) => {
-                isPollutant?   res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>) : res.push(<Option key={key} value={item.value} >{item.name}</Option>);
+                res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>);
               })
             }
             return res;
@@ -59,9 +64,8 @@ class Index extends Component {
           maxTagTextLength,
           value
         } = this.props;
-        // value={value}  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}
         return (
-            <Select {...this.props}>
+            <Select   value={value}  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
             {this.getOption()}
           </Select>
         );
