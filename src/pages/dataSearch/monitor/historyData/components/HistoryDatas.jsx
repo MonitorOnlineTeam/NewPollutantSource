@@ -34,7 +34,7 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
 @connect(({ loading, historyData }) => ({
   isloading: loading.effects['historyData/getAllTypeDataList'],//当historyData的effects中的getAllTypeDataList有异步请求行为时为true，没有请求行为时为false
   exportLoading: loading.effects['historyData/exportHistoryReport'],
-  pollLoading: loading.effects['historyData/getPollutantList'],
+  pollLoading: historyData.pollLoading,
   // option: historyData.chartdata,
   // selectpoint: historyData.selectpoint,
   // columns: historyData.columns,
@@ -60,17 +60,7 @@ class HistoryDatas extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayType: 'data',
       format: 'YYYY-MM-DD HH:mm:ss',
-      selectP: '',   
-      // defaultSearchForm: {
-      //   PollutantSourceType: 1,
-      //   EntCode: '',
-      //   ReportTime: moment().add(-1, 'day'),
-      //   airReportTime: [moment().add(-1, 'day'), moment()],
-      //   pollDefaultCode:"",
-      //   dataType: "",
-      // },
       dateValue: [moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment(new Date())],
       dataType: "hour",
       dgimn:'',
@@ -91,7 +81,7 @@ class HistoryDatas extends React.Component {
       isSingerChat:false,
       pollSelectCode:[],
       pollutantSelect:[],
-      defaultChecked:true,
+      defaultChecked:false,
       chatDatatype:"hour"
     };
   }
@@ -159,7 +149,6 @@ componentDidUpdate(prevProps) {
           chartparams = {
             ...chartparams,
             PollutantCode: pollutantSelectCode,
-            // pollutantNames: res.length > 0 ? res.toString() : '',
           }
           dispatch({type: 'historyData/updateState',payload: { chartparams } });
 
@@ -171,11 +160,7 @@ componentDidUpdate(prevProps) {
 
     /** 切换排口 */
     changeDgimn = (dgimn) => {
-      this.setState({
-          dgimn
-      })
-      this.getpointpollutants(dgimn);
-
+        dgimn?  this.getpointpollutants(dgimn) : null;
   }
     /** 根据排口dgimn获取它下面的所有污染物 */
     getpointpollutants = dgimn => {
@@ -282,8 +267,16 @@ componentDidUpdate(prevProps) {
     })
 
   }
-  identChange = () =>{
-    let { dispatch } = this.props;
+  identChange = (e) =>{
+    let { historyparams,dispatch } = this.props;
+    historyparams = {
+      ...historyparams,
+      Flag: e.target.checked ? "1" : "0"
+    }
+    dispatch({
+     type: "historyData/updateState",
+     payload: {historyparams},
+    })
   }
   onFinish = () => { //查询
     let { historyparams,chartparams, dispatch,pollType } = this.props;
@@ -317,14 +310,12 @@ componentDidUpdate(prevProps) {
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
       const { pollutantlist } = this.props;
-      // const { pollutantSelect } = this.state;
         const pollDefaultSelect = pollutantlist.map((item,index)=>{
           return  item.PollutantCode
          });
         return (<DropDownSelect
           optionDatas={pollutantlist}
           defaultValue={pollDefaultSelect}
-          // value = {pollutantSelect}
           onChange={this.handlePollutantChange} //父组件事件回调子组件的值
       /> );
     }
@@ -334,7 +325,7 @@ componentDidUpdate(prevProps) {
     }
   //查询条件
   queryCriteria = () => {
-    const { dataType,dateValue, displayType,isSwitch,defaultChecked,isSingerChat,chatDatatype } = this.state;
+    const { dataType,dateValue,isSwitch,defaultChecked,isSingerChat,chatDatatype } = this.state;
     const { pollLoading,pollutantlist } = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     const formItemLayout = {
@@ -382,10 +373,7 @@ componentDidUpdate(prevProps) {
               </Form.Item>
             </Col>
             <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}>
-              {/* <Form.Item label="标识" {...formItemLayout} className='queryConditionForm'>
-              <Switch  disabled={this.state.isSwitch} checkedChildren="开启" unCheckedChildren="关闭" style={{ marginRight: 10 }} defaultChecked />
-              </Form.Item> */}
-              <Checkbox  checked={defaultChecked} v-show={this.state.isSwitch} onChange={this.identChange}>标识</Checkbox>
+              <Checkbox  defaultChecked={defaultChecked} v-show={this.state.isSwitch} onChange={this.identChange}>标识</Checkbox>
             </Col>
             <Col  xxl={3} xl={3}   md={12} sm={24} xs={12}>
               <Form.Item {...formItemLayout} className='queryConditionForm'> 
