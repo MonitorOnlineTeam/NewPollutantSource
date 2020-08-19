@@ -225,7 +225,7 @@ export default {
             //   name: 'HistoryData',
             //   path: 'dataQuery/monitorData/historyData',
             //   component: './dataQuery/monitorData/historyData',
-            // },            
+            // },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -305,13 +305,32 @@ export default {
                       name: 'historyData',
                       path: '/dataSearch/monitor/history',
                       component: './dataSearch/monitor/historyData',
-                    },        
+                    },
                     {
                       // 历史数据
                       name: 'historyData',
                       path: '/dataSearch/monitor/RealTimeData',
                       component: './Test/Test',
-                    },                
+                    },
+                  ]
+                },
+                {
+                  // 质控查询
+                  path: '/dataSearch/qca',
+                  name: 'qca',
+                  routes: [
+                    {
+                      // 零点核查
+                      name: 'working',
+                      path: '/dataSearch/qca/zeroCheck',
+                      component: './dataSearch/qca/zeroCheck',
+                    },
+                    {
+                      // 响应时间核查
+                      name: 'resTimeCheck',
+                      path: '/dataSearch/qca/resTimeCheck',
+                      component: './dataSearch/qca/resTimeCheck',
+                    },
                   ]
                 },
               ]
@@ -326,12 +345,12 @@ export default {
                   path: '/qualityCheck/qualityMange',
                   name: 'qualityMange',
                   routes: [
-                      {
+                    {
                       // 标准气管理
                       name: 'working',
                       path: '/qualityCheck/qualityMange/standardAtmosMange',
                       component: './qualityCheck/qualityMange/standardAtmosMange',
-                    },               
+                    },
                   ]
                 },
                 {
@@ -343,7 +362,7 @@ export default {
                       name: 'zeroPointSet',  //零点核查设置
                       path: '/qualityCheck/qualitySetting/zeroPointSet',
                       component: './qualityCheck/qualitySetting/zeroPointSet',
-                    },               
+                    },
                   ]
                 },
               ]
