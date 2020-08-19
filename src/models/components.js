@@ -19,7 +19,7 @@ export default Model.extend({
         yield update({
           treeRegionData: result.Datas.regionData,
           treeIndustryData: result.Datas.induData,
-          selectTreeItem: state.selectTreeItem.value ? state.selectTreeItem : result.Datas.firstData,
+          selectTreeItem: state.selectTreeItem.value ? {...state.selectTreeItem} : result.Datas.firstData,
         })
       } else {
         message.error(result.Message)
