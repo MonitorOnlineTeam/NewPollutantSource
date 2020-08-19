@@ -325,30 +325,8 @@ class BasicLayout extends Component {
           {...settings}
         >
           {
-            config.isShowTabs && defaultSettings.layout === "sidemenu" ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs
-              type="editable-card"
-              size="small"
-              hideAdd
-              activeKey={this.state.activeKey}
-              onChange={this.onChange}
-              onEdit={this.onTabsEdit}
-              className={styles.pageTabs}
-              tabBarStyle={{ marginBottom: 3 }}
-              tabBarGutter={0}
-              tabBarExtraContent={panes.length > 1 ? operations : ""}
-            >
-              {
-                this.state.panes.map(pane => (
-                  <TabPane tab={pane.tab} key={pane.key} closable={panes.length != 1}>
-                    {pane.content}
-                  </TabPane>
-                ))
-              }
-            </Tabs></div> :
-              (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
+            (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
           }
-
-
         </ProLayout>
         {process.env.NODE_ENV === "development" &&
           <SettingDrawer

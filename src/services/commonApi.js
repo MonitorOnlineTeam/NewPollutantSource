@@ -9,8 +9,15 @@ export async function getEnterpriseAndPoint(params) {
 // 获取污染物类型
 export async function getPollutantTypeList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
-  return result === null ? { data: null } : result;
+  return result;
 }
+
+// 获取排口下的污染物类型
+export async function getPollutantListByDgimn(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  return result;
+}
+
 let websocket = null;
 /**
  * 获取系统配置信息
@@ -53,7 +60,7 @@ export async function getEntAndPoint(params) {
 export async function CreatQRCode(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/CreateQRCode', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 

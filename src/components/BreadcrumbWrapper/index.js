@@ -16,7 +16,7 @@ class BreadcrumbWrapper extends Component {
         <Breadcrumb>
           {
             props.breadcrumb.routes.map(item => {
-              return <Breadcrumb.Item>
+              return <Breadcrumb.Item key={item.path}>
                 <a href={item.path}>{item.breadcrumbName}</a>
               </Breadcrumb.Item>
             })

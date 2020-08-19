@@ -21,6 +21,7 @@ class Test extends Component {
     // this._SELF_ = {
     //   ICONS: {}
     // }
+
     import('@ant-design/icons').then((icons) => {
       this.setState({
         ICONS: icons
@@ -50,14 +51,14 @@ class Test extends Component {
             currentMenuData.children.map(menuItem => {
               if (menuItem.children.length) {
                 return (
-                  <li className={styles.menu_title_container}>
+                  <li key={menuItem.name} className={styles.menu_title_container}>
                     <div className={styles.menu_title}>
                       {menuItem.name}
                     </div>
                     <ul className={styles.menu_item_list}>
                       {
                         menuItem.children.map(itm => {
-                          return <li style={{ cursor: 'pointer', color: pathName === itm.NavigateUrl ? "#1890ff" : "" }} onClick={() => { this.onMenuItemClick(itm, menuKey) }}>
+                          return <li key={itm.name} style={{ cursor: 'pointer', color: pathName === itm.NavigateUrl ? "#1890ff" : "" }} onClick={() => { this.onMenuItemClick(itm, menuKey) }}>
                             {this.getIcon(itm.icon)}
                             <span className={styles.menu_name}>{itm.name}</span>
                           </li>
@@ -68,7 +69,7 @@ class Test extends Component {
                 )
               } else {
                 return (
-                  <li className={styles.menu_title_container}>
+                  <li key={menuItem.name} className={styles.menu_title_container}>
                     <ul className={styles.menu_item_list}>
                       <li onClick={() => { this.onMenuItemClick(menuItem, menuKey) }}>
                         {this.getIcon(menuItem.icon)}

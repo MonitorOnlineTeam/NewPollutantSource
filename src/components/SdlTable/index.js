@@ -113,12 +113,12 @@ class SdlTable extends PureComponent {
       } if (title.indexOf('流量') != -1) {
         return 130;
       }
-        return col.width || this.props.defaultWidth;
-    }
-      if (title.props.children.includes('流量')) {
-        return col.width || 130;
-      }
       return col.width || this.props.defaultWidth;
+    }
+    if (title.props.children.includes('流量')) {
+      return col.width || 130;
+    }
+    return col.width || this.props.defaultWidth;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -175,16 +175,17 @@ class SdlTable extends PureComponent {
     const scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({
-        render: (text, record) => text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-            {text}
-          </div>,
-        ...col,
-        width: this.getInitialColWidth(col),
-        onHeaderCell: column => ({
-          width: column.width,
-          onResize: resizable ? this.handleResize(index) : undefined,
-        }),
-      }))
+      render: (text, record) => text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+        {text}
+      </div>,
+      align: 'center',
+      ...col,
+      width: this.getInitialColWidth(col),
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: resizable ? this.handleResize(index) : undefined,
+      }),
+    }))
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
