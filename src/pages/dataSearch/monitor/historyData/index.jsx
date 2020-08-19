@@ -9,17 +9,18 @@ import NavigationTree from '@/components/NavigationTreeNew'
  * 数据查询 历史数据
  * jab 2020.07.30
  */
-import { connect } from 'dva';
-@connect(({ loading,historyData }) => ({
-    dgimn:historyData.dgimn,
-    pollType:historyData.pollType
-}))
+// import { connect } from 'dva';
+// @connect(({ loading,historyData }) => ({
+//     dgimn:historyData.dgimn,
+//     pollType:historyData.pollType
+// }))
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
             dgimn: '',
             title: '',
+            pollType:""
         };
     }
 
@@ -27,21 +28,22 @@ class Index extends Component {
         this.setState({
             dgimn: value,
             title: selectItem.title,
+            pollType:selectItem.PointType
         })
-        let { dgimn, dispatch,pollType} = this.props;
-         dgimn = value;
-         pollType = selectItem.PointType;
-         dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
+        // let { dgimn, dispatch,pollType} = this.props;
+        //  dgimn = value;
+        //  polltype = selectItem.PointType;
+        //  dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
     }
-
     render() {
-        const { dgimn,title } = this.state;
+        const { dgimn,title,polltype } = this.state;
+        console.log(dgimn)
         return (
             <div id="historyData">
-          <NavigationTree domId="history" onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
+          <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                    <HistoryDatas  DGIMN={dgimn} initLoadData/>
+                 {dgimn ?   <HistoryDatas dgimn={dgimn} polltype={polltype} initLoadData/> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

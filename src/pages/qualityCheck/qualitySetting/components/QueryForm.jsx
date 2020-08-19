@@ -3,94 +3,95 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button} from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,Spin} from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
+import PollutantDownSelect from '@/components/PollutantDownSelect'
 import DropDownSelect from '@/components/DropDownSelect'
+
+
 /**
  * 质控核查设置   查询条件组件
  * jab 2020.08.18
  */
 
-@connect(({loading,pollutantListData,qualitySet }) => ({
+@connect(({loading,qualitySet }) => ({
     pollLoading: loading.effects['pollutantListData/getPollutantList'],
     dgimn:qualitySet.dgimn,
-    pollutantlist:pollutantListData.pollutantlist,
+    pollType:qualitySet.pollType
 }))
 
-class QueryForm extends React.Component {
+class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          cycleOptions:[{value:"0",name:"日"},{value:"0",name:"周"},{value:"0",name:"月"},{value:"0",name:"季"}]
+          cycleOptions:[{value:"0",name:"1天"},{value:"1",name:"7天"},{value:"2",name:"30天"},{value:"3",name:"季度"}],
+          dgimn:"",
+          defaultValue:"0"
         };
     }
     // static getDerivedStateFromProps(props, state) {
-
+    //   if (props.dgimn !== state.dgimn) {
+    //     return {
+    //       dgimn: props.dgimn
+    //     };
+    //   }
     // }
     componentDidMount(){
-      this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      this.pollChange();
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
-  componentDidUpdate(prevProps) {
-
-}
+    // componentDidUpdate(prevProps) {
+    //   if(prevProps.dgimn !==  this.props.dgimn) {
+    //     console.log(prevProps.dgimn)
+    //     console.log("---------")
+    //     console.log(this.props.dgimn)
+    //   //  this.changeDgimn(this.props.dgimn);
+    // }
+    // }
     /** 切换排口 */
-    changeDgimn = (dgimn) => {
-        this.setState({
-            dgimn
-        })
-        this.getpointpollutants(dgimn);
+  //   changeDgimns = () => {
+  //       this.getpollutantSelect();
   
-    }
-      /** 根据排口dgimn获取它下面的所有污染物 */
-      getpointpollutants = dgimn => {
-        const {dispatch} = this.props;
-         dispatch({
-            type: 'pollutantListData/getPollutantList',
-            payload: { DGIMNs : dgimn  },
-            callback: () => {
-                // this.initData();
-            }
-        });
+  // }
+
+  defaulltVal=(data)=>{
+      console.log(data)
+  }
+
+  pollChange=(data)=>{
+     console.log(data)
   }
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
-    const { pollLoading,pollutantlist } = this.props;
-      const pollDefaultSelect = pollutantlist.map((item,index)=>{
-        return  item.PollutantCode
-       });
-      return ( pollLoading ?  <Spin size="small" /> :<DropDownSelect
-        optionDatas={pollutantlist}
-        defaultValue={pollDefaultSelect}
-        onChange={this.handlePollutantChange} //父组件事件回调子组件的值
-    /> );
+    const { dgimn,pollType } = this.props;
+    return  dgimn&&pollType ? <PollutantDownSelect  onChange={this.pollChange} dgimn={dgimn} polltype={pollType} defaulltval ={this.defaulltVal} /> :  null ; 
   }
   render() {
 
-    const {onFinish} = this.props;
-    const { cycleOptions } = this.state;
+    const {queryClick,addClick} = this.props;
+    const { cycleOptions,defaultValue } = this.state;
     const GetpollutantSelect = this.getpollutantSelect;
     return (
 <div style={{ marginTop: 10 }}>
-        <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
+        <Form className="search-form-container" layout="inline"  onFinish={queryClick}>
           <Row gutter={[8,8]} style={{flex:1}} > 
-            <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
+            <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
                <GetpollutantSelect />
               </Form.Item>
             </Col>
-            <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
+            <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>
               <Form.Item label="质控周期" className='queryConditionForm'>
-               <DropDownSelect isPollutant={false} optionDatas={cycleOptions}/>
+               <DropDownSelect  optiondatas={cycleOptions}  defaultValue= {defaultValue}/>
               </Form.Item>
             </Col>
-            <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
+            <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
-                <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>添加</Button>
+                <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
               </Form.Item>
             </Col>
           </Row>
@@ -99,4 +100,4 @@ class QueryForm extends React.Component {
   }
 }
 
-export default QueryForm;
+export default Index;

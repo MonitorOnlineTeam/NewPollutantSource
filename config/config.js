@@ -363,8 +363,14 @@ export default {
                       path: '/qualityCheck/qualitySetting/zeroPointSet',
                       component: './qualityCheck/qualitySetting/zeroPointSet',
                     },
+                    {
+                      name: 'rangeSet',  //量程核查设置
+                      path: '/qualityCheck/qualitySetting/rangeSet',
+                      component: './qualityCheck/qualitySetting/rangeSet',
+                    },
                   ]
                 },
+                
               ]
             },
             {

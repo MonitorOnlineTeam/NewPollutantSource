@@ -9,7 +9,7 @@ import moment from 'moment';
 import {  message } from 'antd';
 
 export default Model.extend({
-  namespace: 'zeroPointSet',
+  namespace: 'qualitySet',
   state: {
     pollutantlist :[],
     tableDatas: [],
@@ -17,26 +17,14 @@ export default Model.extend({
     total:"",
     tableLoading:true,
     standardParams: {
-      DGIMN: "399435xd5febbc",
+      DGIMN: "",
       BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     }
   },
   effects: {
-     // 获取数据获取率 - 详情污染物列表
-        *getQCAStandardList({callback, payload }, { call, update }) {
-          yield update({ tableLoading:true  })
-          const result = yield call(getQCAStandardManagement, payload);
-          if (result.IsSuccess) {
-            yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length  })
-          } else {
-            message.error(result.Message)
-          }
-        },
 
 
-
-    // },
     // 导出报表
         *exportStandardData({ payload }, { call, put, update, select }) {
           const { historyparams } = yield select(state => state.historyData);

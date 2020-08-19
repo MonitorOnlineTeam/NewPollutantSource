@@ -9,11 +9,11 @@ import { connect } from 'dva';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import QueryForm from '../../components/QueryForm'
 import { green } from '@ant-design/colors';
 /**
- * 标准气管理
- * jab 2020.08.13
+ *  质控核查 零点核查
+ * jab 2020.08.18
  */
 const columns = [
   {
@@ -59,8 +59,7 @@ const columns = [
     title: '气瓶体积(L)',
     dataIndex: 'Volume',
     key: 'Volume',
-    align: 'center',
-    width:90
+    align: 'center'
   },
   {
     title: '初始压力(MPa)',
@@ -98,11 +97,11 @@ const columns = [
   },
 ];
 @connect(({ standardData }) => ({
-    tableDatas:standardData.tableDatas,
-    total: standardData.total,
-    tablewidth: standardData.tablewidth,
-    tableLoading:standardData.tableLoading,
-    standardParams:standardData.standardParams,
+    // tableDatas:standardData.tableDatas,
+    // total: standardData.total,
+    // tablewidth: standardData.tablewidth,
+    // tableLoading:standardData.tableLoading,
+    // standardParams:standardData.standardParams,
     // dgimn:standardData.dgimn
 }))
 
@@ -115,7 +114,7 @@ class TableData extends React.Component {
         dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
         };
     }
-    static getDerivedStateFromProps(props, state) {
+    // static getDerivedStateFromProps(props, state) {
      
       // 只要当前 tableDatas 变化，
       // 重置所有跟 tableDatas 相关的状态。
@@ -126,11 +125,9 @@ class TableData extends React.Component {
       // }
       // return null;
 
-    }
+    // }
     componentDidMount(){
-       
       this.props.initLoadData && this.changeDgimn(this.props.dgimn)
-     
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
@@ -149,14 +146,13 @@ class TableData extends React.Component {
           let {dispatch,standardParams} = this.props;
           standardParams = {
             ...standardParams,
-            DGIMN:dgimn
+            DGIMNs:dgimn
           }
            dispatch({
               type: 'standardData/updateState',
-              payload: { standardParams  },
+              payload: { ...standardParams  },
           });
-         setTimeout(()=>{this.onFinish()}) 
-         
+          this.onFinish();
           
       }
   /**
@@ -188,52 +184,22 @@ dateCallback = (dates, dataType) => { //更新日期
 
 
 
-  //导出数据
-  exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+
+  queryClick = () =>{
+    alert("查询")
   }
-
-
-      //查询条件
-  queryCriteria = () => {
-    const { dateValue } = this.state;
-    return <div>
-      <div style={{ marginTop: 10 }}>
-        <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
-          <Row gutter={[8,8]} style={{flex:1}} > 
-            <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
-              <Form.Item label="监测时间" className='queryConditionForm'>
-                  <RangePicker_ 
-                   onRef={this.onRef1}
-                  dateValue={dateValue}
-                  isVerification={true}
-                  className='textEllipsis'
-                  callback={(dates, dataType) => this.dateCallback(dates,dataType)} //父组件事件回调子组件的值
-                  allowClear={false} showTime={true} style={{width:"100%"}} /> 
-              </Form.Item>
-            </Col>
-            <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
-              <Form.Item  className='queryConditionForm'> 
-                <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
-                <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </div>
-    </div>
+  addClick=()=>{
+    alert("添加")
+    const {tableDatas} = this.props;
+    tableDatas.push()
   }
   render() {
 
     const {tableLoading,tableDatas,total} = this.props;
-    const  QueryCriteria = this.queryCriteria;
     return (
 
 <div id="standardData">
-        <Card title={<QueryCriteria />} >
+        <Card title={<QueryForm addClick={this.addClick} queryClick={this.queryClick}/>} >
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
               dataSource={tableDatas}

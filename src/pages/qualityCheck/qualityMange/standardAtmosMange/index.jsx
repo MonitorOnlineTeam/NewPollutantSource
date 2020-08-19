@@ -11,10 +11,10 @@ import NavigationTree from '@/components/NavigationTreeNew'
  * 质控核查 标准气管理
  * jab 2020.08.13
  */
-import { connect } from 'dva';
-@connect(({ loading,standardData }) => ({
-    dgimn:standardData.dgimn
-}))
+// import { connect } from 'dva';
+// @connect(({ loading,standardData }) => ({
+//     dgimn:standardData.dgimn
+// }))
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -27,12 +27,12 @@ class Index extends Component {
     changeDgimn = (value, selectItem)=> {
         this.setState({
             dgimn: value,
-            // title: selectItem.title,
+            title: selectItem.title,
         })
-        let { dgimn, dispatch,pollType} = this.props;
-         dgimn = value;
-         pollType = selectItem.PointType;
-         dispatch({ type: 'standardData/updateState', payload: { dgimn,pollType } })
+        // let { dgimn, dispatch} = this.props;
+        //  dgimn = value;
+        //  pollType = selectItem.PointType;
+        //  dispatch({ type: 'standardData/updateState', payload: { dgimn,pollType } })
     }
 
     render() {
@@ -42,7 +42,7 @@ class Index extends Component {
           <NavigationTree domId="standard" onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                    <StandardData  DGIMN={dgimn} initLoadData/>
+                 {dgimn ?    <StandardData dgimn={dgimn} initLoadData/> : <PageLoading /> }  
                 </BreadcrumbWrapper>
             </div>
         );

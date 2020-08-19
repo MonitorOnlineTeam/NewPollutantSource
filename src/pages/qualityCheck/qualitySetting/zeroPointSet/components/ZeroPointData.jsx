@@ -127,7 +127,6 @@ class TableData extends React.Component {
 
     // }
     componentDidMount(){
-      console.log(green)
       this.props.initLoadData && this.changeDgimn(this.props.dgimn)
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
@@ -185,16 +184,13 @@ dateCallback = (dates, dataType) => { //更新日期
 
 
 
-  //导出数据
-  exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+
+  queryClick = () =>{
+    alert("查询")
   }
-
-
-
+  addClick=()=>{
+    alert("添加")
+  }
   render() {
 
     const {tableLoading,tableDatas,total} = this.props;
@@ -202,7 +198,7 @@ dateCallback = (dates, dataType) => { //更新日期
     return (
 
 <div id="standardData">
-        <Card title={<QueryForm />} >
+        <Card title={<QueryForm addClick={this.addClick} queryClick={this.queryClick}/>} >
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
               dataSource={tableDatas}
