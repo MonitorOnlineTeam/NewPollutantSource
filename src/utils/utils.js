@@ -123,6 +123,80 @@ export function formatPollutantPopover(value, additional) {
     '-'
   );
 }
+
+/**
+ *格式化数据显示的Popover
+ * @export
+ * @param {*} value 数据值
+ * @param {*} additional 数据的附加信息
+ * @returns
+ */
+export function formatPollutantPopoverText(value, additional, flag) {
+  if (additional) {
+    const additionalInfo = additional.split('§');
+    if (additionalInfo[0] == 0) {
+      const content = (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="warning" />
+            <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据超标</span>
+          </div>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="success" text={`标准值：${additionalInfo[2]}`} />
+          </li>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="error" text={`超标倍数：${additionalInfo[3]}`} />
+          </li>
+        </div>
+      );
+      return (
+        <Popover content={content}>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#ff0000', cursor: 'pointer' }}>
+              {(value || (value === 0 ? 0 : '-')) +
+                '(超标)' +
+                (flag != '正常' ? '(' + flag + ')' : '')}
+            </span>
+          </div>
+        </Popover>
+      );
+    } else {
+      const content = (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="close-circle" />
+            <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据异常</span>
+          </div>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`异常原因：${additionalInfo[2]}`} />
+          </li>
+        </div>
+      );
+      return (
+        <Popover content={content}>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#F3AC00', cursor: 'pointer' }}>
+              {(value || (value === 0 ? 0 : '-')) +
+                '(异常)' +
+                (flag != '正常' ? '(' + flag + ')' : '')}
+            </span>
+          </div>
+        </Popover>
+      );
+    }
+  }
+  return value ? (
+    <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+      {`${value}` + `${flag ? (flag != '正常' ? '(' + flag + ')' : '') : ''}`}
+    </div>
+  ) : value === 0 ? (
+    0 + `${flag ? (flag != '正常' ? '(' + flag + ')' : '') : ''}`
+  ) : (
+    '-' + `${flag ? (flag != '正常' ? '(' + flag + ')' : '') : ''}`
+  );
+}
+
+
 export function asc(a, b) {
   //数字类型
   if (typeof a.orderby === 'number') return a.orderby - b.orderby;
@@ -298,5 +372,47 @@ export function timeDifference(beginDates, endDates) {
 
     return false;
     
+  }
+}
+
+export function wryFlagToCN(flag) {
+  if (flag) {
+    var rtnCN = '';
+    flag = flag.toLowerCase();
+    switch (flag) {
+      case 'N':
+        rtnCN = '正常';
+        break;
+      case 'F':
+        rtnCN = '停运';
+        break;
+      case 'St':
+        rtnCN = '启炉';
+        break;
+      case 'Sd':
+        rtnCN = '停炉';
+        break;
+      case 'B':
+        rtnCN = '闷炉';
+        break;
+      case 'C':
+        rtnCN = '校准';
+        break;
+      case 'M':
+        rtnCN = '维护';
+        break;
+      case 'Md':
+        rtnCN = '无数据';
+        break;
+      case 'T':
+        rtnCN = '超上限';
+        break;
+      case 'D':
+        rtnCN = '故障';
+        break;
+    }
+    return rtnCN;
+  } else {
+    return '';
   }
 }
