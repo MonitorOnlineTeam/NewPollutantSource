@@ -117,7 +117,7 @@ class RangeCheckPage extends PureComponent {
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantCode',
+        dataIndex: 'PollutantName',
       },
       {
         title: '单位',

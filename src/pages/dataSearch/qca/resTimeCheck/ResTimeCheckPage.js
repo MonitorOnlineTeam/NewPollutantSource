@@ -63,7 +63,7 @@ class resTimeCheckPage extends PureComponent {
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantCode',
+        dataIndex: 'PollutantName',
       },
       {
         title: '第一组（s）',
@@ -339,7 +339,7 @@ class resTimeCheckPage extends PureComponent {
         <SdlTable loading={tableLoading} dataSource={resTimeCheckTableData} columns={columns} />
         {
           visible && <Modal
-            title={`${currentRowData.PollutantCode}响应时间核查详情【${pointName}】`}
+            title={`${currentRowData.PollutantName}响应时间核查详情【${pointName}】`}
             width={"80vw"}
             visible={visible}
             footer={false}

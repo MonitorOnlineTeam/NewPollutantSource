@@ -179,7 +179,7 @@ class CheckModal extends PureComponent {
     const { paramsColumns, logColumns } = this._SELF_;
     return (
       <Modal
-        title={`${currentRowData.PollutantCode}${QCATitle[QCAType]}详情【${pointName}】`}
+        title={`${currentRowData.PollutantName}${QCATitle[QCAType]}详情【${pointName}】`}
         width={"90vw"}
         visible={checkModalVisible}
         footer={false}
