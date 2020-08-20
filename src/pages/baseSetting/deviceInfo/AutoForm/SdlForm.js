@@ -560,20 +560,6 @@ class SdlForm extends PureComponent {
     console.log('submitFormData=', this.props.form.getFieldsValue())
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        // let formData = {};
-        // for (let key in values) {
-        //   if (values[key] && values[key]["fileList"]) {
-        //     // 处理附件列表
-        //     formData[key] = uid;
-        //   } else if (values[key] && moment.isMoment(values[key])) {
-        //     // 格式化moment对象
-        //     formData[key] = moment(values[key]).format("YYYY-MM-DD HH:mm:ss")
-        //   } else {
-        //     formData[key] = values[key] && values[key].toString()
-        //   }
-        // }
-        // let cuid = isEdit ? uid : cuid();
-        // values.uid = uid;
         console.log('values====', values)
         let formData = handleFormData(values, uid)
         console.log('!errAddSubmitFormData=', formData);
@@ -610,7 +596,6 @@ class SdlForm extends PureComponent {
       <Form onSubmit={e => {
         e.preventDefault();
         this._onSubmitForm();
-        // onSubmitForm()
       }} hideRequiredMark={false} style={{ marginTop: 8 }}>
         <Row>
           {
@@ -639,18 +624,6 @@ class SdlForm extends PureComponent {
             >返回</Button>
           </Divider>
         }
-        {/* {(!this.props.hideBtns || this.props.children) ?
-          this.props.children :
-          <Divider orientation="right">
-            <Button type="primary" htmlType="submit">保存</Button>
-            <Button
-              style={{ marginLeft: 8 }}
-              onClick={() => {
-                history.go(-1);
-              }}
-            >返回</Button>
-          </Divider>
-        } */}
       </Form>
       <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
         this.setState({ previewVisible: false })
