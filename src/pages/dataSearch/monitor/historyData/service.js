@@ -31,7 +31,7 @@ export async function getAllChatDataLists(params) {
  */
 export async function querypollutantlist(params) {
   const result = await post( '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null, );
-  return result === null? {   Datas: [], } : result;
+  return result === null? {   Datas: [] } : result;
 }
 
 // 导出历史数据报表

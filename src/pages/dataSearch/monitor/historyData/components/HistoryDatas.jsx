@@ -44,10 +44,10 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
   historyparams: historyData.historyparams,
   pollutantlist:historyData.pollutantlist,
   chartparams:historyData.chartparams,
-  dgimn:historyData.dgimn,
+  // dgimn:historyData.dgimn,
   alreadySelect:historyData.alreadySelect,
   pollutantDefault:historyData.pollutantDefault,
-  pollType:historyData.pollType
+  // pollType:historyData.pollType
 }))
 // loadingAll:loading.models.mySpace,
 // //当mySpace这个models有数据请求行为的时候，loading为true，没有请求的时候为false
@@ -93,12 +93,12 @@ class HistoryDatas extends React.Component {
   static getDerivedStateFromProps(props, state) {
     // 只要当前 dgimn  变化，
     // 重置所有跟 dgimn 相关的状态。
-    // if (props.dgimn !== state.dgimn) {
+    if (props.dgimn !== state.dgimn) {
       
-    //   return {
-    //     dgimn: props.dgimn
-    //   };
-    // }
+      return {
+        dgimn: props.dgimn
+      };
+    }
     //  if (props.pollutantlist !== state.pollutantlist) {
       
     //   return {
@@ -118,14 +118,15 @@ class HistoryDatas extends React.Component {
   }
 
 // 在componentDidUpdate中进行异步操作，驱动数据的变化
-componentDidUpdate(prevProps) {
+ componentDidUpdate(prevProps) {
     if(prevProps.dgimn !==  this.props.dgimn) {
           this.changeDgimn(this.props.dgimn);
       }
-}
+}  
 
-  initData = () =>{
-    const { pollDefaultCode,dgimn } = this.state;
+
+
+  initData = (dgimn) =>{
     let { dispatch,historyparams,pollutantlist,chartparams } = this.props;
          const pollutantSelectCode =  pollutantlist.map((item,index)=>{
               return item.PollutantCode
@@ -140,7 +141,9 @@ componentDidUpdate(prevProps) {
               ...historyparams,
               pollutantCodes: pollutantSelectCode.toString(),
               pollutantNames: pollutantSelectName.toString(),
-              unit: pollutantSelectUnit.toString()
+              unit: pollutantSelectUnit.toString(),
+              DGIMN: dgimn,
+              DGIMNs: dgimn,
             } 
           dispatch({
            type: 'historyData/updateState',
@@ -149,6 +152,7 @@ componentDidUpdate(prevProps) {
           chartparams = {
             ...chartparams,
             PollutantCode: pollutantSelectCode,
+            DGIMN:[dgimn]
           }
           dispatch({type: 'historyData/updateState',payload: { chartparams } });
 
@@ -169,7 +173,7 @@ componentDidUpdate(prevProps) {
           type: 'historyData/getPollutantList',
           payload: { DGIMNs : dgimn  },
           callback: () => {
-              this.initData();
+              this.initData(dgimn);
           }
       });
   }
@@ -279,7 +283,7 @@ componentDidUpdate(prevProps) {
     })
   }
   onFinish = () => { //查询
-    let { historyparams,chartparams, dispatch,pollType } = this.props;
+    let { historyparams,chartparams, dispatch,polltype } = this.props;
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
@@ -287,7 +291,7 @@ componentDidUpdate(prevProps) {
 
      chartparams = {
       ...chartparams,
-      PollutantType: pollType
+      PollutantType: polltype
     }
      dispatch({
       type: "historyData/getAllChatDataList",
@@ -314,7 +318,9 @@ componentDidUpdate(prevProps) {
           return  item.PollutantCode
          });
         return (<DropDownSelect
-          optionDatas={pollutantlist}
+          ispollutant = {1}
+          mode = "multiple"
+          optiondatas={pollutantlist}
           defaultValue={pollDefaultSelect}
           onChange={this.handlePollutantChange} //父组件事件回调子组件的值
       /> );

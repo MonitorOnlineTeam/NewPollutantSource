@@ -48,7 +48,7 @@ class TableData extends React.Component {
       //     // summary:props.summary
       //   };
       // }
-      // return null;
+      return null;
 
     }
     componentDidMount(){

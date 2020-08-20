@@ -1,26 +1,28 @@
 // 多选下拉框组件
 
 import React, { Component } from 'react';
-import { Select } from 'antd';
+import { connect } from 'dva';
+import { Select,Spin } from 'antd';
 import PropTypes from 'prop-types';
 const { Option } = Select;
 
-@connect(({loading,pollutantListData,qualitySet }) => ({
+@connect(({loading,pollutantListData }) => ({
     pollLoading: loading.effects['pollutantListData/getPollutantList'],
-    dgimn:qualitySet.dgimn,
-    pollutantlist:pollutantListData.pollutantlist,
+    pollutantlist:pollutantListData.pollutantlist
 }))
 
 class Index extends Component {
 
     static propTypes = {
-        defaultValue: PropTypes.string || PropTypes.array,
+        // defaultValue: PropTypes.string || PropTypes.array,
         style: PropTypes.object,
         className: PropTypes.string,
         optionDatas: PropTypes.array,
         changeCallback:PropTypes.func,
         maxTagCount:PropTypes.number,
         maxTagTextLength:PropTypes.number,
+        pollutantlist: PropTypes.array,
+        isDefaulltAll:PropTypes.number
     }
     static defaultProps = {
         style: {width:"100%"},
@@ -29,6 +31,8 @@ class Index extends Component {
         allowClear:false,
         maxTagCount:1,//选择项最大个数
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
+        pollutantlist:[],
+        isdefaulltall:0
     }
     constructor(props) {
         super(props);
@@ -36,38 +40,53 @@ class Index extends Component {
             defaultValues:""
         };
     }
+    componentDidMount(){
+        this.changeDgimn(this.props.dgimn)
+      }
+    // 在componentDidUpdate中进行异步操作，驱动数据的变化
+      componentDidUpdate(prevProps) {
+        if(prevProps.dgimn !==  this.props.dgimn) {
+            this.changeDgimn(this.props.dgimn);
+        }
+       }
+      /** 切换排口  根据排口dgimn获取它下面的所有污染物*/
+      changeDgimn = (dgimn) => {
+        const {dispatch} = this.props;
+         dispatch({
+            type: 'pollutantListData/getPollutantList',
+            payload: { DGIMNs : dgimn },
+            callback: () => {
+            }
+         }) ;
+    
+      }
     getOption=() => {
-        const { optionDatas } = this.props;
+        const { pollutantlist } = this.props;
         const res = [];
-        if (optionDatas&&optionDatas.length>0) {
-            optionDatas.map((item, key) => {
-                res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>);
+        if (pollutantlist.length>0) {
+           pollutantlist.map((item, key) => {
+                 res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>);
               })
             }
             return res;
     }
 
-     componentDidMount(){
-     }
     render() {
-        const {
-          mode,
-          onChange,
-          allowClear,
-          style,
-          placeholder,
-          defaultValue,
-          className,
-          maxTagCount,
-          showSearch,
-          maxTagPlaceholder,//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... "
-          maxTagTextLength,
-          value
-        } = this.props;
+        const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
+         
+        const waterDefault =["011","060"]
+        const gasDefault =["a21002","a21026","a19001",]
+
+        const pollDefaultSelect = pollutantlist.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
+            if(isdefaulltall){
+              return  item.PollutantCode
+            }
+           }): polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[];
         return (
-            <Select   value={value}  maxTagCount={maxTagCount}  maxTagPlaceholder={maxTagPlaceholder} maxTagTextLength={maxTagTextLength} allowClear={allowClear} defaultValue={defaultValue} mode={mode} showSearch={showSearch} className={className} style={{ ...style}} placeholder={placeholder} onChange={onChange}>
+          !pollLoading ?  <Select  {...this.props} defaultValue={pollDefaultSelect} >
             {this.getOption()}
-          </Select>
+          </Select> : <Spin size="small" />
+        
         );
     }
 }

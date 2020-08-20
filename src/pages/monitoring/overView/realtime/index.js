@@ -22,11 +22,11 @@ import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
-import { getPointStatusImg } from '@/utils/getStatusImg';
+import { getPointStatusImg,getPointStatusText } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
-import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import { formatPollutantPopover, getDirLevel,formatPollutantPopoverText } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -93,9 +93,9 @@ class index extends Component {
             // 风向转换
             if (item.name === '风向') {
               const _text = text ? `${getDirLevel(text)}` : '-';
-              return formatPollutantPopover(_text, record[`${item.field}_params`]);
+              return formatPollutantPopoverText(_text, record[`${item.field}_params`],record[`${item.field}_flagCN`]);
             }
-            return formatPollutantPopover(text, record[`${item.field}_params`]);
+            return formatPollutantPopoverText(text, record[`${item.field}_params`],record[`${item.field}_flagCN`]);
           },
         }));
 
@@ -136,6 +136,24 @@ class index extends Component {
           ),
           value: 3,
         },
+        {
+          text: (
+            <span>
+              <LegendIcon style={{ color: '#e94' }} />
+              核查异常
+            </span>
+          ),
+          value: 4,
+        },
+        {
+          text: (
+            <span>
+              <LegendIcon style={{ color: '#e94' }} />
+              备案不符
+            </span>
+          ),
+          value: 5,
+        },
       ];
 
       // 大气站状态筛选
@@ -163,48 +181,61 @@ class index extends Component {
       let { sortedInfo, filteredInfo, pollutantCode } = this.state;
       filteredInfo = filteredInfo || {};
       const columns = [
-        {
-          title: '序号',
-          dataIndex: 'index',
-          key: 'index',
-          width: 50,
-          align: 'center',
-          fixed,
-          show: true,
-          render: (value, record, index) => index + 1,
-        },
+        // {
+        //   title: '序号',
+        //   dataIndex: 'index',
+        //   key: 'index',
+        //   width: 50,
+        //   align: 'center',
+        //   fixed,
+        //   show: true,
+        //   render: (value, record, index) => index + 1,
+        // },
         {
           title: '状态',
           dataIndex: 'Status',
           key: 'Status',
-          width: 70,
+          width: 120,
           // width: 120,
           align: 'center',
           fixed,
           show: true,
-          filters: statusFilters,
-          filteredValue: filteredInfo.Status || null,
-          onFilter: (value, record) => {
-            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
-              if (value != 0) {
-                return record.AirLevel == value;
-              }
-                return !record.AirLevel;
-            }
-            return record.status == value;
-          },
+          sorter: (a, b) => a.status - b.status,
+          sortDirections: ['descend'],
+          sortOrder: 'descend',
+          showSorterTooltip: false,
+          // filters: statusFilters,
+          // filteredValue: filteredInfo.Status || null,
+          // onFilter: (value, record) => {
+          //   if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
+          //     if (value != 0) {
+          //       return record.AirLevel == value;
+          //     }
+          //       return !record.AirLevel;
+          //   }
+          //   return record.status == value;
+          // },
           render: (value, record, index) => {
-            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
-              const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
-              const color = airLevelObj.color || '#999999';
-              return (
-                <div className={styles.airStatus}>
-                  <span style={{ backgroundColor: color }} />
-                </div>
-              );
-            }
-            return getPointStatusImg(record, this.props.noticeList);
+            // if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
+            //   const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
+            //   const color = airLevelObj.color || '#999999';
+            //   return (
+            //     <div className={styles.airStatus}>
+            //       <span style={{ backgroundColor: color }} />
+            //     </div>
+            //   );
+            // }
+            return getPointStatusText(record, this.props.noticeList);
           },
+        },
+        {
+          title: '行政区',
+          dataIndex: 'regionName',
+          key: 'regionName',
+          width: 210,
+          align: 'center',
+          fixed,
+          show: true,
         },
         {
           title: '监测点',
@@ -426,7 +457,44 @@ class index extends Component {
                 }}
               // defaultValue={selectpollutantTypeCode}
               />
-              <Radio.Group
+      
+              {
+                wrwList.length ? <Popover
+                  content={
+                    <Row style={{ maxWidth: 700, minWidth: 300 }}>
+                      {
+                        wrwList.map((item, index) => {
+                          if (item.wrw) {
+                            return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
+                              <Checkbox onChange={e => {
+                                if (e.target.checked === false && wrwList.length < 2) {
+                                  message.warning('最少显示一个污染物');
+                                  return;
+                                }
+                                const newColumns = columns;
+                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+                                newColumns[index + num].show = e.target.checked;
+                                this.setState({
+                                  columns: newColumns,
+                                })
+                              }} checked={item.show}>{item.name}</Checkbox>
+                            </Col>
+                          }
+                        })
+                      }
+                    </Row>
+                  }
+                  trigger="click"
+                  visible={this.state.visible}
+                  onVisibleChange={visible => {
+                    this.setState({ visible });
+                  }}
+                >
+                  <Button  type="primary">污染物</Button>
+                </Popover> : null
+              }
+                      <Radio.Group
+                      style={{ marginLeft: 20 }}
                 value={currentDataType}
                 onChange={e => {
                   this.props.dispatch({
@@ -466,41 +534,6 @@ class index extends Component {
                   </Radio.Button>
                   </>}
               </Radio.Group>
-              {
-                wrwList.length ? <Popover
-                  content={
-                    <Row style={{ maxWidth: 700, minWidth: 300 }}>
-                      {
-                        wrwList.map((item, index) => {
-                          if (item.wrw) {
-                            return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
-                              <Checkbox onChange={e => {
-                                if (e.target.checked === false && wrwList.length < 2) {
-                                  message.warning('最少显示一个污染物');
-                                  return;
-                                }
-                                const newColumns = columns;
-                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
-                                newColumns[index + num].show = e.target.checked;
-                                this.setState({
-                                  columns: newColumns,
-                                })
-                              }} checked={item.show}>{item.name}</Checkbox>
-                            </Col>
-                          }
-                        })
-                      }
-                    </Row>
-                  }
-                  trigger="click"
-                  visible={this.state.visible}
-                  onVisibleChange={visible => {
-                    this.setState({ visible });
-                  }}
-                >
-                  <Button style={{ marginLeft: 10 }} type="primary">污染物</Button>
-                </Popover> : null
-              }
               {currentDataType === 'HourData' && (
                 // <TimePicker
                 //   onChange={(time, timeString) => {

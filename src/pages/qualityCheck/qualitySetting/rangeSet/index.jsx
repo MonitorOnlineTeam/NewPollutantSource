@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
-import  ZeroPointData from './components/ZeroPointData'
+import  RangeSetData from './components/RangeSetData'
 import NavigationTree from '@/components/NavigationTreeNew'
 
 
@@ -20,7 +20,6 @@ class Index extends Component {
         this.state = {
             dgimn: '',
             title: '',
-            pollType:""
         };
     }
 
@@ -33,13 +32,14 @@ class Index extends Component {
     }
 
     render() {
-        const { title,dgimn,pollType } = this.state;
+        const { title } = this.state;
+        const { dgimn  } = this.props;
         return (
             <div id="zeroPointData">
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn&&pollType ?   <ZeroPointData  initLoadData/> : <PageLoading /> }
+                 {dgimn ?   <RangeSetData  initLoadData/> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

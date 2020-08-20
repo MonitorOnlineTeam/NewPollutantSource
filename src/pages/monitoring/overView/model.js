@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Popover, Badge, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, onlyOneEnt } from '@/config';
 import { getPollutantTypeList } from '@/services/baseapi';
+import { wryFlagToCN } from '@/utils/utils';
 import {
   querypollutanttypecode,
   querydatalist,
@@ -607,6 +608,8 @@ export default Model.extend({
               } else {
                 delete newRealTimeDataView[idx][`${item.PollutantCode}_params`];
               }
+              newRealTimeDataView[idx][`${item.PollutantCode}_flag`] = item.Flag;
+              newRealTimeDataView[idx][`${item.PollutantCode}_flagCN`] = wryFlagToCN(item.Flag);
               // newRealTimeDataView[idx]["IsException"] = item.IsException;
               // newRealTimeDataView[idx][item.PollutantCode + "_params"] = `${item.IsException}§${item.IsException}§${item.ExceptionType}`;
               // newRealTimeDataView[idx]["ExceptionType"] = item.ExceptionType;
