@@ -12,7 +12,7 @@ import TabContent from './TabContent'
 
 class CemsTabs extends React.Component {
     static propTypes = {
-        key: PropTypes.string || PropTypes.number,
+        // key: PropTypes.string,
         title: PropTypes.string
     }
     static defaultProps = {

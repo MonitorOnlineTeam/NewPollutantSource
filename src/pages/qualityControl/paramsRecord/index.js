@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-18 16:11:36
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-27 10:24:37
+ * @Last Modified time: 2020-08-19 14:48:20
  * @desc: 质控参数记录页面
  */
 import React, { Component } from 'react';
@@ -273,7 +273,7 @@ class index extends Component {
     const { showType, defaultTime } = this.state;
     return (
       <>
-        <NavigationTreeQCA  onItemClick={value => {
+        <NavigationTreeQCA onItemClick={value => {
           if (value.length > 0 && !value[0].IsEnt && value[0].key) {
             this.setState({
               DGIMN: value[0].key,

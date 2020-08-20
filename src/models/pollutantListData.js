@@ -10,19 +10,18 @@ import {  message } from 'antd';
 export default Model.extend({
   namespace: 'pollutantListData',
   state: {
-    pollutantlist :[],
-    dgimn:"yastqsn0000002",
+    pollutantlist :[]
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
         *getPollutantList({callback, payload }, { call, update }) {
           const result = yield call(querypollutantlist, payload);
           if (result.IsSuccess) {
-            yield update({ pollutantlist: result  })
+            yield update({ pollutantlist: result.Datas  })
             callback(result.IsSuccess)
 
           } else {
-            message.error(result.Message)
+            // message.error(result.Message)
           }
         }
   },

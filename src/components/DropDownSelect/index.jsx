@@ -7,23 +7,23 @@ const { Option } = Select;
 class Index extends Component {
 
     static propTypes = {
-        defaultValue: PropTypes.string || PropTypes.array,
+        // defaultValue: PropTypes.string || PropTypes.array,
         style: PropTypes.object,
         className: PropTypes.string,
         optionDatas: PropTypes.array,
         changeCallback:PropTypes.func,
         maxTagCount:PropTypes.number,
         maxTagTextLength:PropTypes.number,
-        isPollutant: PropTypes.bool,
+        ispollutant: PropTypes.number,
     }
     static defaultProps = {
         style: {width:"100%"},
         placeholder:"请选择污染物",
-        mode:"multiple",
+        mode:"-",
         allowClear:false,
         maxTagCount:1,//选择项最大个数
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
-        isPollutant:true
+        ispollutant:0
     }
     constructor(props) {
         super(props);
@@ -32,14 +32,15 @@ class Index extends Component {
         };
     }
     getOption=() => {
-        const { optionDatas,isPollutant } = this.props;
+        const { optiondatas,ispollutant } = this.props;
         const res = [];
-        if (optionDatas&&optionDatas.length>0) {
-            optionDatas.map((item, key) => {
-                isPollutant?   res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>) : res.push(<Option key={key} value={item.value} >{item.name}</Option>);
+        if (optiondatas&&optiondatas.length>0) {
+            optiondatas.map((item, key) => {
+                ispollutant?   res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>) : res.push(<Option key={key} value={item.value} >{item.name}</Option>);
               })
             }
             return res;
+           
     }
 
      componentDidMount(){

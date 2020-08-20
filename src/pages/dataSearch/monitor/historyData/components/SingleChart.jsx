@@ -262,7 +262,7 @@ static getDerivedStateFromProps(props, state) {
   //     // summary:props.summary
   //   };
   // }
-  // return null;
+  return null;
 
 }
   render() {
