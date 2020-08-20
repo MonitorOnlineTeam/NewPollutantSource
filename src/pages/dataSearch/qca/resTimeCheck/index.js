@@ -19,8 +19,6 @@ class index extends PureComponent {
     return (
       <>
         <NavigationTree domId="zeroCheck" onTreeSelect={(value, item) => {
-          console.log('item=', item)
-          console.log('value=', value)
           this.setState({
             pointName: item.title,
             DGIMN: value,

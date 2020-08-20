@@ -4,7 +4,7 @@ import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
-import ZeroCheckChart from "./ZeroCheckChart"
+import BlindCheckChart from "./BlindCheckChart"
 import CheckModal from "../components/CheckModal"
 
 const { RangePicker } = DatePicker;
@@ -15,13 +15,12 @@ const workMode = {
 }
 
 @connect(({ qcaCheck, loading }) => ({
-  zeroCheckTableData: qcaCheck.zeroCheckTableData,
-  zeroCheck24TableData: qcaCheck.zeroCheck24TableData,
+  blindCheckTableData: qcaCheck.blindCheckTableData,
   pollutantList: qcaCheck.pollutantList,
   checkModalVisible: qcaCheck.checkModalVisible,
-  tableLoading: loading.effects['qcaCheck/getZeroCheckTableData'],
+  tableLoading: loading.effects['qcaCheck/getBlindDataList'],
 }))
-class ZeroCheckPage extends PureComponent {
+class BlindCheckPage extends PureComponent {
   formRef = React.createRef();
   state = {
     // entName: "",
@@ -98,58 +97,6 @@ class ZeroCheckPage extends PureComponent {
         dataIndex: 'standard',
       },
     ],
-    columns24: [
-      {
-        title: '核查时间',
-        dataIndex: 'MonitorTime',
-      },
-      {
-        title: '合格情况',
-        dataIndex: 'Result',
-        render: (text, record, index) => {
-          if (text == 1) {
-            return <a style={{ color: "#87d068" }} onClick={(e) => {
-            }}>合格</a>
-          }
-          return <a style={{ color: "#f5222d" }} onClick={(e) => {
-          }}>不合格</a>
-        }
-      },
-      {
-        title: '监测项目',
-        dataIndex: 'PollutantCode',
-      },
-      {
-        title: '单位',
-        dataIndex: 'Unit',
-      },
-      {
-        title: '本次测量浓度',
-        dataIndex: 'StandardValue',
-      },
-      {
-        title: '24小时前测量浓度',
-        dataIndex: 'Check',
-        width: 150,
-      },
-      {
-        title: '量程范围',
-        dataIndex: 'SpanValue',
-      },
-      {
-        title: <span>
-          相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
-仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式测量浓度-标准浓度/量程范围*100%" />
-        </span>,
-        dataIndex: 'Offset',
-        width: 180,
-      },
-      {
-        title: '技术要求',
-        dataIndex: 'standard',
-      },
-    ]
   }
 
   componentDidMount() {
@@ -186,9 +133,8 @@ class ZeroCheckPage extends PureComponent {
   getTableDataSource = () => {
     const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
-    console.log('fieldsValue=', fieldsValue)
     this.props.dispatch({
-      type: "qcaCheck/getZeroCheckTableData",
+      type: "qcaCheck/getBlindDataList",
       payload: {
         beginTime: fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss'),
@@ -200,9 +146,9 @@ class ZeroCheckPage extends PureComponent {
 
 
   render() {
-    const { columns, columns24 } = this._SELF_;
+    const { columns } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, DGIMN, zeroCheckTableData, zeroCheck24TableData, pollutantList, tableLoading, pointName } = this.props;
+    const { checkModalVisible, DGIMN, blindCheckTableData, pollutantList, tableLoading, pointName } = this.props;
     let pollutantCodeList = "";
     if (this.formRef.current) {
       pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
@@ -251,21 +197,18 @@ class ZeroCheckPage extends PureComponent {
         </Form>
         <Spin spinning={tableLoading}>
           <Tabs type="card">
-            <TabPane tab="零点核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={zeroCheckTableData} columns={columns} />
+            <TabPane tab="量程核查" key="1">
+              <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns} />
             </TabPane>
-            <TabPane tab="24小时零点漂移" key="2">
-              <SdlTable loading={tableLoading} dataSource={zeroCheck24TableData} columns={columns24} />
-            </TabPane>
-            <TabPane tab="24小时零点漂移图表" key="3">
-              <ZeroCheckChart pollutantCodeList={pollutantCodeList} />
+            <TabPane tab="量程漂移图表" key="2">
+              <BlindCheckChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>
         </Spin>
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="3" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="2" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }
 }
-export default ZeroCheckPage;
+export default BlindCheckPage;

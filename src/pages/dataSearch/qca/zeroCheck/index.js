@@ -12,7 +12,6 @@ const ZeroCheck = () => {
   return (
     <>
       <NavigationTree domId="zeroCheck" onTreeSelect={(value, item) => {
-        console.log('item=', item)
         setPointName(item.title)
         setDGIMN(value)
         setPointType(item.PointType)
