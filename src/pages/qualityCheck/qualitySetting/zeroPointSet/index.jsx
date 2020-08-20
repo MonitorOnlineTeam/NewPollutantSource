@@ -11,8 +11,8 @@ import NavigationTree from '@/components/NavigationTreeNew'
  * jab 2020.08.18
  */
 import { connect } from 'dva';
-@connect(({ loading,qualitySet }) => ({
-    dgimn:qualitySet.dgimn
+@connect(({ loading,zeroPointSet }) => ({
+    dgimn:zeroPointSet.dgimn
 }))
 class Index extends Component {
     constructor(props) {
