@@ -44,7 +44,7 @@ class SearchSelect extends Component {
         showSearch
         placeholder={this._SELF_.defaultPlaceholder}
         optionFilterProp="children"
-        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        filterOption={(input, option) => option.props.children ? option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false}
         {...this.props}
       >
         {
