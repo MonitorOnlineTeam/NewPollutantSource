@@ -15,6 +15,8 @@ const workMode = {
 @connect(({ qcaCheck, loading }) => ({
   resTimeCheckTableData: qcaCheck.resTimeCheckTableData,
   pollutantList: qcaCheck.pollutantList,
+  keyParameterList: qcaCheck.keyParameterList,
+  qcaLogDataList: qcaCheck.qcaLogDataList,
   tableLoading: loading.effects['qcaCheck/getResTimeCheckTableData'],
 }))
 class resTimeCheckPage extends PureComponent {
@@ -41,6 +43,9 @@ class resTimeCheckPage extends PureComponent {
               this.setState({
                 currentRowData: record,
                 visible: true
+              }, () => {
+                this.getqcaLogAndProcess();
+                this.getKeyParameterList();
               })
             }}>合格</a>
           }
@@ -48,13 +53,17 @@ class resTimeCheckPage extends PureComponent {
             this.setState({
               currentRowData: record,
               visible: true
+            }, () => {
+              this.getqcaLogAndProcess();
+              this.getKeyParameterList();
             })
+
           }}>不合格</a>
         }
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantCode',
+        dataIndex: 'PollutantName',
       },
       {
         title: '第一组（s）',
@@ -161,39 +170,49 @@ class resTimeCheckPage extends PureComponent {
       },
       {
         title: '标准要求',
-        dataIndex: 'na3113me',
+        dataIndex: 'standard',
       },
     ],
     paramsColumns: [
       {
         title: '序号',
-        dataIndex: '1',
+        render: (text, record, index) => {
+          return index + 1;
+        }
       },
       {
         title: '分析仪参数名称',
-        dataIndex: '11',
+        dataIndex: 'paramName',
       },
       {
         title: '参数值',
-        dataIndex: '121',
+        dataIndex: 'value',
+        render: (text, record, index) => {
+          if (text !== "-") {
+            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{`${text} ${record.unit}`}</span>
+          }
+          return text;
+        }
       },
       {
         title: '备注',
-        dataIndex: '1321',
+        dataIndex: 'comment',
       },
     ],
     logColumns: [
       {
         title: '序号',
-        dataIndex: '1',
+        render: (text, record, index) => {
+          return index + 1;
+        }
       },
       {
         title: '监测时间',
-        dataIndex: '11',
+        dataIndex: 'Time',
       },
       {
         title: '日志',
-        dataIndex: '121',
+        dataIndex: 'Msg',
       },
     ]
   }
@@ -218,6 +237,37 @@ class resTimeCheckPage extends PureComponent {
     }
   }
 
+  // 获取质控过程和质控日志
+  getqcaLogAndProcess = () => {
+    const { DGIMN } = this.props;
+    const { currentRowData } = this.state;
+    this.props.dispatch({
+      type: "qcaCheck/getqcaLogAndProcess",
+      payload: {
+        QCAType: 4,
+        DGIMN: DGIMN,
+        MonitorTime: currentRowData.MonitorTime,
+        PollutantCode: currentRowData.PollutantCode,
+      }
+      // payload: { QCAType: 4, "DGIMN": "62020131jhdp02", "MonitorTime": "2020-08-20 23:01:00", "PollutantCode": "a21002" }
+    })
+  }
+
+
+  // 获取关键参数接口
+  getKeyParameterList = () => {
+    const { DGIMN } = this.props;
+    const { currentRowData } = this.state;
+    this.props.dispatch({
+      type: "qcaCheck/getKeyParameterList",
+      payload: {
+        DGIMN: DGIMN,
+        MonitorTime: currentRowData.MonitorTime,
+        PollutantCode: currentRowData.PollutantCode,
+      }
+    })
+  }
+
   // 获取污染物类型
   getPollutantList = () => {
     this.props.dispatch({
@@ -232,7 +282,6 @@ class resTimeCheckPage extends PureComponent {
   getTableDataSource = () => {
     const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
-    console.log('fieldsValue=', fieldsValue)
     this.props.dispatch({
       type: "qcaCheck/getResTimeCheckTableData",
       payload: {
@@ -248,7 +297,7 @@ class resTimeCheckPage extends PureComponent {
   render() {
     const { columns, paramsColumns, logColumns } = this._SELF_;
     const { currentRowData, visible } = this.state;
-    const { resTimeCheckTableData, pollutantList, tableLoading, pointName } = this.props;
+    const { resTimeCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList } = this.props;
     return (
       <Card>
         <Form
@@ -257,10 +306,6 @@ class resTimeCheckPage extends PureComponent {
           initialValues={{
             time: [moment().subtract(29, 'days'), moment()],
           }}
-        // onFieldsChange={(changedFields, allFields) => {
-        //   console.log('changedFields=', changedFields)
-        //   console.log('allFieldss=', allFields)
-        // }}
         >
           <Row gutter={[24, 0]}>
             <Col span={10}>
@@ -285,43 +330,38 @@ class resTimeCheckPage extends PureComponent {
                 </Select>
               </Form.Item>
             </Col>
-            {/* <Col span={6}> */}
             <Space align="baseline">
               <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
               <Button type="primary">导出</Button>
             </Space>
-            {/* </Col> */}
           </Row>
-
         </Form>
         <SdlTable loading={tableLoading} dataSource={resTimeCheckTableData} columns={columns} />
-
         {
           visible && <Modal
-            title={`响应时间核查详情【${pointName}】`}
+            title={`${currentRowData.PollutantName}响应时间核查详情【${pointName}】`}
             width={"80vw"}
             visible={visible}
             footer={false}
             onCancel={() => { this.setState({ visible: false }) }}
           >
-            <Space size={44} style={{marginBottom: 24}}>
+            <Space size={44} style={{ marginBottom: 24 }}>
               <span>质控结果：{currentRowData.Result == 1 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
               <span>平均时间：{currentRowData.AvgTime}s</span>
-              <span>技术要求：≥200s</span>
+              <span>技术要求：{currentRowData.standard}</span>
               <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
               <span>质控时间：{currentRowData.MonitorTime}</span>
             </Space>
             <Tabs type="card">
               <TabPane tab="关键参数" key="1">
-                <SdlTable dataSource={[]} columns={paramsColumns} />
+                <SdlTable dataSource={keyParameterList} columns={paramsColumns} />
               </TabPane>
               <TabPane tab="质控日志" key="2">
-                <SdlTable dataSource={[]} columns={logColumns} />
+                <SdlTable dataSource={qcaLogDataList} columns={logColumns} />
               </TabPane>
             </Tabs>
           </Modal>
         }
-
       </Card>
     );
   }

@@ -4,7 +4,7 @@ import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
-import ZeroCheckChart from "./ZeroCheckChart"
+import RangeCheckChart from "./RangeCheckChart"
 import CheckModal from "../components/CheckModal"
 
 const { RangePicker } = DatePicker;
@@ -15,13 +15,13 @@ const workMode = {
 }
 
 @connect(({ qcaCheck, loading }) => ({
-  zeroCheckTableData: qcaCheck.zeroCheckTableData,
-  zeroCheck24TableData: qcaCheck.zeroCheck24TableData,
+  rangeCheckTableData: qcaCheck.rangeCheckTableData,
+  rangeCheck24TableData: qcaCheck.rangeCheck24TableData,
   pollutantList: qcaCheck.pollutantList,
   checkModalVisible: qcaCheck.checkModalVisible,
-  tableLoading: loading.effects['qcaCheck/getZeroCheckTableData'],
+  tableLoading: loading.effects['qcaCheck/getRangeDataList'],
 }))
-class ZeroCheckPage extends PureComponent {
+class RangeCheckPage extends PureComponent {
   formRef = React.createRef();
   state = {
     // entName: "",
@@ -66,7 +66,7 @@ class ZeroCheckPage extends PureComponent {
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantName',
+        dataIndex: 'PollutantCode',
       },
       {
         title: '单位',
@@ -117,7 +117,7 @@ class ZeroCheckPage extends PureComponent {
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantCode',
+        dataIndex: 'PollutantName',
       },
       {
         title: '单位',
@@ -188,7 +188,7 @@ class ZeroCheckPage extends PureComponent {
     const fieldsValue = this.formRef.current.getFieldsValue();
     console.log('fieldsValue=', fieldsValue)
     this.props.dispatch({
-      type: "qcaCheck/getZeroCheckTableData",
+      type: "qcaCheck/getRangeDataList",
       payload: {
         beginTime: fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss'),
@@ -202,7 +202,7 @@ class ZeroCheckPage extends PureComponent {
   render() {
     const { columns, columns24 } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, DGIMN, zeroCheckTableData, zeroCheck24TableData, pollutantList, tableLoading, pointName } = this.props;
+    const { checkModalVisible, DGIMN, rangeCheckTableData, rangeCheck24TableData, pollutantList, tableLoading, pointName } = this.props;
     let pollutantCodeList = "";
     if (this.formRef.current) {
       pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
@@ -251,21 +251,21 @@ class ZeroCheckPage extends PureComponent {
         </Form>
         <Spin spinning={tableLoading}>
           <Tabs type="card">
-            <TabPane tab="零点核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={zeroCheckTableData} columns={columns} />
+            <TabPane tab="量程核查" key="1">
+              <SdlTable loading={tableLoading} dataSource={rangeCheckTableData} columns={columns} />
             </TabPane>
-            <TabPane tab="24小时零点漂移" key="2">
-              <SdlTable loading={tableLoading} dataSource={zeroCheck24TableData} columns={columns24} />
+            <TabPane tab="24小时量程漂移" key="2">
+              <SdlTable loading={tableLoading} dataSource={rangeCheck24TableData} columns={columns24} />
             </TabPane>
-            <TabPane tab="24小时零点漂移图表" key="3">
-              <ZeroCheckChart pollutantCodeList={pollutantCodeList} />
+            <TabPane tab="24小时量程漂移图表" key="3">
+              <RangeCheckChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>
         </Spin>
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="3" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="1" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }
 }
-export default ZeroCheckPage;
+export default RangeCheckPage;
