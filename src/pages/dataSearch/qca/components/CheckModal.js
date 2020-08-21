@@ -36,7 +36,7 @@ class CheckModal extends PureComponent {
         dataIndex: 'value',
         render: (text, record, index) => {
           if (text !== "-") {
-            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{`${text} ${record.unit}`}</span>
+            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{text} {record.unit}</span>
           }
           return text;
         }
@@ -186,7 +186,7 @@ class CheckModal extends PureComponent {
         onCancel={() => { this.props.dispatch({ type: "qcaCheck/updateState", payload: { checkModalVisible: false } }) }}
       >
         <Space size={44} style={{ marginBottom: 24 }}>
-          <span>质控结果：{currentRowData.Result == 1 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
+          <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
           <span>标准气浓度：{currentRowData.StandardValue}{currentRowData.Unit}</span>
           <span>测量值：{currentRowData.Check}{currentRowData.Unit}</span>
           <span>量程范围：{currentRowData.SpanValue}{currentRowData.Unit}</span>
