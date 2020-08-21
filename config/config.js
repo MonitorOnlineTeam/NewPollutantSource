@@ -338,6 +338,12 @@ export default {
                       component: './dataSearch/qca/blindCheck',
                     },
                     {
+                      // 线性核查
+                      name: 'linear',
+                      path: '/dataSearch/qca/linearCheck',
+                      component: './dataSearch/qca/linearCheck',
+                    },
+                    {
                       // 响应时间核查
                       name: 'resTimeCheck',
                       path: '/dataSearch/qca/resTimeCheck',

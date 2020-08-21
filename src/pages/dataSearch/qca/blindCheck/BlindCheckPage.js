@@ -34,6 +34,10 @@ class BlindCheckPage extends PureComponent {
         dataIndex: 'MonitorTime',
       },
       {
+        title: '结束时间',
+        dataIndex: 'EndTime',
+      },
+      {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
@@ -197,10 +201,10 @@ class BlindCheckPage extends PureComponent {
         </Form>
         <Spin spinning={tableLoading}>
           <Tabs type="card">
-            <TabPane tab="量程核查" key="1">
+            <TabPane tab="盲样数据" key="1">
               <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns} />
             </TabPane>
-            <TabPane tab="量程漂移图表" key="2">
+            <TabPane tab="盲样数据图表" key="2">
               <BlindCheckChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>

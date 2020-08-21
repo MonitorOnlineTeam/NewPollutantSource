@@ -28,6 +28,13 @@ export default Model.extend({
       timeList: [],
     },
     zeroModalVisible: false,
+    // 线性核查
+    linearCheckChartData: {
+      coordMax: [],
+      coordMin: [],
+      data: [],
+      formatter: ""
+    }
 
   },
 
@@ -87,6 +94,12 @@ export default Model.extend({
           valueList: result.Datas.concent,
           standValList: result.Datas.ratio,
           timeList: result.Datas.timeList,
+          linearCheckChartData: {
+            coordMax: result.Datas.coordMax,
+            coordMin: result.Datas.coordMin,
+            formatter: result.Datas.formula,
+            data: result.Datas.linearData,
+          }
         })
       } else {
         message.error(result.Message)
@@ -129,9 +142,27 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取线性核查数据
+    *getLinearDataList({ payload, }, { call, update, put, take, select }) {
+      const result = yield call(services.getLinearDataList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          linearCheckTableData: result.Datas.rtnData,
+          // linearCheckChartAllData: result.Datas.codeList,
+          // linearChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
+          //   PollutantCode: "",
+          //   dataList: [],
+          //   standard: { top: 0, lower: 0 },
+          //   timeList: [],
+          // }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
   reducers: {
-    // 更新zeroChartData
+    // 更新chartData
     updateCheckChartData(state, { payload }) {
       let key = payload.type + "CheckChartAllData";
       let checkChartAllData = state[key];
