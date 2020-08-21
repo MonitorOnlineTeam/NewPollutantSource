@@ -326,6 +326,18 @@ export default {
                       component: './dataSearch/qca/zeroCheck',
                     },
                     {
+                      // 量程核查
+                      name: 'range',
+                      path: '/dataSearch/qca/rangeCheck',
+                      component: './dataSearch/qca/rangeCheck',
+                    },
+                    {
+                      // 盲样核查
+                      name: 'blind',
+                      path: '/dataSearch/qca/blindCheck',
+                      component: './dataSearch/qca/blindCheck',
+                    },
+                    {
                       // 响应时间核查
                       name: 'resTimeCheck',
                       path: '/dataSearch/qca/resTimeCheck',
@@ -358,7 +370,7 @@ export default {
                   path: '/qualityCheck/qualitySetting',
                   name: 'qualitySetting',
                   routes: [
-                      {
+                    {
                       name: 'zeroPointSet',  //零点核查设置
                       path: '/qualityCheck/qualitySetting/zeroPointSet',
                       component: './qualityCheck/qualitySetting/zeroPointSet',
