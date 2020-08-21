@@ -38,7 +38,7 @@ class resTimeCheckPage extends PureComponent {
         title: "合格情况",
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 1) {
+          if (text == 0) {
             return <a style={{ color: "#87d068" }} onClick={(e) => {
               this.setState({
                 currentRowData: record,
@@ -346,7 +346,7 @@ class resTimeCheckPage extends PureComponent {
             onCancel={() => { this.setState({ visible: false }) }}
           >
             <Space size={44} style={{ marginBottom: 24 }}>
-              <span>质控结果：{currentRowData.Result == 1 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
+              <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
               <span>平均时间：{currentRowData.AvgTime}s</span>
               <span>技术要求：{currentRowData.standard}</span>
               <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
