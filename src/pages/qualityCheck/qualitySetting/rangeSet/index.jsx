@@ -12,7 +12,7 @@ import NavigationTree from '@/components/NavigationTreeNew'
  */
 import { connect } from 'dva';
 @connect(({ loading,qualitySet }) => ({
-    dgimn:qualitySet.dgimn
+    // dgimn:qualitySet.dgimn
 }))
 class Index extends Component {
     constructor(props) {
