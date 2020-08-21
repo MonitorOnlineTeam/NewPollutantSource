@@ -1,16 +1,17 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-08-12 17:01:17 
+ * @Author: Jiaqi
+ * @Date: 2020-08-12 17:01:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-21 09:38:24
+ * @Last Modified time: 2020-08-21 14:57:20
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
-import { Drawer, Button, Radio, Row, Col, Badge, Tabs, Input, Tree, Spin, Tooltip } from 'antd';
+import { Drawer, Button, Radio, Row, Col, Tag, Badge, Tabs, Input, Tree, Spin, Tooltip } from 'antd';
 import { CarryOutOutlined, FormOutlined } from "@ant-design/icons"
 import styles from './index.less';
 import { connect } from "dva"
 import CustomIcon from '@/components/CustomIcon'
+import { CheckOutlined } from "@ant-design/icons"
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
 import $ from 'jquery'
 
@@ -34,15 +35,21 @@ class index extends PureComponent {
       tabsCurrentKey: "region",
       selectedKeys: [props.selectTreeItem.value],
       expandedKeys: [props.selectTreeItem.value],
-      filterStatus: [0, 1, 2, 3],
+      defaultStatus: [0, 1, 2, 3, 4, 5],
       searchValue: undefined,
       statusList: [
-        { text: "正常", checked: true, color: "#b7eb8f", value: "0", count: 10, className: "green" },
-        { text: "离线", checked: true, color: "#999999", value: 1, count: 1, className: "default" },
-        { text: "超标", checked: true, color: "#f04d4d", value: 2, count: 2, className: "red" },
-        { text: "异常", checked: true, color: "#e94", value: 3, count: 3, className: "orange" },
-        { text: "备案不符", checked: true, color: "#fa541c", value: 4, count: 4, className: "volcano" },
-        { text: "监测不合格", checked: true, color: "#eb2f96", value: 5, count: 14, className: "magenta" },
+        // { text: "正常", checked: false, color: "#b7eb8f", value: "0", count: 10, className: "green" },
+        // { text: "离线", checked: false, color: "#999999", value: 1, count: 1, className: "default" },
+        // { text: "超标", checked: false, color: "#f04d4d", value: 2, count: 2, className: "red" },
+        // { text: "异常", checked: false, color: "#e94", value: 3, count: 3, className: "orange" },
+        // { text: "备案不符", checked: false, color: "#fa541c", value: 4, count: 4, className: "volcano" },
+        // { text: "监测不合格", checked: false, color: "#eb2f96", value: 5, count: 14, className: "magenta" },
+        { text: "正常", checked: false, color: "success", value: "0", count: 10, className: "green" },
+        { text: "离线", checked: false, color: "default", value: 1, count: 1, className: "default" },
+        { text: "超标", checked: false, color: "error", value: 2, count: 2, className: "red" },
+        { text: "异常", checked: false, color: "warning", value: 3, count: 3, className: "orange" },
+        { text: "备案不符", checked: false, color: "orange", value: 4, count: 4, className: "volcano" },
+        { text: "监测不合格", checked: false, color: "gold", value: 5, count: 14, className: "magenta" },
       ],
     };
 
@@ -86,12 +93,14 @@ class index extends PureComponent {
       if (item.checked) {
         return item.value
       }
-    }).map(item => item.value)
-    console.log('Status=', Status)
+    }).map(item => item.value);
+    this.setState({
+      defaultExpandAll: !!Status.length
+    })
     this.props.dispatch({
       type: "components/getTreeData",
       payload: {
-        Status: Status,
+        Status: Status.length ? Status : this.state.defaultStatus,
         SearchValue: this.state.searchValue,
       }
     })
@@ -158,7 +167,6 @@ class index extends PureComponent {
 
   // 树展开收起
   onTreeExpand = (expandedKeys) => {
-    console.log('expandedKeys=', expandedKeys)
     this.setState({ expandedKeys, autoExpandParent: false })
   }
 
@@ -250,10 +258,9 @@ class index extends PureComponent {
   }
 
   render() {
-    const { visible, placement, statusList, tabsCurrentKey, selectedKeys, expandedKeys, autoExpandParent } = this.state;
+    const { visible, placement, defaultExpandAll, statusList, tabsCurrentKey, selectedKeys, expandedKeys, autoExpandParent } = this.state;
     const { treeRegionData, treeIndustryData, loading, selectTreeItem } = this.props;
     const { } = this._SELF_;
-    console.log('expandedKeys=', expandedKeys)
     return (
       <Drawer
         placement={placement}
@@ -269,24 +276,41 @@ class index extends PureComponent {
           marginTop: 64,
         }}
       >
-        <Row gutter={[8, 8]} className={styles.statusWrapper} style={{ marginBottom: 10 }}>
+        <Row gutter={[8, 8]} className={styles.statusWrapper} style={{ marginBottom: 0 }}>
           {
             statusList.map((item, index) => {
-              if (index < 4) {
-                return <Col span={6}>
-                  <div className={`${styles.status_box} ${item.checked ? styles[item.className] : ""}`} onClick={() => { this.onClickStatus(index) }}>
-                    {/* <Badge color={item.color} text={item.text} /> */}
-                    {item.text}{item.count}个
-                  </div>
-                </Col>
-              } else {
-                return <Col span={12}>
-                  <div className={`${styles.status_box} ${item.checked ? styles[item.className] : ""}`} onClick={() => { this.onClickStatus(index) }}>
-                    {/* <Badge color={item.color} text={item.text} /> */}
-                    {item.text}{item.count}个
-                  </div>
-                </Col>
-              }
+              return <Tag
+                style={{ marginBottom: 6 }}
+                icon={item.checked ? <CheckOutlined /> : ""}
+                color={item.color}
+                onClick={() => { this.onClickStatus(index) }}
+              >
+                {item.text}{item.count}个
+              </Tag>
+              // if (index < 3) {
+              //   return <Col span={8}>
+              //     <div
+              //       className={`${styles.status_box} ${styles[item.className]}`}
+              //       // icon={item.checked ? <CheckOutlined /> : ""}
+              //       onClick={() => { this.onClickStatus(index) }}
+              //     >
+              //       <CheckOutlined />
+              //       {/* <Badge color={item.color} text={item.text} /> */}
+              //       {item.text}{item.count}个
+              //     </div>
+              //   </Col>
+              // } else {
+              //   return <Col span={8}>
+              //     <div
+              //       icon={item.checked ? <CheckOutlined /> : ""}
+              //       className={`${styles.status_box} ${styles[item.className]}`}
+              //       onClick={() => { this.onClickStatus(index) }}
+              //     >
+              //       {/* <Badge color={item.color} text={item.text} /> */}
+              //       {item.text}{item.count}个
+              //     </div>
+              //   </Col>
+              // }
             })
           }
         </Row>
@@ -302,9 +326,10 @@ class index extends PureComponent {
               (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
                 <Tree
                   style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'auto', overflowY: 'auto', }}
-                  showLine={{showLeafIcon: false}}
+                  showLine={{ showLeafIcon: false }}
                   showIcon={false}
                   defaultExpandedKeys={[selectTreeItem.ParentCode]}
+                  defaultExpandAll={defaultExpandAll}
                   autoExpandParent={autoExpandParent}
                   expandedKeys={expandedKeys}
                   selectedKeys={[selectTreeItem.value]}
@@ -327,9 +352,10 @@ class index extends PureComponent {
               (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
                 <Tree
                   style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'hidden', overflowY: 'auto', }}
-                  showLine={{showLeafIcon: false}}
+                  showLine={{ showLeafIcon: false }}
                   showIcon={false}
                   defaultExpandedKeys={[selectTreeItem.ParentCode]}
+                  defaultExpandAll={defaultExpandAll}
                   expandedKeys={expandedKeys}
                   autoExpandParent={autoExpandParent}
                   selectedKeys={[selectTreeItem.value]}
