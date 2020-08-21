@@ -35,6 +35,10 @@ class resTimeCheckPage extends PureComponent {
         dataIndex: 'MonitorTime',
       },
       {
+        title: '结束时间',
+        dataIndex: 'EndTime',
+      },
+      {
         title: "合格情况",
         dataIndex: 'Result',
         render: (text, record, index) => {
@@ -247,6 +251,7 @@ class resTimeCheckPage extends PureComponent {
         QCAType: 4,
         DGIMN: DGIMN,
         MonitorTime: currentRowData.MonitorTime,
+        EndTime: currentRowData.EndTime,
         PollutantCode: currentRowData.PollutantCode,
       }
       // payload: { QCAType: 4, "DGIMN": "62020131jhdp02", "MonitorTime": "2020-08-20 23:01:00", "PollutantCode": "a21002" }

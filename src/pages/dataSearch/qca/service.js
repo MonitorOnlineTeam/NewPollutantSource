@@ -35,6 +35,13 @@ export async function getBlindDataList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSampleDataList', params, null);
   return result;
 }
+
+// 获取线性核查数据
+export async function getLinearDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetLinearDataList', params, null);
+  return result;
+}
+
   
   
 
