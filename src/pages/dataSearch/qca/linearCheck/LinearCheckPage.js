@@ -20,6 +20,7 @@ const workMode = { "1": "定时", "2": "远程", 3: "现场" }
   valueList: qcaCheck.valueList,
   standValList: qcaCheck.standValList,
   timeList: qcaCheck.timeList,
+  linearCheckChartData: qcaCheck.linearCheckChartData,
   tableLoading: loading.effects['qcaCheck/getLinearDataList'],
 }))
 class LinearCheckPage extends PureComponent {
@@ -36,6 +37,10 @@ class LinearCheckPage extends PureComponent {
       {
         title: '监测时间',
         dataIndex: 'MonitorTime',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'EndTime',
       },
       {
         title: "合格情况",
@@ -211,7 +216,7 @@ class LinearCheckPage extends PureComponent {
       },
       {
         title: '线性系数',
-        dataIndex: 'standard',
+        dataIndex: 'Ratio',
       },
       {
         title: '标准要求',
@@ -234,7 +239,7 @@ class LinearCheckPage extends PureComponent {
         dataIndex: 'value',
         render: (text, record, index) => {
           if (text !== "-") {
-            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{`${text} ${record.unit}`}</span>
+            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{text} {record.unit}</span>
           }
           return text;
         }
@@ -289,7 +294,7 @@ class LinearCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getqcaLogAndProcess",
       payload: {
-        QCAType: 4,
+        QCAType: 5,
         DGIMN: DGIMN,
         MonitorTime: currentRowData.MonitorTime,
         EndTime: currentRowData.EndTime,
@@ -339,6 +344,72 @@ class LinearCheckPage extends PureComponent {
     })
   }
 
+  // 线性系数图表配置
+  linearCheckOption = () => {
+    const { linearCheckChartData } = this.props;
+    let markLineOpt = {
+      animation: false,
+      label: {
+        formatter: linearCheckChartData.formatter,
+        align: 'right'
+      },
+      lineStyle: {
+        type: 'solid'
+      },
+      tooltip: {
+        formatter: linearCheckChartData.formatter,
+      },
+      data: [[{
+        coord: linearCheckChartData.coordMin,
+        symbol: 'none'
+      }, {
+        coord: linearCheckChartData.coordMax,
+        symbol: 'none'
+      }]]
+    };
+
+    let option = {
+      // title: {
+      //   text: 'Anscombe\'s quartet',
+      //   left: 'center',
+      //   top: 0
+      // },
+      // grid: [
+      //   { x: '7%', y: '7%', width: '38%', height: '38%' },
+      // ],
+      grid: {
+        left: '60px',
+        right: '120px',
+        bottom: '2%',
+        // top: "2%",
+        containLabel: true
+      },
+      tooltip: {
+        formatter: function (params, ticket, callback) {
+          console.log('params=', params)
+          return `测量浓度:    ${params.value[0]}mg/m³ <br />标准气浓度:    ${params.value[1]}mg/m³`
+        }
+      },
+      xAxis: [
+        { name: '测量浓度(mg/m³)', gridIndex: 0, min: linearCheckChartData.coordMin[0], max: linearCheckChartData.coordMax[0] },
+      ],
+      yAxis: [
+        { name: '标准气浓度(mg/m³)', gridIndex: 0, min: linearCheckChartData.coordMin[1] < 0 ? linearCheckChartData.coordMin[1] - 5 : linearCheckChartData.coordMin[1], max: linearCheckChartData.coordMax[1] + 5 },
+      ],
+      series: [
+        {
+          name: 'I',
+          type: 'scatter',
+          xAxisIndex: 0,
+          yAxisIndex: 0,
+          data: linearCheckChartData.data,
+          markLine: markLineOpt
+        },
+      ]
+    };
+
+    return option;
+  }
 
   // 折线图配置项
   lineOption = () => {
@@ -459,6 +530,7 @@ class LinearCheckPage extends PureComponent {
         <SdlTable loading={tableLoading} dataSource={linearCheckTableData} columns={columns} />
         {
           visible && <Modal
+            destroyOnClose
             title={`${currentRowData.PollutantName}响应时间核查详情【${pointName}】`}
             width={"80vw"}
             visible={visible}
@@ -467,20 +539,24 @@ class LinearCheckPage extends PureComponent {
           >
             <Space size={44} style={{ marginBottom: 24 }}>
               <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
-              <span>线性系数：{currentRowData.AvgTime}s</span>
-              <span>示值误差：{currentRowData.standard}</span>
-              <span>技术要求：{workMode[currentRowData.WorkMode]}</span>
+              <span>线性系数：{currentRowData.Ratio}</span>
+              <span>示值误差：{currentRowData.MaxOffset}</span>
+              <span>标准要求：{currentRowData.standard}</span>
               <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
               <span>质控时间：{currentRowData.MonitorTime}</span>
             </Space>
             <Tabs type="card">
               <TabPane tab="线性系数" key="1">
-                线性系数
+                <ReactEcharts
+                  option={this.linearCheckOption()}
+                  lazyUpdate
+                  notMerge
+                  id="rightLine"
+                  style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
+                />
               </TabPane>
               <TabPane tab="质控过程" key="2">
                 <ReactEcharts
-                  // theme="line"
-                  // option={() => { this.lightOption() }}
                   option={this.lineOption()}
                   lazyUpdate
                   notMerge

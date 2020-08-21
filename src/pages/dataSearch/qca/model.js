@@ -28,6 +28,13 @@ export default Model.extend({
       timeList: [],
     },
     zeroModalVisible: false,
+    // 线性核查
+    linearCheckChartData: {
+      coordMax: [],
+      coordMin: [],
+      data: [],
+      formatter: ""
+    }
 
   },
 
@@ -87,6 +94,12 @@ export default Model.extend({
           valueList: result.Datas.concent,
           standValList: result.Datas.ratio,
           timeList: result.Datas.timeList,
+          linearCheckChartData: {
+            coordMax: result.Datas.coordMax,
+            coordMin: result.Datas.coordMin,
+            formatter: result.Datas.formula,
+            data: result.Datas.linearData,
+          }
         })
       } else {
         message.error(result.Message)
