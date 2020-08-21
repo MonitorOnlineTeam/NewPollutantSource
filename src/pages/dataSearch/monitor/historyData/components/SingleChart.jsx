@@ -22,7 +22,7 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 // import { green } from '@ant-design/colors';
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
-
+let yName = "监测值";
 @connect(({ loading, historyData }) => ({
     isloading: loading.effects['historyData/getAllChatDataList'],
     timeList:historyData.timeList,
@@ -75,7 +75,7 @@ class SingleChart extends React.Component {
 
     const { chartparams : {DataType }} = this.props;
   
-    const yName = "监测值";
+   
     const legendData = ['同比', '环比', '标准'];
     let _this = this;
     let  formatDate = "YYYY-MM-DD HH";
@@ -149,7 +149,7 @@ class SingleChart extends React.Component {
             type: 'category',
             boundaryGap: false,
             axisLine: { onZero: false },
-            data: timeList.map(item => moment(item).format(formats) + appendText),
+            data: timeList.map(item => moment(item).format(formatDate) + appendText),
             splitLine: {
               show: false
             },
@@ -248,9 +248,10 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
 
 componentDidMount(){
   const {chartList,selectedIndex} = this.state;
+  console.log(chartList)
   chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
 }
-static getDerivedStateFromProps(props, state) {
+// static getDerivedStateFromProps(props, state) {
      
   // 只要当前 tableDatas 变化，
   // 重置所有跟 tableDatas 相关的状态。
@@ -262,9 +263,9 @@ static getDerivedStateFromProps(props, state) {
   //     // summary:props.summary
   //   };
   // }
-  return null;
+  // return null;
 
-}
+// }
   render() {
 
     let onEvents = {

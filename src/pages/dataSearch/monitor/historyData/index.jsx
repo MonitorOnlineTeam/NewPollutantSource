@@ -30,20 +30,19 @@ class Index extends Component {
             title: selectItem.title,
             pollType:selectItem.PointType
         })
-        // let { dgimn, dispatch,pollType} = this.props;
-        //  dgimn = value;
+        // let { dispatch,pollType} = this.props;
         //  polltype = selectItem.PointType;
-        //  dispatch({ type: 'historyData/updateState', payload: { dgimn,pollType } })
+        //  dispatch({ type: 'historyData/updateState', payload: { pollType } })
     }
     render() {
-        const { dgimn,title,polltype } = this.state;
+        const { dgimn,title,pollType } = this.state;
         console.log(dgimn)
         return (
             <div id="historyData">
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn ?   <HistoryDatas dgimn={dgimn} polltype={polltype} initLoadData/> : <PageLoading /> }
+                 {dgimn ?   <HistoryDatas dgimn={dgimn} polltype={pollType} initLoadData/> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

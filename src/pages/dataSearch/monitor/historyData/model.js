@@ -46,7 +46,7 @@ export default Model.extend({
     chartList:[],
     alreadySelect:[],
     pollutantDefault:[],
-    pollType:"5",
+    pollType:"",
     tableloading:true
   },
   effects: {

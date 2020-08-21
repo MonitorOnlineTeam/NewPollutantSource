@@ -54,7 +54,9 @@ State: 1,
 Uncertainty: 1,
 Unit: new Date(),
 Value: props.cycleOptions,
-Volume: 800}
+Volume: 800,
+save:["保存","删除"]
+}
         };
 
         this.columns = [
@@ -162,11 +164,19 @@ Volume: 800}
             align: 'center'
           },
           {
-            title: '状态',
-            dataIndex: 'State',
-            key: 'State',
+            title: '操作',
+            dataIndex: 'save',
+            key: 'save',
             align: 'center',
-            render: text => <>{text == 0?  <span>已更换</span> : <span style={{color:green.primary}}>使用中</span> }</>,
+            render: (value,row) => {
+              console.log(value)
+              console.log(value == true)
+              if(value){
+                return  <TimePicker defaultValue={moment(moment(value), 'HH:mm')} format="HH:mm" allowClear={false} />
+              }else{
+              return <span>{value}</span>
+              }
+          }
           },
         ];
         

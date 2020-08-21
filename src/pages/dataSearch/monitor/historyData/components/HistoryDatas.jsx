@@ -322,6 +322,7 @@ class HistoryDatas extends React.Component {
           mode = "multiple"
           optiondatas={pollutantlist}
           defaultValue={pollDefaultSelect}
+          style={{minWidth:"125px"}}
           onChange={this.handlePollutantChange} //父组件事件回调子组件的值
       /> );
     }

@@ -162,7 +162,7 @@ class MultiChart extends React.Component {
         ...otherProps
       }
     })
-    const appendText = "";
+    let appendText = "";
     if(DataType === "hour"){
       appendText = "时"
       format = 'YYYY-MM-DD HH'
