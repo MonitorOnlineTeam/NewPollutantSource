@@ -51,10 +51,10 @@ class SingleChart extends React.Component {
 
           const chartLists = [],monthChartList=[],yearChartList=[],alreadySelect=[];
           props.chartList.map(item=>{
-            chartLists.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.DataList })
+            chartLists.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.DataList, Unit:item.Unit,StandardValue:item.StandardValue })
             monthChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastMonData })
             yearChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastYearData })
-            alreadySelect.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode })
+            alreadySelect.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode, Unit:item.Unit,StandardValue:item.StandardValue })
          })
          props.dispatch({type: 'historyData/updateState', payload: { alreadySelect } }); 
          return {
@@ -72,7 +72,7 @@ class SingleChart extends React.Component {
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { dataType,totalList,timeList} = this.state;
-
+  
     const { chartparams : {DataType }} = this.props;
   
    
@@ -86,8 +86,9 @@ class SingleChart extends React.Component {
         name: item.name,
         type: 'line',
         data: item.DataList,
-        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值'},{type:'max',name:'最大值'}　]  } : null,
-        markLine: item.name == "标准"? {data: [ {yAxis: 145 ,name:'标准值',lineStyle:{type:"solid",color:"red" }} ,{type:'average',name:'平均值' }  ]} : null
+        itemStyle:item.name == "标准"? { normal: {lineStyle:{color:'#1890ff'} }  } : null,
+        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值',itemStyle:{color:'#1890ff' } },{type:'max',name:'最大值',itemStyle:{color:'#1890ff'}  }　]  } : null,
+        markLine: item.name == "标准"? {data: [ {yAxis: 0,name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }} ,{type:'average',name:'平均值',lineStyle:{color:'#1890ff'}}  ]} : null
         }
     })
     const yAxis = {
@@ -100,8 +101,11 @@ class SingleChart extends React.Component {
           }
         },
         splitLine: {
-          show: false
-        }
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
       }
       let appendText = "";
       if(DataType === "hour"){
@@ -215,7 +219,7 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
     chartList.map(items=>{
       if(items.PollutantCode == item.PollutantCode ){
         selectData = items.DataList;
-        this.echartsReact.props.option.yAxis[0].name =  `${yName}(${item.PollutantCode})`;
+        this.echartsReact.props.option.yAxis[0].name =  `${yName}(${item.Unit})`;
       // _this.setState({selectItem:item}) //记录选中的值    
       }
    })
@@ -229,14 +233,25 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
       yearChartData = items.DataList; 
     }
    })
-  this.echartsReact.props.option.series.map((item,index)=>{
-      if(item.name == "标准"){
+  this.echartsReact.props.option.series.map((eitem,index)=>{
+      if(eitem.name == "标准"){
         this.echartsReact.props.option.series[index].data = selectData;
+        if(item.StandardValue.length>0){
+           if(item.StandardValue.length==1){
+             this.echartsReact.props.option.series[index].markLine.data[0].yAxis = item.StandardValue[0]
+           }
+           if(item.StandardValue.length==2){
+            this.echartsReact.props.option.series[index].markLine.data[0].yAxis = item.StandardValue[0]
+            this.echartsReact.props.option.series[index].markLine.data.push({yAxis: item.StandardValue[1],name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }})
+           
+           }
+        }
+       
       }
-      if(item.name == "同比"){
+      if(eitem.name == "同比"){
         this.echartsReact.props.option.series[index].data = yearChartData;
       }
-      if(item.name == "环比"){
+      if(eitem.name == "环比"){
         this.echartsReact.props.option.series[index].data = selecMonthtData;
       }
   })
@@ -248,7 +263,6 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
 
 componentDidMount(){
   const {chartList,selectedIndex} = this.state;
-  console.log(chartList)
   chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
 }
 // static getDerivedStateFromProps(props, state) {
@@ -286,7 +300,7 @@ componentDidMount(){
              option={this.getOptions()}
              onEvents={onEvents}
              lazyUpdate={true}
-             style={{ height: 'calc(100vh - 400px)', width: '100%'}}
+             style={{ height: 'calc(100vh - 340px)', width: '100%'}}
              className="echarts-for-echarts"
              theme="my_theme"
              ref={(e) => { this.echartsReact = e }}

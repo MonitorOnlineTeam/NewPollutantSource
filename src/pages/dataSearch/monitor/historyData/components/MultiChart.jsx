@@ -98,7 +98,7 @@ class MultiChart extends React.Component {
           type: 'value',
           nameLocation: 'end',
           position: "left",  //多个Y轴使用
-          offset: 60,
+          offset: 40,
           splitLine: {
             show: true,
             lineStyle: {
@@ -111,7 +111,7 @@ class MultiChart extends React.Component {
           type: 'value',
           nameLocation: 'end',
           position: "right",  //多个Y轴使用
-          offset: 60,
+          offset: 40,
           splitLine: {
             show: true,
             lineStyle: {
@@ -124,7 +124,7 @@ class MultiChart extends React.Component {
           type: 'value',
           nameLocation: 'end',
           position: "left",  //多个Y轴使用
-          offset: (index - 3) * -50,
+          offset: (index - 3) * -20,
           splitLine: {
             show: true,
             lineStyle: {
@@ -137,7 +137,7 @@ class MultiChart extends React.Component {
           type: 'value',
           nameLocation: 'end',
           position: "right",  //多个Y轴使用
-          offset: (index - 4) * -50,
+          offset: (index - 4) * -20,
           splitLine: {
             show: true,
             lineStyle: {
@@ -201,7 +201,7 @@ class MultiChart extends React.Component {
         },
         legend: { // 图例 标题样式修改,lenged 对象里的修改
           data: legendData,
-          icon:"roundRect",
+          // icon:"roundRect",
           // padding: [140, 40, 50, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
         },
         xAxis: [
@@ -241,7 +241,7 @@ class MultiChart extends React.Component {
        <ReactEcharts
        option={this.getOptions()}
        lazyUpdate={true}
-       style={{ height: 'calc(100vh - 400px)', width: '100%' }}
+       style={{ height: 'calc(100vh - 300px)', width: '100%' }}
        className="echarts-for-echarts"
        theme="my_theme"
    />  : <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>

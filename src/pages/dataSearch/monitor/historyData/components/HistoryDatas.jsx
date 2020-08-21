@@ -408,7 +408,7 @@ class HistoryDatas extends React.Component {
           className="echarts-for-echarts"
           theme="my_theme"
         /> :
-        <SdlTable columns={columns} dataSource={tableList} pagination={false} />) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <SdlTable columns={columns} dataSource={tableList} pagination={false}  />) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
     </>
   }
