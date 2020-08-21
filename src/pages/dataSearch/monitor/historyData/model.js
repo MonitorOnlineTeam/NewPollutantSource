@@ -72,7 +72,6 @@ export default Model.extend({
       yield update({tableloading:true}); //更新state的值
 
       const result = yield call(getAllTypeDataList, { ...body });
-
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
         let columns = [{title: '监测时间', dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', children: [
@@ -84,7 +83,7 @@ export default Model.extend({
         //   }
         //   tablewidth = width * pollutantlist.length + 200;
         pollutantlist.length>0? pollutantlist.map((item,index)=>{
-          result.Datas.length > 0 ? Object.keys(result.Datas[1]).map(items =>{
+          result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
               if(item.PollutantCode == items){
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `, dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
                 children: [
