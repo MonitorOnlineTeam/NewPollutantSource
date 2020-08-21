@@ -37,7 +37,7 @@ class BlindCheckPage extends PureComponent {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 1) {
+          if (text == 0) {
             return <a style={{ color: "#87d068" }} onClick={(e) => {
               this.setState({
                 currentRowData: record

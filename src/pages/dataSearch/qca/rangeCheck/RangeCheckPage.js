@@ -38,7 +38,7 @@ class RangeCheckPage extends PureComponent {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 1) {
+          if (text == 0) {
             return <a style={{ color: "#87d068" }} onClick={(e) => {
               this.setState({
                 currentRowData: record
@@ -66,7 +66,7 @@ class RangeCheckPage extends PureComponent {
       },
       {
         title: '监测项目',
-        dataIndex: 'PollutantCode',
+        dataIndex: 'PollutantName',
       },
       {
         title: '单位',
@@ -107,7 +107,7 @@ class RangeCheckPage extends PureComponent {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 1) {
+          if (text == 0) {
             return <a style={{ color: "#87d068" }} onClick={(e) => {
             }}>合格</a>
           }
@@ -116,6 +116,7 @@ class RangeCheckPage extends PureComponent {
         }
       },
       {
+
         title: '监测项目',
         dataIndex: 'PollutantName',
       },

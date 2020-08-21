@@ -250,25 +250,25 @@ class HistoryDatas extends React.Component {
     this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
 
     this.children.onDataTypeChange(value)//修改日期选择日期  
-    let { historyparams,chartparams, dispatch } = this.props;
-    historyparams = {
-      ...historyparams,
-      datatype: value
-    }
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { historyparams},
-    })
-    chartparams = {
-      ...chartparams,
-      DataType: value
-    }
+    // let { historyparams,chartparams, dispatch } = this.props;
+    // historyparams = {
+    //   ...historyparams,
+    //   datatype: value
+    // }
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { historyparams},
+    // })
+    // chartparams = {
+    //   ...chartparams,
+    //   DataType: value
+    // }
 
 
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { chartparams},
-    })
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { chartparams},
+    // })
 
   }
   identChange = (e) =>{

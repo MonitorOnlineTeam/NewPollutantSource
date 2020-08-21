@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-08-12 17:01:17 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-13 09:26:04
+ * @Last Modified time: 2020-08-21 09:38:24
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
@@ -302,8 +302,8 @@ class index extends PureComponent {
               (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
                 <Tree
                   style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'auto', overflowY: 'auto', }}
-                  showLine={true}
-                  showIcon={true}
+                  showLine={{showLeafIcon: false}}
+                  showIcon={false}
                   defaultExpandedKeys={[selectTreeItem.ParentCode]}
                   autoExpandParent={autoExpandParent}
                   expandedKeys={expandedKeys}
@@ -327,8 +327,8 @@ class index extends PureComponent {
               (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
                 <Tree
                   style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'hidden', overflowY: 'auto', }}
-                  showLine={true}
-                  showIcon={true}
+                  showLine={{showLeafIcon: false}}
+                  showIcon={false}
                   defaultExpandedKeys={[selectTreeItem.ParentCode]}
                   expandedKeys={expandedKeys}
                   autoExpandParent={autoExpandParent}
