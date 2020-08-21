@@ -242,7 +242,7 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
            }
            if(item.StandardValue.length==2){
             this.echartsReact.props.option.series[index].markLine.data[0].yAxis = item.StandardValue[0]
-            this.echartsReact.props.option.series[index].markLine.data.push({yAxis: item.StandardValue[1],name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }})
+            // this.echartsReact.props.option.series[index].markLine.data.push({yAxis: item.StandardValue[1],name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }})
            
            }
         }
