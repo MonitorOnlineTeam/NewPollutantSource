@@ -54,7 +54,6 @@ pollutantSelect=(index,item)=>{ //自定义图例点击事件
 }
   render() {
     const { alreadySelect,selectedIndex } = this.state;
-    console.log(alreadySelect)
     return (
         <>
    <Row justify="center" gutter={[16,16]}  style={{margin:0}}>

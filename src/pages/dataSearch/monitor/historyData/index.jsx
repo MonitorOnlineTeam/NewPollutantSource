@@ -9,11 +9,11 @@ import NavigationTree from '@/components/NavigationTreeNew'
  * 数据查询 历史数据
  * jab 2020.07.30
  */
-// import { connect } from 'dva';
-// @connect(({ loading,historyData }) => ({
-//     dgimn:historyData.dgimn,
-//     pollType:historyData.pollType
-// }))
+import { connect } from 'dva';
+@connect(({ loading,historyData }) => ({
+    dgimn:historyData.dgimn,
+    pollType:historyData.pollType
+}))
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -30,13 +30,13 @@ class Index extends Component {
             title: selectItem.title,
             pollType:selectItem.PointType
         })
-        // let { dispatch,pollType} = this.props;
-        //  polltype = selectItem.PointType;
-        //  dispatch({ type: 'historyData/updateState', payload: { pollType } })
+        console.log(value, selectItem)
+        let { dispatch,pollType,title} = this.props;
+         title = selectItem.title;
+         dispatch({ type: 'historyData/updateState', payload: { title } })
     }
     render() {
         const { dgimn,title,pollType } = this.state;
-        console.log(dgimn)
         return (
             <div id="historyData">
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />

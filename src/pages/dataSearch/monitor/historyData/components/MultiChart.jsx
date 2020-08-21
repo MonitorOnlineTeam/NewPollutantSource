@@ -22,7 +22,8 @@ const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83',
   isloading: loading.effects['historyData/getAllChatDataList'],
   timeList:historyData.timeList,
   chartList:historyData.chartList,
-  chartparams:historyData.chartparams
+  chartparams:historyData.chartparams,
+  title:historyData.title
 }))
 
 class MultiChart extends React.Component {
@@ -37,7 +38,6 @@ class MultiChart extends React.Component {
     }
     static getDerivedStateFromProps(props, state) {
       if (props.timeList !== state.timeList) {
-
         const chartLists = [];
         props.chartList.map(item=>{
           chartLists.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.DataList })
@@ -56,7 +56,7 @@ class MultiChart extends React.Component {
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const {  dataType,chartList,timeList} = this.state;
-    const { chartparams : {DataType }} = this.props;
+    const { chartparams : {DataType },title} = this.props;
     const legendData = chartList.map(item => item.PollutantName);
     let  format = "YYYY-MM-DD HH";
     // series
@@ -79,11 +79,12 @@ class MultiChart extends React.Component {
       if (index === 1) {
         otherProps = {
           type: 'value',
+          nameRotate:45,
           axisLine: { // Y轴线
             // onZero: false,    //核心代码,让第二个Y轴去对面
             lineStyle: {
               color: COLOR[1]
-            }
+            },
           },
           nameLocation: 'end',
           splitLine: {
@@ -150,11 +151,12 @@ class MultiChart extends React.Component {
       return {
         type: 'value',
         name: item.PollutantName,
+        nameRotate:45,
         axisLine: {
           lineStyle: {
             color: COLOR[index],
             width: 2
-          }
+          },
         },
         splitLine: {
           show: false
@@ -174,11 +176,11 @@ class MultiChart extends React.Component {
     if (yAxis.length) {
       // alert(111)
       return {
-        grid: {x: 90, y: 60,  x2: 90,  y2: 20,  },
+        grid: {x: 90, y: 80,  x2: 90,  y2: 20,  },
         toolbox: {
           feature: {
-            saveAsImage: {},
-            dataView: {}
+            saveAsImage: {name:`${title}-历史多参趋势图`},
+            // dataView: {}
           }
         },
         tooltip: {
@@ -202,7 +204,7 @@ class MultiChart extends React.Component {
         legend: { // 图例 标题样式修改,lenged 对象里的修改
           data: legendData,
           // icon:"roundRect",
-          // padding: [140, 40, 50, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+          // padding: [0, 0, 110, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
         },
         xAxis: [
           {

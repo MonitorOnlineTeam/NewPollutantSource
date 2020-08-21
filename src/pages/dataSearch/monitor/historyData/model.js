@@ -14,6 +14,7 @@ import { onlyOneEnt } from '@/config';
 export default Model.extend({
   namespace: 'historyData',
   state: {
+    title:"",
     pollutantlist :[],
     tableDatas: [],
     columns:[],
@@ -89,18 +90,18 @@ export default Model.extend({
         //   }
         //   tablewidth = width * pollutantlist.length + 200;
 
-        gwidth += 200 * result.Datas[0].length;
-        let colwidth = 200;
-        const scroll = document.body.scrollWidth - 40;
-        if (gwidth < scroll && result.Datas[0]) {
-            gwidth = scroll;
-            let oneent = 600;
-            if (onlyOneEnt) {
-                oneent = 300;
-            }
-            colwidth = (scroll - (oneent + csyxl + 70)) / coldata.length;
-        }
-        pollutantlist.length>0? pollutantlist.map((item,index)=>{
+        // gwidth += 200 * result.Datas[0].length;
+        // let colwidth = 200;
+        // const scroll = document.body.scrollWidth - 40;
+        // if (gwidth < scroll && result.Datas[0]) {
+        //     gwidth = scroll;
+        //     let oneent = 600;
+        //     if (onlyOneEnt) {
+        //         oneent = 300;
+        //     }
+        //     colwidth = (scroll - (oneent + csyxl + 70)) / coldata.length;
+        // }
+        pollutantlist.length>0 ? pollutantlist.map((item,index)=>{
           result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
               if(item.PollutantCode == items){
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `,  dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
@@ -141,7 +142,9 @@ export default Model.extend({
              
         }) : null;
         yield update({columns: columns, tableDatas: result.Datas, total: result.Total,tableloading:false}); //更新state的值
+      
       }else {
+        yield update({tableloading:false}); //更新state的值
         message.error(result.Message)
       }
     },

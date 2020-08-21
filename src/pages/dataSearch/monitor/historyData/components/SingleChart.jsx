@@ -15,19 +15,19 @@ import ReactEcharts from 'echarts-for-react';
 import styles from "../index.less";
 import ColorBlock from './ColorBlock'
 import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { red } from '@ant-design/colors';
 /**
  * 单图表数据组件
  * jab 2020.07.30
  */
-
-// import { green } from '@ant-design/colors';
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
 let yName = "监测值";
 @connect(({ loading, historyData }) => ({
     isloading: loading.effects['historyData/getAllChatDataList'],
     timeList:historyData.timeList,
     chartList:historyData.chartList,
-    chartparams:historyData.chartparams
+    chartparams:historyData.chartparams,
+    title:historyData.title
 }))
 class SingleChart extends React.Component {
     constructor(props) {
@@ -48,12 +48,11 @@ class SingleChart extends React.Component {
     }
     static getDerivedStateFromProps(props, state) {
       if (props.timeList !== state.timeList) {
-
           const chartLists = [],monthChartList=[],yearChartList=[],alreadySelect=[];
           props.chartList.map(item=>{
             chartLists.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.DataList, Unit:item.Unit,StandardValue:item.StandardValue })
-            monthChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastMonData })
-            yearChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastYearData })
+            monthChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastMonData,Unit:item.Unit,StandardValue:item.StandardValue })
+            yearChartList.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode,DataList:item.LastYearData, Unit:item.Unit,StandardValue:item.StandardValue })
             alreadySelect.push({ PollutantName:item.PollutantName,PollutantCode:item.PollutantCode, Unit:item.Unit,StandardValue:item.StandardValue })
          })
          props.dispatch({type: 'historyData/updateState', payload: { alreadySelect } }); 
@@ -73,7 +72,7 @@ class SingleChart extends React.Component {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { dataType,totalList,timeList} = this.state;
   
-    const { chartparams : {DataType }} = this.props;
+    const { chartparams : {DataType },title} = this.props;
   
    
     const legendData = ['同比', '环比', '标准'];
@@ -88,7 +87,7 @@ class SingleChart extends React.Component {
         data: item.DataList,
         itemStyle:item.name == "标准"? { normal: {lineStyle:{color:'#1890ff'} }  } : null,
         markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值',itemStyle:{color:'#1890ff' } },{type:'max',name:'最大值',itemStyle:{color:'#1890ff'}  }　]  } : null,
-        markLine: item.name == "标准"? {data: [ {yAxis: 0,name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }} ,{type:'average',name:'平均值',lineStyle:{color:'#1890ff'}}  ]} : null
+        markLine: item.name == "标准"? {data: [ {type:'average',name:'平均值',lineStyle:{color:'#1890ff'}}  ]} : null
         }
     })
     const yAxis = {
@@ -98,8 +97,9 @@ class SingleChart extends React.Component {
           lineStyle: {
             color: COLOR[1],
             width: 2
-          }
+          },
         },
+
         splitLine: {
           show: true,
           lineStyle: {
@@ -123,8 +123,8 @@ class SingleChart extends React.Component {
         grid: {x: 50, y: 50,  x2: 50,  y2: 50  },
         toolbox: {
           feature: {
-            saveAsImage: {},
-            dataView: {}
+            saveAsImage: {name:`${title}-历史单参趋势图`},
+            // dataView: {}
           }
         },
         tooltip: {
@@ -216,35 +216,39 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
    const {chartList,monthChartList,yearChartList,selectItem} = this.state;
    let  selectData = [],selecMonthtData = [],yearChartData=[];
    let _this = this;
-    chartList.map(items=>{
+   chartList.length>0? chartList.map(items=>{
       if(items.PollutantCode == item.PollutantCode ){
         selectData = items.DataList;
         this.echartsReact.props.option.yAxis[0].name =  `${yName}(${item.Unit})`;
       // _this.setState({selectItem:item}) //记录选中的值    
       }
-   })
-   monthChartList.map(items=>{
+   }):null;
+   monthChartList.length>0? monthChartList.map(items=>{
     if(items.PollutantCode == item.PollutantCode ){
       selecMonthtData = items.DataList;
     }
-   })
-   yearChartList.map(items=>{
+   }):null
+   yearChartList.length>0? yearChartList.map(items=>{
     if(items.PollutantCode == item.PollutantCode ){
       yearChartData = items.DataList; 
     }
-   })
+   }):null
   this.echartsReact.props.option.series.map((eitem,index)=>{
       if(eitem.name == "标准"){
         this.echartsReact.props.option.series[index].data = selectData;
         if(item.StandardValue.length>0){
-           if(item.StandardValue.length==1){
-             this.echartsReact.props.option.series[index].markLine.data[0].yAxis = item.StandardValue[0]
-           }
-           if(item.StandardValue.length==2){
-            this.echartsReact.props.option.series[index].markLine.data[0].yAxis = item.StandardValue[0]
-            // this.echartsReact.props.option.series[index].markLine.data.push({yAxis: item.StandardValue[1],name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }})
-           
-           }
+          // {yAxis: 0,name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }},
+
+          item.StandardValue.map(standItem=>{
+            if(item.StandardValue.length == 1){
+              this.echartsReact.props.option.series[index].markLine.data.length<2? this.echartsReact.props.option.series[index].markLine.data.push({yAxis: standItem,name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }}) : null;
+
+            }
+            if(item.StandardValue.length == 2){
+              this.echartsReact.props.option.series[index].markLine.data.length<3? this.echartsReact.props.option.series[index].markLine.data.push({yAxis: standItem,name:'标准值',lineStyle:{type:"solid",color:"#f5222d" }}) : null;
+
+            }
+          })
         }
        
       }

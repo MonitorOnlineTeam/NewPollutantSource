@@ -77,7 +77,7 @@ class HistoryDatas extends React.Component {
         title: '多参数图表',
         name: <MultiChart />
       }],
-      isSwitch:false,
+      isSwitch:true,
       isSingerChat:false,
       pollSelectCode:[],
       pollutantSelect:[],
@@ -250,25 +250,26 @@ class HistoryDatas extends React.Component {
     this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
 
     this.children.onDataTypeChange(value)//修改日期选择日期  
-    // let { historyparams,chartparams, dispatch } = this.props;
-    // historyparams = {
-    //   ...historyparams,
-    //   datatype: value
-    // }
-    // dispatch({
-    //   type: 'historyData/updateState',
-    //   payload: { historyparams},
-    // })
-    // chartparams = {
-    //   ...chartparams,
-    //   DataType: value
-    // }
+
+    let { historyparams,chartparams, dispatch } = this.props;
+    historyparams = {
+      ...historyparams,
+      datatype: value
+    }
+    dispatch({
+      type: 'historyData/updateState',
+      payload: { historyparams},
+    })
+    chartparams = {
+      ...chartparams,
+      DataType: value
+    }
 
 
-    // dispatch({
-    //   type: 'historyData/updateState',
-    //   payload: { chartparams},
-    // })
+    dispatch({
+      type: 'historyData/updateState',
+      payload: { chartparams},
+    })
 
   }
   identChange = (e) =>{
@@ -300,12 +301,19 @@ class HistoryDatas extends React.Component {
 
   }
   tabChange = (key) =>{
+    const {chatDatatype,dataType} = this.state;
     if(key ==='tableData'){
-      this.setState({isSwitch:false,isSingerChat:false})
-    }else{
       this.setState({isSwitch:true,isSingerChat:false})
+    }else{
+      this.setState({isSwitch:false,isSingerChat:false})
       if(key === "singleChart"){
-        this.setState({isSingerChat:true})
+        this.setState({isSingerChat:true},()=>{
+          if(dataType==="realtime" || dataType === "minute"){
+             this.changeReportType(chatDatatype)
+              setTimeout(()=>{ this.onFinish()})
+          }
+        })
+
       }
    
    }
@@ -339,7 +347,6 @@ class HistoryDatas extends React.Component {
       labelCol: { },
       wrapperCol: { }
   };
-
     return <div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
@@ -379,9 +386,9 @@ class HistoryDatas extends React.Component {
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
-            <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}>
-              <Checkbox  defaultChecked={defaultChecked} v-show={this.state.isSwitch} onChange={this.identChange}>标识</Checkbox>
-            </Col>
+          
+              {isSwitch ?  <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}> <Checkbox  defaultChecked={defaultChecked}  onChange={this.identChange}>标识</Checkbox></Col> : null}
+            
             <Col  xxl={3} xl={3}   md={12} sm={24} xs={12}>
               <Form.Item {...formItemLayout} className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
