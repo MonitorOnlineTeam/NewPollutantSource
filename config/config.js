@@ -297,7 +297,7 @@ export default {
                     {
                       // 工况模拟
                       name: 'working',
-                      path: '/dataSearch/monitor/working',
+                      path: '/dataSearch/monitor/datavisualization',
                       component: './dataSearch/monitor/working/index',
                     },
                     {
@@ -388,7 +388,18 @@ export default {
                     },
                   ]
                 },
-                
+                {
+                  // 手动质控核查
+                  path: '/qualityCheck/qualityManualCheck',
+                  name: 'qualityManualCheck',
+                  routes: [
+                    {
+                      name: 'manualQuality',  // 手动质控
+                      path: '/qualityCheck/qualityManualCheck/manualQuality',
+                      component: './qualityCheck/qualityManualCheck/manualQuality',
+                    }
+                  ]
+                },
               ]
             },
             {

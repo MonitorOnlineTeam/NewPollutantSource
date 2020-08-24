@@ -5,6 +5,7 @@ import FlowChart from './component/FlowChart'
 import Params from "./component/Params"
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTreeNew'
+import PageLoading from '@/components/PageLoading'
 
 
 
@@ -41,7 +42,7 @@ class working extends Component {
               </TabPane>
               <TabPane tab="工况参数" key="2">
                 {
-                  DGIMN && <Params DGIMN={DGIMN} />
+                  DGIMN ? <Params DGIMN={DGIMN} /> : <PageLoading />
                 }
               </TabPane>
             </Tabs>
