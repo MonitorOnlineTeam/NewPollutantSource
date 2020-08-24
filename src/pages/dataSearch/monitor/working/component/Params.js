@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-12 16:44:25
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-24 17:35:10
+ * @Last Modified time: 2020-08-24 17:39:12
  * @Description: 工况参数页面
  */
 import React, { PureComponent } from 'react';
@@ -115,7 +115,7 @@ class FlowChart extends PureComponent {
     const { flowTableData, loading } = this.props;
     const { columns } = this.state;
     return (
-      <SdlTable loading={loading} rowClassName="" dataSource={flowTableData} columns={columns} />
+      <SdlTable loading={loading} rowClassName="" dataSource={flowTableData} columns={columns} pagination={false}/>
     );
   }
 }
