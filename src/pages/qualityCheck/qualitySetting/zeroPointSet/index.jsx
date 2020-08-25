@@ -4,15 +4,15 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
 import  ZeroPointData from './components/ZeroPointData'
 import NavigationTree from '@/components/NavigationTreeNew'
-
+import CycleTable from "../components/CycleTable"
 
 /**
  * 质控核查 零点核查设置
  * jab 2020.08.18
  */
 import { connect } from 'dva';
-@connect(({ loading,zeroPointSet }) => ({
-    dgimn:zeroPointSet.dgimn
+@connect(({ loading,qualitySet }) => ({
+    dgimn:qualitySet.dgimn
 }))
 class Index extends Component {
     constructor(props) {
@@ -39,7 +39,7 @@ class Index extends Component {
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn&&pollType ?   <ZeroPointData  initLoadData/> : <PageLoading /> }
+                 {dgimn&&pollType ?   <CycleTable  initLoadData/> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

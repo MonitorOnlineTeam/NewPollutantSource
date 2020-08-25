@@ -17,66 +17,103 @@ import DropDownSelect from '@/components/DropDownSelect'
  * jab 2020.08.18
  */
 
-@connect(({loading,qualitySet }) => ({
-    pollLoading: loading.effects['pollutantListData/getPollutantList'],
+@connect(({loading,qualitySet,pollutantListData }) => ({
     dgimn:qualitySet.dgimn,
-    pollType:qualitySet.pollType
+    polltype:qualitySet.pollType,
+    cycleListParams:qualitySet.cycleListParams,
+    pollutantlist:pollutantListData.pollutantlist
 }))
 
 class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          cycleOptions:[{value:"0",name:"1天"},{value:"1",name:"7天"},{value:"2",name:"30天"},{value:"3",name:"季度"}],
+          cycleOptions:[{value:1,name:"1天"},{value:7,name:"7天"},{value:30,name:"30天"},{value:90,name:"季度"}],
           dgimn:"",
-          defaultValue:"0"
+          defaultValue:1,
+          defaulltVaule:""
         };
     }
-    // static getDerivedStateFromProps(props, state) {
-    //   if (props.dgimn !== state.dgimn) {
-    //     return {
-    //       dgimn: props.dgimn
-    //     };
-    //   }
-    // }
     componentDidMount(){
-      this.pollChange();
+      this.getTableData(this.props.dgimn)
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
-    // componentDidUpdate(prevProps) {
-    //   if(prevProps.dgimn !==  this.props.dgimn) {
-    //     console.log(prevProps.dgimn)
-    //     console.log("---------")
-    //     console.log(this.props.dgimn)
-    //   //  this.changeDgimn(this.props.dgimn);
-    // }
-    // }
-    /** 切换排口 */
-  //   changeDgimns = () => {
-  //       this.getpollutantSelect();
-  
-  // }
+  componentDidUpdate(prevProps) {
+   if(prevProps.dgimn !==  this.props.dgimn) {
+        this.getTableData(this.props.dgimn);
+    }
 
-  defaulltVal=(data)=>{
-      console.log(data)
+}
+
+  /** 根据排口dgimn获取它下面的数据 */
+  getTableData = dgimn => {
+
+      const {waterDefault,gasDefault} = this.child.state
+          let {dispatch,cycleListParams,pollutantlist,polltype} = this.props;
+          cycleListParams = {
+            ...cycleListParams,
+            DGIMN:dgimn,
+            PollutantCodeList: polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []
+          }
+           dispatch({
+              type: 'qualitySet/updateState',
+              payload: { cycleListParams  },
+          });
+         setTimeout(()=>{this.queryClick()}) 
+  
+      }
+
+
+  childSelect=(ref)=>{
+    this.child = ref
   }
 
   pollChange=(data)=>{
-     console.log(data)
+     let {dispatch,cycleListParams} = this.props;
+     cycleListParams = {
+       ...cycleListParams,
+       PollutantCodeList:data
+     }
+      dispatch({
+         type: 'qualitySet/updateState',
+         payload: { cycleListParams  },
+     });
+  }
+  queryClick = () =>{ //查询
+
+    let {dispatch,cycleListParams} = this.props;
+    cycleListParams = {
+      ...cycleListParams,
+    }
+     dispatch({
+        type: 'qualitySet/getCycleQualityControlList',
+        payload: { ...cycleListParams  },
+    });
+  }
+  cycleSelect =(value)=>{
+    let {dispatch,cycleListParams} = this.props;
+    cycleListParams = {
+      ...cycleListParams,
+      Cycle:value
+    }
+     dispatch({
+        type: 'qualitySet/updateState',
+        payload: { cycleListParams  },
+    });
   }
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
-    const { dgimn,pollType } = this.props;
-    return  dgimn&&pollType ? <PollutantDownSelect  onChange={this.pollChange} dgimn={dgimn} polltype={pollType} defaulltval ={this.defaulltVal} /> :  null ; 
+    const { dgimn,polltype,defaulltVal } = this.props;
+    return  dgimn&&polltype? <PollutantDownSelect onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} transDefault ={this.defaulltVal} /> :  null ; 
   }
   render() {
 
-    const {queryClick,addClick} = this.props;
+    const {addClick} = this.props;
     const { cycleOptions,defaultValue } = this.state;
     const GetpollutantSelect = this.getpollutantSelect;
     return (
 <div style={{ marginTop: 10 }}>
-        <Form className="search-form-container" layout="inline"  onFinish={queryClick}>
+        <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
@@ -85,7 +122,7 @@ class Index extends React.Component {
             </Col>
             <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>
               <Form.Item label="质控周期" className='queryConditionForm'>
-               <DropDownSelect  optiondatas={cycleOptions}  defaultValue= {defaultValue}/>
+               <DropDownSelect  optiondatas={cycleOptions}  defaultValue= {defaultValue}  onChange={this.cycleSelect}/>
               </Form.Item>
             </Col>
             <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>

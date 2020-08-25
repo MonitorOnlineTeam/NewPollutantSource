@@ -6,6 +6,9 @@ import { Select,Spin } from 'antd';
 import PropTypes from 'prop-types';
 const { Option } = Select;
 
+
+// const  waterDefault = ["011","060"]
+// const  gasDefault =["a21002","a21026","a19001"]
 @connect(({loading,pollutantListData }) => ({
     pollLoading: loading.effects['pollutantListData/getPollutantList'],
     pollutantlist:pollutantListData.pollutantlist
@@ -32,16 +35,20 @@ class Index extends Component {
         maxTagCount:1,//选择项最大个数
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
         pollutantlist:[],
-        isdefaulltall:0
+        isdefaulltall:0,
+        
     }
     constructor(props) {
         super(props);
         this.state = {
-            defaultValues:""
+            defaultValues:"",
+            waterDefault :["011","060"],
+            gasDefault:["a21002","a21026","a19001"]
         };
     }
     componentDidMount(){
         this.changeDgimn(this.props.dgimn)
+        this.props.onRef(this)// ->将child传递给this.props.onRef()方法
       }
     // 在componentDidUpdate中进行异步操作，驱动数据的变化
       componentDidUpdate(prevProps) {
@@ -51,15 +58,23 @@ class Index extends Component {
        }
       /** 切换排口  根据排口dgimn获取它下面的所有污染物*/
       changeDgimn = (dgimn) => {
-        const {dispatch} = this.props;
+        const {dispatch,isdefaulltall,polltype} = this.props;
+        const {waterDefault,gasDefault} = this.state;
          dispatch({
             type: 'pollutantListData/getPollutantList',
             payload: { DGIMNs : dgimn },
-            callback: () => {
+            callback: (data) => {
+              const pollDefaultSelect = data.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
+                if(isdefaulltall){
+                  return  item.PollutantCode
+                }
+               }): polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[]; 
+               this.setState({defaultValues:pollDefaultSelect})
             }
          }) ;
     
       }
+
     getOption=() => {
         const { pollutantlist } = this.props;
         const res = [];
@@ -72,18 +87,19 @@ class Index extends Component {
     }
 
     render() {
-        const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
-         
-        const waterDefault =["011","060"]
-        const gasDefault =["a21002","a21026","a19001",]
+        const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear,transDefault } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
+        
+        const {defaultValues} = this.state;
+        // const waterDefaults =["011","060"]
+        // const gasDefaults =["a21002","a21026","a19001"]
 
-        const pollDefaultSelect = pollutantlist.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
-            if(isdefaulltall){
-              return  item.PollutantCode
-            }
-           }): polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[];
+        // const pollDefaultSelect = pollutantlist.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
+        //     if(isdefaulltall){
+        //       return  item.PollutantCode
+        //     }
+        //    }): polltype == 1 ? waterDefaults : polltype == 2 ? gasDefaults : []  :[];
         return (
-          !pollLoading ?  <Select  {...this.props} defaultValue={pollDefaultSelect} >
+          !pollLoading ?  <Select  {...this.props} defaultValue={defaultValues}>
             {this.getOption()}
           </Select> : <Spin size="small" />
         

@@ -50,7 +50,8 @@ export default Model.extend({
     alreadySelect:[],
     pollutantDefault:[],
     pollType:"",
-    tableloading:true
+    tableloading:true,
+    singFlag:true
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表

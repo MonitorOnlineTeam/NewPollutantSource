@@ -27,7 +27,8 @@ let yName = "监测值";
     timeList:historyData.timeList,
     chartList:historyData.chartList,
     chartparams:historyData.chartparams,
-    title:historyData.title
+    title:historyData.title,
+    singFlag:historyData.singFlag
 }))
 class SingleChart extends React.Component {
     constructor(props) {
@@ -70,7 +71,7 @@ class SingleChart extends React.Component {
   // 图表Option
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
-    const { dataType,totalList,timeList} = this.state;
+    const { totalList,timeList} = this.state;
   
     const { chartparams : {DataType },title} = this.props;
   
@@ -153,7 +154,7 @@ class SingleChart extends React.Component {
             type: 'category',
             boundaryGap: false,
             axisLine: { onZero: false },
-            data: timeList.map(item => moment(item).format(formatDate) + appendText),
+            data:timeList.length >0? timeList.map(item => moment(item).format(formatDate) + appendText) : null,
             splitLine: {
               show: false
             },
@@ -170,41 +171,13 @@ class SingleChart extends React.Component {
       };
     }
     
-    return {}
+    // return {}
   }
 
 onChartLegendselectchanged=(e)=>{ 
+
   if(e.name != '标准'){
-    this.echartsReact.props.option.legend.selected[e.name] = !this.echartsReact.props.option.legend.selected[e.name];
-    // const {monthChartList,yearChartList,selectItem} = this.state;
-    // if(e.name == "同比"){
-    //   const selectData =[];
-    //   yearChartList.map(items=>{
-    //     if(items.PollutantName == this.selectItem ){
-    //       selectData.push(items)  
-    //     }
-    //  })
-    //  const total = [ ...selectData]
-    //  const series = total.map((item, index) => {
-    //   return {  name: e.name, type: 'line', data: item.DataList }
-    // })
-    // this.echartsReact.props.option.series = [this.echartsReact.props.option.series,...series]
-   
-    // }
-    // if(e.name == "环比"){
-    //   const selectData =[];
-    //   monthChartList.map(items=>{
-    //     if(items.PollutantName == this.selectItem ){
-    //       selectData.push(items)  
-    //     }
-    //  })
-    //  const total = [ ...selectData]
-    //  const series = total.map((item, index) => {
-    //   return {  name: e.name, type: 'line', data: item.DataList }
-    // })
-    // this.echartsReact.props.option.series = [this.echartsReact.props.option.series,...series]
-    // }
-    // this.echartsReact.getEchartsInstance().setOption(this.echartsReact.props.option) // 重新渲染
+    this.echartsReact.props.option.legend.selected[e.name] = !this.echartsReact.props.option.legend.selected[e.name]
 
   }else{
     this.echartsReact.props.option.legend.selected[e.name] = true;
@@ -213,9 +186,9 @@ onChartLegendselectchanged=(e)=>{
 
 }
 pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
+
    const {chartList,monthChartList,yearChartList,selectItem} = this.state;
    let  selectData = [],selecMonthtData = [],yearChartData=[];
-   let _this = this;
    chartList.length>0? chartList.map(items=>{
       if(items.PollutantCode == item.PollutantCode ){
         selectData = items.DataList;
@@ -259,33 +232,27 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
         this.echartsReact.props.option.series[index].data = selecMonthtData;
       }
   })
+  console.log("重新渲染")
   this.echartsReact.getEchartsInstance().setOption(this.echartsReact.props.option) // 重新渲染
 
 }
  
-
+// 在componentDidUpdate中进行异步操作，驱动数据的变化
+componentDidUpdate(prevProps) {
+  if(prevProps.singFlag !==  this.props.singFlag) {
+      const {chartList,selectedIndex} = this.state;
+  
+    chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
+    }
+}  
 
 componentDidMount(){
   const {chartList,selectedIndex} = this.state;
+  
   chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
 }
-// static getDerivedStateFromProps(props, state) {
-     
-  // 只要当前 tableDatas 变化，
-  // 重置所有跟 tableDatas 相关的状态。
-  // if (props.tableDatas !== state.tableDatas) {
-  //   return {
-  //     tableDatas: props.tableDatas,
-  //     columns: props.columns,
-  //     tableloading:props.tableloading,
-  //     // summary:props.summary
-  //   };
-  // }
-  // return null;
 
-// }
   render() {
-
     let onEvents = {
       'legendselectchanged': this.onChartLegendselectchanged.bind(this)
     }
@@ -303,12 +270,11 @@ componentDidMount(){
               <ReactEcharts
              option={this.getOptions()}
              onEvents={onEvents}
-             lazyUpdate={true}
              style={{ height: 'calc(100vh - 340px)', width: '100%'}}
              className="echarts-for-echarts"
              theme="my_theme"
              ref={(e) => { this.echartsReact = e }}
-             />  
+             />   
              </div>
              : 
               <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div> 

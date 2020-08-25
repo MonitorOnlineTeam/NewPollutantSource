@@ -47,6 +47,7 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
   // dgimn:historyData.dgimn,
   alreadySelect:historyData.alreadySelect,
   pollutantDefault:historyData.pollutantDefault,
+  singFlag:historyData.singFlag
   // pollType:historyData.pollType
 }))
 // loadingAll:loading.models.mySpace,
@@ -248,7 +249,6 @@ class HistoryDatas extends React.Component {
   changeReportType=(value)=>{
     
     this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
-
     this.children.onDataTypeChange(value)//修改日期选择日期  
 
     let { historyparams,chartparams, dispatch } = this.props;
@@ -284,7 +284,14 @@ class HistoryDatas extends React.Component {
     })
   }
   onFinish = () => { //查询
-    let { historyparams,chartparams, dispatch,polltype } = this.props;
+    let { historyparams,chartparams, dispatch,polltype,singFlag } = this.props;
+
+    singFlag = !singFlag;
+    dispatch({
+     type: "historyData/updateState",
+     payload: {singFlag},
+    })
+
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
@@ -299,6 +306,7 @@ class HistoryDatas extends React.Component {
       payload: {...chartparams},
      })
 
+     
   }
   tabChange = (key) =>{
     const {chatDatatype,dataType} = this.state;
@@ -310,7 +318,19 @@ class HistoryDatas extends React.Component {
         this.setState({isSingerChat:true},()=>{
           if(dataType==="realtime" || dataType === "minute"){
              this.changeReportType(chatDatatype)
-              setTimeout(()=>{ this.onFinish()})
+              setTimeout(()=>{ 
+                let { chartparams, dispatch,polltype } = this.props;
+                chartparams = {
+                  ...chartparams,
+                  PollutantType: polltype
+                }
+                dispatch({
+                 type: "historyData/getAllChatDataList",
+                 payload: {...chartparams},
+                })
+
+
+              })
           }
         })
 
