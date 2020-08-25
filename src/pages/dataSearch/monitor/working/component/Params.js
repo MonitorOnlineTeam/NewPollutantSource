@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-08-12 16:44:25 
+ * @Author: Jiaqi
+ * @Date: 2020-08-12 16:44:25
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-13 09:11:59
+ * @Last Modified time: 2020-08-24 17:39:12
  * @Description: 工况参数页面
  */
 import React, { PureComponent } from 'react';
@@ -105,17 +105,17 @@ class FlowChart extends PureComponent {
     this.props.dispatch({
       type: "working/getFlowTableData",
       payload: {
-        DGIMN: this.props.DGIMN, 
+        DGIMN: this.props.DGIMN,
         // DGIMN: "399435xd5febbc"
       }
     })
   }
-  
+
   render() {
     const { flowTableData, loading } = this.props;
     const { columns } = this.state;
     return (
-      <SdlTable loading={loading} dataSource={flowTableData} columns={columns} />
+      <SdlTable loading={loading} rowClassName="" dataSource={flowTableData} columns={columns} pagination={false}/>
     );
   }
 }

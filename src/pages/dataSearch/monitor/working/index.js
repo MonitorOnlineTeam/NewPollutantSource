@@ -5,6 +5,7 @@ import FlowChart from './component/FlowChart'
 import Params from "./component/Params"
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTreeNew'
+import PageLoading from '@/components/PageLoading'
 
 
 
@@ -36,12 +37,12 @@ class working extends Component {
         <BreadcrumbWrapper extraName={entName} id="working">
           <Card>
             <Tabs type="card">
-              <TabPane tab="工艺流程图" key="1">
+              <TabPane tab="数据可视化" key="1">
                 <FlowChart />
               </TabPane>
-              <TabPane tab="工况参数" key="2">
+              <TabPane tab="系统参数" key="2">
                 {
-                  DGIMN && <Params DGIMN={DGIMN} />
+                  DGIMN ? <Params DGIMN={DGIMN} /> : <PageLoading />
                 }
               </TabPane>
             </Tabs>
