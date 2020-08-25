@@ -227,7 +227,6 @@ class Index extends React.Component {
      let selectPoll = pollutantlist.filter(function (item,tableIndex) {
         return item.PollutantCode === value//返回你选中删除之外的所有数据
       })
-      console.log(selectPoll)
       const newData = [...tableDatas];
       const item = newData[index];
       newData.splice(index, 1, { ...item, Unit: selectPoll[0].Unit }); //替换
