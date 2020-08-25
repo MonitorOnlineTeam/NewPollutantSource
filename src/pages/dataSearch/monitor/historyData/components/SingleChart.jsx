@@ -22,11 +22,11 @@ import { red } from '@ant-design/colors';
  */
 const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3']
 let yName = "监测值";
-@connect(({ loading, historyData }) => ({
+@connect(({ loading, historyData }) => ({ //这里面任何一个数据发生变化  页面就会刷新
     isloading: loading.effects['historyData/getAllChatDataList'],
     timeList:historyData.timeList,
     chartList:historyData.chartList,
-    chartparams:historyData.chartparams,
+    // chartparams:historyData.chartparams,
     title:historyData.title,
     singFlag:historyData.singFlag
 }))
@@ -70,12 +70,10 @@ class SingleChart extends React.Component {
  
   // 图表Option
   getOptions = () => {
-    // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { totalList,timeList} = this.state;
   
-    const { chartparams : {DataType },title} = this.props;
-  
-   
+    const { title} = this.props;
+    const DataType = sessionStorage.getItem("dataType");
     const legendData = ['同比', '环比', '标准'];
     let _this = this;
     let  formatDate = "YYYY-MM-DD HH";
@@ -232,31 +230,32 @@ pollutantSelect=(selectedIndex,item)=>{ //自定义图例点击事件
         this.echartsReact.props.option.series[index].data = selecMonthtData;
       }
   })
-  console.log("重新渲染")
   this.echartsReact.getEchartsInstance().setOption(this.echartsReact.props.option) // 重新渲染
 
 }
  
 // 在componentDidUpdate中进行异步操作，驱动数据的变化
 componentDidUpdate(prevProps) {
-  if(prevProps.singFlag !==  this.props.singFlag) {
-      const {chartList,selectedIndex} = this.state;
-  
-    chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
+
+  if( prevProps.singFlag !==  this.props.singFlag) {
+      const {selectedIndex} = this.state;
+      const { chartList,timeList} = this.state;
+      chartList.length>0&&timeList.length>0 ? setTimeout(()=>{this.pollutantSelect(selectedIndex,chartList[0])},300)  : null; //默认显示标准
     }
 }  
 
 componentDidMount(){
-  const {chartList,selectedIndex} = this.state;
+  const {chartList,selectedIndex,timeList} = this.state;
   
-  chartList.length>0 ? this.pollutantSelect(selectedIndex,chartList[0]) : null; //默认显示标准
+  chartList.length>0&&timeList.length>0 ? setTimeout(()=>{this.pollutantSelect(selectedIndex,chartList[0])},0)  : null; //默认显示标准
 }
 
   render() {
     let onEvents = {
       'legendselectchanged': this.onChartLegendselectchanged.bind(this)
     }
-    const {  chartList , isloading ,timeList} = this.props;
+    const {  isloading} = this.props;
+    const {chartList,timeList} = this.state;
     return (
         <> 
                { isloading ?
@@ -264,9 +263,9 @@ componentDidMount(){
                   <div>
                   
                   {
-                  chartList.length > 0 && timeList.length >0 ? 
+                  chartList.length > 0 && timeList.length >0 ?
                   <div>
-               <ColorBlock pollutantSelect = { this.pollutantSelect.bind(this) }/>
+                  <ColorBlock pollutantSelect = { this.pollutantSelect.bind(this) }/> 
               <ReactEcharts
              option={this.getOptions()}
              onEvents={onEvents}
@@ -275,6 +274,8 @@ componentDidMount(){
              theme="my_theme"
              ref={(e) => { this.echartsReact = e }}
              />   
+              
+
              </div>
              : 
               <div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div> 

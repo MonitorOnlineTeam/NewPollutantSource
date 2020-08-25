@@ -2,12 +2,11 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
-import  ZeroPointData from './components/ZeroPointData'
 import NavigationTree from '@/components/NavigationTreeNew'
 import CycleTable from "../components/CycleTable"
 
 /**
- * 质控核查 零点核查设置
+ * 质控核查 响应时间核查设置
  * jab 2020.08.18
  */
 import { connect } from 'dva';
@@ -23,8 +22,7 @@ class Index extends Component {
         this.state = {
             dgimn: '',
             title: '',
-            pollType:"",
-           
+            pollType:""
         };
     }
 
@@ -32,11 +30,10 @@ class Index extends Component {
         this.setState({  title: selectItem.title, dgimn: value,  pollType:selectItem.PointType  })
         let { dgimn,pollType, dispatch,cycleListParams,addParams} = this.props;
          dgimn = value;
-         pollType = selectItem.PointType;
-         cycleListParams={...cycleListParams, QCAType: 1026,Cycle: 1}
-         addParams = {...addParams, QCAType: 1026,DGIMN:value}
-         dgimn&&pollType? dispatch({ type: 'qualitySet/updateState', payload: { dgimn,pollType,cycleListParams,addParams } }) : null;
-         
+         pollType = selectItem.PointType
+         cycleListParams={...cycleListParams, QCAType: 1029}
+         addParams = {...addParams, QCAType: 1029,DGIMN:value}
+         dgimn&&pollType? dispatch({ type: 'qualitySet/updateState', payload: { dgimn,pollType,cycleListParams,addParams} }) : null
     }
 
     render() {
@@ -46,7 +43,7 @@ class Index extends Component {
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn&&pollType ?   <CycleTable  initLoadData /> : <PageLoading /> }
+                 {dgimn&&pollType ?   <CycleTable  initLoadData/> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );
