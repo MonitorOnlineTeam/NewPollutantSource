@@ -6,7 +6,7 @@
 import Model from '@/utils/model';
 import moment from 'moment';
 import {  message } from 'antd';
-import {GetCycleQualityControlList,AddOrUpdCycleQualityControl,DeleteCycleQualityControl,IssueMessage} from "./service"
+import {getCycleQualityControlList,AddOrUpdCycleQualityControl,DeleteCycleQualityControlm,IssueMessage} from "./service"
 export default Model.extend({
   namespace: 'qualitySet',
   state: {
@@ -44,7 +44,7 @@ export default Model.extend({
      // 质控核查 质控核查设置 列表
      *getCycleQualityControlList({callback, payload }, { call, update }) {
       yield update({ tableLoading:true  })
-      const result = yield call(GetCycleQualityControlList, payload);
+      const result = yield call(getCycleQualityControlList, payload);
       if (result.IsSuccess) {
         yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length,isSaveFlag:false  })
       } else {
@@ -63,8 +63,8 @@ export default Model.extend({
       }
     },
        // 质控核查 质控核查设置 删除
-   *deleteCycleQualityControl({callback, payload }, { call, update }) {
-        const result = yield call(DeleteCycleQualityControl, payload);
+   *deleteCycleQualityControlm({callback, payload }, { call, update }) {
+        const result = yield call(DeleteCycleQualityControlm, payload);
         if (result.IsSuccess) {
           message.success(result.Message)
           callback(result.IsSuccess)

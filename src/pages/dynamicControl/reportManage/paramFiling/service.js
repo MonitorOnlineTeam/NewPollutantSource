@@ -5,10 +5,10 @@ import { post, get, getNew } from '@/utils/request';
 
 
 // 质控核查 质控核查设置 列表
-export async function GetCycleQualityControlList(params) {
+export async function getCycleQualityControlList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCycleQualityControlList', params, null);
   return result.Datas === null ? {
-    ...result,
+    Message: result.Message,
     Datas: [],
   } : result;
 }
@@ -18,7 +18,7 @@ export async function GetCycleQualityControlList(params) {
 export async function AddOrUpdCycleQualityControl(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdCycleQualityControl', params, null);
   return result.Datas === null ? {
-    ...result,
+    Message: result.Message,
     Datas: [],
   } : result;
 }
@@ -27,7 +27,7 @@ export async function AddOrUpdCycleQualityControl(params) {
 export async function DeleteCycleQualityControl(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteCycleQualityControl', params, null);
   return result.Datas === null ? {
-    ...result,
+    Message: result.Message,
     Datas: [],
   } : result;
 }
@@ -36,7 +36,7 @@ export async function DeleteCycleQualityControl(params) {
 export async function IssueMessage(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/IssueMessage', params, null);
   return result.Datas === null ? {
-    ...result,
+    Message: result.Message,
     Datas: [],
   } : result;
 }

@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber } from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Input} from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -41,6 +41,7 @@ import Cookie from 'js-cookie';
 }))
 
 class Index extends React.Component {
+  formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state = {
@@ -56,6 +57,7 @@ class Index extends React.Component {
         CreatorName:JSON.parse(Cookie.get('currentUser')).UserName,
         CreatorDate: new Date(),
         ApproveState: "-",
+        aa:"测试",
         save:["保存","取消"]
        },
         blindAddItem:{ StandardValue: "添加标准值",Unit:"" }
@@ -146,6 +148,22 @@ class Index extends React.Component {
             render: (value,row) => {
               if(value instanceof Date){
                 return  <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>
+              }else{
+              return <span>{value}</span>
+              }
+          }
+          },
+          {
+            title: '测试',
+            dataIndex: 'aa',
+            key: 'aa',
+            align: 'center',
+            render: (value,row) => {
+              if(value==="测试"){
+                return  <Form.Item name='test' rules={[{ required: true, message: 'Please input your username!' }]}  >
+                          <Input />
+                       </Form.Item>
+        
               }else{
               return <span>{value}</span>
               }
@@ -290,19 +308,30 @@ timeClick=(value)=>{//质控时间
           payload:{tableDatas,isSaveFlag} ,
       });
     }else{ //保存事件
-      let {dispatch,addParams,cycleListParams:{QCAType}} = this.props;
-         addParams = {
-          ...addParams,
-          CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss')
+      // let {dispatch,addParams,cycleListParams:{QCAType}} = this.props;
+      //    addParams = {
+      //     ...addParams,
+      //     CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss')
 
-       }
-       dispatch({
-          type: 'qualitySet/addOrUpdCycleQualityControl',
-          payload: { ...addParams  },
-          callback: () => {
-            this.reloadList();
-           }
-      });
+      //  }
+      //  dispatch({
+      //     type: 'qualitySet/addOrUpdCycleQualityControl',
+      //     payload: { ...addParams  },
+      //     callback: () => {
+      //       this.reloadList();
+      //      }
+      // });
+      // this.formRef.current.validateFields((err, values) => {
+      //   if (!err) {
+      //     console.log('Received values of form: ', values);
+      //   }
+      // });
+        this.formRef.current.validateFields()
+         
+        console.log(this.formRef.current.getFieldValue(),this.formRef.current.getFieldValue(),this.formRef.current.getFieldsError()) 
+   
+      
+     
     }
 
 
@@ -384,6 +413,7 @@ timeClick=(value)=>{//质控时间
 
 <div id="">
         <Card title={ <QueryForm addClick={this.addClick} queryClick={this.queryClick} defaulltVal={this.defaulltVal}/>} >
+        <Form  ref={this.formRef} component={false}>
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
               dataSource={tableDatas}
@@ -394,7 +424,9 @@ timeClick=(value)=>{//质控时间
               loading={tableLoading}
               pagination={{total:total, showSizeChanger:true , showQuickJumper:true }}
           /> 
+          </Form>
         </Card>
+        
      </div>);
   }
 }
