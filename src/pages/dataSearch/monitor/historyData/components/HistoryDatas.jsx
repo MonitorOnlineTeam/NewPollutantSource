@@ -24,7 +24,7 @@ import MultiChart from  './MultiChart'
 import SingleChart from './SingleChart'
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 
-
+const { TabPane } = Tabs;
 /**
  * 历史数据组件
  * jab 2020.07.30
@@ -47,6 +47,7 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
   // dgimn:historyData.dgimn,
   alreadySelect:historyData.alreadySelect,
   pollutantDefault:historyData.pollutantDefault,
+  singFlag:historyData.singFlag
   // pollType:historyData.pollType
 }))
 // loadingAll:loading.models.mySpace,
@@ -87,7 +88,8 @@ class HistoryDatas extends React.Component {
   }
 
   componentDidMount() {
-    this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+    sessionStorage.setItem("dataType",this.state.dataType)
+    this.props.initLoadData &&this.changeDgimn(this.props.dgimn)
    
   }
   static getDerivedStateFromProps(props, state) {
@@ -248,8 +250,8 @@ class HistoryDatas extends React.Component {
   changeReportType=(value)=>{
     
     this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
-
     this.children.onDataTypeChange(value)//修改日期选择日期  
+    sessionStorage.setItem("dataType",value)
 
     let { historyparams,chartparams, dispatch } = this.props;
     historyparams = {
@@ -270,7 +272,6 @@ class HistoryDatas extends React.Component {
       type: 'historyData/updateState',
       payload: { chartparams},
     })
-
   }
   identChange = (e) =>{
     let { historyparams,dispatch } = this.props;
@@ -284,7 +285,8 @@ class HistoryDatas extends React.Component {
     })
   }
   onFinish = () => { //查询
-    let { historyparams,chartparams, dispatch,polltype } = this.props;
+    let { historyparams,chartparams, dispatch,polltype,singFlag } = this.props;
+
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
@@ -297,8 +299,16 @@ class HistoryDatas extends React.Component {
      dispatch({
       type: "historyData/getAllChatDataList",
       payload: {...chartparams},
+      callback: () => {
+        singFlag = !singFlag;
+        dispatch({
+         type: "historyData/updateState",
+         payload: {singFlag},
+        })
+       }
      })
 
+     
   }
   tabChange = (key) =>{
     const {chatDatatype,dataType} = this.state;
@@ -310,7 +320,21 @@ class HistoryDatas extends React.Component {
         this.setState({isSingerChat:true},()=>{
           if(dataType==="realtime" || dataType === "minute"){
              this.changeReportType(chatDatatype)
-              setTimeout(()=>{ this.onFinish()})
+              setTimeout(()=>{ 
+                let { chartparams, dispatch,polltype } = this.props;
+                chartparams = {
+                  ...chartparams,
+                  PollutantType: polltype
+                }
+                dispatch({
+                 type: "historyData/getAllChatDataList",
+                 payload: {...chartparams},
+                })
+
+
+              })
+          }else{
+            this.changeReportType(dataType)
           }
         })
 
@@ -424,10 +448,23 @@ class HistoryDatas extends React.Component {
   render() {
     const QueryCriteria = this.queryCriteria;
     const { TabPane } = Tabs;
+    const { chatDatatype } = this.state;
     return (
       <div id="HistoryDatas">
         <Card title={<QueryCriteria />} >
-          <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
+           <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
+           
+         {/* <Tabs defaultActiveKey="1" type="card" tabChange={this.tabChange}>
+          <TabPane tab="Card Tab 1" key="1">
+          <TableData />
+          </TabPane>
+          <TabPane tab="Card Tab 2" key="2">
+          <SingleChart  chatDatatype={chatDatatype}/>
+          </TabPane>
+          <TabPane tab="Card Tab 3" key="3">
+          <MultiChart />
+          </TabPane>
+        </Tabs>  */}
         </Card>
 
       </div>

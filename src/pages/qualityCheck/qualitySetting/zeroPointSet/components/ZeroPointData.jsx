@@ -10,8 +10,9 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import QueryForm from '../../components/QueryForm'
-import { green } from '@ant-design/colors';
+import { green,red } from '@ant-design/colors';
 import DropDownSelect from '@/components/DropDownSelect'
+
 /**
  *  质控核查 零点核查
  * jab 2020.08.18
@@ -21,10 +22,10 @@ import DropDownSelect from '@/components/DropDownSelect'
 
 
 
-@connect(({ zeroPointSet,qualitySet,pollutantListData }) => ({
-    tableDatas:zeroPointSet.tableDatas,
-    pollutantlist:pollutantListData.pollutantlist,
-    cycleOptions:qualitySet.cycleOptions
+@connect(({ qualitySet,pollutantListData }) => ({
+    cycleOptions:qualitySet.cycleOptions,
+    cycleListParams:qualitySet.cycleListParams,
+   
     // total: standardData.total,
     // tablewidth: standardData.tablewidth,
     // tableLoading:standardData.tableLoading,
@@ -81,8 +82,8 @@ save:["保存","删除"]
           },
           {
             title: '质控周期',
-            dataIndex: 'Value',
-            key: 'Value',
+            dataIndex: 'SpaceName',
+            key: 'SpaceName',
             align: 'center',
             render: (values,row) => {
               console.log(values)
@@ -96,8 +97,8 @@ save:["保存","删除"]
           },
           {
             title: '质控时间',
-            dataIndex: 'Unit',
-            key: 'Unit',
+            dataIndex: 'Time',
+            key: 'Time',
             align: 'center',
             render: (value,row) => {
               console.log(value)
@@ -110,58 +111,24 @@ save:["保存","删除"]
           }
           },
           {
-            title: '证书编号',
-            dataIndex: 'CertificateNo',
-            key: 'CertificateNo',
+            title: '提交人',
+            dataIndex: 'CreatorName',
+            key: 'CreatorName',
             align: 'center',
             width:120
           },
           {
-            title: '生产日期',
-            dataIndex: 'ProductDate',
-            key: 'ProductDate',
-            align: 'center',
-            render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
-          },
-          {
-            title: '有效日期',
-            dataIndex: 'LoseDate',
-            key: 'LoseDate',
-            align: 'center',
-            render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
-          },
-          {
-            title: '气瓶体积(L)',
-            dataIndex: 'Volume',
-            key: 'Volume',
+            title: '提交时间',
+            dataIndex: 'CreatorDate',
+            key: 'CreatorDate',
             align: 'center'
           },
           {
-            title: '初始压力(MPa)',
-            dataIndex: 'Pressure',
-            key: 'Pressure',
+            title: '状态',
+            dataIndex: 'ApproveState',
+            key: 'ApproveState',
             align: 'center',
-            width:115
-          },
-          {
-            title: '录入时间',
-            dataIndex: 'CreateDateTime',
-            key: 'CreateDateTime',
-            align: 'center'
-          },
-          {
-            title: '不确定度(%)',
-            dataIndex: 'Uncertainty',
-            key: 'Uncertainty',
-            align: 'center',
-            // ellipsis: true
-            width:100
-          },
-          {
-            title: '制造商',
-            dataIndex: 'Producer',
-            key: 'Producer',
-            align: 'center'
+            render: text => <>{text == 2?  <span style={{color:green.primary}}>已下发</span> : <span style={{color:red.primary}}>已保存</span> }</>,
           },
           {
             title: '操作',
@@ -169,8 +136,6 @@ save:["保存","删除"]
             key: 'save',
             align: 'center',
             render: (value,row) => {
-              console.log(value)
-              console.log(value == true)
               if(value){
                 return  <TimePicker defaultValue={moment(moment(value), 'HH:mm')} format="HH:mm" allowClear={false} />
               }else{
@@ -186,8 +151,6 @@ save:["保存","删除"]
     static getDerivedStateFromProps(props, state) {
      
       if (props.pollutantlist !== state.addItem.PollutantName) {
-        console.log(props.cycleOptions)
-
         return {
           addItem: {...state.addItem,PollutantName:props.pollutantlist}
         };
@@ -195,88 +158,24 @@ save:["保存","删除"]
       return null;
 
     }
-    componentDidMount(){
-      this.props.initLoadData && this.changeDgimn(this.props.dgimn)
-    }
-  // 在componentDidUpdate中进行异步操作，驱动数据的变化
-  componentDidUpdate(prevProps) {
-   if(prevProps.dgimn !==  this.props.dgimn) {
-        this.changeDgimn(this.props.dgimn);
-    }
-}
- /** 切换排口 */
-      changeDgimn = (dgimn) => {
-        this.getTableData(dgimn);
-  
-    }
-
-  /** 根据排口dgimn获取它下面的数据 */
-  getTableData = dgimn => {
-          let {dispatch,standardParams} = this.props;
-          standardParams = {
-            ...standardParams,
-            DGIMNs:dgimn
-          }
-           dispatch({
-              type: 'standardData/updateState',
-              payload: { ...standardParams  },
-          });
-          this.onFinish();
-          
-      }
-  /**
- * 回调获取时间并重新请求数据
- */
-dateCallback = (dates, dataType) => { //更新日期
-    let { standardParams, dispatch } = this.props;
-    this.setState({dateValue: dates})
-    standardParams = {
-      ...standardParams,
-      BeginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      EndTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
-    }
-    dispatch({
-      type: 'standardData/updateState',
-      payload: { standardParams},
-    })
-  }
-  onFinish = ()=>{
-    let {dispatch,standardParams} = this.props;
-    standardParams = {
-      ...standardParams,
-    }
-     dispatch({
-        type: 'standardData/getQCAStandardList',
-        payload: { ...standardParams  },
-    });
-  }
-
   handlePollutantChange=(e)=>{
     console.log(e)
   }
 
 
-  queryClick = () =>{
-    alert("查询")
-  }
+
   addClick=()=>{
     const {addItem} = this.state;
-
-
-    // console.log(tableDatas)
-    // let tableDatas =  [];
-
-    // this.setState({tableDatas:tableDatas})
     this.setState(prevState => ({tableDatas: [...prevState.tableDatas, prevState.addItem]}))
   }
   render() {
 
-    const {tableLoading,total} = this.props;
+    const {tableLoading,total,cycleListParams} = this.props;
     const {tableDatas} = this.state;
     return (
 
 <div id="zeroPointData">
-        <Card title={<QueryForm addClick={this.addClick} queryClick={this.queryClick}/>} >
+        <Card title={ <QueryForm addClick={this.addClick} queryClick={this.queryClick} defaulltVal={this.defaulltVal}/>} >
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
               dataSource={tableDatas}

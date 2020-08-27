@@ -22,7 +22,7 @@ const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83',
   isloading: loading.effects['historyData/getAllChatDataList'],
   timeList:historyData.timeList,
   chartList:historyData.chartList,
-  chartparams:historyData.chartparams,
+  // chartparams:historyData.chartparams,
   title:historyData.title
 }))
 
@@ -56,7 +56,8 @@ class MultiChart extends React.Component {
   getOptions = () => {
     // const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const {  dataType,chartList,timeList} = this.state;
-    const { chartparams : {DataType },title} = this.props;
+    const { title} = this.props;
+    const DataType = sessionStorage.getItem("dataType");
     const legendData = chartList.map(item => item.PollutantName);
     let  format = "YYYY-MM-DD HH";
     // series

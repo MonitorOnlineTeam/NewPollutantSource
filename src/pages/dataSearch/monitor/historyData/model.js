@@ -50,7 +50,8 @@ export default Model.extend({
     alreadySelect:[],
     pollutantDefault:[],
     pollType:"",
-    tableloading:true
+    tableloading:true,
+    singFlag:true
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
@@ -148,11 +149,12 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    * getAllChatDataList( { payload},{  call, update, put, take, select}) {
+    * getAllChatDataList( {callback, payload},{  call, update, put, take, select}) {
       const body = { ...payload }
       const result = yield call(getAllChatDataLists, { ...body });
       if (result.IsSuccess) {
         yield update({ timeList: result.Datas.timeList, chartList: result.Datas.chartList}); //更新state的值
+        callback(result.IsSuccess)
       }
     },
 

@@ -10,7 +10,8 @@ import {  message } from 'antd';
 export default Model.extend({
   namespace: 'pollutantListData',
   state: {
-    pollutantlist :[]
+    pollutantlist :[],
+    pollutantListCode:[]
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
@@ -18,7 +19,7 @@ export default Model.extend({
           const result = yield call(querypollutantlist, payload);
           if (result.IsSuccess) {
             yield update({ pollutantlist: result.Datas  })
-            callback(result.IsSuccess)
+            callback(result.Datas)
 
           } else {
             // message.error(result.Message)

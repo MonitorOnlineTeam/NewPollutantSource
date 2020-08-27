@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
-import  ZeroPointData from './components/ZeroPointData'
+import  ParamData from './components/ParamData'
 import NavigationTree from '@/components/NavigationTreeNew'
-import CycleTable from "../components/CycleTable"
 
 /**
  * 质控核查 零点核查设置
@@ -46,7 +45,7 @@ class Index extends Component {
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn&&pollType ?   <CycleTable  initLoadData /> : <PageLoading /> }
+                 {dgimn&&pollType ?   <ParamData  initLoadData /> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

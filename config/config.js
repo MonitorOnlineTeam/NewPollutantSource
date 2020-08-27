@@ -386,6 +386,21 @@ export default {
                       path: '/qualityCheck/qualitySetting/rangeSet',
                       component: './qualityCheck/qualitySetting/rangeSet',
                     },
+                    {
+                      name: 'linearSet',  //线性核查设置
+                      path: '/qualityCheck/qualitySetting/linearSet',
+                      component: './qualityCheck/qualitySetting/linearSet',
+                    },
+                    {
+                      name: 'blindSet',  //盲样核查设置
+                      path: '/qualityCheck/qualitySetting/blindSet',
+                      component: './qualityCheck/qualitySetting/blindSet',
+                    },
+                    {
+                      name: 'resTimeSet',  //响应时间设置
+                      path: '/qualityCheck/qualitySetting/resTimeSet',
+                      component: './qualityCheck/qualitySetting/resTimeSet',
+                    },
                   ]
                 },
                 {
@@ -401,6 +416,27 @@ export default {
                   ]
                 },
               ]
+            },
+            //动态管控
+            {
+              path: '/dynamicControl',
+              name: 'dynamicControl',
+              routes: [
+                {
+                  name: 'reportManage',  // 报备管理
+                  path: '/dynamicControl/reportManage',
+                  routes: [
+                    {
+
+                      name: 'paramFiling',  //管控参数备案
+                      path: '/dynamicControl/reportManage/paramFiling',
+                      component: './dynamicControl/reportManage/paramFiling',
+
+                    },
+                  ]
+                }
+              ]
+
             },
             {
               path: '/platformconfig',
