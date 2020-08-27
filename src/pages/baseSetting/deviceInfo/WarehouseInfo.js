@@ -203,6 +203,7 @@ class WarehouseInfo extends Component {
                 size="large"
             />);
         }
+        debugger
         return (
             <BreadcrumbWrapper title="设备主机名称">
                 <Card>

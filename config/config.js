@@ -743,6 +743,53 @@ export default {
               ],
             },
             {
+              path: '/basicInfo',
+              name: 'basicInfo',
+              routes: [
+                {
+                  path: '/basicInfo/SurfaceWaterPointOperation/:configId',
+                  name: 'SurfaceWaterPointOperation',
+                  component: './basicInfo/SurfaceWaterPointOperation',
+                },
+                {
+                  path: '/basicInfo/SurfaceWaterPointOperationAdd/:configId',
+                  name: 'SurfaceWaterPointOperationAdd',
+                  component: './basicInfo/StationAdd',
+                },
+                {
+                  path: '/basicInfo/VocStation/:configId',
+                  name: 'VocStation',
+                  component: './basicInfo/VocStation',
+                },
+                {
+                  path: '/basicInfo/VocStationAdd/:configId',
+                  name: 'VocStationAdd',
+                  component: './basicInfo/StationAdd',
+                },
+                {
+                  path: '/basicInfo/AirStation/:configId',
+                  name: 'AirStation',
+                  component: './basicInfo/AirStation',
+                },
+                {
+                  path: '/basicInfo/AirStationAdd/:configId',
+                  name: 'AirStationAdd',
+                  component: './basicInfo/StationAdd',
+                },
+                {
+                  path: '/basicInfo/GridBaseStation/:configId',
+                  name: 'GridBaseStation',
+                  component: './basicInfo/GridBaseStation',
+                },
+                {
+                  path: '/basicInfo/GridBaseStationAdd/:configId',
+                  name: 'GridBaseStationAdd',
+                  component: './basicInfo/StationAdd',
+                },
+                
+              ],
+            },
+            {
               path: '/rolesmanager',
               name: 'rolesmanager',
               // redirect: './rolesmanager/user',
