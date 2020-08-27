@@ -485,19 +485,48 @@ export default Model.extend({
                   });
                   break;
                 case 'QCARealTimeData':
+                  console.log("QCARealTimeData=", obj.Message);
+                  // CEMS污染物数据
                   dispatch({
-                    type: 'qualityControlModel/changeRealTimeThanData',
+                    type: 'qcManual/changePollutantValueListInfo',
                     payload: { message: obj.Message },
                   });
+                  // 质控图表数据
                   dispatch({
-                    type: 'qualityControl/changeCEMSMonitorValue',
-                    payload: obj.Message[0],
+                    type: 'qcManual/updateRealChartData',
+                    payload: { message: obj.Message },
                   });
                   break;
+                // 阀门状态
                 case 'ControlData':
+                  console.log("ControlData=", obj.Message[0])
                   dispatch({
-                    type: 'qualityControl/changeQCState',
+                    type: 'qcManual/changeQCState',
                     payload: obj.Message[0],
+                  })
+                  break;
+                // 质控日志 - 开始质控命令
+                case 'QCACheckStart':
+                  console.log("QCACheckStart=", obj.Message)
+                  dispatch({
+                    type: 'qcManual/updateQCLogStart',
+                    payload: obj.Message,
+                  })
+                  break;
+                // 质控日志 - 质控应答
+                case 'QCACheckAnswer':
+                  console.log("QCACheckAnswer=", obj.Message)
+                  dispatch({
+                    type: 'qcManual/updateQCLogAnswer',
+                    payload: obj.Message
+                  })
+                  break;
+                // 质控日志 - 质控结果
+                case 'QCACheckResult':
+                  console.log("QCACheckResult=", obj.Message)
+                  dispatch({
+                    type: 'qcManual/updateQCLogResult',
+                    payload: obj.Message
                   })
                   break;
                 case 'ControlState':
@@ -506,11 +535,11 @@ export default Model.extend({
                     payload: obj.Message[0],
                   })
                   break;
-                case 'QCACemsStatus':
+                case 'State':
                   // 质控仪状态
                   dispatch({
-                    type: 'qualityControl/changeQCStatus',
-                    payload: obj.Message,
+                    type: 'qcManual/changeQCStatus',
+                    payload: obj.Message[0],
                   })
                   break;
                 case 'QCAAlarmMsg':

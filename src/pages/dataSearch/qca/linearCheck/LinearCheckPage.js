@@ -294,7 +294,7 @@ class LinearCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getqcaLogAndProcess",
       payload: {
-        QCAType: 5,
+        QCAType: "3104",
         DGIMN: DGIMN,
         MonitorTime: currentRowData.MonitorTime,
         EndTime: currentRowData.EndTime,

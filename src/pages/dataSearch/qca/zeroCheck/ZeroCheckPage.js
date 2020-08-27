@@ -271,7 +271,7 @@ class ZeroCheckPage extends PureComponent {
           </Tabs>
         </Spin>
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="3" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="3101" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }

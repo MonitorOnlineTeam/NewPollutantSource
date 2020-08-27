@@ -1,5 +1,5 @@
 
-import * as services from './service';
+import * as services from '@/services/qcaCheckApi';
 import { getPollutantListByDgimn } from "@/services/commonApi"
 import Model from '@/utils/model';
 import { message } from 'antd';
