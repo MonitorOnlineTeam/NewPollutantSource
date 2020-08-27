@@ -130,15 +130,16 @@ class index extends Component {
             appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
               <Button icon="plus" type="primary" onClick={() => {
                 this.updateModel(null);
-                router.push(`/basicInfo/GridBaseStationAdd/${configId}`)
+                router.push(`/basicInfo/${configId}/${configId}/GridBaseStationAdd/${configId}`)
               }}>添加</Button>
             </Fragment>
             }
             appendHandleRows={row => <Fragment>
+              <Divider type="vertical" />
               <Tooltip title="编辑">
                 <a onClick={() => {
                   this.updateModel(row);
-                  router.push(`/basicInfo/GridBaseStationAdd/${configId}`)
+                  router.push(`/basicInfo/${configId}/${configId}/GridBaseStationAdd/${configId}`)
                 }}><EditIcon /></a>
               </Tooltip>
               <Divider type="vertical" />

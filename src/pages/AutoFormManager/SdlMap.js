@@ -402,6 +402,7 @@ class SdlMap extends PureComponent {
         {
           mode === 'modal' &&
           <Input
+            placeholder="例如：66.666666"
             suffix={<Icon
               onClick={() => {
                 if (latitude && longitude) {

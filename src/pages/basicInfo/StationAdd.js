@@ -70,6 +70,7 @@ export default class StationAdd extends Component {
                         RegionCode: formData.RegionCode,
                         UpdateDate: formData.UpdateDate,
                         Col1: formData.Col1,
+                        SurfaceWaterLevel: formData.SurfaceWaterLevel,
                         PollutantType: pType,
                         callback: result => {
                             if (result.Datas === 1) {
@@ -173,36 +174,29 @@ export default class StationAdd extends Component {
                             {
                                 rowmodel && rowmodel != 'null' ?
                                     <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-                                        <ButtonGroup>
-                                            <Button type="primary"
-                                                onClick={this.onUpdateForm}
-                                            >
-                                                <Icon type="left" />
-                                                保存
+                                        <Button type="primary"
+                                            onClick={this.onUpdateForm}
+                                        >
+                                            保存
                                             </Button>
-                                            <Button onClick={() => {
-                                                router.push(`/basicInfo/${configId}/'${configId}'`)
-                                            }}>
-                                                返回
-                                             <Icon type="right" />
+                                        <Button style={{ marginLeft: 8 }} onClick={() => {
+                                            router.push(`/basicInfo/${configId}/'${configId}'`)
+                                        }}>
+                                            返回
                                             </Button>
-                                        </ButtonGroup>
                                     </Divider> :
                                     <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-                                        <ButtonGroup>
-                                            <Button type="primary"
-                                                onClick={this.onSubmitForm}
-                                            >
-                                                <Icon type="left" />
-                                                保存
+
+                                        <Button type="primary"
+                                            onClick={this.onSubmitForm}
+                                        >
+                                            保存
                                             </Button>
-                                            <Button onClick={() => {
-                                                router.push(`/basicInfo/${configId}/${configId}`)
-                                            }}>
-                                                返回
-                                            <Icon type="right" />
+                                        <Button style={{ marginLeft: 8 }} onClick={() => {
+                                            router.push(`/basicInfo/${configId}/${configId}`)
+                                        }}>
+                                            返回
                                             </Button>
-                                        </ButtonGroup>
                                     </Divider>
                             }
                         </TabPane>

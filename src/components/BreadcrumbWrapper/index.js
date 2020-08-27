@@ -10,6 +10,7 @@ class index extends Component {
     this.state = {};
   }
   render() {
+    debugger
     // 多标签 - 不显示面包屑
     if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
       return <>{this.props.children}</>

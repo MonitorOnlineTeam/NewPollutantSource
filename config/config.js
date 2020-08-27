@@ -752,7 +752,7 @@ export default {
                   component: './basicInfo/SurfaceWaterPointOperation',
                 },
                 {
-                  path: '/basicInfo/SurfaceWaterPointOperationAdd/:configId',
+                  path: '/basicInfo/SurfaceWaterPointOperation/SurfaceWaterPointOperation/SurfaceWaterPointOperationAdd/:configId',
                   name: 'SurfaceWaterPointOperationAdd',
                   component: './basicInfo/StationAdd',
                 },
@@ -762,7 +762,7 @@ export default {
                   component: './basicInfo/VocStation',
                 },
                 {
-                  path: '/basicInfo/VocStationAdd/:configId',
+                  path: '/basicInfo/VocStation/VocStation/VocStationAdd/:configId',
                   name: 'VocStationAdd',
                   component: './basicInfo/StationAdd',
                 },
@@ -772,7 +772,7 @@ export default {
                   component: './basicInfo/AirStation',
                 },
                 {
-                  path: '/basicInfo/AirStationAdd/:configId',
+                  path: '/basicInfo/AirStation/AirStation/AirStationAdd/:configId',
                   name: 'AirStationAdd',
                   component: './basicInfo/StationAdd',
                 },
@@ -782,11 +782,10 @@ export default {
                   component: './basicInfo/GridBaseStation',
                 },
                 {
-                  path: '/basicInfo/GridBaseStationAdd/:configId',
+                  path: '/basicInfo/GridBaseStation/GridBaseStation/GridBaseStationAdd/:configId',
                   name: 'GridBaseStationAdd',
                   component: './basicInfo/StationAdd',
-                },
-                
+                },     
               ],
             },
             {
