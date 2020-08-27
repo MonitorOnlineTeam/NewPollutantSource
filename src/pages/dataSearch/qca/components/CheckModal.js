@@ -3,11 +3,12 @@ import { Modal, Space, Tabs, Tag } from "antd";
 import { connect } from "dva"
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from "@/components/SdlTable"
+import { QCATypes } from '@/utils/CONST'
 
 const TabPane = Tabs.TabPane;
 
 const workMode = { "1": "定时", "2": "远程", 3: "现场" }
-const QCATitle = { "1": "量程核查", "2": "盲样核查", "3": "零点核查", "4": "响应时间核查", "5": "线性核查" }
+// const QCATitle = { "1": "量程核查", "2": "盲样核查", "3": "零点核查", "4": "响应时间核查", "5": "线性核查" }
 
 @connect(({ qcaCheck, loading }) => ({
   checkModalVisible: qcaCheck.checkModalVisible,
@@ -180,7 +181,7 @@ class CheckModal extends PureComponent {
     const { paramsColumns, logColumns } = this._SELF_;
     return (
       <Modal
-        title={`${currentRowData.PollutantName}${QCATitle[QCAType]}详情【${pointName}】`}
+        title={`${currentRowData.PollutantName ? currentRowData.PollutantName : ""}${QCATypes[QCAType]}详情【${pointName}】`}
         width={"90vw"}
         visible={checkModalVisible}
         footer={false}

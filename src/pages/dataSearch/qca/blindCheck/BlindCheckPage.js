@@ -210,7 +210,7 @@ class BlindCheckPage extends PureComponent {
           </Tabs>
         </Spin>
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="2" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="3105" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }

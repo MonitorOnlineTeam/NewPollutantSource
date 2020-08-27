@@ -193,7 +193,7 @@ class resTimeCheckPage extends PureComponent {
         dataIndex: 'value',
         render: (text, record, index) => {
           if (text !== "-") {
-            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{`${text} ${record.unit}`}</span>
+            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{text} {record.unit}</span>
           }
           return text;
         }
@@ -248,7 +248,7 @@ class resTimeCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getqcaLogAndProcess",
       payload: {
-        QCAType: 4,
+        QCAType: "3103",
         DGIMN: DGIMN,
         MonitorTime: currentRowData.MonitorTime,
         EndTime: currentRowData.EndTime,

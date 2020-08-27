@@ -272,7 +272,7 @@ class RangeCheckPage extends PureComponent {
           </Tabs>
         </Spin>
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="1" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="3102" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }

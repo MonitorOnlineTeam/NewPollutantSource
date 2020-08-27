@@ -7,8 +7,19 @@ export async function getBottleDataList(params) {
   return result;
 }
 
-  
-  
+
+// 发送核查命令
+export async function sendQCACheckCMD(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/SendQCACheckCMD', params, null);
+  return result;
+}
+
+// 获取状态和质控记录信息
+export async function getStateAndRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetStateAndRecord', params, null);
+  return result;
+}
+
 
 
 
