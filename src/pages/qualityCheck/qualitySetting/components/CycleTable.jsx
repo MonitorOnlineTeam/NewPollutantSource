@@ -392,7 +392,7 @@ timeClick=(value)=>{//质控时间
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}
               loading={tableLoading}
-              pagination={{total:total, showSizeChanger:true , showQuickJumper:true }}
+              pagination={{total:total, showSizeChanger:true , showQuickJumper:true,pageSize: 20 }}
           /> 
         </Card>
      </div>);

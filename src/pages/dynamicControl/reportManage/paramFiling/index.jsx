@@ -6,15 +6,12 @@ import  ParamData from './components/ParamData'
 import NavigationTree from '@/components/NavigationTreeNew'
 
 /**
- * 质控核查 零点核查设置
- * jab 2020.08.18
+ * 动态管控 参数备案
+ * jab 2020.08.27
  */
 import { connect } from 'dva';
-@connect(({ loading,qualitySet }) => ({
-    dgimn:qualitySet.dgimn,
-    pollType:qualitySet.pollType, 
-    cycleListParams:qualitySet.cycleListParams,
-    addParams:qualitySet.addParams,
+@connect(({ loading,paramsfil }) => ({
+    dgimn:paramsfil.dgimn
 }))
 class Index extends Component {
     constructor(props) {
@@ -22,30 +19,26 @@ class Index extends Component {
         this.state = {
             dgimn: '',
             title: '',
-            pollType:"",
            
         };
     }
 
     changeDgimn = (value, selectItem)=> {
-        this.setState({  title: selectItem.title, dgimn: value,  pollType:selectItem.PointType  })
-        let { dgimn,pollType, dispatch,cycleListParams,addParams} = this.props;
+        this.setState({  title: selectItem.title, dgimn: value })
+        let { dgimn, dispatch} = this.props;
          dgimn = value;
-         pollType = selectItem.PointType;
-         cycleListParams={...cycleListParams, QCAType: 1026,Cycle: 1}
-         addParams = {...addParams, QCAType: 1026,DGIMN:value}
-         dgimn&&pollType? dispatch({ type: 'qualitySet/updateState', payload: { dgimn,pollType,cycleListParams,addParams } }) : null;
+         dgimn? dispatch({ type: 'paramsfil/updateState', payload: { dgimn} }) : null;
          
     }
 
     render() {
-        const { title,dgimn,pollType } = this.state;
+        const { title,dgimn } = this.state;
         return (
-            <div id="zeroPointData">
+            <div id="paramData">
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn&&pollType ?   <ParamData  initLoadData /> : <PageLoading /> }
+                 {dgimn ?   <ParamData  initLoadData /> : <PageLoading /> }
                 </BreadcrumbWrapper>
             </div>
         );

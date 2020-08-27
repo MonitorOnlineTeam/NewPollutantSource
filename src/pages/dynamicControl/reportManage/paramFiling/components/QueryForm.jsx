@@ -17,21 +17,18 @@ import DropDownSelect from '@/components/DropDownSelect'
  * jab 2020.08.18
  */
 
-@connect(({loading,qualitySet,pollutantListData }) => ({
-    dgimn:qualitySet.dgimn,
-    polltype:qualitySet.pollType,
-    cycleListParams:qualitySet.cycleListParams,
-    pollutantlist:pollutantListData.pollutantlist
+@connect(({loading,paramsfil }) => ({
+    dgimn:paramsfil.dgimn,
+    instruListParams:paramsfil.instruListParams,
+    pollutantlist:paramsfil.pollutantlist,
+    defaultValue:paramsfil.defaultValue
 }))
 
 class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          cycleOptions:[{value:1,name:"1天"},{value:7,name:"7天"},{value:30,name:"30天"},{value:90,name:"季度"}],
           dgimn:"",
-          defaultValue:1,
-          defaulltVaule:""
         };
     }
     componentDidMount(){
@@ -47,69 +44,46 @@ class Index extends React.Component {
 
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
-
-      const {waterDefault,gasDefault} = this.child.state
-          let {dispatch,cycleListParams,pollutantlist,polltype} = this.props;
-          cycleListParams = {
-            ...cycleListParams,
+          let {dispatch,instruListParams} = this.props;
+          instruListParams = {
+            ...instruListParams,
             DGIMN:dgimn,
-            PollutantCodeList: polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []
           }
            dispatch({
-              type: 'qualitySet/updateState',
-              payload: { cycleListParams  },
+              type: 'paramsfil/updateState',
+              payload: { instruListParams  },
           });
          setTimeout(()=>{this.queryClick()}) 
   
       }
 
 
-  childSelect=(ref)=>{
-    this.child = ref
-  }
-
-  pollChange=(data)=>{
-     let {dispatch,cycleListParams} = this.props;
-     cycleListParams = {
-       ...cycleListParams,
-       PollutantCodeList:data
-     }
-      dispatch({
-         type: 'qualitySet/updateState',
-         payload: { cycleListParams  },
-     });
-  }
   queryClick = () =>{ //查询
 
-    let {dispatch,cycleListParams} = this.props;
-    cycleListParams = {
-      ...cycleListParams,
+    let {dispatch,instruListParams} = this.props;
+    instruListParams = {
+      ...instruListParams,
     }
      dispatch({
-        type: 'qualitySet/getCycleQualityControlList',
-        payload: { ...cycleListParams  },
+        type: 'paramsfil/getParameterFilingList',
+        payload: { ...instruListParams  },
     });
   }
-  cycleSelect =(value)=>{
-    let {dispatch,cycleListParams} = this.props;
-    cycleListParams = {
-      ...cycleListParams,
-      Cycle:value
+  instruChange =(value)=>{
+    let {dispatch,instruListParams} = this.props;
+    instruListParams = {
+      ...instruListParams,
+      PollutantCodeList:data
     }
      dispatch({
-        type: 'qualitySet/updateState',
-        payload: { cycleListParams  },
+        type: 'paramsfil/updateState',
+        payload: { instruListParams  },
     });
   }
-/** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
- getpollutantSelect = () => {
-    const { dgimn,polltype,defaulltVal } = this.props;
-    return  dgimn&&polltype? <PollutantDownSelect onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} transDefault ={this.defaulltVal} /> :  null ; 
-  }
+
   render() {
 
-    const {addClick} = this.props;
-    const { cycleOptions,defaultValue } = this.state;
+    const {addClick,pollutantlist,defaultValue} = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     return (
 <div style={{ marginTop: 10 }}>
@@ -117,12 +91,7 @@ class Index extends React.Component {
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
-               <GetpollutantSelect />
-              </Form.Item>
-            </Col>
-            <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>
-              <Form.Item label="质控周期" className='queryConditionForm'>
-               <DropDownSelect  optiondatas={cycleOptions}  defaultValue= {defaultValue}  onChange={this.cycleSelect}/>
+              <DropDownSelect  mode="multiple"  optiondatas={pollutantlist}  defaultValue= {defaultValue}  onChange={this.instruChange}/>
               </Form.Item>
             </Col>
             <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>
