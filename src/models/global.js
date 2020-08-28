@@ -484,6 +484,14 @@ export default Model.extend({
                     payload: { message: obj.Message },
                   });
                   break;
+                case 'QCACheckBack':
+                  console.log("QCACheckBack=", obj.Message)
+                  // 数据提取 - 提取日志
+                  dispatch({
+                    type: 'dataExtract/updateQCLogResult',
+                    payload: obj.Message,
+                  });
+                  break;
                 case 'QCARealTimeData':
                   console.log("QCARealTimeData=", obj.Message);
                   // CEMS污染物数据
@@ -508,18 +516,34 @@ export default Model.extend({
                 // 质控日志 - 开始质控命令
                 case 'QCACheckStart':
                   console.log("QCACheckStart=", obj.Message)
-                  dispatch({
-                    type: 'qcManual/updateQCLogStart',
-                    payload: obj.Message,
-                  })
+                  if (obj.Message.MsgType === "check") {
+                    dispatch({
+                      type: 'qcManual/updateQCLogStart',
+                      payload: obj.Message,
+                    })
+                  }
+                  if (obj.Message.MsgType === "get") {
+                    dispatch({
+                      type: 'dataExtract/updateQCLogStart',
+                      payload: obj.Message,
+                    })
+                  }
                   break;
                 // 质控日志 - 质控应答
                 case 'QCACheckAnswer':
                   console.log("QCACheckAnswer=", obj.Message)
-                  dispatch({
-                    type: 'qcManual/updateQCLogAnswer',
-                    payload: obj.Message
-                  })
+                  if (obj.Message.MsgType === "check") {
+                    dispatch({
+                      type: 'qcManual/updateQCLogAnswer',
+                      payload: obj.Message
+                    })
+                  }
+                  if (obj.Message.MsgType === "get") {
+                    dispatch({
+                      type: 'dataExtract/updateQCLogAnswer',
+                      payload: obj.Message
+                    })
+                  }
                   break;
                 // 质控日志 - 质控结果
                 case 'QCACheckResult':

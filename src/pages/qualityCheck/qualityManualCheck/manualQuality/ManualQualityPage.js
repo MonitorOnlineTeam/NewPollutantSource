@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-27 13:52:27
+ * @Last Modified time: 2020-08-28 17:35:31
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -27,13 +27,12 @@ const QCStatusList = {
 // 量程核查为1  盲样核查为2 零点核查：3  响应时间核查为4   线性5
 
 const CheckTypeList = [
-  { id: 3, name: "零点核查" },
-  { id: 1, name: "量程核查" },
-  { id: 5, name: "线性核查" },
-  { id: 2, name: "盲样核查" },
-  { id: 4, name: "响应时间核查" },
+  { id: 3101, name: "零点核查" },
+  { id: 3102, name: "量程核查" },
+  { id: 3104, name: "线性核查" },
+  { id: 3105, name: "盲样核查" },
+  { id: 3103, name: "响应时间核查" },
 ]
-
 @connect(({ qcManual, qcaCheck, loading }) => ({
   bottleDataList: qcManual.bottleDataList,
   qcImageVisible: qcManual.qcImageVisible,
@@ -55,6 +54,14 @@ class ManualQualityPage extends Component {
     this.getBottleDataList();
     this.updateModalState({ currentDGIMN: this.props.DGIMN })
     this.getStateAndRecord();
+  }
+
+  componentWillUnmount() {
+    // 重置数据
+    this.props.dispatch({
+      type: "qcManual/resetModalState",
+      payload: {}
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -302,7 +309,7 @@ class ManualQualityPage extends Component {
         {/* 核查结果弹窗 */}
         {checkModalVisible && <CheckModal QCAType={QCAType} DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
         {/* 质控过程弹窗 */}
-         {qcImageVisible && <ViewQCProcess />}
+        {qcImageVisible && <ViewQCProcess />}
         {/*{true && <ViewQCProcess />}*/}
       </Card>
     );
