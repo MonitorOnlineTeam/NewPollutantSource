@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag } from 'antd'
+import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag, Empty } from 'antd'
 import QuestionTooltip from "@/components/QuestionTooltip"
 import styles from './index.less';
 import { LoadingOutlined } from "@ant-design/icons"
@@ -36,7 +36,7 @@ class DataExtractPage extends PureComponent {
       currentPollutantCode: "a21026",
       mins: [moment().subtract(1, "hour"), moment()],
       hour: [moment().subtract(1, "hour"), moment()],
-      day: [moment().subtract(1, "day"), moment()],
+      day: [moment().subtract(1, "days"), moment()],
       qcainfo: {
         pollutantCode: "a21026"
       }
@@ -92,8 +92,8 @@ class DataExtractPage extends PureComponent {
         endTime = hour[1].format("YYYY-MM-DD HH:00:00");
         break;
       case "day":
-        beginTime = hour[0].format("YYYY-MM-DD 00:00:00");
-        endTime = hour[1].format("YYYY-MM-DD 00:00:00");
+        beginTime = day[0].format("YYYY-MM-DD 00:00:00");
+        endTime = day[1].format("YYYY-MM-DD 00:00:00");
         break;
       default: break;
     }
@@ -114,7 +114,7 @@ class DataExtractPage extends PureComponent {
 
 
   render() {
-    const { mins, hour, day, loading } = this.state;
+    const { mins, hour, day, loading, currentPollutantCode } = this.state;
     const { QCLogsStart, QCLogsAnswer, QCLogsResult, pointName } = this.props;
     return (
       <Spin spinning={!!loading}>
@@ -200,14 +200,13 @@ class DataExtractPage extends PureComponent {
             <Col flex="auto">
               <Button type="primary" onClick={() => {
                 const that = this;
-                const { currentPollutantCode } = this.state;
                 confirm({
                   title: '请选择污染物',
                   okText: "确认",
                   cancelText: "取消",
                   // icon: <ExclamationCircleOutlined />,
                   content: <div>
-                    <Select value={currentPollutantCode} onChange={(val) => {
+                    <Select style={{ width: 200 }} defaultValue={this.state.currentPollutantCode} onChange={(val) => {
                       that.setState({ currentPollutantCode: val })
                     }}>
                       {
@@ -233,65 +232,72 @@ class DataExtractPage extends PureComponent {
         <Card title="提取日志">
           <div className={styles.qcLogContainer}>
             {false ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : ""}
-            {/* 1 */}
-            <div className={styles.logItem}>
-              <p className={styles.date}>{QCLogsStart.Time}</p>
-              <span className={styles.text}>
-                {QCLogsStart.str ?
-                  <>
-                    {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.str}`}
-                  </> : ""}
-              </span>
-            </div>
-            {/* 2 */}
-            <div className={styles.logItem}>
-              <p className={styles.date}>{QCLogsAnswer.Time}</p>
-              <span className={styles.text}>
-                {QCLogsAnswer.str ?
-                  <>
-                    {`【${pointName}】${QCLogsAnswer.str}。`}
-                  </> : ""}
-              </span>
-            </div>
-            {/* 3 */}
-            <div className={styles.logItem}>
-              <p className={styles.date}>
-                {
-                  QCLogsResult.Time && <>
-                    {QCLogsResult.Time}
-                  </>
-                }
-              </p>
-              <span className={styles.text}>
-                {QCLogsResult.Type ?
-                  <>
-                    {`【${pointName}】向平台反馈数据提取`}
-                    {
-                      QCLogsResult.Result == 0 ?
+            {
+              (!QCLogsStart.Time && !QCLogsAnswer.Time && !QCLogsResult.Time) ?
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+                <>
+                  {/* 1 */}
+                  <div className={styles.logItem}>
+                    <p className={styles.date}>{QCLogsStart.Time}</p>
+                    <span className={styles.text}>
+                      {QCLogsStart.str ?
                         <>
-                          <Tag color="#87d068">成功</Tag>
-                          {`, 提取结果。`}
-                          <Tag color="#87d068"
-                            onClick={() => {
-                              if (QCLogsResult.Type === "data") {
-                                router.push("/dataSearch/monitor/history") // 历史数据
-                              }
-                              if (QCLogsResult.Type === "system") {
-                                router.push("/dataSearch/monitor/datavisualization") // 数据可视化
-                              }
-                              if (QCLogsResult.Type === "qcainfo") {
-                                router.push("/qualityCheck/qualityMange/standardAtmosMange") // 标准气体管理页面
-                              }
-                            }}
-                          >查看提取结果</Tag>
+                          {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.str}`}
+                        </> : ""}
+                    </span>
+                  </div>
+                  {/* 2 */}
+                  <div className={styles.logItem}>
+                    <p className={styles.date}>{QCLogsAnswer.Time}</p>
+                    <span className={styles.text}>
+                      {QCLogsAnswer.str ?
+                        <>
+                          {`【${pointName}】${QCLogsAnswer.str}。`}
+                        </> : ""}
+                    </span>
+                  </div>
+                  {/* 3 */}
+                  <div className={styles.logItem}>
+                    <p className={styles.date}>
+                      {
+                        QCLogsResult.Time && <>
+                          {QCLogsResult.Time}
                         </>
-                        :
-                        <Tag color="#f81d22">失败</Tag>
-                    }
-                  </>
-                  : ""}
-              </span>
-            </div>
+                      }
+                    </p>
+                    <span className={styles.text}>
+                      {QCLogsResult.Type ?
+                        <>
+                          {`【${pointName}】向平台反馈数据提取`}
+                          {
+                            QCLogsResult.Result == 1 ?
+                              <>
+                                <Tag color="#87d068">成功</Tag>
+                                {`, 提取结果。`}
+                                <Tag color="#87d068"
+                                  onClick={() => {
+                                    if (QCLogsResult.Type === "data") {
+                                      router.push("/dataSearch/monitor/history") // 历史数据
+                                    }
+                                    if (QCLogsResult.Type === "system") {
+                                      router.push("/dataSearch/monitor/datavisualization") // 数据可视化
+                                    }
+                                    if (QCLogsResult.Type === "qcainfo") {
+                                      router.push("/qualityCheck/qualityMange/standardAtmosMange") // 标准气体管理页面
+                                    }
+                                  }}
+                                >查看提取结果</Tag>
+                              </>
+                              :
+                              <Tag color="#f81d22">失败</Tag>
+                          }
+                        </>
+                        : ""}
+                    </span>
+                  </div>
+                </>
+            }
+
           </div>
         </Card>
       </Spin>

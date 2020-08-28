@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-28 14:36:23
+ * @Last Modified time: 2020-08-28 17:35:31
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -54,6 +54,14 @@ class ManualQualityPage extends Component {
     this.getBottleDataList();
     this.updateModalState({ currentDGIMN: this.props.DGIMN })
     this.getStateAndRecord();
+  }
+
+  componentWillUnmount() {
+    // 重置数据
+    this.props.dispatch({
+      type: "qcManual/resetModalState",
+      payload: {}
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
