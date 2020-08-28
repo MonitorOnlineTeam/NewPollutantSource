@@ -36,10 +36,15 @@ export default Model.extend({
       StandardValue: ""
     },
     tableLoading:true,
+    issueFlag:false,
     tableDatas:[],
     // defaultValue:1,
     cycleOptions:[{value:1,name:"1天"},{value:7,name:"7天"},{value:30,name:"30天"},{value:90,name:"季度"}]
   },
+  subscriptions: { //实时更新
+    setup ({dispatch, history}) {
+      }
+    },
   effects: {
      // 质控核查 质控核查设置 列表
      *getCycleQualityControlList({callback, payload }, { call, update }) {
@@ -72,11 +77,13 @@ export default Model.extend({
           message.error(result.Message)
         }
       },
+
          // 质控核查 质控核查设置 下发
-     *issueMessage({callback, payload }, { call, update }) {
+         *issueMessage({callback, payload }, { call, update }) {
           const result = yield call(IssueMessage, payload);
           if (result.IsSuccess) {
-            message.success(result.Message)
+            // message.success(result.Message)
+            yield update({ tableLoading:true })
             callback(result.IsSuccess)
           } else {
             message.error(result.Message)
@@ -85,6 +92,18 @@ export default Model.extend({
 
 
 
-
   },
+  reducers: { // 以 key/value 格式定义reducer，用于处理同步操作，唯一可以修改 state 的地方，由 action 触发
+         // 质控核查 质控核查设置 下发
+         issueData(state, { payload }) {
+            if(payload.ApproveState===2){
+              message.success("操作成功！")
+              const issueFlag  = state.issueFlag;
+              return { ...state,tableLoading:false,issueFlag:!issueFlag}
+            }
+        
+          
+        },
+
+  }
 });

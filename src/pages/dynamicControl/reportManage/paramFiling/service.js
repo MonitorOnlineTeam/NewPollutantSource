@@ -8,7 +8,7 @@ import { post, get, getNew } from '@/utils/request';
 export async function GetParameterFilingList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParameterFilingList', params, null);
   return result.Datas === null ? {
-    Message: result.Message,
+    ...result,
     Datas: [],
   } : result;
 }
@@ -18,7 +18,7 @@ export async function GetParameterFilingList(params) {
 export async function AddOrUpdParameterFiling(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdParameterFiling', params, null);
   return result.Datas === null ? {
-    Message: result.Message,
+    ...result,
     Datas: [],
   } : result;
 }
@@ -27,7 +27,7 @@ export async function AddOrUpdParameterFiling(params) {
 export async function DeleteParameterFiling(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteParameterFiling', params, null);
   return result.Datas === null ? {
-    Message: result.Message,
+    ...result,
     Datas: [],
   } : result;
 }
@@ -36,16 +36,26 @@ export async function DeleteParameterFiling(params) {
 export async function GetParaCodeList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParaCodeList', params, null);
   return result.Datas === null ? {
-    Message: result.Message,
+    ...result,
     Datas: [],
   } : result;
 }
 
 // 备案
-export async function IssueMessage(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/IssueMessage', params, null);
+export async function UpdateApproveState(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdateApproveState', params, null);
   return result.Datas === null ? {
-    Message: result.Message,
+    ...result,
+    Datas: [],
+  } : result;
+}
+
+//仪器列表 
+
+export async function GetParaPollutantCodeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParaPollutantCodeList', params, null);
+  return result.Datas === null ? {
+    ...result,
     Datas: [],
   } : result;
 }

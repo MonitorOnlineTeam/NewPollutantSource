@@ -32,11 +32,19 @@ class Index extends Component {
         };
     }
     getOption=() => {
-        const { optiondatas,ispollutant } = this.props;
+        const { optiondatas,ispollutant,iscode  } = this.props;
         const res = [];
+
         if (optiondatas&&optiondatas.length>0) {
             optiondatas.map((item, key) => {
-                ispollutant?   res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>) : res.push(<Option key={key} value={item.value} >{item.name}</Option>);
+                if(ispollutant){
+                    res.push(<Option key={key} value={item.PollutantCode} >{item.PollutantName}</Option>)
+                }
+                else if(iscode){
+                    res.push(<Option key={key} value={item.code} >{item.name}</Option>)
+                }else{
+                    res.push(<Option key={key} value={item.value} >{item.name}</Option>)  
+                }
               })
             }
             return res;

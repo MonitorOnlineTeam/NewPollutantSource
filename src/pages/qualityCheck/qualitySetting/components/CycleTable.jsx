@@ -33,6 +33,7 @@ import Cookie from 'js-cookie';
     isSaveFlag:qualitySet.isSaveFlag,
     addParams:qualitySet.addParams,
     dgimn:qualitySet.dgimn,
+    issueFlag:qualitySet.issueFlag,
     // total: standardData.total,
     // tablewidth: standardData.tablewidth,
     // tableLoading:standardData.tableLoading,
@@ -96,7 +97,7 @@ class Index extends React.Component {
                ispollutant = {1}
                optiondatas={value}
                defaultValue={value[0].PollutantCode}
-               onChange={this.handlePollutantChange.bind(this,index)} //父组件事件回调子组件的值
+               onChange={this.handlePollutantChange.bind(this,row,index)} //父组件事件回调子组件的值
                />
                 }else{
                 return <span>{value}</span>
@@ -156,7 +157,7 @@ class Index extends React.Component {
             dataIndex: 'ApproveState',
             key: 'ApproveState',
             align: 'center',
-            render: text => <>{ text == "-"?  <span>-</span> :text == 2?  <span style={{color:green.primary}}>已下发</span> : <span style={{color:red.primary}}>已保存</span>}</>,
+            render: text => <>{ text == "-"?  <span>-</span> :text == 2?  <span style={{color:green.primary}}>已下发</span> :text == "下发中"?<span style={{color:red.primary}}>下发中</span>: <span style={{color:red.primary}}>已保存</span>}</>,
           },
           {
             title: '操作',
@@ -211,6 +212,13 @@ class Index extends React.Component {
       return null;
 
     }
+        // 在componentDidUpdate中进行异步操作，驱动数据的变化
+     componentDidUpdate(prevProps) {
+          console.log(prevProps.issueFlag)
+          if(prevProps.issueFlag !==  this.props.issueFlag) {
+            this.reloadList();
+          }
+         }
     componentDidMount(){
      this.isdBind();
     }
@@ -223,16 +231,24 @@ class Index extends React.Component {
       }
     }
 
-  handlePollutantChange=(index,value)=>{ //监测项目事件
+  handlePollutantChange=(row,index,value)=>{ //监测项目事件
     let {dispatch,cycleListParams:{QCAType},pollutantlist,tableDatas,addParams} = this.props;
     if( QCAType == 1030){
      let selectPoll = pollutantlist.filter(function (item,tableIndex) {
         return item.PollutantCode === value//返回你选中删除之外的所有数据
       })
-      const selectData = [...tableDatas];
-      const item = selectData[index];
-      selectData.splice(index, 1, { ...item, Unit: selectPoll[0].Unit }); //替换
-      dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+
+      tableDatas.filter(function (item,tableIndex) {
+        if(item.ID === row.ID){
+          const selectData = [...tableDatas];
+          const item = selectData[tableIndex];
+          selectData.splice(tableIndex, 1, { ...item, Unit: selectPoll[0].Unit }); //替换
+          dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+        } 
+      
+      
+      })
+
     
     }
     addParams = {
@@ -320,17 +336,17 @@ timeClick=(value)=>{//质控时间
   }
   issueClick=(row,value,index)=>{ //下发
     let {dispatch,tableDatas} = this.props;
-    
+    const selectData = [...tableDatas];
+    const item = selectData[index];
+    selectData.splice(index, 1, { ...item, ApproveState:"下发中" }); //替换
+    dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+
     const ID = { ID :row.ID }
      dispatch({
         type: 'qualitySet/issueMessage',
         payload: { ...ID  },
         callback:()=>{
           // this.reloadList();
-          const selectData = [...tableDatas];
-          const item = selectData[index];
-          selectData.splice(index, 1, { ...item, ApproveState:2 }); //替换
-          dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
         }
     });
   }
@@ -380,6 +396,8 @@ timeClick=(value)=>{//质控时间
   render() {
 
     const {tableLoading,total,tableDatas} = this.props;
+
+
     return (
 
 <div id="">
