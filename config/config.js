@@ -412,6 +412,11 @@ export default {
                       name: 'manualQuality',  // 手动质控
                       path: '/qualityCheck/qualityManualCheck/manualQuality',
                       component: './qualityCheck/qualityManualCheck/manualQuality',
+                    },
+                    {
+                      name: 'dataExtract',  // 数据提取
+                      path: '/qualityCheck/qualityManualCheck/dataExtract',
+                      component: './qualityCheck/qualityManualCheck/dataExtract',
                     }
                   ]
                 },

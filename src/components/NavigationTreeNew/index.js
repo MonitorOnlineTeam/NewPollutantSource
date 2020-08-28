@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-12 17:01:17
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-21 14:57:20
+ * @Last Modified time: 2020-08-27 15:12:26
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
@@ -280,6 +280,7 @@ class index extends PureComponent {
           {
             statusList.map((item, index) => {
               return <Tag
+                key={item.text}
                 style={{ marginBottom: 6 }}
                 icon={item.checked ? <CheckOutlined /> : ""}
                 color={item.color}

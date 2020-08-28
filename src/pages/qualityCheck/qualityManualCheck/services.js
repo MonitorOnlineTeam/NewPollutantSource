@@ -20,6 +20,11 @@ export async function getStateAndRecord(params) {
   return result;
 }
 
+// sendDataExtract
+export async function sendDataExtract(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/SendGetCMD', params, null);
+  return result;
+}
 
 
 
