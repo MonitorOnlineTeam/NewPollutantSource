@@ -152,7 +152,7 @@ class CheckModal extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getqcaLogAndProcess",
       payload: {
-        QCAType: 3,
+        QCAType: QCAType,
         DGIMN: DGIMN,
         MonitorTime: currentRowData.MonitorTime,
         EndTime: currentRowData.EndTime,

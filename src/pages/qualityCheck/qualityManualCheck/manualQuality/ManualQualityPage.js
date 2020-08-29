@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-28 17:35:31
+ * @Last Modified time: 2020-08-29 10:38:51
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -281,7 +281,8 @@ class ManualQualityPage extends Component {
                     QCLogsResult.Data.Result == 0 ?
                       <Tag color="#87d068" onClick={() => {
                         this.setState({
-                          currentRowData: QCLogsResult.Data
+                          currentRowData: QCLogsResult.Data,
+                          QCAType: QCLogsResult.Data.QCAType
                         }, () => {
                           this.props.dispatch({
                             type: "qcaCheck/updateState",
