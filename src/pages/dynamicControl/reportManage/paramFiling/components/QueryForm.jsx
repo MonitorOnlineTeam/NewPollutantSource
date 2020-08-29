@@ -21,7 +21,8 @@ import DropDownSelect from '@/components/DropDownSelect'
     dgimn:paramsfil.dgimn,
     instruListParams:paramsfil.instruListParams,
     pollutantlist:paramsfil.pollutantlist,
-    defaultValue:paramsfil.defaultValue
+    defaultValue:paramsfil.defaultValue,
+    ispollut:paramsfil.ispollut
 }))
 
 class Index extends React.Component {
@@ -53,9 +54,32 @@ class Index extends React.Component {
               type: 'paramsfil/updateState',
               payload: { instruListParams  },
           });
-         setTimeout(()=>{this.queryClick()}) 
+         setTimeout(()=>{this.getpointpollutants(dgimn)}) 
   
       }
+
+    /** 根据排口dgimn获取它下面的所有污染物 */
+    getpointpollutants = dgimn => {
+      const {dispatch} = this.props;
+       dispatch({
+          type: 'paramsfil/getParaPollutantCodeList',
+          payload: { DGIMN : dgimn  },
+          callback: () => {
+              this.getParaCodeList()
+             
+          }
+      });
+  }
+  getParaCodeList=()=>{ //参数名称
+    let {dispatch,pollutantlist} = this.props;
+     dispatch({
+        type: 'paramsfil/getParaCodeList',
+        payload: {PollutantCode:pollutantlist[0].code},
+        callback:()=>{
+          this.queryClick();
+        }
+    });
+  }
 
 
   queryClick = () =>{ //查询
@@ -69,37 +93,63 @@ class Index extends React.Component {
         payload: { ...instruListParams  },
     });
   }
-  instruChange =(value)=>{
+
+  pollutChange =(value)=>{
     let {dispatch,instruListParams} = this.props;
     instruListParams = {
       ...instruListParams,
-      PollutantCodeList:data
+      PollutantCodeList:value
     }
      dispatch({
         type: 'paramsfil/updateState',
         payload: { instruListParams  },
     });
   }
+/** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
+getpollutantSelect = () => {
+  const { pollutantlist } = this.props;
+    const pollDefaultSelect = pollutantlist.map((item,index)=>{
+      return  item.code
+     });
+    return (<DropDownSelect
+      iscode = {1}
+      mode = "multiple"
+      optiondatas={pollutantlist}
+      defaultValue={pollDefaultSelect}
+      style={{minWidth:"125px"}}
+      onChange={this.pollutChange} //父组件事件回调子组件的值
+  /> );
+}
+
 
   render() {
 
-    const {addClick,pollutantlist,defaultValue} = this.props;
+    const {addClick,pollutantlist,defaultValue,keepRecordClick,ispollut} = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
     return (
 <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
-          <Row gutter={[8,8]} style={{flex:1}} > 
-            <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
+          <Row gutter={[8,8]} style={{flex:1}} justify="space-between"> 
+           <Col xxl={10} xl={12}  lg={12}  md={24} sm={24} xs={24}>
+           <Row style={{flex:1}}> 
+            <Col gutter={[8,8]} xxl={12} xl={12}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
-              <DropDownSelect  mode="multiple"  optiondatas={pollutantlist}  defaultValue= {defaultValue}  onChange={this.instruChange}/>
+              { ispollut?  <GetpollutantSelect /> : <Spin size="small" />    }
               </Form.Item>
             </Col>
-            <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>
+            <Col xxl={12} xl={12}   lg={24} md={24} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
-                <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
+                <Button type="primary" loading={false} htmlType="submit" style={{marginLeft:5, marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
               </Form.Item>
             </Col>
+            </Row>
+            </Col>
+              <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>
+              <Form.Item  className='queryConditionForm'> 
+                <Button type="primary" loading={false} onClick={keepRecordClick} style={{ marginRight: 5 }}>备案</Button>
+              </Form.Item>
+            </Col>  
           </Row>
         </Form>
       </div>);
