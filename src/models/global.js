@@ -578,15 +578,15 @@ export default Model.extend({
                   });
                   case 'QCARtn': //下发
                     // console.log('msg=',obj)
-                    dispatch({
-                      type: 'qualitySet/issueMessage',
-                      payload:{ID:obj.Message.ID},
-                      callback:()=>{
+                    // dispatch({
+                    //   type: 'qualitySet/issueMessage',
+                    //   payload:{ID:obj.Message.ID},
+                    //   callback:()=>{
                        dispatch({
                         type: 'qualitySet/issueData',//同步更新数据
                         payload: obj.Message,
-                      });
-                      }
+                      // });
+                      // }
                       
                     })
 

@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber } from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Spin } from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -34,6 +34,8 @@ import Cookie from 'js-cookie';
     addParams:qualitySet.addParams,
     dgimn:qualitySet.dgimn,
     issueFlag:qualitySet.issueFlag,
+    approveState:qualitySet.approveState,
+    issueLoading:qualitySet.issueLoading
     // total: standardData.total,
     // tablewidth: standardData.tablewidth,
     // tableLoading:standardData.tableLoading,
@@ -59,7 +61,10 @@ class Index extends React.Component {
         ApproveState: "-",
         save:["保存","取消"]
        },
-        blindAddItem:{ StandardValue: "添加标准值",Unit:"" }
+        blindAddItem:{ StandardValue: "添加标准值",Unit:"" },
+        issueIndex:0,
+        pageSize:20,
+        current:1,
         };
         // props.cycleListParams === 1030 ?
         this.blindCol =[
@@ -157,7 +162,7 @@ class Index extends React.Component {
             dataIndex: 'ApproveState',
             key: 'ApproveState',
             align: 'center',
-            render: text => <>{ text == "-"?  <span>-</span> :text == 2?  <span style={{color:green.primary}}>已下发</span> :text == "下发中"?<span style={{color:red.primary}}>下发中</span>: <span style={{color:red.primary}}>已保存</span>}</>,
+            render: text => <>{ text == "-"?  <span>-</span> :text == 2?  <span style={{color:green.primary}}>已下发</span> :text == "下发中"?<Spin size="small" />: <span style={{color:red.primary}}>已保存</span>}</>,
           },
           {
             title: '操作',
@@ -214,9 +219,17 @@ class Index extends React.Component {
     }
         // 在componentDidUpdate中进行异步操作，驱动数据的变化
      componentDidUpdate(prevProps) {
-          console.log(prevProps.issueFlag)
-          if(prevProps.issueFlag !==  this.props.issueFlag) {
+          // console.log(prevProps.issueFlag)
+          if(this.props.issueLoading&&prevProps.issueFlag !==  this.props.issueFlag) { //删除
             this.reloadList();
+          }
+          if(!this.props.issueLoading&&prevProps.issueFlag !==  this.props.issueFlag){ //下发 
+            const {issueIndex} = this.state;
+            const {dispatch,tableDatas} = this.props;
+            const selectData = [...tableDatas];
+            const item = selectData[issueIndex];
+            selectData.splice(issueIndex, 1, { ...item, ApproveState:this.props.approveState }); //替换
+            dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
           }
          }
     componentDidMount(){
@@ -330,16 +343,25 @@ timeClick=(value)=>{//质控时间
         type: 'qualitySet/deleteCycleQualityControl',
         payload: { ...ID  },
         callback:()=>{
-          this.reloadList();
+          // this.reloadList();
         }
     });
   }
   issueClick=(row,value,index)=>{ //下发
     let {dispatch,tableDatas} = this.props;
     const selectData = [...tableDatas];
-    const item = selectData[index];
-    selectData.splice(index, 1, { ...item, ApproveState:"下发中" }); //替换
-    dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+    let _this = this;
+    tableDatas.filter(function (item,tableIndex) {
+      if(item.ID === row.ID){
+        const item = selectData[tableIndex];
+        _this.setState({issueIndex:tableIndex})
+        selectData.splice(tableIndex, 1, { ...item, ApproveState:"下发中" }); //替换
+        dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+      } 
+    
+    
+    })
+
 
     const ID = { ID :row.ID }
      dispatch({
@@ -353,16 +375,24 @@ timeClick=(value)=>{//质控时间
   addClick=()=>{
 
     
-    let {addItem,blindAddItem,standDefaultVal,configInfo} = this.state;
+    let {addItem,blindAddItem,standDefaultVal,configInfo,current,pageSize} = this.state;
     
     let {dispatch,tableDatas,count,cycleListParams:{QCAType},isSaveFlag,addParams} = this.props;
      if(!isSaveFlag){
      QCAType ==1030? addItem = {...addItem,ID:count,...blindAddItem} : addItem = {...addItem,ID:count} ;
      count+=1;
-     tableDatas = [
-      ...tableDatas,
-      addItem
-    ]
+
+     if(current===1){ //第一页时
+
+      tableDatas = [
+        addItem,
+      ...tableDatas, 
+      ]
+     }else{
+     const selectData = [...tableDatas];
+          selectData.splice((current-1)*pageSize, 0, { ...addItem }); //替换
+           tableDatas = selectData;
+     }
     addParams = {
       ...addParams,
       PollutantCode:addItem.PollutantName[0].PollutantCode,
@@ -393,6 +423,18 @@ timeClick=(value)=>{//质控时间
         payload: { ...cycleListParams  },
     });
   }
+
+  changePageSize=(pageSize,current)=>{
+    this.setState({pageSize})
+ }
+ changePage=(current)=>{ //跳转页数
+  
+   setTimeout(()=>{
+     const {pageSize} = this.state
+      this.setState({pageSize,current})
+       
+   })
+ }
   render() {
 
     const {tableLoading,total,tableDatas} = this.props;
@@ -410,7 +452,11 @@ timeClick=(value)=>{//质控时间
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}
               loading={tableLoading}
-              pagination={{total:total, showSizeChanger:true , showQuickJumper:true,pageSize: 20 }}
+              pagination={{
+                total:total, showSizeChanger:true , showQuickJumper:true,pageSize:this.state.pageSize,
+                onShowSizeChange: (current,pageSize) => this.changePageSize(pageSize,current),
+                onChange: (current) => this.changePage(current),          
+              }}
           /> 
         </Card>
      </div>);

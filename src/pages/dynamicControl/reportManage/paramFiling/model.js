@@ -47,6 +47,7 @@ export default Model.extend({
     ispollut:false,
     tableLoading:true,
     tableDatas:[],
+    editingKey:""
   },
   effects: {
      // 动态管控 参数备案 列表
@@ -54,7 +55,7 @@ export default Model.extend({
       yield update({ tableLoading:true  })
       const result = yield call(GetParameterFilingList, payload);
       if (result.IsSuccess) {
-        yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length,isSaveFlag:false  })
+        yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length,isSaveFlag:false,editingKey:""  })
       } else {
         message.error(result.Message)
         yield update({ tableLoading:false})
@@ -86,7 +87,7 @@ export default Model.extend({
     const result = yield call(GetParaCodeList, payload);
     if (result.IsSuccess) {
       yield update({ getParaCodeList: result.Datas,isParaCode:true})
-      callback(result.IsSuccess)
+      callback(result.Datas)
     } else {
       message.error(result.Message)
     }
