@@ -217,7 +217,7 @@ class ManualQualityPage extends Component {
                     </div>
                     {
                       CheckTypeList.map((check, idx) => {
-                        if (check.id === 2) {
+                        if (check.id === 3105) {
                           return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.id) }}> 盲样核查 </div>
                         }
                         return <div key={idx} onClick={() =>
