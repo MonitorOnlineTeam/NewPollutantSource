@@ -28,7 +28,7 @@ class Index extends Component {
 
     changeDgimn = (value, selectItem)=> {
         this.setState({  title: selectItem.title, dgimn: value,  pollType:selectItem.PointType  })
-        let { dgimn,pollType, dispatch,cycleListParams} = this.props;
+        let { dgimn,pollType, dispatch,cycleListParams,addParams} = this.props;
          dgimn = value;
          pollType = selectItem.PointType
          cycleListParams={...cycleListParams, QCAType: 1028,Cycle: 1}
