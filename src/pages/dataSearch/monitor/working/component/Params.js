@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-12 16:44:25
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-08-24 17:39:12
+ * @Last Modified time: 2020-08-29 13:57:20
  * @Description: 工况参数页面
  */
 import React, { PureComponent } from 'react';
@@ -44,30 +44,46 @@ class FlowChart extends PureComponent {
           dataIndex: 'state',
           render: (text, record) => {
             switch (text) {
-              case 0:
+              case "0":
                 return <Badge status="success" text="正常" />
-              case 1:
+              case "1":
                 return <Badge status="warning" text="超下限" />
-              case 2:
+              case "2":
                 return <Badge status="error" text="超上限" />
+              case "3":
+                return <Badge status="orange" text="参数不符" />
+              default:
+                return "-"
             }
           }
         },
         {
           title: '当前值',
           dataIndex: 'value',
+          render: (text, record) => {
+            return text ? text : "-"
+          }
         },
         {
           title: '正常范围',
           dataIndex: 'range',
+          render: (text, record) => {
+            return text ? text : "-"
+          }
         },
         {
           title: '单位',
           dataIndex: 'unit',
+          render: (text, record) => {
+            return text ? text : "-"
+          }
         },
         {
           title: '变更时间',
           dataIndex: 'monitorTime',
+          render: (text, record) => {
+            return text ? text : "-"
+          }
         },
         {
           title: '变更记录',
@@ -80,10 +96,15 @@ class FlowChart extends PureComponent {
             if (text > record.value) {
               icon = <ArrowDownOutlined style={{ ...style, color: "#ff4d4f" }} />
             }
-            return <>
-              {text}→{record.value}
-              {icon}
-            </>
+            if (text && record.value) {
+              return <>
+                {text}→{record.value}
+                {icon}
+              </>
+            }else{
+              return "-"
+            }
+
           }
         }
       ]
@@ -115,7 +136,7 @@ class FlowChart extends PureComponent {
     const { flowTableData, loading } = this.props;
     const { columns } = this.state;
     return (
-      <SdlTable loading={loading} rowClassName="" dataSource={flowTableData} columns={columns} pagination={false}/>
+      <SdlTable loading={loading} rowClassName="" dataSource={flowTableData} columns={columns} pagination={false} />
     );
   }
 }
