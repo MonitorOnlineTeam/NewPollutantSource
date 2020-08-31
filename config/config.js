@@ -449,6 +449,19 @@ export default {
 
                     },
                   ]
+                },
+
+                {
+                  name: 'dynamicDataManage',  // 管控数据
+                  path: '/dynamicControl/dynamicDataManage',
+                  routes: [
+                    {
+                      name: 'realtimedynamicData',  //实时管控参数
+                      path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
+                      component: './dataSearch/monitor/working/realtimeParam',
+
+                    },
+                  ]
                 }
               ]
 
