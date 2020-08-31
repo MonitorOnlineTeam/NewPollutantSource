@@ -21,11 +21,12 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getVisualizationChartList({ payload, }, { call, update, put, take, select }) { //可视化数据列表
+    *getVisualizationChartList({callback, payload, }, { call, update, put, take, select }) { //可视化数据列表
       yield update({ visLoading: true })
       const result = yield call(GetVisualizationChartList, payload);
       if (result.IsSuccess) {
         yield update({ visualizaData: result.Datas,visLoading: false})
+        callback(result.Datas);
       } else {
         message.error(result.Message)
         yield update({ visLoading: false})
