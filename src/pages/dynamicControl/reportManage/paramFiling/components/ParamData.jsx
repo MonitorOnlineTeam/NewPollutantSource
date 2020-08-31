@@ -34,7 +34,8 @@ import ConsumablesReplaceRecord from '@/pages/EmergencyTodoList/ConsumablesRepla
     addParams:paramsfil.addParams,
     dgimn:paramsfil.dgimn,
     getParaCodeList:paramsfil.getParaCodeList,
-    isParaCode:paramsfil.isParaCode
+    isParaCode:paramsfil.isParaCode,
+    editingKey:paramsfil.editingKey
     // total: standardData.total,
     // tablewidth: standardData.tablewidth,
     // tableLoading:standardData.tableLoading,
@@ -62,12 +63,12 @@ class Index extends React.Component {
         LowerLimit:[],
         save:["保存","取消"]
        },
-       editingKey:"",
        selectPollutant:"",
        selectParaName:"",
        editSelectIndex:"",
        selectParaCode:"",
-       pageSize:20
+       pageSize:20,
+       current:1,
         };
         this.columns = [
           
@@ -80,14 +81,13 @@ class Index extends React.Component {
             render: (value,row,index) => {
 
                 if(value instanceof Array){
-                  const {editingKey} = this.state;
-                  const {addParams} = this.props;
-                  const items = value.find(item =>  item.value === addParams.PollutantCode);
+                  const {addParams,editingKey} = this.props;
+                  const items = value?value.find(item =>  item.value === addParams.PollutantCode) : null;
                return <DropDownSelect
                iscode={1}
                optiondatas={value}
-               defaultValue={editingKey? items.value :value[0].code}
-               onChange={this.handlePollutantChange.bind(this,index)} //父组件事件回调子组件的值
+               defaultValue={value? editingKey? items&&items.value || "" : value[0].code : null}
+               onChange={this.handlePollutantChange.bind(this,row,index)} //父组件事件回调子组件的值
                />
                 }else{
                   // return <span>{row.PollutantCode == "a34013"? "颗粒物分析仪" : `气态分析仪(${value})`}</span>
@@ -105,18 +105,18 @@ class Index extends React.Component {
             width:120,
             render: (value,row,index) => {
               if(value instanceof Array){
-                const {selectParaCode} = this.state;
                 
-              return<Row align='middle' justify='center'>
-                 <Form.Item style={{marginBottom:0,paddingRight:2}} name='paraName' rules={[{ required: true, message: '请选择参数名' }]}>
+              return  <Select  style={{minWidth:100}} value ={this.state.selectParaCode} onChange={this.paraNameChange.bind(this,row,index)}>
+                        {
+                          this.getParaCodeOption()
+                         }
+                          </Select> 
+                // <Row align='middle' justify='center'>
+                 {/* <Form.Item style={{marginBottom:0,paddingRight:2}} name='paraName' rules={[{ required: true, message: '请选择参数名' }]}> */}
               
-                  <Select  style={{minWidth:100}} value ={selectParaCode} onChange={this.paraNameChange.bind(this,row,index)}>
-                    {
-                     this.getParaCodeOption()
-                    }
-                    </Select> 
-                    </Form.Item>
-                     </Row>
+
+                    {/* </Form.Item> */}
+                    //  </Row>
               }else{
               return <span>{value}</span>
               }
@@ -127,7 +127,7 @@ class Index extends React.Component {
             dataIndex: 'LowerLimit',
             key: 'LowerLimit',
             align: 'center',
-            width:150,
+            width:175,
             render: (value,row) => {
               if(value instanceof Array){
                  if(row.Type==2){
@@ -209,7 +209,7 @@ class Index extends React.Component {
             align: 'center',
             render: (value,row,index) => {
 
-              const { editingKey } = this.state;
+              const { editingKey } = this.props;
 
               if(value instanceof Array){
               //   value.map((item,index)=>{
@@ -249,11 +249,17 @@ class Index extends React.Component {
         };
       }
       if (props.pollutantlist !== state.addItem.PollutantName && props.pollutantlist.length>0) {
-        
         return {
           addItem: {...state.addItem,PollutantName:props.pollutantlist},
         };
       }
+
+      // if (props.editingKey !== state.editingKey) {
+        
+      //   return {
+      //     editingKey: props.editingKey,
+      //   };
+      // }
       // if (props.tableDatas !== state.tableDatas) {
       
       //   return {
@@ -288,49 +294,44 @@ class Index extends React.Component {
     //      }
     //  });
     // }
-  handlePollutantChange=(index,value)=>{ //监测项目事件
+  handlePollutantChange=(row,index,value)=>{ //仪器事件
     let {dispatch,pollutantlist,tableDatas,addParams,getParaCodeList,isParaCode} = this.props;
-
-    this.setState({selectParaCode:""}) 
-    
-    //  const items = value.find(item => addParams.ParaCode === item.ParaCode);
     dispatch({type: 'paramsfil/getParaCodeList',
       payload: {PollutantCode:value},
-      callback:()=>{
-      //  isParaCode? this.setState({selectParaCode:getParaCodeList.length>0? getParaCodeList[0].ParaCode:null}) :null
+      callback:(res)=>{
+        let getParaCodeList = res;
+       this.setState({selectParaCode:getParaCodeList.length>0? getParaCodeList[0].ParaCode:null}) 
+
+       tableDatas.filter(function (item,tableIndex) {
+        if(item.ID === row.ID){
+          const selectData = [...tableDatas];
+          const item = selectData[tableIndex];
+          selectData.splice(tableIndex, 1, { ...item, Unit:getParaCodeList.length>0? getParaCodeList[0].Unit :null,Type:getParaCodeList.length>0?getParaCodeList[0].Type:null }); //替换
+  
+          addParams = {
+            ...addParams,
+            PollutantCode:value,
+            ParaCode: getParaCodeList.length>0? getParaCodeList[0].ParaCode:"",
+            Unit: getParaCodeList.length>0?getParaCodeList[0].Unit:"",
+            Type:getParaCodeList.length>0?getParaCodeList[0].Type:""
+         }
+          dispatch({type: 'paramsfil/updateState',payload:{tableDatas:selectData,addParams} });
+        }  
+      })
       }
     });
-    addParams = {
-      ...addParams,
-      PollutantCode:value,
-      ParaCode: getParaCodeList.length>0? getParaCodeList[0].ParaCode:""
-   }
-   dispatch({
-     type: 'paramsfil/updateState',
-     payload: { addParams  },
-    });
+
+
+
+
+    
+    
+
   }
   paraNameChange=(row,index,value)=>{ //参数名称 事件
     let {dispatch,getParaCodeList,tableDatas,addParams} = this.props;
-      //    let selectPoll = getParaCodeList.filter(function (item,tableIndex) {
-      //     return item.ParaCode === value//返回你选中删除之外的所有数据
-      // })
-      // this.setState({selectParaCode:value})
-      // const selectData = [...tableDatas];
-      // const item = selectData[index];
-      // selectData.splice(index, 1, { ...item, Unit: selectPoll[0].Unit }); //替换
-      // dispatch({type: 'paramsfil/updateState',payload:{tableDatas:selectData} });
-      this.setState({selectParaCode:value}) 
-      // tableDatas.filter(function (item,tableIndex) {
-      //    if(item.ParaCode === value){
-      //      const selectData = [...tableDatas];
-      //      const item = selectData[tableIndex];
-      //      selectData.splice(tableIndex, 1, { ...item, Unit: item.Unit,Type: item.Unit }); //替换
-      //      dispatch({type: 'paramsfil/updateState',payload:{tableDatas:selectData} });
-      //    }
- 
-      //  })
 
+      this.setState({selectParaCode:value}) 
       let selectPoll = getParaCodeList.filter(function (item,tableIndex) {
         return item.ParaCode === value//返回你选中删除之外的所有数据
       })
@@ -377,24 +378,23 @@ class Index extends React.Component {
 
   isSave=(row,name,index)=>{
     if(name==="取消"){
-      let {dispatch,tableDatas,addParams,isSaveFlag} = this.props;
-      let {editingKey,selectPollutant,selectParaName,editSelectIndex} = this.state;
+      let {dispatch,tableDatas,addParams,isSaveFlag,editingKey} = this.props;
+      let {selectPollutant,selectParaName,editSelectIndex} = this.state;
        if(editingKey){ //编辑状态 
         const selectData = [...tableDatas];
         const item = selectData[editSelectIndex];
         selectData.splice(editSelectIndex, 1, { ...item, PollutantName:selectPollutant,ParaName:selectParaName,LowerLimit:row.LowerLimit[0],save:row.ApproveState }); //替换
         tableDatas = selectData;
+        editingKey = ""
           dispatch({
              type: 'paramsfil/updateState',
-             payload:{tableDatas} ,
+             payload:{tableDatas,editingKey} ,
         });
-        this.setState({ editingKey: "" });
        }else{
         tableDatas = tableDatas.filter(function (item,tableIndex) {
           return item.key !== row.key//返回你选中删除之外的所有数据
         })
         isSaveFlag = false;
-        this.setState({ editingKey: "" });
         dispatch({
            type: 'paramsfil/updateState',
            payload:{tableDatas,isSaveFlag} ,
@@ -407,16 +407,16 @@ class Index extends React.Component {
       this.formRef.current.validateFields();
       const lowLimit = this.formRef.current.getFieldsValue().lowLimit;
       const topLimit = this.formRef.current.getFieldsValue().topLimit;
-      const paraName = this.formRef.current.getFieldsValue().paraName;
+      // const paraName = this.formRef.current.getFieldsValue().paraName;
          if( row.TopLimit||row.TopLimit===0 ){
-             if(lowLimit||lowLimit===0 &&topLimit||topLimit===0&&paraName){
+             if(lowLimit||lowLimit===0 &&topLimit||topLimit===0){
                 this.saveSubmit();
              }else{
                return false;
              }
 
          }else{
-          if(lowLimit||lowLimit===0&&paraName){
+          if(lowLimit||lowLimit===0){
             this.saveSubmit();
           }else{
             return false;
@@ -452,21 +452,31 @@ class Index extends React.Component {
     });
   }
   editClick=(row,value,index)=>{//编辑
-   
-    let {dispatch,tableDatas,isSaveFlag,addParams,getParaCodeList,pollutantlist,selectParaCode} = this.props;
+
+    let {dispatch,tableDatas,isSaveFlag,addParams,getParaCodeList,pollutantlist,editingKey} = this.props;
     let {addItem} = this.state;
     if(!isSaveFlag){
-      this.setState({ editingKey: index + 1});
+      editingKey = index + 1;
 
-   this.setState({selectPollutant:row.PollutantName,selectParaName:row.ParaName})
-  
+      addParams = {
+        ...addParams, ID:row.ID,DGIMN:row.DGIMN,InstrumentID:row.InstrumentID,PollutantCode:row.PollutantCode,ParaCode:row.ParaCode,Type:row.Type,
+        LowerLimit:row.LowerLimit,TopLimit:row.TopLimit,DeleteMark:row.DeleteMark,Recordor:row.Recordor,RecordorID:row.RecordorID,RecordTime:row.RecordTime             
+     }
+
+      dispatch({type: 'paramsfil/getParaCodeList',//参数列表请求
+      payload: {PollutantCode:row.PollutantCode},
+      callback:(res)=>{
+        let getParaCodeList = res;
+           this.setState({selectPollutant:row.PollutantCode,selectParaName:row.ParaName ,selectParaCode:row.ParaCode})
+           
+      }
+
+    })
 
    
-    addParams = {
-      ...addParams, ID:row.ID,DGIMN:row.DGIMN,InstrumentID:row.InstrumentID,PollutantCode:row.PollutantCode,ParaCode:row.ParaCode,Type:row.Type,
-      LowerLimit:row.LowerLimit,TopLimit:row.TopLimit,DeleteMark:row.DeleteMark,Recordor:row.Recordor,RecordorID:row.RecordorID,RecordTime:row.RecordTime             
-   }
-   this.setState({selectParaCode:row.ParaCode})
+
+
+ 
 
    this.formRef.current.setFieldsValue({  lowLimit: row.LowerLimit ,topLimit: row.TopLimit});
     const selectData = [...tableDatas];
@@ -479,7 +489,7 @@ class Index extends React.Component {
           tableDatas = selectData;
             dispatch({
                type: 'paramsfil/updateState',
-               payload:{tableDatas,addParams} ,
+               payload:{tableDatas,addParams,editingKey} ,
           });
         }
     })
@@ -495,29 +505,34 @@ class Index extends React.Component {
   addClick=()=>{
 
     
-    let {addItem,standDefaultVal,configInfo,editingKey} = this.state;
+    let {addItem,standDefaultVal,configInfo,current,pageSize} = this.state;
     
-    let {dispatch,tableDatas,count,isSaveFlag,addParams,pollutantlist,getParaCodeList,dgimn} = this.props;
+    let {dispatch,tableDatas,count,isSaveFlag,addParams,pollutantlist,getParaCodeList,dgimn,editingKey} = this.props;
      if(!isSaveFlag && !editingKey){
-
-      this.setState({selectParaCode:getParaCodeList[0].ParaCode})
 
 
       addItem = {...addItem,key:count};
       count+=1;
 
-      tableDatas = [
-      ...tableDatas,
-      addItem
-    ]
-    // const selectData = [...tableDatas];
-    //       selectData.splice(19, 0, { ...addItem }); //替换
-    //  tableDatas = selectData;
+     if(current===1){ //第一页时
 
+      tableDatas = [
+        addItem,
+      ...tableDatas, 
+      ]
+     }else{
+    const selectData = [...tableDatas];
+          selectData.splice((current-1)*pageSize, 0, { ...addItem }); //替换
+           tableDatas = selectData;
+     }
+
+
+     this.setState({selectParaCode:getParaCodeList[0].ParaCode})
     addParams = {
       ...addParams,
       ParaCode:getParaCodeList[0].ParaCode,
       Unit:getParaCodeList[0].Unit,
+      PollutantCode:pollutantlist[0].code,
       DGIMN:dgimn,
       RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
    }
@@ -527,6 +542,8 @@ class Index extends React.Component {
         type: 'paramsfil/updateState',
         payload:{tableDatas,count,isSaveFlag,addParams} ,
     });
+
+
   }else{
     message.warning("请保存之前未保存的状态")
   }
@@ -561,13 +578,12 @@ class Index extends React.Component {
   changePageSize=(pageSize,current)=>{
      this.setState({pageSize})
   }
-  changePage=(current)=>{
+  changePage=(current)=>{ //跳转页数
    
     setTimeout(()=>{
       const {pageSize} = this.state
-      // console.log(pageSize)
-    
-    
+       this.setState({pageSize,current})
+        
     })
   }
   render() {

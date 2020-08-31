@@ -116,7 +116,7 @@ getpollutantSelect = () => {
       mode = "multiple"
       optiondatas={pollutantlist}
       defaultValue={pollDefaultSelect}
-      style={{minWidth:"125px"}}
+      style={{minWidth:125,marginRight:5}}
       onChange={this.pollutChange} //父组件事件回调子组件的值
   /> );
 }
@@ -129,27 +129,31 @@ getpollutantSelect = () => {
     return (
 <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
-          <Row gutter={[8,8]} style={{flex:1}} justify="space-between"> 
-           <Col xxl={10} xl={12}  lg={12}  md={24} sm={24} xs={24}>
-           <Row style={{flex:1}}> 
-            <Col gutter={[8,8]} xxl={12} xl={12}  lg={12}  md={24} sm={24} xs={24}>
-              <Form.Item label="污染物" className='queryConditionForm'>
+          <Row gutter={[0,8]} style={{flex:1}} justify="space-between"> 
+          
+           <Col xxl={18} xl={24}  lg={24}  md={24} sm={24} xs={24}>
+           <Row  gutter={[4,8]} style={{flex:1}}> 
+            <Col  xxl={8} xl={10}  lg={12}  md={24} sm={24} xs={24}>
+              <Form.Item label="污染物" className='queryConditionForm' >
               { ispollut?  <GetpollutantSelect /> : <Spin size="small" />    }
               </Form.Item>
             </Col>
             <Col xxl={12} xl={12}   lg={24} md={24} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
-                <Button type="primary" loading={false} htmlType="submit" style={{marginLeft:5, marginRight: 5 }}>查询</Button>
+                <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
               </Form.Item>
             </Col>
             </Row>
             </Col>
-              <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>
-              <Form.Item  className='queryConditionForm'> 
-                <Button type="primary" loading={false} onClick={keepRecordClick} style={{ marginRight: 5 }}>备案</Button>
+
+            <Row gutter={[4,8]} style={{flex:1}} style={{justifyContent:"flex-end"}}> 
+              {/* <Col  gutter={[0,8]} xxl={4} xl={4}   lg={24} md={24} sm={24} xs={24}> */}
+              <Form.Item  className='queryConditionForm' style={{marginRight:0}}> 
+                <Button type="primary" loading={false} onClick={keepRecordClick} >备案</Button>
               </Form.Item>
-            </Col>  
+            {/* </Col>   */}
+            </Row>
           </Row>
         </Form>
       </div>);
