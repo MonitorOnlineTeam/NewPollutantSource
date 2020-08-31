@@ -295,6 +295,10 @@ export default {
                   name: 'monitor',
                   routes: [
                     {
+                      path: '/dataSearch/monitor',
+                      redirect: "/dataSearch/monitor/datavisualization"
+                    },
+                    {
                       // 工况模拟
                       name: 'working',
                       path: '/dataSearch/monitor/datavisualization',
@@ -368,6 +372,12 @@ export default {
                       name: 'working',
                       path: '/qualityCheck/qualityMange/standardAtmosMange',
                       component: './qualityCheck/qualityMange/standardAtmosMange',
+                    },
+                    {
+                      // 质控运维人管理
+                      name: 'user',
+                      path: '/qualityCheck/qualityMange/qualityUser',
+                      component: './qualityCheck/qualityMange/qualityUser',
                     },
                   ]
                 },
