@@ -162,7 +162,7 @@ class index extends PureComponent {
                   name="userName"
                   label="人员姓名"
                 >
-                  <Input placeholder="请输入人员姓名" />
+                  <Input placeholder="请输入人员姓名" allowClear/>
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -170,7 +170,7 @@ class index extends PureComponent {
                   name="phone"
                   label="手机号码"
                 >
-                  <Input placeholder="请输入手机号码" />
+                  <Input placeholder="请输入手机号码" allowClear/>
                 </Form.Item>
               </Col>
               <Space align="baseline">
