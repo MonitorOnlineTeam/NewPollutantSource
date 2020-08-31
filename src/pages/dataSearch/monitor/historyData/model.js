@@ -117,12 +117,12 @@ export default Model.extend({
                          if(row[`${item.PollutantCode}_params`]){// 数据超标  超标§报警颜色§标准值§超标倍数
                               if(row[`${item.PollutantCode}_params`].split("§")[0]==="0"){
                                 return <Tooltip placement="right" title={`数据超标：${row[`${item.PollutantCode}_params`].split("§")[2]}`}>
-                                <span style={{color:yellow.primary}}>{ value }</span>
+                                <span style={{color:red.primary}}>{ value }</span>
                                 </Tooltip>
                               }
                             if(row[`${item.PollutantCode}_params`].split("§")[0] === "1"){   // 数据异常 异常§异常类别编号§异常类别名称 
                               return <Tooltip placement="right" title={row[`${item.PollutantCode}_params`].split("§")[2]}>
-                                 <span style={{color:red.primary}}>{ value}</span>
+                                 <span style={{color:yellow.primary}}>{ value}</span>
                                  </Tooltip>
                                  }
                 

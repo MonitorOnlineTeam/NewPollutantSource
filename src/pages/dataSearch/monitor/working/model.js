@@ -3,11 +3,13 @@ import moment from 'moment';
 import * as services from './service';
 import Model from '@/utils/model';
 import { message } from 'antd';
-
+import {GetVisualizationChartList} from "./service"
 export default Model.extend({
   namespace: 'working',
   state: {
-    flowTableData: []
+    flowTableData: [],
+    visualizaData:[],
+    visLoading:true
   },
 
   effects: {
@@ -19,5 +21,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *getVisualizationChartList({ payload, }, { call, update, put, take, select }) { //可视化数据列表
+      yield update({ visLoading: true })
+      const result = yield call(GetVisualizationChartList, payload);
+      if (result.IsSuccess) {
+        yield update({ visualizaData: result.Datas,visLoading: false})
+      } else {
+        message.error(result.Message)
+        yield update({ visLoading: false})
+      }
+    },
+    
   }
 });
