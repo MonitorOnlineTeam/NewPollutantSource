@@ -58,11 +58,11 @@ class Index extends Component {
        }
       /** 切换排口  根据排口dgimn获取它下面的所有污染物*/
       changeDgimn = (dgimn) => {
-        const {dispatch,isdefaulltall,polltype} = this.props;
+        const {dispatch,isdefaulltall,polltype,isqca} = this.props;
         const {waterDefault,gasDefault} = this.state;
          dispatch({
             type: 'pollutantListData/getPollutantList',
-            payload: { DGIMNs : dgimn },
+            payload: { DGIMNs : dgimn,dataType:isqca? "qca":"" },
             callback: (data) => {
               const pollDefaultSelect = data.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
                 if(isdefaulltall){

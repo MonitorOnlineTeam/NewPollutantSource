@@ -461,6 +461,12 @@ export default {
                       component: './dataSearch/monitor/working/realtimeParam',
 
                     },
+                    {
+                      name: 'historyparame',  //历史管控参数
+                      path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
+                      component: './dynamicControl/controlData/historyparame',
+
+                    },
                   ]
                 }
               ]
