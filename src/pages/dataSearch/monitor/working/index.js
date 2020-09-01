@@ -8,9 +8,9 @@ import NavigationTree from '@/components/NavigationTreeNew'
 import PageLoading from '@/components/PageLoading'
 
 
-
 const { TabPane } = Tabs;
 @connect(({ loading, working }) => ({
+  // getVisualizationChartList
 }))
 class working extends Component {
   constructor(props) {
@@ -19,7 +19,12 @@ class working extends Component {
       DGIMN: ""
     };
   }
-
+  changeDgimn = (value, selectItem)=> {
+    this.setState({
+      DGIMN: value,
+      entName: selectItem.title
+    })
+}
   componentDidMount() {
 
   }
@@ -28,17 +33,12 @@ class working extends Component {
     const { DGIMN, entName } = this.state;
     return (
       <>
-        <NavigationTree domId="working" onTreeSelect={(value, item) => {
-          this.setState({
-            DGIMN: value,
-            entName: item.title
-          })
-        }} />
+        <NavigationTree domId="working" onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
         <BreadcrumbWrapper extraName={entName} id="working">
           <Card>
             <Tabs type="card">
               <TabPane tab="数据可视化" key="1">
-                <FlowChart />
+                { DGIMN ?<FlowChart DGIMN={DGIMN}/> : <PageLoading />   }
               </TabPane>
               <TabPane tab="系统参数" key="2">
                 {
