@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title';
 import Link from 'umi/link';
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'dva';
-import { Icon, Modal, Popover } from 'antd';
+import { Icon, Button, Popover, Row, Col } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
 import Cookie from 'js-cookie';
@@ -99,14 +99,28 @@ const UserLayout = props => {
           configInfo && configInfo.IsShowQRcode === 'true' &&
           <Popover
             content={
-              <div>
-                {/* <img
-                  width={272}
-                  alt="logo"
-                  src={`/api/upload/phoneQRCode.png`}
-                /> */}
-                <QRCode value={getIp} size={200} />
-              </div>
+              <Row gutter={48}>
+                <Col span={12} style={{ textAlign: 'center' }}>
+                  <div style={{ marginBottom: '10px' }}>
+                    <Button type="danger" icon="download" size="small">监管APP下载</Button>
+                  </div>
+                  <div>
+                    <QRCode value={getIp} size={200} />
+                  </div>
+                </Col>
+                <Col span={12} style={{ textAlign: 'center' }}>
+                <div style={{ marginBottom: '10px' }}>
+                    <Button type="danger" icon="download" size="small">运维APP下载</Button>
+                  </div>
+                  <div>
+                     <img
+                    width={200}
+                    alt=""
+                    src="/yunweicode.png"
+                  />
+                  </div>
+                </Col>
+              </Row>
             }
             title="手机端下载" trigger="hover">
             <Icon type="qrcode" style={{ position: 'absolute', cursor: 'pointer', right: '58px', top: '22px', fontSize: 16 }} />

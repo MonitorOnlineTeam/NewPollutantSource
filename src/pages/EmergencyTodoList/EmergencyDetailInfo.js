@@ -409,6 +409,17 @@ class EmergencyDetailInfo extends Component {
         });
     }
 
+    GetHelpersPeople=data => {
+        const PeopleArr = [];
+
+        data.length > 0 && data.map(item => {
+            PeopleArr.push(
+                item.User_Name,
+            );
+        });
+        return PeopleArr.join(',');
+    }
+
     render() {
         const { photoIndex } = this.state;
         const { getFieldDecorator } = this.props.form;
@@ -754,7 +765,7 @@ class EmergencyDetailInfo extends Component {
                                     {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}
                                 </Description>
                                 <Description term="协助人">
-                                    {isExistTask ? this.props.taskInfo.Datas[0].TaskHelpersPeople : null}
+                                    {isExistTask ? this.GetHelpersPeople(this.props.taskInfo.Datas[0].TaskHelpersPeople) : null}
                                 </Description>
                             </DescriptionList>
                         </Card>
