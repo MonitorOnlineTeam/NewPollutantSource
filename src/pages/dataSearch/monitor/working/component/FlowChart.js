@@ -102,7 +102,7 @@ class FlowChart extends PureComponent {
     const NoMorepar = this.noMorepar;
     const O2Morepar = this.o2Morepar;
 
-    return <MapInteractionCSS style={{ position: 'relative' }}  scale={0.96} {...props} >
+    return <MapInteractionCSS style={{ position: 'relative' }}  scale={0.98} {...props} >
          {/* <img
            width={200}
            src="../../../"
