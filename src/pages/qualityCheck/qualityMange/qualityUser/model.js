@@ -54,10 +54,10 @@ export default Model.extend({
       }
     },
     // 获取查看运维人
-    *getViewUser({ payload, callback }, { call, update, put, take, select }) {
+    *getViewUser({ payload, edit }, { call, update, put, take, select }) {
       const result = yield call(services.getViewUser, payload);
       if (result.IsSuccess) {
-        yield update({ viewUserData: result.Datas, handleUserModalVisible: true })
+        yield update({ viewUserData: result.Datas, handleUserModalVisible: edit ? true : false })
       } else {
         message.error(result.Message)
       }

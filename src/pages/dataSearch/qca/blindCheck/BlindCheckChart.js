@@ -52,11 +52,9 @@ class BlindCheckChart extends PureComponent {
     const standardMin = _.min([blindChartData.standard.top, blindChartData.standard.lower]) ? _.min([blindChartData.standard.top, blindChartData.standard.lower]) : 0
     const min = _.min([valueMin, standardMin]) + -5
 
-    console.log('max=', max)
-    console.log('min=', min)
     return {
       title: {
-        text: "24小时零点漂移历史数据",
+        text: "盲样核查数据历史记录",
         left: 'center'
       },
       tooltip: {

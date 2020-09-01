@@ -91,7 +91,8 @@ class index extends PureComponent {
                   type: "qualityUser/getViewUser",
                   payload: {
                     UserID: record.UserID
-                  }
+                  },
+                  edit: true
                 })
                 // this.showModal({ handleUserModalVisible: true })
               }}>修改</a>

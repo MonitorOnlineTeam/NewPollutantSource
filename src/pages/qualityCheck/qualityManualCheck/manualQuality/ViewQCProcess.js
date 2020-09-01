@@ -56,6 +56,8 @@ const pollutantCodeList = {
   valueList: qcManual.valueList,
   standardValueList: qcManual.standardValueList,
   QCLogsResult: qcManual.QCLogsResult,
+  marginData: qcManual.marginData,
+  currentPollutantCode: qcManual.currentPollutantCode,
   // isReceiveData: qualityControlModel.isReceiveData,
 }))
 class ViewQCProcess extends PureComponent {
@@ -65,7 +67,7 @@ class ViewQCProcess extends PureComponent {
   }
 
   pageContent = (type) => {
-    const { gasData, cemsList, CEMSStatus, QCStatus, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
+    const { gasData, cemsList, CEMSStatus, QCStatus, marginData, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
     let props = {};
     if (type === "modal") {
       props = {
@@ -92,9 +94,9 @@ class ViewQCProcess extends PureComponent {
             {
               gasData.O2Info.msg ?
                 <Tooltip title={gasData.O2Info.msg}>
-                  <span style={{ color: "#FF9800" }}>余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}</span>
+                  <span style={{ color: "#FF9800" }}>余量：{marginData["a19001"] != undefined ? `${marginData["a19001"]} L` : undefined}</span>
                 </Tooltip> :
-                <span>余量：{gasData.O2Info.VolumeValue != undefined ? `${gasData.O2Info.VolumeValue} L` : undefined}</span>
+                <span>余量：{marginData["a19001"] != undefined ? `${marginData["a19001"]} L` : undefined}</span>
             }
           </li>
         </ul>
@@ -115,6 +117,7 @@ class ViewQCProcess extends PureComponent {
         </> : null
       }
 
+
       {/* NOx */}
       <div className={styles.gasInfoBox} style={{ top: "calc(63px + (121px + 30px) * 1" }}>
         <ul>
@@ -129,9 +132,9 @@ class ViewQCProcess extends PureComponent {
             {
               gasData.NOxInfo.msg ?
                 <Tooltip title={gasData.NOxInfo.msg}>
-                  <span style={{ color: "#FF9800" }}>余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}</span>
+                  <span style={{ color: "#FF9800" }}>余量：{marginData["a21002"] != undefined ? `${marginData["a21002"]} L` : undefined}</span>
                 </Tooltip> :
-                <span>余量：{gasData.NOxInfo.VolumeValue != undefined ? `${gasData.NOxInfo.VolumeValue} L` : undefined}</span>
+                <span>余量：{marginData["a21002"] != undefined ? `${marginData["a21002"]} L` : undefined}</span>
             }
           </li>
         </ul>
@@ -167,9 +170,9 @@ class ViewQCProcess extends PureComponent {
             {
               gasData.SO2Info.msg ?
                 <Tooltip title={gasData.SO2Info.msg}>
-                  <span style={{ color: "#FF9800" }}>余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}</span>
+                  <span style={{ color: "#FF9800" }}>余量：{marginData["a21026"] != undefined ? `${marginData["a21026"]} L` : undefined}</span>
                 </Tooltip> :
-                <span>余量：{gasData.SO2Info.VolumeValue != undefined ? `${gasData.SO2Info.VolumeValue} L` : undefined}</span>
+                <span>余量：{marginData["a21026"] != undefined ? `${marginData["a21026"]} L` : undefined}</span>
             }
           </li>
         </ul>
@@ -203,9 +206,9 @@ class ViewQCProcess extends PureComponent {
             {
               gasData.N2Info.msg ?
                 <Tooltip title={gasData.N2Info.msg}>
-                  <span style={{ color: "#FF9800" }}>余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}</span>
+                  <span style={{ color: "#FF9800" }}>余量：{marginData["n00000"] != undefined ? `${marginData["n00000"]} L` : undefined}</span>
                 </Tooltip> :
-                <span>余量：{gasData.N2Info.VolumeValue != undefined ? `${gasData.N2Info.VolumeValue} L` : undefined}</span>
+                <span>余量：{marginData["n00000"] != undefined ? `${marginData["n00000"]} L` : undefined}</span>
             }
 
           </li>
@@ -430,10 +433,12 @@ class ViewQCProcess extends PureComponent {
   }
 
   render() {
-    const { qcImageVisible } = this.props;
+    const { qcImageVisible, pointName, pollutantCode, currentPollutantCode } = this.props;
+    console.log("pollutantCode=", pollutantCode)
+    let code = pollutantCode || currentPollutantCode;
     return (
       <Modal
-        title="质控过程"
+        title={`${pointName} - ${pollutantCodeList[code].name}质控过程`}
         width="80vw"
         footer={false}
         visible={qcImageVisible}

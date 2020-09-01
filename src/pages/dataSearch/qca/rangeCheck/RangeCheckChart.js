@@ -56,7 +56,7 @@ class RangeCheckChart extends PureComponent {
     console.log('min=', min)
     return {
       title: {
-        text: "24小时零点漂移历史数据",
+        text: "24小时量程漂移图表",
         left: 'center'
       },
       tooltip: {

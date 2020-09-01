@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag } from "antd";
+import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
+import ReactEcharts from 'echarts-for-react';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -17,6 +18,10 @@ const workMode = {
   pollutantList: qcaCheck.pollutantList,
   keyParameterList: qcaCheck.keyParameterList,
   qcaLogDataList: qcaCheck.qcaLogDataList,
+  valueList: qcaCheck.valueList,
+  standValList: qcaCheck.standValList,
+  timeList: qcaCheck.timeList,
+  loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
   tableLoading: loading.effects['qcaCheck/getResTimeCheckTableData'],
 }))
 class resTimeCheckPage extends PureComponent {
@@ -298,11 +303,86 @@ class resTimeCheckPage extends PureComponent {
     })
   }
 
+  // 折线图配置项
+  lineOption = () => {
+    const { standValList, valueList, timeList, } = this.props;
+    let option = {
+      color: ["#56f485", "#c23531"],
+      legend: {
+        data: ["测量浓度", "配比标气浓度"],
+      },
+      grid: {
+        left: '10px',
+        right: '10px',
+        bottom: '10px',
+        containLabel: true
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
+          }
+        }
+      },
+      xAxis: {
+        type: 'category',
+        data: timeList,
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '',
+        }
+      ],
+      dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 100
+      }, {
+        start: 0,
+        end: 100,
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleSize: '80%',
+        handleStyle: {
+          color: '#fff',
+          shadowBlur: 3,
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOffsetX: 2,
+          shadowOffsetY: 2
+        }
+      }],
+      series: [{
+        name: '测量浓度',
+        data: valueList,
+        smooth: true,
+        type: 'line',
+      },
+      {
+        name: '配比标气浓度',
+        data: standValList,
+        smooth: true,
+        type: 'line',
+      },
+      ]
+    };
+
+    return option;
+  }
+
+
 
   render() {
     const { columns, paramsColumns, logColumns } = this._SELF_;
     const { currentRowData, visible } = this.state;
-    const { resTimeCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList } = this.props;
+    const { resTimeCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
     return (
       <Card>
         <Form
@@ -350,21 +430,32 @@ class resTimeCheckPage extends PureComponent {
             footer={false}
             onCancel={() => { this.setState({ visible: false }) }}
           >
-            <Space size={44} style={{ marginBottom: 24 }}>
-              <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
-              <span>平均时间：{currentRowData.AvgTime}s</span>
-              <span>技术要求：{currentRowData.standard}</span>
-              <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
-              <span>质控时间：{currentRowData.MonitorTime}</span>
-            </Space>
-            <Tabs type="card">
-              <TabPane tab="关键参数" key="1">
-                <SdlTable dataSource={keyParameterList} columns={paramsColumns} />
-              </TabPane>
-              <TabPane tab="质控日志" key="2">
-                <SdlTable dataSource={qcaLogDataList} columns={logColumns} />
-              </TabPane>
-            </Tabs>
+            <Spin spinning={!!loading} delay={500}>
+              <Space size={44} style={{ marginBottom: 24 }}>
+                <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
+                <span>平均时间：{currentRowData.AvgTime}s</span>
+                <span>技术要求：{currentRowData.standard}</span>
+                <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
+                <span>质控时间：{currentRowData.MonitorTime}</span>
+              </Space>
+              <Tabs type="card">
+                <TabPane tab="质控过程" key="1">
+                  <ReactEcharts
+                    option={this.lineOption()}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
+                  />
+                </TabPane>
+                <TabPane tab="关键参数" key="2">
+                  <SdlTable dataSource={keyParameterList} columns={paramsColumns} />
+                </TabPane>
+                <TabPane tab="质控日志" key="3">
+                  <SdlTable dataSource={qcaLogDataList} columns={logColumns} />
+                </TabPane>
+              </Tabs>
+            </Spin>
           </Modal>
         }
       </Card>

@@ -12,6 +12,7 @@ import { connect } from "dva"
 import CheckModal from "@/pages/dataSearch/qca/components/CheckModal"
 import ViewQCProcess from "./ViewQCProcess"
 import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+import PageLoading from "@/components/PageLoading"
 
 const { confirm } = Modal;
 // 空闲（绿色），运行（蓝色），维护（黄色），故障（红色），断电（红色），离线（灰色）
@@ -43,6 +44,8 @@ const CheckTypeList = [
   QCLogsResult: qcManual.QCLogsResult,
   currentDGIMN: qcManual.currentDGIMN,
   checkModalVisible: qcaCheck.checkModalVisible,
+  marginData: qcManual.marginData,
+  loading: loading.effects["qcManual/getStateAndRecord"],
   sendLoading: loading.effects["qcManual/sendQCACheckCMD"]
 }))
 class ManualQualityPage extends Component {
@@ -192,9 +195,13 @@ class ManualQualityPage extends Component {
       QCLogsAnswer,
       QCLogsResult,
       sendLoading,
-      currentDGIMN
+      currentDGIMN,
+      marginData,
+      loading,
     } = this.props;
-    console.log("currentDGIMN=", currentDGIMN)
+    if(loading) {
+      return <PageLoading />
+    }
     const { QCAType, currentRowData } = this.state;
     return (
       <Card>
@@ -213,7 +220,7 @@ class ManualQualityPage extends Component {
                   return <div key={item.pollutantName} className={styles.pollutantContent}>
                     <div className={styles.pollutantInfo}>
                       <p className={styles.pollutantName}>{item.PollutantName}</p>
-                      <p style={{ color: "rgb(24, 144, 255)", lineHeight: "44px" }}>标气余量：{item.Volume} {item.Unit}</p>
+                      <p style={{ color: "rgb(24, 144, 255)", lineHeight: "44px" }}>标气余量：{marginData[item.GasCode]} L</p>
                     </div>
                     {
                       CheckTypeList.map((check, idx) => {
@@ -255,7 +262,10 @@ class ManualQualityPage extends Component {
               {QCLogsAnswer.str ?
                 <>
                   {`【${pointName}】${QCLogsAnswer.str}。`}
-                  <Tag color="#87d068" onClick={() => this.updateModalState({ qcImageVisible: true })}>查看质控过程</Tag>
+                  <Tag color="#87d068" onClick={() => {
+                    this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
+                    this.updateModalState({ qcImageVisible: true })
+                  }}>查看质控过程</Tag>
                 </> : ""}
             </span>
           </div>
@@ -310,7 +320,7 @@ class ManualQualityPage extends Component {
         {/* 核查结果弹窗 */}
         {checkModalVisible && <CheckModal QCAType={QCAType} DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
         {/* 质控过程弹窗 */}
-        {qcImageVisible && <ViewQCProcess />}
+        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} />}
         {/*{true && <ViewQCProcess />}*/}
       </Card>
     );

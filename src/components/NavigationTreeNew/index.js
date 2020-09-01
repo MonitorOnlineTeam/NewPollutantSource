@@ -23,6 +23,7 @@ const { Search } = Input;
   treeRegionData: components.treeRegionData,
   treeIndustryData: components.treeIndustryData,
   selectTreeItem: components.selectTreeItem,
+  statusList: components.statusList,
   loading: loading.effects["components/getTreeData"]
 }))
 class index extends PureComponent {
@@ -37,20 +38,7 @@ class index extends PureComponent {
       expandedKeys: [props.selectTreeItem.value],
       defaultStatus: [0, 1, 2, 3, 4, 5],
       searchValue: undefined,
-      statusList: [
-        // { text: "正常", checked: false, color: "#b7eb8f", value: "0", count: 10, className: "green" },
-        // { text: "离线", checked: false, color: "#999999", value: 1, count: 1, className: "default" },
-        // { text: "超标", checked: false, color: "#f04d4d", value: 2, count: 2, className: "red" },
-        // { text: "异常", checked: false, color: "#e94", value: 3, count: 3, className: "orange" },
-        // { text: "备案不符", checked: false, color: "#fa541c", value: 4, count: 4, className: "volcano" },
-        // { text: "监测不合格", checked: false, color: "#eb2f96", value: 5, count: 14, className: "magenta" },
-        { text: "正常", checked: false, color: "success", value: "0", count: 10, className: "green" },
-        { text: "离线", checked: false, color: "default", value: 1, count: 1, className: "default" },
-        { text: "超标", checked: false, color: "error", value: 2, count: 2, className: "red" },
-        { text: "异常", checked: false, color: "warning", value: 3, count: 3, className: "orange" },
-        { text: "备案不符", checked: false, color: "orange", value: 4, count: 4, className: "volcano" },
-        { text: "监测不合格", checked: false, color: "gold", value: 5, count: 14, className: "magenta" },
-      ],
+      statusList: props.statusList,
     };
 
     this._SELF_ = {
@@ -65,7 +53,7 @@ class index extends PureComponent {
     if (dom) {
       dom.style.margin = '-24px -24px 0 296px';
     }
-    this.getTreeData();
+    this.getTreeData('did');
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -80,6 +68,9 @@ class index extends PureComponent {
     if (prevProps.loading !== this.props.loading && this.props.loading === false) {
       this.controlsScrollBarOffsetTop()
     }
+    if (JSON.stringify(prevProps.statusList) !== JSON.stringify(this.props.statusList)) {
+      this.setState({ statusList: this.props.statusList })
+    }
   }
   // 0: "62020131jhdp02"
   // 1: "140421000"
@@ -87,7 +78,7 @@ class index extends PureComponent {
   // 3: "140000000"
 
   // 获取导航树数据
-  getTreeData = () => {
+  getTreeData = (requestType) => {
     // 过滤选择状态
     let Status = this.state.statusList.filter(item => {
       if (item.checked) {
@@ -102,7 +93,8 @@ class index extends PureComponent {
       payload: {
         Status: Status.length ? Status : this.state.defaultStatus,
         SearchValue: this.state.searchValue,
-      }
+      },
+      requestType: requestType
     })
   }
 
@@ -114,7 +106,7 @@ class index extends PureComponent {
     statusList[index].checked = !statusList[index].checked;
     this.setState({
       statusList: statusList
-    }, () => { this.getTreeData() })
+    }, () => { this.getTreeData("filter") })
   }
 
   filterEnt = (data, inputValue) => {
@@ -141,7 +133,7 @@ class index extends PureComponent {
     this.setState({
       searchValue: e.target.value
     }, () => {
-      this.getTreeData()
+      this.getTreeData("filter")
     })
   }
 
@@ -191,13 +183,18 @@ class index extends PureComponent {
 
     // 排口
     if (nodeData.NodeType === "point") {
+      let currentStatus = this.state.statusList.find(item => item.value == nodeData.Status)
       return <div className={styles.treeTitleBox}>
         {
           nodeData.PointType === '1' ? <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> :
             <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
         }
         {/* <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> */}
-        <span className={styles.text}>{nodeData.title}</span>
+        <span className={`${styles.text} ${styles.regionText}`} title={nodeData.title}>
+          {nodeData.title}
+        </span>
+        <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
+        {/* style={{ fontSize: 12, padding: "0 2px" }} */}
       </div>
     }
   }
@@ -213,17 +210,19 @@ class index extends PureComponent {
     }
     // 排口
     if (nodeData.NodeType === "point") {
-      return <div className={styles.treeTitleBox}>
+      let currentStatus = this.state.statusList.find(item => item.value == nodeData.Status)
+      return <div className={styles.treeTitleBox} style={{width: 220}}>
         {
           nodeData.PointType === '1' ? <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> :
             <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
         }
         <span className={styles.text}>{nodeData.title}</span>
+        <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
       </div>
     }
     return <div className={styles.treeTitleBox}>
       <span className={styles.industryIcon}>
-        <CustomIcon type={this.getIndustryIcon(nodeData.key)} style={{ color: "#fff" }} />
+        <CustomIcon type={this.getIndustryIcon(nodeData.key)} style={{ color: "#fff", fontSize: 18 }} />
       </span>
       <span className={styles.text}>{nodeData.title}</span>
     </div>
@@ -271,12 +270,12 @@ class index extends PureComponent {
         key={placement}
         mask={false}
         // getContainer={false}
-        bodyStyle={{ padding: '20px 14px' }}
+        bodyStyle={{ padding: '20px 6px' }}
         style={{
           marginTop: 64,
         }}
       >
-        <Row gutter={[8, 8]} className={styles.statusWrapper} style={{ marginBottom: 0 }}>
+        <Row gutter={[0, 8]} className={styles.statusWrapper} style={{ marginBottom: 0 }}>
           {
             statusList.map((item, index) => {
               return <Tag

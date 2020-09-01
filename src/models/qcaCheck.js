@@ -50,7 +50,7 @@ export default Model.extend({
     },
     // 获取污染物类型
     *getPollutantListByDgimn({ payload, }, { call, update, put, take, select }) {
-      const result = yield call(getPollutantListByDgimn, payload);
+        const result = yield call(getPollutantListByDgimn, {...payload, dataType: "qca"});
       if (result.IsSuccess) {
         yield update({ pollutantList: result.Datas })
       } else {

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag } from "antd";
+import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
@@ -21,6 +21,7 @@ const workMode = { "1": "定时", "2": "远程", 3: "现场" }
   standValList: qcaCheck.standValList,
   timeList: qcaCheck.timeList,
   linearCheckChartData: qcaCheck.linearCheckChartData,
+  loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
   tableLoading: loading.effects['qcaCheck/getLinearDataList'],
 }))
 class LinearCheckPage extends PureComponent {
@@ -488,7 +489,7 @@ class LinearCheckPage extends PureComponent {
   render() {
     const { columns, paramsColumns, logColumns } = this._SELF_;
     const { currentRowData, visible } = this.state;
-    const { linearCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList } = this.props;
+    const { linearCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
     return (
       <Card>
         <Form
@@ -537,40 +538,42 @@ class LinearCheckPage extends PureComponent {
             footer={false}
             onCancel={() => { this.setState({ visible: false }) }}
           >
-            <Space size={44} style={{ marginBottom: 24 }}>
-              <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
-              <span>线性系数：{currentRowData.Ratio}</span>
-              <span>示值误差：{currentRowData.MaxOffset}</span>
-              <span>标准要求：{currentRowData.standard}</span>
-              <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
-              <span>质控时间：{currentRowData.MonitorTime}</span>
-            </Space>
-            <Tabs type="card">
-              <TabPane tab="线性系数" key="1">
-                <ReactEcharts
-                  option={this.linearCheckOption()}
-                  lazyUpdate
-                  notMerge
-                  id="rightLine"
-                  style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
-                />
-              </TabPane>
-              <TabPane tab="质控过程" key="2">
-                <ReactEcharts
-                  option={this.lineOption()}
-                  lazyUpdate
-                  notMerge
-                  id="rightLine"
-                  style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
-                />
-              </TabPane>
-              <TabPane tab="关键参数" key="3">
-                <SdlTable dataSource={keyParameterList} columns={paramsColumns} />
-              </TabPane>
-              <TabPane tab="质控日志" key="4">
-                <SdlTable dataSource={qcaLogDataList} columns={logColumns} />
-              </TabPane>
-            </Tabs>
+            <Spin spinning={!!loading} delay={500}>
+              <Space size={44} style={{ marginBottom: 24 }}>
+                <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
+                <span>线性系数：{currentRowData.Ratio}{currentRowData.Unit}</span>
+                <span>示值误差：{currentRowData.MaxOffset}{currentRowData.Unit}</span>
+                <span>标准要求：{currentRowData.standard}</span>
+                <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
+                <span>质控时间：{currentRowData.MonitorTime}</span>
+              </Space>
+              <Tabs type="card">
+                <TabPane tab="线性系数" key="1">
+                  <ReactEcharts
+                    option={this.linearCheckOption()}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
+                  />
+                </TabPane>
+                <TabPane tab="质控过程" key="2">
+                  <ReactEcharts
+                    option={this.lineOption()}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
+                  />
+                </TabPane>
+                <TabPane tab="关键参数" key="3">
+                  <SdlTable dataSource={keyParameterList} columns={paramsColumns} />
+                </TabPane>
+                <TabPane tab="质控日志" key="4">
+                  <SdlTable dataSource={qcaLogDataList} columns={logColumns} />
+                </TabPane>
+              </Tabs>
+            </Spin>
           </Modal>
         }
       </Card>

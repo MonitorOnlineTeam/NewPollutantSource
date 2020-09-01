@@ -47,7 +47,19 @@ class HandleUserModal extends Component {
 
   componentDidMount() {
     this.getEntAndPointList()
-    this.getViewUser();
+    // this.getViewUser();
+    if (this.props.id) {
+      this.setState({
+        fileList: [
+          {
+            uid: '-4',
+            name: 'image.png',
+            status: 'done',
+            url: `/upload/${this.props.viewUserData.Pic}`,
+          }
+        ],
+      })
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -147,6 +159,7 @@ class HandleUserModal extends Component {
       treeData: entAndPointList,
       treeDefaultExpandAll: true,
       treeCheckable: true,
+      treeNodeFilterProp: "title",
       placeholder: '请选择运维站点！',
       style: {
         width: '100%',
