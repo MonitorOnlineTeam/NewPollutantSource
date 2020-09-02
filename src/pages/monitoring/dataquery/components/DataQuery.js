@@ -36,7 +36,7 @@ class DataQuery extends Component {
       format: 'YYYY-MM-DD HH:mm:ss',
       selectDisplay: false,
       dd: [],
-      selectP: '',
+      // selectP: '',
       dgimn: '',
       dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
       dataType: 'realtime',
@@ -197,20 +197,22 @@ class DataQuery extends Component {
   /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
   getpollutantSelect = () => {
     const { displayType, selectP } = this.state;
-    const { pollutantlist } = this.props;
-    return (
-      <PollutantSelect
-        mode="multiple"
-        optionDatas={pollutantlist}
-        defaultValue={selectP === '' ? this.getpropspollutantcode() : selectP}
-        onChange={this.handlePollutantChange}
-        placeholder="请选择污染物"
-        maxTagCount={3}
-        maxTagTextLength={5}
-        maxTagPlaceholder="..."
-        style={{ width: 350 }}
-      />
-    );
+    const { pollutantlist, loadingPollutant } = this.props;
+    if(this.props.pollutantlist[0] && loadingPollutant === false){
+      return (
+        <PollutantSelect
+          mode="multiple"
+          optionDatas={pollutantlist}
+          defaultValue={this.getpropspollutantcode()}
+          onChange={this.handlePollutantChange}
+          placeholder="请选择污染物"
+          maxTagCount={3}
+          maxTagTextLength={5}  
+          maxTagPlaceholder="..."
+          style={{ width: 350 }}
+        />
+      );
+    }
   };
 
   /**切换污染物 */
@@ -227,9 +229,9 @@ class DataQuery extends Component {
       pollutantCodes: value.length > 0 ? value.toString() : '',
       pollutantNames: res.length > 0 ? res.toString() : '',
     };
-    this.setState({
-      selectP: value.length > 0 ? value : [],
-    });
+    // this.setState({
+    //   selectP: value.length > 0 ? value : [],
+    // });
 
     dispatch({
       type: 'dataquery/updateState',
@@ -268,7 +270,7 @@ class DataQuery extends Component {
   changeDgimn = dgimn => {
     this.setState({
       selectDisplay: true,
-      selectP: '',
+      // selectP: '',
       dgimn,
     });
     const { dispatch } = this.props;
