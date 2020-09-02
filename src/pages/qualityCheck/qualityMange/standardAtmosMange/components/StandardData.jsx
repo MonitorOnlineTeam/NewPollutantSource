@@ -242,7 +242,7 @@ dateCallback = (dates, dataType) => { //更新日期
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}
               loading={tableLoading}
-              pagination={{total:total, showSizeChanger:true , showQuickJumper:true,pageSize: 20}}
+              pagination={{total:total, showSizeChanger:true , showQuickJumper:true,defaultPageSize:20}}
           /> 
         </Card>
      </div>);
