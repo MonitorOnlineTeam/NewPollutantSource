@@ -238,7 +238,7 @@ class FlowChart extends PureComponent {
           {isStop ==0?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
           : 
           <Tooltip placement="bottom" title={isStop ==1? "停运" :isStop ==2? "停产":"停炉"} trigger='click'>    
-          <span style={{color:gold,cursor:"pointer"}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
+          <span style={{color:gold[5],cursor:"pointer"}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
           </Tooltip>
           }
            <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
