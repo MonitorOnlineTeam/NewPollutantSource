@@ -72,13 +72,19 @@ class Index extends React.Component {
   }
   getParaCodeList=()=>{ //参数名称
     let {dispatch,pollutantlist} = this.props;
-     dispatch({
+    if(pollutantlist.length>0){
+      dispatch({
         type: 'paramsfil/getParaCodeList',
         payload: {PollutantCode:pollutantlist[0].code},
         callback:()=>{
           this.queryClick();
         }
     });
+
+    }else{
+      this.queryClick();
+    }
+
   }
 
 
