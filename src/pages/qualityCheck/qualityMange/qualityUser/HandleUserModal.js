@@ -172,21 +172,6 @@ class HandleUserModal extends Component {
         <div className="ant-upload-text">文件上传</div>
       </div>
     );
-    const { imageUrl } = this.state;
-
-    let initialValues = { Sex: 1 };
-    if (id) {
-      initialValues = {
-        DGIMNList: viewUserData.DGIMN,
-        Phone: viewUserData.Phone,
-        OpenID: viewUserData.Pic,
-        Sex: viewUserData.Sex,
-        UserName: viewUserData.User_Name
-      }
-    }
-
-    console.log("viewUserData=", viewUserData)
-
     return (
       <Modal
         title={id ? "编辑运维人信息" : "添加运维人信息"}
@@ -258,7 +243,6 @@ class HandleUserModal extends Component {
                 onChange={this.handleChange}
               >
                 {fileList.length >= 1 ? null : uploadButton}
-                {/* {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
               </Upload>
               <div>
                 <div style={{ display: "flex" }}>

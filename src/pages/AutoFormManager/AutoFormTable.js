@@ -177,7 +177,7 @@ class AutoFormTable extends PureComponent {
   delRowData(record) {
     const { keys, dispatch, searchParams, configId } = this.props;
     if (this.props.onDelete) {
-      this.props.onDelete(record, record(keys[configId][0]));
+      this.props.onDelete(record, record[keys[configId][0]]);
       return;
     }
     const postData = {};
@@ -232,7 +232,7 @@ class AutoFormTable extends PureComponent {
                 this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
               }}
             >添加
-                    </Button>
+            </Button>
           );
           // }
           break;
@@ -248,7 +248,7 @@ class AutoFormTable extends PureComponent {
                 this.batchDel();
               }}
             >批量删除
-                           </Button>
+            </Button>
           );
           break;
         case 'print':
@@ -267,7 +267,7 @@ class AutoFormTable extends PureComponent {
                   this.export();
                 }}
               >导出
-                           </Button>
+              </Button>
             );
           } else {
             moreBtns.push({ type: 'export', text: '导出' })
@@ -402,7 +402,7 @@ class AutoFormTable extends PureComponent {
           ...col,
           width: 200,
           render: (text, record) => {
-            if(!text) {
+            if (!text) {
               return "-"
             }
             const attachmentDataSource = getAttachmentDataSource(text);
