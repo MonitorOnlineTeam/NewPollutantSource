@@ -41,7 +41,7 @@ export default Model.extend({
     issueLoading:true,
     tableDatas:[],
     // defaultValue:1,
-    cycleOptions:[{value:1,name:"1天"},{value:7,name:"7天"},{value:30,name:"30天"},{value:90,name:"季度"}]
+    cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季度"}]
   },
   subscriptions: { //实时更新
     setup ({dispatch, history}) {

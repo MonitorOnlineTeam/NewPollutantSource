@@ -87,13 +87,14 @@ export default Model.extend({
         yield update({ applyLoading: false  })
         callback()
       } else {
+        yield update({ applyLoading: false  })
         message.error(result.Message)
       }
     },
         
        //  删除
        *delQCAProgramme({callback, payload }, { call, put, update, select }) {
-              const result = yield call(DelQCAProgramme, postData);
+              const result = yield call(DelQCAProgramme, payload);
               if (result.IsSuccess) {
                 message.success(result.Message)
                 callback()

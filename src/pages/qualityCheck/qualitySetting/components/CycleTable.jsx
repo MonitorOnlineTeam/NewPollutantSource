@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Spin } from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Spin,DatePicker } from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -58,6 +58,7 @@ class Index extends React.Component {
         Time: new Date(),
         CreatorName:JSON.parse(Cookie.get('currentUser')).UserName,
         CreatorDate: new Date(),
+        StartDate:new Date(),
         Date:new Date(),
         ApproveState: "-",
         save:["保存","取消"]
@@ -124,6 +125,20 @@ class Index extends React.Component {
               return <span>{value}</span>
               }
           }
+          },
+          {
+            title: '开启日期',
+            dataIndex: 'StartDate',
+            key: 'StartDate',
+            align: 'center',
+          //   render: (value,row) => {
+          //     if(value instanceof Date){
+          //       return  <span>{moment(value).format('YYYY-MM-DD')}</span>
+          //     }else{
+          //      return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "'YYYY-MM-DD'")} allowClear={false}/>
+          //     }
+          // },
+          width:120
           },
           {
             title: '质控时间',
@@ -287,6 +302,18 @@ class Index extends React.Component {
      payload: { addParams  },
     });
   }
+
+  deteChange=(value)=>{ //开始日期事件
+    let {dispatch,addParams} = this.props;
+    addParams = {
+      ...addParams,
+      startDate:value
+   }
+   dispatch({
+    type: 'qualitySet/updateState',
+    payload: { addParams },
+}); 
+  }
   cycleClick = (value) =>{ //质控周期事件
 
     let {dispatch,addParams} = this.props;
@@ -336,8 +363,9 @@ timeClick=(value)=>{//质控时间
       let {dispatch,addParams,cycleListParams:{QCAType}} = this.props;
          addParams = {
           ...addParams,
-          CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss')
-
+          CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss'),
+          StartDate:moment(row.StartDate).format('YYYY-MM-DD')
+          
        }
        dispatch({
           type: 'qualitySet/addOrUpdCycleQualityControl',

@@ -71,18 +71,19 @@ class EditorAddMode extends React.Component {
   }
 
   handleOk = values => {
+    let _this = this;
     confirm({
       title: '确认要应用到企业排扣？',
       icon: <ExclamationCircleOutlined />,
       content: '',
       onOk() {
-        this.formRef.current.validateFields().then((values) => {
-          let {dispatch,applyPar} = this.props;
+        _this.formRef.current.validateFields().then((values) => {
+          let {dispatch,applyPar} = _this.props;
            dispatch({
-              type: 'qualityProData/getQCAProgrammeList',
+              type: 'qualityProData/applicationProgramme',
               payload: { ...applyPar  },
               callback:()=>{
-                this.handleCancel()
+                _this.handleCancel()
               }
           });
         })

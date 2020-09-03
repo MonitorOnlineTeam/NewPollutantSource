@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import {Form,Row,Col,Button,Input,Modal,Spin} from 'antd';
+import {Form,Row,Col,Button,Input,Modal,Spin,Empty,message} from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -46,26 +46,26 @@ class EditorAddMode extends React.Component {
         this.columns = [
           {
             title: '监测项目',
-            dataIndex: 'PollutantName',
-            key: 'PollutantName',
+            dataIndex: 'monitorItem',
+            key: 'monitorItem',
             align: 'center'
           },
           {
             title: '质控周期',
-            dataIndex: 'Value',
-            key: 'Value',
+            dataIndex: 'space',
+            key: 'space',
             align: 'center',
           },
           {
             title: '质控时间',
-            dataIndex: 'Unit',
-            key: 'Unit',
+            dataIndex: 'time',
+            key: 'time',
             align: 'center'
           },
           {
             title: '创建时间',
-            dataIndex: 'CertificateNo',
-            key: 'CertificateNo',
+            dataIndex: 'date',
+            key: 'date',
             align: 'center',
             // render: text =>  moment(new Date(text)).format('YYYY-MM-DD HH:mm:ss')
           },
@@ -85,10 +85,12 @@ class EditorAddMode extends React.Component {
       let {seeEchoData} = this.props;
       return   <FileViewer
       fileType={type}
-      filePath={`${config.uploadHost}upload/${seeEchoData.QCAProgrammeName}.docx`}
+      filePath={`${config.uploadHost}upload/${seeEchoData.ProgrammeFileName}`}
       onError={this.onError}/>
     }
-    
+    onError=()=>{
+      message.error("打开文件失败")
+    }
 
     getDetailClick=()=>{
       let {dispatch,seeEchoData} = this.props;
@@ -104,32 +106,37 @@ class EditorAddMode extends React.Component {
       const {getDetailsLoading,getDetailsList} = this.props;
 
       console.log(getDetailsList)
-      const title = {
-        0: "零点核查",
-        1: "量程核查",
-        2:"线性核查",
-        3:"响应时间核查",
-        4:"盲样核查"
-      }
-      // return getDetailsLoading? <Spin size="small" />  :
-      //   <Row gutter={[16, 16]}>
-         
-           
-      //     {getDetailsList.map(item,index=>{
-      //       return   <Col span={12} > 
-      //        <h1>{title[index]}</h1>
-      //        <SdlTable
-      //       rowKey={(record, index) => `complete${index}`}
-      //       dataSource={tableDatas}
-      //       columns={index==4? this.columns : this.blindItem}
-      //       resizable
-      //       pagination={ false }
-      //      />
-      //       </Col>
-      //     }) }
+      // const title = {
+      //   0: "零点核查",
+      //   1: "量程核查",
+      //   2:"线性核查",
+      //   3:"响应时间核查",
+      //   4:"盲样核查"
+      // }
+      return getDetailsLoading? <Spin size="small" />  :
+       <>
+       { 
+         getDetailsList.length>0 ?
+        <Row gutter={[16, 16]}> 
+          {getDetailsList.map((item,index)=>{
+            return   <Col span={ getDetailsList.length>1  ? 12 :24} > 
+             <h2>{item.qcaTypeName}</h2>
+             <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            dataSource={item.qcaList}
+            columns={item.qcaTypeName== "盲样核查"? this.blindItem : this.columns }
+            resizable
+            pagination={ false }
+           />
+            </Col>
+          }) }
         
-      //     </Row>
-     
+          </Row>
+          :
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          
+       }
+       </>
     }
 
 
