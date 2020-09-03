@@ -295,6 +295,10 @@ export default {
                   name: 'monitor',
                   routes: [
                     {
+                      path: '/dataSearch/monitor',
+                      redirect: "/dataSearch/monitor/datavisualization"
+                    },
+                    {
                       // 工况模拟
                       name: 'working',
                       path: '/dataSearch/monitor/datavisualization',
@@ -365,9 +369,21 @@ export default {
                   routes: [
                     {
                       // 标准气管理
-                      name: 'working',
+                      name: 'standardAtmosMange',
                       path: '/qualityCheck/qualityMange/standardAtmosMange',
                       component: './qualityCheck/qualityMange/standardAtmosMange',
+                    },
+                    {
+                      // 质控方案管理
+                      name: 'qualityProgram',
+                      path: '/qualityCheck/qualityMange/qualityProgram',
+                      component: './qualityCheck/qualityMange/qualityProgram',
+                    },
+                    {
+                      // 质控运维人管理
+                      name: 'user',
+                      path: '/qualityCheck/qualityMange/qualityUser',
+                      component: './qualityCheck/qualityMange/qualityUser',
                     },
                   ]
                 },
@@ -436,7 +452,12 @@ export default {
                       name: 'paramFiling',  //管控参数备案
                       path: '/dynamicControl/reportManage/paramFiling',
                       component: './dynamicControl/reportManage/paramFiling',
+                    },
+                    {
 
+                      name: 'offStream',  //停运报备
+                      path: '/dynamicControl/reportManage/offStream',
+                      component: './dynamicControl/reportManage/offStream',
                     },
                   ]
                 },
@@ -449,6 +470,12 @@ export default {
                       name: 'realtimedynamicData',  //实时管控参数
                       path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
                       component: './dataSearch/monitor/working/realtimeParam',
+
+                    },
+                    {
+                      name: 'historyparame',  //历史管控参数
+                      path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
+                      component: './dynamicControl/controlData/historyparame',
 
                     },
                   ]

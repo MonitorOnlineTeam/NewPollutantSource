@@ -30,7 +30,6 @@ class Index extends Component {
             title: selectItem.title,
             pollType:selectItem.PointType
         })
-        console.log(value, selectItem)
         let { dispatch,pollType,title} = this.props;
          title = selectItem.title;
          dispatch({ type: 'historyData/updateState', payload: { title } })

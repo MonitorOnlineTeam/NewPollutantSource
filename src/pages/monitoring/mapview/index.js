@@ -39,7 +39,7 @@ import { airLevel } from '@/pages/monitoring/overView/tools'
 import config from '@/config'
 import defaultSettings from '../../../../config/defaultSettings.js'
 import MapUI from './MapUI'
-
+import { gold  } from '@ant-design/colors';
 
 const { TabPane } = Tabs;
 const entZoom = 8;
@@ -954,7 +954,7 @@ class MapView extends Component {
                                         label: item.label,
                                       },
                                     })
-                                  }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
+                                  }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ?gold[5] : '') }}>{item.value}</div></Descriptions.Item>)
                                 }
                               </Descriptions>
                               {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}

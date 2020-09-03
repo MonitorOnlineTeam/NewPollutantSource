@@ -40,6 +40,7 @@ export default Model.extend({
     timeList: [],
     valueList: [],
     standardValueList: [],
+    marginData: {},
   },
   effects: {
     // 获取气瓶数据
@@ -98,6 +99,11 @@ export default Model.extend({
     *getStateAndRecord({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getStateAndRecord, payload);
       if (result.IsSuccess) {
+        let marginData = {};
+        marginData["a19001"] = result.Datas[0].o2
+        marginData["a21002"] = result.Datas[0].nox
+        marginData["a21026"] = result.Datas[0].so2
+        marginData["n00000"] = result.Datas[0].n2
         let updateObj = {};
         updateObj.QCStatus = result.Datas[0].State + "";
         // 判断是否正在质控中
@@ -114,7 +120,7 @@ export default Model.extend({
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
           updateObj.currentDGIMN = result.Datas[2].DGIMN;
         }
-        yield update({ ...updateObj })
+        yield update({ ...updateObj, marginData })
       } else {
         message.error(result.Message)
       }

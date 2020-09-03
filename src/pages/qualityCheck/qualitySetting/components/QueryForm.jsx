@@ -104,7 +104,7 @@ class Index extends React.Component {
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
     const { dgimn,polltype,defaulltVal } = this.props;
-    return  dgimn&&polltype? <PollutantDownSelect onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} transDefault ={this.defaulltVal} /> :  null ; 
+    return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} transDefault ={this.defaulltVal} /> :  null ; 
   }
   render() {
 
@@ -117,7 +117,7 @@ class Index extends React.Component {
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
-               <GetpollutantSelect />
+               <GetpollutantSelect/>
               </Form.Item>
             </Col>
             <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>

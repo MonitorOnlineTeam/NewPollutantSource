@@ -39,7 +39,7 @@ class CemsTabs extends React.Component {
         const { panes,defaultKey } = this.props;
         return (
             <>
-                <Tabs  type="card" defaultActiveKey={defaultKey} onChange={this.tabChanges}>
+                <Tabs  type="card" {...this.props} defaultActiveKey={defaultKey} onChange={this.tabChanges}>
                     {panes.length > 0 ? panes.map(pane =>
                         <TabPane tab={pane.title} key={pane.key}>
                               {  pane.name.constructor ? pane.name.constructor == Object? pane.name : <TabContent name={pane.name}/> : null  }
