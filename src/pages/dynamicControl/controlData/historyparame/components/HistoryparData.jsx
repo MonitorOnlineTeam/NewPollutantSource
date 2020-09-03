@@ -183,9 +183,6 @@ dateCallback = (dates, dataType) => { //更新日期
   }
   onChange=(value,label, extra)=>{
     let { queryParams, dispatch } = this.props;
-
-    console.log(value,label, extra)
-    
     queryParams = {
       ...queryParams,
       ParaCodeList:value
@@ -208,7 +205,7 @@ dateCallback = (dates, dataType) => { //更新日期
       showCheckedStrategy: SHOW_PARENT,
       placeholder: '请选择参数名称'
     };
-    return <TreeSelect {...tProps} maxTagCount={2}/>;
+    return <TreeSelect {...tProps} maxTagCount={1}/>;
   }else{
     return <Spin size="small" />
   }
@@ -278,7 +275,7 @@ dateCallback = (dates, dataType) => { //更新日期
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}
               loading={tableLoading}
-              pagination={{total:total, showSizeChanger:true , showQuickJumper:true,pageSize: 20}}
+              pagination={{ showSizeChanger:true , showQuickJumper:true,defaultPageSize:20}}
           /> 
         </Card>
      </div>);

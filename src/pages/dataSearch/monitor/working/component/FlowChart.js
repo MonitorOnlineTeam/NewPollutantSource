@@ -80,7 +80,9 @@ class FlowChart extends PureComponent {
         zhiyn2:"",
 
 
-        noxb:""
+        noxb:"",
+        isNo:false,
+        isNo2:false
       };
   }
 
@@ -99,9 +101,9 @@ class FlowChart extends PureComponent {
   }
   noxMorepar = ()=>{
     const { noju,nox,nol1,nol2,nol,nolcj,nojc } = this.state;
-    const { no2ju,no2x,no2l1,no2l2,no2l,no2lcj,no2jc } = this.state
+    const { no2ju,no2x,no2l1,no2l2,no2l,no2lcj,no2jc,isNo,isNo2 } = this.state
     return <div>
-          <ul>
+          {isNo?<ul>
               <li>NO</li>
               <li>截距：{noju} </li>
               <li>斜率：{nox} </li>
@@ -110,8 +112,8 @@ class FlowChart extends PureComponent {
               <li>零点校准偏差：{nol} </li>
               <li>量程校准偏差：{nolcj} </li>
               <li>零点校准偏差：{nojc} </li>
-            </ul>
-            <ul>
+            </ul> :<></>}
+            {isNo2? <ul>
              <li>NO2</li>
               <li>截距：{no2ju} </li>
               <li>斜率：{no2x} </li>
@@ -120,7 +122,7 @@ class FlowChart extends PureComponent {
               <li>零点校准偏差：{no2l} </li>
               <li>量程校准偏差：{no2lcj} </li>
               <li>零点校准偏差：{no2jc} </li>
-            </ul>
+            </ul>:<></>}
             </div>
   }
   o2Morepar = ()=>{
@@ -195,7 +197,7 @@ class FlowChart extends PureComponent {
          
         <img src="/visualization/total.png" />
   
-          {isStop ==0? //锅炉状态  非0 是不正常
+          {isStop ==1? //锅炉状态  非1 是不正常
           <div id='fei'>
           <img src="/visualization/fei/1.gif"   className={`${styles.fei1} ${styles.commonSty}`}/>
           <img src="/visualization/fei/1.gif"   className={`${styles.fei2} ${styles.commonSty}`}/>
@@ -219,12 +221,17 @@ class FlowChart extends PureComponent {
           :
           <></>
            }
+           {
+          zhikongState ==1?//运行状态下  开启质控气体流向
           <div id='zhi'>
           <img src="/visualization/zhi/1.gif"   className={`${styles.zhi3} ${styles.commonSty}`}/>
           <img src="/visualization/zhi/2.gif"   className={`${styles.zhi2} ${styles.commonSty}`}/>
           <img src="/visualization/zhi/3.gif"   className={`${styles.zhi1} ${styles.commonSty}`}/>
           <img src="/visualization/zhi/4.gif"   className={`${styles.zhi4} ${styles.commonSty}`}/>
           </div>
+          :
+          <></>
+          }
           <>
 
 
@@ -235,11 +242,9 @@ class FlowChart extends PureComponent {
      
           </>
           <>
-          {isStop ==0?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
+          {isStop ==1?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
           : 
-          <Tooltip placement="bottom" title={isStop ==1? "停运" :isStop ==2? "停产":"停炉"} trigger='click'>    
-          <span style={{color:gold[5],cursor:"pointer"}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
-          </Tooltip>
+          <span style={{color:gold[5],left:75}} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop ==2? "(停运)" :isStop ==3? "(停产)":"(停炉)"}</span>
           }
            <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
            <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
@@ -256,10 +261,10 @@ class FlowChart extends PureComponent {
             <ul className={`${styles.jiemian} ${styles.commonSty}`}>
           
               
-              <li><span>截面积</span><span>{yan}</span></li>
-              <li><span>皮托管</span><span>{pi}</span></li>
-              <li><span>过量空气</span><span>{kong}</span></li>
-              <li><span>速度场</span><span>{su}</span></li>
+              <li><span>截面积：</span><span>{yan}</span></li>
+              <li><span>皮托管：</span><span>{pi}</span></li>
+              <li><span>过量空气：</span><span>{kong}</span></li>
+              <li><span>速度场：</span><span>{su}</span></li>
             
              </ul>
              <ul className={`${styles.wendu} ${styles.commonSty}`}>
@@ -290,7 +295,7 @@ class FlowChart extends PureComponent {
            </Tooltip>
            </div>
            <div className={`${styles.no} ${styles.commonSty}`}>
-           <span>NOx{noxb}</span>
+           <span>NOx：{noxb}</span>
            <Tooltip placement="top" title={<NoxMorepar/>} trigger='click'>    
            <span  className={`${styles.more}`}>更多参数</span>
            </Tooltip>
@@ -320,11 +325,11 @@ class FlowChart extends PureComponent {
            </>
           </MapInteractionCSS>
   }
-  getVisualizationData=()=>{ //获取可视化
+  getVisualizationData=(dgimn)=>{ //获取可视化
     this.props.dispatch({
       type: "working/getVisualizationChartList",
       payload: {
-        DGIMN: this.props.DGIMN,
+        DGIMN: dgimn,
       },
       callback:(res)=>{
         res.map((item,index)=>{
@@ -358,7 +363,7 @@ class FlowChart extends PureComponent {
   
 
            if(item.PollutantCode === "a21026" ){ //SO2
-              if(item.Code ==="i13051"){ // 标气浓度
+              if(item.DynamicType ==="3"){ // 标气浓度
                 this.setState({so2b:`${item.Value==null?"-":item.Value}${item.Unit}`})
               }
               if(item.Code ==="i13007"){ //截距
@@ -383,14 +388,16 @@ class FlowChart extends PureComponent {
                 this.setState({so2jc:`${item.Value==null?"-":item.Value}`})
               }
            }
-          //  if(item.PollutantCode === "a21002"){ //NOx
-          //    if(item.Code ==="i13051"){ //标气浓度
-          //     this.setState({noxb: `${item.Value|| item.Value==0 ?item.Value : "-"}${item.Unit?item.Unit:"mg/m³" }`})
-          //   }
-          //  }
+           if(item.PollutantCode === "a21002"){ //NOx
+              
+             if(item.DynamicType ==="3"){ //标气浓度
+              this.setState({noxb: `${item.Value==null?"-":item.Value}${item.Unit}`})
+            }
+           }
 
            if(item.PollutantCode === "a21003"){ //NO
-            if(item.Code ==="i13051"){ //标气浓度
+            this.setState({isNo:true})
+            if(item.DynamicType ==="3"){ //标气浓度
               this.setState({nob: `${item.Value==null?"-":item.Value}${item.Unit}`})
             }
             if(item.Code ==="i13007"){ //截距
@@ -417,7 +424,8 @@ class FlowChart extends PureComponent {
            }
 
            if(item.PollutantCode === "a21004"){ //NO2
-            if(item.Code ==="i13051"){ //标气浓度
+            this.setState({isNo2:true})
+            if(item.DynamicType ==="3"){ //标气浓度
               this.setState({no2b: `${item.Value==null?"-":item.Value}${item.Unit}`})
             }
             if(item.Code ==="i13007"){ //截距
@@ -544,11 +552,11 @@ class FlowChart extends PureComponent {
   
   }
   componentDidMount(){
-    this.getVisualizationData();
+    this.getVisualizationData(this.props.DGIMN);
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.props.DGIMN !== prevProps.DGIMN) {
-      this.getVisualizationData();
+      this.getVisualizationData(this.props.DGIMN);
     }
   }
   render() {

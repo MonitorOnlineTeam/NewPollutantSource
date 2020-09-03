@@ -58,6 +58,7 @@ class Index extends React.Component {
         Time: new Date(),
         CreatorName:JSON.parse(Cookie.get('currentUser')).UserName,
         CreatorDate: new Date(),
+        Date:new Date(),
         ApproveState: "-",
         save:["保存","取消"]
        },
@@ -154,6 +155,19 @@ class Index extends React.Component {
                 return  <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>
               }else{
               return <span>{value}</span>
+              }
+          }
+          },
+          {
+            title: '首次执行时间',
+            dataIndex: 'Date',
+            key: 'Date',
+            align: 'center',
+            render: (value,row) => {
+              if(value instanceof Date){
+                return  <span>{moment(value).format('YYYY-MM-DD')}</span>
+              }else{
+              return <span>{value? moment(value).format('YYYY-MM-DD') : ''}</span>
               }
           }
           },

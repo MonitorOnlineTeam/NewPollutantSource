@@ -369,9 +369,15 @@ export default {
                   routes: [
                     {
                       // 标准气管理
-                      name: 'working',
+                      name: 'standardAtmosMange',
                       path: '/qualityCheck/qualityMange/standardAtmosMange',
                       component: './qualityCheck/qualityMange/standardAtmosMange',
+                    },
+                    {
+                      // 质控方案管理
+                      name: 'qualityProgram',
+                      path: '/qualityCheck/qualityMange/qualityProgram',
+                      component: './qualityCheck/qualityMange/qualityProgram',
                     },
                     {
                       // 质控运维人管理

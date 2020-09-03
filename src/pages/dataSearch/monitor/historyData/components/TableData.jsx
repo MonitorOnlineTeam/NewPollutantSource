@@ -71,7 +71,7 @@ class TableData extends React.Component {
               resizable
               defaultWidth={80}
               scroll={{ y:'calc(100vh - 65px - 180px - 180px)' || undefined}}
-              pagination={{ total:total, showSizeChanger:true , showQuickJumper:true , pageSize: 20}}
+              pagination={{ total:total, showSizeChanger:true , showQuickJumper:true , defaultPageSize:20}}
               
               // loading={ tableloading }
               // summary={() => (
