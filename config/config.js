@@ -452,7 +452,12 @@ export default {
                       name: 'paramFiling',  //管控参数备案
                       path: '/dynamicControl/reportManage/paramFiling',
                       component: './dynamicControl/reportManage/paramFiling',
+                    },
+                    {
 
+                      name: 'offStream',  //停运报备
+                      path: '/dynamicControl/reportManage/offStream',
+                      component: './dynamicControl/reportManage/offStream',
                     },
                   ]
                 },
