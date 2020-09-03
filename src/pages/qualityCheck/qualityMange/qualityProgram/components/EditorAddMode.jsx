@@ -33,7 +33,9 @@ class EditorAddMode extends React.Component {
         super(props);
         this.state = {
             visible:false,
-            uploadLoading:false
+            uploadLoading:false,
+            uid1:cuid(),
+            uid2:cuid()
         };
     }
 
@@ -134,6 +136,7 @@ class EditorAddMode extends React.Component {
   uploadSet=(type)=>{
     var _this = this;
     let {dispatch,addOrupdatePar} = this.props;
+    const { uid1,uid2 } = this.state;
     return {
       // name: 'file',
       action: "/api/rest/PollutantSourceApi/QCAProgrammeApi/UploadFiles",
@@ -143,7 +146,7 @@ class EditorAddMode extends React.Component {
             if(type == "explain"){
               addOrupdatePar = {
                 ...addOrupdatePar,
-                ProgrammeFile:cuid()
+                ProgrammeFile:uid1
               } 
               _this.formRef.current.setFieldsValue({
                 ProgrammeFile: info.file,        
@@ -151,7 +154,7 @@ class EditorAddMode extends React.Component {
             }else{
               addOrupdatePar = {
                 ...addOrupdatePar,
-                DetailsFile: cuid()
+                DetailsFile: uid2
               } 
               _this.formRef.current.setFieldsValue({
                 DetailsFile: info.file,        
@@ -190,11 +193,11 @@ class EditorAddMode extends React.Component {
           payload: { addOrupdatePar },
         });
       },
-      accept: type == "explain"? ".doc,.docx" : ".xls,.xlsx",
+      accept: type == "explain"? ".docx" : ".xls,.xlsx",
       showUploadList: true,
       data: {
-          FileUuid: cuid(),
-          FileActualType: "0",
+          FileUuid: type == "explain"? uid1 : uid2,
+          FileActualType:"0",
           ssoToken: Cookie.get(config.cookieName)
       }
   };
@@ -214,7 +217,7 @@ class EditorAddMode extends React.Component {
               下载模板
             </Button>
             </Row>
-             <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span>
+             <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span> 
             </>
   }
 

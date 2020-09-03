@@ -11,6 +11,11 @@ import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import { green } from '@ant-design/colors';
 import CemsTabs from '@/components/CemsTabs'
+import FileViewer from 'react-file-viewer';
+// import { CustomErrorComponent } from 'custom-error';
+import config from '@/config'
+
+
 /**
  * 质控方案管理
  * jab 2020.9.2
@@ -76,7 +81,12 @@ class EditorAddMode extends React.Component {
 
 
     qualityProg=()=>{
-      return <span>质控方案</span>
+      const type = 'docx'
+      let {seeEchoData} = this.props;
+      return   <FileViewer
+      fileType={type}
+      filePath={`${config.uploadHost}upload/${seeEchoData.QCAProgrammeName}.docx`}
+      onError={this.onError}/>
     }
     
 
@@ -101,24 +111,24 @@ class EditorAddMode extends React.Component {
         3:"响应时间核查",
         4:"盲样核查"
       }
-      return getDetailsLoading? <Spin size="small" />  :
-        <Row gutter={[16, 16]}>
+      // return getDetailsLoading? <Spin size="small" />  :
+      //   <Row gutter={[16, 16]}>
          
            
-          {getDetailsList.map(item,index=>{
-            return   <Col span={12} > 
-             <h1>{title[index]}</h1>
-             <SdlTable
-            rowKey={(record, index) => `complete${index}`}
-            dataSource={tableDatas}
-            columns={index==4? this.columns : this.blindItem}
-            resizable
-            pagination={ false }
-           />
-            </Col>
-          }) }
+      //     {getDetailsList.map(item,index=>{
+      //       return   <Col span={12} > 
+      //        <h1>{title[index]}</h1>
+      //        <SdlTable
+      //       rowKey={(record, index) => `complete${index}`}
+      //       dataSource={tableDatas}
+      //       columns={index==4? this.columns : this.blindItem}
+      //       resizable
+      //       pagination={ false }
+      //      />
+      //       </Col>
+      //     }) }
         
-          </Row>
+      //     </Row>
      
     }
 
