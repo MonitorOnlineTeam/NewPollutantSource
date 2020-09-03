@@ -10,7 +10,9 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import { green } from '@ant-design/colors';
-import { UploadOutlined,DownloadOutlined} from '@ant-design/icons';
+import { UploadOutlined,DownloadOutlined,ExclamationCircleOutlined} from '@ant-design/icons';
+
+const { confirm } = Modal;
 const { TextArea } = Input;
 const { SHOW_PARENT, TreeNode } = TreeSelect;
 /**
@@ -25,8 +27,9 @@ const { SHOW_PARENT, TreeNode } = TreeSelect;
     tableLoading:qualityProData.tableLoading,
     standardParams:qualityProData.standardParams,
     applyLoading:qualityProData.applyLoading,
-    editEchoData:qualityProData.editEchoData,
+    applyEchoData:qualityProData.applyEchoData,
     entAndPointList: common.entAndPointList,
+    applyPar:qualityProData.applyPar
 }))
 
 class EditorAddMode extends React.Component {
@@ -68,18 +71,24 @@ class EditorAddMode extends React.Component {
   }
 
   handleOk = values => {
-   this.formRef.current.validateFields().then((values) => {
-    console.log("values=", values)
-    // return;
-    let actionType = this.props.id ? "qualityUser/updateOperatorUser" : "qualityUser/addOperator";
-    this.props.dispatch({
-      type: actionType,
-      payload: {
-        ...values,
-        userId: this.state.uuid
-      }
-    })
-  })
+    confirm({
+      title: '确认要应用到企业排扣？',
+      icon: <ExclamationCircleOutlined />,
+      content: '',
+      onOk() {
+        this.formRef.current.validateFields().then((values) => {
+          let {dispatch,applyPar} = this.props;
+           dispatch({
+              type: 'qualityProData/getQCAProgrammeList',
+              payload: { ...applyPar  },
+              callback:()=>{
+                this.handleCancel()
+              }
+          });
+        })
+      },
+    });
+
   };
 
   onReset = () => {
@@ -88,7 +97,41 @@ class EditorAddMode extends React.Component {
 
 
   applyVisibleShow=()=>{
-    this.setState({visible:true})
+    this.setState({visible:true},()=>{
+        
+      let { applyEchoData,applyPar,dispatch} = this.props;
+        setTimeout(()=>{
+          this.formRef.current.setFieldsValue({
+            QCAProgrammeName: applyEchoData.QCAProgrammeName,
+            Describe: applyEchoData.Describe
+          });
+
+          applyPar = {
+            ...applyPar,
+            ID:applyEchoData.ID
+          }
+           dispatch({
+              type: 'qualityProData/updateState',
+              payload: { applyPar },
+          });
+        })
+
+    })
+  }
+  treeChange=(value)=>{
+
+    let {dispatch,applyPar} = this.props;
+    applyPar = {
+      ...applyPar,
+      MNList:value
+    }
+     dispatch({
+        type: 'qualityProData/updateState',
+        payload: { applyPar },
+    });
+    this.formRef.current.setFieldsValue({
+      apply: value,
+    });
   }
   render() {
 
@@ -117,14 +160,14 @@ class EditorAddMode extends React.Component {
           onCancel={this.handleCancel}
         >
     <Form {...layout} ref={this.formRef}  initialValues={{remember: true, }}  >
-     <Form.Item label="质控方案名称" name="username"  rules={[{ required: true, message: '请输入方案名称!',  },]}>
-        <Input />
+     <Form.Item label="质控方案名称" name="QCAProgrammeName"  rules={[{ required: true, message: '请输入方案名称!',  },]}>
+        <Input  disabled />
       </Form.Item>
-      <Form.Item label="质控方案描述" name="username33"  rules={[{ required: true, message: '请输入方案描述!',  },]}>
-       <TextArea rows={4} />
+      <Form.Item label="质控方案描述" name="Describe"  rules={[{ required: true, message: '请输入方案描述!',  },]}>
+       <TextArea rows={4} disabled />
       </Form.Item>  
-      <Form.Item label="选择应用排扣" name="username3">
-        <TreeSelect {...tProps} />
+      <Form.Item label="选择应用排扣" name="apply" rules={[{ required: true, message: '请选择应用排扣!',  },]}>
+        <TreeSelect {...tProps} onChange={this.treeChange}/>
       </Form.Item>   
     </Form>
         </Modal>

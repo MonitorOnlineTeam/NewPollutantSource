@@ -44,14 +44,14 @@ class TableData extends React.Component {
         this.columns = [
           {
             title: '质控方案名称',
-            dataIndex: 'PollutantName',
-            key: 'PollutantName',
+            dataIndex: 'QCAProgrammeName',
+            key: 'QCAProgrammeName',
             align: 'center'
           },
           {
             title: '说明',
-            dataIndex: 'Value',
-            key: 'Value',
+            dataIndex: 'Describe',
+            key: 'Describe',
             align: 'center',
              render: text => {
                return  <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
@@ -59,17 +59,18 @@ class TableData extends React.Component {
                      </Tooltip>
              },
              ellipsis: true,
+            //  width:150
           },
           {
             title: '创建人',
-            dataIndex: 'Unit',
-            key: 'Unit',
+            dataIndex: 'DesignatedPerson',
+            key: 'DesignatedPerson',
             align: 'center'
           },
           {
             title: '创建时间',
-            dataIndex: 'CertificateNo',
-            key: 'CertificateNo',
+            dataIndex: 'CreateTime',
+            key: 'CreateTime',
             align: 'center',
             // render: text =>  moment(new Date(text)).format('YYYY-MM-DD HH:mm:ss')
           },
@@ -82,9 +83,9 @@ class TableData extends React.Component {
               return <> 
                       <a href="#"style={{cursor:"pointer"}} onClick={this.applyClick.bind(this,row)}>应用</a>
                       <a href="#"  style={{paddingLeft:5,cursor:"pointer"}}  onClick={this.seeClick.bind(this,row)}>查看</a>
-                      <a href="#" style={{paddingLeft:5,cursor:"pointer"}} onClick={this.editAddClick.bind(this,row,"edit")}>编辑</a>
+                      <a href="#" style={{paddingLeft:5,cursor:"pointer"}} onClick={this.editAddClick.bind(this,row,"编辑")}>编辑</a>
                       <Popconfirm  title="即将删除一条方案数据?" onConfirm={this.confirmDelete.bind(this,row)}>
-                      <a href="#"  style={{paddingLeft:5,cursor:"pointer"}}>删除</a>
+                      <a href="#"  style={{paddingLeft:5,cursor:"pointer"}} >删除</a>
                       </Popconfirm>
                      </>
             }
@@ -123,19 +124,19 @@ tooltipText=(value)=>{
               type: 'qualityProData/updateState',
               payload: { queryParams  },
           });
-         this.onFinish(dgimn)
+         setTimeout(()=>{this.onFinish()})
          
           
       }
 
-  onFinish = (dgimn)=>{
-    let {dispatch,queryParams} = this.props;
+  onFinish = ()=>{
+    let {dispatch,queryParams,dgimn} = this.props;
     queryParams = {
       ...queryParams,
       DGIMN:dgimn
     }
      dispatch({
-        type: 'qualityProData/getQCAStandardList',
+        type: 'qualityProData/getQCAProgrammeList',
         payload: { ...queryParams  },
     });
   }
@@ -143,19 +144,39 @@ tooltipText=(value)=>{
   reloadList=()=>{
     let {dispatch,queryParams} = this.props;
      dispatch({
-        type: 'qualityProData/getQCAStandardList',
+        type: 'qualityProData/getQCAProgrammeList',
         payload: { ...queryParams  },
     });
   }
 
-
+  programmeChange=(e)=>{
+    let {dispatch,queryParams} = this.props;
+    queryParams = {
+      ...queryParams,
+      QCAProgrammeName:e.target.value
+    }
+     dispatch({
+        type: 'qualityProData/updateState',
+        payload: { queryParams },
+    });
+  }
 
    //删除
   confirmDelete=(row)=>{
-
+    let {dispatch} = this.props;
+   const delParams = {
+      ID:row.ID
+    }
+     dispatch({
+        type: 'qualityProData/delQCAProgramme',
+        payload: { ...delParams },
+        callback:()=>{
+          this.reloadList();
+        }
+    });
   }
 
-  //添加
+  //添加 修改
   editAddClick = (row,type) => { 
     let {dispatch,echoType,editEchoData} = this.props;
        echoType = type;
@@ -164,7 +185,7 @@ tooltipText=(value)=>{
         payload: { echoType  },
       });
 
-       if(type == "edit"){
+       if(type == "编辑"){
         editEchoData = row;
          dispatch({
             type: 'qualityProData/updateState',
@@ -173,7 +194,7 @@ tooltipText=(value)=>{
         this.child.editVisibleShow();
        }
     
-       if(type == "add"){
+       if(type == "添加"){
         this.child.editVisibleShow();
        }
       }
@@ -215,13 +236,13 @@ tooltipText=(value)=>{
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
               <Form.Item label="方案名称" className='queryConditionForm'>
-              <Input placeholder="请输入方案名称" />
+              <Input placeholder="请输入方案名称" onChange={this.programmeChange}/>
               </Form.Item>
             </Col>
             <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
-                <Button type="primary" loading={false} onClick={this.editAddClick.bind(this,"","add")} style={{ marginRight: 5 }}>添加</Button>
+                <Button type="primary" loading={false} onClick={this.editAddClick.bind(this,"","添加")} style={{ marginRight: 5 }}>添加</Button>
               </Form.Item>
             </Col>
           </Row>
