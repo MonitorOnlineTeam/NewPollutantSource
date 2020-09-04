@@ -311,10 +311,16 @@ export default {
                       component: './dataSearch/monitor/historyData',
                     },
                     {
-                      // 历史数据
+                      // 
                       name: 'historyData',
                       path: '/dataSearch/monitor/RealTimeData',
                       component: './Test/Test',
+                    },
+                    {
+                      // 报警信息
+                      name: 'alarmInfo',
+                      path: '/dataSearch/monitor/alarmInfo',
+                      component: './dataSearch/monitor/alarmInfo',
                     },
                   ]
                 },

@@ -35,7 +35,9 @@ class EditorAddMode extends React.Component {
             visible:false,
             uploadLoading:false,
             uid1:cuid(),
-            uid2:cuid()
+            uid2:cuid(),
+            exfileList:[],
+            delfileList:[]
         };
     }
 
@@ -85,8 +87,10 @@ class EditorAddMode extends React.Component {
     let {dispatch,addOrupdatePar} = this.props;
     addOrupdatePar = {
       ...addOrupdatePar,
-      // DesignatedPerson:JSON.parse(Cookie.get('currentUser')).UserName,
-      CreateTime:moment(new Date).format('YYYY-MM-DD HH:mm:ss')
+      DesignatedPerson:JSON.parse(Cookie.get('currentUser')).UserName,
+      CreateTime:moment(new Date).format('YYYY-MM-DD HH:mm:ss'),
+      DetailsFile:"",
+      ProgrammeFile:""
     }
      dispatch({
         type: 'qualityProData/updateState',
@@ -100,16 +104,21 @@ class EditorAddMode extends React.Component {
       QCAProgrammeName: editEchoData.QCAProgrammeName,
       Describe: editEchoData.Describe,
       DesignatedPerson: editEchoData.DesignatedPerson,
-      CreateTime:moment(moment(editEchoData.CreateTime), 'YYYY-MM-DD HH:mm:ss')
+      CreateTime:moment(moment(editEchoData.CreateTime), 'YYYY-MM-DD HH:mm:ss'),
+      DetailsFile:editEchoData.DetailsFile,
+      ProgrammeFile:editEchoData.ProgrammeFile        
     });
     let {dispatch,addOrupdatePar} = this.props;
     addOrupdatePar = {
       ...addOrupdatePar,
       ID:editEchoData.ID,
-      // DesignatedPerson: editEchoData.DesignatedPerson,
+      DesignatedPerson: editEchoData.DesignatedPerson,
+      ProgrammeFile:editEchoData.ProgrammeFile,        
       QCAProgrammeName: editEchoData.QCAProgrammeName,
       Describe: editEchoData.Describe,
-      CreateTime:moment(editEchoData.CreateTime).format('YYYY-MM-DD HH:mm:ss')
+      CreateTime:moment(editEchoData.CreateTime).format('YYYY-MM-DD HH:mm:ss'),
+      DetailsFile:editEchoData.DetailsFile,
+      ProgrammeFile:editEchoData.ProgrammeFile    
     }
      dispatch({
         type: 'qualityProData/updateState',
@@ -132,15 +141,16 @@ class EditorAddMode extends React.Component {
      });
     })
   };
- 
+
   uploadSet=(type)=>{
     var _this = this;
-    let {dispatch,addOrupdatePar} = this.props;
+    let {dispatch,addOrupdatePar,echoType,editEchoData} = this.props;
     const { uid1,uid2 } = this.state;
     return {
       // name: 'file',
       action: "/api/rest/PollutantSourceApi/QCAProgrammeApi/UploadFiles",
       onChange(info) {
+
           if (info.file.status === 'done') {
 
             if(type == "explain"){
@@ -157,13 +167,17 @@ class EditorAddMode extends React.Component {
                 DetailsFile: uid2
               } 
               _this.formRef.current.setFieldsValue({
-                DetailsFile: info.file,        
+                DetailsFile: uid2,        
               });
             }
             dispatch({
               type: 'qualityProData/updateState',
               payload: { addOrupdatePar },
           });
+             _this.setState({
+               uid1:cuid(),
+               uid2:cuid()
+             })
               message.success("上传成功！")
 
           } else if (info.file.status === 'error') {
@@ -199,38 +213,73 @@ class EditorAddMode extends React.Component {
           FileUuid: type == "explain"? uid1 : uid2,
           FileActualType:"0",
           ssoToken: Cookie.get(config.cookieName)
-      }
+      },
+      defaultFileList: this.defaultFileList(type)
   };
   }
+  defaultFileList=(type)=>{
+    const {echoType,editEchoData,addOrupdatePar} = this.props;
+      if(echoType!="添加"){
+         if(type == "explain"){
+           return  [{
+            uid: editEchoData.ProgrammeFile,
+            name: editEchoData.ProgrammeFileName,
+            status: 'done',
+            url: `${config.uploadHost}upload/${editEchoData.ProgrammeFileName}`,
+          }]
+         }else{
+           return [{
+            uid: editEchoData.DetailsFile,
+            name: editEchoData.DetailsFileName,
+            status: 'done',
+            url: `${config.uploadHost}upload/${editEchoData.DetailsFileName}`,
+          }]
+         }
+      }else{
+        return [];
+      }
+      
+     
 
+  }
+  fileAbled=(type,)=>{
+    let {addOrupdatePar} = this.props;
+     if(type == "explain"){
+       return addOrupdatePar.ProgrammeFile;
+     }else{
+      return addOrupdatePar.DetailsFile;
+     }
+  }
   explainUpload=()=>{
 
-
-
+    
+    const {echoType} = this.props;
  
 
       return<> 
-            <Row> <Upload {...this.uploadSet("explain")}>
-             <Button  shape="round" size='small' type="primary"  icon={<UploadOutlined />} style={{fontSize:12}}>上传文件</Button>
+            <Row> <Upload  {...this.uploadSet("explain")}>
+             <Button  disabled={this.fileAbled("explain")}  shape="round" size='small' type="primary"  icon={<UploadOutlined />} style={{fontSize:12}}>上传文件</Button>
             </Upload>
-            <Button  shape="round" size='small' icon={<DownloadOutlined />} onClick={this.explainTemplate} style={{marginLeft:5,fontSize:12}}>
+            <Button   style={{position:"absolute",left:100,fontSize:12}} shape="round" size='small' icon={<DownloadOutlined />} onClick={this.explainTemplate} >
               下载模板
             </Button>
+            {echoType=="添加" ? <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span>:<></>}
             </Row>
-             <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span> 
+         
             </>
   }
 
   strategyUpload=()=>{
+    const {echoType} = this.props;
       return<> 
             <Row> <Upload {...this.uploadSet("detail")}>
-             <Button  shape="round" size='small'  type="primary"  icon={<UploadOutlined />} style={{fontSize:12}}>上传文件</Button>
+             <Button disabled={this.fileAbled("detail")} shape="round" size='small'  type="primary"  icon={<UploadOutlined />} style={{fontSize:12}}>上传文件</Button>
             </Upload>
-            <Button  shape="round" size='small'   icon={<DownloadOutlined />} onClick={this.strategyTemplate} style={{marginLeft:5,fontSize:12}}>
+            <Button  style={{position:"absolute",left:100,fontSize:12}} shape="round" size='small'   icon={<DownloadOutlined />} onClick={this.strategyTemplate} >
               下载模板
             </Button>
             </Row>
-             <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span>
+            {echoType=="添加" ?   <span style={{paddingTop:5,color:"#c6c6c6",fontSize:12}}>用户点击下载模板，在模板基础上进行修改后上传即可</span>:<></>}
             </>
   }
   explainTemplate=()=>{ //  下载模板  说明
