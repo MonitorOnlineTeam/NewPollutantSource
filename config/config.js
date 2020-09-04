@@ -319,7 +319,7 @@ export default {
                     {
                       // 报警信息
                       name: 'alarmInfo',
-                      path: '/dataSearch/monitor/alarmInfo',
+                      path: '/dataSearch/monitor/alarm',
                       component: './dataSearch/monitor/alarmInfo',
                     },
                   ]

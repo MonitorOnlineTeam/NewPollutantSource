@@ -27,7 +27,8 @@ class Index extends Component {
             title: selectItem.title,
         })
     }
-
+   componentDidMount(){
+   }
     render() {
         const { dgimn,title } = this.state;
         return (
@@ -35,7 +36,7 @@ class Index extends Component {
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn ?    <HistoryparData dgimn={dgimn} initLoadData/> : <PageLoading /> }  
+                 {dgimn ?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
                 </BreadcrumbWrapper>
             </div>
         );

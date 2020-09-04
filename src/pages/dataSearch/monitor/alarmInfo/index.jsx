@@ -8,8 +8,8 @@ import NavigationTree from '@/components/NavigationTreeNew'
 
 
 /**
- *动态管控 历史管控数据
- * jab 2020.09.01
+ *数据查询 报警信息
+ * jab 2020.09.04
  */
 
 class Index extends Component {
