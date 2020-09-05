@@ -95,7 +95,13 @@ class Test extends Component {
           {
             menuList.map((item, index) => {
               return (
-                <Menu.Item key={item.id} icon={this.getIcon(item.icon)}>
+                <Menu.Item key={item.id} icon={this.getIcon(item.icon)}
+                  onClick={() => {
+                    if (!item.children.length) {
+                      this.onMenuItemClick(item, item)
+                    }
+                  }}
+                >
                   {
                     item.children.length ?
                       // <Popover overlayClassName={styles.menuPopover} placement="bottom" trigger="click" content={this.menuItemContent(item)}>

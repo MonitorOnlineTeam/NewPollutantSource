@@ -207,7 +207,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading,corporationCode } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -503,6 +503,17 @@ class SdlForm extends PureComponent {
             },
             wrapperCol: {
               span: 19,
+            },
+          }
+        }
+        colSpan = this.props.colSpan || colSpan;
+        if (this.props.colSpan == 24) {
+          layout = {
+            labelCol: {
+              span: 6,
+            },
+            wrapperCol: {
+              span: 14,
             },
           }
         }

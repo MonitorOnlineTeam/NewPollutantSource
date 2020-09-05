@@ -400,6 +400,7 @@ class AutoFormTable extends PureComponent {
       if (col.type === '上传') {
         return {
           ...col,
+          align: "center",
           width: 200,
           render: (text, record) => {
             if (!text) {
@@ -414,6 +415,7 @@ class AutoFormTable extends PureComponent {
       }
       return {
         ...col,
+        align: "center",
         width: col.width,
         render: (text, record) => {
           text = text ? text + "" : text;
