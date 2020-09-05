@@ -10,7 +10,7 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { green } from '@ant-design/colors';
+import { green,gold,red,yellow  } from '@ant-design/colors';
 
 const { SHOW_PARENT } = TreeSelect
 /**
@@ -34,13 +34,13 @@ const columns =  [
     render: (text, record) => {
       switch (text) {
           case "0":
-            return <span status="success" > 正常</span>
+            return <span style={{color:green[6]}} > 正常</span>
           case "1":
-            return  <span status="warning" > 超下限</span>
+            return  <span  style={{color:gold[6]}}  > 超下限</span>
           case "2":
-            return  <span status="error" > 超上限</span>
+            return  <span style={{color:red[6]}}> 超上限</span>
           case "3": 
-            return  <span status="orange" > 参数不符</span>
+            return  <span  style={{color:yellow[6]}}> 参数不符</span>
           default:
             return "-"
       }
@@ -105,19 +105,32 @@ class TableData extends React.Component {
     }
     static getDerivedStateFromProps(props, state) {
      
-      // 只要当前 tableDatas 变化，
-      // 重置所有跟 tableDatas 相关的状态。
-      // if (props.tableDatas !== state.tableDatas) {
+      // if (props.dateValue !== state.dateValue&&props.location.query.id) {
       //   return {
-      //     tableDatas: props.tableDatas
+      //     dateValue: state.dateValue
       //   };
       // }
       return null;
 
     }
     componentDidMount(){
-       
-      this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      const { location,initLoadData,dgimn } = this.props;
+      if(location.query&&location.query.id){
+        // onDateChange
+        this.child.onDateChange([ moment(new Date()).add(-4, 'month'), moment(new Date())])//修改日期选择日期  
+        let { queryParams, dispatch } = this.props;
+        queryParams = {
+          ...queryParams,
+          BeginTime: moment(new Date()).add(-2, 'month').format('YYYY-MM-DD HH:mm:ss'),
+          EndTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        }
+        dispatch({
+          type: 'historyparData/updateState',
+          payload: { queryParams},
+        })
+      }else{
+        this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      }
      
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
@@ -125,6 +138,10 @@ class TableData extends React.Component {
    if(prevProps.dgimn !==  this.props.dgimn) {
         this.changeDgimn(this.props.dgimn);
     }
+}
+
+onRef = ref =>{
+  this.child = ref;  // -> 获取整个Child元素
 }
  /** 切换排口 */
       changeDgimn = (dgimn) => {
@@ -239,7 +256,7 @@ dateCallback = (dates, dataType) => { //更新日期
 
               <Form.Item label="监测时间" className='queryConditionForm'>
                   <RangePicker_ 
-                   onRef={this.onRef1}
+                   onRef={this.onRef}
                   dateValue={dateValue}
                   isVerification={true}
                   className='textEllipsis'

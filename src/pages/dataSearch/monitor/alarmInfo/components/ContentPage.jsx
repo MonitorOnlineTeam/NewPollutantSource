@@ -4,94 +4,76 @@
 import React from 'react';
 
 import { Card,Table,Empty,Form,Row,Col,Button,TreeSelect,Spin} from 'antd';
-
+import router from 'umi/router';
+import Link from 'umi/link';
 import { connect } from 'dva';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { green } from '@ant-design/colors';
-
+import DropDownSelect from '@/components/DropDownSelect'
 const { SHOW_PARENT } = TreeSelect
 /**
  * 标准气管理
- * jab 2020.08.13
+ * jab 2020.09.4
  */
 const columns =  [
   {
-    title: '监测项目',
+    title: '企业排扣',
     align: 'center',
     dataIndex: 'monitoringItems',
 
   },
-  {
-    title: '工作参数',
-    dataIndex: 'param',
-  },
-  {
-    title: '状态',
-    dataIndex: 'state',
-    render: (text, record) => {
-      switch (text) {
-          case "0":
-            return <span status="success" > 正常</span>
-          case "1":
-            return  <span status="warning" > 超下限</span>
-          case "2":
-            return  <span status="error" > 超上限</span>
-          case "3": 
-            return  <span status="orange" > 参数不符</span>
-          default:
-            return "-"
-      }
 
-    }
-  },
   {
-    title: '变更前',
+    title: '报警时间',
     dataIndex: 'oldValue',
     render: (text, record) => {
       return text ? text : "-"
     }
   },
   {
-    title: '变更后',
-    dataIndex: 'value',
+    title: '报警类型',
+    dataIndex: 'state',
     render: (text, record) => {
-      return text ? text : "-"
+      switch (text) {
+        case "0":
+          return <span style={{color:green[6]}} > 正常</span>
+        case "1":
+          return  <span  style={{color:gold[6]}}  > 超下限</span>
+        case "2":
+          return  <span style={{color:red[6]}}> 超上限</span>
+        case "3": 
+          return  <span  style={{color:yellow[6]}}> 参数不符</span>
+        default:
+          return "-"
+    }
 
     }
   },
   {
-    title: '正常范围',
-    dataIndex: 'range',
+    title: '描述',
+    dataIndex: 'value',
     render: (text, record) => {
-      return text ? text : "-"
+      return text ? <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
+                   <div style={{display:"-webkit-box",whiteSpace:"norma", wordWrap: 'break-word','-webkit-line-clamp': 3, '-webkit-box-orient': 'vertical'}} className="text-ellipeis">
+                     {text}
+                     </div>
+                   </Tooltip>: "-"
+
     }
   },
-  {
-    title: '单位',
-    dataIndex: 'unit',
-    render: (text, record) => {
-      return text ? text : "-"
-    }
-  },
-  {
-    title: '变更时间',
-    dataIndex: 'monitorTime',
-    render: (text, record) => {
-      return text ? text : "-"
-    }
-  }
 ]
-@connect(({ historyparData }) => ({
-    tableDatas:historyparData.tableDatas,
-    total: historyparData.total,
-    tablewidth: historyparData.tablewidth,
-    tableLoading:historyparData.tableLoading,
-    queryParams:historyparData.queryParams,
-    paraCodeList:historyparData.paraCodeList,
-    parLoading:historyparData.parLoading,
+@connect(({ alarmInfoData,common }) => ({
+    tableDatas:alarmInfoData.tableDatas,
+    total: alarmInfoData.total,
+    tablewidth: alarmInfoData.tablewidth,
+    tableLoading:alarmInfoData.tableLoading,
+    queryParams:alarmInfoData.queryParams,
+    paraCodeList:alarmInfoData.paraCodeList,
+    parLoading:alarmInfoData.parLoading,
+    entAndPointList: common.entAndPointList,
 }))
 
 class TableData extends React.Component {
@@ -101,33 +83,33 @@ class TableData extends React.Component {
         tableDatas:[],
         columns:[],
         dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
+        alarmOptions:[{name:'超标报警',value:0},{name:'数据异常报警',value:1},{name:'备案不符报警',value:2},{name:'系统报警',value:3},{name:'质控核查报警',value:4}],
+        defaultValue:[0,1,2,3,4]
         };
     }
-    static getDerivedStateFromProps(props, state) {
-     
-      // 只要当前 tableDatas 变化，
-      // 重置所有跟 tableDatas 相关的状态。
-      // if (props.tableDatas !== state.tableDatas) {
-      //   return {
-      //     tableDatas: props.tableDatas
-      //   };
-      // }
-      return null;
-
-    }
     componentDidMount(){
-       
+     
       this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      this.getEntAndPointList();
      
     }
+  // 获取企业和排口
+  getEntAndPointList = () => {
+          this.props.dispatch({
+            type: "common/getEntAndPointList",
+            payload: { "Status": [], "RunState": "1", "PollutantTypes": "1,2" }
+          })
+        }
+          
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
    if(prevProps.dgimn !==  this.props.dgimn) {
-        this.changeDgimn(this.props.dgimn);
+        // this.changeDgimn(this.props.dgimn);
     }
 }
  /** 切换排口 */
       changeDgimn = (dgimn) => {
+       
         this.getTableData(dgimn);
   
     }
@@ -136,22 +118,23 @@ class TableData extends React.Component {
   getTableData = dgimn => {
           let {dispatch,queryParams} = this.props;
           dispatch({
-            type: 'historyparData/getHistoryParaCodeList',
+            type: 'alarmInfoData/getHistoryParaCodeList',
             payload: { DGIMN:dgimn  },
             callback:(res)=>{
               dispatch({
-                type: 'historyparData/updateState',
-                payload: { ...queryParams,DGIMN: dgmin  },
+                type: 'alarmInfoData/updateState',
+                payload: { ...queryParams,DGIMN: dgimn  },
              });
-             this.firstLoad(dgmin)
+           
+             this.firstLoad(dgimn)
             }
         });   
       }
-    firstLoad = dgmin =>{
+    firstLoad = dgimn =>{
       let {dispatch,queryParams} = this.props;
        dispatch({
-          type: 'historyparData/getProcessFlowTableHistory',
-          payload: { ...queryParams,DGIMN: dgmin },
+          type: 'alarmInfoData/getProcessFlowTableHistory',
+          payload: { ...queryParams,DGIMN: dgimn },
       });
     }
     
@@ -163,88 +146,96 @@ dateCallback = (dates, dataType) => { //更新日期
     this.setState({dateValue: dates})
     queryParams = {
       ...queryParams,
-      BeginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      EndTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      BeginTime: dates[0].format('YYYY-MM-DD'),
+      EndTime: dates[1].format('YYYY-MM-DD'),
     }
     dispatch({
-      type: 'historyparData/updateState',
+      type: 'alarmInfoData/updateState',
       payload: { queryParams},
     })
   }
   onFinish = ()=>{
     let {dispatch,queryParams} = this.props;
      dispatch({
-        type: 'historyparData/getProcessFlowTableHistory',
+        type: 'alarmInfoData/getProcessFlowTableHistory',
         payload: { ...queryParams  },
     });
   }
+
+
   onChange=(value,label, extra)=>{
     let { queryParams, dispatch } = this.props;
-    queryParams = {
-      ...queryParams,
-      ParaCodeList:value
-    }
     dispatch({
-      type: 'historyparData/updateState',
-      payload: { queryParams},
+      type: 'alarmInfoData/updateState',
+      payload: { ...queryParams, ParaCodeList:value},
     })
     
   }
 
- parameName=()=>{
 
-  const {parLoading,paraCodeList} = this.props
-  if(!parLoading){
-    const tProps = {
-      treeData:paraCodeList,
-      onChange: this.onChange,
-      treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
-      placeholder: '请选择参数名称'
-    };
-    return <TreeSelect {...tProps} maxTagCount={1}/>;
-  }else{
-    return <Spin size="small" />
-  }
-
- 
+  treeChange=(value)=>{
+  let { queryParams, dispatch } = this.props;
+  dispatch({
+    type: 'alarmInfoData/updateState',
+    payload: { ...queryParams, ParaCodeList:value},
+  })
  }
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+  //   this.props.dispatch({
+  //     type: "historyData/exportHistoryReports",
+  //     payload: {DGIMNs: this.state.dgimn }
+  // })
+
+  router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{id:1} })
+
   }
 
-
-      //查询条件
+//查询条件
   queryCriteria = () => {
-    const { dateValue } = this.state;
-    const ParameName = this.parameName;
+    const { dateValue,alarmOptions,defaultValue } = this.state;
+    
+    const { entAndPointList } = this.props;
+    const tProps = {
+      treeData: entAndPointList,
+      treeDefaultExpandAll: true,
+      treeCheckable: true,
+      treeNodeFilterProp: "title",
+      placeholder: '请选择运维站点！',
+      allowClear:true,
+      style: {
+        width: '100%',
+      },
+    };
     return <div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
           <Row gutter={[8,8]} style={{flex:1}} > 
-          <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
-            <Form.Item label="参数名称" className='queryConditionForm'>
-                  <ParameName /> 
-              </Form.Item>
-            </Col>
-            <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
+
+            <Col xxl={6} xl={10}   lg={14} md={16} sm={24} xs={24}>
 
               <Form.Item label="监测时间" className='queryConditionForm'>
                   <RangePicker_ 
+                   format={"YYYY-MM-DD"}
+                   showTime={false}
                    onRef={this.onRef1}
                   dateValue={dateValue}
                   isVerification={true}
-                  className='textEllipsis'
                   callback={(dates, dataType) => this.dateCallback(dates,dataType)} //父组件事件回调子组件的值
-                  allowClear={false} showTime={true} style={{width:"100%"}} /> 
+                  allowClear={false} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-
+            <Col xxl={6} xl={10}   lg={14} md={16} sm={24} xs={24}>
+            <Form.Item label="企业排扣" className='queryConditionForm'>
+               <TreeSelect {...tProps} onChange={this.treeChange}/>
+              </Form.Item>
+            </Col>
+            <Col xxl={6} xl={10}   lg={14} md={16} sm={24} xs={24}>
+              <Form.Item label="报警类型" className='queryConditionForm'>
+               <DropDownSelect mode='multiple' optiondatas={alarmOptions}  defaultValue= {defaultValue}  onChange={this.alarmSelect}/>
+              </Form.Item>
+            </Col>
             <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
@@ -256,13 +247,17 @@ dateCallback = (dates, dataType) => { //更新日期
       </div>
     </div>
   }
+
+
+
   render() {
 
     const {tableLoading,tableDatas,total} = this.props;
     const  QueryCriteria = this.queryCriteria;
+
     return (
 
-<div id="historyparData">
+<div id="alarmInfoData">
         <Card title={<QueryCriteria />} >
            <SdlTable
               rowKey={(record, index) => `complete${index}`}

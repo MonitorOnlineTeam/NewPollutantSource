@@ -72,7 +72,7 @@ class NewRangePicker extends Component {
 
         switch (dataType) {
             case 'realtime':
-                if (beginTime == 1 || !endTime == 1) {
+                if (beginTime == 1 || !endTime == 1) { //点击按钮的时间改变事件
                     beginTime = moment(new Date()).add(-60, 'minutes');
                     endTime = moment(new Date());
                 }
@@ -208,7 +208,7 @@ class NewRangePicker extends Component {
     }
 
     onDataTypeChange = dataType => {
-        const dateValue = this.getFormatDate(1, 1, dataType);
+        const dateValue = this.getFormatDate(1, 1, dataType); //点击按钮的时间改变事件
         this.setState({
             dateValue,
         });

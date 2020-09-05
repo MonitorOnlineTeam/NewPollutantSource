@@ -83,9 +83,11 @@ class EditorAddMode extends React.Component {
     qualityProg=()=>{
       const type = 'docx'
       let {seeEchoData} = this.props;
+      console.log(`/upload/${seeEchoData.ProgrammeFileName}`)
       return   <FileViewer
+      style={{width:"100%"}}
       fileType={type}
-      filePath={`${config.uploadHost}upload/${seeEchoData.ProgrammeFileName}`}
+      filePath={`/upload/${seeEchoData.ProgrammeFileName}`}
       onError={this.onError}/>
     }
     onError=()=>{
@@ -163,6 +165,7 @@ class EditorAddMode extends React.Component {
           visible={visible}
           footer={null}
           onCancel={this.handleCancel}
+          className="qualitySee"
         >
         <CemsTabs type='line' panes={this.state.panes} tabChange={this.tabChange}/>
         </Modal>

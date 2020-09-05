@@ -23,7 +23,8 @@ export default Model.extend({
       BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       ParaCodeList:[]
-    }
+    },
+    location:''
   },
   effects: {
      // 获取 仪器列表
@@ -66,7 +67,26 @@ export default Model.extend({
           //   message.error(result.Message)
           // }
         },
+
+  },
+  subscriptions: {
+
+    setup ({ dispatch, history }) {
+      // let { queryParams, dispatch } = this.props;
+      // queryParams = {
+      //   ...queryParams,
+      //   ParaCodeList:value
+      // }
+      // dispatch({
+      //   type: 'historyparData/updateState',
+      //   payload: { queryParams},
+      // })
+    history.listen((location) => {
+
+     })
+    }
   }
+
 
 
 });

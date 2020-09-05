@@ -9,7 +9,7 @@ import moment from 'moment';
 import {  message } from 'antd';
 
 export default Model.extend({
-  namespace: 'historyparData',
+  namespace: 'alarmInfoData',
   state: {
     pollutantlist :[],
     tableDatas: [],
@@ -30,7 +30,6 @@ export default Model.extend({
         *getHistoryParaCodeList({callback, payload }, { call, update }) {
           const result = yield call(GetHistoryParaCodeList, payload);  
           if (result.IsSuccess) {
-            yield update({ })
             yield update({ paraCodeList: result.Datas,parLoading: false})
             callback(result.Datas)
           } else {
