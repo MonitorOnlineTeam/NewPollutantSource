@@ -118,7 +118,8 @@ tooltipText=(value)=>{
           let {dispatch,queryParams} = this.props;
           queryParams = {
             ...queryParams,
-            DGIMN:dgimn
+            DGIMN:dgimn,
+            QCAProgrammeName:""
           }
            dispatch({
               type: 'qualityProData/updateState',

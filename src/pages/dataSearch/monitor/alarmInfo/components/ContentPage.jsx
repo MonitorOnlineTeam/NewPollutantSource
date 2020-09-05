@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TreeSelect,Spin} from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TreeSelect,Spin,Tooltip} from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -15,56 +15,12 @@ import { green } from '@ant-design/colors';
 import DropDownSelect from '@/components/DropDownSelect'
 const { SHOW_PARENT } = TreeSelect
 /**
- * 标准气管理
+ * 报警信息
  * jab 2020.09.4
  */
-const columns =  [
-  {
-    title: '企业排扣',
-    align: 'center',
-    dataIndex: 'monitoringItems',
 
-  },
 
-  {
-    title: '报警时间',
-    dataIndex: 'oldValue',
-    render: (text, record) => {
-      return text ? text : "-"
-    }
-  },
-  {
-    title: '报警类型',
-    dataIndex: 'state',
-    render: (text, record) => {
-      switch (text) {
-        case "0":
-          return <span style={{color:green[6]}} > 正常</span>
-        case "1":
-          return  <span  style={{color:gold[6]}}  > 超下限</span>
-        case "2":
-          return  <span style={{color:red[6]}}> 超上限</span>
-        case "3": 
-          return  <span  style={{color:yellow[6]}}> 参数不符</span>
-        default:
-          return "-"
-    }
 
-    }
-  },
-  {
-    title: '描述',
-    dataIndex: 'value',
-    render: (text, record) => {
-      return text ? <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
-                   <div style={{display:"-webkit-box",whiteSpace:"norma", wordWrap: 'break-word','-webkit-line-clamp': 3, '-webkit-box-orient': 'vertical'}} className="text-ellipeis">
-                     {text}
-                     </div>
-                   </Tooltip>: "-"
-
-    }
-  },
-]
 @connect(({ alarmInfoData,common }) => ({
     tableDatas:alarmInfoData.tableDatas,
     total: alarmInfoData.total,
@@ -86,7 +42,59 @@ class TableData extends React.Component {
         alarmOptions:[{name:'超标报警',value:0},{name:'数据异常报警',value:1},{name:'备案不符报警',value:2},{name:'系统报警',value:3},{name:'质控核查报警',value:4}],
         defaultValue:[0,1,2,3,4]
         };
+        this.columns =  [
+          {
+            title: '企业排扣',
+            align: 'center',
+            dataIndex: 'monitoringItems',
+        
+          },
+        
+          {
+            title: '报警时间',
+            dataIndex: 'oldValue',
+            render: (text, record) => {
+              return text ? text : "-"
+            }
+          },
+          {
+            title: '报警类型',
+            dataIndex: 'state',
+            render: (text, record) => {
+              switch (text) {
+                case "0":
+                  return <span style={{color:green[6]}} > 正常</span>
+                case "1":
+                  return  <span  style={{color:gold[6]}}  > 超下限</span>
+                case "2":
+                  return  <span style={{color:red[6]}}> 超上限</span>
+                case "3": 
+                  return  <span  style={{color:yellow[6]}}> 参数不符</span>
+                default:
+                  return "-"
+            }
+        
+            }
+          },
+          {
+            title: '描述',
+            dataIndex: 'value',
+            render: (text, record) => {
+              return text ? <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
+                           <div style={{display:"-webkit-box",whiteSpace:"norma", wordWrap: 'break-word','-webkit-line-clamp': 3, '-webkit-box-orient': 'vertical'}} className="text-ellipeis">
+                             {text}
+                             </div>
+                           </Tooltip>: "-"
+        
+            }
+          },
+        ]
     }
+
+    
+  tooltipText=(value)=>{ 
+    return <div style={{width:200,color:'rgba(0, 0, 0, 0.65)',wordWrap:'break-word'}}>{value}</div>
+}
     componentDidMount(){
      
       this.props.initLoadData && this.changeDgimn(this.props.dgimn)
@@ -104,7 +112,7 @@ class TableData extends React.Component {
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
    if(prevProps.dgimn !==  this.props.dgimn) {
-        // this.changeDgimn(this.props.dgimn);
+        this.changeDgimn(this.props.dgimn);
     }
 }
  /** 切换排口 */
@@ -117,24 +125,20 @@ class TableData extends React.Component {
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
           let {dispatch,queryParams} = this.props;
+          
           dispatch({
-            type: 'alarmInfoData/getHistoryParaCodeList',
-            payload: { DGIMN:dgimn  },
-            callback:(res)=>{
-              dispatch({
-                type: 'alarmInfoData/updateState',
-                payload: { ...queryParams,DGIMN: dgimn  },
-             });
-           
-             this.firstLoad(dgimn)
-            }
-        });   
+            type: 'alarmInfoData/updateState',
+            payload: { ...queryParams,DGIMN: dgimn  },
+         });
+
+         this.firstLoad(dgimn)
+   
       }
     firstLoad = dgimn =>{
       let {dispatch,queryParams} = this.props;
        dispatch({
           type: 'alarmInfoData/getProcessFlowTableHistory',
-          payload: { ...queryParams,DGIMN: dgimn },
+          payload: { ...queryParams,DGIMN: dgimn, BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'), EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),},
       });
     }
     
@@ -188,8 +192,12 @@ dateCallback = (dates, dataType) => { //更新日期
   //     payload: {DGIMNs: this.state.dgimn }
   // })
 
-  router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{id:1} })
+  router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{type:"alarm",code:["a21026"].join()} })
 
+  // router.push({pathname: "/dataSearch/monitor/alarm/overrecord",query:{id:1} }) //超标数据
+
+  // router.push({pathname: "/dataSearch/monitor/alarm/exceptionRecord",query:{id:1} })  //异常数据
+  
   }
 
 //查询条件
@@ -262,7 +270,7 @@ dateCallback = (dates, dataType) => { //更新日期
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
               dataSource={tableDatas}
-              columns={columns}
+              columns={this.columns}
               resizable
               defaultWidth={80}
               scroll={{ y: this.props.tableHeight || undefined}}

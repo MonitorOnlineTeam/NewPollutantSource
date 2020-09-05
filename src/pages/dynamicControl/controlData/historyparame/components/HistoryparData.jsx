@@ -101,6 +101,7 @@ class TableData extends React.Component {
         tableDatas:[],
         columns:[],
         dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
+        code:[],
         };
     }
     static getDerivedStateFromProps(props, state) {
@@ -114,24 +115,17 @@ class TableData extends React.Component {
 
     }
     componentDidMount(){
-      const { location,initLoadData,dgimn } = this.props;
-      if(location.query&&location.query.id){
-        // onDateChange
-        this.child.onDateChange([ moment(new Date()).add(-4, 'month'), moment(new Date())])//修改日期选择日期  
-        let { queryParams, dispatch } = this.props;
-        queryParams = {
-          ...queryParams,
-          BeginTime: moment(new Date()).add(-2, 'month').format('YYYY-MM-DD HH:mm:ss'),
-          EndTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-        }
-        dispatch({
-          type: 'historyparData/updateState',
-          payload: { queryParams},
-        })
-      }else{
-        this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      const { location,initLoadData,dgimn,queryParams,dispatch } = this.props;
+      if(location.query&&location.query.type==="alarm"){ //报警信息
+         const paraCodeList  = location.query.code;
+        this.child.onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+        this.setState({code:paraCodeList})
+
+        // this.props.initLoadData && this.changeDgimn(this.props.dgimn)
       }
-     
+        this.props.initLoadData && this.changeDgimn(this.props.dgimn)
+      
+    
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
@@ -151,27 +145,63 @@ onRef = ref =>{
 
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
-          let {dispatch,queryParams} = this.props;
-          dispatch({
-            type: 'historyparData/getHistoryParaCodeList',
-            payload: { DGIMN:dgimn  },
-            callback:(res)=>{
 
-              queryParams = {
-                ...queryParams,
-                DGIMN:dgimn
-              }
-              dispatch({
-                type: 'historyparData/updateState',
-                payload: { queryParams  },
-             });
-              setTimeout(()=>{this.onFinish()}) 
-            }
-        });
+    let { location,initLoadData,queryParams,dispatch } = this.props;
 
-         
-          
+    if(location.query&&location.query.type==="alarm"){ //报警信息  更新参数
+
+      const paraCodeList  = location.query.code;
+      queryParams = {
+        ...queryParams,
+        BeginTime: moment(new Date()).format('YYYY-MM-DD 00:00:00'),
+        EndTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        ParaCodeList:paraCodeList.split(),
+        DGIMN:dgimn
       }
+    }else{
+      queryParams = {
+        ...queryParams,
+        BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        ParaCodeList:[],
+        DGIMN:dgimn
+      }
+
+    }
+    dispatch({
+      type: 'historyparData/updateState',
+      payload: {queryParams},
+    })
+    dispatch({
+      type: 'historyparData/getHistoryParaCodeList',
+      payload: { DGIMN:dgimn  },
+      callback:(res)=>{
+        setTimeout(()=>{this.onFinish()}) 
+      }
+    });
+        
+      }
+
+
+  loadData=(dgimn)=>{
+    let {dispatch,queryParams} = this.props;
+    dispatch({
+      type: 'historyparData/getHistoryParaCodeList',
+      payload: { DGIMN:dgimn  },
+      callback:(res)=>{
+
+        queryParams = {
+          ...queryParams,
+          DGIMN:dgimn
+        }
+        dispatch({
+          type: 'historyparData/updateState',
+          payload: { queryParams  },
+       });
+        setTimeout(()=>{this.onFinish()}) 
+      }
+  });
+  }
   /**
  * 回调获取时间并重新请求数据
  */
@@ -208,7 +238,7 @@ dateCallback = (dates, dataType) => { //更新日期
       type: 'historyparData/updateState',
       payload: { queryParams},
     })
-    
+    this.setState({code:value})
   }
 
  parameName=()=>{
@@ -216,6 +246,7 @@ dateCallback = (dates, dataType) => { //更新日期
   const {parLoading,paraCodeList} = this.props
   if(!parLoading){
     const tProps = {
+      value:this.state.code,
       treeData:paraCodeList,
       onChange: this.onChange,
       treeCheckable: true,
