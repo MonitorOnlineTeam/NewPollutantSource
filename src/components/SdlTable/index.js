@@ -193,7 +193,7 @@ class SdlTable extends PureComponent {
         <Table
           ref={table => { this.sdlTable = table }}
           id="sdlTable"
-          rowKey={(record,index) => record.id || record.ID || index}
+          rowKey={(record, index) => record.id || record.ID || index}
           size="middle"
           components={resizable ? this.components : undefined}
           // className={styles.dataTable}

@@ -310,12 +310,19 @@ export default {
                       path: '/dataSearch/monitor/history',
                       component: './dataSearch/monitor/historyData',
                     },
-                    // {
-                    //   // 
-                    //   name: 'historyData',
-                    //   path: '/dataSearch/monitor/RealTimeData',
-                    //   component: './Test/Test',
-                    // },
+                    {
+                      // 
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/RealTimeData',
+                      component: './Test/Test',
+                    },
+                    {
+                      //
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/RealTimeData',
+                      component: './Test/Test',
+                    },
+
                     {
                       // 报警信息
                       name: 'alarmInfo',
@@ -499,6 +506,30 @@ export default {
                 }
               ]
 
+            },
+            // 知识库
+            {
+              path: '/knowledge',
+              name: 'knowledge',
+              component: './KBS/Knowledge',
+            },
+            // 基础配置
+            {
+              path: '/basicsManage',
+              name: 'basicsManage',
+              routes: [
+                {
+                  name: 'entManage',  // 企业管理
+                  path: '/basicsManage/entManage',
+                  routes: [
+                    {
+                      name: 'KBS',  // 知识库管理
+                      path: '/basicsManage/entManage/KBS',
+                      component: './KBS/KBSManage',
+                    },
+                  ]
+                },
+              ]
             },
             {
               path: '/platformconfig',
