@@ -126,11 +126,11 @@ class Index extends React.Component {
               }
           }
           },
-          {
-            title: '开启日期',
-            dataIndex: 'StartDate',
-            key: 'StartDate',
-            align: 'center',
+          // {
+          //   title: '开启日期',
+          //   dataIndex: 'StartDate',
+          //   key: 'StartDate',
+          //   align: 'center',
           //   render: (value,row) => {
           //     if(value instanceof Date){
           //       return  <span>{moment(value).format('YYYY-MM-DD')}</span>
@@ -138,8 +138,8 @@ class Index extends React.Component {
           //      return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "'YYYY-MM-DD'")} allowClear={false}/>
           //     }
           // },
-          width:120
-          },
+          // width:120
+          // },
           {
             title: '质控时间',
             dataIndex: 'Time',

@@ -192,11 +192,11 @@ dateCallback = (dates, dataType) => { //更新日期
   //     payload: {DGIMNs: this.state.dgimn }
   // })
 
-  router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{type:"alarm",code:["a21026"].join()} })
+  // router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{type:"alarm",code:["a21026"].join()} })
 
   // router.push({pathname: "/dataSearch/monitor/alarm/overrecord",query:{id:1} }) //超标数据
 
-  // router.push({pathname: "/dataSearch/monitor/alarm/exceptionRecord",query:{id:1} })  //异常数据
+  router.push({pathname: "/dataSearch/monitor/alarm/exceptionRecord",query:{type:"alarm",code:["a21026"].join()} })  //异常数据
   
   }
 

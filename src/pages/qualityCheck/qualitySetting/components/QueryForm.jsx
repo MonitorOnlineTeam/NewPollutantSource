@@ -104,7 +104,7 @@ class Index extends React.Component {
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
     const { dgimn,polltype,defaulltVal } = this.props;
-    return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} transDefault ={this.defaulltVal} /> :  null ; 
+    return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} /> :  null ; 
   }
   render() {
 

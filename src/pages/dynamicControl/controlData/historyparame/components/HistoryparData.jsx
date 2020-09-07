@@ -120,8 +120,6 @@ class TableData extends React.Component {
          const paraCodeList  = location.query.code;
         this.child.onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
         this.setState({code:paraCodeList})
-
-        // this.props.initLoadData && this.changeDgimn(this.props.dgimn)
       }
         this.props.initLoadData && this.changeDgimn(this.props.dgimn)
       

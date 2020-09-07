@@ -316,7 +316,7 @@ class Index extends Component {
                 <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
                 <BreadcrumbWrapper extraName={ `${ title}`}>
                     
-                    {dgimn ?    <RecordEchartTableOver  DGIMN={dgimn}    />: <PageLoading /> }  
+                    {dgimn ?    <RecordEchartTableOver initLoadData DGIMN={this.state.dgimn}     location={this.props.location}  />: <PageLoading /> }  
                 </BreadcrumbWrapper> 
 
         </div>

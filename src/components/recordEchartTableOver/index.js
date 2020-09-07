@@ -34,7 +34,7 @@ import moment from 'moment';
 import styles from './index.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
-
+import PollutantDownSelect from '@/components/PollutantDownSelect'
 
 @connect(({ recordEchartTable, loading }) => ({
     overlist: recordEchartTable.overlist,
@@ -110,18 +110,42 @@ class Index extends Component {
         //         historyparams,
         //     },
         // })
-        const beginTime = moment(new Date()).add(-60, 'minutes');
+
+        const { location,initLoadData,dispatch } = this.props;
+        if(location&&location.query&&location.query.type==="alarm"){ //报警信息
+           const paraCodeList  = location.query.code;
+           this.children.onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+        const beginTime = moment(new Date());
         const endTime = moment(new Date());
-        if (this.props.noticeState == 0) {
-            this.getLoadData(this.props)
-        } else {
-            this.setState({
-                beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+            if (this.props.noticeState == 0) {
+               this.getLoadData(this.props)
+            }else{
+                this.setState({
+                beginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
                 endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            }, () => {
-                this.props.initLoadData && this.getLoadData(this.props);
-            })
+                code:paraCodeList.split() 
+               }, () => {
+                initLoadData && this.getLoadData(this.props);
+             })
+           }
+
+        }else{
+            const beginTime = moment(new Date()).add(-60, 'minutes');
+            const endTime = moment(new Date());
+            if (this.props.noticeState == 0) {
+                this.getLoadData(this.props)
+            } else {
+                this.setState({
+                    beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+                    endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+                }, () => {
+                    initLoadData && this.getLoadData(this.props);
+                })
+            }
+
         }
+
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -166,6 +190,7 @@ class Index extends Component {
     //     console.log("dgmn=",this.props.DGIMN)
 
     getLoadData = nextProps => {
+        const  { location } = this.props;
         const beginTime = moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
         this.props.dispatch({
@@ -177,7 +202,7 @@ class Index extends Component {
         this.props.dispatch({
             type: 'recordEchartTable/getovermodellist',
             payload: {
-                beginTime: this.state.beginTime == '' ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                beginTime: this.state.beginTime == '' ? location&&location.query&&location.query.type==="alarm"? moment(new Date()).format('YYYY-MM-DD 00:00:00') :  beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
                 endTime: this.state.endTime == '' ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [nextProps.DGIMN],
@@ -398,7 +423,16 @@ class Index extends Component {
     onRef1 = ref => {
         this.children = ref;
     }
-
+    getpollutantSelect = () => {
+        const { DGIMN,location} = this.props;
+         const {code } = this.state;
+        if(location&&location.query&&location.query.type==="alarm"){ //报警信息
+            return   code ? <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />:null  ; 
+        }else{
+            return   <PollutantDownSelect style={{ width: 200, marginRight: 10 }}  isdefaulltall={1}   onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />  ; 
+        }
+        return null
+      }
 
     render() {
         const { column } = this.state
@@ -444,13 +478,15 @@ splitLine: {
             series: this.props.overcount,
             // [{type:"bar"},{type:"bar"}]
         }
+
+        const GetpollutantSelect = this.getpollutantSelect;
         return (
             <div className={styles.cardTitle}>
                 <Card
                     extra={
                         <div>
                             {/* <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate} format={this.state.format} onChange={this._handleDateChange} showTime={this.state.format} /> */}
-
+                            <GetpollutantSelect/>
                             <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10 }} dateValue={this.state.rangeDate}
                                 dataType={this.state.dataType}
                                 // format={this.state.format}

@@ -36,6 +36,8 @@ class Index extends Component {
         maxTagTextLength:2,//单个选择项文本长度 超出则是省略号显示
         pollutantlist:[],
         isdefaulltall:0,
+        customCode:[],
+        isqca:""
         
     }
     constructor(props) {
@@ -48,7 +50,7 @@ class Index extends Component {
     }
     componentDidMount(){
         this.changeDgimn(this.props.dgimn)
-        this.props.onRef(this)// ->将child传递给this.props.onRef()方法
+        this.props.onRef&&this.props.onRef(this)// ->将child传递给this.props.onRef()方法
       }
     // 在componentDidUpdate中进行异步操作，驱动数据的变化
       componentDidUpdate(prevProps) {
@@ -58,17 +60,18 @@ class Index extends Component {
        }
       /** 切换排口  根据排口dgimn获取它下面的所有污染物*/
       changeDgimn = (dgimn) => {
-        const {dispatch,isdefaulltall,polltype,isqca} = this.props;
+        const {dispatch,isdefaulltall,polltype,isqca,pollutantlist,customcode} = this.props;
         const {waterDefault,gasDefault} = this.state;
+
          dispatch({
             type: 'pollutantListData/getPollutantList',
             payload: { DGIMNs : dgimn,dataType:isqca? "qca":"" },
+            
             callback: (data) => {
               const pollDefaultSelect = data.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
-                if(isdefaulltall){
+                  
                   return  item.PollutantCode
-                }
-               }): polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[]; 
+               }):customcode&&customcode.length>0? customcode : polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[]; 
                this.setState({defaultValues:pollDefaultSelect})
             }
          }) ;
@@ -87,17 +90,9 @@ class Index extends Component {
     }
 
     render() {
-        const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear,transDefault } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
+        const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
         
         const {defaultValues} = this.state;
-        // const waterDefaults =["011","060"]
-        // const gasDefaults =["a21002","a21026","a19001"]
-
-        // const pollDefaultSelect = pollutantlist.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
-        //     if(isdefaulltall){
-        //       return  item.PollutantCode
-        //     }
-        //    }): polltype == 1 ? waterDefaults : polltype == 2 ? gasDefaults : []  :[];
         return (
           !pollLoading ?  <Select  {...this.props} defaultValue={defaultValues}>
             {this.getOption()}

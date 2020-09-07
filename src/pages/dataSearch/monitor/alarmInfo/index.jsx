@@ -35,7 +35,7 @@ class Index extends Component {
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn ?    <ContentPage dgimn={dgimn} initLoadData/> : <PageLoading /> }  
+                 {dgimn ?    <ContentPage dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
                 </BreadcrumbWrapper>
             </div>
         );
