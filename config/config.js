@@ -316,16 +316,34 @@ export default {
                       component: './dataSearch/monitor/historyData',
                     },
                     {
-                      //
+                      // 
                       name: 'historyData',
                       path: '/dataSearch/monitor/RealTimeData',
                       component: './Test/Test',
                     },
                     {
+                      //
+                      name: 'historyData',
+                      path: '/dataSearch/monitor/RealTimeData',
+                      component: './Test/Test',
+                    },
+
+                    {
                       // 报警信息
                       name: 'alarmInfo',
                       path: '/dataSearch/monitor/alarm',
                       component: './dataSearch/monitor/alarmInfo',
+
+                    },
+                    { //超标数据
+                      name: 'alarmOverrecord',
+                      path: '/dataSearch/monitor/alarm/overrecord',
+                      component: './dataSearch/monitor/alarmInfo/overRecord',
+                    },
+                    { //异常数据
+                      name: 'alarmExceptionRecord',
+                      path: '/dataSearch/monitor/alarm/exceptionRecord',
+                      component: './dataSearch/monitor/alarmInfo/exceptionRecord',
                     },
                   ]
                 },

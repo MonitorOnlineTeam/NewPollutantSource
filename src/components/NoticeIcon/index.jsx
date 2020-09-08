@@ -67,7 +67,7 @@ export default class NoticeIcon extends Component {
       const msgCount = count || count === 0 ? count : len;
       const tabTitle = msgCount > 0 ? `${title} (${msgCount})` : title;
       return (
-        <TabPane tab={tabTitle} key={title}>
+        // <TabPane tab={tabTitle} key={title}>  //新版本  去掉 tab栏
           <NoticeList
             clearText={clearText}
             viewMoreText={viewMoreText}
@@ -77,18 +77,18 @@ export default class NoticeIcon extends Component {
             onViewMore={event => this.onViewMore(child.props, event)}
             showClear={showClear}
             showViewMore={showViewMore}
-            title={title}
+            // title={title}
             {...child.props}
           />
-        </TabPane>
+        // </TabPane>
       );
     });
     return (
       <>
         <Spin spinning={loading} delay={300}>
-          <Tabs className={styles.tabs} onChange={this.onTabChange}>
+          {/* <Tabs className={styles.tabs} onChange={this.onTabChange}> */}
             {panes}
-          </Tabs>
+          {/* </Tabs> */}
         </Spin>
       </>
     );

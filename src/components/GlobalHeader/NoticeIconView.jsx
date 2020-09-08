@@ -173,16 +173,17 @@ export default class GlobalHeaderRight extends PureComponent {
           }}
           loading={fetchingNotices}
         >
-          <NoticeIcon.Tab
+          <NoticeIcon.Tab   
             count={unreadMsg.alarm}
             list={noticeData.alarm}
             title={formatMessage({ id: 'component.globalHeader.notification' })}
             name="alarm"
-            // emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-          />
+          /> 
         </NoticeIcon>
-        <Modal
+
+        {/* 报警列表点击事件  弹出层Model   新版本不需要*/}
+        {/* <Modal 
           destroyOnClose="true"
           visible={this.state.visible}
           title={this.state.title}
@@ -214,7 +215,7 @@ export default class GlobalHeaderRight extends PureComponent {
                   lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
                 />
           }
-        </Modal>
+        </Modal> */}
       </div>
     );
   }

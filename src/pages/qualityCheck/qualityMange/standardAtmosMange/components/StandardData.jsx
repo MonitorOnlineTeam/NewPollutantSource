@@ -149,6 +149,8 @@ class TableData extends React.Component {
           let {dispatch,standardParams} = this.props;
           standardParams = {
             ...standardParams,
+            BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+            EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
             DGIMN:dgimn
           }
            dispatch({
