@@ -18,7 +18,7 @@ class UnlimitedMarquee extends Component {
       // console.log('scrollDiv2.offsetTop=',scrollDiv2.offsetTop)
       // console.log('scrollContent.scrollTop=',scrollContent.scrollTop)
       // console.log('heightGap=',heightGap)
-      if (scrollDiv2.offsetTop - scrollContent.scrollTop <= heightGap) {
+      if (scrollDiv2.offsetTop - scrollContent.scrollTop <= scrollContent.offsetHeight) {
         scrollContent.scrollTop -= scrollDiv1.offsetHeight;
       }
       scrollContent.scrollTop++;
@@ -54,14 +54,12 @@ class UnlimitedMarquee extends Component {
     ) : null;
 
     return (
-      <div>
-        <div id='scrollContent' style={this.setStyle(h, w)}>
-          <div id='scrollDiv1'>
-            {tableData}
-          </div>
-          <div id='scrollDiv2'>
-            {tableData}
-          </div>
+      <div id='scrollContent' style={this.setStyle(h, w)}>
+        <div id='scrollDiv1'>
+          {tableData}
+        </div>
+        <div id='scrollDiv2'>
+          {tableData}
         </div>
       </div>
     );

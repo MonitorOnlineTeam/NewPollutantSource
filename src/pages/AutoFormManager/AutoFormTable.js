@@ -390,7 +390,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode, hideBtns } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -437,6 +437,10 @@ class AutoFormTable extends PureComponent {
             }
             return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
+          } else if (col.otherConfig) {
+            let style = {}
+            eval(`${col.otherConfig}`)
+            return <span style={{ ...style }}>{text}</span>
           }
           return text && <div className={styles.ellipsisText}>
             {/* {type === '超链接' &&
@@ -445,6 +449,7 @@ class AutoFormTable extends PureComponent {
             {type == '小圆点' && <Badge status="warning" text={text} />}
             {/* {type === '标签' && <Tag>{text}</Tag>} */}
             {type === '进度条' && <Progress percent={text} />}
+
             {!type && text}
           </div>
 
@@ -453,7 +458,7 @@ class AutoFormTable extends PureComponent {
       }
       // return col.width ? { width: DEFAULT_WIDTH, ...col } : { ...col, width: DEFAULT_WIDTH }
     });
-    const buttonsView = this._renderHandleButtons();
+    const buttonsView = !hideBtns ? this._renderHandleButtons() : ""
     // let rowKey = [];
     // if(this.props.children instanceof Array){
     //   rowKey = this.props.children.filter(item=>item.key === "row");
