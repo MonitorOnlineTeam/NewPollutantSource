@@ -204,8 +204,8 @@ class Home extends Component {
   randomMarker = (len) => (
     Array(len).fill(true).map((e, idx) => ({
       position: {
-        longitude: 100 + Math.random() * 30,
-        latitude: 30 + Math.random() * 20,
+        longitude: 112 + Math.random() * 6,
+        latitude: 37 + Math.random() * 5,
       },
       status: this.getRandomNum(0, 3),
       type: this.getRandomNum(1, 2)
