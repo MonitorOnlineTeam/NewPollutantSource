@@ -15,15 +15,6 @@ class OutletNumber extends PureComponent {
     this.getOption();
   }
 
-
-
-
-
-
-
-
-
-
   getOption = () => {
     if (this.myChart) {
       console.log("this.myChart11-", this.myChart)

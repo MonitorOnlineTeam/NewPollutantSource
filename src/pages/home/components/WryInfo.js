@@ -5,31 +5,38 @@ import styles from '../Home.less'
 import CustomIcon from '@/components/CustomIcon'
 
 class WryInfo extends PureComponent {
-  state = {}
+  state = {
+    option: {}
+  }
 
+
+  componentDidMount() {
+    this.getOption();
+  }
 
   getOption = () => {
-    let option = {
-      series: [
+    if (this.myChart) {
+      var value = 100;
+      var color = new this.myChart.echartsLib.graphic.LinearGradient(
+        0, 0, 1, 0, [{
+          offset: 0,
+          color: "#41D7F3",
+        },
         {
-          name: '内圈小',
+          offset: 1,
+          color: "#3D9FFF",
+        }
+      ]
+      );
+      let option = {
+        series: [{
+          name: '信用分',
           type: 'gauge',
-          pointer: {
-            show: false
-          },
+          startAngle: 180,
+          endAngle: 0,
+          min: 0,
+          max: 100,
           radius: '70%',
-          startAngle: 100,
-          endAngle: -20,
-          // splitNumber: ,
-          axisLine: { // 坐标轴线
-            lineStyle: { // 属性lineStyle控制线条样式
-              color: [
-                [1, '#bfcbd9']
-              ],
-              width: 6
-            }
-
-          },
           splitLine: { //分隔线样式
             show: false,
           },
@@ -39,86 +46,114 @@ class WryInfo extends PureComponent {
           axisTick: { //刻度样式
             show: false,
           },
-          detail: {
-            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            // fontWeight: 'bolder',
-            fontSize: 10,
-            offsetCenter: [0, '0%']
+          axisLine: {
+            show: false
           },
-          data: [{
-            value: 100,
-            name: ''
-          }]
-        }, {
-          name: '内圈小',
-          type: 'gauge',
           title: {
-            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            fontWeight: 'bolder',
-            fontSize: 12, // 文字大小
-            fontStyle: 'italic',
-            color: "#fff",
-            offsetCenter: [0, '33%'],
+            show: false
+          },
+          detail: {
+            show: false
+          },
+          itemStyle: {
+            color: color,
+            shadowColor: 'rgba(0,138,255,0.45)',
+            shadowBlur: 10,
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
           },
           pointer: {
             show: true,
             length: "80%",
             width: "6%",
-          },
-          radius: '70%',
-          startAngle: 200,
-          endAngle: 50,
-          splitNumber: 4,
-          axisLine: { // 坐标轴线
-            lineStyle: { // 属性lineStyle控制线条样式
-              color: [
-                [1, '#0093ee']
-              ],
-              width: 6,
-              shadowColor: '#0093ee', //默认透明
-              shadowOffsetX: 0,
-              shadowOffsetY: 0,
-              shadowBlur: 40,
-              opacity: 1,
-            }
-
-          },
-          splitLine: { //分隔线样式
-            show: false,
-          },
-          axisLabel: { //刻度标签
-            show: false,
-          },
-          axisTick: { //刻度样式
-            show: false,
-          },
-          detail: {
-            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            fontWeight: 'bolder',
-            fontSize: 16,// 文字大小
-            offsetCenter: [0, '60%'],
-            color: "#fff"
+            color: "#0093ee"
           },
           data: [{
-            value: '100',
-            name: '实时联网率'
+            value: value,
+            name: '年售电量情况'
           }]
+
         },
-
-      ]
-    };
-
-    return option;
+        {
+          name: "已到人数",
+          type: 'gauge',
+          radius: '70%',
+          startAngle: 180.5,
+          endAngle: -0.5,
+          min: 0,
+          max: 100,
+          title: {
+            show: false
+          },
+          detail: {
+            show: false
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              width: 6,
+              color: [
+                [
+                  value / 100, color
+                ],
+                [
+                  1, 'rgba(225,225,225,0.4)'
+                ]
+              ]
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false
+          },
+          pointer: {
+            show: false,
+          },
+          itemStyle: {
+            normal: {
+              color: '#54F200',
+            }
+          },
+          data: [{
+            value: value,
+            name: '年售电量情况'
+          }]
+        }
+        ]
+      }
+      this.setState({
+        option: option
+      })
+    }
   }
 
   render() {
+    const style = {
+      position: 'absolute',
+      bottom: "16%",
+      width: '100%',
+      textAlign: 'center',
+      fontWeight: 500
+    }
     return (
       <div className={styles.wryInfo}>
-        <ReactEcharts
-          option={this.getOption(3)}
-          style={{ height: '100%', width: '40%' }}
-          theme="my_theme"
-        />
+        <div style={{ height: "94%", width: "40%", position: "relative" }}>
+          <ReactEcharts
+            ref={echart => { this.myChart = echart }}
+            option={this.state.option}
+            style={{ height: '100%', width: '100%' }}
+            theme="my_theme"
+          />
+          <div style={{ ...style }}>
+            <span>实时联网率</span><br />
+            <span style={{fontSize: 20, marginRight: 4}}>100</span>%
+          </div>
+        </div>
         <div className={styles.numberContainer}>
           <div>
             <EntIcon className={styles.icon} />
