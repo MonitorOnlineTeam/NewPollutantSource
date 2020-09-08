@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, message, Popover, Icon, Radio, Tabs, Divider, Card } from 'antd';
+import {
+    Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, message, Popover, Icon, Radio, Tabs, Divider, Card,
+
+
+} from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';
@@ -153,17 +157,33 @@ export default class StationAdd extends Component {
             }
         });
     }
+    callback = (tabKey) => {
+        this.setState({
+            tabKey
+        })
+    }
+
     render() {
         const { configId } = this.props.match.params;
         const { rowmodel } = this.props;
+        const { getFieldDecorator } = this.props.form;
         const keysParams = {
             'dbo.T_Bas_CommonPoint.PointCode': rowmodel ? rowmodel['dbo.T_Bas_CommonPoint.PointCode'] : ''
         };
-        debugger
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 12 },
+                sm: { span: 8 },
+            },
+            wrapperCol: {
+                xs: { span: 12 },
+                sm: { span: 12 },
+            },
+        };
         return (
             <BreadcrumbWrapper title={(rowmodel && rowmodel != 'null') ? '编辑信息' : '添加信息'}>
                 <Card>
-                    <Tabs activeKey={this.state.tabKey}>
+                    <Tabs activeKey={this.state.tabKey} onChange={this.callback}>
                         <TabPane tab="基本信息" key="1">
                             {rowmodel && rowmodel != 'null' ?
                                 <SdlForm configId={configId} form={this.props.form} hideBtns isEdit keysParams={keysParams} noLoad />
@@ -200,7 +220,162 @@ export default class StationAdd extends Component {
                                     </Divider>
                             }
                         </TabPane>
-                        <TabPane tab="污染物信息" key="2">
+                        <TabPane tab="运维配置" key="2">
+                            <Form onSubmit={this.handleSubmit}>
+                                <Row gutter={24}>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'项目编号'}>
+                                            {getFieldDecorator('pollutantType', {
+                                                 initialValue: '20200828-SDL123',
+                                            })(
+                                                <Select defaultValue="20200828-SDL123" style={{ width: 120 }} >
+                                                    {/* <Option value="jack">Jack</Option>
+                                                <Option value="lucy">Lucy</Option>
+                                                <Option value="disabled" disabled>
+                                                  Disabled
+                                                </Option> */}
+                                                    <Option value="20200828-SDL123">yiminghe</Option>
+                                                </Select>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'运维负责人'}>
+                                            {getFieldDecorator('pollutantTypes', {
+                                                 initialValue: "董晓云-SDL3123",
+                                            })(
+                                                <Select defaultValue="董晓云-SDL3123" style={{ width: 120 }} >
+                                                    {/* <Option value="jack">Jack</Option>
+                                                <Option value="lucy">Lucy</Option>
+                                                <Option value="disabled" disabled>
+                                                  Disabled
+                                                </Option> */}
+                                                    <Option value="董晓云-SDL3123">yiminghe</Option>
+                                                </Select>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={24}>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'单程（小时）'}>
+                                            {getFieldDecorator('MonitorTime',
+                                                {
+                                                    // initialValue: isExists ? moment(item.MonitorTime === null ? Date.now() : item.MonitorTime) : '',
+                                                    // rules: [
+                                                    //     {
+                                                    //         required: true,
+                                                    //         message: '请选择监测时间!',
+                                                    //     },
+                                                    // ],
+                                                })(
+                                                    <Input placeholder="请选择" />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'半径（米）'}>
+                                            {getFieldDecorator('AvgValue', {
+                                                // initialValue: isExists ? item.MonitorValue.split('.')[0] + '.000' : '',
+                                                // rules: [
+                                                //     {
+                                                //         required: true,
+                                                //         message: '请选择浓度!',
+                                                //     },
+                                                // ],
+                                            })(
+                                                <Input placeholder="请选择" />
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={16} style={{ marginTop: 8 }}>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'运维状态'}>
+                                            {getFieldDecorator('DGIMN', {
+                                                initialValue: 1,
+                                            })(
+                                                <Radio.Group >
+                                                    <Radio value={1}>运维中</Radio>
+                                                    <Radio value={2}>停止运维</Radio>
+                                                </Radio.Group>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'巡检频次'}>
+                                            {getFieldDecorator('DGIMN', {
+                                                initialValue: 1,
+                                            })(
+                                                <Radio.Group>
+                                                    <Radio value={1}>一周一次</Radio>
+                                                    <Radio value={2}>一月一次</Radio>
+                                                </Radio.Group>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row gutter={16} style={{ marginTop: 8 }}>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'校准频次'}>
+                                            {getFieldDecorator('DGIMN', {
+                                                initialValue: 2,
+                                            })(
+                                                <Radio.Group >
+                                                    <Radio value={1}>一周一次</Radio>
+                                                    <Radio value={2}>一月一次</Radio>
+                                                </Radio.Group>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
+                                        <FormItem
+                                            {...formItemLayout}
+                                            label={'质控频次'}>
+                                            {getFieldDecorator('DGIMN', {
+                                                initialValue: 2,
+                                            })(
+                                                <Radio.Group>
+                                                    <Radio value={1}>一周一次</Radio>
+                                                    <Radio value={2}>一月一次</Radio>
+                                                </Radio.Group>
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                            </Form>
+                            {<Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                <Button type="primary"
+                                    onClick={this.onUpdateForm}
+                                >
+                                    保存
+                                            </Button>
+                                <Button style={{ marginLeft: 8 }} onClick={() => {
+                                    router.push(`/basicInfo/${configId}/'${configId}'`)
+                                }}>
+                                    返回
+                                            </Button>
+                            </Divider>}
+                        </TabPane>
+                        <TabPane tab="运维暂停" key="3">
+                        </TabPane>
+                        <TabPane tab="运维时段" key="4">
+                        </TabPane>
+                        <TabPane tab="设备管理" key="5">
                         </TabPane>
                     </Tabs>
                 </Card>
