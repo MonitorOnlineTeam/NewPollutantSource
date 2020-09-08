@@ -215,7 +215,7 @@ class Home extends Component {
   markersEvents = {
     click: (MapsOption, marker) => {
       const itemData = marker.getExtData();
-      this.markersCilck(itemData);
+      // this.markersCilck(itemData);
     }
   };
 

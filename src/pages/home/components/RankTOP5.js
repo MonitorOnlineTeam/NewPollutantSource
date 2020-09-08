@@ -21,27 +21,27 @@ class RankTOP5 extends PureComponent {
         </ul>
         <ul>
           <li>
+            <CustomIcon type="icon-guanjun" className={styles.rankIcon} />
+          </li>
+          <li>昌平区</li>
+          <li>90%</li>
+          <li>90%</li>
+          <li>90%</li>
+        </ul>
+        <ul>
+          <li>
             <CustomIcon type="icon-yajun" className={styles.rankIcon} />
           </li>
-          <li>汉江区</li>
-          <li>90%</li>
-          <li>90%</li>
-          <li>90%</li>
+          <li>朝阳区</li>
+          <li>80%</li>
+          <li>80%</li>
+          <li>80%</li>
         </ul>
         <ul>
           <li>
             <CustomIcon type="icon-jijun" className={styles.rankIcon} />
           </li>
-          <li>昌平区</li>
-          <li>80%</li>
-          <li>80%</li>
-          <li>80%</li>
-        </ul>
-        <ul>
-          <li>
-            <CustomIcon type="icon-guanjun" className={styles.rankIcon} />
-          </li>
-          <li>朝阳区</li>
+          <li>汉江区</li>
           <li>77%</li>
           <li>74%</li>
           <li>80%</li>
