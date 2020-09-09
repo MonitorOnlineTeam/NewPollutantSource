@@ -54,7 +54,7 @@ class TableData extends React.Component {
             key: 'Describe',
             align: 'center',
              render: text => {
-               return  <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
+               return  <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} overlayStyle={{maxWidth:300}}>
                       <span>{text}</span>
                      </Tooltip>
              },
@@ -105,7 +105,7 @@ class TableData extends React.Component {
     }
 }
 tooltipText=(value)=>{ 
-  return <div style={{width:200,color:'rgba(0, 0, 0, 0.65)',wordWrap:'break-word'}}>{value}</div>
+  return <div style={{color:'rgba(0, 0, 0, 0.65)',wordWrap:'break-word'}}>{value}</div>
 }
  /** 切换排口 */
       changeDgimn = (dgimn) => {

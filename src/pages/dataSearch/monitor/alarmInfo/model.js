@@ -1,10 +1,10 @@
 /*
- * @desc: 标气管理
+ * @desc: 报警列表
  * @Author: jab
- * @Date: 2020.08.13
+ * @Date: 2020.09.09
  */
 import Model from '@/utils/model';
-import { GetProcessFlowTableHistoryDataList,GetHistoryParaCodeList  } from './service';
+import { GetAlarmDataList  } from './service';
 import moment from 'moment';
 import {  message } from 'antd';
 
@@ -16,36 +16,23 @@ export default Model.extend({
     columns:[],
     total:"",
     tableLoading:true,
-    paraCodeList:[],
-    parLoading:true,
     queryParams: {
-      DGIMN: "",
+      alarmType: "",
       BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
-      ParaCodeList:[]
+      mnList:""
     }
   },
   effects: {
-     // 获取 仪器列表
-        *getHistoryParaCodeList({callback, payload }, { call, update }) {
-          const result = yield call(GetHistoryParaCodeList, payload);  
-          if (result.IsSuccess) {
-            yield update({ paraCodeList: result.Datas,parLoading: false})
-            callback(result.Datas)
-          } else {
-            yield update({ parLoading: false})
-            message.error(result.Message)
-          }
-        },
+     // 获取报警列表
+        *getAlarmDataList({callback, payload }, { call, update }) {
 
-        *getProcessFlowTableHistory({ payload, }, { call, update, put, take, select }) {
-          yield update({ tableLoading:true })
-          const result = yield call(GetProcessFlowTableHistoryDataList, payload);
-        
-          if (result.IsSuccess) {     
-            yield update({ tableDatas: result.Datas, tableLoading:false})
+          yield update({ tableLoading: true})
+          const result = yield call(GetAlarmDataList, payload);  
+          if (result.IsSuccess) {
+            yield update({ tableDatas: result.Datas,tableLoading: false})
           } else {
-            yield update({ tableLoading:false })
+            yield update({ tableLoading: false})
             message.error(result.Message)
           }
         },

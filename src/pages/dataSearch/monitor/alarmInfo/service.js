@@ -1,9 +1,9 @@
 import { post, get, getNew } from '@/utils/request';
 
 
-//获取系统参数
-export async function GetProcessFlowTableHistoryDataList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetProcessFlowTableHistoryDataList', params, null);
+//报警列表
+export async function GetAlarmDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmDataList', params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],

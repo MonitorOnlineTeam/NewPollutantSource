@@ -379,6 +379,16 @@ export default {
                     },
                   ]
                 },
+                 //视频监控
+                {
+                  name: 'videoMonitor',
+                  path: '/dataSearch/videoMonitor',
+                  component: `${
+                    config.VideoServer === 0
+                      ? './dataSearch/videoMonitor/videopreview/hkvideo'
+                      : './dataSearch/videoMonitor/videopreview/ysyvideo'
+                    }`,
+                },
               ]
             },
             //质控核查
@@ -1094,7 +1104,7 @@ export default {
                   component: './monitoring/mapview',
                 },
                 {
-                  name: 'videopreview',
+                  name: 'videopreview', //视频监控
                   path: '/monitoring/videopreview',
                   component: `${
                     config.VideoServer === 0

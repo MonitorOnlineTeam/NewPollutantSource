@@ -46,9 +46,9 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   // 格式化添加标签和标识icon
-  getNoticeData() {
+  getNoticeData() { 
     const { notices = [] } = this.props;
-    if (notices.length !== 0) {
+    if (notices.length !== 0) { //获取到 并经过处理的返回的数据  notices
       //排序
       const noticesAsc = notices.sort(asc);
       const newNotices = noticesAsc.map(notice => {
@@ -71,18 +71,18 @@ export default class GlobalHeaderRight extends PureComponent {
         if (!newNotice.avatar) {
           if (newNotice.sontype === 'over') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/over.png">
+              <Avatar style={{ verticalAlign: 'top' }} src="/over.png">
               </Avatar>
 
             );
           } else if (newNotice.sontype === 'warn') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/earlywarning.png">
+              <Avatar style={{ verticalAlign: 'top' }} src="/earlywarning.png">
               </Avatar>
             );
           } else if (newNotice.sontype === 'exception') {
             newNotice.avatar = (
-              <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
+              <Avatar style={{ verticalAlign: 'top' }} src="/exception.png">
               </Avatar>
             );
           }
@@ -117,13 +117,13 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   // 取消Model
-  onCancel = () => {
+  // onCancel = () => {
    
-    this.setState({
-      visible: false,
-    });
+  //   this.setState({
+  //     visible: false,
+  //   });
 
-  }
+  // }
 
   render() {
     const { fetchingNotices, currentUserNoticeCnt, dispatch, notices } = this.props;
@@ -131,19 +131,18 @@ export default class GlobalHeaderRight extends PureComponent {
     const unreadMsg = this.getUnreadData(noticeData);
     const className = styles.right;
     return (
-      <div className={`${styles.action} ${styles.account}`}>
-        <NoticeIcon
+      <div className={`${styles.action} ${styles.account}`}  id='noticeIcon'> 
+        <NoticeIcon  
           // count={currentUserNoticeCnt.unreadCount}
-          count={notices.length}
-          onItemClick={(item, tabProps) => {
+          count={notices.length} //小铃铛右上角 小红点 
+          onItemClick={(item, tabProps) => { //点击列表项的回调
+
             // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗
             if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9) {
               return;
             }
             this.setState({
               visible: true,
-              // firsttime: moment(moment().format('YYYY-MM-DD 00:00:00')),
-              // lasttime: moment(moment().format('YYYY-MM-DD 23:59:59')),
               DGIMN: item.DGIMN,
               PointName: item.PointName,
             });
@@ -173,13 +172,13 @@ export default class GlobalHeaderRight extends PureComponent {
           }}
           loading={fetchingNotices}
         >
-          <NoticeIcon.Tab   
+          <NoticeIcon.Tab  //点击展开 每个tab栏  列表内容 
             count={unreadMsg.alarm}
             list={noticeData.alarm}
-            title={formatMessage({ id: 'component.globalHeader.notification' })}
-            name="alarm"
+            // title={formatMessage({ id: 'component.globalHeader.notification' })}
+            name="alarm" 
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-          /> 
+          />  
         </NoticeIcon>
 
         {/* 报警列表点击事件  弹出层Model   新版本不需要*/}

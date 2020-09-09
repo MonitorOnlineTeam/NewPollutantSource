@@ -5,9 +5,10 @@ import classNames from 'classnames';
 import NoticeList from './NoticeList';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-const { TabPane } = Tabs;
+const { TabPane } = Tabs;   
+//NoticeIconView 的 子组件  内容 列表组件
 export default class NoticeIcon extends Component {
-  static Tab = NoticeList;
+  // static Tab = NoticeList;
   static defaultProps = {
     onItemClick: () => {},
     onPopupVisibleChange: () => {},
@@ -81,6 +82,7 @@ export default class NoticeIcon extends Component {
             {...child.props}
           />
         // </TabPane>
+  
       );
     });
     return (

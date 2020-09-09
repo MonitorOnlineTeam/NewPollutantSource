@@ -11,7 +11,7 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { green } from '@ant-design/colors';
+import { blue,green,gold } from '@ant-design/colors';
 import DropDownSelect from '@/components/DropDownSelect'
 const { SHOW_PARENT } = TreeSelect
 /**
@@ -27,8 +27,6 @@ const { SHOW_PARENT } = TreeSelect
     tablewidth: alarmInfoData.tablewidth,
     tableLoading:alarmInfoData.tableLoading,
     queryParams:alarmInfoData.queryParams,
-    paraCodeList:alarmInfoData.paraCodeList,
-    parLoading:alarmInfoData.parLoading,
     entAndPointList: common.entAndPointList,
 }))
 
@@ -36,70 +34,102 @@ class TableData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        tableDatas:[],
         columns:[],
         dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
-        alarmOptions:[{name:'超标报警',value:0},{name:'数据异常报警',value:1},{name:'备案不符报警',value:2},{name:'系统报警',value:3},{name:'质控核查报警',value:4}],
+        alarmOptions:[{name:'超标报警',value:5},{name:'数据异常报警',value:0},{name:'备案不符报警',value:2},{name:'系统报警',value:3},{name:'质控核查报警',value:4}],
         defaultValue:[0,1,2,3,4]
         };
         this.columns =  [
           {
             title: '企业排扣',
             align: 'center',
-            dataIndex: 'monitoringItems',
-        
+            dataIndex: 'ParentName',
+            render: (text, record) => {
+              return `${text}-${record.PointName}`
+            },
+            width:230
           },
         
           {
             title: '报警时间',
-            dataIndex: 'oldValue',
+            align: 'center',
+            dataIndex: 'FirstTime',
             render: (text, record) => {
-              return text ? text : "-"
-            }
+              return text ? <span>{text}</span> : "-"
+            },
+            width:200
           },
           {
             title: '报警类型',
-            dataIndex: 'state',
+            align: 'center',
+            dataIndex: 'AlarmType',
             render: (text, record) => {
               switch (text) {
+                case "5":
+                  return <span> 超标报警</span>
                 case "0":
-                  return <span style={{color:green[6]}} > 正常</span>
-                case "1":
-                  return  <span  style={{color:gold[6]}}  > 超下限</span>
-                case "2":
-                  return  <span style={{color:red[6]}}> 超上限</span>
-                case "3": 
-                  return  <span  style={{color:yellow[6]}}> 参数不符</span>
+                  return  <span> 数据异常报警</span>
+                // case "2":
+                //   return  <span> 超上限</span>
+                // case "3": 
+                //   return  <span> 参数不符</span>
+                // case "3": 
+                //   return  <span> 参数不符</span>
                 default:
                   return "-"
             }
         
-            }
+            },
+            width:200
           },
           {
             title: '描述',
-            dataIndex: 'value',
+            dataIndex: 'AlarmMsg',
             render: (text, record) => {
-              return text ? <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} >
-                           <div style={{display:"-webkit-box",whiteSpace:"norma", wordWrap: 'break-word','-webkit-line-clamp': 3, '-webkit-box-orient': 'vertical'}} className="text-ellipeis">
-                             {text}
+              return text ? <div>
+                           {/* <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"}  overlayStyle={{width:350}}> */}
+                           <div style={{textAlign:"left",'-webkit-box-orient': 'vertical'}} className="line-clamp-3" >
+                              <div>
+                             <span> {text} </span>
+                             <span style={{paddingLeft:5}}>
+                             {record.AlarmType ===""?
+                           
+                        <Link  to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link>:// 数据超标
+                        record.AlarmType ===""?
+                        <Link  to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&type=alarm`} >查看</Link>: //数据异常
+                        record.AlarmType ===""?
+                        <Link  to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&type=alarm`} >查看</Link>: //备案不符
+                        <Link  to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> //质控核查报警
+                        // /dataSearch/qca/zeroCheck
+                        // /dataSearch/qca/rangeCheck
+                        // /dataSearch/qca/blindCheck
+                        // /dataSearch/qca/linearCheck
+                        // /dataSearch/qca/resTimeCheck
+                        }
+                        </span>
                              </div>
-                           </Tooltip>: "-"
+                            </div>
+                           {/* </Tooltip> */}
+            
+    
+                           </div>: "-"
         
-            }
+            },
+
+            width:400
           },
         ]
     }
 
     
   tooltipText=(value)=>{ 
-    return <div style={{width:200,color:'rgba(0, 0, 0, 0.65)',wordWrap:'break-word'}}>{value}</div>
+    return <div style={{color:'rgba(0, 0, 0, 0.65)',wordWrap:'break-word'}}>{value}</div>
 }
     componentDidMount(){
      
       this.props.initLoadData && this.changeDgimn(this.props.dgimn)
       this.getEntAndPointList();
-     
+                  
     }
   // 获取企业和排口
   getEntAndPointList = () => {
@@ -128,7 +158,7 @@ class TableData extends React.Component {
           
           dispatch({
             type: 'alarmInfoData/updateState',
-            payload: { ...queryParams,DGIMN: dgimn  },
+            payload: { ...queryParams},
          });
 
          this.firstLoad(dgimn)
@@ -137,8 +167,8 @@ class TableData extends React.Component {
     firstLoad = dgimn =>{
       let {dispatch,queryParams} = this.props;
        dispatch({
-          type: 'alarmInfoData/getProcessFlowTableHistory',
-          payload: { ...queryParams,DGIMN: dgimn, BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'), EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),},
+          type: 'alarmInfoData/getAlarmDataList',
+          payload: { ...queryParams, BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'), EndTime: moment().format("YYYY-MM-DD HH:mm:ss")},
       });
     }
     
@@ -159,19 +189,24 @@ dateCallback = (dates, dataType) => { //更新日期
     })
   }
   onFinish = ()=>{
+
     let {dispatch,queryParams} = this.props;
-     dispatch({
-        type: 'alarmInfoData/getProcessFlowTableHistory',
-        payload: { ...queryParams  },
-    });
+    dispatch({
+       type: 'alarmInfoData/getAlarmDataList',
+       payload: { ...queryParams},
+   });
   }
 
 
-  onChange=(value,label, extra)=>{
+  alarmSelect=(value,label, extra)=>{
     let { queryParams, dispatch } = this.props;
+    queryParams = {
+      ...queryParams,
+      alarmType:value
+    }
     dispatch({
       type: 'alarmInfoData/updateState',
-      payload: { ...queryParams, ParaCodeList:value},
+      payload: { queryParams},
     })
     
   }
@@ -181,7 +216,7 @@ dateCallback = (dates, dataType) => { //更新日期
   let { queryParams, dispatch } = this.props;
   dispatch({
     type: 'alarmInfoData/updateState',
-    payload: { ...queryParams, ParaCodeList:value},
+    payload: { queryParams:{...queryParams,mnList:value}},
   })
  }
 
