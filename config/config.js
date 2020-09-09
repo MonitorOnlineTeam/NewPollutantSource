@@ -99,6 +99,11 @@ export default {
           path: '/homepage',
           component: './home',
         },
+        {
+          name: 'home',
+          path: '/home',
+          component: './home/Home',
+        },
         // appoperation
         {
           path: '/appoperation',
@@ -342,6 +347,16 @@ export default {
                     },
                   ]
                 },
+                 //视频监控
+                {
+                  name: 'videoMonitor',
+                  path: '/dataSearch/videoMonitor',
+                  component: `${
+                    config.VideoServer === 0
+                      ? './dataSearch/videoMonitor/videopreview/hkvideo'
+                      : './dataSearch/videoMonitor/videopreview/ysyvideo'
+                    }`,
+                },
                 {
                   // 质控查询
                   path: '/dataSearch/qca',
@@ -379,16 +394,19 @@ export default {
                     },
                   ]
                 },
-                 //视频监控
                 {
-                  name: 'videoMonitor',
-                  path: '/dataSearch/videoMonitor',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './dataSearch/videoMonitor/videopreview/hkvideo'
-                      : './dataSearch/videoMonitor/videopreview/ysyvideo'
-                    }`,
-                },
+                  // 站点数据查询
+                  path: '/dataSearch/siteData',
+                  name: 'siteData',
+                  routes: [
+                    {
+                      // 停运记录
+                      name: 'offStreamRecord',
+                      path: '/dataSearch/siteData/offStreamRecord',
+                      component: './dataSearch/siteData/offStreamRecord',
+                    },
+                  ]
+                }
               ]
             },
             //质控核查

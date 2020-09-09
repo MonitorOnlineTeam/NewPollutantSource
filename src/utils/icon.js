@@ -11,7 +11,7 @@ const styles = {
   fontSize: 17,
 }
 const mapStyle = {
-  fontSize: 24,
+  fontSize: 17,
   borderRadius: "50%",
   background: "#fff",
   boxShadow: "0px 0px 3px 2px #fff"
