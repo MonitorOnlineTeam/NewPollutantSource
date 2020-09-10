@@ -719,10 +719,10 @@ export default Model.extend({
             },
           },
           legend: {
-            orient: 'vertical',
-            x: 'right', // 可设定图例在左、右、居中
+            // orient: 'vertical',
+            // x: 'right', // 可设定图例在左、右、居中
             y: 'top', // 可设定图例在上、下、居中
-            padding: [40, 130, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+            padding: [25, 130, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
             data: _historyparams.pollutantNames.split(','),
           },
           toolbox: {
