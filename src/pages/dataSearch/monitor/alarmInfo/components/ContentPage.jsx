@@ -123,14 +123,12 @@ class TableData extends React.Component {
 
       return <div style={{ overflow: "hidden" }}>
         <Tooltip title={_this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
-          <div style={{ textAlign: 'left', '-webkit-box-orient': 'vertical', width: 'auto', float: "left", paddingRight: 5 }} className="line-clamp-3"  >
-            <div>
-              <span> {text} </span>
-            </div>
-          </div>
+          <span style={{ textAlign: 'left', '-webkit-box-orient': 'vertical', width: 'auto', paddingRight: 5,float:"left" }} className="line-clamp-3"  >
+               {text}
+          </span>
 
         </Tooltip>
-        <span style={{ float: "left" }}>
+        <span style={{float:"left"}}>
           {record.AlarmType === "2" ?
 
             <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标

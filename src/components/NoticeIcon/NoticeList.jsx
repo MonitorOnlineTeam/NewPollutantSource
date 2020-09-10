@@ -30,6 +30,22 @@ const NoticeList = ({
   const tooltipText = (value) => {
     return <div style={{ color: 'rgba(0, 0, 0, 0.65)', wordWrap: 'break-word' }}>{value}</div>
   }
+  
+  const linkClick = (item) =>{
+   return  <span>
+   {item.AlarmType === "5" ?
+
+     <Link to={`/dataSearch/monitor/alarm/overrecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
+     item.AlarmType === "0" ?
+       <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
+       item.AlarmType === "12" ?
+         <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
+         <></>
+
+   }
+ </span>
+  }
+
   return (
     <div>
       <List
@@ -77,41 +93,22 @@ const NoticeList = ({
                               <div style={{ overflow: "hidden" }}>
 
                                 <Tooltip title={tooltipText(item.AlarmMsg)} color={"#fff"} overlayStyle={{ maxWidth: 400 }}>
-                                  <div style={{ fontWeight: 'normal', '-webkit-box-orient': 'vertical',width:"auto",float: "left"}} className="line-clamp-3">
+                                  <span style={{ fontWeight: 'normal', '-webkit-box-orient': 'vertical',width:"auto",float:"left"}} className="line-clamp-3">
                                
                                     <span> {item.AlarmMsg} </span>
                   
-                                  </div>
+                                  </span>
                                 </Tooltip>
-                                <span style={{ float: "left" }}>
-                                  {item.AlarmType === "5" ?
-
-                                    <Link to={`/dataSearch/monitor/alarm/overrecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
-                                    item.AlarmType === "0" ?
-                                      <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
-                                      item.AlarmType === "12" ?
-                                        <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
-                                        <></>
-
-                                  }
-                                </span>
+                                  <span style={{float:"left"}}> {linkClick(item)} </span>
                               </div>
                               :
                               <div style={{ fontWeight: 'normal' }}>
                                 {item.AlarmMsg}
-                                <span>
+                                <>
 
-                                  {item.AlarmType === "2" ?
+                                  {linkClick(item)}
 
-                                    <Link to={`/dataSearch/monitor/alarm/overrecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
-                                    item.AlarmType === "0" ?
-                                      <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
-                                      item.AlarmType === "12" ?
-                                        <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
-                                        <></>
-
-                                  }
-                                </span>
+                                </>
                               </div>
                             }
                           </>
