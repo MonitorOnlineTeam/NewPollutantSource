@@ -5,6 +5,9 @@ import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
+
+import { GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
+
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
 import { array } from 'prop-types';
@@ -32,9 +35,13 @@ export default Model.extend({
       unreadCount: 0,
     },
     getAlarmNoticesParameters: {
+      // BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      // EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      // DGIMN: '',
+      alarmType: "",
       BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-      DGIMN: '',
+      EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      mnList:""
     },
     clientHeight: null
   },
@@ -42,26 +49,29 @@ export default Model.extend({
     // 首次加载获取当天报警消息
     *fetchNotices({ payload }, { call, update, select }) {
       const { getAlarmNoticesParameters } = yield select(a => a.global);
-      const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
+      // const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
+      const result = yield call(GetAlarmDataList, { ...getAlarmNoticesParameters });
+      
       let notices = [];
       if (result.IsSuccess) {
         notices = notices.concat(
           result.Datas.map((item, index) => ({
             ...item,
-            id: item.ID,
-            key: item.ID,
-            pointname: item.PointName,
-            DGIMN: item.DGIMN,
-            pollutantnames: item.PollutantNames, // 超标显示时用到此字段
-            firsttime: item.FirstAlarmTime,
-            lasttime: item.LastAlarmTime,
-            alarmcount: item.AlarmCount,
-            sontype: item.PushType, // 推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
+            // id: item.ID,
+            // key: item.ID,
+            // pointname: item.PointName,
+            // DGIMN: item.DGIMN,
+            // pollutantnames: item.PollutantNames, // 超标显示时用到此字段
+            // firsttime: item.FirstTime,
+            // lasttime: item.LastAlarmTime,
+            // alarmcount: item.AlarmCount,
+            // sontype: item.AlarmType, // 推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
             type: 'alarm',
-            title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
-            description: item.Description,
-            exceptiontypes: item.AlarmTypeDescription, // 右侧标签用到，可多个
-            orderby: item.PushType === 'over' ? 1 : item.PushType === 'exception' ? 2 : 3, // 排序
+            // title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
+            // description: item.AlarmMsg,
+            // exceptiontypes: item.AlarmTypeDescription, // 右侧标签用到，可多个
+            orderby: item.AlarmType === '2' ? 1 : item.AlarmType === '5'||item.AlarmType === '6'||item.AlarmType === '7' ||item.AlarmType === '12'
+             || item.AlarmType === '13' |item.AlarmType === '14'   ? 2 : 3, //    排序    超标  异常 其他
           })),
         );
       }

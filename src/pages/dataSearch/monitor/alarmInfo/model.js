@@ -4,7 +4,7 @@
  * @Date: 2020.09.09
  */
 import Model from '@/utils/model';
-import { GetAlarmDataList  } from './service';
+import { GetAlarmDataList,GetAlarmType } from './service';
 import moment from 'moment';
 import {  message } from 'antd';
 
@@ -16,6 +16,9 @@ export default Model.extend({
     columns:[],
     total:"",
     tableLoading:true,
+    alarmTypeLoading:true,
+    alarmTypeList:[],
+    defaultAlarmType:[],
     queryParams: {
       alarmType: "",
       BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
@@ -36,7 +39,24 @@ export default Model.extend({
             message.error(result.Message)
           }
         },
+     // 报警类型
+     *getAlarmType({callback, payload }, { call, update,select }) {
 
+      yield update({ alarmTypeLoading: true})
+      const result = yield call(GetAlarmType, payload);  
+      const queryParams = yield select(_ => _.queryParams)
+      if (result.IsSuccess) {
+        yield update({ alarmTypeList: result.Datas})
+        const defaultValue = result.Datas.map((item)=>{
+          return item.code
+       })
+       yield update({ defaultAlarmType: defaultValue,alarmTypeLoading: false,queryParams:{...queryParams,alarmType:defaultValue}})
+       callback(result.Datas)
+      } else {
+        yield update({ alarmTypeLoading: false})
+        message.error(result.Message)
+      }
+    },
     // },
     // 导出报表
         *exportHistoryReports({ payload }, { call, put, update, select }) {

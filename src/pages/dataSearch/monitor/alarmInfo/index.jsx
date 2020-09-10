@@ -4,7 +4,6 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
 import  ContentPage from './components/ContentPage'
 
-import NavigationTree from '@/components/NavigationTreeNew'
 
 
 /**
@@ -21,21 +20,13 @@ class Index extends Component {
         };
     }
 
-    changeDgimn = (value, selectItem)=> {
-        this.setState({
-            dgimn: value,
-            title: selectItem.title,
-        })
-    }
 
     render() {
         const { dgimn,title } = this.state;
         return (
             <div>
-          <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
-
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn ?    <ContentPage dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
+                 <ContentPage dgimn={dgimn} initLoadData location={this.props.location}/> 
                 </BreadcrumbWrapper>
             </div>
         );

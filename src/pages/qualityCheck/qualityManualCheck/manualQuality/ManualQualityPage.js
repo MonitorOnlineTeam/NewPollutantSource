@@ -23,7 +23,7 @@ const QCStatusList = {
   2: { text: "维护", color: "#faad14" },
   3: { text: "故障", color: "#ff4d4f" },
   5: { text: "断电", color: "#ff4d4f" },
-  5: { text: "离线", color: "#d9d9d9" },
+  6: { text: "离线", color: "#d9d9d9" },
 }
 // 量程核查为1  盲样核查为2 零点核查：3  响应时间核查为4   线性5
 

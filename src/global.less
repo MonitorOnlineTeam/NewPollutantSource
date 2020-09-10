@@ -451,7 +451,7 @@ a:hover {
 
    .ant-spin-nested-loading{
     background-color: transparent !important;
-    box-shadow:none !important;
+    // box-shadow:none !important;
   }
    //个人中心  下拉
   .antd-pro-components-global-header-index-menu .ant-dropdown-menu-item{
@@ -461,10 +461,13 @@ a:hover {
     background: #fff;
     margin-bottom: 10px;
     border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
-    border-radius: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15)
   }
-
+  .antd-pro-components-notice-icon-notice-list-list .antd-pro-components-notice-icon-notice-list-item:last-child
+  {
+    margin-bottom: 0;
+  }
   
 .line-clamp-3{
   display: -webkit-box;
@@ -475,4 +478,7 @@ a:hover {
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
+ }
+ .antd-pro-components-notice-icon-notice-list-notFound{
+   background: #fff;
  }

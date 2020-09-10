@@ -557,6 +557,17 @@ export default {
                     },
                   ]
                 },
+                {
+                  name: 'videomanagers',  // 视频管理
+                  path: '/basicsManage/videomanager',
+                  routes: [
+                    {
+                      name: 'videoList', 
+                      path: '/basicsManage/videomanager',
+                      component: './basicsManage/videomanager',
+                    },
+                  ]
+                },
               ]
             },
             {

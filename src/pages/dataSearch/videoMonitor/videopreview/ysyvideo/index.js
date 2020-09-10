@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTreeNew'
+import PageLoading from '@/components/PageLoading'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
 
 /**
@@ -13,20 +14,23 @@ class Index extends Component {
         super(props);
         this.state = {
             dgimn: '',
+            title:''
         };
     }
 
-    changeDgimn=dgimn => {
+    changeDgimn=(dgimn,selectItem) => {
         this.setState({
             dgimn,
+            title: selectItem.title,
         })
     }
 
     render() {
+        const {dgimn,title} = this.state;
         return (
             <div id="ysyvideo">
-                <BreadcrumbWrapper>
-                 <YsyShowVideo DGIMN={this.state.dgimn} />
+                <BreadcrumbWrapper extraName={ `${ title}`}>
+                  {dgimn ?  <YsyShowVideo DGIMN={dgimn} />: <PageLoading /> } 
                 </BreadcrumbWrapper>
                 <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
             </div>
