@@ -226,7 +226,9 @@ dateCallback = (dates, dataType) => { //更新日期
         payload: { ...queryParams  },
     });
   }
-  onChange=(value,label, extra)=>{
+  treeChange=(value,label, extra)=>{
+    console.log(value)
+    console.log(extra.allCheckedNodes)
     let { queryParams, dispatch } = this.props;
     queryParams = {
       ...queryParams,
@@ -246,12 +248,12 @@ dateCallback = (dates, dataType) => { //更新日期
     const tProps = {
       value:this.state.code,
       treeData:paraCodeList,
-      onChange: this.onChange,
+      treeDefaultExpandAll: true,
       treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
+      // showCheckedStrategy: SHOW_CHILD,
       placeholder: '请选择参数名称'
     };
-    return <TreeSelect {...tProps} maxTagCount={1}/>;
+    return <TreeSelect {...tProps} maxTagCount={1}  onChange={this.treeChange}/>;
   }else{
     return <Spin size="small" />
   }

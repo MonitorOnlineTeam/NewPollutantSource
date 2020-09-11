@@ -69,10 +69,18 @@ export default class GlobalHeaderRight extends PureComponent {
         //   ));
         // }
           const color = {
-            warn: 'blue',
-            over: 'red',
-            exception: 'gold',
-          }["warn"];
+            "5": 'blue',
+            "6": 'blue',
+            "7": 'blue',
+            "13": 'blue',
+            "14": 'blue',
+            "12": 'gold',//备案不符
+            "2": 'red', //超标
+            "0": 'gold',//异常
+            "1": 'gold',
+            "3": 'gold',
+            "4": 'gold',
+          }[newNotice.AlarmType];
 
         newNotice.extra = <Tag key={`${newNotice.key}`} color={color} style={{ marginRight: 0 }}>
                               {newNotice.AlarmTypeName}
@@ -85,13 +93,13 @@ export default class GlobalHeaderRight extends PureComponent {
               </Avatar>
 
             );
-          } else if (newNotice.AlarmType === '5'||newNotice.AlarmType === '6'||newNotice.AlarmType === '7' ||newNotice.AlarmType === '12'
+          } else if (newNotice.AlarmType === '5'||newNotice.AlarmType === '6'||newNotice.AlarmType === '7'
           || newNotice.AlarmType === '13' |newNotice.AlarmType === '14') { //报警
             newNotice.avatar = (
               <Avatar style={{ verticalAlign: 'top' }} src="/earlywarning.png">
               </Avatar>
             );
-          } else  { //异常
+          } else  { //异常  备案不符
             newNotice.avatar = ( 
               <Avatar style={{ verticalAlign: 'top' }} src="/exception.png">
               </Avatar>

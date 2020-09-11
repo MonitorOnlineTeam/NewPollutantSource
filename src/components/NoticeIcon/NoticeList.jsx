@@ -33,7 +33,7 @@ const NoticeList = ({
   
   const linkClick = (item) =>{
    return  <span>
-   {item.AlarmType === "5" ?
+   {item.AlarmType === "2" ?
 
      <Link to={`/dataSearch/monitor/alarm/overrecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
      item.AlarmType === "0" ?
@@ -103,7 +103,7 @@ const NoticeList = ({
                               </div>
                               :
                               <div style={{ fontWeight: 'normal' }}>
-                                {item.AlarmMsg}
+                                <span style={{paddingLeft:5}}>{item.AlarmMsg} </span>
                                 <>
 
                                   {linkClick(item)}

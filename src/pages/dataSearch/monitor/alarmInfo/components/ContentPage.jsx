@@ -112,7 +112,10 @@ class TableData extends React.Component {
   desc = (text, record, index) => {
     const { tableDatas } = this.props;
     let _this = this;
+    const date = record.FirstTime;
 
+    const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
+    const endTime = date;
     if (record.AlarmType == 13) {  //质控核查报警
       // /dataSearch/qca/zeroCheck
       // /dataSearch/qca/rangeCheck
@@ -130,69 +133,17 @@ class TableData extends React.Component {
         </Tooltip>
         <span style={{float:"left"}}>
           {record.AlarmType === "2" ?
-
-            <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
+             
+            <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> :// 数据超标
             record.AlarmType === "0" ?
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : //数据异常
               record.AlarmType === "12" ?
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
+                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&dgimn=${record.DGIMN}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : //备案不符
                  <></>
 
           }
         </span>
       </div>
-      //   tableDatas.filter(function (item,tableIndex) {
-      //     console.log(item.ID)
-      //     if(item.ID === record.ID){
-      //       if (_this[`descDom${tableIndex}`] && _this[`descDom${tableIndex}`].offsetHeight > 60) {
-      //         return <div>
-      //         <Tooltip title={_this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
-      //           <div style={{ textAlign: 'left', '-webkit-box-orient': 'vertical' }} className="line-clamp-3"  >
-      //             <div>
-      //               <span> {text} </span>
-      //             </div>
-      //           </div>
-      //         </Tooltip>
-      //         <span>
-      //               {record.AlarmType === "" ?
-
-      //                 <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
-      //                 record.AlarmType === "" ?
-      //                   <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
-      //                   record.AlarmType === "" ?
-      //                     <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
-      //                     <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> //质控核查报警
-      //                 // /dataSearch/qca/zeroCheck
-      //                 // /dataSearch/qca/rangeCheck
-      //                 // /dataSearch/qca/blindCheck
-      //                 // /dataSearch/qca/linearCheck
-      //                 // /dataSearch/qca/resTimeCheck
-      //               }
-      //             </span>
-      //         </div>
-      //       } else {
-      //         return <div style={{ textAlign: 'left', '-webkit-box-orient': 'vertical' }}>
-      //           <span> {text} </span>
-      //           <span style={{ paddingLeft: 5 }}>
-      //             {record.AlarmType === "" ?
-
-      //               <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
-      //               record.AlarmType === "" ?
-      //                 <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
-      //                 record.AlarmType === "" ?
-      //                   <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
-      //                   <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> //质控核查报警
-      //               // /dataSearch/qca/zeroCheck
-      //               // /dataSearch/qca/rangeCheck
-      //               // /dataSearch/qca/blindCheck
-      //               // /dataSearch/qca/linearCheck
-      //               // /dataSearch/qca/resTimeCheck
-      //             }
-      //           </span>
-      //         </div>
-      //       }
-      //     } 
-      //  })
 
 
     }
@@ -312,6 +263,7 @@ class TableData extends React.Component {
       treeNodeFilterProp: "title",
       placeholder: '请选择运维站点！',
       allowClear: true,
+      // value:'62020131jhdp03',
       style: {
         width: '100%',
       },

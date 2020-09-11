@@ -63,7 +63,8 @@ class Index extends Component {
             rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
             format: 'YYYY-MM-DD HH:mm:ss',
             selectDisplay: false,
-            title:""
+            title:"",
+            dgimn:props.location.query&&props.location.query.type==="alarm"?props.location.query.dgimn:"",
         };
     }
 
@@ -311,12 +312,12 @@ class Index extends Component {
     }
     render() {
         const { dgimn,title } = this.state;
+        const { location  } = this.props;
         return (
             <div id="overrecord">
-                <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
+                {location&&location.query.type==='alarm'? null : <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                    
-                    {dgimn ?    <RecordEchartTableOver initLoadData DGIMN={this.state.dgimn}     location={this.props.location}  />: <PageLoading /> }  
+               { location&&location.query.type==='alarm'? <RecordEchartTableOver DGIMN={location.query.dgimn} initLoadData location={location}/> : dgimn ? <RecordEchartTableOver DGIMN={dgimn} initLoadData location={location}/> : <PageLoading /> }
                 </BreadcrumbWrapper> 
 
         </div>

@@ -16,7 +16,7 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dgimn: '',
+            dgimn: props.location.query&&props.location.query.type==="alarm"?props.location.query.dgimn:"",
             title: '',
         };
     }
@@ -31,12 +31,15 @@ class Index extends Component {
    }
     render() {
         const { dgimn,title } = this.state;
+
+        const { location } = this.props;
+        
         return (
             <div>
           <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                 {dgimn ?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
+                { dgimn?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
                 </BreadcrumbWrapper>
             </div>
         );

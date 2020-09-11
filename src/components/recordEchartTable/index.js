@@ -56,7 +56,7 @@ class Index extends Component {
             rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
             format: 'YYYY-MM-DD HH:mm:ss',
             bar: [],
-            dataType: 'realtime',
+            dataType: '',
             DGIMN: [],
             beginTime: '',
             endTime: '',
@@ -91,35 +91,34 @@ class Index extends Component {
 
     /** 初始化加载 */
     componentDidMount() {
-        // let { historyparams } = this.props;
-        // historyparams = {
-        //     ...historyparams,
-        //    DGIMN:this.props.DGIMNs
-        // }
-        // this.props.dispatch({
-        //     type: 'recordEchartTable/updateState',
-        //     payload: {
-        //         historyparams,
-        //     },
-        // })
 
         const { location,initLoadData,dispatch } = this.props;
-        if(location&&location.query&&location.query.type==="alarm"){ //报警信息
+        if(location.query&&location.query.type==="alarm"){ //报警信息
            const paraCodeList  = location.query.code;
-           this.children.onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
-        const beginTime = moment(new Date());
-        const endTime = moment(new Date());
+           const startTime = location.query.startTime;
+           const endTime = location.query.endTime;
+        this.children.onDateChange([ moment(moment(endTime)), moment( moment(endTime))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+        
+        const DATATYPE = {
+             RealTimeData:"realtime",
+             MinuteData:"minute",
+             HourData:"hour",
+             DayData : 'day'
+        }
         this.setState({
-            beginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
-            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            code:paraCodeList.split() 
+            beginTime: startTime,
+            endTime: endTime,
+            code:paraCodeList.split(),
+            dataType:DATATYPE[location.query.dataType]
         }, () => {
+         
             initLoadData && this.getLoadData(this.props);
         })
         }else{
             const beginTime = moment(new Date()).add(-60, 'minutes');
             const endTime = moment(new Date());
             this.setState({
+                dataType:'realtime',
                 beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
                 endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
             }, () => {
@@ -131,177 +130,28 @@ class Index extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // if (this.props.excount != nextProps.excount) {
-        //     var barList = [];
-        //     var item = { "type": 'bar', "barMaxWidth": '50' }
-        //     var realItem = nextProps.excount > 4 ? { "type": 'bar' } : item
-        //     for (var i = 0; i < nextProps.excount; i++) {
-        //         barList.push(realItem);
-        //     }
-        //     this.setState({
-        //         bar: barList
-        //     })
-        // }
 
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
+           
         }
     }
-    // /** 后台请求数据 */
-    // reloaddatalist = () => {
-    //     const {
-    //         dispatch,
-    //     } = this.props;
-    //     console.log("dgmn=",this.props.DGIMN)
-
     getLoadData = nextProps => {
+
         const beginTime =  moment(new Date()).add(-60, 'minutes');
         const endTime = moment(new Date());
-
         const { location } = this.props;
-        // if (this.props.startTimes && this.props.endTimes) {
             this.props.dispatch({
                 type: 'recordEchartTable/getexmodellist',
                 payload: {
-                    beginTime: this.state.beginTime == '' ? location.query&&location.query.type==="alarm"? moment(new Date()).format('YYYY-MM-DD 00:00:00') :  beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
+                    beginTime: this.state.beginTime == '' ? location.query&&location.query.type==="alarm"? location.query.startTime :  beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
                     endTime: this.state.endTime == '' ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
                     dataType: this.state.dataType,
-                    DGIMN: [nextProps.DGIMN],
+                    DGIMN:[nextProps.DGIMN], 
+                    PollutantList: this.state.code
                 },
             })
-        // } else {
-        //     this.props.dispatch({
-        //         type: 'recordEchartTable/getexmodellist',
-        //         payload: {
-        //             beginTime: this.state.beginTime == '' ? beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-        //             endTime: this.state.endTime == '' ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
-        //             dataType: this.state.dataType,
-        //             DGIMN: [nextProps.DGIMN],
-        //         },
-        //     })
-        // }
     }
-
-    // }
-    /** 数据类型切换 */
-    // _handleDateTypeChange = e => {
-    //     let formats;
-    //     let beginTime = moment(new Date()).add(-60, 'minutes');
-    //     const endTime = moment(new Date());
-    //     let { dataType } = this.state
-    //     switch (e.target.value) {
-    //         case 'realtime':
-    //             beginTime = moment(new Date()).add(-60, 'minutes');
-    //             formats = 'YYYY-MM-DD HH:mm:ss';
-    //             dataType = 'RealTimeData'
-    //             break;
-    //         case 'minute':
-    //             beginTime = moment(new Date()).add(-1, 'day');
-    //             formats = 'YYYY-MM-DD HH:mm';
-    //             dataType = 'MinuteData'
-    //             break;
-    //         case 'hour':
-    //             beginTime = moment(new Date()).add(-1, 'day');
-    //             formats = 'YYYY-MM-DD HH';
-    //             dataType = 'HourData'
-    //             break;
-    //         case 'day':
-    //             beginTime = moment(new Date()).add(-1, 'month');
-    //             formats = 'YYYY-MM-DD';
-    //             dataType = 'DayData'
-    //             break;
-    //     }
-    //     //
-    //     this.setState({
-    //         rangeDate: [beginTime, endTime],
-    //         format: formats,
-    //         beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-    //         endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-    //         dataType,
-    //     });
-    //     this.props.dispatch({
-    //         type: 'recordEchartTable/updateState',
-    //         payload: {
-    //             exceptionData: [],
-    //             pageIndex: 1,
-    //         },
-    //     })
-    //     this.props.dispatch({
-    //         type: 'recordEchartTable/getexmodellist',
-    //         payload: {
-    //             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-    //             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-    //             dataType,
-    //             DGIMN: [this.props.DGIMN],
-    //         },
-    //     })
-    // }
-
-    /** 切换时间 */
-    // _handleDateChange = (date, dateString) => {
-    //     alert()
-    //     if (date) {
-    //         // 判断
-
-    //         switch (this.state.dataType) {
-    //             case 'RealTimeData':
-    //                 if (date[1].add(-7, 'day') > date[0]) {
-    //                     message.info('实时数据时间间隔不能超过7天');
-    //                     return;
-    //                 }
-    //                 date[1].add(+7, 'day')
-    //                 break;
-    //             case 'MinuteData':
-    //                 if (date[1].add(-1, 'month') > date[0]) {
-    //                     message.info('分钟数据时间间隔不能超过1个月');
-    //                     return;
-    //                 }
-    //                 date[1].add(+1, 'month')
-    //                 break;
-    //             case 'HourData':
-    //                 if (date[1].add(-6, 'month') > date[0]) {
-    //                     message.info('小时数据时间间隔不能超过6个月');
-    //                     return;
-    //                 }
-    //                 date[1].add(+6, 'month')
-    //                 break;
-    //             case 'DayData':
-    //                 if (date[1].add(-12, 'month') > date[0]) {
-    //                     message.info('日数据时间间隔不能超过1年');
-    //                     return;
-    //                 }
-    //                 date[1].add(+12, 'month')
-    //                 break;
-    //             default:
-    //                 return;
-    //         }
-
-    //         this.setState({
-    //             rangeDate: date,
-    //             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-    //             endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-
-    //         });
-    //         this.props.dispatch({
-    //             type: 'recordEchartTable/updateState',
-    //             payload: {
-    //                 exceptionData: [],
-    //                 pageIndex: 1,
-    //             },
-    //         })
-
-    //         this.props.dispatch({
-    //             type: 'recordEchartTable/getexmodellist',
-    //             payload: {
-    //                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-    //                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-    //                 dataType: this.state.dataType,
-    //                 DGIMN: [this.props.DGIMN],
-    //             },
-    //         })
-    //     }
-    // };
-
     onclick = {
         click: this.clickEchartsPie.bind(this),
     }
@@ -344,7 +194,6 @@ class Index extends Component {
                 ExceptionType: e.seriesName,
             },
         })
-        console.log(e)
     }
 
     // 分页
@@ -385,6 +234,7 @@ class Index extends Component {
    */
     dateCallback = (dates, dataType) => {
         if (!this.props.DGIMN) { return; }
+        if(this.state.code&&this.state.dataType){
         this.setState({
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -403,8 +253,10 @@ class Index extends Component {
                 endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
                 dataType,
                 DGIMN: [this.props.DGIMN],
+                PollutantList: this.state.code
             },
         })
+    }
     }
 
     onRef1 = ref => {
@@ -483,7 +335,7 @@ class Index extends Component {
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
-                            <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />
+                            <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked={this.state.dataType} onChange={this._handleDateTypeChange} />
                         </div>
                     }
                 >

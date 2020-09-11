@@ -33,14 +33,18 @@ class Index extends Component {
             title: selectItem.title,
         })
     }
+    componentDidMount(){
+
+    }
     render() {
         const { dgimn,title } = this.state;
+        
+        const { location } = this.props;
         return (
             <div id="record">
-                <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
+               {location&&location.query.type==='alarm'? null : <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                    
-                    {dgimn ?    <RecordEchartTable initLoadData DGIMN={this.state.dgimn}    location={this.props.location}/>: <PageLoading /> }  
+               { location&&location.query.type==='alarm'? <RecordEchartTable DGIMN={location.query.dgimn} initLoadData location={location}/> : dgimn ? <RecordEchartTable DGIMN={dgimn} initLoadData location={location}/> : <PageLoading /> }
                 </BreadcrumbWrapper> 
             </div>
         );
