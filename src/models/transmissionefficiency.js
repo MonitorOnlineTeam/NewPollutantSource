@@ -5,7 +5,7 @@
  */
 
 import Model from '@/utils/model';
-import { getMonthsTransmissionEfficiency, getEntMonthsTransmissionEfficiency } from '@/services/TransmissionEfficiencyApi';
+import { getMonthsTransmissionEfficiency, getEntMonthsTransmissionEfficiency, ExportData, RecalculateTransmissionEfficiency } from '@/services/TransmissionEfficiencyApi';
 import moment from 'moment';
 
 export default Model.extend({
@@ -21,6 +21,8 @@ export default Model.extend({
         entCode: null,
         total: 0,
         entTotal: 0,
+        RegionCode: '',
+        EnterpriseName: '',
     },
     subscriptions: {
     },
@@ -47,13 +49,16 @@ export default Model.extend({
 
         },
         * getEntData({ payload }, { call, put, update, select }) {
-            const { beginTime, endTime, pageSize, transmissionEffectiveRate } = yield select(state => state.transmissionefficiency);
+            const { beginTime, endTime, pageSize, pageIndex, transmissionEffectiveRate, RegionCode, EnterpriseName } = yield select(state => state.transmissionefficiency);
+            debugger
             let body = {
                 BeginTime: beginTime,
                 EndTime: endTime,
                 PageSize: pageSize,
                 TERSort: transmissionEffectiveRate,
-                PageIndex: payload.pageIndex,
+                PageIndex: pageIndex,
+                RegionCode: RegionCode,
+                EnterpriseName: EnterpriseName,
                 ...payload
             };
             const response = yield call(getEntMonthsTransmissionEfficiency, { ...body });
@@ -61,11 +66,37 @@ export default Model.extend({
                 yield update({
                     enttableDatas: response.Datas,
                     entTotal: response.Total,
-                    pageIndex: payload.pageIndex || 1,
                 });
             }
 
         },
+        * ExportData({ payload }, { call, put, update, select }) {
+            const { beginTime, endTime, pageSize, pageIndex, transmissionEffectiveRate, RegionCode, EnterpriseName } = yield select(state => state.transmissionefficiency);
+            let body = {
+                BeginTime: beginTime,
+                EndTime: endTime,
+                PageSize: pageSize,
+                TERSort: transmissionEffectiveRate,
+                PageIndex: pageIndex,
+                RegionCode: RegionCode,
+                EnterpriseName: EnterpriseName,
+                ...payload
+            };
+            const response = yield call(ExportData, { ...body });
+            if (response.IsSuccess) {
+                payload.callback(response.Datas);
+            }
 
+        },
+        * RecalculateTransmissionEfficiency({ payload }, { call, put, update, select }) {
+            let body = {
+                beginTime: payload.beginTime,
+                endTime: payload.endTime,
+                DGIMN: payload.DGIMN,
+                ...payload
+            };
+            const response = yield call(RecalculateTransmissionEfficiency, { ...body });
+            payload.callback(response.IsSuccess);
+        },
     },
 });

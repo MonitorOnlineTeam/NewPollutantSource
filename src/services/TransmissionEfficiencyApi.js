@@ -28,3 +28,15 @@ export async function getEntMonthsTransmissionEfficiency(params) {
 
     return result;
 }
+
+///导出数据
+export async function ExportData(params) {
+    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportData', params, null);
+    return result;
+}
+
+///重新统计传输有效率
+export async function RecalculateTransmissionEfficiency(params) {
+    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/RecalculateTransmissionEfficiency', params, null);
+    return result;
+}

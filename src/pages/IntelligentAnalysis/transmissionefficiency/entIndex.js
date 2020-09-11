@@ -28,7 +28,8 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import PointIndex from './pointIndex';
 import styles from './style.less';
-
+import SdlCascader from '../../AutoFormManager/SdlCascader';
+import { downloadFile } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
@@ -45,12 +46,15 @@ const content = (
 @connect(({
     loading,
     transmissionefficiency,
+    autoForm,
 }) => ({
+    exloading: loading.effects['transmissionefficiency/ExportData'],
     loading: loading.effects[pageUrl.getData],
     total: transmissionefficiency.entTotal,
     pageSize: transmissionefficiency.pageSize,
     pageIndex: transmissionefficiency.pageIndex,
     tableDatas: transmissionefficiency.enttableDatas,
+    regionList: autoForm.regionList,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -64,6 +68,7 @@ export default class EntTransmissionEfficiency extends Component {
             EnterpriseName: '',
             visible: false,
             eName: '',
+            regions: '',
         };
     }
 
@@ -78,16 +83,14 @@ export default class EntTransmissionEfficiency extends Component {
         });
     }
 
-    getTableData = pageIndex => {
+    getTableData = () => {
         this.props.dispatch({
             type: pageUrl.getData,
-            payload: {
-                pageIndex,
-            },
         });
     }
 
     handleTableChange = (pagination, filters, sorter) => {
+        debugger
         if (sorter.order) {
             this.updateState({
                 transmissionEffectiveRate: sorter.order,
@@ -109,7 +112,7 @@ export default class EntTransmissionEfficiency extends Component {
             beginTime,
             endTime,
         });
-        this.getTableData(this.props.pageIndex);
+        this.getTableData();
     }
 
     getColumnSearchProps = dataIndex => ({
@@ -134,31 +137,62 @@ export default class EntTransmissionEfficiency extends Component {
 
     // 企业
     enterpriseChange = value => {
+        this.updateState({
+            EnterpriseName: value,
+        });
         this.props.dispatch({
             type: pageUrl.getData,
-            payload: {
-                EnterpriseName: value,
-            },
         });
     }
 
     enterpriseEnter = value => {
+        this.updateState({
+            EnterpriseName: value.target.value,
+        });
         this.props.dispatch({
             type: pageUrl.getData,
+        });
+    }
+
+    changeRegion = (value) => {
+        this.updateState({
+            RegionCode: value.join(',')
+        });
+        this.props.dispatch({
+            type: pageUrl.getData,
+        });
+    }
+
+    //创建并获取模板
+    Template = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'transmissionefficiency/ExportData',
             payload: {
-                EnterpriseName: value.target.value,
-            },
+                callback: (data) => {
+                    downloadFile(data);
+                }
+            }
         });
     }
 
     render() {
         const { eName } = this.state;
+        const { regionList, exloading } = this.props;
         const columns = [
+            {
+                title: (<span style={{ fontWeight: 'bold' }}>行政区</span>),
+                dataIndex: 'RegionName',
+                key: 'RegionName',
+                width: '20%',
+                align: 'left',
+                render: (text, record) => text,
+            },
             {
                 title: (<span style={{ fontWeight: 'bold' }}>企业名称</span>),
                 dataIndex: 'EnterpriseName',
                 key: 'EnterpriseName',
-                width: '30%',
+                width: '20%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -166,14 +200,14 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
                 dataIndex: 'TransmissionRate',
                 key: 'TransmissionRate',
-                width: '15%',
+                width: '10%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.IsStop) {
-                        return <span className={styles.normaldata}>停运</span>;
+                        return <span>停运</span>;
                     }
                     if (record.AvgTransmissionRate <= text) {
-                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
+                        return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
                     const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
@@ -185,15 +219,15 @@ export default class EntTransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
                 dataIndex: 'EffectiveRate',
                 key: 'EffectiveRate',
-                width: '15%',
+                width: '10%',
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
                     if (record.IsStop) {
-                        return <span className={styles.normaldata}>停运</span>;
+                        return <span>停运</span>;
                     }
                     if (record.AvgEffectiveRate <= text) {
-                        return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
+                        return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
                     const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
@@ -213,10 +247,10 @@ export default class EntTransmissionEfficiency extends Component {
                 // width: '250px',
                 width: '30%',
                 // align: 'center',
-                sorter: true,
+                sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
                 render: (text, record) => {
                     if (record.IsStop) {
-                        return <span className={styles.normaldata}>停运</span>;
+                        return <span>停运</span>;
                     }
                     // 红色：#f5222d 绿色：#52c41a
                     const percent = (parseFloat(text) * 100).toFixed(2);
@@ -248,7 +282,7 @@ export default class EntTransmissionEfficiency extends Component {
                 width: '10%',
                 align: 'center',
                 render: (text, record) =>
-                     <a onClick={() => {
+                    <a onClick={() => {
                         this.setState({
                             visible: true,
                             EnterpriseCode: record.EnterpriseCode,
@@ -261,9 +295,9 @@ export default class EntTransmissionEfficiency extends Component {
                         //     }
                         // })
                     }}>查看详情</a>
-                    // return (
-                    //     <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}?tabName=`}> 查看详情 </Link>
-                    // );
+                // return (
+                //     <Link to={`/Intelligentanalysis/transmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}?tabName=`}> 查看详情 </Link>
+                // );
                 ,
             },
         ];
@@ -287,6 +321,22 @@ export default class EntTransmissionEfficiency extends Component {
                                     style={{ width: 200, marginLeft: 10 }}
                                 />
                             </Form.Item>
+                            <Form.Item>
+                                <SdlCascader
+                                    changeOnSelect={false}
+                                    data={regionList}
+                                    placeholder="请选择行政区"
+                                    onChange={this.changeRegion}
+                                    style={{ width: 250, marginLeft: 10 }}
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button onClick={this.Template} loading={exloading}>
+                                    <Icon type="export" />
+                                    导出
+                                </Button>
+                            </Form.Item>
+
                         </Form>
                     }
                     extra={

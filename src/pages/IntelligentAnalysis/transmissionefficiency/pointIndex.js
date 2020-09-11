@@ -15,6 +15,9 @@ import {
     Icon,
     Badge,
     Button,
+    Modal,
+    message,
+    Form,
 } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -22,17 +25,20 @@ import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SdlTable from '@/components/SdlTable';
 import { onlyOneEnt } from '@/config';
-
+import RangePicker_ from '@/components/RangePicker'
+const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
     updateState: 'transmissionefficiency/updateState',
     getData: 'transmissionefficiency/getData',
 };
+@Form.create()
 @connect(({
     loading,
     transmissionefficiency,
 }) => ({
+    updateLoading: loading.effects['transmissionefficiency/RecalculateTransmissionEfficiency'],
     loading: loading.effects[pageUrl.getData],
     total: transmissionefficiency.total,
     pageSize: transmissionefficiency.pageSize,
@@ -47,6 +53,7 @@ export default class TransmissionEfficiency extends Component {
         this.state = {
             beginTime: moment(this.props.beginTime),
             endTime: '',
+            datetimes: [],
         };
     }
 
@@ -112,14 +119,70 @@ export default class TransmissionEfficiency extends Component {
         // });
         this.getTableData(this.props.pageIndex);
     }
+    //重新计算时间段内的传输有撤销率
+    _handleDateChange = (date, dateString) => {
+        // const { dispatch } = this.props;
+        // dispatch({
+        //     type: 'manualupload/updateState',
+        //     payload: {
+        //         manualUploadParameters: {
+        //             ...this.props.manualUploadParameters,
+        //             ...{
+        //                 BeginTime: date.length === 0 ? null : date[0].format('YYYY-MM-DD 00:00:00'),
+        //                 EndTime: date.length === 0 ? null : date[1].format('YYYY-MM-DD 23:59:59'),
+        //             }
+        //         }
+        //     }
+        // });
+        this.setState({
+            datetimes: date
+        })
+    };
+
+    handleCancel = e => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    //表单提交
+    handleSubmit = (e) => {
+        debugger
+        const { dispatch, form } = this.props;
+        const { datetimes, DGIMN } = this.state;
+        form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+
+                dispatch({
+                    type: 'transmissionefficiency/RecalculateTransmissionEfficiency',
+                    payload: {
+                        beginTime: datetimes.length === 0 ? null : datetimes[0].format('YYYY-MM-DD 00:00:00'),
+                        endTime: datetimes.length === 0 ? null : datetimes[1].format('YYYY-MM-DD 23:59:59'),
+                        DGIMN: DGIMN,
+                        callback: (flag) => {
+                            if (flag) {
+                                message.success("计算成功！");
+                            }
+                            else {
+                                message.error("计算失败！");
+                            }
+                        }
+                    },
+                });
+                this.onCancel();
+            }
+        });
+    }
 
     render() {
+        const { getFieldDecorator } = this.props.form;
+        const { updateLoading } = this.props;
         const columns = [
             {
                 title: (<span style={{ fontWeight: 'bold' }}>污染物名称</span>),
                 dataIndex: 'PollutantTypeName',
                 key: 'PollutantTypeName',
-                width: '12%',
+                width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -127,7 +190,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>排口名称</span>),
                 dataIndex: 'PointName',
                 key: 'PointName',
-                width: '12%',
+                width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -142,7 +205,7 @@ export default class TransmissionEfficiency extends Component {
                         return <span className={styles.normaldata}>停运</span>;
                     }
 
-                        return text;
+                    return text;
                 },
             },
             {
@@ -168,7 +231,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效个数</span>),
                 dataIndex: 'EffectiveNumber',
                 key: 'EffectiveNumber',
-                width: '11.3%',
+                width: '10%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.IsStop) {
@@ -187,7 +250,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>传输率</span>),
                 dataIndex: 'TransmissionRate',
                 key: 'TransmissionRate',
-                width: '12.3%',
+                width: '10%',
                 align: 'left',
                 render: (text, record) => {
                     if (record.IsStop) {
@@ -206,7 +269,7 @@ export default class TransmissionEfficiency extends Component {
                 title: (<span style={{ fontWeight: 'bold' }}>有效率</span>),
                 dataIndex: 'EffectiveRate',
                 key: 'EffectiveRate',
-                width: '12.3%',
+                width: '10%',
                 align: 'left',
                 sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
                 render: (text, record) => {
@@ -256,6 +319,21 @@ export default class TransmissionEfficiency extends Component {
                     </div>);
                 },
             },
+            {
+                title: (<span style={{ fontWeight: 'bold' }}>操作</span>),
+                dataIndex: 'opt',
+                key: 'opt',
+                width: '10%',
+                align: 'center',
+                render: (text, record) =>
+                    <a onClick={() => {
+                        this.setState({
+                            visible: true,
+                            DGIMN: record.DGIMN
+                        })
+                    }}>重新计算</a>
+                ,
+            },
         ];
         const entName = this.props.entname;
         let tableTitle = '';
@@ -274,6 +352,17 @@ export default class TransmissionEfficiency extends Component {
                 { Name: '排口有效传输率', Url: '' },
             )
         }
+
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 12 },
+                sm: { span: 8 },
+            },
+            wrapperCol: {
+                xs: { span: 12 },
+                sm: { span: 12 },
+            },
+        };
 
         return (
             // <BreadcrumbWrapper title="有效传输率-详情">
@@ -359,6 +448,37 @@ export default class TransmissionEfficiency extends Component {
                         />
                     </Card>
                 </Row>
+                <Modal
+                    title="重新计算传输有效率"
+                    visible={this.state.visible}
+                    width={650}
+                    footer={[
+                        <Button key="back" onClick={this.handleCancel}>
+                            取消
+                        </Button>,
+                        <Button key="submit" type="primary" loading={updateLoading} onClick={this.handleSubmit}>
+                            计算
+                        </Button>
+                    ]}
+                >
+                    <Form onSubmit={this.handleSubmit}>
+                        <FormItem
+                            {...formItemLayout}
+                            label={'时间段'}>
+                            {getFieldDecorator('pollutantType', {
+                                initialValue: this.state.datetimes,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请选择时间段!',
+                                    },
+                                ],
+                            })(
+                                <RangePicker_ onChange={this._handleDateChange} format={'YYYY-MM-DD'} />
+                            )}
+                        </FormItem>
+                    </Form>
+                </Modal>
             </div>
             /* </BreadcrumbWrapper > */
         );
