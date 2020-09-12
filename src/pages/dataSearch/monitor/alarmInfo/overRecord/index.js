@@ -310,6 +310,14 @@ class Index extends Component {
             title: selectItem.title,
         })
     }
+
+    componentDidMount(){
+        if(location.query&&location.query.type==='alarm' ){
+            this.setState({
+                title: location.query.title,
+            })  
+           }
+    }
     render() {
         const { dgimn,title } = this.state;
         const { location  } = this.props;

@@ -31,19 +31,24 @@ const NoticeList = ({
     return <div style={{ color: 'rgba(0, 0, 0, 0.65)', wordWrap: 'break-word' }}>{value}</div>
   }
   
-  const linkClick = (item) =>{
-   return  <span>
-   {item.AlarmType === "2" ?
+  const linkClick = (record) =>{
+    const date = record.FirstTime;
 
-     <Link to={`/dataSearch/monitor/alarm/overrecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> :// 数据超标
-     item.AlarmType === "0" ?
-       <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //数据异常
-       item.AlarmType === "12" ?
-         <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${item.PollutantCode}&type=alarm`} >查看</Link> : //备案不符
-         <></>
+    const code = [ ...new Set(record.PollutantCode.split(","))].join()
+    const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
+    const endTime = date;
 
-   }
- </span>
+   return  <>
+          {record.AlarmType === "2" ? // 数据超标    
+             <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> :
+             record.AlarmType === "0" ? //数据异常
+               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : 
+               record.AlarmType === "12" ? //备案不符
+                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : 
+                  <></>
+ 
+           }
+      </>
   }
 
   return (

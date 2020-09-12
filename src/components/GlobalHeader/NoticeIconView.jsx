@@ -150,7 +150,6 @@ export default class GlobalHeaderRight extends PureComponent {
     // const unreadMsg = this.getUnreadData(noticeData);
     const className = styles.right;
 
-    console.log(noticeData)
     return (
       <div className={`${styles.action} ${styles.account}`}  id='noticeIcon'> 
         <NoticeIcon  

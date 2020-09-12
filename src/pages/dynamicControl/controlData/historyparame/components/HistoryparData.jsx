@@ -117,8 +117,10 @@ class TableData extends React.Component {
     componentDidMount(){
       const { location,initLoadData,dgimn,queryParams,dispatch } = this.props;
       if(location.query&&location.query.type==="alarm"){ //报警信息
-         const paraCodeList  = location.query.code;
-        this.child.onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+         const paraCodeList  = location.query.code.split(",");
+         const startTime = location.query.startTime;
+         const endTime = location.query.endTime;
+        this.child.onDateChange([ moment(startTime), moment(endTime)])//修改日期选择日期  
         this.setState({code:paraCodeList})
       }
         this.props.initLoadData && this.changeDgimn(this.props.dgimn)
@@ -149,11 +151,13 @@ onRef = ref =>{
     if(location.query&&location.query.type==="alarm"){ //报警信息  更新参数
 
       const paraCodeList  = location.query.code;
+      const startTime = location.query.startTime;
+      const endTime = location.query.endTime;
       queryParams = {
         ...queryParams,
-        BeginTime: moment(new Date()).format('YYYY-MM-DD 00:00:00'),
-        EndTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-        ParaCodeList:paraCodeList.split(),
+        BeginTime:startTime,
+        EndTime: endTime,
+        ParaCodeList:paraCodeList.split(","),
         DGIMN:dgimn
       }
     }else{
@@ -227,8 +231,7 @@ dateCallback = (dates, dataType) => { //更新日期
     });
   }
   treeChange=(value,label, extra)=>{
-    console.log(value)
-    console.log(extra.allCheckedNodes)
+
     let { queryParams, dispatch } = this.props;
     queryParams = {
       ...queryParams,

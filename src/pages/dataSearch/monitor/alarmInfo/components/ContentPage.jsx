@@ -88,12 +88,6 @@ class TableData extends React.Component {
         dataIndex: 'AlarmMsg',
         render: (text, record, index) => {
           return <div>
-            {/* <div style={{ visibility: "hidden", position: "absolute", top: -9999, left: -9999 }} ref={dom => { this[`descDom${index}`] = dom }}  >
-                <div> {text} </div>
-                <div style={{ paddingLeft: 5 }}>
-                <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&type=alarm`} >查看</Link> 
-                </div>
-            </div> */}
             {this.desc(text, record, index)}
           </div>
 
@@ -105,27 +99,52 @@ class TableData extends React.Component {
   }
 
 
+
+
+
   tooltipText = (value) => {
     return <div style={{ color: 'rgba(0, 0, 0, 0.65)', wordWrap: 'break-word' }}>{value}</div>
   }
 
   desc = (text, record, index) => {
-    const { tableDatas } = this.props;
-    let _this = this;
+
     const date = record.FirstTime;
 
+    const code = [ ...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
+
     if (record.AlarmType == 13) {  //质控核查报警
-      // /dataSearch/qca/zeroCheck
-      // /dataSearch/qca/rangeCheck
-      // /dataSearch/qca/blindCheck
-      // /dataSearch/qca/linearCheck
-      // /dataSearch/qca/resTimeCheck    
+      
+      const checkCode = [ ...new Set(record.PollutantCode.split(","))]
+
+       const check={
+         'zero':`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'rang':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'blind':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'line':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'res':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`
+       }
+      //
+      return  <div style={{textAlign: 'left',}}>
+       { [ ...new Set(record.AlarmMsg.split(";"))].map((item,index)=>{
+         return  <>
+                 <span style={{  paddingRight: 5, }}  >
+                  {item}
+               </span>
+               <Link style={{  paddingRight: 8, }} to={(/零点核查/g).test(item) ? `${check["zero"]}code=${checkCode[index]}` : (/量程核查/g).test(item)?
+               `${check["rang"]}&code=${checkCode[index]}` : (/盲样核查/g).test(item) ? `${check["blind"]}&code=${checkCode[index]}`
+                : (/线性核查/g).test(item) ?  `${check["line"]}&code=${checkCode[index]}` :  `${check["res"]}&code=${checkCode[index]}`
+                } >查看</Link> 
+               </>
+      })
+    }
+      </div>
+     
     } else {
 
       return <div style={{ overflow: "hidden" }}>
-        <Tooltip title={_this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
+        <Tooltip title={this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
           <span style={{ textAlign: 'left', '-webkit-box-orient': 'vertical', width: 'auto', paddingRight: 5,float:"left" }} className="line-clamp-3"  >
                {text}
           </span>
@@ -134,11 +153,11 @@ class TableData extends React.Component {
         <span style={{float:"left"}}>
           {record.AlarmType === "2" ?
              
-            <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> :// 数据超标
+            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :// 数据超标
             record.AlarmType === "0" ?
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : //数据异常
-              record.AlarmType === "12" ?
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&dgimn=${record.DGIMN}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : //备案不符
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //数据异常
+              record.AlarmType === "12" ? //备案不符
+                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //备案不符
                  <></>
 
           }

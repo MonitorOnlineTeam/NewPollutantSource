@@ -28,6 +28,12 @@ class Index extends Component {
         })
     }
    componentDidMount(){
+       const { location } = this.props;
+       if(location.query&&location.query.type==='alarm' ){
+        this.setState({
+            title: location.query.title,
+        })  
+       }
    }
     render() {
         const { dgimn,title } = this.state;
@@ -36,10 +42,10 @@ class Index extends Component {
         
         return (
             <div>
-          <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
+              {location.query&&location.query.type==='alarm' ? null :  <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                { dgimn?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
+                {location.query&&location.query.type==='alarm' ? <HistoryparData dgimn={location.query.dgimn} initLoadData location={this.props.location}/>  : dgimn?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
                 </BreadcrumbWrapper>
             </div>
         );
