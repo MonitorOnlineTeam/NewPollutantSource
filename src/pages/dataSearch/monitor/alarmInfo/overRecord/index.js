@@ -312,6 +312,7 @@ class Index extends Component {
     }
 
     componentDidMount(){
+        const { location } = this.props;
         if(location.query&&location.query.type==='alarm' ){
             this.setState({
                 title: location.query.title,
