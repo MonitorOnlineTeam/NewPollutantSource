@@ -330,18 +330,18 @@ class MonitoringStandard extends Component {
                 bordered={false}
                 style={{ width: '100%' }}
                 bodyStyle={{paddingBottom:0}}
-                extra={
-                    <Button
-                        onClick={() => {
-                            this.setState({
-                                standardlibraryModal: true,
-                            });
-                        }}
-                        icon={<SearchOutlined />}
-                    >
-                        查看标准库
-            </Button>
-                }
+            //     extra={
+            //         <Button
+            //             onClick={() => {
+            //                 this.setState({
+            //                     standardlibraryModal: true,
+            //                 });
+            //             }}
+            //             icon={<SearchOutlined />}
+            //         >
+            //             查看标准库
+            // </Button>
+            //     }
             >
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
