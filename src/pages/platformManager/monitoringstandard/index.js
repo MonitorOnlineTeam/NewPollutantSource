@@ -13,7 +13,7 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './style.less';
-import NavigationTree from '@/components/NavigationTree'
+import NavigationTree from '@/components/NavigationTreeNew'
 // import RecordEchartTable from '@/components/recordEchartTable'
 
 import MonitoringStandard from '@/components/MonitoringStandard';
@@ -38,12 +38,12 @@ class Index extends Component {
         return (
             <div id="record">
                 {/* selKeys="31011537961003" */}
-                <NavigationTree domId="#record" choice={false} onItemClick={value => {
+                <NavigationTree domId="#record"  onTreeSelect={value => {
                     console.log(value);
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.setState({
-                            dgimn: value[0].key,
-                            pollutantType: value[0].Type
+                            dgimn: value,
+                            // entName: selectItem.title
                         })
                     }
                 }} />
