@@ -172,7 +172,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                         }}><EditIcon/></a></Tooltip>
                         <Divider type="vertical" />
                         <Tooltip title="删除">
-                            <Popconfirm placement="left" title="确定要删除此排口吗？" onConfirm={() => this.deleteVideoInfobyIndex(record)} okText="是" cancelText="否">
+                            <Popconfirm placement="left" title="确定要删除此相机吗？" onConfirm={() => this.deleteVideoInfobyIndex(record)} okText="是" cancelText="否">
                                 <a href="#" > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip>

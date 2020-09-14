@@ -30,7 +30,7 @@ class Index extends Component {
         return (
             <div id="ysyvideo">
                 <BreadcrumbWrapper extraName={ `${ title}`}>
-                  {dgimn ?  <YsyShowVideo DGIMN={dgimn} />: <PageLoading /> } 
+                  {dgimn ?  <YsyShowVideo DGIMN={dgimn} initLoadData/>: <PageLoading /> } 
                 </BreadcrumbWrapper>
                 <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
             </div>

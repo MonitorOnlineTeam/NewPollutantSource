@@ -74,11 +74,11 @@ export default Model.extend({
         ...payload
       }
       yield update({tableloading:true}); //更新state的值
-      let csyxl = 0;
-      let gwidth = 300 + 140 + 70;
-      if (!onlyOneEnt) {
-        gwidth += 300;
-      }
+      // let csyxl = 0;
+      // let gwidth = 300 + 140 + 70;
+      // if (!onlyOneEnt) {
+      //   gwidth += 300;
+      // }
       const result = yield call(getAllTypeDataList, { ...body });
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值

@@ -11,13 +11,22 @@ class index extends PureComponent {
   }
 
   componentDidMount() {
+    const { location } = this.props;
+    if(location.query&&location.query.type==='alarm' ){
+     this.setState({
+         title: location.query.title,
+     })  
+    }
   }
 
   render() {
     const { pointName, DGIMN, pointType } = this.state;
     // const { resTimeCheckTableData, pollutantList, tableLoading } = this.props;
+    const { location } = this.props;
+
     return (
       <>
+       {location.query&&location.query.type!=='alarm'?
         <NavigationTree domId="zeroCheck" onTreeSelect={(value, item) => {
           this.setState({
             pointName: item.title,
@@ -25,9 +34,11 @@ class index extends PureComponent {
             pointType: item.PointType
           })
         }} />
+        :null
+      }
         <BreadcrumbWrapper id="zeroCheck" extraName={pointName}>
           {
-            DGIMN ? <ResTimeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+           location.query&&location.query.type==='alarm'? <ResTimeCheckPage DGIMN={location.query.dgimn} initLoadData location={location}/> : DGIMN ? <ResTimeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
           }
         </BreadcrumbWrapper>
       </>

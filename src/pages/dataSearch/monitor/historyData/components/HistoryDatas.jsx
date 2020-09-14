@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin,Checkbox } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin,Checkbox, message } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
@@ -209,10 +209,11 @@ class HistoryDatas extends React.Component {
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+   message.warning("暂未开放")
+  //   this.props.dispatch({
+  //     type: "historyData/exportHistoryReports",
+  //     payload: {DGIMNs: this.state.dgimn }
+  // })
   }
 
 
@@ -321,7 +322,7 @@ class HistoryDatas extends React.Component {
           if(dataType==="realtime" || dataType === "minute"){
              this.changeReportType(chatDatatype)
               setTimeout(()=>{ 
-                let { chartparams, dispatch,polltype } = this.props;
+                let { chartparams, dispatch,polltype,singFlag } = this.props;
                 chartparams = {
                   ...chartparams,
                   PollutantType: polltype
@@ -329,6 +330,13 @@ class HistoryDatas extends React.Component {
                 dispatch({
                  type: "historyData/getAllChatDataList",
                  payload: {...chartparams},
+                 callback: () => {
+                  singFlag = !singFlag;
+                  dispatch({
+                   type: "historyData/updateState",
+                   payload: {singFlag},
+                   })
+                 }
                 })
 
 

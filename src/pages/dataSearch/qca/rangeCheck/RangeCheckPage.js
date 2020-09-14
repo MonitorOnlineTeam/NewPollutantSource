@@ -166,8 +166,16 @@ class RangeCheckPage extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.pollutantList !== this.props.pollutantList) {
-      if (this.props.pointType === "1") {
+
+    const {location} = this.props;
+      
+      if(location&&location.query.type==='alarm' ){ //从报警信息页面跳转
+        this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
+        this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime),moment(location.query.endTime)] })
+        this.getTableDataSource();
+      }else{
+       if (prevProps.pollutantList !== this.props.pollutantList) {
+       if (this.props.pointType === "1") {
         // 废水
         this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
       } else {
@@ -175,6 +183,7 @@ class RangeCheckPage extends PureComponent {
         this.formRef.current.setFieldsValue({ PollutantCode: ["a21002", "a19001", "a21026"] })
       }
       this.getTableDataSource();
+      }
     }
     if (prevProps.DGIMN !== this.props.DGIMN) {
       this.getPollutantList();

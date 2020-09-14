@@ -142,7 +142,7 @@ class Index extends React.Component {
                      </Row>
                  }else{
                     return   <Row align='middle' justify='center'>
-                            <Form.Item style={{marginBottom:0}} name='lowLimit' rules={[{ required: true, message: '请输入备案值' }]}>
+                            <Form.Item style={{marginBottom:0}} name='lowLimits' rules={[{ required: true, message: '请输入备案值' }]}>
                              <InputNumber style={{width:70}} min={0} max={99999} defaultValue={row.TopLimit} onChange={this.lowLimitChange} /> 
                             </Form.Item>
                             </Row>
@@ -212,10 +212,6 @@ class Index extends React.Component {
               const { editingKey } = this.props;
 
               if(value instanceof Array){
-              //   value.map((item,index)=>{
-              //     console.log(value)
-              //   // return <Button type="link" onClick={this.isSave(item,index)}>{item}</Button>
-              //   })
               return <div>
                   <Popconfirm title="确认保存此备案记录?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
                      <a >{value[0]}</a>
@@ -407,8 +403,10 @@ class Index extends React.Component {
       this.formRef.current.validateFields();
       const lowLimit = this.formRef.current.getFieldsValue().lowLimit;
       const topLimit = this.formRef.current.getFieldsValue().topLimit;
-      // const paraName = this.formRef.current.getFieldsValue().paraName;
-         if( row.TopLimit||row.TopLimit===0 ){
+      const lowLimits = this.formRef.current.getFieldsValue().lowLimits;
+
+
+         if( row.Type==2){ //备案值有两个时
              if(lowLimit||lowLimit===0 &&topLimit||topLimit===0){
                 this.saveSubmit();
              }else{
@@ -416,7 +414,7 @@ class Index extends React.Component {
              }
 
          }else{
-          if(lowLimit||lowLimit===0){
+          if(lowLimits||lowLimits===0){
             this.saveSubmit();
           }else{
             return false;
@@ -536,7 +534,7 @@ class Index extends React.Component {
       DGIMN:dgimn,
       RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
    }
-   this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: ""});
+   this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: "",lowLimits: "" });
     isSaveFlag = true
      dispatch({
         type: 'paramsfil/updateState',

@@ -30,27 +30,30 @@ const NoticeList = ({
   const tooltipText = (value) => {
     return <div style={{ color: 'rgba(0, 0, 0, 0.65)', wordWrap: 'break-word' }}>{value}</div>
   }
-  
-  const linkClick = (record) =>{
+
+  const linkClick = (record) => {
     const date = record.FirstTime;
 
-    const code = [ ...new Set(record.PollutantCode.split(","))].join()
+    const code = [...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
+    if (record.AlarmType == 13) {
 
-   return  <>
-          {record.AlarmType === "2" ? // 数据超标    
-             <Link to={`/dataSearch/monitor/alarm/overrecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> :
+    } else {
+      return <>
+          {record.AlarmType === "2" ? // 数据超标
+             
+             <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
              record.AlarmType === "0" ? //数据异常
-               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : 
+               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
                record.AlarmType === "12" ? //备案不符
-                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?code=${record.PollutantCode}&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&type=alarm`} >查看</Link> : 
+                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
                   <></>
  
            }
       </>
+    }
   }
-
   return (
     <div>
       <List
@@ -86,29 +89,25 @@ const NoticeList = ({
                       {
                         item.AlarmType == 13 ? //质控核查报警
                           <>
-                          // /dataSearch/qca/zeroCheck
-                          // /dataSearch/qca/rangeCheck
-                          // /dataSearch/qca/blindCheck
-                          // /dataSearch/qca/linearCheck
-                          // /dataSearch/qca/resTimeCheck
+                            {linkClick(item)}
                           </>
                           :
                           <>
                             {item.AlarmMsg && item.AlarmMsg.length >= 62 ?
                               <div style={{ overflow: "hidden" }}>
 
-                                <Tooltip title={tooltipText(item.AlarmMsg)} color={"#fff"} overlayStyle={{ maxWidth: 400 }}>
-                                  <span style={{ fontWeight: 'normal', '-webkit-box-orient': 'vertical',width:"auto",float:"left"}} className="line-clamp-3">
-                               
-                                    <span> {item.AlarmMsg} </span>
-                  
+                                <Tooltip title={tooltipText([...new Set(item.AlarmMsg.split(";"))].join(";"))} color={"#fff"} overlayStyle={{ maxWidth: 400 }}>
+                                  <span style={{ fontWeight: 'normal', '-webkit-box-orient': 'vertical', width: "auto", float: "left" }} className="line-clamp-3">
+
+                                    <span> {[...new Set(item.AlarmMsg.split(";"))].join(";")} </span>
+
                                   </span>
                                 </Tooltip>
-                                  <span style={{float:"left"}}> {linkClick(item)} </span>
+                                <span style={{ float: "left" }}> {linkClick(item)} </span>
                               </div>
                               :
                               <div style={{ fontWeight: 'normal' }}>
-                                <span style={{paddingLeft:5}}>{item.AlarmMsg} </span>
+                                <span style={{ paddingLeft: 5 }}>{item.AlarmMsg} </span>
                                 <>
 
                                   {linkClick(item)}

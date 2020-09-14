@@ -63,7 +63,7 @@ class EditorAddMode extends React.Component {
             align: 'center'
           },
           {
-            title: '创建时间',
+            title: '首次执行时间',
             dataIndex: 'date',
             key: 'date',
             align: 'center',

@@ -119,11 +119,11 @@ class TableData extends React.Component {
       const checkCode = [ ...new Set(record.PollutantCode.split(","))]
 
        const check={
-         'zero':`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'rang':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'blind':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'line':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'res':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`
+         'zero':`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'rang':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'blind':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'line':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+         'res':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
        }
       //
       return  <div style={{textAlign: 'left',}}>
@@ -132,7 +132,7 @@ class TableData extends React.Component {
                  <span style={{  paddingRight: 5, }}  >
                   {item}
                </span>
-               <Link style={{  paddingRight: 8, }} to={(/零点核查/g).test(item) ? `${check["zero"]}code=${checkCode[index]}` : (/量程核查/g).test(item)?
+               <Link style={{  paddingRight: 8, }} to={(/零点核查/g).test(item) ? `${check["zero"]}&code=${checkCode[index]}` : (/量程核查/g).test(item)?
                `${check["rang"]}&code=${checkCode[index]}` : (/盲样核查/g).test(item) ? `${check["blind"]}&code=${checkCode[index]}`
                 : (/线性核查/g).test(item) ?  `${check["line"]}&code=${checkCode[index]}` :  `${check["res"]}&code=${checkCode[index]}`
                 } >查看</Link> 
@@ -144,20 +144,20 @@ class TableData extends React.Component {
     } else {
 
       return <div style={{ overflow: "hidden" }}>
-        <Tooltip title={this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
+        <Tooltip title={this.tooltipText.bind(this, [ ...new Set(text.split(";"))].join(";") )} color={"#fff"} overlayStyle={{ maxWidth: 550}}  >
           <span style={{ textAlign: 'left', '-webkit-box-orient': 'vertical', width: 'auto', paddingRight: 5,float:"left" }} className="line-clamp-3"  >
-               {text}
+               {[ ...new Set(text.split(";"))].join(";")}
           </span>
 
         </Tooltip>
         <span style={{float:"left"}}>
-          {record.AlarmType === "2" ?
+          {record.AlarmType === "2" ? // 数据超标
              
-            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :// 数据超标
-            record.AlarmType === "0" ?
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //数据异常
+            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+            record.AlarmType === "0" ? //数据异常
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
               record.AlarmType === "12" ? //备案不符
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //备案不符
+                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
                  <></>
 
           }
@@ -280,7 +280,7 @@ class TableData extends React.Component {
       treeDefaultExpandAll: true,
       treeCheckable: true,
       treeNodeFilterProp: "title",
-      placeholder: '请选择运维站点！',
+      placeholder: '请选择企业排扣！',
       allowClear: true,
       // value:'62020131jhdp03',
       style: {
