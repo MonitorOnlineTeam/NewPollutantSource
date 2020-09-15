@@ -82,6 +82,31 @@ export default Model.extend({
         });
       }
     },
+    // 获取省市区/企业/排口
+    *getEnterpriseAndPoint({ payload, callback }, { call, update, select }) {
+      const level = yield select(state => state.common.level);
+      const result = yield call(services.getEnterpriseAndPoint, payload);
+      if (result.IsSuccess) {
+        if (level !== result.Datas.level) {
+          yield update({ level: result.Datas.level });
+        }
+        let defaultValue = [];
+        function factorial(data) {
+          // if (n == 1) return n;
+          if (data && data.children) {
+            defaultValue.push(data.value);
+            factorial(data.children[0]);
+          }
+        }
+        result.Datas.list && result.Datas.list.length && factorial(result.Datas.list[0]);
+        yield update({
+          enterpriseAndPointList: result.Datas.list,
+          defaultSelected: defaultValue,
+        });
+
+        callback && callback(result.Datas.list, defaultValue);
+      }
+    },
     /**
   * 基本信息-生成当前企业下所有监测点的二维码
   * @param {传递参数} 传递参数

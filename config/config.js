@@ -232,29 +232,29 @@ export default {
             //   component: './dataQuery/monitorData/historyData',
             // },
             {
-              path: '/:parentcode/autoformmanager/:configId',
+              path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
                 // { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
                 {
                   name: 'index',
-                  path: '/:parentcode/autoformmanager/:configId',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId',
                   component: './AutoFormManager',
                 },
                 {
                   name: 'add',
-                  path: '/:parentcode/autoformmanager/:configId/autoformadd',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformadd',
                   // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
                   component: './AutoFormManager/AutoFormAdd',
                 },
                 {
                   name: 'edit',
-                  path: '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
                   component: './AutoFormManager/AutoFormEdit',
                 },
                 {
                   name: 'view',
-                  path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
@@ -316,7 +316,7 @@ export default {
                       component: './dataSearch/monitor/historyData',
                     },
                     {
-                      // 
+                      //
                       name: 'historyData',
                       path: '/dataSearch/monitor/RealTimeData',
                       component: './Test/Test',
@@ -347,7 +347,7 @@ export default {
                     },
                   ]
                 },
-                 //视频监控
+                //视频监控
                 {
                   name: 'videoMonitor',
                   path: '/dataSearch/videoMonitor',
@@ -404,6 +404,12 @@ export default {
                       name: 'offStreamRecord',
                       path: '/dataSearch/siteData/offStreamRecord',
                       component: './dataSearch/siteData/offStreamRecord',
+                    },
+                    {
+                      // 站点信息
+                      name: 'siteInfo',
+                      path: '/dataSearch/siteData/siteInfo',
+                      component: './dataSearch/siteData/siteInfoPage',
                     },
                   ]
                 }
@@ -547,20 +553,30 @@ export default {
               name: 'basicsManage',
               routes: [
                 {
-                  name: 'entManage',  // 企业管理
-                  path: '/basicsManage/entManage',
+                  name: 'wry',  // 污染源管理
+                  path: '/basicsManage/wry',
                   routes: [
                     {
+                      name: 'index',  // 企业管理
+                      path: '/basicsManage/wry/entManage',
+                      component: './basicsManage/wry/entManage',
+                    },
+                    {
+                      name: 'index',  // 企业管理 - 排口管理
+                      path: '/basicsManage/wry/entManage/point/:entCode/:entName',
+                      component: './basicsManage/wry/entManage/Point',
+                    },
+                    {
                       name: 'KBS',  // 知识库管理
-                      path: '/basicsManage/entManage/KBS',
+                      path: '/basicsManage/wry/KBS',
                       component: './KBS/KBSManage',
                     },
+                    {
+                      name: 'videomanagers',// 视频管理
+                      path: '/basicsManage/wry/videomanager',
+                      component: './basicsManage/videomanager',
+                    },
                   ]
-                },
-                {
-                  name: 'videomanagers',  // 视频管理
-                  path: '/basicsManage/wry/videomanager',
-                  component: './basicsManage/videomanager'
                 },
               ]
             },
