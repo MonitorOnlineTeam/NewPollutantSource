@@ -21,6 +21,13 @@ class BreadcrumbWrapper extends Component {
               </Breadcrumb.Item>
             })
           }
+          {
+            this.props.title ?
+              <Breadcrumb.Item key={this.props.title}>
+                <a>{this.props.title}</a>
+              </Breadcrumb.Item>
+              : ""
+          }
         </Breadcrumb>
         {this.props.extraName ? `【${this.props.extraName}】` : ""}
       </div>
