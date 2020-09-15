@@ -215,8 +215,7 @@ class index extends PureComponent {
             <SdlTable columns={pollutantColumns} dataSource={pollutantByDgimnList} pagination={false} />
             <Divider />
           </Col>
-          <Col flex="100px">
-            {/* <Anchor getContainer={() => this.div}> */}
+          {/* <Col flex="100px">
             <Anchor>
               <Link href="#basic" title="基本信息" />
               <Link href="#personnel" title="人员信息" />
@@ -225,7 +224,7 @@ class index extends PureComponent {
               <Link href="#instrument" title="仪器信息" />
               <Link href="#wrw" title="污染物信息" />
             </Anchor>
-          </Col>
+          </Col> */}
         </Row>
 
       </Card>
