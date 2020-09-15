@@ -383,7 +383,7 @@ class HistoryDatas extends React.Component {
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
           <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
-          <Col  xxl={4} xl={5}  md={12} sm={24} xs={24}>
+          <Col  xxl={4} xl={4}  md={12} sm={24} xs={24}>
               <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
                    {isSingerChat ?
                   
@@ -401,7 +401,7 @@ class HistoryDatas extends React.Component {
             }
               </Form.Item>
               </Col>
-            <Col  xxl={8} xl={8}    md={12} sm={24} xs={24}>
+            <Col  xxl={8} xl={6}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
                   <RangePicker_ 
                   dateValue={dateValue}
@@ -413,15 +413,15 @@ class HistoryDatas extends React.Component {
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-              <Col  xxl={6} xl={5}  md={12} sm={24} xs={24}>
-              <Form.Item label="污染类型" {...formItemLayout} className='queryConditionForm'>
+              <Col  xxl={6} xl={8}  md={12} sm={24} xs={24}>
+              <Form.Item label="污染物" {...formItemLayout} className='queryConditionForm'>
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
           
               {isSwitch ?  <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}> <Checkbox  defaultChecked={defaultChecked}  onChange={this.identChange}>标识</Checkbox></Col> : null}
             
-            <Col  xxl={3} xl={3}   md={12} sm={24} xs={12}>
+            <Col  xxl={3} xl={2}   md={12} sm={24} xs={12}>
               <Form.Item {...formItemLayout} className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>

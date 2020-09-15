@@ -37,8 +37,26 @@ const NoticeList = ({
     const code = [...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
-    if (record.AlarmType == 13) {
 
+    const check={
+      "3101":`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3102':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3105':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3104':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
+    }
+    if (record.AlarmType == 13) {
+      return  <div style={{textAlign: 'left'}}>
+       { record.AlarmMsg.split(";").map((item,index)=>{
+         return  <>
+                 <span style={{  paddingRight: 5, }}  >
+                  {item}
+               </span>
+               <Link style={{  paddingRight: 8, }} to={`${check[record.PollutantCode.split(",")[index].split("@")[1]]}&code=${record.PollutantCode.split(",")[index].split("@")[0]}`} >查看</Link> 
+               </>
+      })
+    }
+      </div>
     } else {
       return <>
           {record.AlarmType === "2" ? // 数据超标
@@ -96,10 +114,10 @@ const NoticeList = ({
                             {item.AlarmMsg && item.AlarmMsg.length >= 62 ?
                               <div style={{ overflow: "hidden" }}>
 
-                                <Tooltip title={tooltipText([...new Set(item.AlarmMsg.split(";"))].join(";"))} color={"#fff"} overlayStyle={{ maxWidth: 400 }}>
+                                <Tooltip title={tooltipText(item.AlarmMsg)} color={"#fff"} overlayStyle={{ maxWidth: 400 }}>
                                   <span style={{ fontWeight: 'normal', '-webkit-box-orient': 'vertical', width: "auto", float: "left" }} className="line-clamp-3">
 
-                                    <span> {[...new Set(item.AlarmMsg.split(";"))].join(";")} </span>
+                                    <span> {item.AlarmMsg} </span>
 
                                   </span>
                                 </Tooltip>
