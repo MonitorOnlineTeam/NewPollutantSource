@@ -84,7 +84,7 @@ class ViewQCProcess extends PureComponent {
       <div className={styles.gasInfoBox}>
         <ul>
           <li>
-            气瓶浓度：{gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
+            气瓶浓度：{gasData.O2Info && gasData.O2Info.Concentration != undefined && `${gasData.O2Info.Concentration}%`}
           </li>
           <li>
             <span>过期时间：</span>
@@ -222,11 +222,12 @@ class ViewQCProcess extends PureComponent {
           </div> : null
       }
       <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px)* 3)" }} src="/qualityControl/valveClose.jpg" alt="" />
-      {valveStatus.N2 ?
+      {valveStatus.N2 && !valveStatus.purge ?
         // {true ?
         <>
           <img className={styles.line} src="/qualityControl/N2.png" alt="" />
           <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 3)" }} src="/qualityControl/valveOpen.jpg" alt="" />
+          <img className={styles.valve} style={{ top: "499px", left: "484px" }} src="/qualityControl/valveOpen2.jpg" alt="" />
         </> : null
       }
       {/* 吹扫 */}

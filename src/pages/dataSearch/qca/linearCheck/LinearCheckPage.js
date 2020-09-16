@@ -240,7 +240,7 @@ class LinearCheckPage extends PureComponent {
         dataIndex: 'value',
         render: (text, record, index) => {
           if (text !== "-") {
-            return <span style={{ color: record.state !== 0 ? "#u39" : "" }}>{text} {record.unit}</span>
+            return <span style={{ color: record.state !== 0 ? "#f5222d" : "" }}>{text} {record.unit}</span>
           }
           return text;
         }

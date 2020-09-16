@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Card, Anchor, Row, Col, Descriptions, Divider, Empty, Tag } from 'antd'
+import { Card, Anchor, Row, Col, Descriptions, Divider, Empty, Tag, Upload } from 'antd'
 import { connect } from 'dva'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import styles from './index.less'
 import SdlTable from "@/components/SdlTable"
 import PageLoading from '@/components/PageLoading'
+import Lightbox from "react-image-lightbox-rotate";
+
 
 const { Link } = Anchor;
 
@@ -150,9 +152,35 @@ class index extends PureComponent {
     }
   }
 
+  handlePreview = (file, fileList) => {
+    let photoIndex = 0;
+    fileList.map((item, index) => {
+      if (item.uid === file.uid) {
+        photoIndex = index;
+      }
+    });
+    this.setState({
+      previewVisible: true,
+      // previewImage: file.url,
+      photoIndex: photoIndex,
+    });
+  }
+
   render() {
-    const { columns, pollutantColumns } = this.state;
+    const { columns, pollutantColumns, photoIndex } = this.state;
     const { loading, siteData, pointInstrumentList, pollutantByDgimnList } = this.props;
+
+    let fileList = siteData.Photo ? siteData.Photo.map((item, index) => {
+      return {
+        uid: index,
+        name: 'image.png',
+        status: 'done',
+        url: `/upload/${item}`,
+      }
+    }) : []
+
+    let ImageList = fileList.map(item => item.url)
+
     if (loading) {
       return <PageLoading />
     }
@@ -164,7 +192,7 @@ class index extends PureComponent {
               <Descriptions.Item label="所属企业">{siteData.ParentName}</Descriptions.Item>
               <Descriptions.Item label="所属行业">{siteData.AutoMonitorInstrument}</Descriptions.Item>
               <Descriptions.Item label="站点名称">{siteData.PointName}</Descriptions.Item>
-              <Descriptions.Item label="编号">{siteData.PointCode}</Descriptions.Item>
+              <Descriptions.Item label="编号">{siteData.DGIMN}</Descriptions.Item>
               <Descriptions.Item label="行政区划">{siteData.RegionName}</Descriptions.Item>
               <Descriptions.Item label="设备类型">{siteData.PollutantType}</Descriptions.Item>
               <Descriptions.Item label="排口类型">{siteData.OutputType}</Descriptions.Item>
@@ -194,22 +222,30 @@ class index extends PureComponent {
               zoom={12}
             />
             <Divider />
-            {/* <div className="ant-descriptions-title">
+            <div className="ant-descriptions-title" style={{marginBottom: 20}}>
               图片信息
             </div>
             <div className={styles.imagesContainer}>
               {
-                siteData.Photo ? siteData.Photo.map(item => {
-                  return <img src={`/upload/${item}`} alt="" />
-                }) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                siteData.Photo ?
+                  <Upload
+                    showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
+                    listType='picture-card'
+                    fileList={fileList}
+                    onPreview={file => {
+                      this.handlePreview(file, fileList);
+                    }}
+                  />
+                  : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
               }
-            </div> */}
-            <div id="instrument" className="ant-descriptions-title" style={{ marginBottom: 10 }}>
+            </div>
+            <Divider />
+            <div id="instrument" className="ant-descriptions-title" style={{ marginBottom: 20 }}>
               仪器信息
             </div>
             <SdlTable scroll={{ y: 400 }} columns={columns} dataSource={pointInstrumentList} pagination={false} />
             <Divider />
-            <div id="wrw" className="ant-descriptions-title" style={{ marginBottom: 10 }}>
+            <div id="wrw" className="ant-descriptions-title" style={{ marginBottom: 20 }}>
               污染物信息
             </div>
             <SdlTable columns={pollutantColumns} dataSource={pollutantByDgimnList} pagination={false} />
@@ -226,7 +262,24 @@ class index extends PureComponent {
             </Anchor>
           </Col> */}
         </Row>
-
+        {this.state.previewVisible && (
+          <Lightbox
+            mainSrc={ImageList[photoIndex]}
+            nextSrc={ImageList[(photoIndex + 1) % ImageList.length]}
+            prevSrc={ImageList[(photoIndex + ImageList.length - 1) % ImageList.length]}
+            onCloseRequest={() => this.setState({ previewVisible: false })}
+            onPreMovePrevRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + ImageList.length - 1) % ImageList.length
+              })
+            }
+            onPreMoveNextRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + 1) % ImageList.length
+              })
+            }
+          />
+        )}
       </Card>
     );
   }
