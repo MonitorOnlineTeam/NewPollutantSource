@@ -520,13 +520,13 @@ class FlowChart extends PureComponent {
                this.setState({leng:`${item.Value==null?"-":item.Value}${item.Unit}`})
               } 
               if(item.Code ==="i32011"){ //质控仪门状态
-                 this.setState({zhikongmenState:item.State})
+                 this.setState({zhikongmenState:item.Value})
               }
                if(item.Code === "i32002"){ //质控仪状态
-                this.setState({zhikongState:item.State})
+                this.setState({zhikongState:item.Value})
                } 
                if(item.Code === "i32009"){ //通讯状态
-                this.setState({tongxunState:item.State})
+                this.setState({tongxunState:item.Value})
                } 
            }
            

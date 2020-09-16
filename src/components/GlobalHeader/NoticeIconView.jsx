@@ -19,6 +19,7 @@ import RealTimeWarningModal from '@/components/RealTimeWarning/RealTimeWarningMo
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices, // 数据要用固定格式
   currentUserNoticeCnt: global.currentUserNoticeCnt,
+  getAlarmNoticesParameters:global.getAlarmNoticesParameters
 }))
 
 /**
@@ -38,12 +39,29 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'global/fetchNotices',
-      payload: {},
-    });
+      this.getAlarmList();
   }
+
+
+    
+    getAlarmList = () => {
+
+      const { dispatch, getAlarmNoticesParameters } = this.props;
+      
+      dispatch({
+        type: "alarmInfoData/getAlarmType", //获取报警类型
+        payload: {},
+        callback: (res) => {
+          const defaultValue = res.map((item)=>{
+            return item.code
+         })
+          dispatch({
+            type: 'global/fetchNotices',
+            payload: {...getAlarmNoticesParameters,alarmType:defaultValue},
+          });
+        }
+      })
+    }
 
   // 格式化添加标签和标识icon
   getNoticeData() { 

@@ -54,7 +54,7 @@ class TableData extends React.Component {
       {
         title: '报警时间',
         align: 'center',
-        dataIndex: 'FirstTime',
+        dataIndex: 'AlarmTime',
         render: (text, record) => {
           return text ? <span>{text}</span> : "-"
         },
@@ -209,8 +209,8 @@ class TableData extends React.Component {
     this.setState({ dateValue: dates })
     queryParams = {
       ...queryParams,
-      BeginTime: dates[0].format('YYYY-MM-DD'),
-      EndTime: dates[1].format('YYYY-MM-DD'),
+      beginTime: dates[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
     }
     dispatch({
       type: 'alarmInfoData/updateState',

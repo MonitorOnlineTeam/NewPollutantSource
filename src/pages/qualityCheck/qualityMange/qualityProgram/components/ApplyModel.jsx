@@ -63,7 +63,7 @@ class EditorAddMode extends React.Component {
   submitClick=()=>{
     this.setState({visible:true})
 
-     console.log(this.props.editEchoData)
+    //  console.log(this.props.editEchoData)
   }
 
   handleCancel=()=>{
@@ -145,7 +145,7 @@ class EditorAddMode extends React.Component {
         treeDefaultExpandAll: true,
         treeCheckable: true,
         treeNodeFilterProp: "title",
-        placeholder: '请选择运维站点！',
+        placeholder: '请选择企业排扣！',
         allowClear:true,
         style: {
           width: '100%',
@@ -162,10 +162,10 @@ class EditorAddMode extends React.Component {
         >
     <Form {...layout} ref={this.formRef}  initialValues={{remember: true, }}  >
      <Form.Item label="质控方案名称" name="QCAProgrammeName"  rules={[{ required: true, message: '请输入方案名称!',  },]}>
-        <Input  disabled />
+        <Input placeholder='请输入质控方案名称' disabled />
       </Form.Item>
       <Form.Item label="质控方案描述" name="Describe"  rules={[{ required: true, message: '请输入方案描述!',  },]}>
-       <TextArea rows={4} disabled />
+       <TextArea placeholder='质控方案描述' rows={4} disabled />
       </Form.Item>  
       <Form.Item label="选择应用排扣" name="apply" rules={[{ required: true, message: '请选择应用排扣!',  },]}>
         <TreeSelect {...tProps} onChange={this.treeChange}/>

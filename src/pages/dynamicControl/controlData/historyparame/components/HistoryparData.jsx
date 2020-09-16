@@ -12,7 +12,7 @@ import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { green,gold,red,yellow  } from '@ant-design/colors';
 
-const { SHOW_PARENT } = TreeSelect
+// const { SHOW_PARENT } = TreeSelect
 /**
  * 标准气管理
  * jab 2020.08.13
@@ -35,14 +35,8 @@ const columns =  [
       switch (text) {
           case "0":
             return <span style={{color:green[6]}} > 正常</span>
-          case "1":
-            return  <span  style={{color:gold[6]}}  > 超下限</span>
-          case "2":
-            return  <span style={{color:red[6]}}> 超上限</span>
-          case "3": 
-            return  <span  style={{color:yellow[6]}}> 参数不符</span>
           default:
-            return "-"
+            return "备案不符"
       }
 
     }
@@ -51,22 +45,21 @@ const columns =  [
     title: '变更前',
     dataIndex: 'oldValue',
     render: (text, record) => {
-      return text ? text : "-"
+      return text || text===0 ? text : "-"
     }
   },
   {
     title: '变更后',
     dataIndex: 'value',
     render: (text, record) => {
-      return text ? text : "-"
-
+      return text || text===0 ? text : "-"
     }
   },
   {
     title: '正常范围',
     dataIndex: 'range',
     render: (text, record) => {
-      return text ? text : "-"
+      return text || text===0 ? text : "-"
     }
   },
   {
@@ -231,7 +224,7 @@ dateCallback = (dates, dataType) => { //更新日期
     });
   }
   treeChange=(value,label, extra)=>{
-
+     
     let { queryParams, dispatch } = this.props;
     queryParams = {
       ...queryParams,
@@ -241,28 +234,49 @@ dateCallback = (dates, dataType) => { //更新日期
       type: 'historyparData/updateState',
       payload: { queryParams},
     })
-    this.setState({code:value})
+    if(value=='all'){
+      this.setState({code:['all',"leaf1"]})
+    }else{
+      this.setState({code:value})
+
+    }
   }
 
  parameName=()=>{
 
   const {parLoading,paraCodeList} = this.props
+  const { TreeNode } = TreeSelect;
   if(!parLoading){
     const tProps = {
       value:this.state.code,
       treeData:paraCodeList,
       treeDefaultExpandAll: true,
       treeCheckable: true,
-      // showCheckedStrategy: SHOW_CHILD,
-      placeholder: '请选择参数名称'
+      // showCheckedStrategy: SHOW_PARENT,
+      placeholder: '请选择参数名称',
+      onChange:this.treeChange,
     };
-    return <TreeSelect {...tProps} maxTagCount={1}  onChange={this.treeChange}/>;
+    return <TreeSelect {...tProps} maxTagCount={1} >
+    
+    {/* <TreeNode value="parent 1" title="parent 1">
+          <TreeNode value="parent 1-0" title="parent 1-0">
+            <TreeNode value="leaf1" title="my leaf" />
+            <TreeNode value="leaf2" title="your leaf" />
+          </TreeNode>
+          <TreeNode value="parent 1-1" title="parent 1-1">
+            <TreeNode value="sss" title={<b style={{ color: '#08c' }}>sss</b>} />
+          </TreeNode>
+        </TreeNode>
+        <TreeNode value="all" title="全选">全选</TreeNode> */}
+    </TreeSelect>;
   }else{
     return <Spin size="small" />
   }
 
  
  }
+
+
 
   //导出数据
   exportData = () => { 
