@@ -155,7 +155,7 @@ getpollutantSelect = () => {
 
             <Row gutter={[4,8]} style={{flex:1}} style={{justifyContent:"flex-end"}}> 
               {/* <Col  gutter={[0,8]} xxl={4} xl={4}   lg={24} md={24} sm={24} xs={24}> */}
-              <Form.Item  className='queryConditionForm' style={{marginRight:0}}> 
+              <Form.Item  className='queryConditionForm' style={{marginRight:0,padding:'8px 0'}}> 
                 <Button type="primary" loading={false} onClick={keepRecordClick} >备案</Button>
               </Form.Item>
             {/* </Col>   */}

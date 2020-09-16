@@ -120,7 +120,7 @@ class Index extends React.Component {
             render: (value,row) => {
               if(value instanceof Array){
               
-             return   <DropDownSelect onChange={this.cycleClick} defaultValue={value[0].value} optiondatas={value}/>
+             return   <DropDownSelect placeholder='请选择质控周期' onChange={this.cycleClick} defaultValue={value[0].value} optiondatas={value}/>
               }else{
               return <span>{value}</span>
               }
