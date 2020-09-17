@@ -22,7 +22,8 @@ import DropDownSelect from '@/components/DropDownSelect'
     instruListParams:paramsfil.instruListParams,
     pollutantlist:paramsfil.pollutantlist,
     defaultValue:paramsfil.defaultValue,
-    ispollut:paramsfil.ispollut
+    ispollut:paramsfil.ispollut,
+    tableDatas:paramsfil.tableDatas,
 }))
 
 class Index extends React.Component {
@@ -130,8 +131,9 @@ getpollutantSelect = () => {
 
   render() {
 
-    const {addClick,pollutantlist,defaultValue,keepRecordClick,ispollut} = this.props;
+    const {addClick,pollutantlist,defaultValue,keepRecordClick,ispollut,tableDatas} = this.props;
     const GetpollutantSelect = this.getpollutantSelect;
+
     return (
 <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
@@ -155,8 +157,8 @@ getpollutantSelect = () => {
 
             <Row gutter={[4,8]} style={{flex:1}} style={{justifyContent:"flex-end"}}> 
               {/* <Col  gutter={[0,8]} xxl={4} xl={4}   lg={24} md={24} sm={24} xs={24}> */}
-              <Form.Item  className='queryConditionForm' style={{marginRight:0,padding:'8px 0'}}> 
-                <Button type="primary" loading={false} onClick={keepRecordClick} >备案</Button>
+              <Form.Item  className='queryConditionForm' style={{marginRight:'1px',padding:'8px 0'}}> 
+                <Button disabled={tableDatas.length>0?false:true} type="primary" loading={false} onClick={keepRecordClick} >备案</Button>
               </Form.Item>
             {/* </Col>   */}
             </Row>
