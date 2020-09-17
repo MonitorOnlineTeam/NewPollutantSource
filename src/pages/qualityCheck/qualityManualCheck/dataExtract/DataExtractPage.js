@@ -112,6 +112,63 @@ class DataExtractPage extends PureComponent {
     })
   }
 
+  getAnswer = (QCLogsAnswer) => {
+    let str = QCLogsAnswer.Str;
+    if (str) {
+      if (str === "通讯超时") {
+        return <span style={{ color: "#f81d22" }}>通讯超时。</span>
+      }
+      if (QCLogsAnswer.Result === false) {
+        return <span>收到{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
+      }
+      if (QCLogsAnswer.Result) {
+        return <span>
+          {QCLogsAnswer.Str}。
+        </span>
+      }
+    }
+  }
+
+  getLogResult = (QCLogsResult) => {
+    const { pointName } = this.props;
+    // 通讯超时
+    if (QCLogsResult.ErrorStr == "通讯超时") {
+      return <span>{`【${pointName}】`}<span style={{ color: "#f81d22" }}>通讯超时</span></span>
+    }
+    // 异常
+    if (QCLogsResult.Result == 2) {
+      return <span>{`【${pointName}】`}<span style={{ color: "#f81d22" }}>{QCLogsResult.ErrorStr}</span></span>
+    }
+    // 正常
+    if (QCLogsResult.Result != 2 && QCLogsResult.Type) {
+      return <>
+        {`【${pointName}】向平台反馈数据提取`}
+        {
+          QCLogsResult.Result == 1 ?
+            <>
+              <Tag color="#87d068">成功</Tag>
+              {`, 提取结果。`}
+              <Tag color="#87d068"
+                onClick={() => {
+                  if (QCLogsResult.Type === "data") {
+                    router.push("/dataSearch/monitor/history") // 历史数据
+                  }
+                  if (QCLogsResult.Type === "system") {
+                    router.push("/dataSearch/monitor/datavisualization") // 数据可视化
+                  }
+                  if (QCLogsResult.Type === "qcainfo") {
+                    router.push("/qualityCheck/qualityMange/standardAtmosMange") // 标准气体管理页面
+                  }
+                }}
+              >查看提取结果</Tag>
+            </>
+            :
+            <Tag color="#f81d22">失败</Tag>
+        }
+      </>
+    }
+  }
+
 
   render() {
     const { mins, hour, day, loading, currentPollutantCode } = this.state;
@@ -240,9 +297,9 @@ class DataExtractPage extends PureComponent {
                   <div className={styles.logItem}>
                     <p className={styles.date}>{QCLogsStart.Time}</p>
                     <span className={styles.text}>
-                      {QCLogsStart.str ?
+                      {QCLogsStart.Str ?
                         <>
-                          {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.str}`}
+                          {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.Str}`}
                         </> : ""}
                     </span>
                   </div>
@@ -250,9 +307,9 @@ class DataExtractPage extends PureComponent {
                   <div className={styles.logItem}>
                     <p className={styles.date}>{QCLogsAnswer.Time}</p>
                     <span className={styles.text}>
-                      {QCLogsAnswer.str ?
+                      {QCLogsAnswer.Str ?
                         <>
-                          {`【${pointName}】${QCLogsAnswer.str}。`}
+                          {`【${pointName}】`}{this.getAnswer(QCLogsAnswer)}
                         </> : ""}
                     </span>
                   </div>
@@ -266,7 +323,8 @@ class DataExtractPage extends PureComponent {
                       }
                     </p>
                     <span className={styles.text}>
-                      {QCLogsResult.Type ?
+                      {this.getLogResult(QCLogsResult)}
+                      {/* {QCLogsResult.Type ?
                         <>
                           {`【${pointName}】向平台反馈数据提取`}
                           {
@@ -292,7 +350,7 @@ class DataExtractPage extends PureComponent {
                               <Tag color="#f81d22">失败</Tag>
                           }
                         </>
-                        : ""}
+                        : ""} */}
                     </span>
                   </div>
                 </>
