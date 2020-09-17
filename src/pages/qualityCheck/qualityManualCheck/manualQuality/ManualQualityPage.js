@@ -80,7 +80,7 @@ class ManualQualityPage extends Component {
     // 状态改变后，情况数据
     if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
       this.props.dispatch({
-        type: "qcaCheck/updateState",
+        type: "qcManual/updateState",
         payload: {
           CEMSOpen: undefined,// CEMS阀门状态
           CEMSStatus: undefined,
@@ -97,8 +97,17 @@ class ManualQualityPage extends Component {
           realtimeStabilizationTime: {},
         }
       })
-      this.getStateAndRecord();
+      this.getMargin();
     }
+  }
+
+  getMargin = () => {
+    this.props.dispatch({
+      type: "qcManual/getMargin",
+      payload: {
+        DGIMN: this.props.DGIMN
+      }
+    })
   }
 
 
@@ -218,7 +227,7 @@ class ManualQualityPage extends Component {
       if (QCLogsAnswer.Result) {
         return <span>
           {/* 收到{QCLogsAnswer.Comment}，准备执行请求。 */}
-          {QCLogsAnswer.Str}。
+          收到{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
           {
             !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
               this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
