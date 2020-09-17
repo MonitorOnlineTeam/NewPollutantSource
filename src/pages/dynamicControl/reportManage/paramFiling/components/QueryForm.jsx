@@ -140,7 +140,7 @@ getpollutantSelect = () => {
            <Col xxl={18} xl={24}  lg={24}  md={24} sm={24} xs={24}>
            <Row  gutter={[4,8]} style={{flex:1}}> 
             <Col  xxl={8} xl={10}  lg={12}  md={24} sm={24} xs={24}>
-              <Form.Item label="污染物" className='queryConditionForm' >
+              <Form.Item label="仪器" className='queryConditionForm' >
               { ispollut?  <GetpollutantSelect /> : <Spin size="small" />    }
               </Form.Item>
             </Col>

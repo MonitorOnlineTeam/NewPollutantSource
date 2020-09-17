@@ -334,6 +334,10 @@ class FlowChart extends PureComponent {
       callback:(res)=>{
         res.map((item,index)=>{
 
+          let code  = item.Code;
+
+          console.log(code)
+
           if(item.Code ==="stop"){ //速度场
             this.setState({isStop:item.Value})
            }
@@ -344,6 +348,7 @@ class FlowChart extends PureComponent {
            if(item.Code ==="a01030"){ //皮托管
             this.setState({pi:`${item.Value==null?"-":item.Value}`})
            }
+
            if(item.Code ==="a01031"){ //过量空气
             this.setState({kong:`${item.Value==null?"-":item.Value}`})
            }
@@ -520,13 +525,13 @@ class FlowChart extends PureComponent {
                this.setState({leng:`${item.Value==null?"-":item.Value}${item.Unit}`})
               } 
               if(item.Code ==="i32011"){ //质控仪门状态
-                 this.setState({zhikongmenState:item.State})
+                 this.setState({zhikongmenState:item.Value})
               }
                if(item.Code === "i32002"){ //质控仪状态
-                this.setState({zhikongState:item.State})
+                this.setState({zhikongState:item.Value})
                } 
                if(item.Code === "i32009"){ //通讯状态
-                this.setState({tongxunState:item.State})
+                this.setState({tongxunState:item.Value})
                } 
            }
            

@@ -401,26 +401,31 @@ class Index extends React.Component {
     }else{ //保存事件
 
       this.formRef.current.validateFields();
-      const lowLimit = this.formRef.current.getFieldsValue().lowLimit;
-      const topLimit = this.formRef.current.getFieldsValue().topLimit;
-      const lowLimits = this.formRef.current.getFieldsValue().lowLimits;
-
-
+      const lowLimit = this.formRef.current.getFieldsValue().lowLimit=== 0? this.formRef.current.getFieldsValue().lowLimit.toString() : this.formRef.current.getFieldsValue().lowLimit;
+      const topLimit = this.formRef.current.getFieldsValue().topLimit===0? this.formRef.current.getFieldsValue().topLimit.toString() : this.formRef.current.getFieldsValue().topLimit;
+      const lowLimits = this.formRef.current.getFieldsValue().lowLimits===0? this.formRef.current.getFieldsValue().lowLimits.toString() : this.formRef.current.getFieldsValue().lowLimits;
          if( row.Type==2){ //备案值有两个时
-             if(lowLimit||lowLimit===0 &&topLimit||topLimit===0){
-                this.saveSubmit();
+             if(lowLimit && topLimit){
+               
+               if(lowLimit<topLimit){
+                  this.saveSubmit();
+                }else{
+                this.formRef.current.setFieldsValue({  lowLimit:null,topLimit:null});
+                this.formRef.current.validateFields();
+                 message.warn('备案值的下限值不能大于上限值')
+              }
              }else{
                return false;
              }
-
+            
          }else{
           if(lowLimits||lowLimits===0){
             this.saveSubmit();
           }else{
             return false;
           }
-         }
-   
+         
+        }
       
      
     }
@@ -545,6 +550,7 @@ class Index extends React.Component {
 
 
   }else{
+   
     message.warning("请保存之前未保存的状态")
   }
     

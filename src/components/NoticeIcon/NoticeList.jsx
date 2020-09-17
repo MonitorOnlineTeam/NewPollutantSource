@@ -144,7 +144,7 @@ const NoticeList = ({
                 description={
                   <div>
                     {/* <div className={styles.description}>{item.description}</div> */}
-                    <div className={styles.datetime}>{moment(item.FirstTime).format("YYYY-MM-DD HH:mm")}</div>
+                    <div className={styles.datetime}>{moment(item.AlarmTime).format("YYYY-MM-DD HH:mm")}</div>
                     <div className={styles.extra}>{item.extra}</div>
                   </div>
                 }

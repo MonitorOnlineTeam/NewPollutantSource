@@ -42,7 +42,7 @@ class TableData extends React.Component {
     };
     this.columns = [
       {
-        title: '企业排扣',
+        title: '企业排口',
         align: 'center',
         dataIndex: 'ParentName',
         render: (text, record) => {
@@ -54,7 +54,7 @@ class TableData extends React.Component {
       {
         title: '报警时间',
         align: 'center',
-        dataIndex: 'FirstTime',
+        dataIndex: 'AlarmTime',
         render: (text, record) => {
           return text ? <span>{text}</span> : "-"
         },
@@ -209,8 +209,8 @@ class TableData extends React.Component {
     this.setState({ dateValue: dates })
     queryParams = {
       ...queryParams,
-      BeginTime: dates[0].format('YYYY-MM-DD'),
-      EndTime: dates[1].format('YYYY-MM-DD'),
+      beginTime: dates[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
     }
     dispatch({
       type: 'alarmInfoData/updateState',
@@ -294,7 +294,7 @@ class TableData extends React.Component {
               </Form.Item>
             </Col>
             <Col xxl={6} xl={10} lg={14} md={16} sm={24} xs={24}>
-              <Form.Item label="企业排扣" className='queryConditionForm'>
+              <Form.Item label="企业排口" className='queryConditionForm'>
                 <TreeSelect {...tProps} onChange={this.treeChange} />
               </Form.Item>
             </Col>
