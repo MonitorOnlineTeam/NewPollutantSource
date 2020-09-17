@@ -136,6 +136,20 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取余量
+    *getMargin({ payload }, { call, update, put, take, select }) {
+      const result = yield call(services.getStateAndRecord, payload);
+      if (result.IsSuccess) {
+        let marginData = {};
+        marginData["a19001"] = result.Datas[0].o2
+        marginData["a21002"] = result.Datas[0].nox
+        marginData["a21026"] = result.Datas[0].so2
+        marginData["n00000"] = result.Datas[0].n2
+        yield update({ marginData })
+      } else {
+        message.error(result.Message)
+      }
+    }
     // *resetModalState({ payload, callback }, { call, update, put, take, select }) {
     //   yeild put({
     //     type: "resetState",

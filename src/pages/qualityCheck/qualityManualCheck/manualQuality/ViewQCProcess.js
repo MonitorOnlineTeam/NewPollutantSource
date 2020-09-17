@@ -235,6 +235,7 @@ class ViewQCProcess extends PureComponent {
         !!valveStatus.purge ? <>
           {/* true ? <> */}
           <img className={styles.line} src="/qualityControl/purge.png" alt="" />
+          <img className={styles.valve} style={{ top: "calc(90px + (130px + 30px) * 3)" }} src="/qualityControl/valveOpen.jpg" alt="" />
           <img className={styles.valve} style={{ top: "499px", left: "484px" }} src="/qualityControl/valveOpen2.jpg" alt="" />
         </> : null
       }
