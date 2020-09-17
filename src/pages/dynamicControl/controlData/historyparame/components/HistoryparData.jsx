@@ -14,18 +14,18 @@ import { green,gold,red,yellow  } from '@ant-design/colors';
 
 // const { SHOW_PARENT } = TreeSelect
 /**
- * 标准气管理
+ * 历史管控参数
  * jab 2020.08.13
  */
 const columns =  [
   {
-    title: '监测项目',
+    title: '仪器',
     align: 'center',
     dataIndex: 'monitoringItems',
 
   },
   {
-    title: '工作参数',
+    title: '参数名称',
     dataIndex: 'param',
   },
   {
@@ -39,6 +39,13 @@ const columns =  [
             return "备案不符"
       }
 
+    }
+  },
+  {
+    title: '变更时间',
+    dataIndex: 'monitorTime',
+    render: (text, record) => {
+      return text ? text : "-"
     }
   },
   {
@@ -65,13 +72,6 @@ const columns =  [
   {
     title: '单位',
     dataIndex: 'unit',
-    render: (text, record) => {
-      return text ? text : "-"
-    }
-  },
-  {
-    title: '变更时间',
-    dataIndex: 'monitorTime',
     render: (text, record) => {
       return text ? text : "-"
     }
@@ -296,7 +296,7 @@ dateCallback = (dates, dataType) => { //更新日期
         <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
           <Row gutter={[8,8]} style={{flex:1}} > 
           <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>
-            <Form.Item label="参数名称" className='queryConditionForm'>
+            <Form.Item label="工况参数" className='queryConditionForm'>
                   <ParameName /> 
               </Form.Item>
             </Col>

@@ -73,7 +73,7 @@ class EditorAddMode extends React.Component {
   handleOk = values => {
     let _this = this;
     confirm({
-      title: '确认要应用到企业排扣？',
+      title: '确认要应用到企业排口？',
       icon: <ExclamationCircleOutlined />,
       content: '',
       onOk() {
@@ -145,7 +145,7 @@ class EditorAddMode extends React.Component {
         treeDefaultExpandAll: true,
         treeCheckable: true,
         treeNodeFilterProp: "title",
-        placeholder: '请选择企业排扣！',
+        placeholder: '请选择企业排口！',
         allowClear:true,
         style: {
           width: '100%',
@@ -154,7 +154,7 @@ class EditorAddMode extends React.Component {
 
     return <div>
         <Modal
-          title={"应用到企业排扣"}
+          title={"应用到企业排口"}
           visible={visible}
           onOk={this.handleOk}
           confirmLoading={applyLoading}
@@ -167,7 +167,7 @@ class EditorAddMode extends React.Component {
       <Form.Item label="质控方案描述" name="Describe"  rules={[{ required: true, message: '请输入方案描述!',  },]}>
        <TextArea placeholder='质控方案描述' rows={4} disabled />
       </Form.Item>  
-      <Form.Item label="选择应用排扣" name="apply" rules={[{ required: true, message: '请选择应用排扣!',  },]}>
+      <Form.Item label="选择应用排口" name="apply" rules={[{ required: true, message: '请选择应用排口!',  },]}>
         <TreeSelect {...tProps} onChange={this.treeChange}/>
       </Form.Item>   
     </Form>
