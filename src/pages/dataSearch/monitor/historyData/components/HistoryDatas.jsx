@@ -222,10 +222,13 @@ class HistoryDatas extends React.Component {
  * 回调获取时间并重新请求数据
  */
   dateCallback = (dates, dataType) => { //更新日期
+
+   
     let { historyparams,chartparams, dispatch } = this.props;
     this.setState({
       dateValue: dates
     })
+
     historyparams = {
       ...historyparams,
       beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -238,6 +241,7 @@ class HistoryDatas extends React.Component {
       EndTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
       DataType: dataType
     }
+
     dispatch({
       type: 'historyData/updateState',
       payload: { historyparams},
@@ -246,6 +250,7 @@ class HistoryDatas extends React.Component {
       type: 'historyData/updateState',
       payload: { chartparams},
     })
+
   }
   
   changeReportType=(value)=>{
@@ -254,25 +259,25 @@ class HistoryDatas extends React.Component {
     this.children.onDataTypeChange(value)//修改日期选择日期  
     sessionStorage.setItem("dataType",value)
 
-    let { historyparams,chartparams, dispatch } = this.props;
-    historyparams = {
-      ...historyparams,
-      datatype: value
-    }
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { historyparams},
-    })
-    chartparams = {
-      ...chartparams,
-      DataType: value
-    }
+    // let { historyparams,chartparams, dispatch } = this.props;
+    // historyparams = {
+    //   ...historyparams,
+    //   datatype: value
+    // }
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { historyparams},
+    // })
+    // chartparams = {
+    //   ...chartparams,
+    //   DataType: value
+    // }
 
 
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { chartparams},
-    })
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { chartparams},
+    // })
   }
   identChange = (e) =>{
     let { historyparams,dispatch } = this.props;
@@ -288,6 +293,7 @@ class HistoryDatas extends React.Component {
   onFinish = () => { //查询
     let { historyparams,chartparams, dispatch,polltype,singFlag } = this.props;
 
+   
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},

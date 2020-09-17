@@ -23,7 +23,6 @@ import ConsumablesReplaceRecord from '@/pages/EmergencyTodoList/ConsumablesRepla
 
 
 
-
 @connect(({ paramsfil}) => ({
     instruListParams:paramsfil.instruListParams,
     tableDatas:paramsfil.tableDatas,
@@ -42,7 +41,6 @@ import ConsumablesReplaceRecord from '@/pages/EmergencyTodoList/ConsumablesRepla
     // standardParams:standardData.standardParams,
     // dgimn:standardData.dgimn
 }))
-
 class Index extends React.Component {
   formRef = React.createRef();
     constructor(props) {
@@ -538,6 +536,7 @@ class Index extends React.Component {
       PollutantCode:pollutantlist[0].code,
       DGIMN:dgimn,
       RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
+      RecordorID:JSON.parse(Cookie.get('currentUser')).UserId,
       ID:"",
       InstrumentID:""
    }
