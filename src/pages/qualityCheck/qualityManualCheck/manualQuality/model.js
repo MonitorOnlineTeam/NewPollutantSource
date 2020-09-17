@@ -361,7 +361,7 @@ export default Model.extend({
     updateQCLogResult(state, { payload }) {
       console.log("updateQCLogResult=", payload)
       debugger
-      if (payload.Data.DataGatherCode === state.currentDGIMN) {
+      if (payload.DGIMN === state.currentDGIMN) {
         let QCLogsResult = state.QCLogsResult;
         let QCAResultLoading = state.QCAResultLoading;
         QCLogsResult = payload
@@ -474,12 +474,12 @@ export default Model.extend({
         ...state,
         // 质控仪流程图
         qualityControlName: null, // 质控仪名称
-        gasData: {  // 气瓶信息
-          N2Info: {},
-          NOxInfo: {},
-          SO2Info: {},
-          O2Info: {},
-        },
+        // gasData: {  // 气瓶信息
+        //   N2Info: {},
+        //   NOxInfo: {},
+        //   SO2Info: {},
+        //   O2Info: {},
+        // },
         CEMSOpen: undefined,// CEMS阀门状态
         CEMSStatus: undefined,
         valveStatus: {}, // 阀门状态
@@ -488,7 +488,9 @@ export default Model.extend({
         p3Pressure: {},
         p4Pressure: {},
         QCStatus: undefined, // 质控仪状态
+        standardValue: undefined,
         standardValueUtin: null, // 单位
+        totalFlow: undefined,
         pollutantValueListInfo: [],
         realtimeStabilizationTime: {},
         QCAResultLoading: false, // 质控结果loading

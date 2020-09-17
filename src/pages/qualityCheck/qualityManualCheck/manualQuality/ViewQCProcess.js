@@ -35,7 +35,6 @@ const pollutantCodeList = {
 
 @connect(({ loading, qcManual, qualityControlModel }) => ({
   gasData: qcManual.gasData,
-  cemsList: qcManual.cemsList,
   valveStatus: qcManual.valveStatus,
   CEMSOpen: qcManual.CEMSOpen,
   CEMSStatus: qcManual.CEMSStatus,
@@ -67,7 +66,7 @@ class ViewQCProcess extends PureComponent {
   }
 
   pageContent = (type) => {
-    const { gasData, cemsList, CEMSStatus, QCStatus, marginData, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
+    const { gasData, CEMSStatus, QCStatus, marginData, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
     let props = {};
     if (type === "modal") {
       props = {

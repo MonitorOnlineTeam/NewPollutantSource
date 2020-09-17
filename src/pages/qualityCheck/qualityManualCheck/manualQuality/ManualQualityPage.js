@@ -76,6 +76,29 @@ class ManualQualityPage extends Component {
       })
       this.getStateAndRecord();
     }
+
+    // 状态改变后，情况数据
+    if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
+      this.props.dispatch({
+        type: "qcaCheck/updateState",
+        payload: {
+          CEMSOpen: undefined,// CEMS阀门状态
+          CEMSStatus: undefined,
+          valveStatus: {}, // 阀门状态
+          p2Pressure: {},
+          p1Pressure: {},
+          p3Pressure: {},
+          p4Pressure: {},
+          QCStatus: undefined, // 质控仪状态
+          standardValue: undefined,
+          standardValueUtin: null, // 单位
+          totalFlow: undefined,
+          pollutantValueListInfo: [],
+          realtimeStabilizationTime: {},
+        }
+      })
+      this.getStateAndRecord();
+    }
   }
 
 
@@ -182,6 +205,85 @@ class ManualQualityPage extends Component {
     });
   }
 
+  getAnswer = (QCLogsAnswer) => {
+    const { QCLogsResult } = this.props;
+    let str = QCLogsAnswer.Str;
+    if (str) {
+      if (str === "通讯超时") {
+        return <span style={{ color: "#f81d22" }}>通讯超时。</span>
+      }
+      if (QCLogsAnswer.Result === false) {
+        return <span>收到{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
+      }
+      if (QCLogsAnswer.Result) {
+        return <span>
+          {/* 收到{QCLogsAnswer.Comment}，准备执行请求。 */}
+          {QCLogsAnswer.Str}。
+          {
+            !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
+              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
+              this.updateModalState({ qcImageVisible: true })
+            }}>查看质控过程</Tag>
+          }
+        </span>
+      }
+    }
+    // {
+    //   QCLogsAnswer.Str ?
+    //     (QCLogsAnswer.Result === false ? <span style={{ color: QCLogsAnswer.Str === "" }}></span> : "")
+    //     : null
+    // }
+    // {QCLogsAnswer.str ?
+    //   <>
+    //     {`【${pointName}】${QCLogsAnswer.str}。`}
+    //     <Tag color="#87d068" onClick={() => {
+    //       this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
+    //       this.updateModalState({ qcImageVisible: true })
+    //     }}>查看质控过程</Tag>
+    //   </> : ""}
+  }
+
+
+  getLogResult = (QCLogsResult) => {
+    const { pointName } = this.props;
+    let str = QCLogsResult.Str;
+    if (QCLogsResult.Data) {
+      return <>
+        {`【${pointName}】${QCLogsResult.Str}`}
+        {
+          QCLogsResult.Data.Result == 0 ?
+            <Tag color="#87d068" onClick={() => {
+              this.setState({
+                currentRowData: QCLogsResult.Data,
+                QCAType: QCLogsResult.Data.QCAType
+              }, () => {
+                this.props.dispatch({
+                  type: "qcaCheck/updateState",
+                  payload: { checkModalVisible: true }
+                })
+              })
+            }}>合格</Tag>
+            :
+            <Tag color="#f81d22" onClick={() => {
+              this.setState({
+                currentRowData: QCLogsResult.Data
+              }, () => {
+                this.props.dispatch({
+                  type: "qcaCheck/updateState",
+                  payload: { checkModalVisible: true }
+                })
+              })
+            }}>不合格</Tag>
+        }
+      </>
+    } else if (str === "通讯超时") {
+      return <span>【{pointName}】<span style={{ color: "#f81d22" }}>通讯超时。</span></span>
+    } else {
+      return <span>【{pointName}】向平台反馈<span style={{ color: "#f81d22" }}>{str}。</span></span>
+    }
+    return ""
+  }
+
   render() {
     const {
       checkModalVisible,
@@ -199,7 +301,7 @@ class ManualQualityPage extends Component {
       marginData,
       loading,
     } = this.props;
-    if(loading) {
+    if (loading) {
       return <PageLoading />
     }
     const { QCAType, currentRowData } = this.state;
@@ -249,9 +351,9 @@ class ManualQualityPage extends Component {
           <div className={styles.logItem}>
             <p className={styles.date}>{QCLogsStart.Time}</p>
             <span className={styles.text}>
-              {QCLogsStart.str ?
+              {QCLogsStart.Str ?
                 <>
-                  {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.str}`}
+                  {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.Str}`}
                 </> : ""}
             </span>
           </div>
@@ -259,21 +361,18 @@ class ManualQualityPage extends Component {
           <div className={styles.logItem}>
             <p className={styles.date}>{QCLogsAnswer.Time}</p>
             <span className={styles.text}>
-              {QCLogsAnswer.str ?
+              {QCLogsAnswer.Str ?
                 <>
-                  {`【${pointName}】${QCLogsAnswer.str}。`}
-                  <Tag color="#87d068" onClick={() => {
-                    this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
-                    this.updateModalState({ qcImageVisible: true })
-                  }}>查看质控过程</Tag>
+                  {`【${pointName}】`}{this.getAnswer(QCLogsAnswer)}
                 </> : ""}
             </span>
           </div>
           {/* 3 */}
           <div className={styles.logItem}>
             <p className={styles.date}>
+              {QCLogsResult.Time && QCLogsResult.Time}
               {
-                QCLogsResult.Data.EndTime && <>
+                (QCLogsResult.Data && QCLogsResult.Data.EndTime) && <>
                   {QCLogsResult.Data.EndTime}
                   {
                     QCLogsResult.Data.Result == 0 ?
@@ -284,35 +383,36 @@ class ManualQualityPage extends Component {
               }
             </p>
             <span className={styles.text}>
-              {QCLogsResult.str ?
-                <>
-                  {`【${pointName}】${QCLogsResult.str}`}
-                  {
-                    QCLogsResult.Data.Result == 0 ?
-                      <Tag color="#87d068" onClick={() => {
-                        this.setState({
-                          currentRowData: QCLogsResult.Data,
-                          QCAType: QCLogsResult.Data.QCAType
-                        }, () => {
-                          this.props.dispatch({
-                            type: "qcaCheck/updateState",
-                            payload: { checkModalVisible: true }
-                          })
-                        })
-                      }}>合格</Tag>
-                      :
-                      <Tag color="#f81d22" onClick={() => {
-                        this.setState({
-                          currentRowData: QCLogsResult.Data
-                        }, () => {
-                          this.props.dispatch({
-                            type: "qcaCheck/updateState",
-                            payload: { checkModalVisible: true }
-                          })
-                        })
-                      }}>不合格</Tag>
-                  }
-                </>
+              {QCLogsResult.Str ?
+                this.getLogResult(QCLogsResult)
+                // <>
+                //   {`【${pointName}】${QCLogsResult.str}`}
+                //   {
+                //     QCLogsResult.Data.Result == 0 ?
+                //       <Tag color="#87d068" onClick={() => {
+                //         this.setState({
+                //           currentRowData: QCLogsResult.Data,
+                //           QCAType: QCLogsResult.Data.QCAType
+                //         }, () => {
+                //           this.props.dispatch({
+                //             type: "qcaCheck/updateState",
+                //             payload: { checkModalVisible: true }
+                //           })
+                //         })
+                //       }}>合格</Tag>
+                //       :
+                //       <Tag color="#f81d22" onClick={() => {
+                //         this.setState({
+                //           currentRowData: QCLogsResult.Data
+                //         }, () => {
+                //           this.props.dispatch({
+                //             type: "qcaCheck/updateState",
+                //             payload: { checkModalVisible: true }
+                //           })
+                //         })
+                //       }}>不合格</Tag>
+                //   }
+                // </>
                 : ""}
             </span>
           </div>
