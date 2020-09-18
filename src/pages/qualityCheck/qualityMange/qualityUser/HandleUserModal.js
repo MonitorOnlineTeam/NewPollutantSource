@@ -5,6 +5,7 @@ import { LoadingOutlined, PlusOutlined, ZoomInOutlined } from "@ant-design/icons
 import { v4 as uuidv4 } from 'uuid';
 import Cookie from 'js-cookie';
 import config from '@/config'
+import { checkRules } from '@/utils/validator';
 
 
 const { SHOW_PARENT, TreeNode } = TreeSelect;
@@ -200,12 +201,12 @@ class HandleUserModal extends Component {
             <Input placeholder="请输入姓名" />
           </Form.Item>
           <Form.Item
-            label="联系方式"
+            label="手机号"
             name="Phone"
             initialValue={id ? viewUserData.Phone : undefined}
-            rules={[{ required: true, message: '请输入联系方式!' }]}
+            rules={[{ required: true, message: '请输入手机号!' }, { ...checkRules.mobile }]}
           >
-            <Input placeholder="请输入联系方式" />
+            <Input placeholder="请输入手机号" />
           </Form.Item>
           <Form.Item
             label="性别"
@@ -223,7 +224,7 @@ class HandleUserModal extends Component {
             name="OpenID"
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
-            initialValue={id ? viewUserData.Pic : 1}
+            initialValue={id ? viewUserData.Pic : undefined}
             rules={[{ required: true, message: '请上传照片!' }]}
           >
             <>

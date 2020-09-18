@@ -34,10 +34,10 @@ class ZeroCheckPage extends PureComponent {
         title: '核查时间',
         dataIndex: 'MonitorTime',
       },
-      {
-        title: '结束时间',
-        dataIndex: 'EndTime',
-      },
+      // {
+      //   title: '结束时间',
+      //   dataIndex: 'EndTime',
+      // },
       {
         title: '合格情况',
         dataIndex: 'Result',
@@ -204,12 +204,11 @@ class ZeroCheckPage extends PureComponent {
   getTableDataSource = () => {
     const { DGIMN, location } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
-    console.log('fieldsValue=', fieldsValue)
     this.props.dispatch({
       type: "qcaCheck/getZeroCheckTableData",
       payload: {
-        beginTime: fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         DGIMN: DGIMN,
         PollutantCode: fieldsValue["PollutantCode"]
       }
