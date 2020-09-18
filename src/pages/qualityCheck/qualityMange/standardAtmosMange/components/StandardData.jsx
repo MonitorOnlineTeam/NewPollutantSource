@@ -112,7 +112,7 @@ class TableData extends React.Component {
         this.state = {
         tableDatas:[],
         columns:[],
-        dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
+        dateValue: [ moment(new Date()).add(-1, 'year'), moment(new Date())],
         };
     }
     static getDerivedStateFromProps(props, state) {
@@ -149,7 +149,7 @@ class TableData extends React.Component {
           let {dispatch,standardParams} = this.props;
           standardParams = {
             ...standardParams,
-            BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+            BeginTime: moment(new Date()).add(-1, 'year').format('YYYY-MM-DD HH:mm:ss'),
             EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
             DGIMN:dgimn
           }

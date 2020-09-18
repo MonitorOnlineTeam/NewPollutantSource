@@ -18,7 +18,7 @@ class Index extends Component {
     }
     static defaultProps = {
         style: {width:"100%"},
-        placeholder:"请选择污染物",
+        placeholder:"请选择污染物类型",
         mode:"-",
         allowClear:false,
         maxTagCount:1,//选择项最大个数

@@ -22,7 +22,7 @@ class FlowChart extends PureComponent {
     this.state = {
       columns: [
         {
-          title: '监测项目',
+          title: '仪器',
           // align: 'center',
           dataIndex: 'monitoringItems',
           render: (value, record, index) => {

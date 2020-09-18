@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TreeSelect,Spin} from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TreeSelect,Spin,Checkbox} from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -11,6 +11,8 @@ import PageLoading from '@/components/PageLoading'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { green,gold,red,yellow  } from '@ant-design/colors';
+
+import styles from "../index.less";
 
 // const { SHOW_PARENT } = TreeSelect
 /**
@@ -95,6 +97,7 @@ class TableData extends React.Component {
         columns:[],
         dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
         code:[],
+        allCode:[]
         };
     }
     static getDerivedStateFromProps(props, state) {
@@ -175,13 +178,19 @@ onRef = ref =>{
         let paraCodeDefaults =  res.map(item =>{
            return item.children
         }) 
-        console.log(paraCodeDefaults)
-      //  let paraCodeDefault =  paraCodeDefaults.map(item=>{
-      //     console.log(item)
-      //     return item.value
-      //  })
-       
-        // console.log(paraCodeDefault)
+
+        let paraCodeDefault = [];
+        paraCodeDefaults.map(item=>{  
+           item.map(items=>{
+            paraCodeDefault.push(items.value)
+          })
+       })
+       dispatch({
+        type: 'historyparData/updateState',
+        payload: { queryParams:{...queryParams,ParaCodeList:paraCodeDefault} },
+     });
+        this.setState({allCode:paraCodeDefault, code:paraCodeDefault})
+
           setTimeout(()=>{this.onFinish()}) 
       }
     });
@@ -245,30 +254,46 @@ dateCallback = (dates, dataType) => { //更新日期
       type: 'historyparData/updateState',
       payload: { queryParams},
     })
-    if(value=='all'){
-      this.setState({code:['all',"leaf1"]})
+    if(extra.triggerValue=='all'){
+      this.setState({code:this.state.allCode})
+      dispatch({
+        type: 'historyparData/updateState',
+        payload: { queryParams:{...queryParams,ParaCodeList:this.state.allCode }},
+      })
     }else{
       this.setState({code:value})
 
     }
   }
-
+  allChange=()=>{
+    this.setState({code:this.state.allCode})
+  }
  parameName=()=>{
 
   const {parLoading,paraCodeList} = this.props
   const { TreeNode } = TreeSelect;
+
+  let treeData = [];
+
+   treeData = [...paraCodeList,{title:<Button type="primary" size='small'>全选</Button>, key: "all", value: "all"},]
+  // treeData = paraCodeList;
+
   if(!parLoading){
     const tProps = {
       value:this.state.code,
-      treeData:paraCodeList,
+      treeData,
       treeDefaultExpandAll: true,
       treeCheckable: true,
       // showCheckedStrategy: SHOW_PARENT,
+      allowClear:true,
       placeholder: '请选择参数名称',
       onChange:this.treeChange,
     };
-    return <TreeSelect {...tProps} maxTagCount={1} >
-    
+    return <TreeSelect  {...tProps} maxTagCount={1} dropdownClassName={styles.parName}>
+        {/* {paraCodeList.map(item=>{
+          
+        })
+      } */}
     {/* <TreeNode value="parent 1" title="parent 1">
           <TreeNode value="parent 1-0" title="parent 1-0">
             <TreeNode value="leaf1" title="my leaf" />
@@ -341,7 +366,7 @@ dateCallback = (dates, dataType) => { //更新日期
     const  QueryCriteria = this.queryCriteria;
     return (
 
-<div id="historyparData">
+<div className="historyparData">
         <Card title={<QueryCriteria />} >
            <SdlTable
               rowKey={(record, index) => `complete${index}`}
