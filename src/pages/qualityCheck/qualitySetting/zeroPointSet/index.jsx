@@ -33,7 +33,7 @@ class Index extends Component {
         let { dgimn,pollType, dispatch,cycleListParams,addParams} = this.props;
          dgimn = value;
          pollType = selectItem.PointType;
-         cycleListParams={...cycleListParams, QCAType: 1026,Cycle: 1}
+         cycleListParams={...cycleListParams, QCAType: 1026}
          addParams = {...addParams, QCAType: 1026,DGIMN:value}
          dgimn&&pollType? dispatch({ type: 'qualitySet/updateState', payload: { dgimn,pollType,cycleListParams,addParams } }) : null;
          
