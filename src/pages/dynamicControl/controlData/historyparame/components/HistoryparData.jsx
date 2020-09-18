@@ -139,7 +139,7 @@ onRef = ref =>{
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
 
-    let { location,initLoadData,queryParams,dispatch } = this.props;
+    let { location,initLoadData,queryParams,dispatch,paraCodeList } = this.props;
 
     if(location.query&&location.query.type==="alarm"){ //报警信息  更新参数
 
@@ -154,6 +154,7 @@ onRef = ref =>{
         DGIMN:dgimn
       }
     }else{
+
       queryParams = {
         ...queryParams,
         BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
@@ -171,7 +172,17 @@ onRef = ref =>{
       type: 'historyparData/getHistoryParaCodeList',
       payload: { DGIMN:dgimn  },
       callback:(res)=>{
-        setTimeout(()=>{this.onFinish()}) 
+        let paraCodeDefaults =  res.map(item =>{
+           return item.children
+        }) 
+        console.log(paraCodeDefaults)
+      //  let paraCodeDefault =  paraCodeDefaults.map(item=>{
+      //     console.log(item)
+      //     return item.value
+      //  })
+       
+        // console.log(paraCodeDefault)
+          setTimeout(()=>{this.onFinish()}) 
       }
     });
         
@@ -179,7 +190,7 @@ onRef = ref =>{
 
 
   loadData=(dgimn)=>{
-    let {dispatch,queryParams} = this.props;
+    let {dispatch,queryParams,paraCodeList} = this.props;
     dispatch({
       type: 'historyparData/getHistoryParaCodeList',
       payload: { DGIMN:dgimn  },

@@ -241,15 +241,15 @@ class FlowChart extends PureComponent {
            }
           {
             
-            zhikongState != 1? //运行状态下  关闭样气流向
+            // zhikongState != 1? //运行状态下  关闭样气流向
           <div id='yang'>
           <img src="/visualization/yang/1.gif"   className={`${styles.yang1} ${styles.commonSty}`}/>
           <img src="/visualization/yang/2.gif"   className={`${styles.yang2} ${styles.commonSty}`}/>
           <img src="/visualization/yang/3.gif"   className={`${styles.yang3} ${styles.commonSty}`}/>
           <img src="/visualization/yang/4.gif"   className={`${styles.yang4} ${styles.commonSty}`}/>
           </div>
-          :
-          <></>
+          // :
+          // <></>
            }
            {
           zhikongState ==1?//运行状态下  开启质控气体流向
@@ -494,7 +494,11 @@ class FlowChart extends PureComponent {
 
 
            if(item.PollutantCode === "a21003"){ //NO
-            this.setState({isNo:true})
+          
+            if(item.Code !=="i13051"){
+              this.setState({isNo:true})
+             }
+
             if(item.DynamicType ==="3"){ //标气浓度
               this.setState({nob: `${item.Value==null?"-":item.Value}${item.Unit}`})
             }
@@ -524,7 +528,13 @@ class FlowChart extends PureComponent {
 
 
            if(item.PollutantCode === "a21004"){ //NO2
-            this.setState({isNo2:true})
+           
+
+            if(item.Code !=="i13051"){
+              this.setState({isNo2:true})
+             }
+
+
             if(item.DynamicType ==="3"){ //标气浓度
               this.setState({no2b: `${item.Value==null?"-":item.Value}${item.Unit}`})
             }

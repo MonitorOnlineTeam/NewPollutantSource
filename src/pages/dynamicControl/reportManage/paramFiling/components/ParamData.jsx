@@ -75,7 +75,7 @@ class Index extends React.Component {
             dataIndex: 'PollutantName',
             key: 'PollutantName',
             align: 'center',
-            width:100,
+            width:130,
             render: (value,row,index) => {
 
                 if(value instanceof Array){

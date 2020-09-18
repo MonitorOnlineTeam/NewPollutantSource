@@ -17,7 +17,7 @@ export default Model.extend({
     isSaveFlag:false,
     cycleListParams:{
       PollutantCodeList: "",
-      Cycle: 1,
+      Cycle: '',
       DGIMN: "",
       QCAType: "",
     },
