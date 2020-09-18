@@ -365,11 +365,15 @@ export default Model.extend({
     updateQCLogAnswer(state, { payload }) {
       console.log("updateQCLogAnswer=", payload)
       let QCLogsAnswer = state.QCLogsAnswer;
+      let QCAResultLoading = state.QCAResultLoading;
       debugger
+      if (payload.Result === false) {
+        QCAResultLoading = false;
+      }
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsAnswer = payload
       }
-      return { ...state, QCLogsAnswer: QCLogsAnswer }
+      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading }
     },
     // log - Result
     updateQCLogResult(state, { payload }) {

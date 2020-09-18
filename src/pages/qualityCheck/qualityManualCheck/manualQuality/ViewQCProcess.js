@@ -420,16 +420,18 @@ class ViewQCProcess extends PureComponent {
 
   // 获取质控结果
   getQCAResult = () => {
-    console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
-    switch (this.props.QCLogsResult.Data.Result + "") {
-      case "0":
-        return <CustomIcon className={styles.QCResult} type="icon-hege" />
-      case "1":
-        return <CustomIcon className={styles.QCResult} type="icon-buhege" />
-      case "3":
-        return <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
-      default:
-        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+    if(this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result) {
+      console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
+      switch (this.props.QCLogsResult.Data.Result + "") {
+        case "0":
+          return <CustomIcon className={styles.QCResult} type="icon-hege" />
+        case "1":
+          return <CustomIcon className={styles.QCResult} type="icon-buhege" />
+        case "2":
+          return <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+        default:
+          return <Spin style={{ position: 'absolute', right: 20 }} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+      }
     }
   }
 

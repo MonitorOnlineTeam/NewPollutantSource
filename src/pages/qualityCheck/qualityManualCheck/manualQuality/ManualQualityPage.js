@@ -261,29 +261,35 @@ class ManualQualityPage extends Component {
       return <>
         {`【${pointName}】${QCLogsResult.Str}`}
         {
-          QCLogsResult.Data.Result == 0 ?
-            <Tag color="#87d068" onClick={() => {
-              this.setState({
-                currentRowData: QCLogsResult.Data,
-                QCAType: QCLogsResult.Data.QCAType
-              }, () => {
-                this.props.dispatch({
-                  type: "qcaCheck/updateState",
-                  payload: { checkModalVisible: true }
-                })
+          QCLogsResult.Data.Result == 0 && <Tag color="#87d068" onClick={() => {
+            this.setState({
+              currentRowData: QCLogsResult.Data,
+              QCAType: QCLogsResult.Data.QCAType
+            }, () => {
+              this.props.dispatch({
+                type: "qcaCheck/updateState",
+                payload: { checkModalVisible: true }
               })
-            }}>合格</Tag>
-            :
-            <Tag color="#f81d22" onClick={() => {
-              this.setState({
-                currentRowData: QCLogsResult.Data
-              }, () => {
-                this.props.dispatch({
-                  type: "qcaCheck/updateState",
-                  payload: { checkModalVisible: true }
-                })
+            })
+          }}>合格</Tag>
+        }
+        {
+          QCLogsResult.Data.Result == 1 &&
+          <Tag color="#f81d22" onClick={() => {
+            this.setState({
+              currentRowData: QCLogsResult.Data,
+              QCAType: QCLogsResult.Data.QCAType
+            }, () => {
+              this.props.dispatch({
+                type: "qcaCheck/updateState",
+                payload: { checkModalVisible: true }
               })
-            }}>不合格</Tag>
+            })
+          }}>不合格</Tag>
+        }
+        {
+          QCLogsResult.Data.Result == 2 &&
+          <Tag color="#333">无效</Tag>
         }
       </>
     } else if (str === "通讯超时") {
@@ -385,9 +391,9 @@ class ManualQualityPage extends Component {
                 (QCLogsResult.Data && QCLogsResult.Data.EndTime) && <>
                   {QCLogsResult.Data.EndTime}
                   {
-                    QCLogsResult.Data.Result == 0 ?
-                      <CheckCircleFilled style={{ color: "#87d068", fontSize: 18, marginLeft: 10 }} /> :
-                      <CloseCircleFilled style={{ color: "#f81d22", fontSize: 18, marginLeft: 10 }} />
+                    QCLogsResult.Data.Result == 0 && <CheckCircleFilled style={{ color: "#87d068", fontSize: 18, marginLeft: 10 }} />}
+                  {
+                    QCLogsResult.Data.Result == 1 && <CloseCircleFilled style={{ color: "#f81d22", fontSize: 18, marginLeft: 10 }} />
                   }
                 </>
               }
