@@ -330,18 +330,18 @@ class MonitoringStandard extends Component {
                 bordered={false}
                 style={{ width: '100%' }}
                 bodyStyle={{paddingBottom:0}}
-            //     extra={
-            //         <Button
-            //             onClick={() => {
-            //                 this.setState({
-            //                     standardlibraryModal: true,
-            //                 });
-            //             }}
-            //             icon={<SearchOutlined />}
-            //         >
-            //             查看标准库
-            // </Button>
-            //     }
+                extra={
+                    <Button
+                        onClick={() => {
+                            this.setState({
+                                standardlibraryModal: true,
+                            });
+                        }}
+                        icon={<SearchOutlined />}
+                    >
+                        查看标准库
+            </Button>
+                }
             >
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
@@ -349,6 +349,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
+                    pagination={false}
                   //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
