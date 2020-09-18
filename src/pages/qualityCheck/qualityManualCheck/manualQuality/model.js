@@ -145,7 +145,7 @@ export default Model.extend({
         marginData["a21002"] = result.Datas[0].nox
         marginData["a21026"] = result.Datas[0].so2
         marginData["n00000"] = result.Datas[0].n2
-        yield update({ marginData })
+        yield update({ marginData: marginData })
       } else {
         message.error(result.Message)
       }

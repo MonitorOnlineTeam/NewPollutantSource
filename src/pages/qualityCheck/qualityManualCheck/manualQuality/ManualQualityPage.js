@@ -77,19 +77,20 @@ class ManualQualityPage extends Component {
       this.getStateAndRecord();
     }
 
-    // 状态改变后，情况数据
+    // 状态改变后，清空数据
     if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
+      console.log("状态改变后，清空数据")
       this.props.dispatch({
         type: "qcManual/updateState",
         payload: {
           CEMSOpen: undefined,// CEMS阀门状态
-          CEMSStatus: undefined,
+          // CEMSStatus: undefined,
           valveStatus: {}, // 阀门状态
           p2Pressure: {},
           p1Pressure: {},
           p3Pressure: {},
           p4Pressure: {},
-          QCStatus: undefined, // 质控仪状态
+          // QCStatus: undefined, // 质控仪状态
           standardValue: undefined,
           standardValueUtin: null, // 单位
           totalFlow: undefined,
