@@ -225,7 +225,7 @@ class Home extends Component {
     return (
       <div className={styles.homeWrapper}>
         <header className={styles.homeHeader}>
-          <p><span>SDL</span> 污染源智能分析系统</p>
+          <p><span>SDL</span> 污染源智能质控系统</p>
           <a className={styles.backMenu} onClick={() => {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>

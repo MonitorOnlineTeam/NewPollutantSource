@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button} from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,message} from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -192,10 +192,11 @@ dateCallback = (dates, dataType) => { //更新日期
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+    message.warning("暂未开放")
+  //   this.props.dispatch({
+  //     type: "historyData/exportHistoryReports",
+  //     payload: {DGIMNs: this.state.dgimn }
+  // })
   }
 
 

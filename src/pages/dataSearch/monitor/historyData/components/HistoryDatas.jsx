@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin,Checkbox } from 'antd';
+import { Card, Form, Button, Row, Col,Select,Switch,Tabs,Spin,Checkbox, message } from 'antd';
 import moment from 'moment';
 
 import { connect } from 'dva';
@@ -209,10 +209,11 @@ class HistoryDatas extends React.Component {
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+   message.warning("暂未开放")
+  //   this.props.dispatch({
+  //     type: "historyData/exportHistoryReports",
+  //     payload: {DGIMNs: this.state.dgimn }
+  // })
   }
 
 
@@ -221,10 +222,13 @@ class HistoryDatas extends React.Component {
  * 回调获取时间并重新请求数据
  */
   dateCallback = (dates, dataType) => { //更新日期
+
+   
     let { historyparams,chartparams, dispatch } = this.props;
     this.setState({
       dateValue: dates
     })
+
     historyparams = {
       ...historyparams,
       beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -237,6 +241,7 @@ class HistoryDatas extends React.Component {
       EndTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
       DataType: dataType
     }
+
     dispatch({
       type: 'historyData/updateState',
       payload: { historyparams},
@@ -245,6 +250,7 @@ class HistoryDatas extends React.Component {
       type: 'historyData/updateState',
       payload: { chartparams},
     })
+
   }
   
   changeReportType=(value)=>{
@@ -253,25 +259,25 @@ class HistoryDatas extends React.Component {
     this.children.onDataTypeChange(value)//修改日期选择日期  
     sessionStorage.setItem("dataType",value)
 
-    let { historyparams,chartparams, dispatch } = this.props;
-    historyparams = {
-      ...historyparams,
-      datatype: value
-    }
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { historyparams},
-    })
-    chartparams = {
-      ...chartparams,
-      DataType: value
-    }
+    // let { historyparams,chartparams, dispatch } = this.props;
+    // historyparams = {
+    //   ...historyparams,
+    //   datatype: value
+    // }
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { historyparams},
+    // })
+    // chartparams = {
+    //   ...chartparams,
+    //   DataType: value
+    // }
 
 
-    dispatch({
-      type: 'historyData/updateState',
-      payload: { chartparams},
-    })
+    // dispatch({
+    //   type: 'historyData/updateState',
+    //   payload: { chartparams},
+    // })
   }
   identChange = (e) =>{
     let { historyparams,dispatch } = this.props;
@@ -287,6 +293,7 @@ class HistoryDatas extends React.Component {
   onFinish = () => { //查询
     let { historyparams,chartparams, dispatch,polltype,singFlag } = this.props;
 
+   
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
@@ -321,7 +328,7 @@ class HistoryDatas extends React.Component {
           if(dataType==="realtime" || dataType === "minute"){
              this.changeReportType(chatDatatype)
               setTimeout(()=>{ 
-                let { chartparams, dispatch,polltype } = this.props;
+                let { chartparams, dispatch,polltype,singFlag } = this.props;
                 chartparams = {
                   ...chartparams,
                   PollutantType: polltype
@@ -329,6 +336,13 @@ class HistoryDatas extends React.Component {
                 dispatch({
                  type: "historyData/getAllChatDataList",
                  payload: {...chartparams},
+                 callback: () => {
+                  singFlag = !singFlag;
+                  dispatch({
+                   type: "historyData/updateState",
+                   payload: {singFlag},
+                   })
+                 }
                 })
 
 
@@ -375,7 +389,7 @@ class HistoryDatas extends React.Component {
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
           <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
-          <Col  xxl={4} xl={5}  md={12} sm={24} xs={24}>
+          <Col  xxl={4} xl={4}  md={12} sm={24} xs={24}>
               <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
                    {isSingerChat ?
                   
@@ -393,7 +407,7 @@ class HistoryDatas extends React.Component {
             }
               </Form.Item>
               </Col>
-            <Col  xxl={8} xl={8}    md={12} sm={24} xs={24}>
+            <Col  xxl={8} xl={6}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
                   <RangePicker_ 
                   dateValue={dateValue}
@@ -405,15 +419,15 @@ class HistoryDatas extends React.Component {
                   allowClear={false} showTime={true} style={{width:"100%"}} /> 
               </Form.Item>
             </Col>
-              <Col  xxl={6} xl={5}  md={12} sm={24} xs={24}>
-              <Form.Item label="污染类型" {...formItemLayout} className='queryConditionForm'>
+              <Col  xxl={6} xl={8}  md={12} sm={24} xs={24}>
+              <Form.Item label="污染物" {...formItemLayout} className='queryConditionForm'>
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
           
               {isSwitch ?  <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}> <Checkbox  defaultChecked={defaultChecked}  onChange={this.identChange}>标识</Checkbox></Col> : null}
             
-            <Col  xxl={3} xl={3}   md={12} sm={24} xs={12}>
+            <Col  xxl={3} xl={2}   md={12} sm={24} xs={12}>
               <Form.Item {...formItemLayout} className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>

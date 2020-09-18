@@ -3,7 +3,7 @@ import * as services from '../services';
 import { getPollutantListByDgimn } from "@/services/commonApi"
 import Model from '@/utils/model';
 import { message } from 'antd';
-
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'qcManual',
@@ -12,6 +12,7 @@ export default Model.extend({
     currentPollutantCode: "",
     bottleDataList: [],
     qcImageVisible: false,
+    // qcImageVisible: true,
     // 质控仪流程图
     qualityControlName: null, // 质控仪名称
     gasData: {  // 气瓶信息
@@ -52,46 +53,56 @@ export default Model.extend({
           if (item.GasCode === "a21026") {
             gasData.SO2Info = {
               Concentration: item.Value,
-              ExpirationDate: item.LoseDate,
+              ExpirationDate: item.LoseDate ? moment(item.LoseDate).format("YYYY-MM-DD") : "",
               VolumeValue: item.Volume,
             }
           }
           if (item.GasCode === "a21002") {
             gasData.NOxInfo = {
               Concentration: item.Value,
-              ExpirationDate: item.LoseDate,
+              ExpirationDate: item.LoseDate ? moment(item.LoseDate).format("YYYY-MM-DD") : "",
               VolumeValue: item.Volume,
             }
           }
           if (item.GasCode === "n00000") {
             gasData.N2Info = {
               Concentration: item.Value,
-              ExpirationDate: item.LoseDate,
+              ExpirationDate: item.LoseDate ? moment(item.LoseDate).format("YYYY-MM-DD") : "",
               VolumeValue: item.Volume,
             }
           }
           if (item.GasCode === "a19001") {
             gasData.O2Info = {
               Concentration: item.Value,
-              ExpirationDate: item.LoseDate,
+              ExpirationDate: item.LoseDate ? moment(item.LoseDate).format("YYYY-MM-DD") : "",
               VolumeValue: item.Volume,
             }
           }
         })
         console.log("gasData=", gasData)
-        yield update({ bottleDataList: result.Datas, gasData: gasData })
+        yield update({
+          bottleDataList: result.Datas, gasData: {
+            N2Info: {},
+            NOxInfo: {},
+            SO2Info: {},
+            O2Info: {},
+            ...gasData
+          }
+        })
       } else {
         message.error(result.Message)
       }
     },
     // 发送核查命令
     *sendQCACheckCMD({ payload, callback }, { call, update, put, take, select }) {
+      yield update({ QCAResultLoading: true })
       const result = yield call(services.sendQCACheckCMD, payload);
       if (result.IsSuccess) {
         message.success("命令发送成功");
         yield update({ QCAResultLoading: true })
         // callback && callback()
       } else {
+        yield update({ QCAResultLoading: false })
         message.error(result.Message)
       }
     },
@@ -125,6 +136,20 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取余量
+    *getMargin({ payload }, { call, update, put, take, select }) {
+      const result = yield call(services.getStateAndRecord, payload);
+      if (result.IsSuccess) {
+        let marginData = {};
+        marginData["a19001"] = result.Datas[0].o2
+        marginData["a21002"] = result.Datas[0].nox
+        marginData["a21026"] = result.Datas[0].so2
+        marginData["n00000"] = result.Datas[0].n2
+        yield update({ marginData: marginData })
+      } else {
+        message.error(result.Message)
+      }
+    }
     // *resetModalState({ payload, callback }, { call, update, put, take, select }) {
     //   yeild put({
     //     type: "resetState",
@@ -350,7 +375,7 @@ export default Model.extend({
     updateQCLogResult(state, { payload }) {
       console.log("updateQCLogResult=", payload)
       debugger
-      if (payload.Data.DataGatherCode === state.currentDGIMN) {
+      if (payload.DGIMN === state.currentDGIMN) {
         let QCLogsResult = state.QCLogsResult;
         let QCAResultLoading = state.QCAResultLoading;
         QCLogsResult = payload
@@ -463,12 +488,12 @@ export default Model.extend({
         ...state,
         // 质控仪流程图
         qualityControlName: null, // 质控仪名称
-        gasData: {  // 气瓶信息
-          N2Info: {},
-          NOxInfo: {},
-          SO2Info: {},
-          O2Info: {},
-        },
+        // gasData: {  // 气瓶信息
+        //   N2Info: {},
+        //   NOxInfo: {},
+        //   SO2Info: {},
+        //   O2Info: {},
+        // },
         CEMSOpen: undefined,// CEMS阀门状态
         CEMSStatus: undefined,
         valveStatus: {}, // 阀门状态
@@ -477,7 +502,9 @@ export default Model.extend({
         p3Pressure: {},
         p4Pressure: {},
         QCStatus: undefined, // 质控仪状态
+        standardValue: undefined,
         standardValueUtin: null, // 单位
+        totalFlow: undefined,
         pollutantValueListInfo: [],
         realtimeStabilizationTime: {},
         QCAResultLoading: false, // 质控结果loading

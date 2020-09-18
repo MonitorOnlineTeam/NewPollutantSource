@@ -43,18 +43,22 @@ class FlowChart extends PureComponent {
           title: '状态',
           dataIndex: 'state',
           render: (text, record) => {
-            switch (text) {
-              case "0":
-                return <Badge status="success" text="正常" />
-              case "1":
-                return <Badge status="warning" text="超下限" />
-              case "2":
-                return <Badge status="error" text="超上限" />
-              case "3":
-                return <Badge status="orange" text="参数不符" />
-              default:
-                return "-"
+            if (text) {
+              return text === '0' ? <Badge status="success" text="正常" /> : <Badge status="orange" text="参数不符" />
             }
+            return "-"
+            // switch (text) {
+            //   case "0":
+            //     return
+            //   case "1":
+            //     return <Badge status="warning" text="超下限" />
+            //   case "2":
+            //     return <Badge status="error" text="超上限" />
+            //   case "3":
+            //     return <Badge status="orange" text="参数不符" />
+            //   default:
+            //     return "-"
+            // }
           }
         },
         {
@@ -101,7 +105,7 @@ class FlowChart extends PureComponent {
                 {text}→{record.value}
                 {icon}
               </>
-            }else{
+            } else {
               return "-"
             }
 

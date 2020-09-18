@@ -30,7 +30,7 @@ class Index extends React.Component {
         this.state = {
           cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季度"}],
           dgimn:"",
-          defaultValue:1,
+          defaultValue:'',
           defaulltVaule:""
         };
     }
@@ -122,7 +122,7 @@ class Index extends React.Component {
             </Col>
             <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>
               <Form.Item label="质控周期" className='queryConditionForm'>
-               <DropDownSelect  optiondatas={cycleOptions}  defaultValue= {defaultValue}  onChange={this.cycleSelect}/>
+               <DropDownSelect placeholder='请选择质控周期'  optiondatas={cycleOptions}   onChange={this.cycleSelect} allowClear/>
               </Form.Item>
             </Col>
             <Col xxl={2} xl={2}   lg={24} md={24} sm={24} xs={24}>

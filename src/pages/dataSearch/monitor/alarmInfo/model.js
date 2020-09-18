@@ -21,8 +21,8 @@ export default Model.extend({
     defaultAlarmType:[],
     queryParams: {
       alarmType: "",
-      BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
-      EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       mnList:""
     }
   },
@@ -60,7 +60,7 @@ export default Model.extend({
     // },
     // 导出报表
         *exportHistoryReports({ payload }, { call, put, update, select }) {
-          alert(111)
+           message.error('暂未开放')
           // const { historyparams } = yield select(state => state.historyparData);
           // const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
           // }

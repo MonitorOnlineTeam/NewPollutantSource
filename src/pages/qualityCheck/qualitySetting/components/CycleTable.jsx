@@ -35,7 +35,7 @@ import Cookie from 'js-cookie';
     dgimn:qualitySet.dgimn,
     issueFlag:qualitySet.issueFlag,
     approveState:qualitySet.approveState,
-    issueLoading:qualitySet.issueLoading
+    issueLoading:qualitySet.issueLoading,
     // total: standardData.total,
     // tablewidth: standardData.tablewidth,
     // tableLoading:standardData.tableLoading,
@@ -58,7 +58,7 @@ class Index extends React.Component {
         Time: new Date(),
         CreatorName:JSON.parse(Cookie.get('currentUser')).UserName,
         CreatorDate: new Date(),
-        StartDate:new Date(),
+        Date:new Date(),
         Date:new Date(),
         ApproveState: "-",
         save:["保存","取消"]
@@ -67,6 +67,7 @@ class Index extends React.Component {
         issueIndex:0,
         pageSize:20,
         current:1,
+        disabledState:false,
         };
         // props.cycleListParams === 1030 ?
         this.blindCol =[
@@ -120,26 +121,28 @@ class Index extends React.Component {
             render: (value,row) => {
               if(value instanceof Array){
               
-             return   <DropDownSelect onChange={this.cycleClick} defaultValue={value[0].value} optiondatas={value}/>
+             return   <DropDownSelect placeholder='请选择质控周期' onChange={this.cycleClick} defaultValue={value[0].value} optiondatas={value}/>
               }else{
               return <span>{value}</span>
               }
           }
           },
-          // {
-          //   title: '开启日期',
-          //   dataIndex: 'StartDate',
-          //   key: 'StartDate',
-          //   align: 'center',
-          //   render: (value,row) => {
-          //     if(value instanceof Date){
-          //       return  <span>{moment(value).format('YYYY-MM-DD')}</span>
-          //     }else{
-          //      return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "'YYYY-MM-DD'")} allowClear={false}/>
-          //     }
-          // },
-          // width:120
-          // },
+          {
+            title: '开始日期',
+            dataIndex: 'Date',
+            key: 'Date',
+            align: 'center',
+            render: (value,row) => {
+              if(value instanceof Date){
+               return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "'YYYY-MM-DD'")} allowClear={false} disabledDate={ this.state.disabledState? this.disabledDate :false}/>
+
+              }else{
+                return  <span>{moment(value).format('YYYY-MM-DD')}</span>
+
+              }
+          },
+          width:120
+          },
           {
             title: '质控时间',
             dataIndex: 'Time',
@@ -173,19 +176,19 @@ class Index extends React.Component {
               }
           }
           },
-          {
-            title: '首次执行时间',
-            dataIndex: 'Date',
-            key: 'Date',
-            align: 'center',
-            render: (value,row) => {
-              if(value instanceof Date){
-                return  <span>{moment(value).format('YYYY-MM-DD')}</span>
-              }else{
-              return <span>{value? moment(value).format('YYYY-MM-DD') : ''}</span>
-              }
-          }
-          },
+          // {
+          //   title: '首次执行时间',
+          //   dataIndex: 'Date',
+          //   key: 'Date',
+          //   align: 'center',
+          //   render: (value,row) => {
+          //     if(value instanceof Date){
+          //       return  <span>{moment(value).format('YYYY-MM-DD')}</span>
+          //     }else{
+          //      return <span>{value? moment(value).format('YYYY-MM-DD') : ''}</span>
+          //     }
+          // }
+          // },
           {
             title: '状态',
             dataIndex: 'ApproveState',
@@ -198,6 +201,7 @@ class Index extends React.Component {
             dataIndex: 'save',
             key: 'save',
             align: 'center',
+            width:85,
             render: (value,row,index) => {
               if(value instanceof Array){
               //   value.map((item,index)=>{
@@ -205,7 +209,7 @@ class Index extends React.Component {
               //   // return <Button type="link" onClick={this.isSave(item,index)}>{item}</Button>
               //   })
               return <div>
-                  <Popconfirm title="即将下发命令到现场质控仪?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
+                  <Popconfirm title="确认保存此质控命令?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
                      <a >{value[0]}</a>
                      </Popconfirm>
                      <span> <a   onClick={this.isSave.bind(this,row,value[1],index)} href="#" style={{paddingLeft:10}} >{value[1]}</a> </span>
@@ -260,7 +264,7 @@ class Index extends React.Component {
             selectData.splice(issueIndex, 1, { ...item, ApproveState:this.props.approveState }); //替换
             dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
           }
-         }
+        }
     componentDidMount(){
      this.isdBind();
     }
@@ -302,19 +306,24 @@ class Index extends React.Component {
      payload: { addParams  },
     });
   }
-
+  disabledDate(current) {
+    return current && current >  moment(moment(current).format("YYYY-MM-29"));
+  }
   deteChange=(value)=>{ //开始日期事件
     let {dispatch,addParams} = this.props;
     addParams = {
       ...addParams,
-      startDate:value
+      Date:moment(value).format("YYYY-MM-DD")
    }
    dispatch({
     type: 'qualitySet/updateState',
     payload: { addParams },
-}); 
+     }); 
+
+    console.log(addParams)
   }
   cycleClick = (value) =>{ //质控周期事件
+
 
     let {dispatch,addParams} = this.props;
     addParams = {
@@ -325,6 +334,12 @@ class Index extends React.Component {
     type: 'qualitySet/updateState',
     payload: { addParams },
 });  
+
+if(value=='30'||value=='90'){
+  this.setState({disabledState:true})
+}else{
+  this.setState({disabledState:false})
+}
   }
   standChange=(value)=>{//标准气浓度
     let {dispatch,addParams} = this.props;
@@ -363,9 +378,7 @@ timeClick=(value)=>{//质控时间
       let {dispatch,addParams,cycleListParams:{QCAType}} = this.props;
          addParams = {
           ...addParams,
-          CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss'),
-          StartDate:moment(row.StartDate).format('YYYY-MM-DD')
-          
+          CreatorDate:moment(row.CreatorDate).format('YYYY-MM-DD HH:mm:ss'),          
        }
        dispatch({
           type: 'qualitySet/addOrUpdCycleQualityControl',
@@ -440,6 +453,8 @@ timeClick=(value)=>{//质控时间
       PollutantCode:addItem.PollutantName[0].PollutantCode,
       Time:moment(addItem.Time).format('HH:mm'),
       StandardValue:standDefaultVal,
+      Date: moment(new Date()).format('YYYY-MM-DD'),
+      Space:1
    }
     isSaveFlag = true
      dispatch({

@@ -6,7 +6,7 @@ import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 
-import { GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
+import { getAlarmType,GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
 
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
@@ -39,8 +39,8 @@ export default Model.extend({
       // EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       // DGIMN: '',
       alarmType: "",
-      BeginTime: moment().format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       mnList:""
     },
     clientHeight: null
@@ -48,9 +48,9 @@ export default Model.extend({
   effects: {
     // 首次加载获取当天报警消息
     *fetchNotices({ payload }, { call, update, select }) {
-      const { getAlarmNoticesParameters } = yield select(a => a.global);
+      // const { getAlarmNoticesParameters } = yield select(a => a.global);
       // const result = yield call(getAlarmNotices, { ...getAlarmNoticesParameters });
-      const result = yield call(GetAlarmDataList, { ...getAlarmNoticesParameters });
+      const result = yield call(GetAlarmDataList, { ...payload });
       
       let notices = [];
       if (result.IsSuccess) {

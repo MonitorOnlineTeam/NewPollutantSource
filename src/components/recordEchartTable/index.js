@@ -97,7 +97,7 @@ class Index extends Component {
            const paraCodeList  = location.query.code;
            const startTime = location.query.startTime;
            const endTime = location.query.endTime;
-        this.children.onDateChange([ moment(moment(endTime)), moment( moment(endTime))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+        this.children.onDateChange([ moment(moment(startTime)), moment( moment(endTime))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
         
         const DATATYPE = {
              RealTimeData:"realtime",

@@ -63,7 +63,7 @@ class EditorAddMode extends React.Component {
             align: 'center'
           },
           {
-            title: '创建时间',
+            title: '首次执行时间',
             dataIndex: 'date',
             key: 'date',
             align: 'center',
@@ -83,7 +83,7 @@ class EditorAddMode extends React.Component {
     qualityProg=()=>{
       const type = 'docx'
       let {seeEchoData} = this.props;
-      console.log(`/upload/${seeEchoData.ProgrammeFileName}`)
+      // console.log(`/upload/${seeEchoData.ProgrammeFileName}`)
       return   <FileViewer
       style={{width:"100%"}}
       fileType={type}
@@ -107,7 +107,7 @@ class EditorAddMode extends React.Component {
     qualityDetail=()=>{ 
       const {getDetailsLoading,getDetailsList} = this.props;
 
-      console.log(getDetailsList)
+      // console.log(getDetailsList)   
       // const title = {
       //   0: "零点核查",
       //   1: "量程核查",

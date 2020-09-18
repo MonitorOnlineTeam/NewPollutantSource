@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card, Table, Empty, Form, Row, Col, Button, TreeSelect, Spin, Tooltip } from 'antd';
+import { Card, Table, Empty, Form, Row, Col, Button, TreeSelect, Spin, Tooltip, message } from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -42,7 +42,7 @@ class TableData extends React.Component {
     };
     this.columns = [
       {
-        title: '企业排扣',
+        title: '企业排口',
         align: 'center',
         dataIndex: 'ParentName',
         render: (text, record) => {
@@ -54,7 +54,7 @@ class TableData extends React.Component {
       {
         title: '报警时间',
         align: 'center',
-        dataIndex: 'FirstTime',
+        dataIndex: 'AlarmTime',
         render: (text, record) => {
           return text ? <span>{text}</span> : "-"
         },
@@ -114,29 +114,23 @@ class TableData extends React.Component {
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
 
+    const check={
+      "3101":`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3102':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3105':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3104':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
+    }
     if (record.AlarmType == 13) {  //质控核查报警
       
-      const checkCode = [ ...new Set(record.PollutantCode.split(","))]
-
-       const check={
-         'zero':`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'rang':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'blind':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'line':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`,
-         'res':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}`
-       }
-      //
       return  <div style={{textAlign: 'left',}}>
-       { [ ...new Set(record.AlarmMsg.split(";"))].map((item,index)=>{
+       { record.AlarmMsg.split(";").map((item,index)=>{
          return  <>
                  <span style={{  paddingRight: 5, }}  >
                   {item}
                </span>
-               <Link style={{  paddingRight: 8, }} to={(/零点核查/g).test(item) ? `${check["zero"]}code=${checkCode[index]}` : (/量程核查/g).test(item)?
-               `${check["rang"]}&code=${checkCode[index]}` : (/盲样核查/g).test(item) ? `${check["blind"]}&code=${checkCode[index]}`
-                : (/线性核查/g).test(item) ?  `${check["line"]}&code=${checkCode[index]}` :  `${check["res"]}&code=${checkCode[index]}`
-                } >查看</Link> 
-               </>
+               <Link style={{  paddingRight: 8, }} to={`${check[record.PollutantCode.split(",")[index].split("@")[1]]}&code=${record.PollutantCode.split(",")[index].split("@")[0]}`} >查看</Link> 
+                </>
       })
     }
       </div>
@@ -144,20 +138,20 @@ class TableData extends React.Component {
     } else {
 
       return <div style={{ overflow: "hidden" }}>
-        <Tooltip title={this.tooltipText.bind(this, text)} color={"#fff"} overlayStyle={{ maxWidth: 550 }}  >
+        <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} overlayStyle={{ maxWidth: 550}}  >
           <span style={{ textAlign: 'left', '-webkit-box-orient': 'vertical', width: 'auto', paddingRight: 5,float:"left" }} className="line-clamp-3"  >
                {text}
           </span>
 
         </Tooltip>
         <span style={{float:"left"}}>
-          {record.AlarmType === "2" ?
+          {record.AlarmType === "2" ? // 数据超标
              
-            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :// 数据超标
-            record.AlarmType === "0" ?
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //数据异常
+            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+            record.AlarmType === "0" ? //数据异常
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
               record.AlarmType === "12" ? //备案不符
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : //备案不符
+                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
                  <></>
 
           }
@@ -215,8 +209,8 @@ class TableData extends React.Component {
     this.setState({ dateValue: dates })
     queryParams = {
       ...queryParams,
-      BeginTime: dates[0].format('YYYY-MM-DD'),
-      EndTime: dates[1].format('YYYY-MM-DD'),
+      beginTime: dates[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
     }
     dispatch({
       type: 'alarmInfoData/updateState',
@@ -257,16 +251,9 @@ class TableData extends React.Component {
 
   //导出数据
   exportData = () => {
-    //   this.props.dispatch({
-    //     type: "historyData/exportHistoryReports",
-    //     payload: {DGIMNs: this.state.dgimn }
-    // })
 
-    // router.push({pathname: "/dynamicControl/dynamicDataManage/controlData/historyparame",query:{type:"alarm",code:["a21026"].join()} })
-
-    // router.push({pathname: "/dataSearch/monitor/alarm/overrecord",query:{id:1} }) //超标数据
-
-    router.push({ pathname: "/dataSearch/monitor/alarm/exceptionRecord", query: { type: "alarm", code: ["a21026"].join() } })  //异常数据
+     message.error("暂未开放")
+    // router.push({ pathname: "/dataSearch/monitor/alarm/exceptionRecord", query: { type: "alarm", code: ["a21026"].join() } })  //异常数据
 
   }
 
@@ -280,7 +267,7 @@ class TableData extends React.Component {
       treeDefaultExpandAll: true,
       treeCheckable: true,
       treeNodeFilterProp: "title",
-      placeholder: '请选择运维站点！',
+      placeholder: '请选择企业排扣！',
       allowClear: true,
       // value:'62020131jhdp03',
       style: {
@@ -295,7 +282,7 @@ class TableData extends React.Component {
 
             <Col xxl={6} xl={10} lg={14} md={16} sm={24} xs={24}>
 
-              <Form.Item label="监测时间" className='queryConditionForm'>
+              <Form.Item label="报警时间" className='queryConditionForm'>
                 <RangePicker_
                   format={"YYYY-MM-DD"}
                   showTime={false}
@@ -307,14 +294,14 @@ class TableData extends React.Component {
               </Form.Item>
             </Col>
             <Col xxl={6} xl={10} lg={14} md={16} sm={24} xs={24}>
-              <Form.Item label="企业排扣" className='queryConditionForm'>
+              <Form.Item label="企业排口" className='queryConditionForm'>
                 <TreeSelect {...tProps} onChange={this.treeChange} />
               </Form.Item>
             </Col>
             <Col xxl={6} xl={10} lg={14} md={16} sm={24} xs={24}>
               <Form.Item label="报警类型" className='queryConditionForm'>
-                {!alarmTypeLoading ? <DropDownSelect iscode={1} mode='multiple' optiondatas={alarmTypeList} defaultValue={defaultAlarmType} onChange={this.alarmSelect} /> : <Spin size='small' />}
-              </Form.Item>
+                {!alarmTypeLoading ? <DropDownSelect  placeholder='请选择报警类型' iscode={1} mode='multiple'  optiondatas={alarmTypeList} defaultValue={defaultAlarmType} onChange={this.alarmSelect} /> : <Spin size='small' />}
+               </Form.Item>
             </Col>
             <Col xxl={4} xl={4} lg={4} md={3} sm={24} xs={24}>
               <Form.Item className='queryConditionForm'>

@@ -34,7 +34,7 @@ class index extends PureComponent {
           dataIndex: 'Sex',
           key: 'Sex',
           render: (text, record) => {
-            return text ? (text == 1 ? "男" : "女") : ""
+            return text == 1 ? "男" : "女"
           }
         },
         {

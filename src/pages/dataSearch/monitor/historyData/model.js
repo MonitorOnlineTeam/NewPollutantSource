@@ -29,8 +29,8 @@ export default Model.extend({
       DGIMNs: "",
       pageIndex: null,
       pageSize: null,
-      beginTime:  moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')),
-      endTime: moment(moment(new Date()).format('YYYY-MM-DD HH:mm:ss')),
+      beginTime: '',
+      endTime: '',
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
@@ -74,11 +74,11 @@ export default Model.extend({
         ...payload
       }
       yield update({tableloading:true}); //更新state的值
-      let csyxl = 0;
-      let gwidth = 300 + 140 + 70;
-      if (!onlyOneEnt) {
-        gwidth += 300;
-      }
+      // let csyxl = 0;
+      // let gwidth = 300 + 140 + 70;
+      // if (!onlyOneEnt) {
+      //   gwidth += 300;
+      // }
       const result = yield call(getAllTypeDataList, { ...body });
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值

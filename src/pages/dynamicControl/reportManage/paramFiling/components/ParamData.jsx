@@ -23,7 +23,6 @@ import ConsumablesReplaceRecord from '@/pages/EmergencyTodoList/ConsumablesRepla
 
 
 
-
 @connect(({ paramsfil}) => ({
     instruListParams:paramsfil.instruListParams,
     tableDatas:paramsfil.tableDatas,
@@ -42,7 +41,6 @@ import ConsumablesReplaceRecord from '@/pages/EmergencyTodoList/ConsumablesRepla
     // standardParams:standardData.standardParams,
     // dgimn:standardData.dgimn
 }))
-
 class Index extends React.Component {
   formRef = React.createRef();
     constructor(props) {
@@ -77,16 +75,16 @@ class Index extends React.Component {
             dataIndex: 'PollutantName',
             key: 'PollutantName',
             align: 'center',
-            width:100,
+            width:130,
             render: (value,row,index) => {
 
                 if(value instanceof Array){
                   const {addParams,editingKey} = this.props;
-                  const items = value?value.find(item =>  item.value === addParams.PollutantCode) : null;
+                  const items = value?value.find(item =>  item.code === `${addParams.PollutantCode}`) : null;
                return <DropDownSelect
                iscode={1}
                optiondatas={value}
-               defaultValue={value? editingKey? items&&items.value || "" : value[0].code : null}
+               defaultValue={value? editingKey? items&&`${items.code}` || "" : value[0].code : null}
                onChange={this.handlePollutantChange.bind(this,row,index)} //父组件事件回调子组件的值
                />
                 }else{
@@ -142,7 +140,7 @@ class Index extends React.Component {
                      </Row>
                  }else{
                     return   <Row align='middle' justify='center'>
-                            <Form.Item style={{marginBottom:0}} name='lowLimit' rules={[{ required: true, message: '请输入备案值' }]}>
+                            <Form.Item style={{marginBottom:0}} name='lowLimits' rules={[{ required: true, message: '请输入备案值' }]}>
                              <InputNumber style={{width:70}} min={0} max={99999} defaultValue={row.TopLimit} onChange={this.lowLimitChange} /> 
                             </Form.Item>
                             </Row>
@@ -212,10 +210,6 @@ class Index extends React.Component {
               const { editingKey } = this.props;
 
               if(value instanceof Array){
-              //   value.map((item,index)=>{
-              //     console.log(value)
-              //   // return <Button type="link" onClick={this.isSave(item,index)}>{item}</Button>
-              //   })
               return <div>
                   <Popconfirm title="确认保存此备案记录?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
                      <a >{value[0]}</a>
@@ -405,24 +399,31 @@ class Index extends React.Component {
     }else{ //保存事件
 
       this.formRef.current.validateFields();
-      const lowLimit = this.formRef.current.getFieldsValue().lowLimit;
-      const topLimit = this.formRef.current.getFieldsValue().topLimit;
-      // const paraName = this.formRef.current.getFieldsValue().paraName;
-         if( row.TopLimit||row.TopLimit===0 ){
-             if(lowLimit||lowLimit===0 &&topLimit||topLimit===0){
-                this.saveSubmit();
+      const lowLimit = this.formRef.current.getFieldsValue().lowLimit=== 0? this.formRef.current.getFieldsValue().lowLimit.toString() : this.formRef.current.getFieldsValue().lowLimit;
+      const topLimit = this.formRef.current.getFieldsValue().topLimit===0? this.formRef.current.getFieldsValue().topLimit.toString() : this.formRef.current.getFieldsValue().topLimit;
+      const lowLimits = this.formRef.current.getFieldsValue().lowLimits===0? this.formRef.current.getFieldsValue().lowLimits.toString() : this.formRef.current.getFieldsValue().lowLimits;
+         if( row.Type==2){ //备案值有两个时
+             if(lowLimit && topLimit){
+               
+               if(lowLimit<topLimit){
+                  this.saveSubmit();
+                }else{
+                this.formRef.current.setFieldsValue({  lowLimit:null,topLimit:null});
+                this.formRef.current.validateFields();
+                 message.warn('备案值的下限值不能大于上限值')
+              }
              }else{
                return false;
              }
-
+            
          }else{
-          if(lowLimit||lowLimit===0){
+          if(lowLimits||lowLimits===0){
             this.saveSubmit();
           }else{
             return false;
           }
-         }
-   
+         
+        }
       
      
     }
@@ -459,7 +460,7 @@ class Index extends React.Component {
       editingKey = index + 1;
 
       addParams = {
-        ...addParams, ID:row.ID,DGIMN:row.DGIMN,InstrumentID:row.InstrumentID,PollutantCode:row.PollutantCode,ParaCode:row.ParaCode,Type:row.Type,
+        ...addParams, ID:row.ID,DGIMN:row.DGIMN,InstrumentID:row.InstrumentID,PollutantCode:`${row.PollutantCode}^${row.InstrumentID}`,ParaCode:row.ParaCode,Type:row.Type,
         LowerLimit:row.LowerLimit,TopLimit:row.TopLimit,DeleteMark:row.DeleteMark,Recordor:row.Recordor,RecordorID:row.RecordorID,RecordTime:row.RecordTime             
      }
 
@@ -535,8 +536,11 @@ class Index extends React.Component {
       PollutantCode:pollutantlist[0].code,
       DGIMN:dgimn,
       RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
+      RecordorID:JSON.parse(Cookie.get('currentUser')).UserId,
+      ID:"",
+      InstrumentID:""
    }
-   this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: ""});
+   this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: "",lowLimits: "" });
     isSaveFlag = true
      dispatch({
         type: 'paramsfil/updateState',
@@ -545,6 +549,7 @@ class Index extends React.Component {
 
 
   }else{
+   
     message.warning("请保存之前未保存的状态")
   }
     
