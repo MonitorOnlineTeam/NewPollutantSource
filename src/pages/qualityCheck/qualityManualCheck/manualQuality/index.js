@@ -12,7 +12,7 @@ const ZeroCheck = () => {
   return (
     <>
       <NavigationTree domId="manualQuality" onTreeSelect={(value, item) => {
-        setPointName(item.title)
+        setPointName(`${item.EntName} - ${item.title}`)
         setDGIMN(value)
         setPointType(item.PointType)
       }} />

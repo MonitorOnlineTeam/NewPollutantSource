@@ -195,7 +195,7 @@ class EditPollutant extends Component {
                   </FormItem>
                 </Col>
               </Row>
-              <Row gutter={48}>
+              {/* <Row gutter={48}>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警描述">
                     {getFieldDecorator('AlarmDescription')(
@@ -203,7 +203,7 @@ class EditPollutant extends Component {
                     )}
                   </FormItem>
                 </Col>
-              </Row>
+              </Row> */}
             </Panel>
             <Panel header="异常设置" key="2" style={customPanelStyle}>
               <Row gutter={48}>

@@ -250,13 +250,15 @@ class index extends Component {
             if (this.state.pollutantCode == 5) {
               return (
                 <span>
-                  {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                  {text}{record.outPutFlag == 1 ? <Tag color="#f50">停产</Tag> : ''}
                 </span>
               );
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停产</Tag> : 
+                record.outPutFlag == 2?<Tag color="#f50">停炉</Tag>:record.outPutFlag == 3?
+                <Tag color="#f50">停运</Tag>: ''}
               </span>
             );
           },

@@ -145,7 +145,7 @@ export default Model.extend({
         marginData["a21002"] = result.Datas[0].nox
         marginData["a21026"] = result.Datas[0].so2
         marginData["n00000"] = result.Datas[0].n2
-        yield update({ marginData })
+        yield update({ marginData: marginData })
       } else {
         message.error(result.Message)
       }
@@ -365,11 +365,15 @@ export default Model.extend({
     updateQCLogAnswer(state, { payload }) {
       console.log("updateQCLogAnswer=", payload)
       let QCLogsAnswer = state.QCLogsAnswer;
+      let QCAResultLoading = state.QCAResultLoading;
       debugger
+      if (payload.Result === false) {
+        QCAResultLoading = false;
+      }
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsAnswer = payload
       }
-      return { ...state, QCLogsAnswer: QCLogsAnswer }
+      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading }
     },
     // log - Result
     updateQCLogResult(state, { payload }) {
