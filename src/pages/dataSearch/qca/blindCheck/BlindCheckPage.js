@@ -33,10 +33,10 @@ class BlindCheckPage extends PureComponent {
         title: '核查时间',
         dataIndex: 'MonitorTime',
       },
-      {
-        title: '结束时间',
-        dataIndex: 'EndTime',
-      },
+      // {
+      //   title: '结束时间',
+      //   dataIndex: 'EndTime',
+      // },
       {
         title: '合格情况',
         dataIndex: 'Result',
@@ -109,15 +109,12 @@ class BlindCheckPage extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.pollutantList !== this.props.pollutantList) {
-      
       const { location } = this.props;
-
-      if(location&&location.query.type==='alarm' ){ //从报警信息页面跳转
+      if (location && location.query.type === 'alarm') { //从报警信息页面跳转
         this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
-        this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime),moment(location.query.endTime)] })
+        this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
         this.getTableDataSource();
-      }else{
-
+      } else {
         if (this.props.pointType === "1") {
           // 废水
           this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
@@ -127,14 +124,13 @@ class BlindCheckPage extends PureComponent {
         }
         this.getTableDataSource();
       }
-       if (prevProps.DGIMN !== this.props.DGIMN) {
-        this.getPollutantList();
-       }
-
-      }
-
+    }
+    
+    if (prevProps.DGIMN !== this.props.DGIMN) {
+      this.getPollutantList();
+    }
   }
-  
+
   // 获取污染物类型
   getPollutantList = () => {
     this.props.dispatch({
@@ -147,13 +143,13 @@ class BlindCheckPage extends PureComponent {
 
   // 获取表格数据
   getTableDataSource = () => {
-    const { DGIMN} = this.props;
+    const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
     this.props.dispatch({
       type: "qcaCheck/getBlindDataList",
       payload: {
-        beginTime:fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         DGIMN: DGIMN,
         PollutantCode: fieldsValue["PollutantCode"]
       }

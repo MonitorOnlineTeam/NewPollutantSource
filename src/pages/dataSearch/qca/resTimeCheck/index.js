@@ -29,7 +29,7 @@ class index extends PureComponent {
        {location.query&&location.query.type!=='alarm'?
         <NavigationTree domId="zeroCheck" onTreeSelect={(value, item) => {
           this.setState({
-            pointName: item.title,
+            pointName: `${item.EntName} - ${item.title}`,
             DGIMN: value,
             pointType: item.PointType
           })

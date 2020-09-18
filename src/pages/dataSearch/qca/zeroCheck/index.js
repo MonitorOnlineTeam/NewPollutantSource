@@ -23,7 +23,7 @@ const ZeroCheck = (props) => {
     <>
       {location.query&&location.query.type!=='alarm'?
       <NavigationTree domId="zeroCheck" onTreeSelect={(value, item) => {
-        setPointName(item.title)
+        setPointName(`${item.EntName} - ${item.title}`)
         setDGIMN(value)
         setPointType(item.PointType)
       }} />

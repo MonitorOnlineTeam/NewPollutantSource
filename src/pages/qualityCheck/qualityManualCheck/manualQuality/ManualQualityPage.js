@@ -323,7 +323,7 @@ class ManualQualityPage extends Component {
           }
           <Divider />
         </Row>
-        <Spin spinning={QCAResultLoading} tip="正在质控中...">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} spinning={QCAResultLoading} tip="质控中...">
           <div className={styles.pollutantsContainer}>
             {
               bottleDataList.map((item) => {

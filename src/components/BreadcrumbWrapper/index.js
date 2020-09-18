@@ -2,14 +2,28 @@ import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Breadcrumb } from "antd"
 import webConfig from '../../../public/webConfig'
+import { connect } from "dva"
 
+@connect(({ components, loading }) => ({
+  selectTreeItem: components.selectTreeItem,
+}))
 class BreadcrumbWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: "components/updateState",
+      payload: {
+        selectTreeItem: {}
+      }
+    })
+  }
+
   pageHeaderRender = (props) => {
+    const { selectTreeItem } = this.props;
     if (props.breadcrumb.routes) {
       return <div>
         当前位置：
@@ -29,7 +43,8 @@ class BreadcrumbWrapper extends Component {
               : ""
           }
         </Breadcrumb>
-        {this.props.extraName ? `【${this.props.extraName}】` : ""}
+        {(selectTreeItem && selectTreeItem.EntName && selectTreeItem.title) ? `【${selectTreeItem.EntName} - ${selectTreeItem.title}】` : ""}
+        {/* {this.props.extraName ? `【${this.props.extraName}】` : ""} */}
       </div>
     }
   }
