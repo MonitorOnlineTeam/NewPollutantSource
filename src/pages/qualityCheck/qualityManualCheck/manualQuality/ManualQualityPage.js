@@ -75,7 +75,7 @@ class ManualQualityPage extends Component {
         payload: {}
       })
       this.getStateAndRecord();
-    }
+    } 
 
     // 状态改变后，清空数据
     if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
@@ -85,6 +85,7 @@ class ManualQualityPage extends Component {
         payload: {
           CEMSOpen: undefined,// CEMS阀门状态
           // CEMSStatus: undefined,
+          QCAResultLoading: false,
           valveStatus: {}, // 阀门状态
           p2Pressure: {},
           p1Pressure: {},
@@ -289,7 +290,7 @@ class ManualQualityPage extends Component {
         }
         {
           QCLogsResult.Data.Result == 2 &&
-          <Tag color="#333">无效</Tag>
+          <Tag color="#7b7b7b">无效</Tag>
         }
       </>
     } else if (str === "通讯超时") {
