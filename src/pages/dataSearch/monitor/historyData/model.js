@@ -35,7 +35,7 @@ export default Model.extend({
       pollutantNames: null,
       unit: null,
       isAsc: true,
-      Flag:"0"//1 显示 0 不显示
+      Flag:0//1 显示 0 不显示
     },
     chartparams:{
       DGIMN:[""],

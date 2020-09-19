@@ -227,7 +227,7 @@ class FlowChart extends PureComponent {
          
         <img src="/visualization/total.png" />
   
-          {isStop ==1? //锅炉状态  非1 是不正常
+          {isStop !=1 && isStop !=2 && isStop !=3? //锅炉状态  非1 2 3  是不正常
           <div id='fei'>
           <img src="/visualization/fei/1.gif"   className={`${styles.fei1} ${styles.commonSty}`}/>
           <img src="/visualization/fei/1.gif"   className={`${styles.fei2} ${styles.commonSty}`}/>
@@ -272,9 +272,9 @@ class FlowChart extends PureComponent {
      
           </>
           <>
-          {isStop ==1?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
+          {isStop !=1 && isStop !=2 && isStop !=3?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
           : 
-          <span style={{color:gold[5],left:75}} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop ==2? "(停运)" :isStop ==3? "(停产)":"(停炉)"}</span>
+          <span style={{color:gold[5],left:75}} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop ==3? "(停运)" :isStop ==1? "(停产)":isStop ==2?"(停炉)":''}</span>
           }
            <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
            <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
@@ -344,9 +344,9 @@ class FlowChart extends PureComponent {
            </>
 
            <>
-           <span  style={{background:tongxunState == 0? green.primary : ""}} className={`${styles.tong} ${styles.commonSty}`}>通讯状态：
+           <span  style={{background:tongxunState == 1? green.primary : ""}} className={`${styles.tong} ${styles.commonSty}`}>通讯状态：
              {/* {TONGXUN_STATUS[zhikongState]} */}
-             { tongxunState == 0? <span>在线</span> :   <span>离线</span>}
+             { tongxunState == 1? <span>在线</span> :   <span>离线</span>}
             </span>
            <div className={`${styles.dai} ${styles.commonSty}`}>
               {ZHIKONG_STATUS[zhikongState]}  
@@ -368,12 +368,16 @@ class FlowChart extends PureComponent {
       
         res.map((item,index)=>{
 
+
+          if(item.Code ==="stop"){ //锅炉状态
+            this.setState({isStop:item.Value})
+           }
        
           if(item.PollutantCode === "cems"){
 
-            if(item.Code ==="a01032"&&this.state.isStopFlag){ //速度场
-              this.setState({isStop:item.Value})
-             }
+
+
+
              if(item.Code ==="a01016"){ //烟道截面积  
                this.setState({yan:`${item.Value==null?"-":item.Value}${item.Unit}`})
              }
@@ -405,9 +409,7 @@ class FlowChart extends PureComponent {
              if(item.Code === "i32002"){ //质控仪状态
               this.setState({zhikongState:item.Value})
              } 
-             if(item.Code === "i32009"){ //通讯状态
-              this.setState({tongxunState:item.Value})
-             } 
+
 
 
              
@@ -434,19 +436,19 @@ class FlowChart extends PureComponent {
 
 
          if(item.PollutantCode === "a01012"){ //烟气温度
-          this.setState({yanw:`${item.Value==null?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
+          this.setState({yanw:`${item.Value==null ||item.Value=='-' ?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
          }
          if(item.PollutantCode === "a01014"){ //烟气湿度
-          this.setState({yans:`${item.Value==null?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
+          this.setState({yans:`${item.Value==null||item.Value=='-'?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
          }
          if(item.PollutantCode === "a00000"){ //烟气流量
-          this.setState({yanll:`${item.Value==null?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
+          this.setState({yanll:`${item.Value==null||item.Value=='-'?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
          }
          if(item.PollutantCode === "a01011"){ //烟气流速
-          this.setState({yanls:`${item.Value==null?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
+          this.setState({yanls:`${item.Value==null||item.Value=='-'?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
          }
          if(item.PollutantCode === "a01013"){ //烟气静压
-          this.setState({yanj:`${item.Value==null?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
+          this.setState({yanj:`${item.Value==null||item.Value=='-'?"-":Number(item.Value).toFixed(2)}${item.Unit}`})
          }
 
   
@@ -631,7 +633,9 @@ class FlowChart extends PureComponent {
 
 
 
-
+           if(item.Code === "status"){ //通讯状态
+            this.setState({tongxunState:item.Value})
+           } 
 
 
            

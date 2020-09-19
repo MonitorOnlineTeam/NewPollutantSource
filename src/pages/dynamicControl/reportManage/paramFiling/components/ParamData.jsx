@@ -211,10 +211,10 @@ class Index extends React.Component {
 
               if(value instanceof Array){
               return <div>
-                  <Popconfirm title="确认保存此备案记录?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
-                     <a >{value[0]}</a>
-                     </Popconfirm>
-                     <span> <a   onClick={this.isSave.bind(this,row,value[1],index)} href="#" style={{paddingLeft:10}} >{value[1]}</a> </span>
+                  {/* <Popconfirm title="确认保存此备案记录?" onConfirm={this.isSave.bind(this,row,value[0],index)}  > */}
+                     <a onClick={this.isSave.bind(this,row,value[0],index)} href="#">保存</a>
+                     {/* </Popconfirm> */}
+                     <span> <a   onClick={this.isSave.bind(this,row,value[1],index)} href="#" style={{paddingLeft:10}} >取消</a> </span>
                  
                    </div>
               }else{
