@@ -70,7 +70,7 @@ class MultiChart extends React.Component {
         name: item.PollutantName,
         type: 'line',
         // animation: false,
-        markPoint:  {  data:[{type:'min',name:'最小值'},{type:'max',name:'最大值'     }　]  },
+        markPoint:  {  data:[{type:'min',name:'最小值'},{type:'max',name:'最大值'     }　], silent:true  },
         data: item.DataList,
         ...otherProps
       }

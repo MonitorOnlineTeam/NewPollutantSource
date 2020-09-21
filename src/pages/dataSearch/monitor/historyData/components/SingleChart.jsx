@@ -85,7 +85,7 @@ class SingleChart extends React.Component {
         type: 'line',
         data: item.DataList,
         itemStyle:item.name == "标准"? { normal: {lineStyle:{color:'#1890ff'} }  } : null,
-        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值',itemStyle:{color:'#1890ff' } },{type:'max',name:'最大值',itemStyle:{color:'#1890ff'}  }　]  } : null,
+        markPoint: item.name == "标准"? {  data:[{type:'min',name:'最小值',itemStyle:{color:'#1890ff' } },{type:'max',name:'最大值',itemStyle:{color:'#1890ff'}  }　],silent:true  } : null,
         markLine: item.name == "标准"? {data: [ {type:'average',name:'平均值',lineStyle:{color:'#1890ff'}}  ]} : null
         }
     })
