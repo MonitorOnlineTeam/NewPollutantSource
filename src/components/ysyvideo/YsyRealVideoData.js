@@ -55,7 +55,8 @@ class YsyRealVideoData extends Component {
   getTreeDatalist = () => {
     const { realdata, columns } = this.props;
     let res = [];
-    if (columns && realdata.length > 0) {
+    console.log(realdata, columns)
+    if (columns.length > 0 && realdata.length > 0) {
       if (columns.length !== 0) {
         columns.map((item, key) => {
           const i = key;
@@ -75,7 +76,7 @@ class YsyRealVideoData extends Component {
         });
       }
     } else {
-      res = <div style={{ textAlign: 'center', height: 70, background: '#fff' }}>暂无数据</div>;
+      res = <div style={{ textAlign: 'center', height: 70, background: 'rgba(255,255,255,.25)', lineHeight: '70px'}}>暂无数据</div>;
     }
     return res;
   };

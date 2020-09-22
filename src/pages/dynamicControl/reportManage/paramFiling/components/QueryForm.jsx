@@ -139,14 +139,14 @@ getpollutantSelect = () => {
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
           <Row gutter={[0,8]} style={{flex:1}} justify="space-between"> 
           
-           <Col xxl={18} xl={24}  lg={24}  md={24} sm={24} xs={24}>
+           <Col xxl={18} xl={18}  lg={18}  md={24} sm={24} xs={24}>
            <Row  gutter={[4,8]} style={{flex:1}}> 
-            <Col  xxl={8} xl={10}  lg={12}  md={24} sm={24} xs={24}>
+            <Col  xxl={8} xl={14}  lg={16}  md={24} sm={24} xs={24}>
               <Form.Item label="仪器" className='queryConditionForm' >
               { ispollut?  <GetpollutantSelect /> : <Spin size="small" />    }
               </Form.Item>
             </Col>
-            <Col xxl={12} xl={12}   lg={24} md={24} sm={24} xs={24}>
+            <Col xxl={12} xl={8}   lg={6} md={24} sm={24} xs={24}>
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
@@ -155,12 +155,12 @@ getpollutantSelect = () => {
             </Row>
             </Col>
 
-            <Row gutter={[4,8]} style={{flex:1}} style={{justifyContent:"flex-end"}}> 
-              {/* <Col  gutter={[0,8]} xxl={4} xl={4}   lg={24} md={24} sm={24} xs={24}> */}
-              <Form.Item  className='queryConditionForm' style={{marginRight:'1px',padding:'8px 0'}}> 
+            <Row gutter={0} style={{flex:1}} style={{justifyContent:"flex-end"}}> 
+              <Col>
+              <Form.Item  className='queryConditionForm' style={{marginRight:'1px',paddingTop:4}}> 
                 <Button disabled={tableDatas.length>0?false:true} type="primary" loading={false} onClick={keepRecordClick} >备案</Button>
               </Form.Item>
-            {/* </Col>   */}
+            </Col>  
             </Row>
           </Row>
         </Form>

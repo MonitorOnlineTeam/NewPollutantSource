@@ -46,14 +46,16 @@ const columns = [
     dataIndex: 'ProductDate',
     key: 'ProductDate',
     align: 'center',
-    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD'),
+    width:100
   },
   {
     title: '有效日期',
     dataIndex: 'LoseDate',
     key: 'LoseDate',
     align: 'center',
-    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD'),
+    width:100
   },
   {
     title: '气瓶体积(L)',
@@ -87,7 +89,8 @@ const columns = [
     title: '制造商',
     dataIndex: 'Producer',
     key: 'Producer',
-    align: 'center'
+    align: 'center',
+    width:100
   },
   {
     title: '状态',

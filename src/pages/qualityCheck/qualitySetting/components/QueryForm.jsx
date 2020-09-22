@@ -28,7 +28,7 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季度"}],
+          cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季"}],
           dgimn:"",
           defaultValue:'',
           defaulltVaule:""
