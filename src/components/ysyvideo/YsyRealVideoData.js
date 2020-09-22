@@ -55,7 +55,7 @@ class YsyRealVideoData extends Component {
   getTreeDatalist = () => {
     const { realdata, columns } = this.props;
     let res = [];
-    console.log(realdata, columns)
+    // console.log(realdata, columns)
     if (columns.length > 0 && realdata.length > 0) {
       if (columns.length !== 0) {
         columns.map((item, key) => {
@@ -92,7 +92,7 @@ class YsyRealVideoData extends Component {
       <div className={styles.tab}>
         <Card
           title="实时数据"
-          style={{ height: 'calc(100vh - 445px)', overflowY: 'scroll' }}
+          style={{ height: 'calc(100vh - 345px)', overflowY: 'scroll' }}
           extra={<div style={{ color: 'gray' }}>{MonitorTime}</div>}
           loading={isloadingC && isloadingP}
           size="small"

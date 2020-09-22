@@ -47,20 +47,21 @@ class Index extends React.Component {
 
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
-
-      const {waterDefault,gasDefault} = this.child.state
+        const {cycleListParams:{QCAType}} = this.props;
+        const waterDefault = ["011","060"];
+        const gasDefault = ["a21002","a21026","a19001"]
           let {dispatch,cycleListParams,pollutantlist,polltype} = this.props;
           cycleListParams = {
             ...cycleListParams,
             DGIMN:dgimn,
-            PollutantCodeList: polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []
+            PollutantCodeList:polltype == 1 ? QCAType==1026? waterDefault : this.child.state.waterDefault : QCAType==1026? gasDefault: polltype == 2 ? this.child.state.gasDefault : []
           }
            dispatch({
               type: 'qualitySet/updateState',
               payload: { cycleListParams  },
           });
          setTimeout(()=>{this.queryClick()}) 
-  
+        
       }
 
 
@@ -103,21 +104,27 @@ class Index extends React.Component {
   }
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
-    const { dgimn,polltype,defaulltVal } = this.props;
-    return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} /> :  null ; 
+    const { dgimn,polltype,defaulltVal,cycleListParams:{QCAType} } = this.props;
+ return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} /> :  null ; 
   }
   render() {
 
-    const {addClick} = this.props;
+    const {addClick,cycleListParams:{QCAType}} = this.props;
     const { cycleOptions,defaultValue } = this.state;
     const GetpollutantSelect = this.getpollutantSelect;
     return (
 <div style={{ marginTop: 10 }}>
+       
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
+          {QCAType==1026?
+           <Row style={{flex:1}} > 
+            <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
+           </Row>
+          :
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
-               <GetpollutantSelect/>
+                <GetpollutantSelect />
               </Form.Item>
             </Col>
             <Col xxl={5} xl={8}   lg={12} md={24} sm={24} xs={24}>
@@ -132,6 +139,7 @@ class Index extends React.Component {
               </Form.Item>
             </Col>
           </Row>
+          }
         </Form>
       </div>);
   }

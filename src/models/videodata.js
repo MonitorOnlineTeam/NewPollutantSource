@@ -33,7 +33,7 @@ export default Model.extend({
       hisrealdata: [],
       total: 0,
       pageIndex: 1,
-      pageSize: 15,
+      pageSize: 20,
     },
     columns: [],
     realdata: [],
@@ -175,6 +175,8 @@ export default Model.extend({
         DGIMNs: payload.dgimn,
       };
       const res = yield call(querypollutantlist, body);
+      console.log("-----")
+      console.log(res)
       let pollutants = [];
       pollutants.push({
         title: '监测时间',
@@ -197,6 +199,7 @@ export default Model.extend({
           });
         });
       }
+
       if (pollutants.length === 1) {
         pollutants = [];
       }

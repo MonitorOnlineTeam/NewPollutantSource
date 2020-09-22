@@ -55,7 +55,7 @@ export default Model.extend({
     // },
     // 导出报表
         *exportHistoryReports({ payload }, { call, put, update, select }) {
-          alert(111)
+          message.warning('暂未开放')
           // const { historyparams } = yield select(state => state.historyparData);
           // const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
           // }
