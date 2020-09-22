@@ -57,7 +57,8 @@ class Index extends Component {
             checkedYC: false,
             checkedCB: false,
             checkedYJ: false,
-            checkedCS: false
+            checkedCS: false,
+            checkedXT: false
         };
     }
 
@@ -101,9 +102,9 @@ class Index extends Component {
         }
     }
 
-      // 根据省市区获取企业
-      getentbyrt = val => {
-         if (val.length === 0) {
+    // 根据省市区获取企业
+    getentbyrt = val => {
+        if (val.length === 0) {
             const { dispatch, alarmPushParam } = this.props;
             dispatch({
                 type: 'user/updateState',
@@ -120,35 +121,35 @@ class Index extends Component {
                 type: 'user/getAlarmPushAuthor',
                 payload: {},
             })
-            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
-         } else {
-         this.props.dispatch({
-            type: 'user/getEnterpriseList',
-            payload: {
-            regionCode: val.toString(),
-            pollutantTypeCode: '',
-            callback: entcode => {
-                const { dispatch, alarmPushParam } = this.props;
-                dispatch({
-                    type: 'user/updateState',
-                    payload: {
-                        alarmPushParam: {
-                            ...alarmPushParam,
-                            pageSize: 12,
-                            pageIndex: 1,
-                            entCode: entcode === '' ? '88888' : entcode,
-                        },
+            this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
+        } else {
+            this.props.dispatch({
+                type: 'user/getEnterpriseList',
+                payload: {
+                    regionCode: val.toString(),
+                    pollutantTypeCode: '',
+                    callback: entcode => {
+                        const { dispatch, alarmPushParam } = this.props;
+                        dispatch({
+                            type: 'user/updateState',
+                            payload: {
+                                alarmPushParam: {
+                                    ...alarmPushParam,
+                                    pageSize: 12,
+                                    pageIndex: 1,
+                                    entCode: entcode === '' ? '88888' : entcode,
+                                },
+                            },
+                        });
+                        dispatch({
+                            type: 'user/getAlarmPushAuthor',
+                            payload: {},
+                        })
+                        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
                     },
-                });
-                dispatch({
-                    type: 'user/getAlarmPushAuthor',
-                    payload: {},
-                })
-                this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
-            },
-            },
-        })
-    }
+                },
+            })
+        }
     }
 
     // 单个卡片复选框切换
@@ -178,7 +179,7 @@ class Index extends Component {
         })
         this.setState({ currentData });
 
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
         // console.log('currentData=', currentData);
     }
 
@@ -201,7 +202,7 @@ class Index extends Component {
             type: 'user/insertAlarmPushAuthor',
             payload: data,
         });
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
     }
 
     // 分页
@@ -224,7 +225,7 @@ class Index extends Component {
             payload: {},
         })
 
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
     }
 
     // 显示条数
@@ -246,7 +247,7 @@ class Index extends Component {
             type: 'user/getAlarmPushAuthor',
             payload: {},
         });
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
     }
 
     // 搜索
@@ -270,7 +271,7 @@ class Index extends Component {
             type: 'user/getAlarmPushAuthor',
             payload: {},
         })
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
+        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
         // }
     }
 
@@ -289,8 +290,9 @@ class Index extends Component {
         currentData.map((item, index) => {
             if (item.AlarmTypes) {
                 const array = item.AlarmTypes.split(',');
-                const ind = array.indexOf(target.AlarmTypes);
-                if (ind !== -1) {
+                const isIncludes = array.includes(target.AlarmTypes);
+                const ind = array.findIndex(i => i == target.AlarmTypes);
+                if (isIncludes) {
                     !target.checked && array.splice(ind, 1);
                     item.AlarmTypes = array.toString();
                 } else {
@@ -302,24 +304,23 @@ class Index extends Component {
             }
             return item;
         });
-
-        if (target.AlarmTypes === '1') {
+        if (target.AlarmTypes === '0') {
             this.setState({ checkedYC: target.checked });
         } else if (target.AlarmTypes === '2') {
             this.setState({ checkedCB: target.checked });
-        } else if (target.AlarmTypes === '5') {
+        } else if (target.AlarmTypes === '12') {
             this.setState({ checkedYJ: target.checked });
-        }
-        else if(target.AlarmTypes === '6') {
+        } else if (target.AlarmTypes === '13') {
             this.setState({ checkedCS: target.checked });
+        } else if (target.AlarmTypes === '14') {
+            this.setState({ checkedXT: target.checked });
         }
-
         this.setState({ currentData });
     }
 
     render() {
         const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
-        const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
+        const { currentData, checkedYC, checkedCB, checkedYJ, checkedCS, checkedXT } = this.state;
 
         return (
             <div>
@@ -328,7 +329,7 @@ class Index extends Component {
                         <Col span={24}>
                             <Card >
                                 <Row gutter={10}>
-                                    <Col xs={24} sm={24} md={24} lg={7} xl={8} xxl={5}>
+                                    <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={5}>
                                         <Search
                                             placeholder="输入字符模糊搜索"
                                             allowClear
@@ -336,9 +337,9 @@ class Index extends Component {
                                             style={{ width: '100%' }}
                                         />
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
+                                    <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
                                         <SdlCascader
-                                           style={{ width: '100%' }}
+                                            style={{ width: '100%' }}
                                             changeOnSelect
                                             placeholder="请选择行政区"
                                             data={this.props.regionList}
@@ -346,33 +347,38 @@ class Index extends Component {
                                             onChange={val => {
                                                 this.getentbyrt(val);
                                             }}
-                                    />
+                                        />
                                         {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
                                     </Col>
-                                    <Col xs={24} sm={24} md={24} lg={10} xl={15} xxl={7}>
-                                    <Checkbox
-                                        AlarmTypes="1"
-                                        checked={checkedYC}
-                                        onChange={this.changeCheckboxGroup}
-                                    >异常</Checkbox>
-                                    <Checkbox
-                                        AlarmTypes="2"
-                                        checked={checkedCB}
-                                        onChange={this.changeCheckboxGroup}
-                                    >超标</Checkbox>
-                                    {
-                                        showAlarmState && <Checkbox
-                                            AlarmTypes="5"
-                                            checked={checkedYJ}
-                                            onChange={this.changeCheckboxGroup}
-                                        >预警</Checkbox>
-                                    }{
+                                    <Col style={{ marginTop: 6 }} xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                         <Checkbox
-                                            AlarmTypes="6"
+                                            AlarmTypes="0"
+                                            checked={checkedYC}
+                                            onChange={this.changeCheckboxGroup}
+                                        >数据异常</Checkbox>
+                                        <Checkbox
+                                            AlarmTypes="2"
+                                            checked={checkedCB}
+                                            onChange={this.changeCheckboxGroup}
+                                        >数据超标</Checkbox>
+                                        {
+                                            // showAlarmState && <Checkbox
+                                            <Checkbox
+                                                AlarmTypes="12"
+                                                checked={checkedYJ}
+                                                onChange={this.changeCheckboxGroup}
+                                            >备案不符</Checkbox>
+                                        }
+                                        <Checkbox
+                                            AlarmTypes="13"
                                             checked={checkedCS}
                                             onChange={this.changeCheckboxGroup}
-                                        >超标核实推送</Checkbox>
-                                    }
+                                        >质控核查报警</Checkbox>
+                                        <Checkbox
+                                            AlarmTypes="14"
+                                            checked={checkedXT}
+                                            onChange={this.changeCheckboxGroup}
+                                        >系统报警</Checkbox>
                                     </Col>
                                 </Row>
                             </Card>
@@ -382,7 +388,7 @@ class Index extends Component {
                 </div>
 
                 <div style={{ background: '#ECECEC', padding: 15, overflow: 'auto', overflowY: 'scorll', minHeight: 350, height: 480 }}>
-                    <Row gutter={16} style={{  justifyContent:(alarmPushData != null && alarmPushData.length > 0) ? null : 'center'  }}>
+                    <Row gutter={16} style={{ justifyContent: (alarmPushData != null && alarmPushData.length > 0) ? null : 'center' }}>
                         {
                             (loadingGetData || loadingGetAlarmState) ? <Spin
                                 style={{
@@ -394,42 +400,59 @@ class Index extends Component {
                                 }}
                                 size="large"
                             /> : (alarmPushData != null && alarmPushData.length > 0) ? alarmPushData.map((item, index) => <Col span={6}>
-                                <Card title={
+                                <Card size="small" title={
                                     <span style={{ fontSize: 14 }}>{item.TargetName}</span>
                                 }
                                     style={{ marginBottom: 10 }} bordered={false} actions={[
-                                        <>
-                                            <Checkbox
-                                                DGIMN={item.DGIMN}
-                                                AlarmTypes="1"
-                                                checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('1') > -1)).length > 0}
-                                                onChange={this.onChangeDGINM}
-                                            >异常</Checkbox>
-                                            <Checkbox
-                                                DGIMN={item.DGIMN}
-                                                AlarmTypes="2"
-                                                checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('2') > -1)).length > 0}
-                                                onChange={this.onChangeDGINM}
-                                            >超标</Checkbox>
-                                            {
-                                                showAlarmState && <Checkbox
+                                        <Row>
+                                            <Col span={12}>
+                                                <Checkbox
                                                     DGIMN={item.DGIMN}
-                                                    AlarmTypes="5"
-                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('5') > -1)).length > 0}
+                                                    AlarmTypes="0"
+                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('0') > -1)).length > 0}
                                                     onChange={this.onChangeDGINM}
-                                                >预警</Checkbox>
-                                            }
-                                             {
-                                              <Checkbox
+                                                >数据异常</Checkbox>
+                                            </Col>
+                                            <Col span={12} style={{ textAlign: 'left' }}>
+                                                <Checkbox
                                                     DGIMN={item.DGIMN}
-                                                    AlarmTypes="6"
-                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('6') > -1)).length > 0}
+                                                    AlarmTypes="2"
+                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.split(",").includes('2'))).length > 0}
                                                     onChange={this.onChangeDGINM}
-                                                >超标核实推送</Checkbox>
-                                            }
+                                                >数据超标</Checkbox>
+                                            </Col>
+                                            <Col span={12}>
+                                                {
+                                                    // showAlarmState && <Checkbox
+                                                    <Checkbox
+                                                        DGIMN={item.DGIMN}
+                                                        AlarmTypes="12"
+                                                        checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.split(",").includes('12'))).length > 0}
+                                                        onChange={this.onChangeDGINM}
+                                                    >备案不符</Checkbox>
+                                                }
+                                            </Col>
+                                            <Col span={12} style={{ textAlign: 'left' }}>
+                                                {
+                                                    <Checkbox
+                                                        DGIMN={item.DGIMN}
+                                                        AlarmTypes="13"
+                                                        checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('13') > -1)).length > 0}
+                                                        onChange={this.onChangeDGINM}
+                                                    >质控核查报警</Checkbox>
+                                                }
+                                            </Col>
+                                            <Col span={12}>
+                                                <Checkbox
+                                                    DGIMN={item.DGIMN}
+                                                    AlarmTypes="14"
+                                                    checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('14') > -1)).length > 0}
+                                                    onChange={this.onChangeDGINM}
+                                                >系统报警</Checkbox>
+                                            </Col>
 
                                             {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}
-                                        </>,
+                                        </Row>,
                                     ]}>
                                     <div style={{ height: 50 }}>
                                         <p style={{ fontWeight: 'bold', fontSize: 14, marginBottom: 3 }}>{`${item.PointName}`}</p>
