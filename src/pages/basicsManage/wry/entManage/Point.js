@@ -88,6 +88,7 @@ class Point extends PureComponent {
             if (result.IsSuccess) {
               this.setState({
                 selectedPointCode: FormData.DGIMN,
+                DGIMN: FormData.DGIMN
               });
               dispatch({
                 type: 'autoForm/getAutoFormData',

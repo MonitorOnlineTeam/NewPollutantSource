@@ -156,7 +156,8 @@ class SdlForm extends PureComponent {
   // 处理时间控件
   _rtnDateEl = item => {
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
-    const format = dateFormat.toUpperCase();
+    // const format = (dateFormat || 'YYYY-MM-DD HH:mm:ss').toUpperCase();
+    const format = dateFormat || 'YYYY-MM-DD HH:mm:ss';
     if (format === 'YYYY-MM' || format === 'MM') {
       // 年月 、 月
       return <MonthPicker style={{ width: '100%' }} format={format} />
@@ -174,7 +175,7 @@ class SdlForm extends PureComponent {
       return <DatePicker format={format} style={{ width: '100%' }} />
     }
     // 年-月-日 时:分:秒
-    return <DatePicker showTime format={format} style={{ width: '100%' }} />
+    return <DatePicker format={format} showTime style={{ width: '100%' }} />
   }
 
   // 检验重复
