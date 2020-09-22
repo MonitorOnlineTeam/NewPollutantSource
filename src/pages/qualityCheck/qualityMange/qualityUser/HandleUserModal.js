@@ -164,6 +164,9 @@ class HandleUserModal extends Component {
         }]
       }
     }
+    if (info.file.status === 'error') {
+      message.error(info.fileList[0].response.Message)
+    }
     this.setState({
       fileList: fileList
     })
