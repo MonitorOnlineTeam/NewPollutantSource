@@ -125,11 +125,13 @@ class TableData extends React.Component {
       
       return  <div style={{textAlign: 'left',}}>
        { record.AlarmMsg.split(";").map((item,index)=>{
-         return  <>
+   
+              let see = record.PollutantCode.split(",")[index];
+               return  <>
                  <span style={{  paddingRight: 5, }}  >
                   {item}
                </span>
-               <Link style={{  paddingRight: 8, }} to={`${check[record.PollutantCode.split(",")[index].split("@")[1]]}&code=${record.PollutantCode.split(",")[index].split("@")[0]}`} >查看</Link> 
+                {see?  <Link style={{  paddingRight: 8, }} to={`${check[see.split("@")[1]]}&code=${see.split("@")[0]}`} >查看</Link> : null}
                 </>
       })
     }
