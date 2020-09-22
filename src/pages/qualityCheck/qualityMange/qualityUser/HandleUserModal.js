@@ -13,7 +13,7 @@ const { SHOW_PARENT, TreeNode } = TreeSelect;
 
 const figureStyle = {
   width: 102,
-  height: 88,
+  height: 108,
   border: "1px dashed #d9d9d9",
   padding: 4,
   color: "#666",
@@ -24,11 +24,11 @@ const instructionsStyle = {
   flex: 1,
   marginLeft: 10,
   border: "1px dashed rgb(217, 217, 217)",
-  height: 88,
+  height: 108,
   color: "#666",
   fontSize: 13,
-  padding: 4,
-  lineHeight: "18px"
+  padding: "6px 10px",
+  lineHeight: "20px"
 }
 
 @connect(({ qualityUser, common, loading }) => ({
@@ -44,6 +44,7 @@ class HandleUserModal extends Component {
     loading: false,
     uuid: this.props.id ? this.props.id : uuidv4(),
     fileList: [],
+    entAndPointList: [],
   }
 
   componentDidMount() {
@@ -74,6 +75,22 @@ class HandleUserModal extends Component {
             url: `/upload/${this.props.viewUserData.Pic}`,
           }
         ],
+      })
+    }
+    if (this.props.entAndPointList !== prevProps.entAndPointList) {
+      let entAndPointList = this.props.entAndPointList.map(item => {
+        if (item.children) {
+          let children = item.children.map(child => {
+            return {
+              ...child, title: child.EntName + " - " + child.title
+            }
+          })
+          return { ...item, children }
+        }
+        return item
+      })
+      this.setState({
+        entAndPointList
       })
     }
   }
@@ -147,6 +164,9 @@ class HandleUserModal extends Component {
         }]
       }
     }
+    if (info.file.status === 'error') {
+      message.error(info.fileList[0].response.Message)
+    }
     this.setState({
       fileList: fileList
     })
@@ -154,10 +174,11 @@ class HandleUserModal extends Component {
 
 
   render() {
-    const { handleUserModalVisible, entAndPointList, addLoading, updateLoading, viewUserData, id } = this.props;
-    const { uuid, fileList } = this.state;
+    const { handleUserModalVisible, addLoading, updateLoading, viewUserData, id } = this.props;
+    const { uuid, fileList, entAndPointList } = this.state;
     const tProps = {
       treeData: entAndPointList,
+      // treeNodeLabelProp: "",
       treeDefaultExpandAll: true,
       treeCheckable: true,
       treeNodeFilterProp: "title",
@@ -198,7 +219,7 @@ class HandleUserModal extends Component {
             initialValue={id ? viewUserData.User_Name : undefined}
             rules={[{ required: true, message: '请输入姓名!' }]}
           >
-            <Input placeholder="请输入姓名" />
+            <Input placeholder="请输入姓名" maxLength={10} />
           </Form.Item>
           <Form.Item
             label="手机号"
@@ -231,6 +252,7 @@ class HandleUserModal extends Component {
               <Upload
                 accept=".jpg,.png,.jpeg,.bmp"
                 listType="picture-card"
+                disabled={!!id}
                 fileList={fileList}
                 style={{ width: 120 }}
                 action={id ? "/api/rest/PollutantSourceApi/UploadApi/UpdOperator" : "/api/rest/PollutantSourceApi/UploadApi/AddOperator"}
@@ -248,13 +270,17 @@ class HandleUserModal extends Component {
               <div>
                 <div style={{ display: "flex" }}>
                   <div style={{ ...figureStyle }}>
-                    <img src="/u33.png" alt="" width="100%" />
-                  示例图&nbsp;&nbsp;<ZoomInOutlined />
+                    <img src="/rl.jpg" alt="" width="86" height="80" />
+                    <span style={{ cursor: 'pointer' }} onClick={() => this.setState({ visible: true })}>示例图&nbsp;&nbsp;<ZoomInOutlined /></span>
                   </div>
                   <div style={{ ...instructionsStyle }}>
-                    * 请确保上传的照片光线良好照片清晰；眼睛、鼻子、嘴巴、脸颊、下巴不能被遮挡；人脸部分不小于100*100像素；照片中仅一人。<br />
-                    * 支持扩展名：.PNG、.JPG、.JPEG、.BMP
-                </div>
+                    <p style={{ marginBottom: 14 }}>
+                      * 请确保上传的照片光线良好照片清晰；眼睛、鼻子、嘴巴、脸颊、下巴不能被遮挡；人脸部分不小于100*100像素；照片中仅一人。
+                    </p>
+                    <p>
+                      * 支持扩展名：.PNG、.JPG、.JPEG、.BMP
+                    </p>
+                  </div>
                 </div>
               </div>
             </>
@@ -280,7 +306,16 @@ class HandleUserModal extends Component {
             </TreeSelect> */}
           </Form.Item>
         </Form>
-      </Modal >
+        <Modal
+          footer={false}
+          visible={this.state.visible}
+          onCancel={() => { this.setState({ visible: false }) }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <img src="/rl.jpg" alt="" />
+          </div>
+        </Modal>
+      </Modal>
     );
   }
 }

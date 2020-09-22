@@ -104,6 +104,7 @@ class InstrumentInfo extends Component {
       },
       callback: () => {
         this.setState({
+          handleType: undefined,
           Name: undefined,
           Factory: undefined,
           Method: undefined,

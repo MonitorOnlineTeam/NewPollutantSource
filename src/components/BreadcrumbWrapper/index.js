@@ -30,9 +30,11 @@ class BreadcrumbWrapper extends Component {
         <Breadcrumb>
           {
             props.breadcrumb.routes.map(item => {
-              return <Breadcrumb.Item key={item.path}>
-                <a href={item.path}>{item.breadcrumbName}</a>
-              </Breadcrumb.Item>
+              if (item.breadcrumbName !== "首页") {
+                return <Breadcrumb.Item key={item.path}>
+                  <a href={item.path}>{item.breadcrumbName}</a>
+                </Breadcrumb.Item>
+              }
             })
           }
           {
