@@ -44,6 +44,7 @@ class HandleUserModal extends Component {
     loading: false,
     uuid: this.props.id ? this.props.id : uuidv4(),
     fileList: [],
+    entAndPointList: [],
   }
 
   componentDidMount() {
@@ -74,6 +75,22 @@ class HandleUserModal extends Component {
             url: `/upload/${this.props.viewUserData.Pic}`,
           }
         ],
+      })
+    }
+    if (this.props.entAndPointList !== prevProps.entAndPointList) {
+      let entAndPointList = this.props.entAndPointList.map(item => {
+        if (item.children) {
+          let children = item.children.map(child => {
+            return {
+              ...child, title: child.EntName + " - " + child.title
+            }
+          })
+          return { ...item, children }
+        }
+        return item
+      })
+      this.setState({
+        entAndPointList
       })
     }
   }
@@ -154,10 +171,11 @@ class HandleUserModal extends Component {
 
 
   render() {
-    const { handleUserModalVisible, entAndPointList, addLoading, updateLoading, viewUserData, id } = this.props;
-    const { uuid, fileList } = this.state;
+    const { handleUserModalVisible, addLoading, updateLoading, viewUserData, id } = this.props;
+    const { uuid, fileList, entAndPointList } = this.state;
     const tProps = {
       treeData: entAndPointList,
+      // treeNodeLabelProp: "",
       treeDefaultExpandAll: true,
       treeCheckable: true,
       treeNodeFilterProp: "title",
