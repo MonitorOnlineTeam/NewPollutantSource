@@ -287,12 +287,11 @@ class ViewQCProcess extends PureComponent {
         <div className={styles.CEMSName}>
           CEMS
         </div>
-        <div className={styles.CEMSStatus}>
-          {/* 状态：{CEMSStatus == 1 && "正常" } {CEMSStatus == 0 && "故障" } */}
+        {/* <div className={styles.CEMSStatus}>
           工作状态：{
             this.props.QCStatus !== undefined && QCStatusList[this.props.QCStatus].text
           }
-        </div>
+        </div> */}
         <div className={styles.pollutantListInfo}>
           <p className={styles.title}>气态分析仪</p>
           {
