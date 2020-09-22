@@ -316,10 +316,14 @@ dateCallback = (dates, dataType) => { //更新日期
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+    let {dispatch,queryParams} = this.props;
+    queryParams = {
+      ...queryParams,
+    }
+     dispatch({
+        type: 'historyparData/exportHistoryReports',
+        payload: { ...queryParams  },
+    });
   }
 
 

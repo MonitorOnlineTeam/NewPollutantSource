@@ -10,7 +10,8 @@ import moment from 'moment';
 import {  message,Tooltip } from 'antd';
 import { red,yellow,gold  } from '@ant-design/colors';
 
-import { onlyOneEnt } from '@/config';
+import { onlyOneEnt,uploadHost } from '@/config';
+
 export default Model.extend({
   namespace: 'historyData',
   state: {
@@ -158,21 +159,12 @@ export default Model.extend({
       }
     },
 
-    // * getPollutantlist( { payload},{   call, update,select}){
-    //   // const body = {  ...payload }
-    //   // const result = yield call(getAllTypeDataList, { ...body });
-    //   const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
 
-
-    // },
     // 导出报表
         *exportHistoryReports({ payload }, { call, put, update, select }) {
-          const { historyparams } = yield select(state => state.historyData);
-          const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
-          }
-          const result = yield call(exportHistoryReport, postData);
+          const result = yield call(exportHistoryReport, payload);
           if (result.IsSuccess) {
-            window.open(result.Datas)
+            window.open(`${uploadHost}upload${result.Datas}`)
             message.success('导出成功')
           } else {
             message.error(result.Message)
