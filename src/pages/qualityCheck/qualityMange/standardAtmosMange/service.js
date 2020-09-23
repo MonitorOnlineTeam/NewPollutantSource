@@ -13,7 +13,5 @@ export async function getQCAStandardManagement(params) {
 // 导出数据
 export async function exportDatas(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportQCAStandardManagement', params, null);
-  return result.Datas === null ? {
-    Datas: [],
-  } : result;
+  return result;
 }
