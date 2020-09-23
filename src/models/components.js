@@ -76,7 +76,7 @@ export default Model.extend({
     *getPollutantByDgimn({ payload }, { call, put, update, select }) {
       const result = yield call(services.getPollutantByDgimn, payload);
       if (result.IsSuccess) {
-        yield update({ pollutantByDgimnList: result.Datas })
+        yield update({ pollutantByDgimnList: result.Datas.filter(item => item.IsUse === "1") })
       } else {
         message.error(result.Message);
       }

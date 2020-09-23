@@ -317,10 +317,14 @@ class SdlForm extends PureComponent {
               console.log('map=', map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue('Longitude') || formData.Longitude}
-            latitude={getFieldValue('Latitude') || formData.Latitude}
+            longitude={getFieldValue('Longitude') !== undefined ? getFieldValue('Longitude') : formData.Longitude}
+            latitude={getFieldValue('Latitude') !== undefined ? getFieldValue('Latitude') : formData.Latitude}
             path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
+            onChange={(e) => {
+              initialValue = e.target.value;
+              setFieldsValue({ Longitude: e.target.value })
+            }}
           />
           break;
         case '纬度':
@@ -332,10 +336,14 @@ class SdlForm extends PureComponent {
               console.log('map=', map)
               setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
             }}
-            longitude={getFieldValue('Longitude') || formData.Longitude}
-            latitude={getFieldValue('Latitude') || formData.Latitude}
+            longitude={getFieldValue('Longitude') !== undefined ? getFieldValue('Longitude') : formData.Longitude}
+            latitude={getFieldValue('Latitude') !== undefined ? getFieldValue('Latitude') : formData.Latitude}
             path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
+            onChange={(e) => {
+              initialValue = e.target.value;
+              setFieldsValue({ Latitude: e.target.value })
+            }}
           />;
           break;
         case '坐标集合':
@@ -350,6 +358,7 @@ class SdlForm extends PureComponent {
             path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
             showMarker={true}
             handlePolygon
+
           />;
           break;
         // case "上传":
@@ -392,7 +401,7 @@ class SdlForm extends PureComponent {
                   }
                 })
               },
-              onPreview: this.handlePreview,
+              // onPreview: this.handlePreview,
               multiple: true,
               listType: "picture-card",
               data: {

@@ -295,7 +295,7 @@ class SearchWrapper extends Component {
               itemName={item.configDataItemName}
               itemValue={item.configDataItemValue}
               configId={item.configId}
-              changeOnSelect={true}
+              // changeOnSelect={true}
               placeholder={placeholder}
               data={item.value}
             />

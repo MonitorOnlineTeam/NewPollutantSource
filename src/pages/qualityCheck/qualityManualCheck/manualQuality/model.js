@@ -131,6 +131,10 @@ export default Model.extend({
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
           updateObj.currentDGIMN = result.Datas[2].DGIMN;
         }
+        if (result.Datas[3]) {
+          updateObj.QCLogsResult = result.Datas[3];
+          updateObj.currentDGIMN = result.Datas[3].DGIMN;
+        }
         yield update({ ...updateObj, marginData })
       } else {
         message.error(result.Message)

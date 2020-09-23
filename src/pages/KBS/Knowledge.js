@@ -63,7 +63,7 @@ class Knowledge extends PureComponent {
           <h1>污染源质控云中心</h1>
           <div className={styles.inputContainer}>
             {/* <img src="/u230.png" alt="" /> */}
-            <Input placeholder="请输入关键字搜索" onChange={(e) => { this.setState({ keyword: e.target.value }) }} />
+            <Input className={styles.input} placeholder="请输入关键字搜索" allowClear onChange={(e) => { this.setState({ keyword: e.target.value }) }} />
             <Divider type="vertical" style={{ height: "100%" }} />
             <Button type="link" onClick={() => this.getKBSData()}>搜索</Button>
           </div>
