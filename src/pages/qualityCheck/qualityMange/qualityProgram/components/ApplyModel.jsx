@@ -145,7 +145,7 @@ class EditorAddMode extends React.Component {
         treeDefaultExpandAll: true,
         treeCheckable: true,
         treeNodeFilterProp: "title",
-        placeholder: '请选择企业排口！',
+        placeholder: '请选择应用排口',
         allowClear:true,
         style: {
           width: '100%',

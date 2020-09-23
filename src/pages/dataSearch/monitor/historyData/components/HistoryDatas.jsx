@@ -209,11 +209,14 @@ class HistoryDatas extends React.Component {
 
   //导出数据
   exportData = () => { 
-   message.warning("暂未开放")
-  //   this.props.dispatch({
-  //     type: "historyData/exportHistoryReports",
-  //     payload: {DGIMNs: this.state.dgimn }
-  // })
+    let { historyparams, dispatch,} = this.props;
+
+   
+     dispatch({
+      type: "historyData/exportHistoryReports",
+      payload: {...historyparams},
+     })
+
   }
 
 
@@ -283,7 +286,7 @@ class HistoryDatas extends React.Component {
     let { historyparams,dispatch } = this.props;
     historyparams = {
       ...historyparams,
-      Flag: e.target.checked ? "1" : "0"
+      Flag: e.target.checked ? 1 : 0
     }
     dispatch({
      type: "historyData/updateState",
@@ -420,7 +423,7 @@ class HistoryDatas extends React.Component {
               </Form.Item>
             </Col>
               <Col  xxl={6} xl={8}  md={12} sm={24} xs={24}>
-              <Form.Item label="污染物" {...formItemLayout} className='queryConditionForm'>
+              <Form.Item label="污染物类型" {...formItemLayout} className='queryConditionForm'>
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>

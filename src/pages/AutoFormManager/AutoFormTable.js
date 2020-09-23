@@ -229,8 +229,8 @@ class AutoFormTable extends PureComponent {
               type="primary"
               onClick={() => {
                 //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
-                this.props.onAdd ? 
-                this.props.onAdd() : 
+                this.props.onAdd ?
+                this.props.onAdd() :
                 dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
               }}
             >添加
@@ -418,7 +418,7 @@ class AutoFormTable extends PureComponent {
       return {
         ...col,
         align: "center",
-        width: col.width,
+        width: col.width || DEFAULT_WIDTH,
         render: (text, record) => {
           text = text ? text + "" : text;
           const type = col.formatType;

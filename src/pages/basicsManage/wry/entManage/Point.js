@@ -88,6 +88,7 @@ class Point extends PureComponent {
             if (result.IsSuccess) {
               this.setState({
                 selectedPointCode: FormData.DGIMN,
+                DGIMN: FormData.DGIMN
               });
               dispatch({
                 type: 'autoForm/getAutoFormData',
@@ -127,7 +128,7 @@ class Point extends PureComponent {
             configId={CONFIG_ID}
             searchParams={searchParams}
             onAdd={() => {
-              this.setState({ visible: true })
+              this.setState({ visible: true, isEdit: false })
             }}
             onView={(record, key) => {
               this.setState({ viewVisible: true, DGIMN: record["dbo.T_Cod_MonitorPointBase.DGIMN"] })

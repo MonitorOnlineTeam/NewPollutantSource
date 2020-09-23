@@ -287,12 +287,11 @@ class ViewQCProcess extends PureComponent {
         <div className={styles.CEMSName}>
           CEMS
         </div>
-        <div className={styles.CEMSStatus}>
-          {/* 状态：{CEMSStatus == 1 && "正常" } {CEMSStatus == 0 && "故障" } */}
+        {/* <div className={styles.CEMSStatus}>
           工作状态：{
             this.props.QCStatus !== undefined && QCStatusList[this.props.QCStatus].text
           }
-        </div>
+        </div> */}
         <div className={styles.pollutantListInfo}>
           <p className={styles.title}>气态分析仪</p>
           {
@@ -420,16 +419,18 @@ class ViewQCProcess extends PureComponent {
 
   // 获取质控结果
   getQCAResult = () => {
-    console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
-    switch (this.props.QCLogsResult.Data.Result + "") {
-      case "0":
-        return <CustomIcon className={styles.QCResult} type="icon-hege" />
-      case "1":
-        return <CustomIcon className={styles.QCResult} type="icon-buhege" />
-      case "3":
-        return <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
-      default:
-        return <Spin style={{ position: 'absolute', right: 20 }} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+    if(this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result) {
+      console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
+      switch (this.props.QCLogsResult.Data.Result + "") {
+        case "0":
+          return <CustomIcon className={styles.QCResult} type="icon-hege" />
+        case "1":
+          return <CustomIcon className={styles.QCResult} type="icon-buhege" />
+        case "2":
+          return <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+        default:
+          return <Spin style={{ position: 'absolute', right: 20 }} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+      }
     }
   }
 

@@ -41,7 +41,7 @@ export async function querypollutantlist(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
   return result === null ? {
     Datas: [],
-  } : result;
+  } : result.Datas;
 }
 
 /**

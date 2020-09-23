@@ -18,7 +18,7 @@ export default Model.extend({
     tableLoading:true,
     standardParams: {
       DGIMN: "",
-      BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+      BeginTime: moment(new Date()).add(-1, 'year').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     }
   },

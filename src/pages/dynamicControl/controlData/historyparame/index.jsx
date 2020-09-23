@@ -41,7 +41,7 @@ class Index extends Component {
         const { location } = this.props;
         
         return (
-            <div>
+            <div id='historyparData'>
               {location.query&&location.query.type==='alarm' ? null :  <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
 
                 <BreadcrumbWrapper extraName={ `${ title}`}>

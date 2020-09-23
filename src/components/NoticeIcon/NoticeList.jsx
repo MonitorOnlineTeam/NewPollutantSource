@@ -46,17 +46,20 @@ const NoticeList = ({
       '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
     }
     if (record.AlarmType == 13) {
-      return  <div style={{textAlign: 'left'}}>
-       { record.AlarmMsg.split(";").map((item,index)=>{
-         return  <>
-                 <span style={{  paddingRight: 5, }}  >
-                  {item}
-               </span>
-               <Link style={{  paddingRight: 8, }} to={`${check[record.PollutantCode.split(",")[index].split("@")[1]]}&code=${record.PollutantCode.split(",")[index].split("@")[0]}`} >查看</Link> 
+      return  <div style={{textAlign: 'left',}}>
+      { record.AlarmMsg.split(";").map((item,index)=>{
+  
+             let see = record.PollutantCode.split(",")[index];
+
+              return  <>
+                <span style={{  paddingRight: 5, }}  >
+                 {item}
+              </span>
+               {see?  <Link style={{  paddingRight: 8, }} to={`${check[see.split("@")[1]]}&code=${see.split("@")[0]}`} >查看</Link> : null}
                </>
-      })
-    }
-      </div>
+     })
+   }
+     </div>
     } else {
       return <>
           {record.AlarmType === "2" ? // 数据超标

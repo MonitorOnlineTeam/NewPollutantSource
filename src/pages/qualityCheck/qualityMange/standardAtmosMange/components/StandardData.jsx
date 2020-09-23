@@ -46,14 +46,16 @@ const columns = [
     dataIndex: 'ProductDate',
     key: 'ProductDate',
     align: 'center',
-    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD'),
+    width:100
   },
   {
     title: '有效日期',
     dataIndex: 'LoseDate',
     key: 'LoseDate',
     align: 'center',
-    render: text =>  moment(new Date(text)).format('YYYY-MM-DD')
+    render: text =>  moment(new Date(text)).format('YYYY-MM-DD'),
+    width:100
   },
   {
     title: '气瓶体积(L)',
@@ -87,7 +89,8 @@ const columns = [
     title: '制造商',
     dataIndex: 'Producer',
     key: 'Producer',
-    align: 'center'
+    align: 'center',
+    width:100
   },
   {
     title: '状态',
@@ -112,7 +115,7 @@ class TableData extends React.Component {
         this.state = {
         tableDatas:[],
         columns:[],
-        dateValue: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
+        dateValue: [ moment(new Date()).add(-1, 'year'), moment(new Date())],
         };
     }
     static getDerivedStateFromProps(props, state) {
@@ -149,7 +152,7 @@ class TableData extends React.Component {
           let {dispatch,standardParams} = this.props;
           standardParams = {
             ...standardParams,
-            BeginTime: moment(new Date()).add(-1, 'month').format('YYYY-MM-DD HH:mm:ss'),
+            BeginTime: moment(new Date()).add(-1, 'year').format('YYYY-MM-DD HH:mm:ss'),
             EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
             DGIMN:dgimn
           }

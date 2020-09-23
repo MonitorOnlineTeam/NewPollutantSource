@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import PageLoading from '@/components/PageLoading'
-import  ZeroPointData from './components/ZeroPointData'
 import NavigationTree from '@/components/NavigationTreeNew'
 import CycleTable from "../components/CycleTable"
 

@@ -42,20 +42,10 @@ class ZeroCheckPage extends PureComponent {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 0) {
-            return <a style={{ color: "#87d068" }} onClick={(e) => {
-              this.setState({
-                currentRowData: record
-              })
-              this.props.dispatch({
-                type: "qcaCheck/updateState",
-                payload: {
-                  checkModalVisible: true
-                }
-              })
-            }}>合格</a>
+          if (text == 2) {
+            return <a style={{ color: "#7b7b7b" }}>无效</a>
           }
-          return <a style={{ color: "#f5222d" }} onClick={(e) => {
+          return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
             this.setState({
               currentRowData: record
             })
@@ -65,7 +55,7 @@ class ZeroCheckPage extends PureComponent {
                 checkModalVisible: true
               }
             })
-          }}>不合格</a>
+          }}>{text == 0 ? "合格" : "不合格"}</a>
         }
       },
       {
@@ -115,12 +105,10 @@ class ZeroCheckPage extends PureComponent {
         title: '合格情况',
         dataIndex: 'Result',
         render: (text, record, index) => {
-          if (text == 0) {
-            return <a style={{ color: "#87d068" }} onClick={(e) => {
-            }}>合格</a>
+          if (text == 2) {
+            return <a style={{ color: "#7b7b7b" }}>无效</a>
           }
-          return <a style={{ color: "#f5222d" }} onClick={(e) => {
-          }}>不合格</a>
+          return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }}>{text == 0 ? "合格" : "不合格"}</a>
         }
       },
       {
