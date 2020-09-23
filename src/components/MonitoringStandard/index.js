@@ -70,7 +70,7 @@ class MonitoringStandard extends Component {
         //         configId: 'service_StandardLibrary',
         //     },
         // });
-   
+
         this.getpollutantbydgimn(DGIMN);
     }
 
@@ -79,7 +79,15 @@ class MonitoringStandard extends Component {
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getpollutantbydgimn(nextProps.DGIMN);
         }
-
+        if (this.props.standardTableDatas !== nextProps.standardTableDatas) {
+            let standardTableDatas = nextProps.standardTableDatas;
+            if (this.props.filter) {
+                standardTableDatas = nextProps.standardTableDatas.filter(item => item.IsUse === "1")
+            }
+            this.setState({
+                standardTableDatas: standardTableDatas
+            })
+        }
     }
 
     getpollutantbydgimn(DGIMN) {
@@ -320,16 +328,16 @@ class MonitoringStandard extends Component {
             pointDataWhere,
             isEdit,
             pollutantType,
-            standardTableDatas,
+
 
         } = this.props;
 
-        const { standardlibraryModal, Fvisible } = this.state;
+        const { standardlibraryModal, Fvisible, standardTableDatas, } = this.state;
         return (
             <Card
                 bordered={false}
                 style={{ width: '100%' }}
-                bodyStyle={{paddingBottom:0}}
+                bodyStyle={{ paddingBottom: 0 }}
                 extra={
                     <Button
                         onClick={() => {
@@ -350,7 +358,7 @@ class MonitoringStandard extends Component {
                     columns={columns}
                     dataSource={standardTableDatas}
                     pagination={false}
-                  //  pagination={{ pageSize: 20 }}
+                //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
                     visible={standardlibraryModal}

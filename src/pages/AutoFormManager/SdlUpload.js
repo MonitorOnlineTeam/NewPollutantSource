@@ -93,7 +93,7 @@ class SdlUpload extends Component {
           }
         })
       },
-      onPreview: this.handlePreview,
+      // onPreview: this.handlePreview,
       multiple: true,
       listType: "picture-card",
       data: {

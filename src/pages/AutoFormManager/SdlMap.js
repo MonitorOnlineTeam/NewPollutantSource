@@ -246,6 +246,14 @@ class SdlMap extends PureComponent {
         isChangePos: nextProps.handleMarker,
       })
     }
+    if ((this.props.latitude !== nextProps.latitude) || (this.props.longitude !== nextProps.longitude)) {
+      this.setState({
+        position: {
+          latitude: nextProps.latitude,
+          longitude: nextProps.longitude
+        }
+      })
+    }
   }
 
   renderMapContent() {
@@ -321,9 +329,9 @@ class SdlMap extends PureComponent {
 
     let mapStaticAttribute = {};
     // 离线地图设置做大缩放级别
-    if (config.offlineMapUrl.domain) {
-      mapStaticAttribute.zooms = [3, 14]
-    }
+    // if (config.offlineMapUrl.domain) {
+    //   mapStaticAttribute.zooms = [3, 14]
+    // }
 
     return <Map
       amapkey={YOUR_AMAP_KEY}
@@ -403,33 +411,37 @@ class SdlMap extends PureComponent {
         {
           mode === 'modal' &&
           <Input
-            suffix={<GlobalOutlined
-              onClick={() => {
-                if (latitude && longitude) {
-                  this.setState({
-                    position: {
-                      latitude,
-                      longitude,
-                    },
-                    mapCenter: [longitude, latitude],
-                  })
-                }
-
-                const path = this.props.path && JSON.parse(this.props.path);
-                // 厂界
-                if (handlePolygon && path) {
-                  this.setState({
-                    mapCenter: path[0] && path[0][0] && path[0][0][0],
-                    path,
-                  })
-                }
-                this.setState({
-                  mapVisible: true,
-                })
-              }}
-              style={{ color: '#2db7f5', cursor: 'pointer' }} />}
             allowClear
+            suffix={
+              <GlobalOutlined
+                onClick={() => {
+                  if (latitude && longitude) {
+                    this.setState({
+                      position: {
+                        latitude,
+                        longitude,
+                      },
+                      mapCenter: [longitude, latitude],
+                    })
+                  }
+
+                  const path = this.props.path && JSON.parse(this.props.path);
+                  // 厂界
+                  if (handlePolygon && path) {
+                    this.setState({
+                      mapCenter: path[0] && path[0][0] && path[0][0][0],
+                      path,
+                    })
+                  }
+                  this.setState({
+                    mapVisible: true,
+                  })
+                }}
+                style={{ color: '#2db7f5', cursor: 'pointer' }} />
+            }
+
             {...this.props}
+            onChange = {(e) => { this.props.onChange && this.props.onChange(e)}}
           />
         }
         {

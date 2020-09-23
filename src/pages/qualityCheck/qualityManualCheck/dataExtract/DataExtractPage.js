@@ -106,7 +106,7 @@ class DataExtractPage extends PureComponent {
         BeginTime: beginTime,
         EndTime: endTime,
         Type: type,
-        PollutantCode: type === "qcainfo" ? currentPollutantCode : undefined,
+        PollutantCode: (type === "qcainfo" || type === "qcaflow") ? currentPollutantCode : undefined,
         DGIMN: this.props.DGIMN
       }
     })
@@ -248,6 +248,42 @@ class DataExtractPage extends PureComponent {
             <Col flex="auto">
               <Button type="primary" onClick={() => this.sendDataExtract("system")}>提取</Button>
             </Col>
+            <Col className={styles.label} flex="200px">
+              提取配气流量信息
+              <QuestionTooltip content="提取质控仪SO2、NOx、O2的配气信息，用于计算质控仪配气范围" />
+            </Col>
+            <Col flex="auto">
+              <Button type="primary" onClick={() => {
+                const that = this;
+                confirm({
+                  title: '请选择污染物',
+                  okText: "确认",
+                  cancelText: "取消",
+                  // icon: <ExclamationCircleOutlined />,
+                  content: <div>
+                    <Select style={{ width: 200 }} defaultValue={this.state.currentPollutantCode} onChange={(val) => {
+                      that.setState({ currentPollutantCode: val })
+                    }}>
+                      {
+                        gasPollutantList.map(item => {
+                          if (item.value !== "n00000") {
+                            return <Option key={item.value} value={item.value}>{item.label}</Option>
+                          }
+                        })
+                      }
+                    </Select>
+                  </div>,
+                  onOk() {
+                    that.sendDataExtract("qcaflow");
+                  },
+                  // onCancel() {
+                  //   that.setState({
+                  //     currentPollutantCode: undefined
+                  //   })
+                  // },
+                });
+              }}>提取</Button>
+            </Col>
           </Row>
           <Row className={styles.row}>
             <Col className={styles.label} flex="200px">
@@ -299,7 +335,7 @@ class DataExtractPage extends PureComponent {
                     <span className={styles.text}>
                       {QCLogsStart.Str ?
                         <>
-                          {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.Str}`}
+                          {`${QCLogsStart.User}向【${pointName}】，${QCLogsStart.Str}`}
                         </> : ""}
                     </span>
                   </div>

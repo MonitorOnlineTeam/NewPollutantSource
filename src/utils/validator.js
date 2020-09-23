@@ -58,7 +58,7 @@ export const checkRules = {
   },
   phone: {
     pattern: REGEXP.phone,
-    message: '电话号码格式不正确。',
+    message: '电话号码格式不正确，格式（xxx-xxxxxxx）',
   },
   mobile: {
     pattern: REGEXP.mobile,

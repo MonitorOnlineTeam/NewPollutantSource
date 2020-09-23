@@ -295,13 +295,23 @@ export default {
               name: 'dataSearch',
               routes: [
                 {
+                  path: '/dataSearch',
+                  redirect: "/dataSearch/monitor"
+                },
+                {
                   // 监测数据
                   path: '/dataSearch/monitor',
                   name: 'monitor',
                   routes: [
                     {
                       path: '/dataSearch/monitor',
-                      redirect: "/dataSearch/monitor/datavisualization"
+                      redirect: "/dataSearch/monitor/realtimeDataView"
+                    },
+                    // 数据一览
+                    {
+                      name: 'realtimeDataView',
+                      path: '/dataSearch/monitor/realtimeDataView',
+                      component: './monitoring/overView/realtime',
                     },
                     {
                       // 工况模拟
