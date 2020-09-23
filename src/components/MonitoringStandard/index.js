@@ -376,6 +376,7 @@ class MonitoringStandard extends Component {
                         <AutoFormTable
                             style={{ marginTop: 10 }}
                             configId={'service_StandardLibrary'}
+                            getPageConfig
                             searchParams={[
                                 {
                                     Key: 'dbo__T_Cod_PollutantType__PollutantTypeCode',

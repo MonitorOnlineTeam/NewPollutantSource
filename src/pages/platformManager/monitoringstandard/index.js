@@ -38,14 +38,11 @@ class Index extends Component {
         return (
             <div id="record">
                 {/* selKeys="31011537961003" */}
-                <NavigationTree domId="#record"  onTreeSelect={value => {
-                    console.log(value);
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        this.setState({
-                            dgimn: value,
-                            // entName: selectItem.title
-                        })
-                    }
+                <NavigationTree domId="#record" onTreeSelect={(value, item) => {
+                    this.setState({
+                        dgimn: value,
+                        pollutantType: item.PointType
+                    })
                 }} />
                 <BreadcrumbWrapper>
                     {dgimn && <MonitoringStandard DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>}
