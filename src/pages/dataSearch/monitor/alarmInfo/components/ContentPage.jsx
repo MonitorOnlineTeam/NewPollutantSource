@@ -125,11 +125,13 @@ class TableData extends React.Component {
       
       return  <div style={{textAlign: 'left',}}>
        { record.AlarmMsg.split(";").map((item,index)=>{
-         return  <>
+   
+              let see = record.PollutantCode.split(",")[index];
+               return  <>
                  <span style={{  paddingRight: 5, }}  >
                   {item}
                </span>
-               <Link style={{  paddingRight: 8, }} to={`${check[record.PollutantCode.split(",")[index].split("@")[1]]}&code=${record.PollutantCode.split(",")[index].split("@")[0]}`} >查看</Link> 
+                {see?  <Link style={{  paddingRight: 8, }} to={`${check[see.split("@")[1]]}&code=${see.split("@")[0]}`} >查看</Link> : null}
                 </>
       })
     }
@@ -251,9 +253,11 @@ class TableData extends React.Component {
 
   //导出数据
   exportData = () => {
-
-     message.error("暂未开放")
-    // router.push({ pathname: "/dataSearch/monitor/alarm/exceptionRecord", query: { type: "alarm", code: ["a21026"].join() } })  //异常数据
+   let {dispatch,queryParams} = this.props;
+     dispatch({
+        type: 'alarmInfoData/exportDatas',
+        payload: {...queryParams },
+    });
 
   }
 
@@ -270,6 +274,8 @@ class TableData extends React.Component {
       placeholder: '请选择企业排扣！',
       allowClear: true,
       // value:'62020131jhdp03',
+      maxTagCount:2,
+      maxTagTextLength:4,//单个选择项文本长度 超出则是省略号显示
       style: {
         width: '100%',
       },

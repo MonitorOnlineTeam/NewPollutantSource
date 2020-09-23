@@ -217,7 +217,8 @@ class FlowChart extends PureComponent {
       2: <span style={{color:gold[5]}} >维护</span>,
       3: <span style={{color:red.primary}} >故障</span>,
       5: <span style={{color:red.primary}}>断电</span>,
-      6: <span style={{color:grey.primary}} >离线</span>
+      6: <span style={{color:grey.primary}} >离线</span>,
+      "-":<span style={{color:grey.primary}} >离线</span>,
     };
     return <MapInteractionCSS style={{ position: 'relative' }}  scale={0.98} {...props} >
          {/* <img

@@ -210,9 +210,9 @@ class Index extends React.Component {
               //   })
               return <div>
                   <Popconfirm title="确认保存此质控命令?" onConfirm={this.isSave.bind(this,row,value[0],index)}  >
-                     <a >{value[0]}</a>
+                     <a >{'保存'}</a>
                      </Popconfirm>
-                     <span> <a   onClick={this.isSave.bind(this,row,value[1],index)} href="#" style={{paddingLeft:10}} >{value[1]}</a> </span>
+                     <span> <a   onClick={this.isSave.bind(this,row,value[1],index)} href="#" style={{paddingLeft:10}} >{'取消'}</a> </span>
                  
                    </div>
               }else{
@@ -274,6 +274,11 @@ class Index extends React.Component {
       const {cycleListParams:{QCAType}} = this.props;
       if( QCAType == 1030){
         this.columns.splice(2,0,...this.blindCol)
+      }
+      if(QCAType == 1026){
+        this.columns = this.columns.filter(item=>{
+          return  item.dataIndex !='PollutantName'
+        })
       }
     }
 
@@ -450,7 +455,7 @@ timeClick=(value)=>{//质控时间
      }
     addParams = {
       ...addParams,
-      PollutantCode:addItem.PollutantName[0].PollutantCode,
+      PollutantCode: QCAType ==1026? null : addItem.PollutantName[0].PollutantCode,
       Time:moment(addItem.Time).format('HH:mm'),
       StandardValue:standDefaultVal,
       Date: moment(new Date()).format('YYYY-MM-DD'),
@@ -495,7 +500,7 @@ timeClick=(value)=>{//质控时间
   render() {
 
     const {tableLoading,total,tableDatas} = this.props;
-
+ 
 
     return (
 

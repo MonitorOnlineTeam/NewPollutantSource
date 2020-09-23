@@ -5,12 +5,13 @@
  */
 import Model from '@/utils/model';
 import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,querypollutantlist,exportHistoryReport } from './service';
-import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
 import {  message,Tooltip } from 'antd';
 import { red,yellow,gold  } from '@ant-design/colors';
 
-import { onlyOneEnt } from '@/config';
+import { formatPollutantPopover,downloadFile} from '@/utils/utils';
+import { onlyOneEnt,uploadHost } from '@/config';
+
 export default Model.extend({
   namespace: 'historyData',
   state: {
@@ -158,22 +159,20 @@ export default Model.extend({
       }
     },
 
-    // * getPollutantlist( { payload},{   call, update,select}){
-    //   // const body = {  ...payload }
-    //   // const result = yield call(getAllTypeDataList, { ...body });
-    //   const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
 
-
-    // },
     // 导出报表
         *exportHistoryReports({ payload }, { call, put, update, select }) {
-          const { historyparams } = yield select(state => state.historyData);
-          const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
-          }
-          const result = yield call(exportHistoryReport, postData);
+          const result = yield call(exportHistoryReport, payload);
           if (result.IsSuccess) {
-            window.open(result.Datas)
-            message.success('导出成功')
+
+            downloadFile(`/upload${result.Datas}`)
+            // let link = document.createElement('a');
+            // link.href =  `${uploadHost}upload${result.Datas}`;
+            // link.style = 'display:none';
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
+            // message.success('导出成功')
           } else {
             message.error(result.Message)
           }

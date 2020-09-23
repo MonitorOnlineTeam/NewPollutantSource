@@ -4,10 +4,10 @@
  * @Date: 2020.08.13
  */
 import Model from '@/utils/model';
-import { GetProcessFlowTableHistoryDataList,GetHistoryParaCodeList  } from './service';
+import { GetProcessFlowTableHistoryDataList,GetHistoryParaCodeList,exportDatas  } from './service';
 import moment from 'moment';
 import {  message } from 'antd';
-
+import { downloadFile} from '@/utils/utils';
 export default Model.extend({
   namespace: 'historyparData',
   state: {
@@ -53,19 +53,15 @@ export default Model.extend({
         },
 
     // },
-    // 导出报表
-        *exportHistoryReports({ payload }, { call, put, update, select }) {
-          alert(111)
-          // const { historyparams } = yield select(state => state.historyparData);
-          // const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
-          // }
-          // const result = yield call(exportHistoryReport, postData);
-          // if (result.IsSuccess) {
-          //   window.open(result.Datas)
-          //   message.success('导出成功')
-          // } else {
-          //   message.error(result.Message)
-          // }
+    // 导出数据
+        *exportDatas({ payload }, { call, put, update, select }) {
+          
+          const result = yield call(exportDatas, payload); 
+          if (result.IsSuccess) {
+            downloadFile(`/upload${result.Datas}`)
+          } else {
+            message.error(result.Message)
+          }
         },
 
   },
@@ -81,9 +77,9 @@ export default Model.extend({
       //   type: 'historyparData/updateState',
       //   payload: { queryParams},
       // })
-    history.listen((location) => {
+      history.listen((location) => {
 
-     })
+       })
     }
   }
 

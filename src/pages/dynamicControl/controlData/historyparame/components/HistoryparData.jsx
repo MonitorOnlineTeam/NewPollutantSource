@@ -36,9 +36,9 @@ const columns =  [
     render: (text, record) => {
       switch (text) {
           case "0":
-            return <span style={{color:green[6]}} > 正常</span>
+            return  "备案不符"
           default:
-            return "备案不符"
+            return <span style={{color:green[5]}} > 正常</span>
       }
 
     }
@@ -316,10 +316,11 @@ dateCallback = (dates, dataType) => { //更新日期
 
   //导出数据
   exportData = () => { 
-    this.props.dispatch({
-      type: "historyData/exportHistoryReports",
-      payload: {DGIMNs: this.state.dgimn }
-  })
+    let {dispatch,queryParams} = this.props;
+     dispatch({
+        type: 'historyparData/exportDatas',
+        payload: { ...queryParams },
+    });
   }
 
 

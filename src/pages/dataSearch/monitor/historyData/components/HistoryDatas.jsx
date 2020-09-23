@@ -209,11 +209,14 @@ class HistoryDatas extends React.Component {
 
   //导出数据
   exportData = () => { 
-   message.warning("暂未开放")
-  //   this.props.dispatch({
-  //     type: "historyData/exportHistoryReports",
-  //     payload: {DGIMNs: this.state.dgimn }
-  // })
+    let { historyparams, dispatch,} = this.props;
+
+   
+     dispatch({
+      type: "historyData/exportHistoryReports",
+      payload: {...historyparams},
+     })
+
   }
 
 

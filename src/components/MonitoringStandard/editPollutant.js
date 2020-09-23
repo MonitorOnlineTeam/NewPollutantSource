@@ -131,7 +131,7 @@ class EditPollutant extends Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator,getFieldValue } = this.props.form;
     const { btnisloading } = this.props;
     const { TextArea } = Input;
     const customPanelStyle = {
@@ -180,20 +180,23 @@ class EditPollutant extends Component {
                 </Col>
               </Row>
               <Row gutter={48}>
-                <Col span={12}>
+                {getFieldValue('AlarmType')!=2?<Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警上限">
                     {getFieldDecorator('UpperLimit', {
                       initialValue: 0,
                     })(<InputNumber min={0} max={10000} step={0.1} />)}
                   </FormItem>
-                </Col>
-                <Col span={12}>
+                </Col>:''}
+
+                {
+                  getFieldValue('AlarmType')!=1?  <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警下限">
                     {getFieldDecorator('LowerLimit', {
                       initialValue: 0,
                     })(<InputNumber min={0} max={10000} step={0.1} />)}
                   </FormItem>
-                </Col>
+                </Col>:''
+                }
               </Row>
               {/* <Row gutter={48}>
                 <Col span={12}>

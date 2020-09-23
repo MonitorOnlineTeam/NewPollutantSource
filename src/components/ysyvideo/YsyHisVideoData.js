@@ -84,7 +84,7 @@ class YsyHisVideoData extends Component {
         DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: pageIndex === undefined ? 1 : pageIndex,
-        pageSize: pageSize === undefined ? 15 : pageSize,
+        pageSize: pageSize === undefined ? 20 : pageSize,
         beginTime,
         endTime,
         isAsc: true,
@@ -108,7 +108,7 @@ class YsyHisVideoData extends Component {
         DGIMNs: dgimn,
         datatype: 'realtime',
         pageIndex: pageIndex === undefined ? 1 : pageIndex,
-        pageSize: pageSize === undefined ? 15 : pageSize,
+        pageSize: pageSize === undefined ? 20 : pageSize,
         beginTime: beginDate,
         endTime: endDate,
         isAsc: true,
@@ -119,7 +119,8 @@ class YsyHisVideoData extends Component {
   render() {
     const { hisrealdata, hiscolumns } = this.props;
     const x = hiscolumns.length * 160;
-    console.log('----------------------------', x);
+    // console.log('----------------------------', x);
+    // console.log(hisrealdata,hiscolumns)
     return (
       <Table
         className={styles.dataTable}
@@ -127,7 +128,7 @@ class YsyHisVideoData extends Component {
         dataSource={hisrealdata}
         columns={hiscolumns}
         size="small"
-        scroll={{ x, y: 'calc(100vh - 617px)' }}
+        scroll={{ x, y: 'calc(100vh - 425px)' }}
         pagination={{
           total: this.props.total,
           pageSize: this.props.pageSize,
