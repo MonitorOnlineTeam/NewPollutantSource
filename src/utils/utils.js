@@ -261,8 +261,10 @@ export function downloadFile(sUrl) {
       var e = document.createEvent('MouseEvents');
       e.initEvent('click', true, true);
       link.dispatchEvent(e);
+      message.success('导出成功')
       return true;
     }
+  
   }
   // Force file download (whether supported by server).
   if (sUrl.indexOf('?') === -1) {

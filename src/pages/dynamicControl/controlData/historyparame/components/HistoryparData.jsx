@@ -38,7 +38,7 @@ const columns =  [
           case "0":
             return  "备案不符"
           default:
-            return <span style={{color:green[6]}} > 正常</span>
+            return <span style={{color:green[5]}} > 正常</span>
       }
 
     }
@@ -317,12 +317,9 @@ dateCallback = (dates, dataType) => { //更新日期
   //导出数据
   exportData = () => { 
     let {dispatch,queryParams} = this.props;
-    queryParams = {
-      ...queryParams,
-    }
      dispatch({
-        type: 'historyparData/exportHistoryReports',
-        payload: { ...queryParams  },
+        type: 'historyparData/exportDatas',
+        payload: { ...queryParams },
     });
   }
 

@@ -4,9 +4,10 @@
  * @Date: 2020.08.13
  */
 import Model from '@/utils/model';
-import { getQCAStandardManagement  } from './service';
+import { getQCAStandardManagement,exportDatas  } from './service';
 import moment from 'moment';
 import {  message } from 'antd';
+import { downloadFile} from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'standardData',
@@ -34,18 +35,11 @@ export default Model.extend({
           }
         },
 
-
-
-    // },
-    // 导出报表
-        *exportStandardData({ payload }, { call, put, update, select }) {
-          const { historyparams } = yield select(state => state.historyData);
-          const postData = {  ...historyparams,DGIMNs: historyparams.DGIMN,...payload,
-          }
-          const result = yield call(exportHistoryReport, postData);
+    // 导出数据
+        *exportDatas({ payload }, { call, put, update, select }) {
+          const result = yield call(exportDatas, payload);
           if (result.IsSuccess) {
-            window.open(result.Datas)
-            message.success('导出成功')
+            downloadFile(`/upload${result.Datas}`)
           } else {
             message.error(result.Message)
           }

@@ -3,7 +3,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTree from '@/components/NavigationTreeNew'
 import PageLoading from '@/components/PageLoading'
 import YsyShowVideo from '@/components/ysyvideo/YsyShowVideo'
-
+// import YsyShowVideo from '@/components/QCAVideo/QCAYsyShowVideo'
 /**
  * 视频预览
  * xpy 2019.07.26

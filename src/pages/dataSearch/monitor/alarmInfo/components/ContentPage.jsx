@@ -253,9 +253,11 @@ class TableData extends React.Component {
 
   //导出数据
   exportData = () => {
-
-     message.error("暂未开放")
-    // router.push({ pathname: "/dataSearch/monitor/alarm/exceptionRecord", query: { type: "alarm", code: ["a21026"].join() } })  //异常数据
+   let {dispatch,queryParams} = this.props;
+     dispatch({
+        type: 'alarmInfoData/exportDatas',
+        payload: {...queryParams },
+    });
 
   }
 

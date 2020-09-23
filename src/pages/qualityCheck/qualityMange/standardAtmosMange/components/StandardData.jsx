@@ -195,11 +195,11 @@ dateCallback = (dates, dataType) => { //更新日期
 
   //导出数据
   exportData = () => { 
-    message.warning("暂未开放")
-  //   this.props.dispatch({
-  //     type: "historyData/exportHistoryReports",
-  //     payload: {DGIMNs: this.state.dgimn }
-  // })
+    let {dispatch,standardParams} = this.props;
+     dispatch({
+        type: 'standardData/exportDatas',
+        payload: { ...standardParams },
+    });
   }
 
 

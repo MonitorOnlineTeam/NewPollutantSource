@@ -5,11 +5,11 @@
  */
 import Model from '@/utils/model';
 import { getAllTypeDataList , getpollutantListByDgimn,getAllChatDataLists,querypollutantlist,exportHistoryReport } from './service';
-import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
 import {  message,Tooltip } from 'antd';
 import { red,yellow,gold  } from '@ant-design/colors';
 
+import { formatPollutantPopover,downloadFile} from '@/utils/utils';
 import { onlyOneEnt,uploadHost } from '@/config';
 
 export default Model.extend({
@@ -164,8 +164,15 @@ export default Model.extend({
         *exportHistoryReports({ payload }, { call, put, update, select }) {
           const result = yield call(exportHistoryReport, payload);
           if (result.IsSuccess) {
-            window.open(`${uploadHost}upload${result.Datas}`)
-            message.success('导出成功')
+
+            downloadFile(`/upload${result.Datas}`)
+            // let link = document.createElement('a');
+            // link.href =  `${uploadHost}upload${result.Datas}`;
+            // link.style = 'display:none';
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
+            // message.success('导出成功')
           } else {
             message.error(result.Message)
           }
