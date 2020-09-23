@@ -272,6 +272,8 @@ class TableData extends React.Component {
       placeholder: '请选择企业排扣！',
       allowClear: true,
       // value:'62020131jhdp03',
+      maxTagCount:2,
+      maxTagTextLength:4,//单个选择项文本长度 超出则是省略号显示
       style: {
         width: '100%',
       },
