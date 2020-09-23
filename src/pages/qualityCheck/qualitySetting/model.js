@@ -101,13 +101,18 @@ export default Model.extend({
   reducers: { // 以 key/value 格式定义reducer，用于处理同步操作，唯一可以修改 state 的地方，由 action 触发
          // 质控核查 质控核查设置 下发
          issueData(state, { payload }) {
+
+          const issueFlag  = state.issueFlag;
+          const approveState = state.approveState;
+          
             if(payload.ApproveState===2){           
-                const issueFlag  = state.issueFlag;
-                const approveState = state.approveState;
-               !state.issueLoading? null:message.success("操作成功！")
-              return { ...state,tableLoading:false,issueFlag:!issueFlag,approveState:payload.ApproveState}
+
+               !state.issueLoading? null : message.success("操作成功！")
+            }else{
+               !state.issueLoading? null : payload.Message
             }
            
+            return { ...state,tableLoading:false,issueFlag:!issueFlag,approveState:payload.ApproveState}
           
         },
 

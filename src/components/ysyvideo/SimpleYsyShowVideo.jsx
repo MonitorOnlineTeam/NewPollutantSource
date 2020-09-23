@@ -23,7 +23,7 @@ import VideoSelect from '../VideoSelect'
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 /*
-页面：萤石云视频监控页面
+页面：萤石云视频监控页面 简单版
 描述：可以和数据、参数、报警等联动查看 
 add by xpy
 */
