@@ -10,7 +10,7 @@ import {
 import * as services from '../services/dataQueryApi'
 import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import moment from 'moment';
-
+import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 export default Model.extend({
   namespace: 'dataquery',
   state: {
@@ -107,8 +107,15 @@ export default Model.extend({
       }
       let xAxis = [];
       const arr = [];
-
       let i = 0;
+      if (result[0].PollutantType === "5AQI") {
+        _historyparams.pollutantCodes = "AQI," + _historyparams.pollutantCodes;
+        _historyparams.pollutantNames = "AQI," + _historyparams.pollutantNames;
+      }
+      if (result[0].PollutantType === "5IQI") {
+        _historyparams.pollutantCodes = "IQI," + _historyparams.pollutantCodes;
+        _historyparams.pollutantNames = "IQI," + _historyparams.pollutantNames;
+      }
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         let seriesdata = [];
@@ -133,6 +140,7 @@ export default Model.extend({
             }],
           };
         }
+
         result.map((item1, key) => {
           seriesdata = seriesdata.concat(item1[item]);
         });
@@ -142,7 +150,6 @@ export default Model.extend({
           data: seriesdata,
           markLine,
         }
-
         arr.push(series);
         i++;
       })
@@ -183,7 +190,63 @@ export default Model.extend({
           width: 160,
           // fixed: 'left',
           align: 'center',
+          render: (text, record) => {
+            let showDetail = "";
+            debugger
+            switch (historyparams.datatype) {
+              case "month":
+                return moment(text).format("YYYY-MM");
+              case "quarter":
+                switch (moment(text).format("MM-DD")) {
+                  case "01-01":
+                    return moment(text).format("YYYY") + "年第一季度";
+                  case "04-01":
+                    return moment(text).format("YYYY") + "年第二季度";
+                  case "07-01":
+                    return moment(text).format("YYYY") + "年第三季度";
+                  case "10-01":
+                    return moment(text).format("YYYY") + "年第四季度";
+                }
+                return moment(text).format("YYYY-MM");
+              case "year":
+                return moment(text).format("YYYY");
+              default:
+                return text;
+
+            }
+          },
         }];
+        if (result && result[0] && result[0].PollutantType === '5AQI') {
+          columns = columns.concat({
+            title: 'AQI',
+            dataIndex: 'AQI',
+            key: 'AQI',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+            render: (text, record) => {
+              return AQIPopover(text, record);
+            },
+          });
+          columns = columns.concat({
+            title: '级别',
+            dataIndex: 'AirQuality',
+            key: 'AirQuality',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+          });
+        }
+        if (result && result[0] && result[0].PollutantType === '5IQI') {
+          columns = columns.concat({
+            title: '综合指数',
+            dataIndex: 'IQI',
+            key: 'IQI',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+          });
+        }
         columns = columns.concat(pollutantcols);
       } else {
         pollutantlist.map((item, key) => {
@@ -209,7 +272,62 @@ export default Model.extend({
           key: 'MonitorTime',
           width: 160,
           align: 'center',
+          render: (text, record) => {
+            let showDetail = "";
+            switch (historyparams.datatype) {
+              case "month":
+                return moment(text).format("YYYY-MM");
+              case "quarter":
+                switch (moment(text).format("MM-DD")) {
+                  case "01-01":
+                    return moment(text).format("YYYY") + "年第一季度";
+                  case "04-01":
+                    return moment(text).format("YYYY") + "年第二季度";
+                  case "07-01":
+                    return moment(text).format("YYYY") + "年第三季度";
+                  case "10-01":
+                    return moment(text).format("YYYY") + "年第四季度";
+                }
+                return moment(text).format("YYYY-MM");
+              case "year":
+                return moment(text).format("YYYY");
+              default:
+                return text;
+
+            }
+          },
         }];
+        if (result && result[0] && result[0].PollutantType === '5AQI') {
+          columns = columns.concat({
+            title: 'AQI',
+            dataIndex: 'AQI',
+            key: 'AQI',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+            render: (text, record) => {
+              return AQIPopover(text, record);
+            },
+          })
+          columns = columns.concat({
+            title: '级别',
+            dataIndex: 'AirQuality',
+            key: 'AirQuality',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+          })
+        }
+        if (result && result[0] && result[0].PollutantType === '5IQI') {
+          columns = columns.concat({
+            title: '综合指数',
+            dataIndex: 'IQI',
+            key: 'IQI',
+            width: 160,
+            // fixed: 'left',
+            align: 'center',
+          });
+        }
         columns = columns.concat(pollutantcols);
       }
       let option = null;
