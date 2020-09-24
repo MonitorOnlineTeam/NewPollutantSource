@@ -143,7 +143,7 @@ class BasicLayout extends Component {
     let _unfoldMenuList = _.cloneDeep(unfoldMenuList);
 
     let currentPathObj = _unfoldMenuList.find(item => {
-      if(item.path){
+      if (item.path) {
         return item.path.split("?")[0] === location.pathname
       }
     }) || {};
@@ -231,10 +231,10 @@ class BasicLayout extends Component {
 
     const handleMenuCollapse = payload =>
       dispatch &&
-      dispatch({
-        type: 'global/changeLayoutCollapsed',
-        payload,
-      });
+        dispatch({
+          type: 'global/changeLayoutCollapsed',
+          payload,
+        });
 
     const menuDataRender = list => {
       let menuList = currentMenu;
@@ -304,20 +304,20 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => [
-            {
-              path: '/',
-              breadcrumbName: formatMessage({
-                id: 'menu.home',
-                defaultMessage: 'Home',
-              }),
-            },
-            ...routers,
+              {
+                path: '/',
+                breadcrumbName: formatMessage({
+                  id: 'menu.home',
+                  defaultMessage: 'Home',
+                }),
+              },
+              ...routers,
           ]}
           footerRender={() => {
             return <div></div>;
           }}
           menuDataRender={menuDataRender}
-          formatMessage={formatMessage}
+          // formatMessage={formatMessage}
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {...settings}

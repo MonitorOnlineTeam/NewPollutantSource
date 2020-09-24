@@ -161,12 +161,30 @@ class DataQuery extends Component {
 
     /** 数据类型切换 */
     _handleDateTypeChange = (e) => {
-        const { historyparams } = this.props;
+        const { historyparams, pollutantlist, dispatch } = this.props;
         const dataType = e.target.value;
         this.setState({ dataType });
+        // switch (dataType) {
+        //     case "realtime":
+        //     case "minute":
+        //     case "hour":
+        //     case "day":
+        //         pollutantlist.map((item)=>{
+
+        //         })
+
+        // }
+
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams,
+            },
+        })
+
+
         this.children.onDataTypeChange(dataType)
     }
-
 
     /** 图表转换 */
     displayChange = checked => {
@@ -333,7 +351,7 @@ class DataQuery extends Component {
                 columns={columns}
                 resizable
                 defaultWidth={80}
-                scroll={{ y: this.props.tableHeight || undefined}}
+                scroll={{ y: this.props.tableHeight || undefined }}
                 pagination={{ pageSize: 20 }}
 
             />
@@ -351,7 +369,7 @@ class DataQuery extends Component {
         })
     }
     /**
-     * 回调获取时间并重新请求数据
+     * 回调获取时间(实时、分钟、小时、日)并重新请求数据
      */
     dateCallback = (dates, dataType) => {
         let { historyparams, dispatch } = this.props;
@@ -372,6 +390,47 @@ class DataQuery extends Component {
         })
         this.reloaddatalist(historyparams);
     }
+    dateCallbackDataQuery = (dates, dataType) => {
+        let { historyparams, dispatch } = this.props;
+        this.setState({
+            dateValue: dates
+        })
+        historyparams = {
+            ...historyparams,
+            beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+            datatype: dataType
+        }
+        dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams,
+            },
+        })
+    }
+    //     /**
+    //  * 回调获取时间（月、季度、年）并重新请求数据
+    //  */
+    //     dateCallbackOther = (dates, dataType) => {
+    //         debugger
+    //         let { historyparams, dispatch } = this.props;
+    //         this.setState({
+    //             dateValue: dates
+    //         })
+    //         historyparams = {
+    //             ...historyparams,
+    //             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
+    //             endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+    //             datatype: dataType
+    //         }
+    //         dispatch({
+    //             type: 'dataquery/updateState',
+    //             payload: {
+    //                 historyparams,
+    //             },
+    //         })
+    //     }
+
 
     onRef1 = (ref) => {
         this.children = ref;
@@ -379,7 +438,25 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue, displayType } = this.state;
-        const { pointName, entName } = this.props;
+        const { pointName, entName, pollutantlist } = this.props;
+        let flag = "", mode = [];
+        if (pollutantlist && pollutantlist[0]) {
+            flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
+        }
+        switch (dataType) {
+            case 'month':
+                mode = ['month', 'month'];
+                break;
+            case 'quarter':
+                mode = ['year', 'year'];
+                break;
+            case 'year':
+                mode = ['year', 'year'];
+                break;
+            default:
+                mode = [];
+                break;
+        }
         return (
             <div>
                 <Card
@@ -391,27 +468,42 @@ class DataQuery extends Component {
                             </div>
                             <div style={{ marginTop: 10 }}>
                                 <Form layout="inline">
-                                    <Form.Item style={{marginRight: 5}}>
+                                    <Form.Item style={{ marginRight: 5 }}>
                                         {!this.props.isloading && this.getpollutantSelect()}
                                     </Form.Item>
-                                    <Form.Item style={{marginRight: 5}}>
-                                        <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
-                                            dataType={dataType}
-                                            format={this.state.format}
-                                            onRef={this.onRef1}
-                                            isVerification={true}
-                                            // onChange={this._handleDateChange}
-                                            callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                                            allowClear={false} showTime={this.state.format} />
+                                    <Form.Item style={{ marginRight: 5 }}>
+                                        {
+                                            // mode.length !== 0 ?
+                                            <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
+                                                dataType={dataType}
+                                                format={this.state.format}
+                                                onRef={this.onRef1}
+                                                isVerification={true}
+                                                mode={mode}
+                                                dataQuery={true}
+                                                // onChange={this._handleDateChange}
+                                                callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                                callbackDataQuery={(dates, dataType) => this.dateCallbackDataQuery(dates, dataType)}
+                                                allowClear={false} showTime={this.state.format} />
+                                            //     :
+                                            // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
+                                            //     dataType={dataType}
+                                            //     format={this.state.format}
+                                            //     onRef={this.onRef1}
+                                            //     isVerification={true}
+                                            //     // onChange={this._handleDateChange}
+                                            //     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                                            //     allowClear={false} showTime={this.state.format} />
+                                        }
                                     </Form.Item>
-                                    <Form.Item style={{marginRight: 5}}>
+                                    <Form.Item style={{ marginRight: 5 }}>
                                         <Button type="primary" loading={false} onClick={() => { this.reloaddatalist() }} style={{ marginRight: 10 }}>查询</Button>
                                         <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
                                     </Form.Item>
-                                    <Form.Item style={{marginRight: 5}}>
-                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" onChange={this._handleDateTypeChange} />
+                                    <Form.Item style={{ marginRight: 5 }}>
+                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" showOtherTypes={flag} onChange={this._handleDateTypeChange} />
                                     </Form.Item>
-                                    <Form.Item style={{marginRight: 5}}>
+                                    <Form.Item style={{ marginRight: 5 }}>
                                         <Radio.Group style={{ width: '100%' }} defaultValue={displayType} buttonStyle="solid" onChange={e => {
                                             this.displayChange(e.target.value)
                                         }}>
