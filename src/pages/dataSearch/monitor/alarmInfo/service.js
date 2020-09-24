@@ -22,7 +22,5 @@ export async function GetAlarmType(params) {
 // 导出数据
 export async function exportDatas(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList', params, null);
-  return result.Datas === null ? {
-    Datas: [],
-  } : result;
+  return result;
 }

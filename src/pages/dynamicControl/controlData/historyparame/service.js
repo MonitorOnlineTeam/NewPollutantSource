@@ -23,7 +23,6 @@ export async function GetHistoryParaCodeList(params) {
 // 导出数据
 export async function exportDatas(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportProcessFlowTableHistoryDataList', params, null);
-  return result.Datas === null ? {
-    Datas: [],
-  } : result;
+   return result;
 }
+
