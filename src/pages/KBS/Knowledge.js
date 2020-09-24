@@ -4,6 +4,7 @@ import { Input, Button, Divider, Row, Col, Card, message, Modal } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons'
 import { connect } from 'dva'
 import KBSMoreModal from './KBSMoreModal'
+import OpenFileModal from './OpenFileModal'
 
 const fileTypeMap = {
   "1": "法律法规",
@@ -14,12 +15,13 @@ const fileTypeMap = {
 
 @connect(({ KBS, loading }) => ({
   KBSData: KBS.KBSData,
+  viewFileModalVisible: KBS.viewFileModalVisible,
   KBSMoreModalVisible: KBS.KBSMoreModalVisible,
 }))
 class Knowledge extends PureComponent {
   state = {
     keyword: "",
-    searchParams: []
+    searchParams: [],
   }
 
   componentDidMount() {
@@ -54,9 +56,40 @@ class Knowledge extends PureComponent {
     }
   }
 
+  onOpenViewFileModal = () => {
+    this.props.dispatch({
+      type: "KBS/updateState",
+      payload: {
+        viewFileModalVisible: true
+      }
+    })
+  }
+
+  onViewFile = (data) => {
+    let file = data["File"]
+    if (file) {
+      let fileName = file;
+      if (fileName) {
+        let suffix = fileName.split(".")[1];
+        this.setState({
+          fileType: suffix,
+          filePath: fileName
+        }, () => {
+          this.onOpenViewFileModal()
+        })
+        let id = data["dbo.T_Bas_Repository.ID"];
+        this.updViewForKBM(id, "view")
+      } else {
+        message.error("文件不存在！")
+      }
+    } else {
+      message.error("文件不存在！")
+    }
+  }
+
   render() {
-    const { KBSData, KBSMoreModalVisible } = this.props;
-    const { searchParams } = this.state;
+    const { KBSData, KBSMoreModalVisible, viewFileModalVisible } = this.props;
+    const { searchParams, fileType, filePath } = this.state;
     return (
       <div>
         <div className={styles.banner}>
@@ -82,8 +115,20 @@ class Knowledge extends PureComponent {
                       if (index < 4) {
                         return <div className={styles.fileItem}>
                           <img src="/u236.png" alt="" />
-                          <p>{item.Name}</p>
-                          <DownloadOutlined className={styles.download} onClick={() => this.onDownload(item)} />
+                          <p title="查看" style={{ cursor: 'pointer' }} onClick={() => { this.onViewFile(item) }}>{item.Name}</p>
+                          <a href={`/upload/${item.File}`} download onClick={(e) => {
+                            e.stopPropagation()
+                            if (item.File) {
+                              this.updViewForKBM(item.ID, "down")
+                              // window.open(`/upload/${data.File}`);
+                            } else {
+                              message.error("文件不存在！");
+                              return;
+                            }
+                          }}>
+                            <DownloadOutlined className={styles.download} />
+                          </a>
+
                         </div>
                       }
                     })
@@ -107,6 +152,7 @@ class Knowledge extends PureComponent {
           }
         </Row>
         {KBSMoreModalVisible && <KBSMoreModal searchParams={searchParams} />}
+        {viewFileModalVisible && <OpenFileModal fileType={fileType} filePath={filePath} />}
       </div>
     );
   }

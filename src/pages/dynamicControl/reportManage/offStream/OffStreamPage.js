@@ -162,7 +162,7 @@ class OffStreamPage extends PureComponent {
           destroyOnClose
           visible={this.state.visible}
           onOk={this.onFinish}
-          onCancel={() => { this.setState({ visible: false }) }}
+          onCancel={() => { this.setState({ visible: false, StopHours: undefined }) }}
         >
           <Form
             {...layout}
@@ -194,17 +194,25 @@ class OffStreamPage extends PureComponent {
                 format="YYYY-MM-DD HH"
                 placeholder={['开始时间', '结束时间']}
                 onChange={(dates, dateString) => {
-                  this.formRef.current.setFieldsValue({ time: dates })
-                  const startTime = moment(dates[0], "YYYY-MM-DD HH");
-                  const endTime = moment(dates[1], "YYYY-MM-DD HH");
-                  const diffHours = endTime.diff(startTime, "hours");//计算相差的小时数
-                  const day = Math.floor(diffHours / 24);//相差的天数
-                  const hour = diffHours % 24;//计算相差天后余下的小时数
-                  // console.log("diffHours=", diffHours)
-                  // console.log("day=", day)
-                  // console.log("hour=", hour)
-                  let StopHours = `${day}天${hour}小时`;
-                  this.setState({ StopHours: StopHours })
+                  if (dates) {
+                    // console.log("dates-", dates)
+                    // console.log("dateString-", dateString)
+                    this.formRef.current.setFieldsValue({ time: dates })
+                    const startTime = moment(dates[0]);
+                    const endTime = moment(dates[1]);
+                    // const diffHours = endTime.diff(startTime, "hours");//计算相差的小时数
+                    const diffHours = moment(dateString[1]).diff(moment(dateString[0]), "hours");//计算相差的小时数
+                    const day = Math.floor(diffHours / 24);//相差的天数
+                    const hour = diffHours % 24;//计算相差天后余下的小时数
+                    // console.log("diffHours=", diffHours)
+                    // console.log("day=", day)
+                    // console.log("hour=", hour)
+                    let StopHours = `${day}天${hour}小时`;
+                    this.setState({ StopHours: StopHours })
+                  }else{
+                    this.setState({ StopHours: "" })
+                    this.formRef.current.setFieldsValue({ time: undefined })
+                  }
                 }}
               />
               {

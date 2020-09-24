@@ -24,15 +24,15 @@ export function InitWebsocket(webSocketPushURL) {
 export function listen(callback) {
   try {
     websocket.onopen = event => {
-      console.log('open=', true)
+      console.log('websocket-open=', true)
     };
 
     websocket.onclose = event => {
-      // console.log('disconnected');
+      console.log('websocket-disconnected');
     };
 
     websocket.onerror = event => {
-      //  console.log(`error:${  event.data}`);
+      console.log(`websocket-error:${event.data}`);
     };
 
     websocket.onmessage = event => {

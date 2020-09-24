@@ -118,7 +118,7 @@ class AutoFormViewItems extends Component {
       }
 
       return (
-        <Col span={6} style={{ marginBottom: 10 }} key={item.fieldName}>
+        <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>
           {el}
         </Col>
@@ -130,11 +130,11 @@ class AutoFormViewItems extends Component {
   _renderAppendDataSource() {
     const { appendDataSource } = this.props;
     return appendDataSource.map((item, index) => (
-        <Col span={6} style={{ marginBottom: 10 }} key={index}>
-          <div className={styles.term}>{item.label}</div>
-          <div className={styles.detail}>{item.value}</div>
-        </Col>
-      ))
+      <Col span={6} style={{ marginBottom: 10 }} key={index}>
+        <div className={styles.term}>{item.label}</div>
+        <div className={styles.detail}>{item.value}</div>
+      </Col>
+    ))
   }
 
   renderContent() {
