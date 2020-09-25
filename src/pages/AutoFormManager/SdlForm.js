@@ -379,6 +379,13 @@ class SdlForm extends PureComponent {
         //   break;
         default:
           if (item.type === '上传') {
+            let imageProps = {};
+            if (item.uploadType === "pic") {
+              imageProps.accept = ".jpg,.png,.jpeg,.bmp"
+            }
+            if (item.uploadNumber) {
+              imageProps.uploadNumber = item.uploadNumber
+            }
             // let uploadElement = null;
             const props = {
               action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
@@ -409,7 +416,7 @@ class SdlForm extends PureComponent {
                 FileActualType: '0',
               },
             };
-            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload {...imageProps} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />

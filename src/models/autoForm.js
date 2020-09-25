@@ -287,6 +287,8 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
+          uploadType: item.DF_UpType,
+          uploadNumber: item.DF_UpNum,
         }));
 
 
@@ -405,6 +407,7 @@ export default Model.extend({
           labelText: item.DF_NAME_CN,
           fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
           // configId: item.DT_CONFIG_ID,
+          isHide: item.DF_HIDDEN,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,

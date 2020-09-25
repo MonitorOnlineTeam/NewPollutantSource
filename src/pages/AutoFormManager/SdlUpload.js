@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-05 17:18:49 
+ * @Author: Jiaqi
+ * @Date: 2019-11-05 17:18:49
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-12-09 15:17:22
  * @desc: 上传组件
@@ -28,7 +28,8 @@ class SdlUpload extends Component {
       cuid: this.props.cuid
     }
     this.state = {
-      previewVisible: false
+      previewVisible: false,
+      fileList: []
     };
   }
 
@@ -56,8 +57,7 @@ class SdlUpload extends Component {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-    {
+    if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
       this.setState({
         previewImage: file.url || file.preview,
         previewVisible: true,
@@ -68,9 +68,13 @@ class SdlUpload extends Component {
 
 
   render() {
-    const { configId, fileList, dispatch } = this.props;
+    const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
+    let imageProps = {};
+    if (accept) {
+      imageProps.accept = accept;
+    }
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
@@ -94,6 +98,7 @@ class SdlUpload extends Component {
         })
       },
       // onPreview: this.handlePreview,
+      ...imageProps,
       multiple: true,
       listType: "picture-card",
       data: {
@@ -101,13 +106,19 @@ class SdlUpload extends Component {
         FileActualType: '0',
       },
     };
-
     return <>
       <Upload {...props} fileList={this.state.fileList}>
-        <div>
-          <PlusOutlined />
-          <div className="ant-upload-text">文件上传</div>
-        </div>
+        {
+          uploadNumber ?
+            (this.state.fileList.length >= uploadNumber ? null : <div>
+              <PlusOutlined />
+              <div className="ant-upload-text">文件上传</div>
+            </div>)
+            : <div>
+              <PlusOutlined />
+              <div className="ant-upload-text">文件上传</div>
+            </div>
+        }
       </Upload>
 
       <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
@@ -134,11 +145,10 @@ class SdlUpload extends Component {
                 this.props.fileList && this.props.fileList.map(item => {
                   const nameSplit = item.name.split('.');
                   const postfix = nameSplit[nameSplit.length - 1];
-                  if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-                  {
+                  if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
                     return <div key={item.Guid}>
-                    <img alt="example" style={{ width: '100%' }} src={item.url} />
-                  </div>
+                      <img alt="example" style={{ width: '100%' }} src={item.url} />
+                    </div>
                   }
                 })
               }
