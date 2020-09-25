@@ -54,7 +54,7 @@ class Index extends React.Component {
           cycleListParams = {
             ...cycleListParams,
             DGIMN:dgimn,
-            PollutantCodeList:polltype == 1 ? QCAType==1026? waterDefault : this.child.state.waterDefault : QCAType==1026? gasDefault: polltype == 2 ? this.child.state.gasDefault : []
+            PollutantCodeList:polltype == 1 ? QCAType==1026? [] : this.child.state.waterDefault : QCAType==1026? []: polltype == 2 ? this.child.state.gasDefault : []
           }
            dispatch({
               type: 'qualitySet/updateState',
