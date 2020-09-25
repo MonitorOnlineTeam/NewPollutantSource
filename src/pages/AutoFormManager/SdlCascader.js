@@ -1,25 +1,21 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
-import {
-  Cascader,
-  Select
-} from 'antd'
+import { Cascader, Select } from 'antd';
 import { connect } from 'dva';
 const { Option } = Select;
 
 @connect(({ loading, common }) => ({
   enterpriseAndPointList: common.enterpriseAndPointList,
-  level: common.level
+  level: common.level,
 }))
 class SdlCascader extends Component {
   constructor(props) {
     super(props);
     this.state = {};
     this._SELF_ = {
-      defaultPlaceholder: "请选择",
-    }
+      defaultPlaceholder: '请选择',
+    };
   }
 
   componentDidMount() {
@@ -27,13 +23,14 @@ class SdlCascader extends Component {
     // !data.length && dispatch({
     //   type: 'autoForm/getRegions',
     // })
-    !data.length && dispatch({
-      type: 'common/getEnterpriseAndPoint',
-      payload: {
-        RegionCode: "",
-        PointMark: "2"
-      }
-    })
+    !data.length &&
+      dispatch({
+        type: 'common/getEnterpriseAndPoint',
+        payload: {
+          RegionCode: '',
+          PointMark: '2',
+        },
+      });
   }
   render() {
     const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
@@ -42,23 +39,20 @@ class SdlCascader extends Component {
     // const valueArr = itemValue.split('.');
     // let label = labelArr.length > 1 ? itemName.split('.').pop().toString() : itemName;
     // let value = valueArr.length > 1 ? itemValue.split('.').pop().toString() : itemValue;
+    console.log('level:' + level);
+    console.log(options);
     if (level == 1) {
       return (
-        <Select
-          showSearch
-          {...this.props}
-        >
-          {
-            options.map(item => {
-              return <Option value={item.value}>{item.label}</Option>
-            })
-          }
+        <Select showSearch {...this.props}>
+          {options.map(item => {
+            return <Option value={item.value}>{item.label}</Option>;
+          })}
         </Select>
-      )
+      );
     }
     return (
       <Cascader
-        fieldNames={{ label: "label", value: "value", children: 'children' }}
+        fieldNames={{ label: 'label', value: 'value', children: 'children' }}
         options={options}
         // changeOnSelect={true}
         {...this.props}
@@ -66,7 +60,6 @@ class SdlCascader extends Component {
     );
   }
 }
-
 
 // SearchSelect.propTypes = {
 //   // placeholder
@@ -82,9 +75,9 @@ class SdlCascader extends Component {
 // }
 
 SdlCascader.defaultProps = {
-  itemName: "title",
-  itemValue: "value",
-  data: []
-}
+  itemName: 'title',
+  itemValue: 'value',
+  data: [],
+};
 
 export default SdlCascader;
