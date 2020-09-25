@@ -6,8 +6,8 @@
  * @Description: 导航树
  */
 import React, { PureComponent } from 'react';
-import { Drawer, Button, Radio, Row, Col, Tag, Badge, Tabs, Input, Tree, Spin, Tooltip } from 'antd';
-import { CarryOutOutlined, FormOutlined } from "@ant-design/icons"
+import { Drawer, Button, Radio, Row, Col, Empty, Tag, Badge, Tabs, Input, Tree, Spin, Tooltip } from 'antd';
+import { CarryOutOutlined, FormOutlined, StopOutlined } from "@ant-design/icons"
 import styles from './index.less';
 import { connect } from "dva"
 import CustomIcon from '@/components/CustomIcon'
@@ -30,6 +30,7 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      firstData: {},
       visible: true,
       placement: "left",
       autoExpandParent: true,
@@ -94,7 +95,16 @@ class index extends PureComponent {
         Status: Status.length ? Status : this.state.defaultStatus,
         SearchValue: this.state.searchValue,
       },
-      requestType: requestType
+      requestType: requestType,
+      callback: (firstData) => {
+        this.setState({
+          // selectedKeys: [selectedKeys],
+          // autoExpandParent: true,
+          // defaultExpandAll: !firstData.value,
+          firstData: firstData,
+          expandedKeys: [...this.state.expandedKeys, this.props.selectTreeItem.ParentCode, firstData.ParentCode]
+        })
+      }
     })
   }
 
@@ -121,6 +131,9 @@ class index extends PureComponent {
 
   // 条件搜索
   onKeywordSearch = (e) => {
+    this.setState({
+      searchValue: e.target.value
+    })
     e.persist();
     this.callAjax(e)
     // const { value } = e.target;
@@ -193,6 +206,7 @@ class index extends PureComponent {
         <span className={`${styles.text} ${styles.regionText}`} title={nodeData.title}>
           {nodeData.title}
         </span>
+        <StopOutlined />
         <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
         {/* style={{ fontSize: 12, padding: "0 2px" }} */}
       </div>
@@ -211,7 +225,7 @@ class index extends PureComponent {
     // 排口
     if (nodeData.NodeType === "point") {
       let currentStatus = this.state.statusList.find(item => item.value == nodeData.Status)
-      return <div className={styles.treeTitleBox} style={{width: 220}}>
+      return <div className={styles.treeTitleBox} style={{ width: 220 }}>
         {
           nodeData.PointType === '1' ? <WaterIcon className={styles.icon} style={{ fontSize: 18 }} /> :
             <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
@@ -257,7 +271,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { visible, placement, defaultExpandAll, statusList, tabsCurrentKey, selectedKeys, expandedKeys, autoExpandParent } = this.state;
+    const { visible, searchValue, firstData, placement, defaultExpandAll, statusList, tabsCurrentKey, selectedKeys, expandedKeys, autoExpandParent } = this.state;
     const { treeRegionData, treeIndustryData, loading, selectTreeItem } = this.props;
     const { } = this._SELF_;
     return (
@@ -317,56 +331,61 @@ class index extends PureComponent {
         <Tabs defaultActiveKey={tabsCurrentKey} onChange={this.onTabsChange}>
           <TabPane tab="区域" key="region">
             <Search
-              placeholder="请输入关键字查询"
+              placeholder="请输入企业关键字查询"
               style={{ width: '100%', marginTop: 10 }}
+              value={searchValue}
               // onChange={_.debounce(this.onKeywordSearch, 1000)}
               onChange={this.onKeywordSearch}
             />
             {
-              (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
-                <Tree
-                  style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'auto', overflowY: 'auto', }}
-                  showLine={{ showLeafIcon: false }}
-                  showIcon={false}
-                  defaultExpandedKeys={[selectTreeItem.ParentCode]}
-                  defaultExpandAll={defaultExpandAll}
-                  autoExpandParent={autoExpandParent}
-                  expandedKeys={expandedKeys}
-                  selectedKeys={[selectTreeItem.value]}
-                  onSelect={this.onTreeSelect}
-                  onExpand={this.onTreeExpand}
-                  titleRender={(nodeData) => {
-                    return this.regionTreeTitleRender(nodeData)
-                  }}
-                  treeData={treeRegionData}
-                />
+              firstData.key ?
+                (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
+                  <Tree
+                    style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'auto', overflowY: 'auto', }}
+                    showLine={{ showLeafIcon: false }}
+                    showIcon={false}
+                    defaultExpandedKeys={[selectTreeItem.ParentCode]}
+                    defaultExpandAll={defaultExpandAll}
+                    autoExpandParent={autoExpandParent}
+                    expandedKeys={expandedKeys}
+                    selectedKeys={[selectTreeItem.value]}
+                    onSelect={this.onTreeSelect}
+                    onExpand={this.onTreeExpand}
+                    titleRender={(nodeData) => {
+                      return this.regionTreeTitleRender(nodeData)
+                    }}
+                    treeData={treeRegionData}
+                  />
+                : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             }
           </TabPane>
           <TabPane tab="行业" key="industry">
             <Search
-              placeholder="请输入关键字查询"
+              placeholder="请输入企业关键字查询"
+              value={searchValue}
               style={{ width: '100%', marginTop: 10 }}
               onChange={this.onKeywordSearch}
             />
             {
-              (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
-                <Tree
-                  style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'hidden', overflowY: 'auto', }}
-                  showLine={{ showLeafIcon: false }}
-                  showIcon={false}
-                  defaultExpandedKeys={[selectTreeItem.ParentCode]}
-                  defaultExpandAll={defaultExpandAll}
-                  expandedKeys={expandedKeys}
-                  autoExpandParent={autoExpandParent}
-                  selectedKeys={[selectTreeItem.value]}
-                  onSelect={this.onTreeSelect}
-                  onExpand={this.onTreeExpand}
-                  titleRender={(nodeData) => {
-                    return this.industryTreeTitleRender(nodeData)
-                  }}
-                  treeData={treeIndustryData}
-
-                />
+              firstData.key ?
+                (loading || !selectedKeys) ? <Spin className={styles.treeSpin} /> :
+                  <Tree
+                    style={{ marginTop: 14, maxHeight: 'calc(100vh - 276px)', overflow: 'hidden', overflowY: 'auto', }}
+                    showLine={{ showLeafIcon: false }}
+                    showIcon={false}
+                    defaultExpandedKeys={[selectTreeItem.ParentCode]}
+                    defaultExpandAll={defaultExpandAll}
+                    expandedKeys={expandedKeys}
+                    autoExpandParent={autoExpandParent}
+                    selectedKeys={[selectTreeItem.value]}
+                    onSelect={this.onTreeSelect}
+                    onExpand={this.onTreeExpand}
+                    titleRender={(nodeData) => {
+                      return this.industryTreeTitleRender(nodeData)
+                    }}
+                    treeData={treeIndustryData}
+                  />
+                : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             }
           </TabPane>
         </Tabs>

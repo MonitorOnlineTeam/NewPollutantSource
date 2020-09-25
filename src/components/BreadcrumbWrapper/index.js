@@ -10,20 +10,33 @@ import { connect } from "dva"
 class BreadcrumbWrapper extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectTreeItem: {}
+    };
   }
 
   componentWillUnmount() {
-    this.props.dispatch({
-      type: "components/updateState",
-      payload: {
-        selectTreeItem: {}
-      }
+    // this.props.dispatch({
+    //   type: "components/updateState",
+    //   payload: {
+    //     selectTreeItem: {}
+    //   }
+    // })
+    this.setState({
+      selectTreeItem: {}
     })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectTreeItem !== this.props.selectTreeItem) {
+      this.setState({
+        selectTreeItem: this.props.selectTreeItem
+      })
+    }
+  }
+
   pageHeaderRender = (props) => {
-    const { selectTreeItem } = this.props;
+    const { selectTreeItem } = this.state;
     if (props.breadcrumb.routes) {
       return <div>
         当前位置：
@@ -68,7 +81,7 @@ class BreadcrumbWrapper extends Component {
 }
 
 BreadcrumbWrapper.defaultProps = {
-  extraName: "",
+  extraName: "", 
 }
 
 export default BreadcrumbWrapper;
