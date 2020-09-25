@@ -196,11 +196,11 @@ class ManualQualityPage extends Component {
       },
       callback: (res) => {
         let that = this;
-        Modal.info({
+        confirm({
           title: '盲样核查',
           okText: "确认",
           cancelText: "取消",
-          // icon: <ExclamationCircleOutlined />,
+          icon: <ExclamationCircleOutlined />,
           content: <div>
             <InputNumber style={{ width: '100%', marginBottom: 4 }} min={res.min} max={res.max} placeholder="请输入盲样核查浓度" onChange={(value) => {
               this.setState({
