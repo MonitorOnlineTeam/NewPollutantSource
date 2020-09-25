@@ -206,7 +206,7 @@ class index extends PureComponent {
         <span className={`${styles.text} ${styles.regionText}`} title={nodeData.title}>
           {nodeData.title}
         </span>
-        <StopOutlined />
+        {/* <StopOutlined /> */}
         <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
         {/* style={{ fontSize: 12, padding: "0 2px" }} */}
       </div>
