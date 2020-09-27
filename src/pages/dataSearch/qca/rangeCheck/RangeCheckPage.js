@@ -6,6 +6,7 @@ import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
 import RangeCheckChart from "./RangeCheckChart"
 import CheckModal from "../components/CheckModal"
+import _ from "lodash"
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -160,12 +161,15 @@ class RangeCheckPage extends PureComponent {
       this.getTableDataSource();
     } else {
       if (prevProps.pollutantList !== this.props.pollutantList) {
+        let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
         if (this.props.pointType === "1") {
+          let intersection = _.intersection(pollutantList, ["011", "060"])
           // 废水
-          this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026"])
           // 废气
-          this.formRef.current.setFieldsValue({ PollutantCode: ["a21002", "a19001", "a21026"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
         this.getTableDataSource();
       }

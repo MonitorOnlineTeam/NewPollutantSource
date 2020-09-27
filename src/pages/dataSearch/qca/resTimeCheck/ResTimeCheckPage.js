@@ -5,6 +5,7 @@ import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
 import ReactEcharts from 'echarts-for-react';
+import _ from 'lodash';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -71,7 +72,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-            <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+            <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't11',
             width: 80,
@@ -104,7 +105,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-              <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+              <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't21',
             width: 80,
@@ -137,7 +138,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-              <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+              <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't31',
             width: 80,
@@ -231,12 +232,15 @@ class resTimeCheckPage extends PureComponent {
         this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
         this.getTableDataSource();
       } else {
+        let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
         if (this.props.pointType === "1") {
+          let intersection = _.intersection(pollutantList, ["011", "060"])
           // 废水
-          this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026"])
           // 废气
-          this.formRef.current.setFieldsValue({ PollutantCode: ["a21002", "a19001", "a21026"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
         this.getTableDataSource();
       }
@@ -324,6 +328,18 @@ class resTimeCheckPage extends PureComponent {
           label: {
             backgroundColor: '#6a7985',
           }
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
         }
       },
       xAxis: {

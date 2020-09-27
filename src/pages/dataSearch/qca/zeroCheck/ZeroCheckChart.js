@@ -46,11 +46,13 @@ class ZeroCheckChart extends PureComponent {
     console.log('zeroChartData111=', zeroChartData)
     const valueMax = _.max(zeroChartData.dataList) ? _.max(zeroChartData.dataList) : 0;
     const standardMax = _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
-    const max = _.max([valueMin, valueMax]) + 5
+    let max = _.max([valueMin, valueMax]) + 5
+    max = max > 100 ? 100 : max;
 
     const valueMin = _.min(zeroChartData.dataList) ? _.min(zeroChartData.dataList) : 0;
     const standardMin = _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
-    const min = _.min([valueMin, standardMin]) + -5
+    let min = _.min([valueMin, standardMin]) + -5
+    min = min < -100 ? -100 : min;
 
     console.log('max=', max)
     console.log('min=', min)
@@ -60,7 +62,24 @@ class ZeroCheckChart extends PureComponent {
         left: 'center'
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        formatter: (params, ticket, callback) => {
+          let param = params[0]
+          let format = `${param.name}<br />${param.marker}${param.value}%`
+          return format
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
+        }
       },
       grid: {
         left: '5%',
@@ -74,6 +93,7 @@ class ZeroCheckChart extends PureComponent {
         data: zeroChartData.timeList
       },
       yAxis: {
+        name: '(%)',
         type: 'value',
         max: Math.ceil(max),
         min: Math.ceil(min)

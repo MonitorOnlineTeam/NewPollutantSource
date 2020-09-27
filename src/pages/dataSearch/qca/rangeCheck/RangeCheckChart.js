@@ -46,11 +46,15 @@ class RangeCheckChart extends PureComponent {
     console.log('rangeChartData111=', rangeChartData)
     const valueMax = _.max(rangeChartData.dataList) ? _.max(rangeChartData.dataList) : 0;
     const standardMax = _.max([rangeChartData.standard.top, rangeChartData.standard.lower]) ? _.max([rangeChartData.standard.top, rangeChartData.standard.lower]) : 0
-    const max =  _.max([valueMin, valueMax]) + 5
+    let max = _.max([valueMin, valueMax]) + 5;
+    max = max > 100 ? 100 : max;
 
     const valueMin = _.min(rangeChartData.dataList) ? _.min(rangeChartData.dataList) : 0;
     const standardMin = _.min([rangeChartData.standard.top, rangeChartData.standard.lower]) ? _.min([rangeChartData.standard.top, rangeChartData.standard.lower]) : 0
-    const min = _.min([valueMin, standardMin]) + -5
+    let min = _.min([valueMin, standardMin]) + -5
+    min = min < -100 ? -100 : min;
+
+
 
     console.log('max=', max)
     console.log('min=', min)
@@ -60,7 +64,24 @@ class RangeCheckChart extends PureComponent {
         left: 'center'
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        formatter: (params, ticket, callback) => {
+          let param = params[0]
+          let format = `${param.name}<br />${param.marker}${param.value}%`
+          return format
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
+        }
       },
       grid: {
         left: '5%',
@@ -74,6 +95,7 @@ class RangeCheckChart extends PureComponent {
         data: rangeChartData.timeList
       },
       yAxis: {
+        name: '(%)',
         type: 'value',
         max: Math.ceil(max),
         min: Math.ceil(min)
