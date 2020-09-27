@@ -30,6 +30,8 @@ import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
+import ButtonGroup_ from '@/components/ButtonGroup'
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -40,7 +42,7 @@ const pageUrl = {
   getData: 'newtransmissionefficiency/getQutletData',
 };
 const content = <div>当有效传输率未到达90%时判定为未达标</div>;
-@connect(({ loading, newtransmissionefficiency }) => ({
+@connect(({ loading, newtransmissionefficiency,autoForm }) => ({
   priseList: newtransmissionefficiency.priseList,
   exEntloading: newtransmissionefficiency.exEntloading,
   loading: loading.effects[pageUrl.getData],
@@ -50,6 +52,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   entName: newtransmissionefficiency.entName,
   pageSize: newtransmissionefficiency.pageSize,
   pageIndex: newtransmissionefficiency.pageIndex,
+  regionList: autoForm.regionList,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -223,6 +226,30 @@ export default class EntTransmissionEfficiency extends Component {
       });
     });
   };
+  regchildren=()=>{
+    const { regionList } = this.props;
+
+    const selectList = [];
+    if (regionList.length > 0) {
+      regionList[0].children.map(item => {
+        selectList.push(
+          <Option key={item.key} value={item.value}>
+            {item.title}
+          </Option>,
+        );
+      });
+      return selectList;
+    }
+  }
+      /** 数据类型切换 */
+ _handleDateTypeChange = e => {
+        const dataType = e.target.value;
+        this.setState({ dataType });
+        this.child.onDataTypeChange(dataType);
+    }
+    onRef1 = ref => {
+      this.child = ref;
+  }
   render() {
     const { eName } = this.state;
     const {
@@ -371,35 +398,66 @@ export default class EntTransmissionEfficiency extends Component {
           title={
             <>
               <Form layout="inline">
+            
+              <Row>
+              <Form.Item label='数据类型'>
+              <ButtonGroup_  checked="realtime" onChange={this._handleDateTypeChange} />
+              </Form.Item>
                 <Form.Item>
-                  时间选择：
+                  时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(beginTime), moment(endTime)]}
-                    format="YYYY-MM-DD"
+                    format="YYYY-MM-DD HH:mm:ss"
                     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                    onRef={this.onRef1}
                     allowClear={false}
                   />
                 </Form.Item>
-                <Form.Item>
+                <Form.Item label='行政区'>
                   <Select
-                    placeholder="请选择企业类型"
+                    allowClear
+                    placeholder="行政区"
+                    onChange={this.changeRegion}
+                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                    style={{ width: 200 }}
+                  >
+                    {this.regchildren()}
+                  </Select>
+                </Form.Item>
+                <Form.Item label='关注程度'>
+                  <Select
+                    allowClear
+                    placeholder="关注程度"
+                    onChange={this.changeRegion}
+                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                    style={{ width: 200 }}
+                  >
+                    {this.regchildren()}
+                  </Select>
+                </Form.Item>
+                </Row>
+                <Row>
+
+                <Form.Item label='企业类型'>
+                  <Select
+                    placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                   >
                     <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item>
+                <Form.Item label='企业列表'>
                   <Select
                     allowClear
                     placeholder="企业列表"
                     onChange={this.changeRegion}
                     value={EntCode ? EntCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200,  }}
                   >
                     {this.children()}
                   </Select>
@@ -416,49 +474,9 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                   </Button>
-                  <Button
-                    onClick={() => {
-                      this.props.history.go(-1);
-                    }}
-                  >
-                    <Icon type="rollback" />
-                    返回
-                  </Button>
                 </Form.Item>
+                </Row>
               </Form>
-              <div style={{ paddingBottom: 10 }}>
-                <div
-                  style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#52c41a',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginRight: 3,
-                  }}
-                />{' '}
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {' '}
-                  ≥90%达标
-                </span>
-                <div
-                  style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#f5222d',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginLeft: 10,
-                    marginRight: 3,
-                  }}
-                />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {' '}
-                  ≤90%未达标
-                </span>
-              </div>
             </>
           }
         >
