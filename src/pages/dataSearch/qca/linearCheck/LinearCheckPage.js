@@ -201,14 +201,21 @@ class LinearCheckPage extends PureComponent {
       {
         title: <span>
           示值误差（%）
-        <QuestionTooltip content="按照零气、高浓度标准气体、零气、中浓度(50%~60%的
-          满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
+        <QuestionTooltip content="按照
+零气、低浓度(20%的满量程值)标准气体；低浓度(40%的满量程值)标准气体；中浓度(60%的
+满量程值)标准气体；中浓度(80%的
+满量程值)标准气体的顺序 通入标准气体的顺序 通入标准气体。" />
         </span>,
         width: 140,
         dataIndex: 'MaxOffset',
       },
       {
-        title: '线性系数',
+        title: <span>
+          线性系数
+        <QuestionTooltip overlayStyle={{maxWidth: 350}} content={<>
+          <img style={{width: '100%'}} src="/linearCheck.png" alt=""/>
+        </>} />
+        </span>,
         dataIndex: 'Ratio',
       },
       {
