@@ -29,7 +29,6 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import EnterpriseModel from '../components/enterpriseModel';
 import { downloadFile } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -51,8 +50,6 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   entName: newtransmissionefficiency.entName,
   pageSize: newtransmissionefficiency.pageSize,
   pageIndex: newtransmissionefficiency.pageIndex,
-  beginTime:newtransmissionefficiency.beginTime,
-  endTime:newtransmissionefficiency.endTime
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -76,12 +73,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,beginTime,endTime } = this.props;
+    const { dispatch, location } = this.props;
 
     this.updateQueryState({
       RegionCode: location.query.RegionCode,
-      beginTime: beginTime,
-      endTime: endTime,
+      beginTime: moment()
+        .subtract(1, 'months')
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       PageIndex: 1,
       PageSize: 20,
       EntCode: '',
@@ -171,9 +170,11 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
-      payload: {...queryPar},
-      callback: data => {
-        downloadFile(data);
+      payload: { ...queryPar },
+      payload: {
+        callback: data => {
+          downloadFile(data);
+        },
       },
     });
   };
@@ -226,9 +227,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { eName } = this.state;
     const {
       exEntloading,
-      queryPar: { PollutantType, PageIndex, PageSize, EntCode },
-      beginTime,
-      endTime,
+      queryPar: { PollutantType, beginTime, endTime, PageIndex, PageSize, EntCode },
       entName,
     } = this.props;
 
@@ -250,7 +249,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => {
           return (
-            <a href="#" onClick={this.priseClick.bind(this, text, record)}>
+            <a href="#" onClick={this.priseClick.bind(this, text, row)}>
               {text}
             </a>
           );
@@ -483,17 +482,6 @@ export default class EntTransmissionEfficiency extends Component {
                 pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
-            <Modal
-              title="企业下传输有效效率"
-              visible={this.state.visible}
-              footer={null}
-              width={'95%'}
-              onCancel={() => {
-                this.setState({ visible: false });
-              }}
-            >
-              <EnterpriseModel />
-            </Modal>
           </>
         </Card>
         {/* </div> */}

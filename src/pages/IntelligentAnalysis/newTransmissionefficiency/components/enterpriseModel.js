@@ -150,8 +150,8 @@ export default class enterpriseEfficiency extends Component {
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>有效个数</span>,
-        dataIndex: 'EffectiveNumber',
-        key: 'EffectiveNumber',
+        dataIndex: 'TransmissionNumber',
+        key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
           if (record.IsStop) {

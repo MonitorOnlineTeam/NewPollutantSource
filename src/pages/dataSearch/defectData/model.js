@@ -144,12 +144,12 @@ export default Model.extend({
       }
     },
 
-    *exportTransmissionEfficiencyForEnt({ callback,payload }, { call, put, update, select }) {
+    *exportTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
       //企业级导出
       const response = yield call(ExportTransmissionEfficiencyForEnt, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
-        callback(response.Datas);
+        payload.callback(response.Datas);
         yield update({ exEntloading: false });
       } else {
         message.warning(response.Message);

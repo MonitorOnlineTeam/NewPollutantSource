@@ -1198,6 +1198,32 @@ export default {
               ],
             },
             {
+              path: '/dataSearch',
+              name: 'dataSearch',            
+               routes: [
+                {
+                  path: '/dataSearch',
+                  redirect: '/dataquery/defectData',
+                },
+                {
+                  name: 'defectData', //数据缺失
+                  path: '/dataSearch/defectData',
+                  routes: [
+                    {
+                      name: 'defectDatEnt', //数据缺失 - 企业
+                      path: '/dataSearch/defectData/ent',
+                      component: './dataSearch/defectData/ent',
+                    },
+                    {
+                      name: 'defectDatAir', //数据缺失 - 空气站
+                      path: '/dataSearch/defectData/air',
+                      component: './dataSearch/defectData/air',
+                    },
+                  ],
+                },
+              ]
+            },
+            {
               path: '/dataquery',
               name: 'dataquery',
               routes: [
