@@ -99,7 +99,7 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        
+
         // appoperation
         {
           path: '/appoperation',
@@ -1122,15 +1122,20 @@ export default {
                     },
                   ],
                 },
+                // {
+                //   name: 'Intelligentanalysis',
+                //   path: '/Intelligentanalysis/transmissionefficiency',
+                //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
+                // },
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
-                  component: './Intelligentanalysis/transmissionefficiency/entIndex',
+                  component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
                 },
                 {
                   name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
-                  component: './Intelligentanalysis/transmissionefficiency/pointIndex',
+                  path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                  component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
                 },
                 {
                   name: 'emissions',
@@ -1199,6 +1204,22 @@ export default {
                 {
                   path: '/dataquery',
                   redirect: '/monitoring/dataquery',
+                },
+                {
+                  name: 'defectData', //数据缺失
+                  path: '/dataquery/defectData',
+                  routes: [
+                    {
+                      name: 'defectDatEnt', //数据缺失 - 企业
+                      path: '/dataquery/defectData/ent',
+                      component: './monitoring/dataquery/index',
+                    },
+                    {
+                      name: 'defectDatAir', //数据缺失 - 空气站
+                      path: '/dataquery/defectData/air',
+                      component: './monitoring/dataquery/index',
+                    },
+                  ],
                 },
                 {
                   name: 'dataquery',

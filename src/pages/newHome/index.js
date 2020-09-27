@@ -154,7 +154,7 @@ class NewHome extends PureComponent {
         });
       },
       clickable: true,
-      click: (MapsOption, marker) => {},
+      click: (MapsOption, marker) => { },
     };
     // 厂界事件
     this.polygonEvents = {
@@ -209,6 +209,7 @@ class NewHome extends PureComponent {
       hideEntName: true,
       initCenter: [85.35803, 42.229502],
       initZoom: 6,
+      SparePartsStationCode: "",
     };
   }
 
@@ -455,23 +456,23 @@ class NewHome extends PureComponent {
           {displayType === 0 ? (
             this.getEntIcon(extData)
           ) : (
-            <div
-              onClick={() => {
-                this.setState(
-                  {
-                    currentClickObj: extData.position,
-                    infoWindowVisible: true,
-                    infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
-                  },
-                  () => {
-                    this.getInfoWindowData();
-                  },
-                );
-              }}
-            >
-              {this.getPollutantIcon(extData)}
-            </div>
-          )}
+              <div
+                onClick={() => {
+                  this.setState(
+                    {
+                      currentClickObj: extData.position,
+                      infoWindowVisible: true,
+                      infoWindowPos: [extData.position.Longitude, extData.position.Latitude],
+                    },
+                    () => {
+                      this.getInfoWindowData();
+                    },
+                  );
+                }}
+              >
+                {this.getPollutantIcon(extData)}
+              </div>
+            )}
         </div>
       );
     }
@@ -584,6 +585,10 @@ class NewHome extends PureComponent {
             type="icon-cangku"
             style={{ ...style, fontSize: 28 }}
             onClick={() => {
+              debugger
+              this.setState({
+                SparePartsStationCode: extData.position.SparePartsStationCode
+              })
               this.getOfficeModalData(extData);
             }}
           />
@@ -754,8 +759,8 @@ class NewHome extends PureComponent {
       infoWindowData.pollutantTypeCode === 2
         ? '/gasInfoWindow.png'
         : infoWindowData.pollutantTypeCode === 1
-        ? '/water.jpg'
-        : '/infoWindowImg.png';
+          ? '/water.jpg'
+          : '/infoWindowImg.png';
     if (infoWindowData.photo) {
       imgName = `/upload/${infoWindowData.photo[0]}`;
     }
@@ -782,10 +787,10 @@ class NewHome extends PureComponent {
             {currentClickObj.outPutFlag === 1 ? (
               <span style={{ color: '#999999' }}>停运</span>
             ) : (
-              <span style={{ color: this.getColor(currentClickObj.Status) }}>
-                {this.getStatusText(currentClickObj.Status)}
-              </span>
-            )}
+                <span style={{ color: this.getColor(currentClickObj.Status) }}>
+                  {this.getStatusText(currentClickObj.Status)}
+                </span>
+              )}
           </p>
         </div>
         <div className={styles.desc}>
@@ -804,8 +809,8 @@ class NewHome extends PureComponent {
             {infoWindowData.pollutantTypeCode === 2
               ? '废气数据'
               : infoWindowData.pollutantTypeCode === 1
-              ? '废水数据'
-              : '空气质量数据'}
+                ? '废水数据'
+                : '空气质量数据'}
           </h3>
           {infoWindowData.pollutantTypeCode === 5 && (
             <div style={{ marginBottom: 10, fontSize: 13 }}>
@@ -947,6 +952,7 @@ class NewHome extends PureComponent {
       displayType,
       modalTitle,
       clickedDivision,
+      SparePartsStationCode,
     } = this.state;
     const {
       allEntAndPointList,
@@ -1183,8 +1189,8 @@ class NewHome extends PureComponent {
                       {toggleSelect ? (
                         <Icon type="caret-up" className={styles.icon} />
                       ) : (
-                        <Icon type="caret-down" className={styles.icon} />
-                      )}
+                          <Icon type="caret-down" className={styles.icon} />
+                        )}
                     </div>
                     {toggleSelect && (
                       <div className={styles.dropDownContent}>
@@ -1192,7 +1198,7 @@ class NewHome extends PureComponent {
                           <li
                             className={
                               !clickedDivision ||
-                              (clickedDivision && clickedDivision.title === '全部')
+                                (clickedDivision && clickedDivision.title === '全部')
                                 ? styles.current
                                 : ''
                             }
@@ -1246,11 +1252,11 @@ class NewHome extends PureComponent {
                     {/* <span>第九师</span> */}
                   </div>
                 )
-                // true && <div className={styles.shibox}>
-                //   {/* <span>师局</span><br /> */}
-                //   <span>第九师</span>
-                //   {/* <span>第九师</span> */}
-                // </div>
+                  // true && <div className={styles.shibox}>
+                  //   {/* <span>师局</span><br /> */}
+                  //   <span>第九师</span>
+                  //   {/* <span>第九师</span> */}
+                  // </div>
                 }
               </div>
               <div className={styles.legendContent}>
@@ -1335,7 +1341,7 @@ class NewHome extends PureComponent {
                   markers={this.state.markersList}
                   events={this.markersEvents}
                   render={this.renderMarker}
-                  // content={<span>111</span>}
+                // content={<span>111</span>}
                 />
                 {/* hover 提示 */}
                 <InfoWindow
@@ -1356,8 +1362,8 @@ class NewHome extends PureComponent {
                   autoMove
                   showShadow
                   closeWhenClickMap={false}
-                  // isCustom
-                  // content={this.infoWindowContent()}
+                // isCustom
+                // content={this.infoWindowContent()}
                 >
                   {this.infoWindowContent()}
                 </InfoWindow>
@@ -1371,7 +1377,7 @@ class NewHome extends PureComponent {
                     showShadow
                     closeWhenClickMap
                     isCustom
-                    // content={this.infoWindowContent()}
+                  // content={this.infoWindowContent()}
                   >
                     {searchResult.title}
                   </InfoWindow>
@@ -1395,7 +1401,7 @@ class NewHome extends PureComponent {
             </div>
           </div>
         </Spin>
-        {officeVisible && <OfficeModal title={modalTitle} />}
+        {officeVisible && <OfficeModal title={modalTitle} SparePartsStationCode={SparePartsStationCode}/>}
         {/* {true && <OfficeModal />} */}
         {siteDetailsVisible && <SiteDetailsModal data={currentClickObj} />}
       </div>

@@ -88,7 +88,8 @@ export default Model.extend({
     },
     taskClassifyModalData: {
       ywc: [], wwc: [], x: [], name: ""
-    }
+    },
+    SparePartsStationInfo: null,
   },
   effects: {
     // 获取显示级别
@@ -565,7 +566,25 @@ export default Model.extend({
         currentDivision,
         currentDivisionPosition
       })
-    }
+    },
+    /*获取服务站关联信息**/
+    * GetSparePartsStation({
+      payload
+    }, {
+      call,
+      update,
+    }) {
+      const result = yield call(services.GetSparePartsStation, {
+        ...payload
+      });
+      debugger
+      if (result.IsSuccess) {
+        yield update({
+          SparePartsStationInfo: result.Datas
+        });
+      }
+    },
+
   },
   reducers: {
     update(state, { payload }) {

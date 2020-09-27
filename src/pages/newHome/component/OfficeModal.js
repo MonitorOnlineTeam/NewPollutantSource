@@ -1,17 +1,18 @@
 import React, { PureComponent } from 'react';
-import { Modal, Tabs } from "antd";
+import { Modal, Tabs, Descriptions, Divider } from "antd";
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import styles from '../index.less'
-
+import SdlMap from '@/pages/AutoFormManager/SdlMap'
 const { TabPane } = Tabs;
-const tabList = ["人员列表", "备品备件耗材"];
+const tabList = ["人员列表", "备品备件耗材", "基本信息"];
 
 
 @connect(({ loading, newHome }) => ({
   officeVisible: newHome.officeVisible,
   officeUserList: newHome.officeUserList,
   officeStockList: newHome.officeStockList,
+  SparePartsStationInfo: newHome.SparePartsStationInfo,
 }))
 class OfficeModal extends PureComponent {
   constructor(props) {
@@ -135,6 +136,18 @@ class OfficeModal extends PureComponent {
     };
   }
 
+
+  componentDidMount() {
+
+    const { SparePartsStationCode } = this.props;
+    this.props.dispatch({
+      type: "newHome/GetSparePartsStation",
+      payload: {
+        SparePartsStationCode
+      }
+    })
+  }
+
   close = () => {
     this.props.dispatch({
       type: "newHome/updateState",
@@ -150,7 +163,7 @@ class OfficeModal extends PureComponent {
         {
           tabList.map((item, index) => {
             return <li onClick={() => { this.footerItemClick(index) }}>
-              <img src={`/xj/0${index + 1}.png`} alt="" />
+              <img src={item === "基本信息" ? `/xj/07.png` : `/xj/0${index + 1}.png`} alt="" />
               <p>{item}</p>
             </li>
           })
@@ -172,7 +185,7 @@ class OfficeModal extends PureComponent {
   }
 
   render() {
-    const { officeVisible, officeUserList, officeStockList, title } = this.props;
+    const { officeVisible, officeUserList, officeStockList, title, SparePartsStationInfo } = this.props;
     const { columns, columns2, currentKey, itemTitle } = this.state;
     return (
       <Modal
@@ -204,6 +217,35 @@ class OfficeModal extends PureComponent {
               columns={columns2}
               dataSource={officeStockList}
             />
+          }
+          {
+            currentKey === 3 &&
+            <div style={{ height: "60vh", overflow: 'auto' }}>
+              <div className={styles.basisInfo}>
+                <div>
+                  <img src={"/fuwuzhan.jpg"} alt="" width="100%" />
+                </div>
+                <div>
+                  <Descriptions title={SparePartsStationInfo ? SparePartsStationInfo.Name : null}>
+                    <Descriptions.Item span={3} label="地址">{SparePartsStationInfo ? SparePartsStationInfo.Address : null}</Descriptions.Item>
+                    <Descriptions.Item span={1.5} label="经度">{SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}</Descriptions.Item>
+                    <Descriptions.Item span={1.5} label="纬度">{SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}</Descriptions.Item>
+                  </Descriptions>
+                </div>
+              </div>
+              <Divider />
+              <SdlMap
+                mode="map"
+                longitude={SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}
+                latitude={SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}
+                handleMarker={true}
+                handlePolygon={true}
+                style={{ height: 450 }}
+                zoom={12}
+              />
+
+
+            </div>
           }
         </div>
       </Modal>

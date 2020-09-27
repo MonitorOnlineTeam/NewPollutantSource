@@ -132,6 +132,13 @@ export async function getMonitorRegionDivision(params) {
   return result;
 }
 
+// 获取服务站信息
+export async function GetSparePartsStation(params) {
+  const result = get('/api/rest/PollutantSourceApi/SparepartManageApi/GetSparePartsStation', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
 
 
 
