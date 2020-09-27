@@ -250,7 +250,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => {
           return (
-            <a href="#" onClick={this.priseClick.bind(this, text, record)}>
+            <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
               {text}
             </a>
           );
