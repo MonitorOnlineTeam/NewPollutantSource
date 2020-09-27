@@ -30,7 +30,7 @@ import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EnterpriseModel from '../components/enterpriseModel';
-
+import { downloadFile } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -43,7 +43,7 @@ const pageUrl = {
 const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 @connect(({ loading, newtransmissionefficiency }) => ({
   priseList: newtransmissionefficiency.priseList,
-  exloading: loading.effects['newtransmissionefficiency/ExportData'],
+  exEntloading: newtransmissionefficiency.exEntloading,
   loading: loading.effects[pageUrl.getData],
   total: newtransmissionefficiency.qutleTotal,
   tableDatas: newtransmissionefficiency.qutleTableDatas,
@@ -70,7 +70,7 @@ export default class EntTransmissionEfficiency extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.initData();
   }
   initData = () => {
@@ -78,6 +78,14 @@ export default class EntTransmissionEfficiency extends Component {
 
     this.updateQueryState({
       RegionCode: location.query.RegionCode,
+      beginTime: moment()
+        .subtract(1, 'months')
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      PageIndex: 1,
+      PageSize: 20,
+      EntCode: '',
+      PollutantType: '',
     });
 
     dispatch({
@@ -86,7 +94,9 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { RegionCode: location.query.RegionCode },
     });
 
-    this.getTableData();
+    setTimeout(() => {
+      this.getTableData();
+    });
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -109,17 +119,19 @@ export default class EntTransmissionEfficiency extends Component {
     if (sorter.order) {
       this.updateQueryState({
         // transmissionEffectiveRate: sorter.order,
-        pageIndex: pagination.current,
-        pageSize: pagination.pageSize,
+        PageIndex: pagination.current,
+        PageSize: pagination.pageSize,
       });
     } else {
       this.updateQueryState({
         // transmissionEffectiveRate: 'ascend',
-        pageIndex: pagination.current,
-        pageSize: pagination.pageSize,
+        PageIndex: pagination.current,
+        PageSize: pagination.pageSize,
       });
     }
-    this.getTableData(pagination.current);
+    setTimeout(() => {
+      this.getTableData();
+    });
   };
 
   children = () => {
@@ -129,8 +141,8 @@ export default class EntTransmissionEfficiency extends Component {
     if (priseList.length > 0) {
       priseList.map(item => {
         selectList.push(
-          <Option key={item.key} value={item.value}>
-            {item.title}
+          <Option key={item.EntCode} value={item.EntCode}>
+            {item.EntName}
           </Option>,
         );
       });
@@ -146,15 +158,20 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion = value => {
     this.updateQueryState({
-      RegionCode: value,
+      EntCode: value,
     });
   };
 
-  //创建并获取模板
-  Template = () => {
-    const { dispatch } = this.props;
+  //创建并获取模板   导出
+  template = () => {
+    const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'newtransmissionefficiency/ExportData',
+      type: pageUrl.updateState,
+      payload: { exEntloading: true },
+    });
+    dispatch({
+      type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
+      payload: { ...queryPar },
       payload: {
         callback: data => {
           downloadFile(data);
@@ -174,28 +191,20 @@ export default class EntTransmissionEfficiency extends Component {
     this.getTableData();
   };
 
-  //手工生成有效传输效率数据
-  exportData = () => {
-    this.setState({ effectiveVisible: true });
-  };
-  effectiveOk = () => {
-    alert('it is ok');
-  };
-
-  priseClick = text => {
-    //企业下有效传输效率
+  priseClick = (text, row) => {
+    //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: { RegionCode, PollutantType, beginTime, endTime },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode },
       entName,
     } = this.props;
 
     let priseQueryPar = {
       beginTime: beginTime,
       endTime: endTime,
-      PollutantType: PollutantType,
+      PollutantType: '',
       RegionCode: RegionCode,
-      EntCode: '',
+      EntCode: row.EntCode,
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -218,10 +227,11 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const { eName } = this.state;
     const {
-      exloading,
-      queryPar: { PollutantType, beginTime, endTime },
+      exEntloading,
+      queryPar: { PollutantType, beginTime, endTime, PageIndex, PageSize, EntCode },
       entName,
     } = this.props;
+
     const columns = [
       {
         title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
@@ -230,17 +240,17 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <Link to={{ pathname: '', query: {} }} />;
+          return <span>{text}</span>;
         },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>考核企业名称</span>,
-        dataIndex: 'EnterpriseName',
-        key: 'EnterpriseName',
+        dataIndex: 'EntName',
+        key: 'EntName',
         align: 'center',
         render: (text, record) => {
           return (
-            <a href="#" onClick={this.priseClick.bind(this, text)}>
+            <a href="#" onClick={this.priseClick.bind(this, text, row)}>
               {text}
             </a>
           );
@@ -275,12 +285,12 @@ export default class EntTransmissionEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                <Badge className={styles.warningdata} status="warning" />
-                {`${(parseFloat(text) * 100).toFixed(2)}%`}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              <Badge className={styles.warningdata} status="warning" />
+              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+            </span>
+            // </Popover>
           );
         },
       },
@@ -305,12 +315,13 @@ export default class EntTransmissionEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                <Badge className={styles.warningdata} status="warning" />
-                {`${(parseFloat(text) * 100).toFixed(2)}%`}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              <Badge className={styles.warningdata} status="warning" />
+              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+            </span>
+            // {' '}
+            // </Popover>
           );
         },
       },
@@ -319,6 +330,7 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
+        align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
           if (record.IsStop) {
@@ -387,7 +399,7 @@ export default class EntTransmissionEfficiency extends Component {
                     allowClear
                     placeholder="企业列表"
                     onChange={this.changeRegion}
-                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                    value={EntCode ? EntCode : undefined}
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     {this.children()}
@@ -397,8 +409,12 @@ export default class EntTransmissionEfficiency extends Component {
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
-                  <Button style={{ margin: '0 5px' }} onClick={this.Template} loading={exloading}>
-                    <Icon type="export" />
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon="export"
+                    onClick={this.template}
+                    loading={exEntloading}
+                  >
                     导出
                   </Button>
                   <Button
@@ -462,8 +478,8 @@ export default class EntTransmissionEfficiency extends Component {
                 showQuickJumper: true,
                 sorter: true,
                 total: this.props.total,
-                pageSize: this.props.pageSize,
-                current: this.props.pageIndex,
+                pageSize: PageSize,
+                current: PageIndex,
                 pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
@@ -471,7 +487,7 @@ export default class EntTransmissionEfficiency extends Component {
               title="企业下传输有效效率"
               visible={this.state.visible}
               footer={null}
-              width={'90%'}
+              width={'95%'}
               onCancel={() => {
                 this.setState({ visible: false });
               }}

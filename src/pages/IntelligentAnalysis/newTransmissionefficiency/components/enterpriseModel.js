@@ -92,27 +92,24 @@ export default class enterpriseEfficiency extends Component {
     const { getFieldDecorator } = this.props.form;
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>污染物名称</span>,
+        title: <span style={{ fontWeight: 'bold' }}>排口类型</span>,
         dataIndex: 'PollutantTypeName',
         key: 'PollutantTypeName',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => text,
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>排口名称</span>,
         dataIndex: 'PointName',
         key: 'PointName',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => text,
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>应传个数</span>,
         dataIndex: 'ShouldNumber',
         key: 'ShouldNumber',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => {
           if (record.IsStop) {
             return <span className={styles.normaldata}>停运</span>;
@@ -125,8 +122,7 @@ export default class enterpriseEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>实传个数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => {
           if (record.IsStop) {
             return <span className={styles.normaldata}>停运</span>;
@@ -141,13 +137,14 @@ export default class enterpriseEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                {' '}
-                <Badge className={styles.warningdata} status="warning" />
-                {text}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              {/* {' '} */}
+              <Badge className={styles.warningdata} status="warning" />
+              {text}
+            </span>
+            // {' '}
+            // </Popover>
           );
         },
       },
@@ -155,8 +152,7 @@ export default class enterpriseEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>有效个数</span>,
         dataIndex: 'EffectiveNumber',
         key: 'EffectiveNumber',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => {
           if (record.IsStop) {
             return <span className={styles.normaldata}>停运</span>;
@@ -171,12 +167,13 @@ export default class enterpriseEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                <Badge className={styles.warningdata} status="warning" />
-                {text}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              <Badge className={styles.warningdata} status="warning" />
+              {text}
+            </span>
+            // {' '}
+            // </Popover>
           );
         },
       },
@@ -184,8 +181,7 @@ export default class enterpriseEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         render: (text, record) => {
           if (record.IsStop) {
             return <span className={styles.normaldata}>停运</span>;
@@ -202,12 +198,13 @@ export default class enterpriseEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                <Badge className={styles.warningdata} status="warning" />
-                {`${(parseFloat(text) * 100).toFixed(2)}%`}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              <Badge className={styles.warningdata} status="warning" />
+              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+            </span>
+            // {' '}
+            // </Popover>
           );
         },
       },
@@ -215,8 +212,7 @@ export default class enterpriseEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
-        width: '10%',
-        align: 'left',
+        align: 'center',
         sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
         render: (text, record) => {
           if (record.IsStop) {
@@ -234,12 +230,13 @@ export default class enterpriseEfficiency extends Component {
             </span>
           );
           return (
-            <Popover content={content} trigger="hover">
-              <span className={styles.avgtext}>
-                <Badge className={styles.warningdata} status="warning" />
-                {`${(parseFloat(text) * 100).toFixed(2)}%`}
-              </span>{' '}
-            </Popover>
+            // <Popover content={content} trigger="hover">
+            <span className={styles.avgtext}>
+              <Badge className={styles.warningdata} status="warning" />
+              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+            </span>
+            // {' '}
+            // </Popover>
           );
         },
       },
@@ -247,9 +244,7 @@ export default class enterpriseEfficiency extends Component {
         title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
-        // width: '250px',
-        width: '20%',
-        // align: 'center',
+        align: 'center',
         sorter: true,
         render: (text, record) => {
           if (record.IsStop) {
@@ -259,7 +254,7 @@ export default class enterpriseEfficiency extends Component {
           const percent = (parseFloat(text) * 100).toFixed(2);
           if (percent >= 90) {
             return (
-              <div style={{ width: 200 }}>
+              <div>
                 <Progress
                   successPercent={percent}
                   percent={percent - 0}
@@ -270,7 +265,7 @@ export default class enterpriseEfficiency extends Component {
             );
           }
           return (
-            <div style={{ width: 200 }}>
+            <div>
               <Progress
                 successPercent={0}
                 percent={percent - 0}
@@ -326,6 +321,7 @@ export default class enterpriseEfficiency extends Component {
               columns={columns}
               bordered={false}
               // onChange={this.handleTableChange}
+              scroll={{ x: null }}
               size="small" // small middle
               dataSource={this.props.tableDatas}
               pagination={{

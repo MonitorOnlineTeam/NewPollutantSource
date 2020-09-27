@@ -42,7 +42,7 @@ const pageUrl = {
 };
 const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 @connect(({ loading, newtransmissionefficiency, autoForm }) => ({
-  exloading: loading.effects['newtransmissionefficiency/ExportData'],
+  exRegionloading: newtransmissionefficiency.exRegionloading,
   loading: loading.effects[pageUrl.getData],
   total: newtransmissionefficiency.entTotal,
   pageSize: newtransmissionefficiency.pageSize,
@@ -163,11 +163,14 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  //创建并获取模板
-  Template = () => {
+  //创建并获取模板   导出
+  template = () => {
+    this.updateState({
+      exRegionloading: true,
+    });
     const { dispatch } = this.props;
     dispatch({
-      type: 'newtransmissionefficiency/ExportData',
+      type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
         callback: data => {
           downloadFile(data);
@@ -190,7 +193,7 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   //手工生成有效传输效率数据
-  exportData = () => {
+  manualData = () => {
     this.setState({ effectiveVisible: true });
   };
   effectiveOk = () => {
@@ -205,23 +208,23 @@ export default class EntTransmissionEfficiency extends Component {
   // })
   render() {
     const { eName } = this.state;
-    const { regionList, exloading, RegionCode } = this.props;
+    const { regionList, exRegionloading, RegionCode } = this.props;
     const columns = [
       {
         title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
-        // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return (
+          return text === '全部合计' ? (
+            <span>{text}</span>
+          ) : (
             <Link
               to={{
                 pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
                 query: { RegionCode: record.RegionCode },
               }}
             >
-              {' '}
               {text}
             </Link>
           );
@@ -397,13 +400,18 @@ export default class EntTransmissionEfficiency extends Component {
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
-                  <Button style={{ margin: '0 5px' }} onClick={this.Template} loading={exloading}>
-                    <Icon type="export" />
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon="export"
+                    onClick={this.template}
+                    loading={exRegionloading}
+                  >
+                    {/* <Icon type="export" /> */}
                     导出
                   </Button>
-                  <Button type="primary" onClick={this.exportData}>
+                  {/* <Button type="primary" onClick={this.manualData}>
                     手工生成有效传输效率数据
-                  </Button>
+                  </Button> */}
                 </Form.Item>
               </Form>
               <div style={{ paddingTop: 10 }}>

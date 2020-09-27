@@ -1,21 +1,25 @@
 /**
  * 功  能：传输有效率
- * 创建人：吴建伟
- * 创建时间：2018.12.07
+ * 创建人：贾安波
+ * 创建时间：2020.09.27
  */
 
 import Model from '@/utils/model';
 import {
   GetTransmissionEfficiencyForRegion,
-  GetTransmissionEfficiencyForPoints,
+  GetTransmissionEfficiencyForPoint,
   GetTransmissionEfficiencyForEnt,
   GetEntByRegion,
+  ExportTransmissionEfficiencyForRegion,
+  ExportTransmissionEfficiencyForEnt,
 } from './service';
 import moment from 'moment';
-
+import { message } from 'antd';
 export default Model.extend({
   namespace: 'newtransmissionefficiency',
   state: {
+    exRegionloading: false,
+    exEntloading: false,
     pageSize: 20,
     pageIndex: 1,
     beginTime: moment()
@@ -54,11 +58,11 @@ export default Model.extend({
   subscriptions: {},
   effects: {
     *getTransmissionEfficiencyForRegion({ payload }, { call, put, update, select }) {
+      //行政区
       const {
         beginTime,
         endTime,
         pageSize,
-        transmissionEffectiveRate,
         RegionCode,
         pageIndex,
         pollutantType,
@@ -82,7 +86,8 @@ export default Model.extend({
       }
     },
     *getQutletData({ payload }, { call, put, update, select }) {
-      const response = yield call(GetTransmissionEfficiencyForPoints, { ...payload });
+      //企业
+      const response = yield call(GetTransmissionEfficiencyForEnt, { ...payload });
       if (response.IsSuccess) {
         yield update({
           qutleTableDatas: response.Datas,
@@ -91,7 +96,8 @@ export default Model.extend({
       }
     },
     *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
-      const response = yield call(GetTransmissionEfficiencyForEnt, { ...payload });
+      //排口
+      const response = yield call(GetTransmissionEfficiencyForPoint, { ...payload });
       if (response.IsSuccess) {
         yield update({
           priseTableDatas: response.Datas,
@@ -109,30 +115,48 @@ export default Model.extend({
         });
       }
     },
-    *ExportData({ payload }, { call, put, update, select }) {
+    *exportTransmissionEfficiencyForRegion({ payload }, { call, put, update, select }) {
+      //行政区导出
       const {
         beginTime,
         endTime,
         pageSize,
-        pageIndex,
-        transmissionEffectiveRate,
         RegionCode,
-        EnterpriseName,
-      } = yield select(state => state.transmissionefficiency);
+        pageIndex,
+        pollutantType,
+        entCode,
+      } = yield select(state => state.newtransmissionefficiency);
       let body = {
-        BeginTime: beginTime,
-        EndTime: endTime,
-        PageSize: pageSize,
-        PageIndex: pageIndex,
         RegionCode: RegionCode,
-        EnterpriseName: EnterpriseName,
-        ...payload,
+        beginTime: beginTime,
+        endTime: endTime,
+        PollutantType: pollutantType,
+        EntCode: entCode,
       };
-      const response = yield call(ExportData, { ...body });
+      const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
+        message.success('下载成功');
         payload.callback(response.Datas);
+        yield update({ exRegionloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exRegionloading: false });
       }
     },
+
+    *exportTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+      //企业级导出
+      const response = yield call(ExportTransmissionEfficiencyForEnt, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        payload.callback(response.Datas);
+        yield update({ exEntloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exEntloading: false });
+      }
+    },
+
     *RecalculateTransmissionEfficiency({ payload }, { call, put, update, select }) {
       let body = {
         beginTime: payload.beginTime,

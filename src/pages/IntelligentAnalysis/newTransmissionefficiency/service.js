@@ -16,9 +16,9 @@ export async function GetTransmissionEfficiencyForRegion(params) {
 
 //传输有效率  排口
 
-export async function GetTransmissionEfficiencyForPoints(params) {
+export async function GetTransmissionEfficiencyForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoints',
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
     params,
     null,
   );
@@ -41,10 +41,34 @@ export async function GetTransmissionEfficiencyForEnt(params) {
 
 export async function GetEntByRegion(params) {
   const result = post(
-    'rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
       params.RegionCode +
       '',
     null,
+    null,
+  );
+
+  return result;
+}
+
+//行政区导出
+
+export async function ExportTransmissionEfficiencyForRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
+    params,
+    null,
+  );
+
+  return result;
+}
+
+//企业导出
+
+export async function ExportTransmissionEfficiencyForEnt(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
+    params,
     null,
   );
 
