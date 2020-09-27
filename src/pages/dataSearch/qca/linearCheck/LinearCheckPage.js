@@ -429,6 +429,7 @@ class LinearCheckPage extends PureComponent {
   // 折线图配置项
   lineOption = () => {
     const { standValList, valueList, timeList, } = this.props;
+    const { currentRowData } = this.state;
     let option = {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -447,6 +448,29 @@ class LinearCheckPage extends PureComponent {
           label: {
             backgroundColor: '#6a7985',
           }
+        },
+        formatter: (params) => {
+          return `
+            ${params[0].name}
+            <br />
+            ${params[0].marker}
+            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+            <br />
+            ${params[1].marker}
+            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+          `
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
         }
       },
       xAxis: {
@@ -462,7 +486,7 @@ class LinearCheckPage extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          name: '',
+          name: currentRowData.Unit ? (currentRowData.Unit) : "",
         }
       ],
       dataZoom: [{
@@ -546,7 +570,7 @@ class LinearCheckPage extends PureComponent {
         {
           visible && <Modal
             destroyOnClose
-            title={`${currentRowData.PollutantName}响应时间核查详情【${pointName}】`}
+            title={`${currentRowData.PollutantName}线性核查详情【${pointName}】`}
             width={"80vw"}
             visible={visible}
             footer={false}

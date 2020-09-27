@@ -108,7 +108,7 @@ class Point extends PureComponent {
   }
 
   render() {
-    const { match: { params: { entCode, entName } } } = this.props;
+    const { match: { params: { entCode, entName, coordinateSet } } } = this.props;
     const { visible, viewVisible, searchParams, activeKey, keysParams, DGIMN, modalProps } = this.state;
 
     return (
@@ -178,6 +178,7 @@ class Point extends PureComponent {
                 form={this.props.form}
                 // noLoad
                 hideBtns
+                corporationCode={coordinateSet}
                 uid={this.state.cuid}
                 isEdit={this.state.isEdit}
                 keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': keysParams }}

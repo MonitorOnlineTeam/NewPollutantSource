@@ -54,7 +54,7 @@ module.exports = {
   // },
   // 离线地图配置：
   offlineMapUrl: {
-    domain: 'http://172.16.12.135:50209',
+    // domain: 'http://172.16.12.135:50209',
     srcPath: '/amap-master/amap/js/maps.js',
   },
   isShowTabs: true,

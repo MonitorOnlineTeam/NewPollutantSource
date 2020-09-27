@@ -358,7 +358,6 @@ class SdlForm extends PureComponent {
             path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
             showMarker={true}
             handlePolygon
-
           />;
           break;
         // case "上传":

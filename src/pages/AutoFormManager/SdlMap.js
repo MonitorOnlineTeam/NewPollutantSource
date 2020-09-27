@@ -468,16 +468,22 @@ class SdlMap extends PureComponent {
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {
-                this.setState({
-                  position: {
-                    latitude: undefined,
-                    longitude: undefined,
-                  },
-                  address: undefined,
-                  polygon: [],
-                  path: undefined,
-                })
-                thisMap.clearMap()
+                if(handlePolygon) {
+                  this.setState({
+                    address: undefined,
+                    polygon: [],
+                    path: undefined,
+                  })
+                }else{
+                  this.setState({
+                    position: {
+                      latitude: undefined,
+                      longitude: undefined,
+                    },
+                    address: undefined,
+                  })
+                }
+                // thisMap.clearMap()
               }}>清除全部</Button>
 
               {handleMarker && <Button style={{ marginLeft: 10 }} onClick={() => {
