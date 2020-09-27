@@ -287,7 +287,7 @@ class NewHome extends PureComponent {
     if (this.state.clickedDivision) {
       filterEntList = filterEntList.filter(itm => {
         if (itm.RegionCode) {
-          let RegionCode = itm.RegionCode.split(',');
+          const RegionCode = itm.RegionCode.split(',');
           if (RegionCode.includes(this.state.clickedDivision.RegionCode)) {
             return itm;
           }
@@ -602,10 +602,6 @@ class NewHome extends PureComponent {
   getPollutantIcon = extData => {
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle };
     let pollutantElement = '';
-    if (extData.position.outPutFlag == 1) {
-      // 停产
-      pollutantElement = <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />;
-    }
     switch (extData.position.PollutantType) {
       case '1':
         pollutantElement = this.getWaterIcon(extData.position.Status);
@@ -630,7 +626,10 @@ class NewHome extends PureComponent {
         pollutantElement = <CustomIcon type="icon-dian2" style={{ ...style }} />;
         break;
     }
-
+    if (extData.position.outPutFlag == 1) {
+      // 停产
+      pollutantElement = <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />;
+    }
     return (
       <div style={{ color: '#525151' }}>
         {/* {true && */}
@@ -922,9 +921,9 @@ class NewHome extends PureComponent {
       },
     });
 
-    let filterEntList = this.props.allEntAndPointList.filter(itm => {
+    const filterEntList = this.props.allEntAndPointList.filter(itm => {
       if (itm.RegionCode) {
-        let RegionCode = itm.RegionCode.split(',');
+        const RegionCode = itm.RegionCode.split(',');
         if (RegionCode.includes(item.RegionCode)) {
           return itm;
         }
@@ -1069,7 +1068,7 @@ class NewHome extends PureComponent {
                       if (clickedDivision) {
                         filterList = filterList.filter(itm => {
                           if (itm.RegionCode) {
-                            let RegionCode = itm.RegionCode.split(',');
+                            const RegionCode = itm.RegionCode.split(',');
                             if (RegionCode.includes(clickedDivision.RegionCode)) {
                               return itm;
                             }
@@ -1134,7 +1133,7 @@ class NewHome extends PureComponent {
                         if (clickedDivision) {
                           filterList = filterList.filter(itm => {
                             if (itm.RegionCode) {
-                              let RegionCode = itm.RegionCode.split(',');
+                              const RegionCode = itm.RegionCode.split(',');
                               if (RegionCode.includes(clickedDivision.RegionCode)) {
                                 return itm;
                               }
@@ -1147,7 +1146,7 @@ class NewHome extends PureComponent {
                         if (clickedDivision) {
                           filterList = allEntAndPointList.filter(itm => {
                             if (itm.RegionCode) {
-                              let RegionCode = itm.RegionCode.split(',');
+                              const RegionCode = itm.RegionCode.split(',');
                               if (RegionCode.includes(clickedDivision.RegionCode)) {
                                 return itm;
                               }
@@ -1222,8 +1221,7 @@ class NewHome extends PureComponent {
                           >
                             全部
                           </li>
-                          {constructionCorpsList.map(item => {
-                            return (
+                          {constructionCorpsList.map(item => (
                               <li
                                 className={
                                   clickedDivision &&
@@ -1236,8 +1234,7 @@ class NewHome extends PureComponent {
                               >
                                 {item.title}
                               </li>
-                            );
-                          })}
+                            ))}
                         </ul>
                       </div>
                     )}
