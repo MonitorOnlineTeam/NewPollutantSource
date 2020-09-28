@@ -26,7 +26,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
 import { onlyOneEnt } from '@/config';
 import RangePicker_ from '@/components/RangePicker';
-
+import { interceptTwo } from '@/utils/utils';
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
@@ -87,7 +87,11 @@ export default class enterpriseEfficiency extends Component {
   //     }
   //     this.getTableData(pagination.current);
   // }
-
+  interceptTwo=(value)=>{
+    const data = value.toString();
+    const result = data.substring(0,data.indexOf(".")+3)
+    return result;
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const columns = [
@@ -140,7 +144,7 @@ export default class enterpriseEfficiency extends Component {
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
               {/* {' '} */}
-              <Badge className={styles.warningdata} status="warning" />
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
               {text}
             </span>
             // {' '}
@@ -160,16 +164,16 @@ export default class enterpriseEfficiency extends Component {
           if (record.AvgEffectiveNumber <= text) {
             return <span className={styles.normaldata}>{text}</span>;
           }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{record.AvgEffectiveNumber}
-            </span>
-          );
+          // const content = (
+          //   <span>
+          //     <Icon type="warning" style={{ color: '#EEC900' }} />
+          //     平均值{record.AvgEffectiveNumber}
+          //   </span>
+          // );
           return (
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
               {text}
             </span>
             // {' '}
@@ -188,20 +192,20 @@ export default class enterpriseEfficiency extends Component {
           }
           if (record.AvgTransmissionRate <= text) {
             return (
-              <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>
+              <span className={styles.normaldata}>{`${interceptTwo(Number(text) * 100)}%`}</span>
             );
           }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
-            </span>
-          );
+          // const content = (
+          //   <span>
+          //     <Icon type="warning" style={{ color: '#EEC900' }} />
+          //     平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
+          //   </span>
+          // );
           return (
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
+              {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // {' '}
             // </Popover>
@@ -220,20 +224,20 @@ export default class enterpriseEfficiency extends Component {
           }
           if (record.AvgEffectiveRate <= text) {
             return (
-              <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>
+              <span className={styles.normaldata}>{`${interceptTwo(Number(text) * 100)}%`}</span>
             );
           }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}
-            </span>
-          );
+          // const content = (
+          //   <span>
+          //     <Icon type="warning" style={{ color: '#EEC900' }} />
+          //     平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}
+          //   </span>
+          // );
           return (
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
+              {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // {' '}
             // </Popover>
@@ -251,7 +255,7 @@ export default class enterpriseEfficiency extends Component {
             return <span className={styles.normaldata}>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
-          const percent = (parseFloat(text) * 100).toFixed(2);
+          const percent = interceptTwo(Number(text) * 100);
           if (percent >= 90) {
             return (
               <div>

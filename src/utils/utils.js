@@ -300,3 +300,10 @@ export function timeDifference(beginDates, endDates) {
     
   }
 }
+
+//截取小数点后两位  
+export  function interceptTwo(value){
+  const data = value.toString();
+  const result = data.substring(0,data.indexOf(".")+3)
+  return result;
+}

@@ -28,7 +28,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from './style.less';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Search } = Input;
@@ -151,9 +151,9 @@ export default class EntTransmissionEfficiency extends Component {
     filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />,
   });
 
-  typeChange = e => {
+  typeChange = value => {
     this.updateState({
-      pollutantType: e.target.value,
+      pollutantType: value,
     });
   };
 
@@ -206,6 +206,11 @@ export default class EntTransmissionEfficiency extends Component {
   //         tabName: "有效传输率 - 详情"
   //     }
   // })
+  interceptTwo=(value)=>{
+    const data = value.toString();
+    const result = data.substring(0,data.indexOf(".")+3)
+    return result;
+  }
   render() {
     const { eName } = this.state;
     const { regionList, exRegionloading, RegionCode } = this.props;
@@ -216,18 +221,15 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => {
-          return text === '全部合计' ? (
-            <span>{text}</span>
-          ) : (
-            <Link
-              to={{
+          return  <Link
+                 to={{
                 pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
                 query: { RegionCode: record.RegionCode },
               }}
             >
               {text}
             </Link>
-          );
+          
         },
       },
       {
@@ -259,19 +261,19 @@ export default class EntTransmissionEfficiency extends Component {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
-            return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
+            return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}
-            </span>
-          );
+          // const content = (
+          //   <span>
+          //     <Icon type="warning" style={{ color: '#EEC900' }} />
+          //     平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}
+          //   </span>
+          // );
           return (
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
+              {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             //  </Popover>
           );
@@ -289,19 +291,19 @@ export default class EntTransmissionEfficiency extends Component {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
-            return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
+            return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
-            </span>
-          );
+          // const content = (
+          //   <span>
+          //     <Icon type="warning" style={{ color: '#EEC900' }} />
+          //     平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
+          //   </span>
+          // );
           return (
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
+              {/* <Badge className={styles.warningdata} status="warning" /> */}
+              {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // </Popover>
           );
@@ -319,7 +321,7 @@ export default class EntTransmissionEfficiency extends Component {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
-          const percent = (parseFloat(text) * 100).toFixed(2);
+          const percent = interceptTwo(Number(text) * 100);
           if (percent >= 90) {
             return (
               <div>
@@ -382,7 +384,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     <Option value="">全部</Option>
                     <Option value="1">废水</Option>
-                    <Option value="1">废气</Option>
+                    <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>
