@@ -505,55 +505,73 @@ class Index extends React.Component {
 
   addClick=()=>{
 
-    
+
     let {addItem,standDefaultVal,configInfo,current,pageSize} = this.state;
     
-    let {dispatch,tableDatas,count,isSaveFlag,addParams,pollutantlist,getParaCodeList,dgimn,editingKey} = this.props;
-     if(!isSaveFlag && !editingKey){
+    let {dispatch,tableDatas,count,isSaveFlag,addParams,pollutantlist,dgimn,editingKey} = this.props;
 
 
-      addItem = {...addItem,key:count};
-      count+=1;
+    if(pollutantlist.length>0){//重置 参数名称列表
+      dispatch({
+        type: 'paramsfil/getParaCodeList', 
+        payload: {PollutantCode:pollutantlist[0].code},
 
-     if(current===1){ //第一页时
+        callback:()=>{
 
-      tableDatas = [
-        addItem,
-      ...tableDatas, 
-      ]
-     }else{
-    const selectData = [...tableDatas];
-          selectData.splice((current-1)*pageSize, 0, { ...addItem }); //替换
-           tableDatas = selectData;
-     }
+          const { getParaCodeList } = this.props;
+
+          if(!isSaveFlag && !editingKey){
 
 
-     this.setState({selectParaCode:getParaCodeList[0].ParaCode})
-    addParams = {
-      ...addParams,
-      ParaCode:getParaCodeList[0].ParaCode,
-      Unit:getParaCodeList[0].Unit,
-      PollutantCode:pollutantlist[0].code,
-      DGIMN:dgimn,
-      RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
-      RecordorID:JSON.parse(Cookie.get('currentUser')).UserId,
-      ID:"",
-      InstrumentID:""
-   }
-   this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: "",lowLimits: "" });
-    isSaveFlag = true
-     dispatch({
-        type: 'paramsfil/updateState',
-        payload:{tableDatas,count,isSaveFlag,addParams} ,
+            addItem = {...addItem,key:count};
+            count+=1;
+      
+           if(current===1){ //第一页时
+      
+            tableDatas = [
+              addItem,
+            ...tableDatas, 
+            ]
+           }else{
+          const selectData = [...tableDatas];
+                selectData.splice((current-1)*pageSize, 0, { ...addItem }); //替换
+                 tableDatas = selectData;
+           }
+      
+      
+           this.setState({selectParaCode:getParaCodeList[0].ParaCode})
+          addParams = {
+            ...addParams,
+            ParaCode:getParaCodeList[0].ParaCode,
+            Unit:getParaCodeList[0].Unit,
+            PollutantCode:pollutantlist[0].code,
+            DGIMN:dgimn,
+            RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
+            RecordorID:JSON.parse(Cookie.get('currentUser')).UserId,
+            ID:"",
+            InstrumentID:""
+         }
+         this.formRef.current.setFieldsValue({  lowLimit: "" ,topLimit: "",lowLimits: "" });
+          isSaveFlag = true
+           dispatch({
+              type: 'paramsfil/updateState',
+              payload:{tableDatas,count,isSaveFlag,addParams} ,
+          });
+      
+      
+        }else{
+         
+          message.warning("请保存之前未保存的状态")
+        }
+
+
+        }
     });
 
+    }
 
-  }else{
-   
-    message.warning("请保存之前未保存的状态")
-  }
+
     
-    // this.setState(prevState => ({tableDatas: [...prevState.tableDatas, prevState.addItem]}))
    
   }
 
