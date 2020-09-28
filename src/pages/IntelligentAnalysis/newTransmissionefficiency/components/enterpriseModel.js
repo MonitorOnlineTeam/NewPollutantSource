@@ -100,14 +100,26 @@ export default class enterpriseEfficiency extends Component {
         dataIndex: 'PollutantTypeName',
         key: 'PollutantTypeName',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
+        },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>排口名称</span>,
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
+        },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>应传个数</span>,
@@ -115,7 +127,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'ShouldNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
 
@@ -128,7 +140,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionNumber <= text) {
@@ -158,7 +170,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveNumber <= text) {
@@ -187,7 +199,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionRate',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -219,7 +231,7 @@ export default class enterpriseEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -251,7 +263,7 @@ export default class enterpriseEfficiency extends Component {
         align: 'center',
         sorter: true,
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -261,7 +273,7 @@ export default class enterpriseEfficiency extends Component {
               <div>
                 <Progress
                   successPercent={percent}
-                  percent={percent - 0}
+                  percent={percent}
                   size="small"
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
@@ -272,7 +284,7 @@ export default class enterpriseEfficiency extends Component {
             <div>
               <Progress
                 successPercent={0}
-                percent={percent - 0}
+                percent={percent}
                 status="exception"
                 size="small"
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}

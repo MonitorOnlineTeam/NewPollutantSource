@@ -304,6 +304,6 @@ export function timeDifference(beginDates, endDates) {
 //截取小数点后两位  
 export  function interceptTwo(value){
   const data = value.toString();
-  const result = data.substring(0,data.indexOf(".")+3)
+  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
   return result;
 }

@@ -245,7 +245,11 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>;
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
         },
       },
       {
@@ -253,12 +257,14 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
-        render: (text, record) => {
-          return (
-            <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
-              {text}
+        render: (text, record) => {     
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+           return <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
+            {text}
             </a>
-          );
+          }
         },
       },
       {
@@ -268,7 +274,13 @@ export default class EntTransmissionEfficiency extends Component {
         sorter: (a, b) => a.CountPoint - b.CountEnt,
         // width: '20%',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
+        },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
@@ -277,7 +289,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -307,7 +319,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -336,9 +348,10 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
+        width: 145,
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -348,7 +361,7 @@ export default class EntTransmissionEfficiency extends Component {
               <div>
                 <Progress
                   successPercent={percent}
-                  percent={percent - 0}
+                  percent={percent}
                   size="small"
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
@@ -358,8 +371,8 @@ export default class EntTransmissionEfficiency extends Component {
           return (
             <div>
               <Progress
-                successPercent={0}
-                percent={percent - 0}
+                successPercent={percent}
+                percent={percent}
                 status="exception"
                 size="small"
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
@@ -432,7 +445,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Button>
                 </Form.Item>
               </Form>
-              <div style={{ paddingBottom: 10 }}>
+              <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -478,6 +491,7 @@ export default class EntTransmissionEfficiency extends Component {
               dataSource={this.props.tableDatas}
               // scroll={{ y: 'calc(100vh - 450px)' }}
               // scroll={{ y: 550 }}
+              width={'100%'}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
@@ -489,7 +503,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
             <Modal
-              title="企业下传输有效效率"
+              title="企业下有效传输率"
               visible={this.state.visible}
               footer={null}
               width={'95%'}

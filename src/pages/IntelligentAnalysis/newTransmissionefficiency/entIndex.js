@@ -220,16 +220,17 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
-        render: (text, record) => {
-          return  <Link
-                 to={{
-                pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                query: { RegionCode: record.RegionCode },
-              }}
-            >
-              {text}
-            </Link>
-          
+        render: (text, record) => { 
+           if (record.ShouldNumber==0) {
+                return <span>停运</span>;
+              }else{
+                  return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                       query: { RegionCode: record.RegionCode },
+                       }}
+                       >
+                    {text}
+                </Link>
+                  }   
         },
       },
       {
@@ -239,7 +240,13 @@ export default class EntTransmissionEfficiency extends Component {
         sorter: (a, b) => a.CountEnt - b.CountEnt,
         // width: '20%',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }  
+        },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
@@ -248,7 +255,13 @@ export default class EntTransmissionEfficiency extends Component {
         sorter: (a, b) => a.CountPoint - b.CountEnt,
         // width: '20%',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
+        },
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
@@ -257,7 +270,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -287,7 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -317,7 +330,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.IsStop) {
+          if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -327,7 +340,7 @@ export default class EntTransmissionEfficiency extends Component {
               <div>
                 <Progress
                   successPercent={percent}
-                  percent={percent - 0}
+                  percent={percent}
                   size="small"
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
@@ -338,7 +351,7 @@ export default class EntTransmissionEfficiency extends Component {
             <div>
               <Progress
                 successPercent={0}
-                percent={percent - 0}
+                percent={percent}
                 status="exception"
                 size="small"
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
@@ -354,7 +367,13 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'LowerTransmissionEffectiveRateCount',
         width: 145,
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }else{
+          return <span>{text}</span>
+          }
+        },
       },
     ];
     return (
@@ -366,7 +385,7 @@ export default class EntTransmissionEfficiency extends Component {
             <>
               <Form layout="inline">
                 <Form.Item>
-                  时间选择：
+                  查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(this.props.beginTime), moment(this.props.endTime)]}
