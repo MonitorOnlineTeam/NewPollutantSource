@@ -1,12 +1,12 @@
 import { post } from '@/utils/request';
 
 /**
- * 传输有效率 行政区下
+ * 缺失数据
  *
  */
-export async function GetTransmissionEfficiencyForRegion(params) {
+export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel',
     params,
     null,
   );
@@ -14,61 +14,37 @@ export async function GetTransmissionEfficiencyForRegion(params) {
   return result;
 }
 
-//传输有效率  排口
-
-export async function GetTransmissionEfficiencyForPoint(params) {
+//关注列表
+export async function GetAttentionDegreeList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
     params,
     null,
   );
 
   return result;
 }
-//传输有效率  企业
 
-export async function GetTransmissionEfficiencyForEnt(params) {
+//导出
+
+export async function ExportGetAlarmDataList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForEnt',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
     params,
     null,
   );
 
   return result;
 }
+
 
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode +
-      '',
+      params.RegionCode,
     null,
-    null,
-  );
-
-  return result;
-}
-
-//行政区导出
-
-export async function ExportTransmissionEfficiencyForRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
-    params,
-    null,
-  );
-
-  return result;
-}
-
-//企业导出
-
-export async function ExportTransmissionEfficiencyForEnt(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
-    params,
     null,
   );
 

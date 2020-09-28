@@ -42,8 +42,7 @@ export async function GetTransmissionEfficiencyForEnt(params) {
 export async function GetEntByRegion(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode +
-      '',
+      params.RegionCode,
     null,
     null,
   );

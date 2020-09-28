@@ -363,7 +363,7 @@ export default class EntTransmissionEfficiency extends Component {
           return (
             <div>
               <Progress
-                successPercent={percent}
+                successPercent={0}
                 percent={percent}
                 status="exception"
                 size="small"
