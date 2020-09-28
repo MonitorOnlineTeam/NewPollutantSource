@@ -14,7 +14,7 @@ class index extends PureComponent {
   render() {
     const { content } = this.props;
     return (
-      <Tooltip title={content} >
+      <Tooltip title={content} overlayStyle={this.props.overlayStyle}>
         <QuestionCircleOutlined {...this.props} style={{ marginLeft: 6, color: "#808080", ...this.props.style }} />
       </Tooltip>
     );

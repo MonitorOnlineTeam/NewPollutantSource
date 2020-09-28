@@ -43,14 +43,15 @@ class BlindCheckChart extends PureComponent {
 
   getOption = () => {
     const { blindChartData } = this.props;
-    console.log('blindChartData111=', blindChartData)
     const valueMax = _.max(blindChartData.dataList) ? _.max(blindChartData.dataList) : 0;
     const standardMax = _.max([blindChartData.standard.top, blindChartData.standard.lower]) ? _.max([blindChartData.standard.top, blindChartData.standard.lower]) : 0
-    const max =  _.max([valueMin, valueMax]) + 5
+    let max =  _.max([valueMin, valueMax]) + 5
+    max = max > 100 ? 100 : max;
 
     const valueMin = _.min(blindChartData.dataList) ? _.min(blindChartData.dataList) : 0;
     const standardMin = _.min([blindChartData.standard.top, blindChartData.standard.lower]) ? _.min([blindChartData.standard.top, blindChartData.standard.lower]) : 0
-    const min = _.min([valueMin, standardMin]) + -5
+    let min = _.min([valueMin, standardMin]) + -5
+    min = min < -100 ? -100 : min;
 
     return {
       title: {
@@ -58,7 +59,24 @@ class BlindCheckChart extends PureComponent {
         left: 'center'
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        formatter: (params, ticket, callback) => {
+          let param = params[0]
+          let format = `${param.name}<br />${param.marker}${param.value}%`
+          return format
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
+        }
       },
       grid: {
         left: '5%',
@@ -72,6 +90,7 @@ class BlindCheckChart extends PureComponent {
         data: blindChartData.timeList
       },
       yAxis: {
+        name: '(%)',
         type: 'value',
         max: Math.ceil(max),
         min: Math.ceil(min)

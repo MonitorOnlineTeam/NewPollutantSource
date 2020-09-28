@@ -24,7 +24,7 @@ export default Model.extend({
   },
   effects: {
     // 获取导航树 - 数据
-    * getTreeData({ payload, requestType }, { call, update, put, select }) {
+    * getTreeData({ payload, requestType, callback }, { call, update, put, select }) {
       let state = yield select(state => state.components)
       const result = yield call(services.getTreeNodeData, payload);
       if (result.IsSuccess) {
@@ -41,13 +41,13 @@ export default Model.extend({
           ];
           status.statusList = statusList;
         }
-
         yield update({
           ...status,
           treeRegionData: result.Datas.regionData,
           treeIndustryData: result.Datas.induData,
           selectTreeItem: state.selectTreeItem.value ? { ...state.selectTreeItem } : result.Datas.firstData,
         })
+        callback && callback(result.Datas.firstData)
       } else {
         message.error(result.Message)
       }

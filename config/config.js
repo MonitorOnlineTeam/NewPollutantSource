@@ -573,7 +573,7 @@ export default {
                     },
                     {
                       name: 'index',  // 企业管理 - 排口管理
-                      path: '/basicsManage/wry/entManage/point/:entCode/:entName',
+                      path: '/basicsManage/wry/entManage/point/:entCode/:entName/:coordinateSet',
                       component: './basicsManage/wry/entManage/Point',
                     },
                     {

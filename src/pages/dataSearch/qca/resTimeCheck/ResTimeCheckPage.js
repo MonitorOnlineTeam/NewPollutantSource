@@ -5,6 +5,7 @@ import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
 import ReactEcharts from 'echarts-for-react';
+import _ from 'lodash';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -71,7 +72,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-            <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+            <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't11',
             width: 80,
@@ -89,8 +90,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T=T1+T2
-              <QuestionTooltip content="按照零气、高浓度标准气体、零气、中浓度(50%~80%的
-满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
+              <QuestionTooltip content="上述T1+T2之和" />
             </span>,
             dataIndex: 't13',
             width: 120,
@@ -104,7 +104,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-              <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+              <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't21',
             width: 80,
@@ -122,8 +122,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T=T1+T2
-            <QuestionTooltip content="按照零气、高浓度标准气体、零气、中浓度(50%~80%的
-满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
+            <QuestionTooltip content="上述T1+T2之和" />
             </span>,
             dataIndex: 't23',
             width: 120,
@@ -137,7 +136,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-              <QuestionTooltip content="通入气体到仪表读书产生变化的时间段，精确到秒" />
+              <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't31',
             width: 80,
@@ -155,8 +154,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T=T1+T2
-              <QuestionTooltip content="按照零气、高浓度标准气体、零气、中浓度(50%~80%的
-满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
+              <QuestionTooltip content="上述T1+T2之和" />
             </span>,
             dataIndex: 't33',
             width: 120,
@@ -165,7 +163,12 @@ class resTimeCheckPage extends PureComponent {
         ]
       },
       {
-        title: '平均值（s）',
+        // title: '平均值（s）',
+        title: <span>
+          平均值（s）
+              <QuestionTooltip content=" 按照零气、高浓度标准气体、零气、中浓度(50%~60%的
+          满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
+        </span>,
         dataIndex: 'AvgTime',
       },
       {
@@ -231,12 +234,15 @@ class resTimeCheckPage extends PureComponent {
         this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
         this.getTableDataSource();
       } else {
+        let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
         if (this.props.pointType === "1") {
+          let intersection = _.intersection(pollutantList, ["011", "060"])
           // 废水
-          this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026"])
           // 废气
-          this.formRef.current.setFieldsValue({ PollutantCode: ["a21002", "a19001", "a21026"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
         this.getTableDataSource();
       }
@@ -306,6 +312,7 @@ class resTimeCheckPage extends PureComponent {
   // 折线图配置项
   lineOption = () => {
     const { standValList, valueList, timeList, } = this.props;
+    const { currentRowData } = this.state;
     let option = {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -324,6 +331,29 @@ class resTimeCheckPage extends PureComponent {
           label: {
             backgroundColor: '#6a7985',
           }
+        },
+        formatter: (params) => {
+          return `
+            ${params[0].name}
+            <br />
+            ${params[0].marker}
+            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+            <br />
+            ${params[1].marker}
+            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+          `
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
         }
       },
       xAxis: {
@@ -339,7 +369,7 @@ class resTimeCheckPage extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          name: '',
+          name: currentRowData.Unit ? (currentRowData.Unit) : "",
         }
       ],
       dataZoom: [{

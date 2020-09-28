@@ -93,7 +93,7 @@ class SdlUpload extends Component {
         dispatch({
           type: "autoForm/deleteAttach",
           payload: {
-            Guid: file.uid,
+            FileName: file.response.Datas,
           }
         })
       },

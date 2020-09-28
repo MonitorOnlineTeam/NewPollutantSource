@@ -75,7 +75,7 @@ class CheckModal extends PureComponent {
 
   // 折线图配置项
   lineOption = () => {
-    const { standValList, valueList, timeList, } = this.props;
+    const { standValList, valueList, timeList, currentRowData } = this.props;
     let option = {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -94,6 +94,29 @@ class CheckModal extends PureComponent {
           label: {
             backgroundColor: '#6a7985',
           }
+        },
+        formatter: (params) => {
+          return `
+            ${params[0].name}
+            <br />
+            ${params[0].marker}
+            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+            <br />
+            ${params[1].marker}
+            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+          `
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
         }
       },
       xAxis: {
@@ -109,7 +132,7 @@ class CheckModal extends PureComponent {
       yAxis: [
         {
           type: 'value',
-          name: '',
+          name: currentRowData.Unit ? (currentRowData.Unit) : "",
         }
       ],
       dataZoom: [{

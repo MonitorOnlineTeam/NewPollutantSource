@@ -153,7 +153,16 @@ export default Model.extend({
       } else {
         message.error(result.Message)
       }
-    }
+    },
+    // 获取盲样核查浓度范围
+    *getSampleRangeFlow({ payload, callback }, { call, update, put, take, select }) {
+      const result = yield call(services.getSampleRangeFlow, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
     // *resetModalState({ payload, callback }, { call, update, put, take, select }) {
     //   yeild put({
     //     type: "resetState",

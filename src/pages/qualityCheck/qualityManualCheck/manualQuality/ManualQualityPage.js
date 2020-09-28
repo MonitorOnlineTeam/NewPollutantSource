@@ -6,12 +6,12 @@
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
-import { Card, Row, Col, Badge, Divider, Tag, Modal, Input, message, Spin } from "antd";
+import { Card, Row, Col, Badge, Divider, Tag, Modal, Input, InputNumber, message, Spin } from "antd";
 import styles from "../index.less"
 import { connect } from "dva"
 import CheckModal from "@/pages/dataSearch/qca/components/CheckModal"
 import ViewQCProcess from "./ViewQCProcess"
-import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import PageLoading from "@/components/PageLoading"
 
 const { confirm } = Modal;
@@ -75,7 +75,8 @@ class ManualQualityPage extends Component {
         payload: {}
       })
       this.getStateAndRecord();
-    } 
+      this.getBottleDataList();
+    }
 
     // 状态改变后，清空数据
     if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
@@ -187,33 +188,45 @@ class ManualQualityPage extends Component {
 
   //
   blindCheckClick = (PollutantCode, QCAType) => {
-    let that = this;
-    confirm({
-      title: '盲样核查',
-      okText: "确认",
-      cancelText: "取消",
-      // icon: <ExclamationCircleOutlined />,
-      content: <div>
-        <Input placeholder="请输入盲样核查浓度" onChange={(e) => {
-          this.setState({
-            value: e.target.value
-          })
-        }} />
-      </div>,
-      onOk() {
-        if (!that.state.value) {
-          message.error("请输入盲样核查浓度");
-          return;
-        } else {
-          that.sendQCACheckCMD(PollutantCode, QCAType, that.state.value);
-        }
+    this.props.dispatch({
+      type: "qcManual/getSampleRangeFlow",
+      payload: {
+        DGIMN: this.props.DGIMN,
+        PollutantCode: PollutantCode
       },
-      onCancel() {
-        that.setState({
-          value: undefined
-        })
-      },
-    });
+      callback: (res) => {
+        let that = this;
+        confirm({
+          title: '盲样核查',
+          okText: "确认",
+          cancelText: "取消",
+          icon: <ExclamationCircleOutlined />,
+          content: <div>
+            <InputNumber style={{ width: '100%', marginBottom: 4 }} min={res.min} max={res.max} placeholder="请输入盲样核查浓度" onChange={(value) => {
+              this.setState({
+                value: value
+              })
+            }} />
+            <span style={{ color: "#656565", fontSize: 13 }}>
+              <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${res.min}-${res.max} 】之间`}
+            </span>
+          </div>,
+          onOk() {
+            if (!that.state.value) {
+              message.error("请输入盲样核查浓度");
+              return;
+            } else {
+              that.sendQCACheckCMD(PollutantCode, QCAType, that.state.value);
+            }
+          },
+          onCancel() {
+            that.setState({
+              value: undefined
+            })
+          },
+        });
+      }
+    })
   }
 
   getAnswer = (QCLogsAnswer) => {

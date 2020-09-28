@@ -26,6 +26,11 @@ export async function sendDataExtract(params) {
   return result;
 }
 
+// 获取盲样核查浓度范围
+export async function getSampleRangeFlow(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetSampleRangeFlow', params, null);
+  return result;
+}
 
 
 

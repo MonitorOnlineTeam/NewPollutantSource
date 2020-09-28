@@ -115,6 +115,7 @@ class OffStreamPage extends PureComponent {
       headers: {
         authorization: 'authorization-text',
       },
+      accept: ".doc,.docx,.pdf,.jpg,.jpeg,.png,.bmp,.xlsx,.xls,.pptx,.ppt",
       onChange: (info) => {
         if (info.file.status === 'done') {
           this.formRef.current.setFieldsValue({ Attachment: uuid })
@@ -125,11 +126,11 @@ class OffStreamPage extends PureComponent {
         //   fileList: info.fileList
         // })
       },
-      onRemove(file) {
+      onRemove: (file) => {
         this.props.dispatch({
           type: "autoForm/deleteAttach",
           payload: {
-            Guid: file.uid,
+            FileName: file.response.Datas,
           }
         })
       },
@@ -209,7 +210,7 @@ class OffStreamPage extends PureComponent {
                     // console.log("hour=", hour)
                     let StopHours = `${day}天${hour}小时`;
                     this.setState({ StopHours: StopHours })
-                  }else{
+                  } else {
                     this.setState({ StopHours: "" })
                     this.formRef.current.setFieldsValue({ time: undefined })
                   }

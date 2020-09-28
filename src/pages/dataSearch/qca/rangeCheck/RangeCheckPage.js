@@ -6,6 +6,7 @@ import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
 import RangeCheckChart from "./RangeCheckChart"
 import CheckModal from "../components/CheckModal"
+import _ from "lodash"
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -81,8 +82,7 @@ class RangeCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
-仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式测量浓度-标准浓度/量程范围*100%" />
+      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于满量程的百分比。测量浓度-标准浓度/量程范围*100%（参考75标准中示值误差计算公式）" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
@@ -133,8 +133,7 @@ class RangeCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
-仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式测量浓度-标准浓度/量程范围*100%" />
+      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于24小时前的量程核查读数的百分比。测量浓度-24小时前量程核查浓度/量程范围*100%（参考75标准中示值误差计算公式）" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
@@ -160,12 +159,15 @@ class RangeCheckPage extends PureComponent {
       this.getTableDataSource();
     } else {
       if (prevProps.pollutantList !== this.props.pollutantList) {
+        let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
         if (this.props.pointType === "1") {
+          let intersection = _.intersection(pollutantList, ["011", "060"])
           // 废水
-          this.formRef.current.setFieldsValue({ PollutantCode: ["011", "060"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026"])
           // 废气
-          this.formRef.current.setFieldsValue({ PollutantCode: ["a21002", "a19001", "a21026"] })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
         this.getTableDataSource();
       }

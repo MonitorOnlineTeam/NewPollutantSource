@@ -25,7 +25,7 @@ class index extends PureComponent {
                   <Divider type="vertical" />
                   <Tooltip title="维护排口信息">
                     <a onClick={() => {
-                      router.push(`/basicsManage/wry/entManage/point/${row["dbo.T_Bas_Enterprise.EntCode"]}/${row["dbo.T_Bas_Enterprise.EntName"]}`)
+                      router.push(`/basicsManage/wry/entManage/point/${row["dbo.T_Bas_Enterprise.EntCode"]}/${row["dbo.T_Bas_Enterprise.EntName"]}/${row["dbo.T_Bas_Enterprise.CoordinateSet"]}`)
                     }}><EnvironmentOutlined style={{ fontSize: 16 }} /></a>
                   </Tooltip>
                 </>
