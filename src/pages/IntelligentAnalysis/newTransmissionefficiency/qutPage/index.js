@@ -141,7 +141,7 @@ export default class EntTransmissionEfficiency extends Component {
     if (priseList.length > 0) {
       priseList.map(item => {
         selectList.push(
-          <Option key={item.EntCode} value={item.EntCode}>
+          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
             {item.EntName}
           </Option>,
         );
