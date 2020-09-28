@@ -229,7 +229,7 @@ export default class EntTransmissionEfficiency extends Component {
 
 
 
-  children = () => {
+  children = () => { //企业列表
     const { priseList } = this.props;
 
     const selectList = [];
