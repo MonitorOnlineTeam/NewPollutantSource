@@ -101,11 +101,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'PollutantTypeName',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
           return <span>{text}</span>
-          }
         },
       },
       {
@@ -114,11 +110,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'PointName',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
           return <span>{text}</span>
-          }
         },
       },
       {

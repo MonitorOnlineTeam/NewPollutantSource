@@ -221,16 +221,13 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
-           if (record.ShouldNumber==0) {
-                return <span>停运</span>;
-              }else{
-                  return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
                        query: { RegionCode: record.RegionCode },
                        }}
                        >
                     {text}
                 </Link>
-                  }   
+                  
         },
       },
       {
@@ -241,11 +238,8 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
             return <span>停运</span>;
-          }else{
-          return <span>{text}</span>
-          }  
+         
         },
       },
       {
@@ -256,11 +250,8 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
           return <span>{text}</span>
-          }
+
         },
       },
       {

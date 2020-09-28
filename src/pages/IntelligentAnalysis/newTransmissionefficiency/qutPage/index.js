@@ -245,11 +245,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
             return <span>停运</span>;
-          }else{
-          return <span>{text}</span>
-          }
         },
       },
       {
@@ -258,13 +254,10 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {     
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
            return <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
             {text}
             </a>
-          }
+      
         },
       },
       {
@@ -275,11 +268,8 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
           return <span>{text}</span>
-          }
+
         },
       },
       {
