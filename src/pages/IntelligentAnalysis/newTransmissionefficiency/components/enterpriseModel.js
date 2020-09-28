@@ -275,6 +275,7 @@ export default class enterpriseEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
+                  style={{width:'90%'}}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -287,6 +288,7 @@ export default class enterpriseEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
+                style={{width:'90%'}}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>

@@ -348,7 +348,6 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
-        width: 145,
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
           if (record.ShouldNumber==0) {
@@ -363,6 +362,7 @@ export default class EntTransmissionEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
+                  style={{width:'90%'}}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -375,6 +375,7 @@ export default class EntTransmissionEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
+                style={{width:'90%'}}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
