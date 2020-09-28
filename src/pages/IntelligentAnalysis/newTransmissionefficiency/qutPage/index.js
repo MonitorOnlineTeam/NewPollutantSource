@@ -254,9 +254,11 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {     
-           return <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
+           return   <div style={{textAlign:'left',width:'100%'}}>
+            <a href="javascript:;"  onClick={this.priseClick.bind(this, text, record)}>
             {text}
             </a>
+            </div>
       
         },
       },
@@ -325,7 +327,7 @@ export default class EntTransmissionEfficiency extends Component {
             // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
               {/* <Badge className={styles.warningdata} status="warning" /> */}
-              {`${(interceptTwo(text) * 100)}%`}
+              {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // {' '}
             // </Popover>
