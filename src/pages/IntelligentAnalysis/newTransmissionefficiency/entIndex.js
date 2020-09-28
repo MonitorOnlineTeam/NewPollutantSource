@@ -238,7 +238,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-            return <span>停运</span>;
+         return <span>{text}</span>;
          
         },
       },
