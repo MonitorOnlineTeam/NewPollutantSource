@@ -805,7 +805,7 @@ class DepartIndex extends Component {
             onChange: this.onChangeTree,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
-            searchPlaceholder: '行政区',
+            placeholder: '请选择行政区',
             treeDefaultExpandedKeys: ['0'],
             style: {
                 width: 400,
@@ -1067,7 +1067,7 @@ class DepartIndex extends Component {
                                                 // showAll
                                                 onChange={this.handleSizeChange}
                                             />
-                                            <TreeSelect className={styles.placeHolderClass} {...tProps} />
+                                            <TreeSelect  className={styles.placeHolderClass} {...tProps} />
                                         </Row>{
                                             (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{

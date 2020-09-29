@@ -39,6 +39,7 @@ import {
     Tag,
     Select,
     Pagination,
+     Space
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
@@ -217,13 +218,13 @@ class RoleIndex extends Component {
                                                 this.state.selectButton.push(item.ID)
                                                 this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
                                             } else if (this.state.selectButton.indexOf(item.ID) == -1) {
-                                                    this.state.selectButton.push(item.ID)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
-                                                } else {
-                                                    const index = this.state.selectButton.indexOf(item.ID)
-                                                    this.state.selectButton.splice(index, 1)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
-                                                }
+                                                this.state.selectButton.push(item.ID)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
+                                            } else {
+                                                const index = this.state.selectButton.indexOf(item.ID)
+                                                this.state.selectButton.splice(index, 1)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
+                                            }
                                             this.setState({
                                                 buttonState: this.state.buttonState,
                                             })
@@ -645,6 +646,7 @@ class RoleIndex extends Component {
         }
         const rowMenuSelection = {
             selectedRowKeys: this.state.selectButton,
+            checkStrictly:false,
             onChange: (se, selectedRows) => {
                 this.setState({
                     selectButton: se,
@@ -668,6 +670,9 @@ class RoleIndex extends Component {
                     // }
                     // >
                     <BreadcrumbWrapper>
+                        {/* <Space align="center" style={{ marginBottom: 16 }}>
+                            CheckStrictly: <Switch checked={checkStrictly} onChange={setCheckStrictly} />
+                        </Space> */}
                         <Card bordered={false} >
                             <Button type="primary"
                                 onClick={this.showModal}
@@ -693,14 +698,14 @@ class RoleIndex extends Component {
                                 /> :
                                     <Table
                                         onRow={record => ({
-                                                onClick: event => {
-                                                    console.log('onClick=', record)
-                                                    this.setState({
-                                                        selectedRowKeys: record,
-                                                        rowKeys: [record.key],
-                                                    })
-                                                },
-                                            })}
+                                            onClick: event => {
+                                                console.log('onClick=', record)
+                                                this.setState({
+                                                    selectedRowKeys: record,
+                                                    rowKeys: [record.key],
+                                                })
+                                            },
+                                        })}
                                         size="small"
                                         style={{ marginTop: '20px' }}
                                         //rowSelection={rowRadioSelection}
@@ -713,7 +718,7 @@ class RoleIndex extends Component {
                                 visible={this.state.visible}
                                 onOk={this.handleSubmit}
                                 destroyOnClose="true"
-                                confirmLoading={ this.state.IsEdit === true ? btnloading1 : btnloading}
+                                confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                                 onCancel={this.handleCancel}
                             >
                                 {
@@ -868,12 +873,12 @@ class RoleIndex extends Component {
                                         /> :
                                             <Table
                                                 onRow={record => ({
-                                                        onClick: event => {
-                                                            console.log('onClick=', this.props.CheckMenu)
-                                                        },
-                                                    })}
+                                                    onClick: event => {
+                                                        console.log('onClick=', this.props.CheckMenu)
+                                                    },
+                                                })}
                                                 size="small"
-                                                 rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
+                                                rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }
 
                                 </div>
