@@ -407,6 +407,8 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 <Form.Item>
                   <Select
+                    showSearch
+                    optionFilterProp="children"
                     allowClear
                     placeholder="企业列表"
                     onChange={this.changeRegion}

@@ -35,6 +35,7 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
@@ -46,8 +47,8 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   priseList: defectData.priseList,
   exloading:defectData.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: defectData.qutleTotal,
-  tableDatas: defectData.TableDatas,
+  total: defectData.total,
+  tableDatas: defectData.tableDatas,
   queryPar: defectData.queryPar,
   regionList: autoForm.regionList,
   attentionList:defectData.attentionList
@@ -58,126 +59,53 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      entCode:''
     };
     
     this.columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        // width: '20%',
+        title: <span>行政区</span>,
+        dataIndex: 'regionName',
+        key: 'regionName',
         align: 'center',
         render: (text, record) => {
           return <span>{text}</span>;
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
-        dataIndex: 'CountPoint',
-        key: 'CountPoint',
-        sorter: (a, b) => a.CountPoint - b.CountEnt,
-        // width: '20%',
+        title: <span>企业名称</span>,
+        dataIndex: 'entName',
+        key: 'entName',
         align: 'center',
         render: (text, record) => text,
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
-        dataIndex: 'EffectiveRate',
-        key: 'EffectiveRate',
+        title: <span>监测点名称</span>,
+        dataIndex: 'pointName',
+        key: 'pointName',
         // width: '10%',
         align: 'center',
-        render: (text, record) => {
-          if (record.IsStop) {
-            return <span>停运</span>;
-          }
-          if (record.AvgEffectiveRate <= text) {
-            return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
-          }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}
-            </span>
-          );
-          return (
-            // <Popover content={content} trigger="hover">
-            <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
-            </span>
-            // </Popover>
-          );
-        },
+      
+      },
+      // {
+      //   title: <span>缺失监测因子</span>,
+      //   dataIndex: 'TransmissionRate',
+      //   key: 'TransmissionRate',
+      //   align: 'center',
+      // },
+      {
+        title: <span>缺失时间段</span>,
+        dataIndex: 'firstAlarmTime',
+        key: 'firstAlarmTime',
+        align: 'center',
+        render:(text,row)=>{
+          return `${row.firstAlarmTime}~${row.alarmTime}`
+        }
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
-        dataIndex: 'TransmissionRate',
-        key: 'TransmissionRate',
-        sorter: (a, b) => a.TransmissionRate - b.TransmissionRate,
-        // width: '10%',
+        title: <span>缺失小时数</span>,
+        dataIndex: 'defectCount',
+        key: 'defectCount',
         align: 'center',
-        render: (text, record) => {
-          if (record.IsStop) {
-            return <span>停运</span>;
-          }
-          if (record.AvgTransmissionRate <= text) {
-            return <span>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
-          }
-          const content = (
-            <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
-              平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
-            </span>
-          );
-          return (
-            // <Popover content={content} trigger="hover">
-            <span className={styles.avgtext}>
-              <Badge className={styles.warningdata} status="warning" />
-              {`${(parseFloat(text) * 100).toFixed(2)}%`}
-            </span>
-            // {' '}
-            // </Popover>
-          );
-        },
-      },
-      ,
-      {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
-        dataIndex: 'TransmissionEffectiveRate',
-        key: 'TransmissionEffectiveRate',
-        align: 'center',
-        sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
-        render: (text, record) => {
-          if (record.IsStop) {
-            return <span>停运</span>;
-          }
-          // 红色：#f5222d 绿色：#52c41a
-          const percent = (parseFloat(text) * 100).toFixed(2);
-          if (percent >= 90) {
-            return (
-              <div>
-                <Progress
-                  successPercent={percent}
-                  percent={percent - 0}
-                  size="small"
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
-                />
-              </div>
-            );
-          }
-          return (
-            <div>
-              <Progress
-                successPercent={0}
-                percent={percent - 0}
-                status="exception"
-                size="small"
-                format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
-              />
-            </div>
-          );
-        },
       },
     ];
   }
@@ -186,19 +114,18 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
+    const { dispatch, location,Atmosphere } = this.props;
 
     this.updateQueryState({
       beginTime: moment()
-        .subtract(1, 'months')
-        .format('YYYY-MM-DD 00:00:00'),
+        .subtract(1, 'day')
+        .format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       AttentionCode: '',
-      EntName: '',
+      EntCode: '',
       RegionCode: '',
-      Atmosphere:''
+      Atmosphere:Atmosphere
     });
-    this.setState({entCode:''})
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'defectData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
@@ -236,7 +163,7 @@ export default class EntTransmissionEfficiency extends Component {
     if (priseList.length > 0) {
       priseList.map(item => {
         selectList.push(
-          <Option key={item.EntCode} value={item.EntCode}>
+          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
             {item.EntName}
           </Option>,
         );
@@ -263,12 +190,8 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
   changeEnt=(value,data)=>{ //企业事件
-    console.log(data)
-    this.setState({
-      entCode:value
-    })
     this.updateQueryState({
-      EntName: value,
+      EntCode: value,
     });
   }
   //创建并获取模板   导出
@@ -280,12 +203,6 @@ export default class EntTransmissionEfficiency extends Component {
       callback: data => {
           downloadFile(data);
         },
-    });
-  };
-  dateCallback = date => {
-    this.updateQueryState({
-      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
     });
   };
   //查询事件
@@ -325,23 +242,38 @@ export default class EntTransmissionEfficiency extends Component {
   
       /** 数据类型切换 */
  _handleDateTypeChange = value => {
-        const dataType = value;
+   
+    if( value === 'HourData'){
+      this.updateQueryState({
+        dataType: value,
+        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+       
+        });
+      }else{
         this.updateQueryState({
           dataType: value,
-        });
-        this.child.onDataTypeChange(dataType);
+          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+          
+          });
+      }
     }
-    onRef1 = ref => {
-      this.child = ref;
-  }
+  dateChange=(date)=>{
+      this.updateQueryState({
+        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }
+    dateOk=()=>{ 
 
+   }
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntName, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
     } = this.props;
 
-    const { entCode } = this.state;
     return (
         <Card
           bordered={false}
@@ -364,14 +296,14 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                  <RangePicker_
-                    dateValue={[moment(beginTime), moment(endTime)]}
-                    format="YYYY-MM-DD HH:mm:ss"
-                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                    onRef={this.onRef1}
-                    style={{width: 350,marginLeft:0,marginRight:0}}
-                    allowClear={false}
-                  />
+                      <RangePicker
+                        showTime={{ format: 'HH:mm:ss' }}
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder={['开始时间', '结束时间']}
+                        value={[moment(beginTime),moment(endTime)]}
+                        onChange={this.dateChange}
+                        onOk={this.dateOk}
+                   />
                 </Form.Item>
                 <Form.Item label='行政区'>
                   <Select
@@ -413,10 +345,11 @@ export default class EntTransmissionEfficiency extends Component {
                 <Form.Item label='企业列表'>
                   <Select
                     showSearch
+                    optionFilterProp="children"
                     allowClear
                     placeholder="企业列表"
                     onChange={this.changeEnt}
-                    value={entCode ? entCode : undefined}
+                    value={EntCode ? EntCode : undefined}
                     style={{ width: 350  }}
                   >
                     {this.children()}
@@ -447,15 +380,16 @@ export default class EntTransmissionEfficiency extends Component {
               columns={this.columns}
               bordered={false}
               dataSource={this.props.tableDatas}
-              // pagination={{
-              //   showSizeChanger: true,
-              //   showQuickJumper: true,
-              //   sorter: true,
-              //   total: this.props.total,
-              //   pageSize: PageSize,
-              //   current: PageIndex,
-              //   pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
+              pagination={{
+                // showSizeChanger: true,
+                // showQuickJumper: true,
+                // sorter: true,
+                total: this.props.total,
+                defaultPageSize:20
+                // pageSize: PageSize,
+                // current: PageIndex,
+                // pageSizeOptions: ['10', '20', '30', '40', '50'],
+              }}
             />
           </>
         </Card>

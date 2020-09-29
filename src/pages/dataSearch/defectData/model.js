@@ -20,11 +20,11 @@ export default Model.extend({
     loading: false,
     queryPar: {
       beginTime: moment()
-        .subtract(1, 'months')
-        .format('YYYY-MM-DD 00:00:00'),
+        .subtract(1, 'day')
+        .format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       AttentionCode: '',
-      EntName: '',
+      EntCode: '',
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
@@ -42,8 +42,8 @@ export default Model.extend({
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          qutleTableDatas: response.Datas,
-          qutleTotal: response.Total,
+          tableDatas: response.Datas,
+          total: response.Total,
         });
       }
     },
