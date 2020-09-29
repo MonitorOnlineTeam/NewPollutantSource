@@ -6,13 +6,13 @@
 import Model from '@/utils/model';
 import moment from 'moment';
 import {  message } from 'antd';
-import {GetCycleQualityControlList,AddOrUpdCycleQualityControl,DeleteCycleQualityControl,IssueMessage} from "./service"
+import {GetCycleQualityControlList,AddOrUpdCycleQualityControl,DeleteCycleQualityControl,IssueMessage,GetSampleRangeFlow} from "./service"
 export default Model.extend({
   namespace: 'qualitySet',
   state: {
     count:0,
     approveState:"",
-    dgimn:"",
+    dgimn:"1111",
     pollType:"",
     isSaveFlag:false,
     cycleListParams:{
@@ -41,7 +41,7 @@ export default Model.extend({
     issueLoading:true,
     tableDatas:[],
     // defaultValue:1,
-    cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季"}]
+    cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季"}],
   },
   subscriptions: { //实时更新
     setup ({dispatch, history}) {
@@ -83,7 +83,7 @@ export default Model.extend({
       },
 
          // 质控核查 质控核查设置 下发
-         *issueMessage({callback, payload }, { call, update }) {
+      *issueMessage({callback, payload }, { call, update }) {
           yield update({ issueLoading:true })
           const result = yield call(IssueMessage, payload);      
           if (result.IsSuccess) {
@@ -95,9 +95,19 @@ export default Model.extend({
           }
         },
 
-
-
-  },
+      // 质控核查 盲样核查设置 盲样范围提示语
+         *getSampleRangeFlow({callback, payload }, { call, update }) {
+              const result = yield call(GetSampleRangeFlow, payload);      
+              if (result.IsSuccess) {
+                yield update({ sampleRange:result.Datas })
+                // message.success(result.Message)
+                callback(result.Datas)
+              } else {
+                callback()
+                message.info(result.Message)
+              }
+            },
+      },
   reducers: { // 以 key/value 格式定义reducer，用于处理同步操作，唯一可以修改 state 的地方，由 action 触发
          // 质控核查 质控核查设置 下发
          issueData(state, { payload }) {

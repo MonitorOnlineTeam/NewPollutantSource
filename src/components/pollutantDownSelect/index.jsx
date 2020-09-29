@@ -48,9 +48,13 @@ class Index extends Component {
             gasDefault:["a21002","a21026","a19001"]
         };
     }
+
     componentDidMount(){
+        
         this.changeDgimn(this.props.dgimn)
         this.props.onRef&&this.props.onRef(this)// ->将child传递给this.props.onRef()方法
+       
+
       }
     // 在componentDidUpdate中进行异步操作，驱动数据的变化
       componentDidUpdate(prevProps) {
@@ -60,7 +64,7 @@ class Index extends Component {
        }
       /** 切换排口  根据排口dgimn获取它下面的所有污染物*/
       changeDgimn = (dgimn) => {
-        const {dispatch,isdefaulltall,polltype,isqca,pollutantlist,customcode} = this.props;
+        const {dispatch,isdefaulltall,polltype,isqca,pollutantlist,customcode,pollLoading} = this.props;
         const {waterDefault,gasDefault} = this.state;
 
          dispatch({
@@ -68,11 +72,12 @@ class Index extends Component {
             payload: { DGIMNs : dgimn,dataType:isqca? "qca":"" },
             
             callback: (data) => {
-              const pollDefaultSelect = data.length>0? isdefaulltall? pollutantlist.map((item,index)=>{
+              const pollDefaultSelect = data.length>0? isdefaulltall? data.map((item,index)=>{
                   
                   return  item.PollutantCode
                }):customcode&&customcode.length>0? customcode : polltype == 1 ? waterDefault : polltype == 2 ? gasDefault : []  :[]; 
                this.setState({defaultValues:pollDefaultSelect})
+              
             }
          }) ;
     
@@ -88,7 +93,9 @@ class Index extends Component {
             }
             return res;
     }
-
+   initData = ()=>{
+     return this.state.defaultValues
+   }
     render() {
         const {  maxTagPlaceholder,pollLoading,pollutantlist,isdefaulltall,polltype,onChange,defaulltval,allowClear } = this.props;//超出最大选择项最大个数时 其余选择项的展示方式  默认为  " + {未展示选择项数量} ... " 
         

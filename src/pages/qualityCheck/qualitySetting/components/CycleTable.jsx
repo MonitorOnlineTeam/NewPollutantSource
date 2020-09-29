@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Spin,DatePicker } from 'antd';
+import { Card,Table,Empty,Form,Row,Col,Button,TimePicker,Popconfirm,message,InputNumber,Spin,DatePicker,Tooltip } from 'antd';
 
 import { connect } from 'dva';
 import moment from 'moment';
@@ -49,7 +49,7 @@ class Index extends React.Component {
         this.state = {
         tableDatas:[],
         columns:[],
-        standDefaultVal:0,
+        standDefaultVal:'',
         // Time: [ moment(new Date()).add(-1, 'month'), moment(new Date())],
         addItem : {
         ID:0,
@@ -61,7 +61,8 @@ class Index extends React.Component {
         Date:new Date(),
         Date:new Date(),
         ApproveState: "-",
-        save:["保存","取消"]
+        save:["保存","取消"],
+        sampleRange:''
        },
         blindAddItem:{ StandardValue: "添加标准值",Unit:"" },
         issueIndex:0,
@@ -76,10 +77,15 @@ class Index extends React.Component {
             dataIndex: 'StandardValue',
             key: 'StandardValue',
             align: 'center',
-            width:110,
+            width:180,
             render: (value,row) => {
               if(value==="添加标准值"){
-               return <InputNumber min={0} max={99999} defaultValue={this.state.standDefaultVal} onChange={this.standChange} />
+                const title = this.state.sampleRange? `请输入${this.state.sampleRange.min}到${this.state.sampleRange.max}的值` : null
+               return(
+                // <Tooltip placement="bottom" visible={this.state.sampleRange?true:false} title={this.state.sampleRange? `请输入${this.state.sampleRange.min}到${this.state.sampleRange.max}的值`:null}>
+                 <InputNumber title={title}  style={{width:'100%'}} min={0} max={99999} placeholder={this.state.sampleRange? `请输入${this.state.sampleRange.min}到${this.state.sampleRange.max}的值` : `请输入标气浓度`} defaultValue={this.state.standDefaultVal} onChange={this.standChange} />
+                //  </Tooltip>
+                 )
               }else{
                 return <span>{value}</span>
               }
@@ -134,7 +140,7 @@ class Index extends React.Component {
             align: 'center',
             render: (value,row) => {
               if(value instanceof Date){
-               return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "'YYYY-MM-DD'")} allowClear={false} disabledDate={ this.state.disabledState? this.disabledDate :false}/>
+               return <DatePicker onChange={this.deteChange} defaultValue={moment(new Date(), "YYYY-MM-DD")} allowClear={false} disabledDate={ this.state.disabledState? this.disabledDate :false}/>
 
               }else{
                 return  <span>{moment(value).format('YYYY-MM-DD')}</span>
@@ -283,7 +289,7 @@ class Index extends React.Component {
     }
 
   handlePollutantChange=(row,index,value)=>{ //监测项目事件
-    let {dispatch,cycleListParams:{QCAType},pollutantlist,tableDatas,addParams} = this.props;
+    let {dispatch,cycleListParams:{QCAType},pollutantlist,tableDatas,addParams,dgimn} = this.props;
     if( QCAType == 1030){
      let selectPoll = pollutantlist.filter(function (item,tableIndex) {
         return item.PollutantCode === value//返回你选中删除之外的所有数据
@@ -295,11 +301,12 @@ class Index extends React.Component {
           const item = selectData[tableIndex];
           selectData.splice(tableIndex, 1, { ...item, Unit: selectPoll[0].Unit }); //替换
           dispatch({type: 'qualitySet/updateState',payload:{tableDatas:selectData} });
+          
         } 
-      
+       
       
       })
-
+      this.getSampleRangeFlow(dgimn,value) //盲样范围
     
     }
     addParams = {
@@ -432,14 +439,33 @@ timeClick=(value)=>{//质控时间
         }
     });
   }
+  getSampleRangeFlow=(mn,code)=>{ //盲样范围提示信息
+    let {dispatch} = this.props;
+    dispatch({
+      type: 'qualitySet/getSampleRangeFlow',
+      payload: { DGIMN:mn, PollutantCode:code},
+      callback:res=>{
+        this.setState({sampleRange:res})
+      }
+  });
+    
+  }
+
   addClick=()=>{
 
     
     let {addItem,blindAddItem,standDefaultVal,configInfo,current,pageSize} = this.state;
     
-    let {dispatch,tableDatas,count,cycleListParams:{QCAType},isSaveFlag,addParams} = this.props;
+    let {dispatch,tableDatas,count,cycleListParams:{QCAType},isSaveFlag,addParams,dgimn} = this.props;
      if(!isSaveFlag){
-     QCAType ==1030? addItem = {...addItem,ID:count,...blindAddItem} : addItem = {...addItem,ID:count} ;
+     
+
+      if(QCAType ==1030){ //盲样核查
+        addItem = {...addItem,ID:count,...blindAddItem}
+        this.getSampleRangeFlow(dgimn,addItem.PollutantName[0].PollutantCode)
+      }else{
+        addItem = {...addItem,ID:count} ;
+      }
      count+=1;
 
      if(current===1){ //第一页时
@@ -466,6 +492,7 @@ timeClick=(value)=>{//质控时间
         type: 'qualitySet/updateState',
         payload:{tableDatas,count,isSaveFlag,addParams} ,
     });
+  
   }else{
     message.warning("请保存之前的编辑状态")
   }
