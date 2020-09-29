@@ -199,34 +199,33 @@ class SearchWrapper extends Component {
   _rtnRangePickerEl = item => {
     const { dateFormat } = item;
     const { fieldName } = item;
-    const format = dateFormat ? dateFormat.toUpperCase() : "";
+    const format = dateFormat ? dateFormat : "";
 
     console.log("format=", format)
 
-    switch (format) {
-      case "YYYY-MM-DD HH:MM:SS":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
+    // switch (format) {
+    //   case "YYYY-MM-DD HH:MM:SS":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
 
-      case "YYYY-MM-DD HH:MM":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
+    //   case "YYYY-MM-DD HH:MM":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
 
-      case "YYYY-MM-DD HH":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
+    //   case "YYYY-MM-DD HH":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
 
-      default:
-        return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
-
-    }
+    //   default:
+    //     return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
+    // }
 
     // return <RangePicker_ style={{ width: '100%' }} />
-    // if (format) {
-    //   return <RangePicker style={{ width: '100%' }} format={format} />
-    // }
-    // return <RangePicker style={{ width: '100%' }} />
+    if (format) {
+      return <RangePicker showTime style={{ width: '100%' }} format={format} />
+    }
+    return <RangePicker showTime style={{ width: '100%' }} />
   }
 
   /**时间控件回调 */
@@ -354,7 +353,7 @@ class SearchWrapper extends Component {
         let tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
         let scrollYHeight = this.props.clientHeight - tableOffsetTop;
         let tableBodyEle = document.getElementById("sdlTable").getElementsByClassName("ant-table-body");
-        if(tableBodyEle && tableBodyEle.length) {
+        if (tableBodyEle && tableBodyEle.length) {
           tableBodyEle[0].style.maxHeight = scrollYHeight + "px";
         }
       }

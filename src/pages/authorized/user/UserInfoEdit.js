@@ -35,7 +35,8 @@ const { TreeNode } = Tree;
     UserDepLoading: loading.effects['userinfo/getdepbyuserid'],
     UserRoles: userinfo.UserRoles,
     UserDep: userinfo.UserDep,
-   btnisloading: loading.effects['userinfo/edit'],
+    btnisloading: loading.effects['userinfo/edit'],
+    loadingAdd: loading.effects['autoForm/getFormData'],
 }))
 @Form.create()
 export default class UserInfoEdit extends Component {
@@ -125,7 +126,7 @@ export default class UserInfoEdit extends Component {
     };
 
     onChecks = checkedKeys => {
-        var that=this;
+        var that = this;
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
@@ -166,9 +167,9 @@ export default class UserInfoEdit extends Component {
     postFormDatas() {
         // this.onSubmitForm();
         const {
-          dispatch,
-          form,
-          RolesTreeData,
+            dispatch,
+            form,
+            RolesTreeData,
         } = this.props;
         const { leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
         if (checkedKeySel.length == 0) {
@@ -229,7 +230,7 @@ export default class UserInfoEdit extends Component {
     }
 
     render() {
-        const { match, routerData, children, btnisloading } = this.props;
+        const { match, routerData, children, btnisloading, loadingAdd } = this.props;
         const tablist = [{
             key: 'base',
             tab: '基本信息',
@@ -290,15 +291,34 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
-                                    <SdlForm
-                                        configId="UserInfoAdd"
-                                        onSubmitForm={this.onSubmitForm}
-                                        form={this.props.form}
-                                        isEdit
-                                        hideBtns
-                                        keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
-                                    >
-                                        {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                    {
+                                        <Spin spinning={loadingAdd}>
+                                            <SdlForm
+                                                configId="UserInfoAdd"
+                                                onSubmitForm={this.onSubmitForm}
+                                                form={this.props.form}
+                                                isEdit
+                                                hideBtns
+                                                keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}>
+                                                <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                                    <Button
+                                                        type="primary"
+
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                activeKey: 'roles',
+                                                                baseState: 'none',
+                                                                rolesState: 'block',
+                                                                departState: 'none',
+                                                            })
+                                                        }}
+                                                    >下一步
+                                                </Button>
+                                                </Divider>
+                                            </SdlForm>
+                                        </Spin>
+                                    }
+                                    {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -320,22 +340,7 @@ export default class UserInfoEdit extends Component {
                                         </FormItem> */}
 
 
-                                        <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-                                            <Button
-                                                type="primary"
 
-                                                onClick={() => {
-                                                    this.setState({
-                                                        activeKey: 'roles',
-                                                        baseState: 'none',
-                                                        rolesState: 'block',
-                                                        departState: 'none',
-                                                    })
-                                                }}
-                                            >下一步
-                                        </Button>
-                                        </Divider>
-                                    </SdlForm>
 
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
@@ -352,10 +357,11 @@ export default class UserInfoEdit extends Component {
                                         /> :
                                             <Tree
                                                 checkable
-                                                checkStrictly={false}
+                                                // checkStrictly={false}
+                                                defaultExpandAll
                                                 onExpand={this.onExpand}
-                                                expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // expandedKeys={this.state.expandedKeys}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onCheck}
                                                 checkedKeys={this.state.checkedKey}
                                                 onSelect={this.onSelect}
@@ -395,9 +401,11 @@ export default class UserInfoEdit extends Component {
 
                                             <Tree
                                                 checkable
+                                                defaultExpandAll
+
                                                 onExpand={this.onExpand}
-                                                expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // expandedKeys={this.state.expandedKeys}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
@@ -421,7 +429,7 @@ export default class UserInfoEdit extends Component {
                     }
 
                 </div>
-            </BreadcrumbWrapper>
+            </BreadcrumbWrapper >
         );
     }
 }

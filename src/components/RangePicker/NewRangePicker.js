@@ -54,7 +54,7 @@ class NewRangePicker extends Component {
             return this.getFormatDate(dateValue[0], dateValue[1]);
         }
 
-            return this.getFormatDate(null, null);
+        return this.getFormatDate(null, null);
     }
 
     /**
@@ -170,18 +170,19 @@ class NewRangePicker extends Component {
     }
 
     onDateChange = (dates, dateStrings) => {
-        const dateValue = this.getFormatDate(dates[0], dates[1]);
-        if (dates && dates.length && dates[0] && dates[1]) {
+        let datesTemp = dates || [];
+        const dateValue = this.getFormatDate(datesTemp[0], datesTemp[1]);
+        if (datesTemp && datesTemp.length && datesTemp[0] && datesTemp[1]) {
             if (dateValue) {
- this.setState({
+                this.setState({
                     dateValue,
                 });
-} else {
+            } else {
                 this.setState({
                     dateValue: [undefined, undefined],
                 });
             }
-        } 
+        }
         else {
             this.setState({
                 dateValue: [undefined, undefined],
@@ -197,10 +198,10 @@ class NewRangePicker extends Component {
     onPanelChange = (dates, mode) => {
         const dateValue = this.getFormatDate(dates[0], dates[1]);
         if (dateValue) {
- this.setState({
+            this.setState({
                 dateValue,
             });
-} else {
+        } else {
             this.setState({
                 dateValue: [undefined, undefined],
             });

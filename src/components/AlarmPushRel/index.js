@@ -331,7 +331,7 @@ class Index extends Component {
                                 <Row gutter={10}>
                                     <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={5}>
                                         <Search
-                                            placeholder="输入字符模糊搜索"
+                                            placeholder="请输入监测点名称"
                                             allowClear
                                             onSearch={value => this.onSearch(value)}
                                             style={{ width: '100%' }}

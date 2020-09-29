@@ -11,7 +11,7 @@ import { CarryOutOutlined, FormOutlined, StopOutlined } from "@ant-design/icons"
 import styles from './index.less';
 import { connect } from "dva"
 import CustomIcon from '@/components/CustomIcon'
-import { CheckOutlined } from "@ant-design/icons"
+import { CheckOutlined, MinusCircleOutlined } from "@ant-design/icons"
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
 import $ from 'jquery'
 
@@ -206,7 +206,9 @@ class index extends PureComponent {
         <span className={`${styles.text} ${styles.regionText}`} title={nodeData.title}>
           {nodeData.title}
         </span>
-        {/* <StopOutlined /> */}
+        {
+          nodeData.StopStatus && <Tag style={{ marginRight: 2 }} color="default">停运</Tag>
+        }
         <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
         {/* style={{ fontSize: 12, padding: "0 2px" }} */}
       </div>
@@ -231,6 +233,9 @@ class index extends PureComponent {
             <GasIcon className={styles.icon} style={{ fontSize: 18 }} />
         }
         <span className={styles.text}>{nodeData.title}</span>
+        {
+          nodeData.StopStatus && <Tag style={{ marginRight: 2 }} color="default">停运</Tag>
+        }
         <Tag style={{ marginRight: 0 }} color={currentStatus.color}>{currentStatus.text}</Tag>
       </div>
     }

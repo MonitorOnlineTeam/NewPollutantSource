@@ -360,7 +360,7 @@ export default {
                 //视频监控
                 {
                   name: 'videoMonitor',
-                  path: '/dataSearch/videoMonitor',
+                  path: '/dataSearch/videoMonitor/index',
                   component: `${
                     config.VideoServer === 0
                       ? './dataSearch/videoMonitor/videopreview/hkvideo'
@@ -587,6 +587,80 @@ export default {
                       component: './basicsManage/videomanager',
                     },
                   ]
+                },
+                {
+                  path: '/basicsManage/rolesmanager',
+                  name: 'rolesmanager',
+                  // redirect: './rolesmanager/user',
+                  // component: './authorized/user',
+                  // authority: ['admin', 'user'],
+                  routes: [
+                    {
+                      path: '/basicsManage/rolesmanager',
+                      redirect: '/basicsManage/rolesmanager/user/userinfoindex/UserInfo',
+                    },
+                    {
+                      name: 'user',
+                      path: '/basicsManage/rolesmanager/user',
+                      routes: [
+                        // {
+                        //   path: '/rolesmanager',
+                        //   redirect: '/rolesmanager/user',
+                        // },
+                        {
+                          path: '/basicsManage/rolesmanager/user',
+                          redirect: '/basicsManage/rolesmanager/user/userinfoindex/UserInfo',
+                        },
+                        {
+                          name: 'index',
+                          path: '/basicsManage/rolesmanager/user/userinfoindex/:configId',
+                          component: './authorized/user',
+                        },
+                        {
+                          name: 'add',
+                          path: '/basicsManage/rolesmanager/user/userinfoadd',
+                          component: './authorized/user/UserInfoAdd',
+                        },
+                        {
+                          name: 'edit',
+                          path: '/basicsManage/rolesmanager/user/userinfoedit/:userid',
+                          component: './authorized/user/UserInfoEdit',
+                        },
+                        {
+                          name: 'view',
+                          path: '/basicsManage/rolesmanager/user/userinfoview/:userid',
+                          component: './authorized/user/UserInfoView',
+                        },
+                      ],
+                    },
+                    {
+                      name: 'roleInfo',
+                      path: '/basicsManage/rolesmanager/role',
+                      routes: [
+                        {
+                          name: 'index',
+                          path: '/basicsManage/rolesmanager/role/roleindex',
+                          component: './authorized/roleInfo',
+                        },
+                        {
+                          name: 'menu',
+                          path: '/basicsManage/rolesmanager/rolemenu/:roleid',
+                          component: './authorized/roleInfo/menu',
+                        },
+                      ],
+                    },
+                    {
+                      name: 'departInfo',
+                      path: '/basicsManage/rolesmanager/depart',
+                      routes: [
+                        {
+                          name: 'index',
+                          path: '/basicsManage/rolesmanager/depart/departindex',
+                          component: './authorized/departInfo',
+                        },
+                      ],
+                    },
+                  ],
                 },
               ]
             },
@@ -974,80 +1048,7 @@ export default {
                 },
               ],
             },
-            {
-              path: '/rolesmanager',
-              name: 'rolesmanager',
-              // redirect: './rolesmanager/user',
-              // component: './authorized/user',
-              // authority: ['admin', 'user'],
-              routes: [
-                {
-                  path: '/rolesmanager',
-                  redirect: '/rolesmanager/user/userinfoindex/UserInfo',
-                },
-                {
-                  name: 'user',
-                  path: '/rolesmanager/user',
-                  routes: [
-                    // {
-                    //   path: '/rolesmanager',
-                    //   redirect: '/rolesmanager/user',
-                    // },
-                    {
-                      path: '/rolesmanager/user',
-                      redirect: '/rolesmanager/user/userinfoindex/UserInfo',
-                    },
-                    {
-                      name: 'index',
-                      path: '/rolesmanager/user/userinfoindex/:configId',
-                      component: './authorized/user',
-                    },
-                    {
-                      name: 'add',
-                      path: '/rolesmanager/user/userinfoadd',
-                      component: './authorized/user/UserInfoAdd',
-                    },
-                    {
-                      name: 'edit',
-                      path: '/rolesmanager/user/userinfoedit/:userid',
-                      component: './authorized/user/UserInfoEdit',
-                    },
-                    {
-                      name: 'view',
-                      path: '/rolesmanager/user/userinfoview/:userid',
-                      component: './authorized/user/UserInfoView',
-                    },
-                  ],
-                },
-                {
-                  name: 'roleInfo',
-                  path: '/rolesmanager/role',
-                  routes: [
-                    {
-                      name: 'index',
-                      path: '/rolesmanager/role/roleindex',
-                      component: './authorized/roleInfo',
-                    },
-                    {
-                      name: 'menu',
-                      path: '/rolesmanager/rolemenu/:roleid',
-                      component: './authorized/roleInfo/menu',
-                    },
-                  ],
-                },
-                {
-                  name: 'departInfo',
-                  path: '/rolesmanager/depart',
-                  routes: [
-                    {
-                      name: 'index',
-                      path: '/rolesmanager/depart/departindex',
-                      component: './authorized/departInfo',
-                    },
-                  ],
-                },
-              ],
-            },
+            
             // {
             //   path: '/overview',
             //   name: 'overview',

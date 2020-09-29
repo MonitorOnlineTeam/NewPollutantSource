@@ -277,7 +277,7 @@ class SdlMap extends PureComponent {
         }
         // if (this.props.handlePolygon) {
         setTimeout(() => {
-          ins.setFitView()
+          ins && ins.setFitView && ins.setFitView()
         }, 1000)
 
         const timer = setInterval(() => {
@@ -313,14 +313,54 @@ class SdlMap extends PureComponent {
       },
       click: e => {
         if (this.state.isChangePos) {
-          const position = {
-            longitude: e.lnglat.lng,
-            latitude: e.lnglat.lat,
+
+          if (this.props.path) {
+            // console.log("this.props.path=", this.props.path)
+            let path = JSON.parse(this.props.path)
+            let innerArr = path[0][0];
+            // console.log("innerArr=",)
+            let longitudeArr = innerArr.map(item => item[0]) // 经度
+            let latitudeArr = innerArr.map(item => item[1]) // 纬度
+            let longMax = _.max(longitudeArr);
+            let longMin = _.min(longitudeArr);
+
+            let latMax = _.max(latitudeArr);
+            let latMin = _.min(latitudeArr);
+            let lngFlag = false;
+            let latFlag = false;
+
+            if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
+              lngFlag = true;
+            } else {
+              lngFlag = false;
+            }
+
+            if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
+              latFlag = true;
+            } else {
+              latFlag = false;
+            }
+
+            if (lngFlag && latFlag) {
+              const position = {
+                longitude: e.lnglat.lng,
+                latitude: e.lnglat.lat,
+              }
+              this.setState({
+                position,
+              })
+            } else {
+              message.error("设置点不在厂界范围内！")
+            }
+          } else {
+            const position = {
+              longitude: e.lnglat.lng,
+              latitude: e.lnglat.lat,
+            }
+            this.setState({
+              position,
+            })
           }
-          this.setState({
-            position,
-          })
-          const that = this;
         }
       },
     }
@@ -441,7 +481,7 @@ class SdlMap extends PureComponent {
             }
 
             {...this.props}
-            onChange = {(e) => { this.props.onChange && this.props.onChange(e)}}
+            onChange={(e) => { this.props.onChange && this.props.onChange(e) }}
           />
         }
         {
@@ -468,13 +508,13 @@ class SdlMap extends PureComponent {
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {
-                if(handlePolygon) {
+                if (handlePolygon) {
                   this.setState({
                     address: undefined,
                     polygon: [],
                     path: undefined,
                   })
-                }else{
+                } else {
                   this.setState({
                     position: {
                       latitude: undefined,
