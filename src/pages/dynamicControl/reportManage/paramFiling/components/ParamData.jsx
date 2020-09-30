@@ -291,16 +291,22 @@ class Index extends React.Component {
     //  });
     // }
   handlePollutantChange=(row,index,value)=>{ //仪器事件
-    let {dispatch,pollutantlist,tableDatas,addParams,getParaCodeList,isParaCode,dgimn} = this.props;
+    let {dispatch,pollutantlist,tableDatas,addParams,getParaCodeList,isParaCode,dgimn,editingKey} = this.props;
     dispatch({type: 'paramsfil/getParaCodeList',
       payload: {PollutantCode:value,IsOther:true,DGIMN:dgimn},
       callback:(res)=>{
         let getParaCodeList = res;
         if(getParaCodeList.length==0){
+        
           this.setState({paraPlaceholder:'请选择其他仪器' })
+
+          if(editingKey){
+            message.info('此仪器已全部备案，请选择其他仪器')
+            this.setState({ selectParaCode:this.state.selectParaCode })  
+          }
         }else{
           this.setState({  paraPlaceholder:'请选择参数名称' })
-        }
+        
        this.setState({selectParaCode:getParaCodeList.length>0? getParaCodeList[0].ParaCode:null}) 
 
        tableDatas.filter(function (item,tableIndex) {
@@ -320,10 +326,11 @@ class Index extends React.Component {
         }  
       })
       }
+    }
     });
 
 
-
+ 
 
     
     
@@ -404,12 +411,12 @@ class Index extends React.Component {
        }
 
     }else{ //保存事件
-
       this.formRef.current.validateFields();
       const lowLimit = this.formRef.current.getFieldsValue().lowLimit=== 0? this.formRef.current.getFieldsValue().lowLimit.toString() : this.formRef.current.getFieldsValue().lowLimit;
       const topLimit = this.formRef.current.getFieldsValue().topLimit===0? this.formRef.current.getFieldsValue().topLimit.toString() : this.formRef.current.getFieldsValue().topLimit;
       const lowLimits = this.formRef.current.getFieldsValue().lowLimits===0? this.formRef.current.getFieldsValue().lowLimits.toString() : this.formRef.current.getFieldsValue().lowLimits;
-         if( row.Type==2){ //备案值有两个时
+        
+       if( row.Type==2){ //备案值有两个时
              if(lowLimit && topLimit){
                
                if(lowLimit<topLimit){
@@ -474,13 +481,13 @@ class Index extends React.Component {
       payload: {PollutantCode:row.PollutantCode,IsOther:true,DGIMN:dgimn},
       callback:(res)=>{
         let getParaCodeList = res;
-        this.setState({ paraPlaceholder:'请选择参数名称',selectPollutant:row.PollutantName,selectParaName:row.ParaName,selectParaCode:row.ParaName})
+        this.setState({ selectPollutant:row.PollutantName,selectParaName:row.ParaName,selectParaCode:row.ParaName})
          
-        // if(getParaCodeList.length==0){
-        //   this.setState({selectParaCode:row.ParaName})
-        // }else{
-        //   this.setState({selectParaCode:row.ParaName})
-        // }
+        if(getParaCodeList.length==0){
+          this.setState({paraPlaceholder:'请选择其他仪器'})
+        }else{
+          this.setState({paraPlaceholder:'请选择参数名称'})
+        }
        
       }
 
@@ -491,7 +498,7 @@ class Index extends React.Component {
 
  
 
-   this.formRef.current.setFieldsValue({  lowLimit: row.LowerLimit ,topLimit: row.TopLimit});
+   this.formRef.current.setFieldsValue({ lowLimits:row.LowerLimit, lowLimit: row.LowerLimit ,topLimit: row.TopLimit});
     const selectData = [...tableDatas];
     let _this = this;
      tableDatas = tableDatas.filter(function (item,tableIndex) {
@@ -522,7 +529,10 @@ class Index extends React.Component {
     
     let {dispatch,tableDatas,count,isSaveFlag,addParams,pollutantlist,dgimn,editingKey} = this.props;
 
-
+    dispatch({
+      type: 'paramsfil/updateState',
+      payload:{editingKey:''} ,
+    });
     if(pollutantlist.length>0){//重置 参数名称列表
       dispatch({
         type: 'paramsfil/getParaCodeList', 
