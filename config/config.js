@@ -1195,6 +1195,22 @@ export default {
                   path: '/Intelligentanalysis/quartDataCaptureRate',
                   component: './dataAnalyze/QuartDataCaptureRate',
                 },
+                //污水处理分析
+                {
+                  path: '/Intelligentanalysis/sewageDisposal',
+                  name: 'SewageDisposal',
+                
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/sewageDisposal',
+                      redirect: '/Intelligentanalysis/sewageDisposal/removalRate',
+                    },
+                    { //去除率分析
+                      path: '/Intelligentanalysis/sewageDisposal/removalRate',
+                      component: './Intelligentanalysis/sewageDisposal/removalRate',
+                    },
+                  ],
+                },                
               ],
             },
             {
