@@ -281,8 +281,8 @@ class FlowChart extends PureComponent {
            <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
            <span className={`${styles.chu} ${styles.commonSty}`}>除尘设施</span>
            <span  className={`${styles.yan} ${styles.commonSty}`}>烟囱</span>
-           <span  className={`${styles.quyangt} ${styles.commonSty}`}>取样探头</span>
-           <span  className={`${styles.quyangg} ${styles.commonSty}`}>取样管线</span>
+           <span  className={`${styles.quyangt} ${styles.commonSty}`}>探头温度</span>
+           <span  className={`${styles.quyangg} ${styles.commonSty}`}>管线温度</span>
            <span  className={`${styles.keli} ${styles.commonSty}`}>颗粒物CEMS</span>
            <span className={`${styles.cems} ${styles.commonSty}`}>CEMS</span>
            <span className={`${styles.shuju} ${styles.commonSty}`}>数据终端</span>
@@ -293,9 +293,9 @@ class FlowChart extends PureComponent {
           
               
             {yan!=='-' ?  <li><span>截面积：</span><span>{yan}</span></li> :null }
-            {pi!=='-' ? <li><span>皮托管：</span><span>{pi}</span></li> :null }
+            {pi!=='-' ? <li><span>皮托管系数：</span><span>{pi}</span></li> :null }
              {kong!=='-' ?  <li><span>过量空气：</span><span>{kong}</span></li>:null }
-              {su!=='-' ?   <li><span>速度场：</span><span>{su}</span></li>:null }
+              {su!=='-' ?   <li><span>速度场系数：</span><span>{su}</span></li>:null }
             
              </ul>
              <ul className={`${styles.wendu} ${styles.commonSty}`}>
@@ -339,7 +339,7 @@ class FlowChart extends PureComponent {
            </div>
            
       <div className={`${styles.leng} ${styles.commonSty}`}> 
-        {leng!=='-' ? <span>冷凝器：{leng}</span> :null }
+        {leng!=='-' ? <span>冷凝器温度：{leng}</span> :null }
       
       </div>
            </>
