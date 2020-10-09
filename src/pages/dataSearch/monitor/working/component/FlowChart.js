@@ -310,7 +310,7 @@ class FlowChart extends PureComponent {
   <span className={`${styles.tantoutem} ${styles.commonSty}`}>{ tan!=='-' ? tan : ""}</span>
   <span className={`${styles.guanxiantem} ${styles.commonSty}`}>{guan!=='-' ? guan : ""}</span>
             <div  className={`${styles.yanchen} ${styles.commonSty}`}>
-            {ycnd!=='-' ?  <span>烟尘：{ycnd}</span> : null } 
+            {ycnd!=='-' ?  <span>颗粒物：{ycnd}</span> : null } 
             <Tooltip placement="top" title={<KeMorepar/>} trigger='click'>    
             <span  className={`${styles.more}`} style={{marginTop:5}}>
               更多参数
