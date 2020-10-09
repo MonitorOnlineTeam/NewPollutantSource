@@ -38,13 +38,26 @@ class Index extends React.Component {
         };
     }
     componentDidMount(){
+      const {cycleListParams:{QCAType}} = this.props;
         // this.getTableData(this.props.dgimn)
-     
+        if(QCAType==1026){
+          this.getTableData(this.props.dgimn);
+        }  
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
-   if(prevProps.pollLoading !==  this.props.pollLoading && !this.props.pollLoading) { //先获取污染物列表 获取到污染物 再更新表格数据
+
+
+    const {cycleListParams:{QCAType}} = this.props;
+
+    if(QCAType==1026){  //零点核查
+      if(prevProps.dgimn !==  this.props.dgimn) { 
+          this.getTableData(this.props.dgimn);
+      }
+    }else{
+      if(prevProps.pollLoading !==  this.props.pollLoading && !this.props.pollLoading) { //先获取污染物列表 获取到污染物 再更新表格数据
         this.getTableData(this.props.dgimn);
+      }
     }
 }
 
@@ -54,7 +67,6 @@ class Index extends React.Component {
         const {cycleListParams:{QCAType}} = this.props;
           let {dispatch,cycleListParams,pollutantlist,polltype} = this.props;
             
-
           // setTimeout(()=>{
             const {pollutantCode} = this.props;
             cycleListParams = {
