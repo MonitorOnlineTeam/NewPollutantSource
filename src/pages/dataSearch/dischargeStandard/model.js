@@ -1,5 +1,5 @@
 /**
- * 功  能：去除分析率
+ * 功  能：排放标准
  * 创建人：贾安波
  * 创建时间：2020.10.09
  */
@@ -11,7 +11,7 @@ import {
   GetAttentionDegreeList,
   ExportSewageHistoryList,
 } from './service';
-import moment from 'moment';
+import moment from 'moment';                                                                                                                                                                                                                  
 import { message } from 'antd';
 export default Model.extend({
   namespace: 'removalFlowRate',
@@ -19,15 +19,10 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType:'011',
-      dataType:'HourData'
+      PollutantType:'',
     },
     pointName:'COD',
     tableDatas: [],
