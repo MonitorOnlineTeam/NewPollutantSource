@@ -155,7 +155,7 @@ class NewRangePicker extends Component {
                     }
                 }
                 break;
-            case 'month':
+            case 'month': 
                 if (beginTime == 1 || endTime == 1) {
                     beginTime = moment(moment(new Date()).add(-3, 'month').format('YYYY-MM-01 01:00:00'));
                     endTime = moment(moment().add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');

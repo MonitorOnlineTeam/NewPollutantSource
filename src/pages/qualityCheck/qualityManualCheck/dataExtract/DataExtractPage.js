@@ -276,11 +276,11 @@ class DataExtractPage extends PureComponent {
                   onOk() {
                     that.sendDataExtract("qcaflow");
                   },
-                  // onCancel() {
-                  //   that.setState({
-                  //     currentPollutantCode: undefined
-                  //   })
-                  // },
+                  onCancel() {
+                    that.setState({
+                      currentPollutantCode: "a21026",
+                    })
+                  },
                 });
               }}>提取</Button>
             </Col>
@@ -312,11 +312,11 @@ class DataExtractPage extends PureComponent {
                   onOk() {
                     that.sendDataExtract("qcainfo");
                   },
-                  // onCancel() {
-                  //   that.setState({
-                  //     currentPollutantCode: undefined
-                  //   })
-                  // },
+                  onCancel() {
+                    that.setState({
+                      currentPollutantCode: "a21026",
+                    })
+                  },
                 });
               }}>提取</Button>
             </Col>
