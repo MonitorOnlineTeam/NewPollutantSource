@@ -1,11 +1,7 @@
-/**
- * 功  能：去除率
- * 创建人：贾安波
- * 创建时间：2020.10.10
- */
+
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import AnalysisData from '../components/AnalysisData'
+import StandardData from './components/StandardData'
 
 
 
@@ -26,8 +22,9 @@ export default class Index extends Component {
   render() {
     return (
         <BreadcrumbWrapper title="去除率分析">
-           <AnalysisData />
+           <StandardData />
         </BreadcrumbWrapper>
     );
   }
 }
+                                                                                             
