@@ -40,3 +40,13 @@ export async function IssueMessage(params) {
     Datas: [],
   } : result;
 }
+
+//盲样核查设置 提示语
+
+export async function GetSampleRangeFlow(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetSampleRangeFlow', params, null);
+  return result.Datas === null ? {
+    ...result,
+    Datas: [],
+  } : result;
+}

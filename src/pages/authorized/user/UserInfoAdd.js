@@ -293,7 +293,9 @@ export default class UserInfoAdd extends Component {
                                     </SdlForm>
 
                                 </Card>
-                                <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
+                                {
+                                    this.state.rolesState === "block" && 
+                                    <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
                                     {
                                         this.props.RolesTreeDataLoading ? <Spin
                                             style={{
@@ -309,15 +311,15 @@ export default class UserInfoAdd extends Component {
                                             <Tree
                                                 checkable
                                                 // checkStrictly={false}
+                                                defaultExpandAll
                                                 onExpand={this.onExpand}
                                                 // expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onCheck}
                                                 checkedKeys={this.state.checkedKey}
                                                 onSelect={this.onSelect}
                                                 selectedKeys={this.state.selectedKey}
                                                 // autoExpandParent={true}
-                                                defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.RolesTreeData)}
                                             </Tree>
@@ -339,6 +341,7 @@ export default class UserInfoAdd extends Component {
                                         </Button>
                                     </Divider>
                                 </Card>
+    }
                                 <Card bordered={false} title="部门设置" style={{ display: this.state.departState }}>
                                     {
                                         this.props.treeDataLoading ? <Spin
@@ -356,12 +359,12 @@ export default class UserInfoAdd extends Component {
                                                 checkable
                                                 onExpand={this.onExpand}
                                                 // expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
-                                                autoExpandParent
+                                                // autoExpandParent
                                                 defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}

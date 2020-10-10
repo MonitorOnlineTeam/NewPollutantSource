@@ -21,7 +21,9 @@ import DropDownSelect from '@/components/DropDownSelect'
     dgimn:qualitySet.dgimn,
     polltype:qualitySet.pollType,
     cycleListParams:qualitySet.cycleListParams,
-    pollutantlist:pollutantListData.pollutantlist
+    pollutantlist:pollutantListData.pollutantlist,
+    pollutantCode:pollutantListData.pollutantCode,
+    pollLoading: loading.effects['pollutantListData/getPollutantList'],
 }))
 
 class Index extends React.Component {
@@ -31,39 +33,60 @@ class Index extends React.Component {
           cycleOptions:[{value:1,name:"每天"},{value:7,name:"周"},{value:30,name:"月"},{value:90,name:"季"}],
           dgimn:"",
           defaultValue:'',
-          defaulltVaule:""
+          defaulltVaule:"",
+          pollutantCode:''
         };
     }
     componentDidMount(){
-      this.getTableData(this.props.dgimn)
+      const {cycleListParams:{QCAType}} = this.props;
+        // this.getTableData(this.props.dgimn)
+        if(QCAType==1026){
+          this.getTableData(this.props.dgimn);
+        }  
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
-   if(prevProps.dgimn !==  this.props.dgimn) {
-        this.getTableData(this.props.dgimn);
-    }
 
+
+    const {cycleListParams:{QCAType}} = this.props;
+
+    if(QCAType==1026){  //零点核查
+      if(prevProps.dgimn !==  this.props.dgimn) { 
+          this.getTableData(this.props.dgimn);
+      }
+    }else{
+      if(prevProps.pollLoading !==  this.props.pollLoading && !this.props.pollLoading) { //先获取污染物列表 获取到污染物 再更新表格数据
+        this.getTableData(this.props.dgimn);
+      }
+    }
 }
+
 
   /** 根据排口dgimn获取它下面的数据 */
   getTableData = dgimn => {
         const {cycleListParams:{QCAType}} = this.props;
-        const waterDefault = ["011","060"];
-        const gasDefault = ["a21002","a21026","a19001"]
           let {dispatch,cycleListParams,pollutantlist,polltype} = this.props;
-          cycleListParams = {
-            ...cycleListParams,
-            DGIMN:dgimn,
-            PollutantCodeList:polltype == 1 ? QCAType==1026? [] : this.child.state.waterDefault : QCAType==1026? []: polltype == 2 ? this.child.state.gasDefault : []
-          }
-           dispatch({
+            
+          // setTimeout(()=>{
+            const {pollutantCode} = this.props;
+            cycleListParams = {
+              ...cycleListParams,
+              DGIMN:dgimn,
+              // PollutantCodeList:polltype == 1 ? QCAType==1026? [] : this.child.state.waterDefault : QCAType==1026? []: polltype == 2 ? this.child.state.gasDefault : []
+              PollutantCodeList: QCAType==1026? [] :pollutantCode
+  
+            }
+            dispatch({
               type: 'qualitySet/updateState',
               payload: { cycleListParams  },
           });
-         setTimeout(()=>{this.queryClick()}) 
+          setTimeout(()=>{this.queryClick()}) 
+          // },1000)
+
+
+         
         
       }
-
 
   childSelect=(ref)=>{
     this.child = ref
@@ -105,7 +128,7 @@ class Index extends React.Component {
 /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
  getpollutantSelect = () => {
     const { dgimn,polltype,defaulltVal,cycleListParams:{QCAType} } = this.props;
- return  dgimn&&polltype? <PollutantDownSelect   isqca onRef={this.childSelect} onChange={this.pollChange} dgimn={dgimn} polltype={polltype} /> :  null ; 
+    return  dgimn? <PollutantDownSelect isdefaulltall  isqca onRef={this.childSelect}   onChange={this.pollChange} dgimn={dgimn}  /> :  null ; 
   }
   render() {
 

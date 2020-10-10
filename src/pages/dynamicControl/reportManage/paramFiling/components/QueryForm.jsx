@@ -67,7 +67,7 @@ class Index extends React.Component {
           payload: { DGIMN : dgimn  },
           callback: () => {
               this.getParaCodeList()
-             
+              // this.queryClick();
           }
       });
   }

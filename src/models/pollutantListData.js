@@ -11,14 +11,21 @@ export default Model.extend({
   namespace: 'pollutantListData',
   state: {
     pollutantlist :[],
-    pollutantListCode:[]
+    pollutantCode:[],
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
         *getPollutantList({callback, payload }, { call, update }) {
+
+          
           const result = yield call(querypollutantlist, payload);
-           yield update({ pollutantlist: result  })
-           callback(result)
+          
+          const pollutantCode = result.map((item,index)=>{
+                  
+            return  item.PollutantCode
+         })
+         yield update({ pollutantlist: result, pollutantCode:pollutantCode})
+          callback(result)
           // if (result.IsSuccess) {
           //   yield update({ pollutantlist: result.Datas  })
           //   callback(result.Datas)
