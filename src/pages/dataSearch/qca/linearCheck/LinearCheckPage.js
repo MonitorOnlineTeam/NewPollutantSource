@@ -24,6 +24,7 @@ const workMode = { "1": "定时", "2": "远程", 3: "现场" }
   linearCheckChartData: qcaCheck.linearCheckChartData,
   loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
   tableLoading: loading.effects['qcaCheck/getLinearDataList'],
+  exportLoading: loading.effects['qcaCheck/qcaCheckExport'],
 }))
 class LinearCheckPage extends PureComponent {
   formRef = React.createRef();
@@ -354,6 +355,23 @@ class LinearCheckPage extends PureComponent {
     })
   }
 
+
+  // 导出
+  onExport = () => {
+    const { DGIMN } = this.props;
+    const fieldsValue = this.formRef.current.getFieldsValue();
+    this.props.dispatch({
+      type: "qcaCheck/qcaCheckExport",
+      payload: {
+        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        DGIMN: DGIMN,
+        PollutantCode: fieldsValue["PollutantCode"],
+        exportType: "exportLinearDataList"
+      }
+    })
+  }
+
   // 线性系数图表配置
   linearCheckOption = () => {
     const { linearCheckChartData } = this.props;
@@ -531,10 +549,12 @@ class LinearCheckPage extends PureComponent {
     return option;
   }
 
+
+
   render() {
     const { columns, paramsColumns, logColumns } = this._SELF_;
     const { currentRowData, visible } = this.state;
-    const { linearCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
+    const { linearCheckTableData, exportLoading, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
     return (
       <Card>
         <Form
@@ -569,7 +589,7 @@ class LinearCheckPage extends PureComponent {
             </Col>
             <Space align="baseline">
               <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
-              <Button type="primary">导出</Button>
+              <Button type="primary" loading={exportLoading} onClick={this.onExport}>导出</Button>
             </Space>
           </Row>
         </Form>

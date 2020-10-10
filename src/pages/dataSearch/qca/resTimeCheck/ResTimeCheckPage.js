@@ -24,6 +24,7 @@ const workMode = {
   timeList: qcaCheck.timeList,
   loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
   tableLoading: loading.effects['qcaCheck/getResTimeCheckTableData'],
+  exportLoading: loading.effects['qcaCheck/qcaCheckExport'],
 }))
 class resTimeCheckPage extends PureComponent {
   formRef = React.createRef();
@@ -309,6 +310,22 @@ class resTimeCheckPage extends PureComponent {
     })
   }
 
+    // 导出
+    onExport = () => {
+      const { DGIMN } = this.props;
+      const fieldsValue = this.formRef.current.getFieldsValue();
+      this.props.dispatch({
+        type: "qcaCheck/qcaCheckExport",
+        payload: {
+          beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+          endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+          DGIMN: DGIMN,
+          PollutantCode: fieldsValue["PollutantCode"],
+          exportType: "exportResponseDataList"
+        }
+      })
+    }
+
   // 折线图配置项
   lineOption = () => {
     const { standValList, valueList, timeList, } = this.props;
@@ -412,7 +429,7 @@ class resTimeCheckPage extends PureComponent {
   render() {
     const { columns, paramsColumns, logColumns } = this._SELF_;
     const { currentRowData, visible } = this.state;
-    const { resTimeCheckTableData, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
+    const { resTimeCheckTableData, exportLoading, pollutantList, tableLoading, pointName, keyParameterList, qcaLogDataList, loading } = this.props;
     return (
       <Card>
         <Form
@@ -447,7 +464,7 @@ class resTimeCheckPage extends PureComponent {
             </Col>
             <Space align="baseline">
               <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
-              <Button type="primary">导出</Button>
+              <Button type="primary" loading={exportLoading} onClick={this.onExport}>导出</Button>
             </Space>
           </Row>
         </Form>

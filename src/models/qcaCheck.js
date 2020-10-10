@@ -50,7 +50,7 @@ export default Model.extend({
     },
     // 获取污染物类型
     *getPollutantListByDgimn({ payload, }, { call, update, put, take, select }) {
-        const result = yield call(getPollutantListByDgimn, {...payload, dataType: "qca"});
+      const result = yield call(getPollutantListByDgimn, { ...payload, dataType: "qca" });
       if (result.IsSuccess) {
         yield update({ pollutantList: result.Datas })
       } else {
@@ -160,6 +160,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 核查导出
+    *qcaCheckExport({ payload, }, { call, update, put, take, select }) {
+      const result = yield call(services[payload.exportType], payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
   },
   reducers: {
     // 更新chartData

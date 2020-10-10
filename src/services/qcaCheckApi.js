@@ -42,11 +42,35 @@ export async function getLinearDataList(params) {
   return result;
 }
 
-  
-  
+// 零点导出
+export async function exportZeroDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportZeroDataList', params, null);
+  return result;
+}
 
+// 响应时间导出
+export async function exportResponseDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/exportResponseDataList', params, null);
+  return result;
+}
 
+// 量程导出
+export async function exportRangeDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportRangeDataList', params, null);
+  return result;
+}
 
+// 盲样导出
+export async function exportSampleDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportSampleDataList ', params, null);
+  return result;
+}
+
+// 线性导出
+export async function exportLinearDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportLinearDataList ', params, null);
+  return result;
+}
 
 
 

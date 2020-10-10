@@ -20,6 +20,7 @@ const workMode = {
   pollutantList: qcaCheck.pollutantList,
   checkModalVisible: qcaCheck.checkModalVisible,
   tableLoading: loading.effects['qcaCheck/getBlindDataList'],
+  exportLoading: loading.effects['qcaCheck/qcaCheckExport'],
 }))
 class BlindCheckPage extends PureComponent {
   formRef = React.createRef();
@@ -149,11 +150,27 @@ class BlindCheckPage extends PureComponent {
     })
   }
 
+  // 导出
+  onExport = () => {
+    const { DGIMN } = this.props;
+    const fieldsValue = this.formRef.current.getFieldsValue();
+    this.props.dispatch({
+      type: "qcaCheck/qcaCheckExport",
+      payload: {
+        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        DGIMN: DGIMN,
+        PollutantCode: fieldsValue["PollutantCode"],
+        exportType: "exportSampleDataList"
+      }
+    })
+  }
+
 
   render() {
     const { columns } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, DGIMN, blindCheckTableData, pollutantList, tableLoading, pointName } = this.props;
+    const { checkModalVisible, exportLoading, DGIMN, blindCheckTableData, pollutantList, tableLoading, pointName } = this.props;
     let pollutantCodeList = "";
     if (this.formRef.current) {
       pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
@@ -196,7 +213,7 @@ class BlindCheckPage extends PureComponent {
             </Col>
             <Space align="baseline">
               <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
-              <Button type="primary">导出</Button>
+              <Button type="primary" loading={exportLoading} onClick={this.onExport}>导出</Button>
             </Space>
           </Row>
         </Form>
