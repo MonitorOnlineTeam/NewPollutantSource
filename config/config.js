@@ -1209,6 +1209,10 @@ export default {
                       path: '/Intelligentanalysis/sewageDisposal/removalRate',
                       component: './Intelligentanalysis/sewageDisposal/removalRate',
                     },
+                    { //流量分析
+                      path: '/Intelligentanalysis/sewageDisposal/flow',
+                      component: './Intelligentanalysis/sewageDisposal/flow',
+                    },
                   ],
                 },                
               ],
