@@ -1209,6 +1209,10 @@ export default {
                       path: '/Intelligentanalysis/sewageDisposal/removalRate',
                       component: './Intelligentanalysis/sewageDisposal/removalRate',
                     },
+                    { //流量分析
+                      path: '/Intelligentanalysis/sewageDisposal/flow',
+                      component: './Intelligentanalysis/sewageDisposal/flow',
+                    },
                   ],
                 },                
               ],
@@ -1237,6 +1241,19 @@ export default {
                     },
                   ],
                 },
+                {
+     
+                  name: 'abnormalStandard',   //异常标准
+                  path: '/dataSearch/abnormalStandard',
+                  component: './dataSearch/abnormalStandard',
+      
+                },
+                {
+                  name: 'dischargeStandard', //排放标准
+                  path: '/dataSearch/dischargeStandard',
+                  component: './dataSearch/dischargeStandard',
+                },
+                
               ]
             },
             {
@@ -1247,22 +1264,22 @@ export default {
                   path: '/dataquery',
                   redirect: '/monitoring/dataquery',
                 },
-                {
-                  name: 'defectData', //数据缺失
-                  path: '/dataquery/defectData',
-                  routes: [
-                    {
-                      name: 'defectDatEnt', //数据缺失 - 企业
-                      path: '/dataquery/defectData/ent',
-                      component: './monitoring/dataquery/index',
-                    },
-                    {
-                      name: 'defectDatAir', //数据缺失 - 空气站
-                      path: '/dataquery/defectData/air',
-                      component: './monitoring/dataquery/index',
-                    },
-                  ],
-                },
+                // {
+                //   name: 'defectData', //数据缺失
+                //   path: '/dataquery/defectData',
+                //   routes: [
+                //     {
+                //       name: 'defectDatEnt', //数据缺失 - 企业
+                //       path: '/dataquery/defectData/ent',
+                //       component: './monitoring/dataquery/index',
+                //     },
+                //     {
+                //       name: 'defectDatAir', //数据缺失 - 空气站
+                //       path: '/dataquery/defectData/air',
+                //       component: './monitoring/dataquery/index',
+                //     },
+                //   ],
+                // },
                 {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',

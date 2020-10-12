@@ -22,10 +22,8 @@ export default Model.extend({
     exEntloading: false,
     pageSize: 20,
     pageIndex: 1,
-    beginTime: moment()
-      .subtract(1, 'months')
-      .format('YYYY-MM-DD 00:00:00'),
-    endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+    beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
+    endTime: moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
     transmissionEffectiveRate: 'ascend',
     entTableDatas: [],
     entCode: null,
@@ -36,10 +34,8 @@ export default Model.extend({
     pollutantType: '',
 
     qutletQueryPar: {
-      beginTime: moment()
-        .subtract(1, 'months')
-        .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
       PageIndex: 1,
       PageSize: 20,
       EntCode: '',
