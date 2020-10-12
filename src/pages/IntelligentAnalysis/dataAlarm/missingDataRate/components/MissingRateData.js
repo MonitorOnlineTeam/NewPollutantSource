@@ -73,7 +73,7 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: <span>企业名称</span>,
+        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',

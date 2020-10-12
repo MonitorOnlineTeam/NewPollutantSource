@@ -70,7 +70,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span>企业名称</span>,
+        title: <span>{this.props.type==='ent'? '大气站名称': '企业名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
@@ -395,11 +395,30 @@ reponseComp = (type)=>{
                  {this.btnCompents()}
                 </Row>
                 </>:
+                <>
                 <Row>
                 {this.queryComponents(type)}
-                {this.reponseComp(type)}
-                {this.btnCompents()}
                 </Row>
+                <Row>
+
+                {this.reponseComp(type)}
+                <Form.Item label='大气站列表'>
+                <Select
+                  showSearch
+                  optionFilterProp="children"
+                  allowClear
+                  placeholder="大气站列表"
+                  onChange={this.changeEnt}
+                  value={EntCode ? EntCode : undefined}
+                  style={{ width: 336  }}
+                >
+                  {this.children()}
+                </Select>
+                </Form.Item>
+                {this.btnCompents()}
+
+                </Row>
+                </>
               }
               </Form>
             </>

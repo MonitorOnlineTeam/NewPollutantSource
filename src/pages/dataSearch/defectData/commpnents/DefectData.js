@@ -270,6 +270,7 @@ export default class EntTransmissionEfficiency extends Component {
    }
   render() {
     const {
+      Atmosphere,
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
     } = this.props;
@@ -329,7 +330,9 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 </Row>
                 <Row>
-
+                {Atmosphere?
+                 null
+                 :
                 <Form.Item label='企业类型'>
                   <Select
                     placeholder="企业类型"
@@ -342,19 +345,37 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    optionFilterProp="children"
-                    allowClear
-                    placeholder="企业列表"
-                    onChange={this.changeEnt}
-                    value={EntCode ? EntCode : undefined}
-                    style={{ width: 350  }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
+                }
+
+                {Atmosphere?
+                <Form.Item label='大气站列表'>
+                <Select
+                  showSearch
+                  optionFilterProp="children"
+                  allowClear
+                  placeholder="企业列表"
+                  onChange={this.changeEnt}
+                  value={EntCode ? EntCode : undefined}
+                  style={{ width: 336  }}
+                >
+                  {this.children()}
+                </Select>
+              </Form.Item>
+              :    
+              <Form.Item label='企业列表'>
+              <Select
+                showSearch
+                optionFilterProp="children"
+                allowClear
+                placeholder="企业列表"
+                onChange={this.changeEnt}
+                value={EntCode ? EntCode : undefined}
+                style={{ width: 350  }}
+              >
+                {this.children()}
+              </Select>
+            </Form.Item>
+                }
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

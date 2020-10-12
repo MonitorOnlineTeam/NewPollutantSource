@@ -52,7 +52,7 @@ const pageUrl = {
   attentionList:missingData.attentionList
 }))
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -70,7 +70,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span>企业名称</span>,
+        title: <span>{this.props.type ==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
@@ -275,7 +275,7 @@ export default class EntTransmissionEfficiency extends Component {
           placeholder="数据类型"
           onChange={this._handleDateTypeChange}
           value={dataType}
-          style={{ width: type==='ent'? 200 : 150  }}
+          style={{ width: 200  }}
         >  
        <Option key='0' value='HourData'>小时数据</Option>
        <Option key='1' value='DayData'> 日数据</Option>
@@ -299,7 +299,7 @@ export default class EntTransmissionEfficiency extends Component {
           placeholder="行政区"
           onChange={this.changeRegion}
           value={RegionCode ? RegionCode : undefined}
-          style={{ width: type==='ent'? 200 : 150  }}
+          style={{ width: 200  }}
         >
           {this.regchildren()}
         </Select>
@@ -309,7 +309,7 @@ export default class EntTransmissionEfficiency extends Component {
           placeholder="关注程度"
           onChange={this.changeAttent}
           value={AttentionCode}
-          style={{ width: type==='ent'? 200 : 150  }}
+          style={{ width: 200  }}
         >
           <Option value="">全部</Option>
           {this.attentchildren()}
@@ -339,7 +339,7 @@ reponseComp = (type)=>{
     placeholder="响应状态"
     onChange={this.changeEnt}
     value={""}
-    style={{ width: type==='ent'? 200 : 150  }}
+    style={{ width: 200 }}
   >
     <Option value="">全部</Option>
     <Option value="1">已响应</Option>
@@ -377,7 +377,7 @@ reponseComp = (type)=>{
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item> 
+                </Form.Item>                  
                 <Form.Item label='企业列表'>
                   <Select
                     showSearch
@@ -391,15 +391,36 @@ reponseComp = (type)=>{
                     {this.children()}
                   </Select>
                 </Form.Item>
+
                  {this.reponseComp(type)}
                  {this.btnCompents()}
                 </Row>
                 </>:
+                <>
                 <Row>
                 {this.queryComponents(type)}
-                {this.reponseComp(type)}
-                {this.btnCompents()}
+
                 </Row>
+                <Row>
+
+                {this.reponseComp(type)}
+                <Form.Item label='大气站列表'>
+                <Select
+                  showSearch
+                  optionFilterProp="children"
+                  allowClear
+                  placeholder="大气站列表"
+                  onChange={this.changeEnt}
+                  value={EntCode ? EntCode : undefined}
+                  style={{ width: 336  }}
+                >
+                  {this.children()}
+                </Select>
+                </Form.Item>
+                {this.btnCompents()}
+
+                </Row>
+                </>
               }
               </Form>
             </>
