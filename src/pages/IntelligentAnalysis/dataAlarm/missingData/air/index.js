@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import StandardData from './components/StandardData'
+import MissingData from '../components/MissingData'
 
 
 
@@ -21,8 +21,8 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="异常标准查询">
-           <StandardData />
+        <BreadcrumbWrapper title="空气站">
+           <MissingData />
         </BreadcrumbWrapper>
     );
   }

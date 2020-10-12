@@ -1,4 +1,8 @@
-
+/**
+ * 功  能：有效传输率
+ * 创建人：吴建伟
+ * 创建时间：2019.08.12
+ */
 import React, { Component } from 'react';
 import {
   Card,
@@ -15,19 +19,18 @@ import {
   Button,
   Form,
   Select,
-  Tabs
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import Link from 'umi/link';
-
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import { blue,red } from '@ant-design/colors';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -35,23 +38,18 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'standardData/updateState',
-  getData: 'standardData/getDischargeStandValue',
+  updateState: 'missingData/updateState',
+  getData: 'missingData/getDefectModel',
 };
-@connect(({ loading, standardData,autoForm }) => ({
-  priseList: standardData.priseList,
-  exloading:standardData.exloading,
-  loading: standardData.loading,
-  total: standardData.total,
-  disTableDatas: standardData.disTableDatas,
-  queryPar: standardData.queryPar,
+@connect(({ loading, missingData,autoForm }) => ({
+  priseList: missingData.priseList,
+  exloading:missingData.exloading,
+  loading: loading.effects[pageUrl.getData],
+  total: missingData.total,
+  tableDatas: missingData.tableDatas,
+  queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:standardData.attentionList,
-  pointName:standardData.pointName,
-  chartExport:standardData.chartExport,
-  chartImport:standardData.chartImport,
-  chartTime:standardData.chartTime,
-  disColumn:standardData.disColumn,
+  attentionList:missingData.attentionList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -63,59 +61,79 @@ export default class EntTransmissionEfficiency extends Component {
     
     this.columns = [
       {
-        title: '行政区',
+        title: <span>行政区</span>,
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
+        render: (text, record) => {
+          return <span>{text}</span>;
+        },
       },
       {
-        title: '企业名称',
+        title: <span>企业名称</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        render: (text, record) => text,
       },
       {
-        title: '监测点名称',
+        title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
+        // width: '10%',
         align: 'center',
+      
+      },
+      // {
+      //   title: <span>缺失监测因子</span>,
+      //   dataIndex: 'TransmissionRate',
+      //   key: 'TransmissionRate',
+      //   align: 'center',
+      // },
+      {
+        title: <span>缺失时间段</span>,
+        dataIndex: 'firstAlarmTime',
+        key: 'firstAlarmTime',
+        align: 'center',
+        render:(text,row)=>{
+          return `${row.firstAlarmTime}~${row.alarmTime}`
+        }
       },
       {
-        title: '污染物排放标准',
-        width:480,
-        children: [],
+        title: <span>缺失小时数</span>,
+        dataIndex: 'defectCount',
+        key: 'defectCount',
+        align: 'center',
       },
-    ]
+    ];
   }
 
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
-    
+    const { dispatch, location,Atmosphere } = this.props;
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
-
- 
-     dispatch({ type: 'standardData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-
-     dispatch({   type: 'standardData/getEntByRegion',payload: { RegionCode: '' },  });//获取企业列表
-
-     this.updateQueryState({
+    this.updateQueryState({
+      beginTime: moment()
+        .subtract(1, 'day')
+        .format('YYYY-MM-DD HH:mm:ss'),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:'',
-      PollutantType:'1',
+      Atmosphere:Atmosphere
     });
+     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+
+     dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+ 
+     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+  
+
     setTimeout(() => {
       this.getTableData();
     });
-
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -174,31 +192,20 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: value,
     });
   }
-  changePoll=(value,data)=>{ //污染物改变事件
-    this.updateQueryState({
-      PollutantType: value,
-    });
-
-
-
-  }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'standardData/exportDischargeStandValue',
+      type: 'missingData/exportGetAlarmDataList',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+         downloadFile(`/upload${data}`);
         },
     });
   };
   //查询事件
   queryClick = () => {
     this.getTableData();
-
-    const {  queryPar:{ PollutantType } } = this.props;
-     PollutantType ==1 ? this.columns[3].width = 480 : this.columns[3].width = 1120;
   };
 
 
@@ -259,56 +266,53 @@ export default class EntTransmissionEfficiency extends Component {
     dateOk=()=>{ 
 
    }
-
-
   render() {
     const {
       exloading,
-      loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType },
-      disColumn
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
     } = this.props;
-    const { TabPane } = Tabs;
-    let columns = this.columns;
-    if(disColumn.length>0){
-     columns[3].children=[];
-      disColumn.map(item=>{
-       columns[3].children.push( 
-        {
-        title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,dataIndex: `${item.PollutantCode}`,key: `${item.PollutantCode}`,
-         width:80, align:'center'},
-     )
-    })
-  }
+
     return (
+        <BreadcrumbWrapper title="二级页面">
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
-               <Form.Item label='行政区'>
+            
+              <Row>
+              <Form.Item label='数据类型'>
+              <Select
+                    placeholder="数据类型"
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                    style={{ width: 200 }}
+                  >  
+                 <Option key='0' value='HourData'>小时数据</Option>
+                 <Option key='1' value='DayData'> 日数据</Option>
+
+                  </Select>
+              </Form.Item>
+                <Form.Item>
+                  日期查询：
+                      <RangePicker
+                        showTime={{ format: 'HH:mm:ss' }}
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder={['开始时间', '结束时间']}
+                        value={[moment(beginTime),moment(endTime)]}
+                        onChange={this.dateChange}
+                        onOk={this.dateOk}
+                   />
+                </Form.Item>
+                <Form.Item label='行政区'>
                   <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
                     value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 170 }}
+                    style={{ width: 150 }}
                   >
                     {this.regchildren()}
-                  </Select>
-                </Form.Item>
-
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="企业名称"
-                    onChange={this.changeEnt}
-                    value={EntCode? EntCode : undefined }
-                    style={{ width: 170  }}
-                  >
-                    {this.children()}
                   </Select>
                 </Form.Item>
                 <Form.Item label='关注程度'>
@@ -316,23 +320,52 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="关注程度"
                     onChange={this.changeAttent}
                     value={AttentionCode}
-                    style={{ width: 170 }}
+                    style={{ width: 150 }}
                   >
                     <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
+                </Row>
+                <Row>
+
                 <Form.Item label='企业类型'>
                   <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
-                    style={{ width: 170 }}
+                    style={{ width: 200 }}
                   >
+                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
+                <Form.Item label='企业列表'>
+                  <Select
+                    showSearch
+                    optionFilterProp="children"
+                    allowClear
+                    placeholder="企业列表"
+                    onChange={this.changeEnt}
+                    value={EntCode ? EntCode : undefined}
+                    style={{ width: 350  }}
+                  >
+                    {this.children()}
+                  </Select>
+                </Form.Item>
+                <Form.Item label='响应状态'>
+                  <Select
+                    placeholder="响应状态"
+                    onChange={this.changeEnt}
+                    value={EntCode}
+                    style={{ width: 188  }}
+                  >
+                    <Option value="">全部</Option>
+                    <Option value="1">已响应</Option>
+                    <Option value="2">待响应</Option>
+                  </Select>
+                </Form.Item> 
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
@@ -346,27 +379,32 @@ export default class EntTransmissionEfficiency extends Component {
                     导出
                   </Button>
                 </Form.Item>
+                </Row>
               </Form>
             </>
           }
         >
-          <div id=''>
-
-             <SdlTable
+          <>
+            <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={columns}
+              loading={this.props.loading}
+              columns={this.columns}
               bordered={false}
-              dataSource={this.props.disTableDatas}
+              dataSource={this.props.tableDatas}
               pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
+                // showSizeChanger: true,
+                // showQuickJumper: true,
+                // sorter: true,
                 total: this.props.total,
                 defaultPageSize:20
+                // pageSize: PageSize,
+                // current: PageIndex,
+                // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
-          </div>
+          </>
         </Card>
+        </BreadcrumbWrapper>
     );
   }
 }

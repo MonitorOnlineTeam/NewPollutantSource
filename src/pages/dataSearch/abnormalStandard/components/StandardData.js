@@ -35,26 +35,26 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'standardData/updateState',
-  getData: 'standardData/getDischargeStandValue',
+  updateState: 'abnormalStandard/updateState',
+  getData: 'abnormalStandard/getExceptionStandValue',
 };
-@connect(({ loading, standardData,autoForm }) => ({
-  priseList: standardData.priseList,
-  exloading:standardData.exloading,
-  loading: standardData.loading,
-  total: standardData.total,
-  disTableDatas: standardData.disTableDatas,
-  queryPar: standardData.queryPar,
+@connect(({ loading, abnormalStandard,autoForm }) => ({
+  priseList: abnormalStandard.priseList,
+  exloading:abnormalStandard.exloading,
+  loading: abnormalStandard.loading,
+  total: abnormalStandard.total,
+  tableDatas: abnormalStandard.tableDatas,
+  queryPar: abnormalStandard.queryPar,
   regionList: autoForm.regionList,
-  attentionList:standardData.attentionList,
-  pointName:standardData.pointName,
-  chartExport:standardData.chartExport,
-  chartImport:standardData.chartImport,
-  chartTime:standardData.chartTime,
-  disColumn:standardData.disColumn,
+  attentionList:abnormalStandard.attentionList,
+  pointName:abnormalStandard.pointName,
+  chartExport:abnormalStandard.chartExport,
+  chartImport:abnormalStandard.chartImport,
+  chartTime:abnormalStandard.chartTime,
+  column:abnormalStandard.column,
 }))
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -84,9 +84,93 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
       },
       {
-        title: '污染物排放标准',
-        width:480,
-        children: [],
+        title: '实测烟尘',
+        width:400,
+        children: [
+          {
+          title: '零值异常',
+          width:100,
+          children: [{
+              title: '零值计数',
+              dataIndex: 'pointName',
+              key: 'pointName',
+              align: 'center',
+          }], 
+         },
+         {
+          title: '超量程异常',
+          width:300,
+          children: [
+            {
+              title: '检出上限',
+              dataIndex: 'pointName',
+              key: 'pointName',
+              width:100,
+              align: 'center',
+           },
+           {
+            title: '检出下限',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            width:100,
+            align: 'center',
+         },
+         {
+          title: '超量程计数',
+          dataIndex: 'pointName',
+          key: 'pointName',
+          width:100,
+          align: 'center',
+       }], 
+
+        } ],
+      },
+
+      {
+        title: '折算烟尘',
+        width:400,
+        children: [
+          {
+          title: '零值异常',
+          width:100,
+          children: [{
+              title: '零值计数',
+              dataIndex: 'pointName',
+              key: 'pointName',
+              width:100,
+              align: 'center',
+          }], 
+         },
+         {
+          title: '超量程异常',
+          width:300,
+          children: [
+            {
+              title: '检出上限',
+              dataIndex: 'pointName',
+              key: 'pointName',
+              width:100,
+              align: 'center',
+           },
+           {
+            title: '检出下限',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            width:100,
+            align: 'center',
+         },
+         {
+          title: '超量程计数',
+          dataIndex: 'pointName',
+          key: 'pointName',
+          width:100,
+          align: 'center',
+       }], 
+
+        } ],
+
+
+
       },
     ]
   }
@@ -101,9 +185,9 @@ export default class EntTransmissionEfficiency extends Component {
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'standardData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'abnormalStandard/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
 
-     dispatch({   type: 'standardData/getEntByRegion',payload: { RegionCode: '' },  });//获取企业列表
+     dispatch({   type: 'abnormalStandard/getEntByRegion',payload: { RegionCode: '' },  });//获取企业列表
 
      this.updateQueryState({
       AttentionCode: '',
@@ -186,7 +270,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'standardData/exportDischargeStandValue',
+      type: 'abnormalStandard/exportExceptionStandValue',
       payload: { ...queryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
@@ -266,20 +350,20 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType },
-      disColumn
+      column
     } = this.props;
     const { TabPane } = Tabs;
     let columns = this.columns;
-    if(disColumn.length>0){
-     columns[3].children=[];
-      disColumn.map(item=>{
-       columns[3].children.push( 
-        {
-        title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,dataIndex: `${item.PollutantCode}`,key: `${item.PollutantCode}`,
-         width:80, align:'center'},
-     )
-    })
-  }
+  //   if(column.length>0){
+  //    columns[3].children=[];
+  //     column.map(item=>{
+  //      columns[3].children.push( 
+  //       {
+  //       title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,dataIndex: `${item.PollutantCode}`,key: `${item.PollutantCode}`,
+  //        width:80, align:'center'},
+  //    )
+  //   })
+  // }
     return (
         <Card
           bordered={false}
@@ -357,7 +441,7 @@ export default class EntTransmissionEfficiency extends Component {
               loading={loading}
               columns={columns}
               bordered={false}
-              dataSource={this.props.disTableDatas}
+              dataSource={this.props.tableDatas}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
