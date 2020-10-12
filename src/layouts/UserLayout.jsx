@@ -52,7 +52,7 @@ const UserLayout = props => {
   } else {
     getIp = `http://${window.location.host}/appoperation/appqrcodemain`;
   }
-
+  const links = [{ key: '新疆空天地一体化系统', title: '新疆空天地一体化系统', href: 'http://xj.airsensor.top:5000/login', blankTarget: true }];
   return (
     <DocumentTitle
       // title={getPageTitle({
@@ -127,7 +127,7 @@ const UserLayout = props => {
           </Popover>
         }
         {
-          configInfo && configInfo.IsShowFooterMessages === 'true' && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
+          configInfo && configInfo.IsShowFooterMessages === 'true' && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={links} />
         }
         {configInfo && configInfo.TechnicalSupport && <p style={{ fontSize: 14, textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', marginTop: -13 }}>{configInfo.TechnicalSupport}</p>}
       </div>
