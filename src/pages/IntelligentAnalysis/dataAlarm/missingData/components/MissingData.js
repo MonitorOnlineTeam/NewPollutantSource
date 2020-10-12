@@ -273,6 +273,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      type
     } = this.props;
 
     return (
@@ -288,7 +289,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
                     value={dataType}
-                    style={{ width: 200 }}
+                    style={{ width: 100 }}
                   >  
                  <Option key='0' value='HourData'>小时数据</Option>
                  <Option key='1' value='DayData'> 日数据</Option>
@@ -306,50 +307,47 @@ export default class EntTransmissionEfficiency extends Component {
                         onOk={this.dateOk}
                    />
                 </Form.Item>
+                <Form.Item label='关注程度'>
+                  <Select
+                    placeholder="关注程度"
+                    onChange={this.changeAttent}
+                    value={AttentionCode}
+                    style={{ width: 110 }}
+                  >
+                    <Option value="">全部</Option>
+                    {this.attentchildren()}
+                  </Select>
+                </Form.Item>
                 <Form.Item label='行政区'>
                   <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
                     value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 200 }}
+                    style={{ width: 100 }}
                   >
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
-
-                </Row>
-                <Row>
-
-                <Form.Item label='企业类型'>
+               {type==='ent'? <Form.Item label='企业类型'>
                   <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
-                    style={{ width: 200 }}
+                    style={{ width: 100 }}
                   >
                     <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item> 
-                <Form.Item label='关注程度'>
-                  <Select
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode}
-                    style={{ width: 200 }}
-                  >
-                    <Option value="">全部</Option>
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
+                </Form.Item> : null }
+
                  <Form.Item label='响应状态'>
                   <Select
                     placeholder="响应状态"
                     onChange={this.changeEnt}
                     value={EntCode}
-                    style={{ width: 205  }}
+                    style={{ width: 100  }}
                   >
                     <Option value="">全部</Option>
                     <Option value="1">已响应</Option>

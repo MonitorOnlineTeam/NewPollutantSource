@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import MissingData from '../components/MissingData'
+import MissingRateData from '../components/MissingRateData'
 
 
 
@@ -22,7 +22,7 @@ export default class Index extends Component {
   render() {
     return (
         <BreadcrumbWrapper title="空气站">
-           <MissingData  type='air'/>
+           <MissingRateData  type='air'/>
         </BreadcrumbWrapper>
     );
   }

@@ -67,3 +67,26 @@ export async function queryPointForTarget(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
   return result;
 }
+
+//根据行政区获取 企业列表
+
+export async function GetEntByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+      params.RegionCode,
+    null,
+    null,
+  );
+
+  return result;
+}
+//关注列表
+export async function GetAttentionDegreeList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+    params,
+    null,
+  );
+
+  return result;
+}

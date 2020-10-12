@@ -422,7 +422,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="污染物名称"
                     onChange={this.changeEnt}
                     value={EntCode}
-                    style={{ width: 170  }}
+                    style={{ width: 300  }}
                   >
                     {this.children()}
                   </Select>

@@ -22,7 +22,7 @@ export default class Index extends Component {
   render() {
     return (
         <BreadcrumbWrapper title="企业">
-           <MissingData />
+           <MissingData type='ent'/>
         </BreadcrumbWrapper>
     );
   }

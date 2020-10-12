@@ -266,12 +266,92 @@ export default class EntTransmissionEfficiency extends Component {
     dateOk=()=>{ 
 
    }
+  queryComponents=(type)=>{
+    const { 
+       queryPar: {  beginTime, endTime, RegionCode,AttentionCode,dataType, },
+    } = this.props;
+    return  <><Form.Item label='数据类型'>
+    <Select
+          placeholder="数据类型"
+          onChange={this._handleDateTypeChange}
+          value={dataType}
+          style={{ width: type==='ent'? 200 : 150  }}
+        >  
+       <Option key='0' value='HourData'>小时数据</Option>
+       <Option key='1' value='DayData'> 日数据</Option>
+
+        </Select>
+    </Form.Item>
+      <Form.Item>
+        日期查询：
+            <RangePicker
+              showTime={{ format: 'HH:mm:ss' }}
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder={['开始时间', '结束时间']}
+              value={[moment(beginTime),moment(endTime)]}
+              onChange={this.dateChange}
+              onOk={this.dateOk}
+         />
+      </Form.Item>
+      <Form.Item label='行政区'>
+        <Select
+          allowClear
+          placeholder="行政区"
+          onChange={this.changeRegion}
+          value={RegionCode ? RegionCode : undefined}
+          style={{ width: type==='ent'? 200 : 150  }}
+        >
+          {this.regchildren()}
+        </Select>
+      </Form.Item>
+      <Form.Item label='关注程度'>
+        <Select
+          placeholder="关注程度"
+          onChange={this.changeAttent}
+          value={AttentionCode}
+          style={{ width: type==='ent'? 200 : 150  }}
+        >
+          <Option value="">全部</Option>
+          {this.attentchildren()}
+        </Select>
+      </Form.Item>
+      </>
+  }
+  btnCompents=()=>{
+    const { exloading } = this.props;
+   return  <Form.Item>
+    <Button type="primary" onClick={this.queryClick}>
+      查询
+    </Button>
+    <Button
+      style={{ margin: '0 5px' }}
+      icon="export"
+      onClick={this.template}
+      loading={exloading}
+    >
+      导出
+    </Button>
+  </Form.Item>
+  }
+reponseComp = (type)=>{
+  return <Form.Item label='响应状态'>
+  <Select
+    placeholder="响应状态"
+    onChange={this.changeEnt}
+    value={""}
+    style={{ width: type==='ent'? 200 : 150  }}
+  >
+    <Option value="">全部</Option>
+    <Option value="1">已响应</Option>
+    <Option value="2">待响应</Option>
+  </Select>
+</Form.Item> 
+}
   render() {
     const {
-      exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: { EntCode,PollutantType },
+      type
     } = this.props;
-
     return (
         <BreadcrumbWrapper title="二级页面">
         <Card
@@ -279,57 +359,14 @@ export default class EntTransmissionEfficiency extends Component {
           title={
             <>
               <Form layout="inline">
-            
+              {type==='ent'?
+              <>
               <Row>
-              <Form.Item label='数据类型'>
-              <Select
-                    placeholder="数据类型"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                    style={{ width: 200 }}
-                  >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
-
-                  </Select>
-              </Form.Item>
-                <Form.Item>
-                  日期查询：
-                      <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                   />
-                </Form.Item>
-                <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 150 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
-                </Form.Item>
-                <Form.Item label='关注程度'>
-                  <Select
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode}
-                    style={{ width: 150 }}
-                  >
-                    <Option value="">全部</Option>
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
-                </Row>
+              {this.queryComponents(type)}
+              </Row>
                 <Row>
 
-                <Form.Item label='企业类型'>
+               <Form.Item label='企业类型'>
                   <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
@@ -340,7 +377,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> 
                 <Form.Item label='企业列表'>
                   <Select
                     showSearch
@@ -354,32 +391,16 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.children()}
                   </Select>
                 </Form.Item>
-                <Form.Item label='响应状态'>
-                  <Select
-                    placeholder="响应状态"
-                    onChange={this.changeEnt}
-                    value={EntCode}
-                    style={{ width: 188  }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">已响应</Option>
-                    <Option value="2">待响应</Option>
-                  </Select>
-                </Form.Item> 
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
+                 {this.reponseComp(type)}
+                 {this.btnCompents()}
                 </Row>
+                </>:
+                <Row>
+                {this.queryComponents(type)}
+                {this.reponseComp(type)}
+                {this.btnCompents()}
+                </Row>
+              }
               </Form>
             </>
           }

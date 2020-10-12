@@ -1215,12 +1215,13 @@ export default {
                     },
                   ],
                 },    
-                //缺失数据报警统计
+                //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
                 
                   routes: [
+                     /* 缺失数据报警统计 */
                     {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
@@ -1237,8 +1238,25 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                       component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                     },
+
+
+                   /* 缺失数据报警响应率 */
+
+                    { //缺失数据报警响应率 企业
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    },
+                    { //缺失数据报警响应率 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    { //缺失数据报警响应率 二级页面
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    },
                   ],
-                },                               
+                },  
+                                             
               ],
             },
             {
