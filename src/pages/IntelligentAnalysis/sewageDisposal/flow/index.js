@@ -79,7 +79,7 @@ class index extends PureComponent {
    getChartAndTableData = () => {
 
     if (!this.state.pollutantValue || !this.state.pollutantValue.length) {
-      message.error('请选择污染物');
+      message.error('请选择污水处理厂');
       return;
     }
     this.props.dispatch({
@@ -114,12 +114,21 @@ class index extends PureComponent {
     return (
       <>
         <Select
-          //mode="multiple"
+          allowClear
+          showSearch
           style={{ width: 200, marginLeft: 10,marginRight: 10}}
           placeholder="污水处理厂列表"
           maxTagCount={2}
           maxTagTextLength={5}
           maxTagPlaceholder="..."
+          optionFilterProp="children"
+          filterOption={(input, option)=>{
+            if (option && option.props && option.props.title) {
+              return option.props.title === input || option.props.title.indexOf(input) !== -1
+            } else {
+              return true
+            }
+          }}
           onChange={(value) => {
             this.setState({
               pollutantValue: value
@@ -149,7 +158,7 @@ class index extends PureComponent {
         }/>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
         <Button type="primary"  style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
-        <span style={{color:'red',marginLeft:20}}>"是否停运"列显示-,表示没有这个检测点</span>
+        <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个检测点</span>
       </>
     )
   }
@@ -282,7 +291,6 @@ class index extends PureComponent {
                     render:(text)=>{
                       return  text === null ? '-' :text
                     }
-                    
                 },
                 {
                     title: "是否停运",
@@ -292,7 +300,7 @@ class index extends PureComponent {
                     dataIndex: 'importStop',
                     key: 'importStop',
                     render:(text)=>{
-                        return text == 0?'否':'是'
+                        return text == '-'?'-':text==0?'否':'是'
                     }
                 },
             ]
@@ -323,7 +331,7 @@ class index extends PureComponent {
                     dataIndex: 'backStop',
                     key: 'backStop',
                     render:(text)=>{
-                        return text == '-'?'否':'是'
+                        return text == '-'?'-':text==0?'否':'是'
                     }
                 },
             ]
@@ -354,21 +362,19 @@ class index extends PureComponent {
                     dataIndex: 'exportStop',
                     key: 'exportStop',
                     render:(text)=>{
-                        return text == 0?'否':'是'
+                        return text == '-'?'-':text==0?'否':'是'
                     }
                 },
             ]
         },
       ]
-      if (loading) {
-        return <PageLoading />
-      }
         return <>{
             
             <Tabs defaultActiveKey = "1">
                 <TabPane tab="变化趋势" key="1">
                     {
-                        FlowList.length > 0 ?
+                      !loading ?
+                        (FlowList.length > 0 ?
                         <ReactEcharts
                           option={option}
                           lazyUpdate={true}
@@ -377,14 +383,16 @@ class index extends PureComponent {
                           theme="my_theme"
                       />
                       :
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />):<PageLoading />
                     }
                 </TabPane>
                 <TabPane tab="数据详情" key="2">
                     {
-                        FlowList.length > 0 ?
+                      !loading ?
+                        (FlowList.length > 0 ?
                         <SdlTable columns={columns} dataSource={FlowList} pagination={false} />
-                        :<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        :<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+                        :<PageLoading />
                     }
                 </TabPane>
             </Tabs>
