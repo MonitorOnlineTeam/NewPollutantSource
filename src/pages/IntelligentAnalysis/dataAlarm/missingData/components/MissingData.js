@@ -342,7 +342,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item> : null }
 
-                 <Form.Item label='响应状态'>
+                 {/* <Form.Item label='响应状态'>
                   <Select
                     placeholder="响应状态"
                     onChange={this.changeEnt}
@@ -353,7 +353,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">已响应</Option>
                     <Option value="2">待响应</Option>
                   </Select>
-                </Form.Item> 
+                </Form.Item>  */}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

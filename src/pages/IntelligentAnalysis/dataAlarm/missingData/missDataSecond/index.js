@@ -19,6 +19,7 @@ import {
   Button,
   Form,
   Select,
+  Radio 
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -266,56 +267,59 @@ export default class Index extends Component {
     dateOk=()=>{ 
 
    }
-  queryComponents=(type)=>{
-    const { 
-       queryPar: {  beginTime, endTime, RegionCode,AttentionCode,dataType, },
-    } = this.props;
-    return  <><Form.Item label='数据类型'>
-    <Select
-          placeholder="数据类型"
-          onChange={this._handleDateTypeChange}
-          value={dataType}
-          style={{ width: 200  }}
-        >  
-       <Option key='0' value='HourData'>小时数据</Option>
-       <Option key='1' value='DayData'> 日数据</Option>
+  // queryComponents=(type)=>{
+  //   const { 
+  //      queryPar: {  beginTime, endTime, RegionCode,AttentionCode,dataType, },
+  //   } = this.props;
+  //   return  <><Form.Item label='数据类型'>
+  //   <Select
+  //         placeholder="数据类型"
+  //         onChange={this._handleDateTypeChange}
+  //         value={dataType}
+  //         style={{ width: 200  }}
+  //       >  
+  //      <Option key='0' value='HourData'>小时数据</Option>
+  //      <Option key='1' value='DayData'> 日数据</Option>
 
-        </Select>
-    </Form.Item>
-      <Form.Item>
-        日期查询：
-            <RangePicker
-              showTime={{ format: 'HH:mm:ss' }}
-              format="YYYY-MM-DD HH:mm:ss"
-              placeholder={['开始时间', '结束时间']}
-              value={[moment(beginTime),moment(endTime)]}
-              onChange={this.dateChange}
-              onOk={this.dateOk}
-         />
-      </Form.Item>
-      <Form.Item label='行政区'>
-        <Select
-          allowClear
-          placeholder="行政区"
-          onChange={this.changeRegion}
-          value={RegionCode ? RegionCode : undefined}
-          style={{ width: 200  }}
-        >
-          {this.regchildren()}
-        </Select>
-      </Form.Item>
-      <Form.Item label='关注程度'>
-        <Select
-          placeholder="关注程度"
-          onChange={this.changeAttent}
-          value={AttentionCode}
-          style={{ width: 200  }}
-        >
-          <Option value="">全部</Option>
-          {this.attentchildren()}
-        </Select>
-      </Form.Item>
-      </>
+  //       </Select>
+  //   </Form.Item>
+  //     <Form.Item>
+  //       日期查询：
+  //           <RangePicker
+  //             showTime={{ format: 'HH:mm:ss' }}
+  //             format="YYYY-MM-DD HH:mm:ss"
+  //             placeholder={['开始时间', '结束时间']}
+  //             value={[moment(beginTime),moment(endTime)]}
+  //             onChange={this.dateChange}
+  //             onOk={this.dateOk}
+  //        />
+  //     </Form.Item>
+  //     <Form.Item label='行政区'>
+  //       <Select
+  //         allowClear
+  //         placeholder="行政区"
+  //         onChange={this.changeRegion}
+  //         value={RegionCode ? RegionCode : undefined}
+  //         style={{ width: 200  }}
+  //       >
+  //         {this.regchildren()}
+  //       </Select>
+  //     </Form.Item>
+  //     <Form.Item label='关注程度'>
+  //       <Select
+  //         placeholder="关注程度"
+  //         onChange={this.changeAttent}
+  //         value={AttentionCode}
+  //         style={{ width: 200  }}
+  //       >
+  //         <Option value="">全部</Option>
+  //         {this.attentchildren()}
+  //       </Select>
+  //     </Form.Item>
+  //     </>
+  // }
+  reponseChange=(e)=>{
+    console.log(e.target.value)
   }
   btnCompents=()=>{
     const { exloading } = this.props;
@@ -335,16 +339,11 @@ export default class Index extends Component {
   }
 reponseComp = (type)=>{
   return <Form.Item label='响应状态'>
-  <Select
-    placeholder="响应状态"
-    onChange={this.changeEnt}
-    value={""}
-    style={{ width: 200 }}
-  >
-    <Option value="">全部</Option>
-    <Option value="1">已响应</Option>
-    <Option value="2">待响应</Option>
-  </Select>
+        <Radio.Group  onChange={this.reponseChange}>
+          <Radio.Button value="">全部</Radio.Button>
+          <Radio.Button value="1">已响应</Radio.Button>
+          <Radio.Button value="2">待响应</Radio.Button>
+        </Radio.Group>
 </Form.Item> 
 }
   render() {
@@ -359,7 +358,10 @@ reponseComp = (type)=>{
           title={
             <>
               <Form layout="inline">
-              {type==='ent'?
+                
+                {this.reponseComp(type)}
+                 {this.btnCompents()}
+              {/* {type==='ent'?
               <>
               <Row>
               {this.queryComponents(type)}
@@ -421,7 +423,7 @@ reponseComp = (type)=>{
 
                 </Row>
                 </>
-              }
+              } */}
               </Form>
             </>
           }

@@ -268,13 +268,29 @@ export default class EntTransmissionEfficiency extends Component {
     dateOk=()=>{ 
 
    }
+   btnComponents=()=>{
+    const { exloading } = this.props
+     return <Form.Item>
+     <Button type="primary" onClick={this.queryClick}>
+       查询
+     </Button>
+     <Button
+       style={{ margin: '0 5px' }}
+       icon="export"
+       onClick={this.template}
+       loading={exloading}
+     >
+       导出
+     </Button>
+   </Form.Item>
+   }
   render() {
     const {
       Atmosphere,
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
     } = this.props;
-
+    const BtnComponents = this.btnComponents;
     return (
         <Card
           bordered={false}
@@ -288,7 +304,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
                     value={dataType}
-                    style={{ width: 200 }}
+                    style={{ width: Atmosphere? 100 : 200}}
                   >  
                  <Option key='0' value='HourData'>小时数据</Option>
                  <Option key='1' value='DayData'> 日数据</Option>
@@ -312,11 +328,26 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="行政区"
                     onChange={this.changeRegion}
                     value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 150 }}
+                    style={{ width:  Atmosphere? 100 : 150}}
                   >
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
+                {Atmosphere?
+                  <Form.Item label='大气站列表'>
+              <Select
+              showSearch
+              optionFilterProp="children"
+              allowClear
+              placeholder="大气站列表"
+              onChange={this.changeEnt}
+              value={EntCode ? EntCode : undefined}
+              style={{ width: 200  }}
+            >
+              {this.children()}
+            </Select>
+            </Form.Item>
+                 :
                 <Form.Item label='关注程度'>
                   <Select
                     placeholder="关注程度"
@@ -328,11 +359,12 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
+                  } 
+                 { Atmosphere?  <BtnComponents /> : null}
                 </Row>
-                <Row>
-                {Atmosphere?
-                 null
-                 :
+                
+                {!Atmosphere?  <Row>
+
                 <Form.Item label='企业类型'>
                   <Select
                     placeholder="企业类型"
@@ -344,24 +376,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item>
-                }
-
-                {Atmosphere?
-                <Form.Item label='大气站列表'>
-                <Select
-                  showSearch
-                  optionFilterProp="children"
-                  allowClear
-                  placeholder="企业列表"
-                  onChange={this.changeEnt}
-                  value={EntCode ? EntCode : undefined}
-                  style={{ width: 336  }}
-                >
-                  {this.children()}
-                </Select>
-              </Form.Item>
-              :    
+                </Form.Item>   
               <Form.Item label='企业列表'>
               <Select
                 showSearch
@@ -375,21 +390,11 @@ export default class EntTransmissionEfficiency extends Component {
                 {this.children()}
               </Select>
             </Form.Item>
-                }
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
+                 <BtnComponents />
                 </Row>
+                :
+                null
+           }
               </Form>
             </>
           }
