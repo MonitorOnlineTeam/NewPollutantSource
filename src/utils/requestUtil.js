@@ -40,8 +40,10 @@ export function getCookie(name) {
  * 异常处理程序
  */
 const errorHandler = error => {
-  const { response } = error;
+  const { response, data } = error;
   console.log("error=", error)
+  console.log("response=", response)
+  console.log("data=", data)
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -56,18 +58,23 @@ const errorHandler = error => {
       return;
     }
     if (status >= 404 && status < 422) {
-      router.push('/exception/404');
-      return;
+      // router.push('/exception/404');
+      notification.error({
+        message: `请求错误 ${status}: ${url}`,
+        description: errorText,
+      });
     }
-    notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
-    });
+    // notification.error({
+    //   message: `请求错误 ${status}: ${url}`,
+    //   description: errorText,
+    // });
+    return data
   } else if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
+    return data
   }
 };
 
