@@ -1,11 +1,18 @@
 @import '~antd/es/style/themes/default.less';
-
+:global(.ant-pro-global-footer-links a) {
+  color: #666666;
+  font-size: 14px;
+}
+:global(.ant-pro-global-footer-links a:hover) {
+  color: #2409f99e;
+}
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: auto;
   background: @layout-body-background;
+  
 }
 
 .lang {

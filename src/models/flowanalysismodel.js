@@ -3,11 +3,12 @@
  * 创建人：胡孟弟
  * 创建时间：2020.10.10
  */
-import Model from '@/utils/model';
-import {
-  GetEntByRegion,
-} from '../pages/IntelligentAnalysis/newTransmissionefficiency/service';
-import { GetSewageFlowList, ExportSewageFlowList } from '../services/FlowAnalysisApi'
+// import Model from '@/utils/model';
+// import {
+//   GetEntByRegion,
+// } from '../pages/IntelligentAnalysis/newTransmissionefficiency/service';
+// import { GetSewageFlowList, ExportSewageFlowList } from '../services/FlowAnalysisApi'
+import {GetSewageFlowList ,ExportSewageFlowList,GetEntByRegion} from '../services/FlowAnalysisApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';

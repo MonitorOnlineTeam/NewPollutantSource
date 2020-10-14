@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -480,6 +480,12 @@ export default {
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
+                //年度考核企业
+                {
+                  name: 'yearCheckEnt',
+                  path: '/platformconfig/yearCheckEnt',
+                  component: './platformManager/yearCheckEnt/',
+                },
               ],
             },
             {
@@ -875,11 +881,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
+                  component: `${config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1199,7 +1204,7 @@ export default {
                 {
                   path: '/Intelligentanalysis/sewageDisposal',
                   name: 'SewageDisposal',
-                
+
                   routes: [
                     {
                       path: '/Intelligentanalysis/sewageDisposal',
@@ -1214,13 +1219,55 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                },                
+                },    
+                //数据报警统计
+                {
+                  path: '/Intelligentanalysis/dataAlarm',
+                  name: 'dataAlarm',
+                
+                  routes: [
+                     /* 缺失数据报警统计 */
+                    {
+                      path: '/Intelligentanalysis/dataAlarm',
+                      redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
+                    },
+                    { //缺失数据报警 企业
+                      path: '/Intelligentanalysis/dataAlarm/missingData/ent',
+                      component: './Intelligentanalysis/dataAlarm/missingData/ent',
+                    },
+                    { //缺失数据报警 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingData/air',
+                      component: './Intelligentanalysis/dataAlarm/missingData/air',
+                    },
+                    { //缺失数据报警 二级页面
+                      path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
+                      component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
+                    },
+
+
+                   /* 缺失数据报警响应率 */
+
+                    { //缺失数据报警响应率 企业
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    },
+                    { //缺失数据报警响应率 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    { //缺失数据报警响应率 二级页面
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    },
+                  ],
+                },  
+                                             
               ],
             },
             {
               path: '/dataSearch',
-              name: 'dataSearch',            
-               routes: [
+              name: 'dataSearch',
+              routes: [
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
@@ -1239,6 +1286,7 @@ export default {
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
+                    
                   ],
                 },
                 {
@@ -1278,22 +1326,6 @@ export default {
                   path: '/dataquery',
                   redirect: '/monitoring/dataquery',
                 },
-                // {
-                //   name: 'defectData', //数据缺失
-                //   path: '/dataquery/defectData',
-                //   routes: [
-                //     {
-                //       name: 'defectDatEnt', //数据缺失 - 企业
-                //       path: '/dataquery/defectData/ent',
-                //       component: './monitoring/dataquery/index',
-                //     },
-                //     {
-                //       name: 'defectDatAir', //数据缺失 - 空气站
-                //       path: '/dataquery/defectData/air',
-                //       component: './monitoring/dataquery/index',
-                //     },
-                //   ],
-                // },
                 {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
