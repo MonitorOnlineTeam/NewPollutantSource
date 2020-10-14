@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -480,6 +480,12 @@ export default {
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
+                //年度考核企业
+                {
+                  name: 'yearCheckEnt',
+                  path: '/platformconfig/yearCheckEnt',
+                  component: './platformManager/yearCheckEnt/',
+                },
               ],
             },
             {
@@ -875,11 +881,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
+                  component: `${config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1199,7 +1204,7 @@ export default {
                 {
                   path: '/Intelligentanalysis/sewageDisposal',
                   name: 'SewageDisposal',
-                
+
                   routes: [
                     {
                       path: '/Intelligentanalysis/sewageDisposal',
@@ -1261,8 +1266,8 @@ export default {
             },
             {
               path: '/dataSearch',
-              name: 'dataSearch',            
-               routes: [
+              name: 'dataSearch',
+              routes: [
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
@@ -1296,7 +1301,21 @@ export default {
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
                 },
-                
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseMonitoringInquiry',
+                  component: './dataSearch/enterpriseMonitoringInquiry',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
+                  component: './dataSearch/enterpriseInquiryDetail',
+                },
+                {
+                  name: 'airStation', //空气站查询
+                  path: '/dataSearch/airStation',
+                  component: './dataSearch/airStation',
+                },
               ]
             },
             {
