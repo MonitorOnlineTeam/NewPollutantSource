@@ -4,7 +4,7 @@
  * 创建时间：2020.10.10
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs } from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon} from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -25,7 +25,10 @@ const pageUrl = {
 @connect(({ loading , flowanalysisModel}) => ({
     loading:loading.effects["flowanalysisModel/GetSewageFlowList"],
     priseList:flowanalysisModel.priseList,
-    FlowList:flowanalysisModel.FlowList
+    FlowList:flowanalysisModel.FlowList,
+    total:flowanalysisModel.total,
+    PageSize:flowanalysisModel.PageSize,
+    PageIndex:flowanalysisModel.PageIndex
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -52,6 +55,7 @@ class index extends PureComponent {
     this.props.dispatch({
         type:pageUrl.GetFlowList,
         payload:{
+
         }
     })
 
@@ -78,17 +82,20 @@ class index extends PureComponent {
    // 获取图表及表格数据
    getChartAndTableData = () => {
 
-    if (!this.state.pollutantValue || !this.state.pollutantValue.length) {
+    if(this.state.pollutantValue == '' || this.state.pollutantValue == undefined)
+    {
       message.error('请选择污水处理厂');
-      return;
+      return
     }
     this.props.dispatch({
       type: pageUrl.GetFlowList,
       payload: {
-        EntCode: this.state.pollutantValue.toString(),
+        EntCode:this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
         BeginTime: moment(this.state.time[0]),
         EndTime: moment(this.state.time[1]),
         DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
+        PageSize:25,
+        PageIndex:1,
       }
     })
   }
@@ -140,37 +147,44 @@ class index extends PureComponent {
             <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
                     this.setState({
                       dataType: e.target.value,
-                      time:e.target.value === 'Day' ?[moment().add(-7, "day")]:[moment().add(-24, "hour"), moment()]
+                      time:e.target.value === 'Day' ?[moment().add(-1, "month")]:[moment().add(-24, "hour"), moment()]
                     })
-                    e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-7, "day"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                    e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
                   }}>
                     <Radio.Button value="Hour">小时</Radio.Button>
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
             (dates, dataType)=>{
-                console.log(dates)
                 this.setState({
                     time:dates
                 })
             }
         }/>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-        <Button type="primary"  style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
-        <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个检测点</span>
+        <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
+        <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
       </>
     )
   }
-
+  onChange = (PageIndex, PageSize) => {
+    this.props.dispatch({
+      type: pageUrl.GetFlowList,
+      payload: {
+        EntCode: this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
+        BeginTime: moment(this.state.time[0]),
+        EndTime: moment(this.state.time[1]),
+        DataType: this.state.dataType == 'Hour' ? 'HourData' : 'DayData',
+        PageSize: PageSize,
+        PageIndex: PageIndex,
+      }
+    })
+  }
   
   pageContent =()=>{
     const { showType,dataType } = this.state;
     const {FlowList,loading} = this.props
-
-    console.log(FlowList)
-
-
     const hourTime = []
     const importValue = [] //进水口
     const exportValue = [] //出水口
@@ -285,7 +299,6 @@ class index extends PureComponent {
                     width: '12%',
                     align: 'center',
                     fixed: fixed,
-                    dataIndex: '流量',
                     key: 'importValue',
                     dataIndex: 'importValue',
                     render:(text)=>{
@@ -316,7 +329,6 @@ class index extends PureComponent {
                     width: '12%',
                     align: 'center',
                     fixed: fixed,
-                    dataIndex: '流量',
                     key: 'backValue',
                     dataIndex: 'backValue',
                     render:(text)=>{
@@ -347,7 +359,6 @@ class index extends PureComponent {
                     width: '12%',
                     align: 'center',
                     fixed: fixed,
-                    dataIndex: '流量',
                     key: 'exportValue',
                     dataIndex: 'exportValue',
                     render:(text)=>{
@@ -370,28 +381,31 @@ class index extends PureComponent {
       ]
         return <>{
             
-            <Tabs defaultActiveKey = "1">
+            <Tabs defaultActiveKey = "1" animated={false}>
                 <TabPane tab="变化趋势" key="1">
                     {
                       !loading ?
-                        (FlowList.length > 0 ?
                         <ReactEcharts
                           option={option}
                           lazyUpdate={true}
                           style={{ height: 'calc(100vh - 250px)', width: '100%' }}
                           className="echarts-for-echarts"
                           theme="my_theme"
-                      />
-                      :
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />):<PageLoading />
+                      />:<PageLoading />
                     }
                 </TabPane>
                 <TabPane tab="数据详情" key="2">
                     {
                       !loading ?
-                        (FlowList.length > 0 ?
-                        <SdlTable columns={columns} dataSource={FlowList} pagination={false} />
-                        :<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+                        <SdlTable columns={columns} dataSource={FlowList} pagination={{
+                          showSizeChanger: true,
+                          showQuickJumper: true,
+                          pageSize: this.props.PageSize,
+                          current: this.props.PageIndex,
+                          onChange: this.onChange,
+                          pageSizeOptions: ['25', '30', '40', '100'],
+                          total: this.props.total,
+                        }} />
                         :<PageLoading />
                     }
                 </TabPane>

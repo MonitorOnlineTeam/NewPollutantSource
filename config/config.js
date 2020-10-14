@@ -1253,7 +1253,21 @@ export default {
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
                 },
-                
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseMonitoringInquiry',
+                  component: './dataSearch/enterpriseMonitoringInquiry',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
+                  component: './dataSearch/enterpriseInquiryDetail',
+                },
+                {
+                  name: 'airStation', //空气站查询
+                  path: '/dataSearch/airStation',
+                  component: './dataSearch/airStation',
+                },
               ]
             },
             {
