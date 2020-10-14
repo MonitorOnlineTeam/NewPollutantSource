@@ -52,6 +52,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   queryPar: defectData.queryPar,
   regionList: autoForm.regionList,
   attentionList:defectData.attentionList,
+  airList:defectData.airList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -67,9 +68,9 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
-        render: (text, record) => {
-          return <span>{text}</span>;
-        },
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
@@ -84,7 +85,9 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'pointName',
         // width: '10%',
         align: 'center',
-      
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       // {
       //   title: <span>缺失监测因子</span>,
@@ -320,6 +323,7 @@ export default class EntTransmissionEfficiency extends Component {
                         value={[moment(beginTime),moment(endTime)]}
                         onChange={this.dateChange}
                         onOk={this.dateOk}
+                        allowClear={false}
                    />
                 </Form.Item>
                 <Form.Item label='行政区'>
@@ -404,7 +408,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
+              // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
                 // showSizeChanger: true,

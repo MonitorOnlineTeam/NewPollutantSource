@@ -19,7 +19,8 @@ import {
   Button,
   Form,
   Select,
-  Tabs
+  Tabs,
+  Radio
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -29,7 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,GetDataType } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
 import { blue,red } from '@ant-design/colors';
@@ -56,7 +57,8 @@ const pageUrl = {
   pointName:removalFlowRate.pointName,
   chartExport:removalFlowRate.chartExport,
   chartImport:removalFlowRate.chartImport,
-  chartTime:removalFlowRate.chartTime
+  chartTime:removalFlowRate.chartTime,
+  entName:removalFlowRate.entName,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -142,22 +144,24 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, location } = this.props;
     
      sessionStorage.setItem("pointName", 'COD')
+     sessionStorage.setItem("entName", '')
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
      dispatch({ type: 'removalFlowRate/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-
+     this.child.onDataTypeChange('hour')
      dispatch({ 
            type: 'removalFlowRate/getEntByRegion',
            payload: { RegionCode: '' }, 
            callback:(code)=>{
             this.updateQueryState({
-              beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
-              endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+              beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
+              endTime: moment().format('YYYY-MM-DD HH:59:59'),
               AttentionCode: '',
-              EntCode: code,
+              EntCode: '',
               RegionCode: '',
+              dataType:'HourData',
               PollutantType:'011',
             });
             setTimeout(() => {
@@ -225,15 +229,21 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
+    sessionStorage.setItem("entName", data.props.title)
+
   }
-  changePoll=(value,data)=>{ //污染物改变事件
+
+  changePoll=(e)=>{ //污染物改变事件
     this.updateQueryState({
-      PollutantType: value,
+      PollutantType: e.target.value,
     });
-    sessionStorage.setItem("pointName", data.props.children)
-
-
-
+    const pollType = {
+      '011':'COD',
+      '060':'氨氮',
+      '101':'总磷',
+      '065':'总氮'
+    }
+    sessionStorage.setItem("pointName", pollType[e.target.value])
   }
   //创建并获取模板   导出
   template = () => {
@@ -254,7 +264,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { pointName: sessionStorage.getItem("pointName")},
+      payload: { pointName: sessionStorage.getItem("pointName"),entName:sessionStorage.getItem("entName")},
     });
   };
 
@@ -289,26 +299,12 @@ export default class EntTransmissionEfficiency extends Component {
   }
   
       /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
-      this.updateQueryState({
-        dataType: value,
-        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
+ _handleDateTypeChange = e => {
+    this.child.onDataTypeChange(e.target.value==='HourData'?'hour':'day')
     }
-  dateChange=(date)=>{
+  dateChange=(date,dataType)=>{
       this.updateQueryState({
+        dataType:GetDataType(dataType),
         beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
@@ -318,9 +314,17 @@ export default class EntTransmissionEfficiency extends Component {
    }
    getChartData=()=>{
 
-    const { pointName,chartExport,chartImport,chartTime} = this.props;
+    const { pointName,chartExport,chartImport,chartTime,entName} = this.props;
     return {
       color:[blue[5],red[5]],
+      title:{
+        text:entName,//图表标题文本内
+        textStyle:{//标题内容的样式
+          fontSize:14//主题文字字体大小，默认为18px
+        },
+        left:'center',
+        top:30
+      },
       tooltip: {
           trigger: 'axis'
       },
@@ -331,6 +335,7 @@ export default class EntTransmissionEfficiency extends Component {
           left: '3%',
           right: '4%',
           bottom: '3%',
+          top:80,
           containLabel: true
       },
       toolbox: {
@@ -365,6 +370,13 @@ export default class EntTransmissionEfficiency extends Component {
       ]
   };
    }
+
+   onRef1 = (ref) => {
+    this.child = ref;
+  }
+  onChange3=(e)=>{
+   console.log(e)
+  }
   render() {
     const {
       exloading,
@@ -380,30 +392,17 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline">
             
               <Row>
-              <Form.Item label='数据类型'>
-              <Select
-                    placeholder="数据类型"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                    style={{ width: 170 }}
-                  >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
-
-                  </Select>
+              <Form.Item label=''>
+                 <Radio.Group value={dataType} style={{ marginRight: 10 }} onChange={(e) =>this._handleDateTypeChange(e) }>
+                    <Radio.Button value="HourData">小时</Radio.Button>
+                    <Radio.Button value="DayData">日均</Radio.Button>
+                  </Radio.Group> 
               </Form.Item>
                 <Form.Item>
-                  日期查询：
-                      <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                   />
+          <RangePicker_  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+          callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
-                <Form.Item label='行政区'>
+                {/* <Form.Item label='行政区'>
                   <Select
                     allowClear
                     placeholder="行政区"
@@ -413,15 +412,16 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {this.regchildren()}
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
 
-                <Form.Item label='污水处理厂名称'>
+                <Form.Item label=''>
                   <Select
                     showSearch
+                    allowClear
                     optionFilterProp="children"
-                    placeholder="污染物名称"
+                    placeholder="污水处理厂名称"
                     onChange={this.changeEnt}
-                    value={EntCode}
+                    value={EntCode?EntCode: undefined }
                     style={{ width: 300  }}
                   >
                     {this.children()}
@@ -429,7 +429,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 </Row>
                 <Row>
-                <Form.Item label='关注程度'>
+                {/* <Form.Item label='关注程度'>
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
@@ -439,9 +439,9 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
-                </Form.Item>
-                <Form.Item label='污染物名称'>
-                <Select
+                </Form.Item> */}
+                <Form.Item label='监测因子'>
+                {/* <Select
                     placeholder="污染物名称"
                     onChange={this.changePoll}
                     value={PollutantType}
@@ -451,7 +451,13 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option key='060' value='060'>氨氮</Option>
                  <Option key='101' value='101'>总磷</Option>
                  <Option key='065' value='065'>总氮</Option>
-                  </Select>
+                  </Select> */}
+                  <Radio.Group  onChange={this.changePoll} value={PollutantType}>
+                     <Radio value='011'>COD</Radio>
+                     <Radio value='060'>氨氮</Radio>
+                     <Radio value='101'>总磷</Radio>
+                     <Radio value='065'>总氮</Radio>
+                 </Radio.Group>
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -465,6 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                   </Button>
+                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个检测点</span>
                 </Form.Item>
                 </Row>
               </Form>
@@ -472,7 +479,7 @@ export default class EntTransmissionEfficiency extends Component {
           }
         >
           <div id='removalFlowRate'>
-              <Tabs type="card">
+              <Tabs>
             <TabPane tab="变化趋势" key="1"   >
             {loading?
              <PageLoading/>
@@ -491,7 +498,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={this.columns}
-              bordered={false}
+              // bordered={false}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{

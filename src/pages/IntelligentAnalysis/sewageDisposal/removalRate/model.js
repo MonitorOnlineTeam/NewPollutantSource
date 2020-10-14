@@ -21,8 +21,8 @@ export default Model.extend({
     queryPar: {
       beginTime: moment()
         .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        .format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
@@ -36,12 +36,15 @@ export default Model.extend({
     priseList: [],
     chartExport:[],
     chartImport:[],
-    chartTime:[]
+    chartTime:[],
+    entName:''
   },
   subscriptions: {},
   effects: {
     *getSewageHistoryList({ payload }, { call, put, update, select }) {
       //列表
+
+      yield update({ loading:true }); 
       const response = yield call(GetSewageHistoryList, { ...payload });
       if (response.IsSuccess) {
         yield update({
@@ -60,6 +63,8 @@ export default Model.extend({
           chartTime:chartTime,
           loading:false
         });
+      }else{
+        yield update({ loading:false }); 
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {

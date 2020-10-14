@@ -66,46 +66,34 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',query:  record.RegionCode }} >
+          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
                    {text}
                </Link>
                  
        },
       },
       {
-        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
+        title: <span>{this.props.type==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
+        dataIndex: 'pointCount',
+        key: 'pointCount',
         align: 'center',
-        render: (text, record) => text,
       },
       {
-        title: <span>监测点名称</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
-        // width: '10%',
-        align: 'center',
-      
-      },
-      // {
-      //   title: <span>缺失监测因子</span>,
-      //   dataIndex: 'TransmissionRate',
-      //   key: 'TransmissionRate',
-      //   align: 'center',
-      // },
-      {
-        title: <span>缺失时间段</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
-        align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
+        title: <span>缺失数据报警次数</span>,
+        dataIndex: 'exceptionCount',
+        key: 'exceptionCount',
+        align: 'center'
       },
       {
-        title: <span>缺失小时数</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        title: <span>已响应报警次数</span>,
+        dataIndex: 'xiangyingCount',
+        key: 'xiangyingCount',
+        align: 'center',
+      },
+      {
+        title: <span>待响应报警次数</span>,
+        dataIndex: 'weixiangyingCount',
+        key: 'weixiangyingCount',
         align: 'center',
       },
     ];
@@ -115,16 +103,20 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location,Atmosphere,type } = this.props;
+
+    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+
+    type==='ent'? this.columns.splice(1,0,entObj) : null;
 
     this.updateQueryState({
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
+      // beginTime: moment()
+      //   .subtract(1, 'day')
+      //   .format('YYYY-MM-DD HH:mm:ss'),
+      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      // AttentionCode: '',
+      // EntCode: '',
+      // RegionCode: '',
       Atmosphere:Atmosphere
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
@@ -199,7 +191,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'missingData/exportGetAlarmDataList',
+      type: 'missingData/exportDefectDataSummary',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -305,13 +297,14 @@ export default class EntTransmissionEfficiency extends Component {
                         value={[moment(beginTime),moment(endTime)]}
                         onChange={this.dateChange}
                         onOk={this.dateOk}
+                        allowClear={false}
                    />
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode}
+                    value={AttentionCode} 
                     style={{ width: 110 }}
                   >
                     <Option value="">全部</Option>
@@ -342,18 +335,6 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item> : null }
 
-                 {/* <Form.Item label='响应状态'>
-                  <Select
-                    placeholder="响应状态"
-                    onChange={this.changeEnt}
-                    value={EntCode}
-                    style={{ width: 100  }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">已响应</Option>
-                    <Option value="2">待响应</Option>
-                  </Select>
-                </Form.Item>  */}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
@@ -377,7 +358,6 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
                 // showSizeChanger: true,

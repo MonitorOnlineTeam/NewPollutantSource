@@ -9,7 +9,9 @@ import {
   GetDefectModel,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportGetAlarmDataList,
+  ExportDefectPointDetailRate,
+  ExportDefectDataSummary,
+  GetDefectPointDetailRate
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -20,25 +22,27 @@ export default Model.extend({
     loading: false,
     queryPar: {
       beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
+        .subtract(7, 'day')
+        .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
-      dataType:'HourData'
+      EntType:''
+      // dataType:'HourData'
     },
     tableDatas: [],
     total: '',
     attentionList:[],
     priseList: [],
+    tableDatil:[]
   },
   subscriptions: {},
   effects: {
     *getDefectModel({ payload }, { call, put, update, select }) {
-      //列表
+      //列表 响应数据
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         yield update({
@@ -47,6 +51,15 @@ export default Model.extend({
         });
       }
     },
+    *getDefectPointDetailRate({ payload }, { call, put, update, select }) {
+      //列表 响应率数据详情
+      const response = yield call(GetDefectPointDetailRate, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          tableDatil: response.Datas,
+        });
+      }
+    },   
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
       const response = yield call(GetAttentionDegreeList, { ...payload });
@@ -65,10 +78,11 @@ export default Model.extend({
         });
       }
     },
-    *exportGetAlarmDataList({callback, payload }, { call, put, update, select }) {
+    // 
+    *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出
-      const response = yield call(ExportGetAlarmDataList, { ...payload });
+      //导出   父页面
+      const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -78,7 +92,19 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-
+    *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //导出 详情页面
+      const response = yield call(ExportDefectPointDetailRate, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
 
   },
 });

@@ -9,7 +9,9 @@ import {
   GetDefectModel,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportGetAlarmDataList,
+  ExportDefectDataSummary,
+  ExportDefectPointDetail,
+  GetDefectPointDetail
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -28,12 +30,15 @@ export default Model.extend({
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
-      dataType:'HourData'
+      dataType:'HourData',
+      EntType:''
     },
     tableDatas: [],
     total: '',
     attentionList:[],
     priseList: [],
+    airList:[],
+    tableDatil:[]
   },
   subscriptions: {},
   effects: {
@@ -44,6 +49,15 @@ export default Model.extend({
         yield update({
           tableDatas: response.Datas,
           total: response.Total,
+        });
+      }
+    },
+    *getDefectPointDetail({ payload }, { call, put, update, select }) {
+      //列表 响应数据详情
+      const response = yield call(GetDefectPointDetail, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          tableDatil: response.Datas,
         });
       }
     },
@@ -65,10 +79,10 @@ export default Model.extend({
         });
       }
     },
-    *exportGetAlarmDataList({callback, payload }, { call, put, update, select }) {
+    *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出
-      const response = yield call(ExportGetAlarmDataList, { ...payload });
+      //导出  缺失数据报警响应
+      const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -78,7 +92,19 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-
-
+    *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //导出  缺失数据报警响应  详情
+      const response = yield call(ExportDefectPointDetail, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
+    
   },
 });

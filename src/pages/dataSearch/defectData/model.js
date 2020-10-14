@@ -34,6 +34,7 @@ export default Model.extend({
     total: '',
     attentionList:[],
     priseList: [],
+    airList:[]
   },
   subscriptions: {},
   effects: {
