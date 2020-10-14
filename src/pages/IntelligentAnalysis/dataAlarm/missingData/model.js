@@ -1,23 +1,23 @@
 /**
- * 功  能：去除分析率
+ * 功  能：传输有效率
  * 创建人：贾安波
- * 创建时间：2020.10.09
+ * 创建时间：2020.09.27
  */
 
 import Model from '@/utils/model';
 import {
-  GetSewageHistoryList,
+  GetDefectModel,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportSewageHistoryList,
+  ExportGetAlarmDataList,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'removalFlowRate',
+  namespace: 'missingData',
   state: {
     exloading: false,
-    loading: true,
+    loading: false,
     queryPar: {
       beginTime: moment()
         .subtract(1, 'day')
@@ -26,39 +26,24 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType:'011',
+      Atmosphere:'',
+      PollutantType:'',
       dataType:'HourData'
     },
-    pointName:'COD',
     tableDatas: [],
     total: '',
     attentionList:[],
     priseList: [],
-    chartExport:[],
-    chartImport:[],
-    chartTime:[]
   },
   subscriptions: {},
   effects: {
-    *getSewageHistoryList({ payload }, { call, put, update, select }) {
+    *getDefectModel({ payload }, { call, put, update, select }) {
       //列表
-      const response = yield call(GetSewageHistoryList, { ...payload });
+      const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,
           total: response.Total,
-        });
-        const chartExport = [], chartImport=[], chartTime=[];
-        response.Datas.map(item=>{
-          chartExport.push(item.exportValue);
-          chartImport.push(item.importValue);
-          chartTime.push(moment(item.MonitorTime).format('YYYY-MM-DD HH:mm'))
-        })
-        yield update({
-          chartExport:chartExport,
-          chartImport:chartImport,
-          chartTime:chartTime,
-          loading:false
         });
       }
     },
@@ -71,21 +56,19 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
+    *getEntByRegion({ payload }, { call, put, update, select }) {
       //获取所有企业列表
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
           priseList: response.Datas,
         });
-        callback(response.Datas[0].EntCode)
       }
     },
-    *exportSewageHistoryList({callback, payload }, { call, put, update, select }) {
+    *exportGetAlarmDataList({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出
-      const response = yield call(ExportSewageHistoryList, { ...payload });
+      const response = yield call(ExportGetAlarmDataList, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

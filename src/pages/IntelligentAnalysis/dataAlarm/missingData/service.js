@@ -4,9 +4,9 @@ import { post } from '@/utils/request';
  * 缺失数据
  *
  */
-export async function GetSewageHistoryList(params) {
+export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetSewageHistoryList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel',
     params,
     null,
   );
@@ -27,9 +27,9 @@ export async function GetAttentionDegreeList(params) {
 
 //导出
 
-export async function ExportSewageHistoryList(params) {
+export async function ExportGetAlarmDataList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/ExportSewageHistoryList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
     params,
     null,
   );
