@@ -3,7 +3,7 @@
  * 创建人：胡孟弟
  * 创建时间：2020.10.10
  */
-// import Model from '@/utils/model';
+import Model from '@/utils/model';
 // import {
 //   GetEntByRegion,
 // } from '../pages/IntelligentAnalysis/newTransmissionefficiency/service';
