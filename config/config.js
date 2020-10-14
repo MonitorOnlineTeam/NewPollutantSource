@@ -1290,12 +1290,6 @@ export default {
                   ],
                 },
                 {
-<<<<<<< HEAD
-                  name: 'defectData', //超标数据
-                  path: '/dataSearch/exceedData',
-                  component: './dataSearch/exceedData',
-                },
-=======
      
                   name: 'abnormalStandard',   //异常标准
                   path: '/dataSearch/abnormalStandard',
@@ -1308,7 +1302,6 @@ export default {
                   component: './dataSearch/dischargeStandard',
                 },
                 
->>>>>>> 42f461dc996326b59d91acd5ca341491962e1143
               ]
             },
             {
