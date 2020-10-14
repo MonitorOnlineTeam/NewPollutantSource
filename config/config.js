@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -480,6 +480,12 @@ export default {
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
+                //年度考核企业
+                {
+                  name: 'yearCheckEnt',
+                  path: '/platformconfig/yearCheckEnt',
+                  component: './platformManager/yearCheckEnt/',
+                },
               ],
             },
             {
@@ -875,11 +881,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
+                  component: `${config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1199,7 +1204,7 @@ export default {
                 {
                   path: '/Intelligentanalysis/sewageDisposal',
                   name: 'SewageDisposal',
-                
+
                   routes: [
                     {
                       path: '/Intelligentanalysis/sewageDisposal',
@@ -1210,13 +1215,13 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/removalRate',
                     },
                   ],
-                },                
+                },
               ],
             },
             {
               path: '/dataSearch',
-              name: 'dataSearch',            
-               routes: [
+              name: 'dataSearch',
+              routes: [
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
@@ -1236,6 +1241,11 @@ export default {
                       component: './dataSearch/defectData/air',
                     },
                   ],
+                },
+                {
+                  name: 'defectData', //超标数据
+                  path: '/dataSearch/exceedData',
+                  component: './dataSearch/exceedData',
                 },
               ]
             },
