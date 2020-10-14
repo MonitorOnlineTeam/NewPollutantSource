@@ -1260,12 +1260,8 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                     },
                   ],
-<<<<<<< HEAD
-                },
-=======
                 },  
                                              
->>>>>>> 42f461dc996326b59d91acd5ca341491962e1143
               ],
             },
             {
