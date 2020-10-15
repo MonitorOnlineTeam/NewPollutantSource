@@ -16,9 +16,19 @@ export default Model.extend({
     pollutantCode: [],
     industryTreeList: [],
     entAndPointList: [],
+    atmoStationList:[]
   },
 
   effects: {
+    *getStationByRegion({ payload }, { call, put, update, select }) {
+      //大气站列表
+      const response = yield call(services.GetStationByRegion, { ...payload });
+      if (response.IsSuccess) {
+        yield update({       
+          atmoStationList: response.Datas,
+        });
+      }
+    },
     // 获取污染物类型
     *getPollutantTypeList({ payload = {}, showAll, callback }, { update, call }) {
       const { filterPollutantType } = payload;

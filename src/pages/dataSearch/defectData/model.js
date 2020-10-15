@@ -21,8 +21,8 @@ export default Model.extend({
     queryPar: {
       beginTime: moment()
         .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
@@ -34,7 +34,6 @@ export default Model.extend({
     total: '',
     attentionList:[],
     priseList: [],
-    airList:[]
   },
   subscriptions: {},
   effects: {

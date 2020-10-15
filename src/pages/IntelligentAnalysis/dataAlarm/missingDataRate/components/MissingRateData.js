@@ -41,7 +41,7 @@ const pageUrl = {
   updateState: 'MissingRateData/updateState',
   getData: 'MissingRateData/getDefectModel',
 };
-@connect(({ loading, MissingRateData,autoForm }) => ({
+@connect(({ loading, MissingRateData,autoForm,common}) => ({
   priseList: MissingRateData.priseList,
   exloading:MissingRateData.exloading,
   loading: loading.effects[pageUrl.getData],
@@ -49,7 +49,8 @@ const pageUrl = {
   tableDatas: MissingRateData.tableDatas,
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateData.attentionList
+  attentionList:MissingRateData.attentionList,
+  atmoStationList:common.atmoStationList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -157,12 +158,12 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
 
-
-  children = () => { //企业列表
-    const { priseList } = this.props;
+  children = () => { //企业列表 or 大气站列表
+    const { priseList,atmoStationList,type } = this.props;
 
     const selectList = [];
-    if (priseList.length > 0) {
+    if(type==='ent'){
+     if (priseList.length > 0) {
       priseList.map(item => {
         selectList.push(
           <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
@@ -170,6 +171,17 @@ export default class EntTransmissionEfficiency extends Component {
           </Option>,
         );
       });
+     }else{
+       if(atmoStationList.length > 0){
+        atmoStationList.map(item => {
+          selectList.push(
+            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
+              {item.StationName}
+            </Option>,
+          );
+        }); 
+       }
+     }
       return selectList;
     }
   };
@@ -242,34 +254,20 @@ export default class EntTransmissionEfficiency extends Component {
     }
   }
   
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
-      this.updateQueryState({
-        dataType: value,
-        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
+      onRef1 = (ref) => {
+        this.child = ref;
       }
-    }
-  dateChange=(date)=>{
-      this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }
-    dateOk=()=>{ 
-
-   }
+          /** 数据类型切换 */
+     _handleDateTypeChange = value => {
+       this.child.onDataTypeChange(value)
+        }
+      dateChange=(date,dataType)=>{
+          this.updateQueryState({
+            // dataType:dataType,
+            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
 
   render() {
     const {
@@ -299,15 +297,8 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item> */}
                 <Form.Item>
                   日期查询：
-                      <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                        allowClear={false}
-                   />
+                  <RangePicker_  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select

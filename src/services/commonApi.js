@@ -1,5 +1,39 @@
 import { post, get } from '@/utils/request';
 
+//根据行政区获取 大气站列表
+
+export async function GetStationByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetStationByRegion?RegionCode=' +
+      params.RegionCode,
+    null,
+    null,
+  );
+
+  return result;
+}
+//根据行政区获取 企业列表
+
+export async function GetEntByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+      params.RegionCode,
+    null,
+    null,
+  );
+
+  return result;
+}
+//关注列表
+export async function GetAttentionDegreeList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+    params,
+    null,
+  );
+
+  return result;
+}
 // 行政区划
 export async function getEnterpriseAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetXuRegions', params, null);

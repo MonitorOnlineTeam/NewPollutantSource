@@ -104,7 +104,7 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'importStop',
             align:'center',
             render: (text, record) => {
-              return text==0? "否":'是';
+              return text==0? "否": text==1? '是' : text;
             },
             width:200,
            
@@ -129,7 +129,7 @@ export default class EntTransmissionEfficiency extends Component {
             width:200,
             align:'center',
             render: (text, record) => {
-              return text==0? <span>否</span>:<span>是</span>;
+              return text==0? "否": text==1? '是' : text;
             },
           },
         ],

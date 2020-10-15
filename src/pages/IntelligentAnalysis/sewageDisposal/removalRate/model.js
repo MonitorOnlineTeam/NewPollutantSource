@@ -78,7 +78,7 @@ export default Model.extend({
     },
     *getEntByRegion({ callback,payload }, { call, put, update, select }) {
       const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有企业列表
+      //获取所有污水处理厂
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
