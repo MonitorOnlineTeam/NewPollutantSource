@@ -267,7 +267,8 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
-      type
+      type,
+      tableDatas
     } = this.props;
 
     return (
@@ -354,16 +355,17 @@ export default class EntTransmissionEfficiency extends Component {
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              pagination={{
+              pagination={false}
+              // pagination={{
                 // showSizeChanger: true,
                 // showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
+                // total: this.props.total,
+                // defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+              // }}
             />
           </>
         </Card>

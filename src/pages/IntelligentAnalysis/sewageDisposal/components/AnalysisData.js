@@ -162,7 +162,7 @@ export default class EntTransmissionEfficiency extends Component {
               EntCode: '',
               RegionCode: '',
               dataType:'HourData',
-              PollutantType:'011',
+              PollutantCode:'011',
             });
             setTimeout(() => {
               this.getTableData();
@@ -210,7 +210,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantType: value,
+      PollutantCode: value,
     });
   };
 
@@ -235,7 +235,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   changePoll=(e)=>{ //污染物改变事件
     this.updateQueryState({
-      PollutantType: e.target.value,
+      PollutantCode: e.target.value,
     });
     const pollType = {
       '011':'COD',
@@ -381,7 +381,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode },
     } = this.props;
     const { TabPane } = Tabs;
     return (
@@ -444,7 +444,7 @@ export default class EntTransmissionEfficiency extends Component {
                 {/* <Select
                     placeholder="污染物名称"
                     onChange={this.changePoll}
-                    value={PollutantType}
+                    value={PollutantCode}
                     style={{ width: 170  }}
                   >
                  <Option key='011' value='011'>COD</Option>
@@ -452,7 +452,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option key='101' value='101'>总磷</Option>
                  <Option key='065' value='065'>总氮</Option>
                   </Select> */}
-                  <Radio.Group  onChange={this.changePoll} value={PollutantType}>
+                  <Radio.Group  onChange={this.changePoll} value={PollutantCode}>
                      <Radio value='011'>COD</Radio>
                      <Radio value='060'>氨氮</Radio>
                      <Radio value='101'>总磷</Radio>
