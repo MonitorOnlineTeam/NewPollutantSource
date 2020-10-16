@@ -379,9 +379,21 @@ reponseComp = (type)=>{
         </Radio.Group>
 </Form.Item> 
 }
+
+handleTableChange = (pagination, filters, sorter) => {
+
+    this.updateQueryState({
+      // transmissionEffectiveRate: 'ascend',
+      PageIndex: pagination.current,
+      PageSize: pagination.pageSize,
+    });
+  setTimeout(() => {
+    this.getTableData();
+  });
+};
   render() {
     const {
-      queryPar: { EntCode,PollutantType },
+      queryPar: { EntCode,PollutantType,PageSize=20,PageIndex },
       type
     } = this.props;
     return (
@@ -468,12 +480,13 @@ reponseComp = (type)=>{
               columns={this.columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
+              // onChange={this.handleTableChange}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 // sorter: true,
                 // total: this.props.total,
-                defaultPageSize:20
+                defaultPageSize:20,
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
