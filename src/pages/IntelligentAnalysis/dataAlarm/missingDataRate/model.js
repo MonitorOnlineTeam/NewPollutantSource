@@ -9,20 +9,20 @@ import {
   GetDefectModel,
   GetEntByRegion,
   GetAttentionDegreeList,
+  ExportDefectPointDetailRate,
   ExportDefectDataSummary,
-  ExportDefectPointDetail,
-  GetDefectPointDetail
+  GetDefectPointDetailRate
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'missingData',
+  namespace: 'MissingRateData',
   state: {
     exloading: false,
     loading: false,
     queryPar: {
       beginTime: moment()
-        .subtract(1, 'day')
+        .subtract(30, 'day')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
@@ -30,26 +30,26 @@ export default Model.extend({
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
-      dataType:'HourData',
       EntType:''
+      // dataType:'HourData'
     },
     tableDatas: [],
     total: '',
     attentionList:[],
     priseList: [],
-    airList:[],
     tableDatil:[]
   },
   subscriptions: {},
   effects: {
     *getDefectModel({ payload }, { call, put, update, select }) {
-      //列表
+      //列表 响应数据
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         let entCount = 0,pointCount=0,responseRate=0,exceptionCount=0,weixiangyingCount=0,xiangyingCount=0;
         response.Datas.map(item=>{
           entCount += item.entCount;
           pointCount += item.pointCount;
+          responseRate += item.responseRate;
           exceptionCount += item.exceptionCount;
           weixiangyingCount += item.weixiangyingCount;
           xiangyingCount += item.xiangyingCount;
@@ -59,26 +59,27 @@ export default Model.extend({
           regionCode:'',
           entCount:entCount,
           pointCount:pointCount,
+          responseRate:responseRate,
           exceptionCount:exceptionCount,
           weixiangyingCount:weixiangyingCount,
           xiangyingCount:xiangyingCount
         }
         yield update({
           tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
-          // tableDatas:response.Datas,
+          // tableDatas: response.Datas,
           total: response.Total,
         });
-      } 
+      }
     },
-    *getDefectPointDetail({ payload }, { call, put, update, select }) {
-      //列表 响应数据详情
-      const response = yield call(GetDefectPointDetail, { ...payload });
+    *getDefectPointDetailRate({ payload }, { call, put, update, select }) {
+      //列表 响应率数据详情
+      const response = yield call(GetDefectPointDetailRate, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatil: response.Datas,
         });
       }
-    },
+    },   
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
       const response = yield call(GetAttentionDegreeList, { ...payload });
@@ -97,9 +98,10 @@ export default Model.extend({
         });
       }
     },
+    // 
     *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应
+      //导出   父页面
       const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
@@ -112,8 +114,8 @@ export default Model.extend({
     },
     *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应  详情
-      const response = yield call(ExportDefectPointDetail, { ...payload });
+      //导出 详情页面
+      const response = yield call(ExportDefectPointDetailRate, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -123,6 +125,6 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-    
+
   },
 });

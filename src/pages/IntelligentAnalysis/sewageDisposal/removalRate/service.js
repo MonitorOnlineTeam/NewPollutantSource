@@ -38,11 +38,11 @@ export async function ExportSewageHistoryList(params) {
 }
 
 
-//根据行政区获取 企业列表
+//根据行政区获取 污水处理厂
 
 export async function GetEntByRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
       params.RegionCode,
     null,
     null,

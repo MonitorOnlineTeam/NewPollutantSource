@@ -67,3 +67,7 @@ export async function queryPointForTarget(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
   return result;
 }
+
+
+
+

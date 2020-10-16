@@ -28,9 +28,9 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import { routerRedux } from 'dva/router';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -38,18 +38,18 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'missingData/updateState',
-  getData: 'missingData/getDefectModel',
+  updateState: 'MissingRateData/updateState',
+  getData: 'MissingRateData/getDefectModel',
 };
-@connect(({ loading, missingData,autoForm,common }) => ({
-  priseList: missingData.priseList,
-  exloading:missingData.exloading,
+@connect(({ loading, MissingRateData,autoForm,common}) => ({
+  priseList: MissingRateData.priseList,
+  exloading:MissingRateData.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: missingData.total,
-  tableDatas: missingData.tableDatas,
-  queryPar: missingData.queryPar,
+  total: MissingRateData.total,
+  tableDatas: MissingRateData.tableDatas,
+  queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList,
+  attentionList:MissingRateData.attentionList,
   atmoStationList:common.atmoStationList
 }))
 @Form.create()
@@ -67,28 +67,26 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-          //          {text}
-          //      </Link>
-           return <a href='javascript:;' onClick={
-             ()=>{ 
-               sessionStorage.setItem("missDataDetailPageIndex",1)
-               sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query: {regionCode:record.regionCode}}));
-              }}>{text}</a>      
+          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',query: {regionCode :record.regionCode} }} >
+                   {text}
+               </Link>
+                 
        },
       },
       {
-        title: <span>{this.props.type==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
+        title: <span>{this.props.type==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center',
+        render: (text, record) => text,
       },
       {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'exceptionCount',
         key: 'exceptionCount',
-        align: 'center'
+        // width: '10%',
+        align: 'center',
+      
       },
       {
         title: <span>已响应报警次数</span>,
@@ -100,7 +98,17 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span>待响应报警次数</span>,
         dataIndex: 'weixiangyingCount',
         key: 'weixiangyingCount',
+        align: 'center'
+      },
+      {
+        title: <span>响应率</span>,
+        dataIndex: 'responseRate',
+        key: 'responseRate',
         align: 'center',
+        render:(text,row)=>{
+          return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>
+        }
+      
       },
     ];
   }
@@ -110,11 +118,6 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
-
-    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
-
-    type==='ent'? this.columns.splice(1,0,entObj) : null;
-
     this.updateQueryState({
       // beginTime: moment()
       //   .subtract(1, 'day')
@@ -122,17 +125,15 @@ export default class EntTransmissionEfficiency extends Component {
       // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       // AttentionCode: '',
       // EntCode: '',
-      // RegionCode: '',
-      // Atmosphere:Atmosphere
       RegionCode: '',
       EntType: type==='ent'? "1":"2"
+      // Atmosphere:Atmosphere
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     //获取企业列表 or 大气站列表
-     type==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
+     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
  
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -155,8 +156,6 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { ...queryPar },
     });
   };
-
-
 
 
   children = () => { //企业列表 or 大气站列表
@@ -213,7 +212,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'missingData/exportDefectDataSummary',
+      type: 'MissingRateData/exportDefectDataSummary',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -254,26 +253,27 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  onRef1 = (ref) => {
-    this.child = ref;
-  }
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   this.child.onDataTypeChange(value)
-    }
-  dateChange=(date,dataType)=>{
-      this.updateQueryState({
-        dataType:dataType,
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }
+  
+      onRef1 = (ref) => {
+        this.child = ref;
+      }
+          /** 数据类型切换 */
+     _handleDateTypeChange = value => {
+       this.child.onDataTypeChange(value)
+        }
+      dateChange=(date,dataType)=>{
+          this.updateQueryState({
+            // dataType:dataType,
+            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+
   render() {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
-      type,
-      tableDatas
+      type
     } = this.props;
 
     return (
@@ -281,10 +281,9 @@ export default class EntTransmissionEfficiency extends Component {
           bordered={false}
           title={
             <>
-              <Form layout="inline">
-            
+              <Form layout="inline"> 
               <Row>
-              <Form.Item label='数据类型'>
+              {/* <Form.Item label='数据类型'>
               <Select
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
@@ -295,17 +294,17 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option key='1' value='DayData'> 日数据</Option>
 
                   </Select>
-              </Form.Item>
+              </Form.Item> */}
                 <Form.Item>
                   日期查询：
-                  <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  <RangePicker_  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode} 
+                    value={AttentionCode}
                     style={{ width: 110 }}
                   >
                     <Option value="">全部</Option>
@@ -359,6 +358,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
+              bordered={false}
               dataSource={this.props.tableDatas}
               pagination={false}
               // pagination={{

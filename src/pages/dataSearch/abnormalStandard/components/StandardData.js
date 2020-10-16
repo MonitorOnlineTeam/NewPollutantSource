@@ -67,12 +67,14 @@ export default class Index extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
+        width:100,
       },
       {
         title: '企业名称',
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
+        width:200,
         render: (text, record) => {     
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
@@ -82,95 +84,10 @@ export default class Index extends Component {
         dataIndex: 'pointName',
         key: 'pointName',
         align: 'center',
-      },
-      {
-        title: '实测烟尘',
-        width:400,
-        children: [
-          {
-          title: '零值异常',
-          width:100,
-          children: [{
-              title: '零值计数',
-              dataIndex: 'pointName',
-              key: 'pointName',
-              align: 'center',
-          }], 
-         },
-         {
-          title: '超量程异常',
-          width:300,
-          children: [
-            {
-              title: '检出上限',
-              dataIndex: 'pointName',
-              key: 'pointName',
-              width:100,
-              align: 'center',
-           },
-           {
-            title: '检出下限',
-            dataIndex: 'pointName',
-            key: 'pointName',
-            width:100,
-            align: 'center',
-         },
-         {
-          title: '超量程计数',
-          dataIndex: 'pointName',
-          key: 'pointName',
-          width:100,
-          align: 'center',
-       }], 
-
-        } ],
-      },
-
-      {
-        title: '折算烟尘',
-        width:400,
-        children: [
-          {
-          title: '零值异常',
-          width:100,
-          children: [{
-              title: '零值计数',
-              dataIndex: 'pointName',
-              key: 'pointName',
-              width:100,
-              align: 'center',
-          }], 
-         },
-         {
-          title: '超量程异常',
-          width:300,
-          children: [
-            {
-              title: '检出上限',
-              dataIndex: 'pointName',
-              key: 'pointName',
-              width:100,
-              align: 'center',
-           },
-           {
-            title: '检出下限',
-            dataIndex: 'pointName',
-            key: 'pointName',
-            width:100,
-            align: 'center',
-         },
-         {
-          title: '超量程计数',
-          dataIndex: 'pointName',
-          key: 'pointName',
-          width:100,
-          align: 'center',
-       }], 
-
-        } ],
-
-
-
+        width:150,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
     ]
   }
@@ -282,7 +199,6 @@ export default class Index extends Component {
     this.getTableData();
 
     const {  queryPar:{ PollutantType } } = this.props;
-     PollutantType ==1 ? this.columns[3].width = 480 : this.columns[3].width = 1120;
   };
 
 
@@ -350,20 +266,52 @@ export default class Index extends Component {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType },
-      column
+      column,
+      tableDatas
     } = this.props;
     const { TabPane } = Tabs;
     let columns = this.columns;
-  //   if(column.length>0){
-  //    columns[3].children=[];
-  //     column.map(item=>{
-  //      columns[3].children.push( 
-  //       {
-  //       title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,dataIndex: `${item.PollutantCode}`,key: `${item.PollutantCode}`,
-  //        width:80, align:'center'},
-  //    )
-  //   })
-  // }
+
+    if(column.length>0){
+      let  addCol=[];
+      column.map(item=>{
+        addCol.push({
+           title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,
+           width:400, 
+           children: [
+          {
+            // width: 100, 
+           title: '零值异常',
+           children: [{  title: '零值计数',   dataIndex: `${item.PollutantCode}_zero`,  key:`${item.PollutantCode}_zero`,  width: 100, align:'center' }]
+          },
+          {
+            // width: 300, 
+           title: '超量程异常',
+            children: [{
+            title: '检出上限',
+            dataIndex: `${item.PollutantCode}_overrunup`,
+            key: `${item.PollutantCode}_overrunup`,
+            width: 100, align:'center' 
+          },
+          {
+           title: '检出下限',
+           dataIndex: `${item.PollutantCode}_overrunlow`,
+           key: `${item.PollutantCode}_overrunlow`,
+           width: 100, align:'center' 
+        },
+        {
+         title: '超量程计数',
+         dataIndex: `${item.PollutantCode}_overrun`,
+         key: `${item.PollutantCode}_overrun`,
+         width: 100, align:'center' 
+        }]
+          }],
+
+        })
+    })
+
+    columns = [...this.columns,...addCol]
+  }
     return (
         <Card
           bordered={false}
@@ -440,8 +388,8 @@ export default class Index extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={columns}
-              bordered={false}
-              dataSource={this.props.tableDatas}
+              bordered={true}
+              dataSource={tableDatas}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,

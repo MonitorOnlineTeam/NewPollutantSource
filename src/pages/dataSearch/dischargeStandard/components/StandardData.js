@@ -67,12 +67,14 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
+        width:100,
       },
       {
         title: '企业名称',
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
+        width:200,
         render: (text, record) => {     
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
@@ -82,6 +84,10 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'pointName',
         key: 'pointName',
         align: 'center',
+        width:150,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: '污染物排放标准',
@@ -356,7 +362,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={columns}
-              bordered={false}
+              bordered={true}
               dataSource={this.props.disTableDatas}
               pagination={{
                 showSizeChanger: true,

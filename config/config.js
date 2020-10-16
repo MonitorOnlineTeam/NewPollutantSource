@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -480,6 +480,12 @@ export default {
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
+                //年度考核企业
+                {
+                  name: 'yearCheckEnt',
+                  path: '/platformconfig/yearCheckEnt',
+                  component: './platformManager/yearCheckEnt/',
+                },
               ],
             },
             {
@@ -819,7 +825,13 @@ export default {
                 {
                   name: 'exceptionrecord',
                   path: '/dataquerymanager/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
+                },
+                {
+                  name: 'exceptionrecordDetails',
+                  path: '/dataquerymanager/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
                 },
                 {
                   name: 'overrecord',
@@ -875,11 +887,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1199,7 +1210,7 @@ export default {
                 {
                   path: '/Intelligentanalysis/sewageDisposal',
                   name: 'SewageDisposal',
-                
+
                   routes: [
                     {
                       path: '/Intelligentanalysis/sewageDisposal',
@@ -1214,13 +1225,14 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                },    
-                //缺失数据报警统计
+                },
+                //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
-                
+
                   routes: [
+                    /* 缺失数据报警统计 */
                     {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
@@ -1237,14 +1249,31 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                       component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                     },
+
+
+                    /* 缺失数据报警响应率 */
+
+                    { //缺失数据报警响应率 企业
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    },
+                    { //缺失数据报警响应率 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    { //缺失数据报警响应率 二级页面
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    },
                   ],
-                },                               
+                },
+
               ],
             },
             {
               path: '/dataSearch',
-              name: 'dataSearch',            
-               routes: [
+              name: 'dataSearch',
+              routes: [
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
@@ -1263,22 +1292,46 @@ export default {
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
-                    
+
                   ],
                 },
                 {
-     
+
                   name: 'abnormalStandard',   //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
-      
+
                 },
                 {
                   name: 'dischargeStandard', //排放标准
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
                 },
-                
+                {
+                  name: 'abnormalData', //异常数据
+                  path: '/dataSearch/abnormalData',
+                  component: './dataSearch/abnormalData',
+                },
+                {
+                  name: 'abnormalDetailsData', //异常数据 - 二级
+                  path: '/dataSearch/abnormalData/details',
+                  component: './dataSearch/abnormalData/DetailsPage',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseMonitoringInquiry',
+                  component: './dataSearch/enterpriseMonitoringInquiry',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
+                  component: './dataSearch/enterpriseInquiryDetail',
+                },
+                {
+                  name: 'airStation', //空气站查询
+                  path: '/dataSearch/airStation',
+                  component: './dataSearch/airStation',
+                },
               ]
             },
             {
