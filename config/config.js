@@ -1332,6 +1332,11 @@ export default {
                   path: '/dataSearch/airStation',
                   component: './dataSearch/airStation',
                 },
+                {
+                  name: 'exceedData', //超标数据查询
+                  path: '/dataSearch/exceedData',
+                  component: './dataSearch/exceedData',
+                },
               ]
             },
             {

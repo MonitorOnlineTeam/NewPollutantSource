@@ -40,7 +40,6 @@ export default Model.extend({
         PageIndex: payload.PageIndex,
       }
       const result = yield call(GetSewageFlowList, body, null)
-      console.log(result)
       if (result.IsSuccess) {
         yield update({
           FlowList: result.Datas,
