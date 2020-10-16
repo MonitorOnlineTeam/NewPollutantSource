@@ -56,7 +56,7 @@ const pageUrl = {
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
     };
     

@@ -50,13 +50,13 @@ const pageUrl = {
   tableDatas: missingData.tableDatil,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList
+  attentionList:missingData.attentionList,
+  type:missingData.type
 }))
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
     };
     
@@ -71,18 +71,23 @@ export default class Index extends Component {
         },
       },
       {
-        title: <span>{this.props.type ==='ent'? '企业名称': '大气站名称'}</span>,
+        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-      //   align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
+        align: 'center',
+        width:250,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>首次报警时间</span>,
@@ -138,6 +143,7 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
 
+    // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
     this.updateQueryState({
       // beginTime: moment()
       //   .subtract(1, 'day')

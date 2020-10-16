@@ -50,7 +50,8 @@ const pageUrl = {
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
   attentionList:MissingRateData.attentionList,
-  atmoStationList:common.atmoStationList
+  atmoStationList:common.atmoStationList,
+  type:MissingRateData.type
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -74,11 +75,10 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: <span>{this.props.type==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
+        title: <span>{this.props.types==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
-        align: 'center',
-        render: (text, record) => text,
+        align: 'center'
       },
       {
         title: <span>缺失数据报警次数</span>,
@@ -118,6 +118,8 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
+
+
     this.updateQueryState({
       // beginTime: moment()
       //   .subtract(1, 'day')

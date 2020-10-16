@@ -358,13 +358,13 @@ export default class EntTransmissionEfficiency extends Component {
           {
               name: `进水口-${pointName}`,
               type: 'line',
-              stack: '总量',
+              // stack: '总量',
               data: chartImport,
           },
           {
               name: `出水口-${pointName}`,
               type: 'line',
-              stack: '总量',
+              // stack: '总量',
               data: chartExport,
           },
       ]
