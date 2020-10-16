@@ -825,7 +825,8 @@ export default {
                 {
                   name: 'exceptionrecord',
                   path: '/dataquerymanager/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
                 },
                 {
                   name: 'overrecord',
@@ -1219,12 +1220,12 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                },    
+                },
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
-                
+
                   routes: [
                      /* 缺失数据报警统计 */
                     {
@@ -1260,8 +1261,8 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                     },
                   ],
-                },  
-                                             
+                },
+
               ],
             },
             {
@@ -1286,20 +1287,30 @@ export default {
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
-                    
+
                   ],
                 },
                 {
-     
+
                   name: 'abnormalStandard',   //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
-      
+
                 },
                 {
                   name: 'dischargeStandard', //排放标准
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
+                },
+                {
+                  name: 'abnormalData', //异常数据
+                  path: '/dataSearch/abnormalData',
+                  component: './dataSearch/abnormalData',
+                },
+                {
+                  name: 'abnormalDetailsData', //异常数据 - 二级
+                  path: '/dataSearch/abnormalData/details',
+                  component: './dataSearch/abnormalData/DetailsPage',
                 },
                 {
                   name: 'enterpriseMonitoringInquiry', //企业监测点查询
