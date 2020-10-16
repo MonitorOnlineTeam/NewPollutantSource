@@ -30,7 +30,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-
+import { routerRedux } from 'dva/router';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -41,7 +41,7 @@ const pageUrl = {
   updateState: 'missingData/updateState',
   getData: 'missingData/getDefectModel',
 };
-@connect(({ loading, missingData,autoForm }) => ({
+@connect(({ loading, missingData,autoForm,common }) => ({
   priseList: missingData.priseList,
   exloading:missingData.exloading,
   loading: loading.effects[pageUrl.getData],
@@ -49,7 +49,8 @@ const pageUrl = {
   tableDatas: missingData.tableDatas,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList
+  attentionList:missingData.attentionList,
+  atmoStationList:common.atmoStationList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -66,46 +67,39 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',query:  record.RegionCode }} >
-                   {text}
-               </Link>
-                 
+          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
+          //          {text}
+          //      </Link>
+           return <a href='javascript:;' onClick={
+             ()=>{ 
+               sessionStorage.setItem("missDataDetailPageIndex",1)
+               sessionStorage.setItem("missDataDetailPageSize",20)
+               this.props.dispatch(routerRedux.push({pathname:'/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query: {regionCode:record.regionCode}}));
+              }}>{text}</a>      
        },
       },
       {
-        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
+        title: <span>{this.props.type==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
+        dataIndex: 'pointCount',
+        key: 'pointCount',
         align: 'center',
-        render: (text, record) => text,
       },
       {
-        title: <span>监测点名称</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
-        // width: '10%',
-        align: 'center',
-      
-      },
-      // {
-      //   title: <span>缺失监测因子</span>,
-      //   dataIndex: 'TransmissionRate',
-      //   key: 'TransmissionRate',
-      //   align: 'center',
-      // },
-      {
-        title: <span>缺失时间段</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
-        align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
+        title: <span>缺失数据报警次数</span>,
+        dataIndex: 'exceptionCount',
+        key: 'exceptionCount',
+        align: 'center'
       },
       {
-        title: <span>缺失小时数</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        title: <span>已响应报警次数</span>,
+        dataIndex: 'xiangyingCount',
+        key: 'xiangyingCount',
+        align: 'center',
+      },
+      {
+        title: <span>待响应报警次数</span>,
+        dataIndex: 'weixiangyingCount',
+        key: 'weixiangyingCount',
         align: 'center',
       },
     ];
@@ -115,21 +109,28 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location,Atmosphere,type } = this.props;
+
+    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+
+    type==='ent'? this.columns.splice(1,0,entObj) : null;
 
     this.updateQueryState({
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      AttentionCode: '',
-      EntCode: '',
+      // beginTime: moment()
+      //   .subtract(1, 'day')
+      //   .format('YYYY-MM-DD HH:mm:ss'),
+      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      // AttentionCode: '',
+      // EntCode: '',
+      // RegionCode: '',
+      // Atmosphere:Atmosphere
       RegionCode: '',
-      Atmosphere:Atmosphere
+      EntType: type==='ent'? "1":"2"
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+     //获取企业列表 or 大气站列表
+     type==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
  
      dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
@@ -157,11 +158,13 @@ export default class EntTransmissionEfficiency extends Component {
 
 
 
-  children = () => { //企业列表
-    const { priseList } = this.props;
+
+  children = () => { //企业列表 or 大气站列表
+    const { priseList,atmoStationList,type } = this.props;
 
     const selectList = [];
-    if (priseList.length > 0) {
+    if(type==='ent'){
+     if (priseList.length > 0) {
       priseList.map(item => {
         selectList.push(
           <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
@@ -169,6 +172,17 @@ export default class EntTransmissionEfficiency extends Component {
           </Option>,
         );
       });
+     }else{
+       if(atmoStationList.length > 0){
+        atmoStationList.map(item => {
+          selectList.push(
+            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
+              {item.StationName}
+            </Option>,
+          );
+        }); 
+       }
+     }
       return selectList;
     }
   };
@@ -199,7 +213,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'missingData/exportGetAlarmDataList',
+      type: 'missingData/exportDefectDataSummary',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -240,40 +254,26 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  
+  onRef1 = (ref) => {
+    this.child = ref;
+  }
       /** 数据类型切换 */
  _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
-      this.updateQueryState({
-        dataType: value,
-        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
+   this.child.onDataTypeChange(value)
     }
-  dateChange=(date)=>{
+  dateChange=(date,dataType)=>{
       this.updateQueryState({
+        dataType:dataType,
         beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
-    dateOk=()=>{ 
-
-   }
   render() {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
-      type
+      type,
+      tableDatas
     } = this.props;
 
     return (
@@ -298,20 +298,14 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                      <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                   />
+                  <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode}
+                    value={AttentionCode} 
                     style={{ width: 110 }}
                   >
                     <Option value="">全部</Option>
@@ -342,18 +336,6 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item> : null }
 
-                 {/* <Form.Item label='响应状态'>
-                  <Select
-                    placeholder="响应状态"
-                    onChange={this.changeEnt}
-                    value={EntCode}
-                    style={{ width: 100  }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">已响应</Option>
-                    <Option value="2">待响应</Option>
-                  </Select>
-                </Form.Item>  */}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
@@ -377,18 +359,18 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
               dataSource={this.props.tableDatas}
-              pagination={{
+              pagination={false}
+              // pagination={{
                 // showSizeChanger: true,
                 // showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
+                // total: this.props.total,
+                // defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+              // }}
             />
           </>
         </Card>

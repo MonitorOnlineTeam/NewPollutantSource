@@ -40,14 +40,14 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'missingData/updateState',
-  getData: 'missingData/getDefectModel',
+  getData: 'missingData/getDefectPointDetail',
 };
 @connect(({ loading, missingData,autoForm }) => ({
   priseList: missingData.priseList,
   exloading:missingData.exloading,
   loading: loading.effects[pageUrl.getData],
   total: missingData.total,
-  tableDatas: missingData.tableDatas,
+  tableDatas: missingData.tableDatil,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
   attentionList:missingData.attentionList
@@ -74,37 +74,60 @@ export default class Index extends Component {
         title: <span>{this.props.type ==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-        align: 'center',
-        render: (text, record) => text,
+      //   align: 'center',
+      //   render: (text, record) => {     
+      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+      //  },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
+      },
+      {
+        title: <span>首次报警时间</span>,
+        dataIndex: 'firstTime',
+        key: 'firstTime',
         // width: '10%',
         align: 'center',
       
       },
-      // {
-      //   title: <span>缺失监测因子</span>,
-      //   dataIndex: 'TransmissionRate',
-      //   key: 'TransmissionRate',
-      //   align: 'center',
-      // },
       {
-        title: <span>缺失时间段</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
+        title: <span>报警信息</span>,
+        dataIndex: 'message',
+        key: 'message',
         align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
+        width:250
       },
       {
-        title: <span>缺失小时数</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        title: <span>响应状态</span>,
+        dataIndex: 'status',
+        key: 'status',
         align: 'center',
+        render:(text,record)=>{return text==0?'未响应':'已响应'}
+      },
+      {
+        title: <span>运维负责人</span>,
+        dataIndex: 'operationName',
+        key: 'operationName',
+        align: 'center',
+      
+      },
+      {
+        title: <span>响应时间</span>,
+        dataIndex: 'xiangyingTime',
+        key: 'xiangyingTime',
+        align: 'center',
+      
+      },
+      {
+        title: <span>处理详情</span>,
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render:(text,record)=>{
+          return text==0?
+           '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>}
       },
     ];
   }
@@ -113,18 +136,21 @@ export default class Index extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location,Atmosphere,type } = this.props;
 
     this.updateQueryState({
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      Atmosphere:Atmosphere
-    });
+      // beginTime: moment()
+      //   .subtract(1, 'day')
+      //   .format('YYYY-MM-DD HH:mm:ss'),
+      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      // AttentionCode: '',
+      // EntCode: '',
+      // RegionCode: '',
+      // Atmosphere:Atmosphere
+      RegionCode:location.query.regionCode,
+      statusInfo:'',
+     });
+     
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
@@ -197,7 +223,7 @@ export default class Index extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'missingData/exportGetAlarmDataList',
+      type: 'missingData/exportDefectPointDetail',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -319,7 +345,9 @@ export default class Index extends Component {
   //     </>
   // }
   reponseChange=(e)=>{
-    console.log(e.target.value)
+      this.updateQueryState({
+        statusInfo: e.target.value,
+      });
   }
   btnCompents=()=>{
     const { exloading } = this.props;
@@ -335,20 +363,39 @@ export default class Index extends Component {
     >
       导出
     </Button>
+      <Button  onClick={() => { this.props.history.go(-1);  }} >
+         <Icon type="rollback" />
+                返回
+     </Button>
   </Form.Item>
   }
 reponseComp = (type)=>{
+  const {queryPar:{statusInfo} } = this.props;
   return <Form.Item label='响应状态'>
-        <Radio.Group  onChange={this.reponseChange}>
+        <Radio.Group value={statusInfo} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
-          <Radio.Button value="2">待响应</Radio.Button>
+          <Radio.Button value="0">待响应</Radio.Button>
         </Radio.Group>
 </Form.Item> 
 }
+
+handleTableChange = (pagination, filters, sorter) => {
+
+    this.updateQueryState({
+      // transmissionEffectiveRate: 'ascend',
+      PageIndex: pagination.current,
+      PageSize: pagination.pageSize,
+    });
+    sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
+    sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
+  // setTimeout(() => {
+  //   this.getTableData();
+  // });
+};
   render() {
     const {
-      queryPar: { EntCode,PollutantType },
+      queryPar: { EntCode,PollutantType,PageSize,PageIndex },
       type
     } = this.props;
     return (
@@ -433,16 +480,17 @@ reponseComp = (type)=>{
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
+              // bordered={false}
               dataSource={this.props.tableDatas}
+              onChange={this.handleTableChange}
               pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
+                showSizeChanger: true,
+                showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
+                // total: this.props.total,
+                defaultPageSize:20,
+                pageSize:sessionStorage.getItem("missDataDetailPageSize"),
+                current:parseInt(sessionStorage.getItem("missDataDetailPageIndex")),
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
@@ -452,3 +500,4 @@ reponseComp = (type)=>{
     );
   }
 }
+ 

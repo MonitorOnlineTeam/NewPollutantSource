@@ -21,12 +21,12 @@ export default Model.extend({
     queryPar: {
       beginTime: moment()
         .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:mm:ss'),
-      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        .format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType:'011',
+      PollutantCode:'011',
       dataType:'HourData'
     },
     pointName:'COD',
@@ -36,12 +36,15 @@ export default Model.extend({
     priseList: [],
     chartExport:[],
     chartImport:[],
-    chartTime:[]
+    chartTime:[],
+    entName:''
   },
   subscriptions: {},
   effects: {
     *getSewageHistoryList({ payload }, { call, put, update, select }) {
       //列表
+
+      yield update({ loading:true }); 
       const response = yield call(GetSewageHistoryList, { ...payload });
       if (response.IsSuccess) {
         yield update({
@@ -60,6 +63,8 @@ export default Model.extend({
           chartTime:chartTime,
           loading:false
         });
+      }else{
+        yield update({ loading:false }); 
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -73,7 +78,7 @@ export default Model.extend({
     },
     *getEntByRegion({ callback,payload }, { call, put, update, select }) {
       const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有企业列表
+      //获取所有污水处理厂
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
