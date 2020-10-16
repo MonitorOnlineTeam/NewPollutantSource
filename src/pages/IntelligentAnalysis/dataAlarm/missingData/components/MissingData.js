@@ -30,7 +30,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-
+import { routerRedux } from 'dva/router';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -67,10 +67,15 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-                   {text}
-               </Link>
-                 
+          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
+          //          {text}
+          //      </Link>
+           return <a href='javascript:;' onClick={
+             ()=>{ 
+               sessionStorage.setItem("missDataDetailPageIndex",1)
+               sessionStorage.setItem("missDataDetailPageSize",20)
+               this.props.dispatch(routerRedux.push({pathname:'/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query: {regionCode:record.regionCode}}));
+              }}>{text}</a>      
        },
       },
       {
