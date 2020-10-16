@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message, Icon } from 'antd';
+import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message, Icon, Modal } from 'antd';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
@@ -15,8 +15,10 @@ const { RangePicker } = DatePicker;
   attentionList: exceptionrecordNew.attentionList,
   divisorList: exceptionrecordNew.divisorList,
   exceptionAlarmDataSource: exceptionrecordNew.exceptionAlarmDataSource,
+  exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
+  detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
 }))
 @Form.create()
 class index extends PureComponent {
@@ -25,6 +27,8 @@ class index extends PureComponent {
     format: 'YYYY-MM-DD HH',
     pollutantType: "1",
     checkedValues: [],
+    secondQueryCondition: {},
+    queryCondition: {},
   }
   _SELF_ = {
     formLayout: {
@@ -37,6 +41,14 @@ class index extends PureComponent {
         dataIndex: 'RegionName',
         key: 'RegionName',
         width: 120,
+        render: (text, record) => {
+          return <a onClick={() => {
+            let queryCondition = this.state.queryCondition;
+            queryCondition.RegionCode = record.RegionCode;
+            queryCondition = JSON.stringify(queryCondition)
+            router.push(`/dataquerymanager/exceptionrecord/details?queryCondition=${queryCondition}`);
+          }}>{text}</a>
+        }
       },
       {
         title: '数据异常报警企业数',
@@ -64,21 +76,40 @@ class index extends PureComponent {
             dataIndex: 'LingAlarmCount',
             key: 'LingAlarmCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                this.onTableClick(record.RegionCode, '1', undefined)
+              }}>{text}</a>
+            }
           },
           {
             title: '已响应报警次数',
             dataIndex: 'LingResponsedCount',
             key: 'LingResponsedCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                this.onTableClick(record.RegionCode, "1", '1')
+              }}>{text}</a>
+            }
           },
           {
             title: '待响应报警次数',
             dataIndex: 'LingNoResponseCount',
             key: 'LingNoResponseCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+
+                this.onTableClick(record.RegionCode, "1", '0')
+              }}>{text}</a>
+            }
           },
         ]
       },
@@ -90,25 +121,97 @@ class index extends PureComponent {
             dataIndex: 'ChaoAlarmCount',
             key: 'ChaoAlarmCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+
+                this.onTableClick(record.RegionCode, "2", undefined)
+              }}>{text}</a>
+            }
           },
           {
             title: '已响应报警次数',
             dataIndex: 'ChaoResponsedCount',
             key: 'ChaoResponsedCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+
+                this.onTableClick(record.RegionCode, "2", '1')
+              }}>{text}</a>
+            }
           },
           {
             title: '待响应报警次数',
             dataIndex: 'ChaoNoResponseCount',
             key: 'ChaoNoResponseCount',
             width: 120,
-            align: 'center'
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                this.onTableClick(record.RegionCode, "2", '0')
+              }}>{text}</a>
+            }
           },
         ]
       },
-    ]
+    ],
+    detailsColumns: [
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+      },
+      {
+        title: '数据类型',
+        dataIndex: 'DataType',
+        key: 'DataType',
+      },
+      {
+        title: '首次报警时间',
+        dataIndex: 'FirstTime',
+        key: 'FirstTime',
+      },
+      {
+        title: '报警信息',
+        dataIndex: 'AlarmMsg',
+        key: 'AlarmMsg',
+        width: 300
+      },
+      {
+        title: '响应状态',
+        dataIndex: 'ResponseStatusName',
+        key: 'ResponseStatusName',
+      },
+      {
+        title: '运维负责人',
+        dataIndex: 'OperationName',
+        key: 'OperationName',
+      },
+      {
+        title: '响应时间',
+        dataIndex: 'CompleteTime',
+        key: 'CompleteTime',
+        align: 'center',
+        render: (text, record) => {
+          return text ? text : "-"
+        }
+      },
+    ],
   }
 
   componentDidMount() {
@@ -125,6 +228,39 @@ class index extends PureComponent {
     });
 
     this.getExceptionList();
+  }
+
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus) => {
+    this.setState({
+      secondQueryCondition: {
+        ...this.state.queryCondition,
+        RegionCode: RegionCode,
+        ExceptionType: ExceptionType,
+        ResponseStatus: ResponseStatus
+      },
+      visible: true
+    }, () => {
+      this.getExceptionAlarmListForEnt();
+    })
+  }
+
+  // 获取二级数据
+  getExceptionAlarmListForEnt = () => {
+    this.props.dispatch({
+      type: "exceptionrecordNew/getExceptionAlarmListForEnt",
+      payload: {
+        ...this.state.secondQueryCondition,
+      }
+    })
+  }
+
+  onExport = () => {
+    this.props.dispatch({
+      type: "exceptionrecordNew/exportExceptionAlarmListForEnt",
+      payload: {
+        ...this.state.secondQueryCondition,
+      }
+    })
   }
 
   // 获取异常数据
@@ -208,11 +344,15 @@ class index extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator }, regionList, attentionList, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
-    const { formLayout, columns } = this._SELF_;
-    const { format, showTime, checkedValues } = this.state;
-    console.log("attentionList=", attentionList)
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { formLayout, columns, detailsColumns } = this._SELF_;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition } = this.state;
+    console.log("exceptionAlarmListForEntDataSource=", exceptionAlarmListForEntDataSource)
     let _regionList = regionList.length ? regionList[0].children : [];
+    let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
+    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")
+    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.endTime).format("YYYY年MM月DD号")
+    let modelTitle = `${RegionName}${beginTime} - ${endTime}${showTypeText}`
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -311,6 +451,21 @@ class index extends PureComponent {
           </Form>
           <SdlTable dataSource={exceptionAlarmDataSource} columns={columns} loading={loading} />
         </Card>
+        <Modal
+          title={modelTitle}
+          visible={this.state.visible}
+          footer={false}
+          width={"100vw"}
+          maskClosable={false}
+          onCancel={() => { this.setState({ visible: false }) }}
+        >
+          <Row style={{ marginBottom: 10 }}>
+            <Button type="primary" onClick={this.onExport}>
+              导出
+            </Button>
+          </Row>
+          <SdlTable loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={detailsColumns} pagination={false} />
+        </Modal>
       </BreadcrumbWrapper>
     );
   }

@@ -9,6 +9,7 @@ export default Model.extend({
     divisorList: [],
     exceptionAlarmDataSource: [],
     exceptionPointList: [],
+    exceptionAlarmListForEntDataSource: [],
   },
   effects: {
     // 获取关注列表
@@ -54,20 +55,20 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 异常数据查询-二级页面
-    *getExceptionPointList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getExceptionPointList, { ...payload });
+    // 异常数据报警-二级页面
+    *getExceptionAlarmListForEnt({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getExceptionAlarmListForEnt, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          exceptionPointList: result.Datas
+          exceptionAlarmListForEntDataSource: result.Datas
         })
       } else {
         message.error(result.Message)
       }
     },
-    // 异常数据导出-师二级
-    *exportExceptionPointList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.exportExceptionPointList, { ...payload });
+    // 异常数据报警导出-师二级
+    *exportExceptionAlarmListForEnt({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportExceptionAlarmListForEnt, { ...payload });
       if (result.IsSuccess) {
         window.open(result.Datas)
       } else {

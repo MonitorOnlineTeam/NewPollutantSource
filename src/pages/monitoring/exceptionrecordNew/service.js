@@ -18,21 +18,21 @@ export async function getExceptionAlarmListForRegion(params) {
   return result;
 }
 
-// 异常数据导出-师一级
+// 异常数据报警-师一级
 export async function exportExceptionAlarm(params) {
   const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmListForRegion`, params);
   return result;
 }
 
-// 异常数据查询 - 二级页面
-export async function getExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionPointList`, params);
+// 异常数据报警 - 二级页面
+export async function getExceptionAlarmListForEnt(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmListForEnt`, params);
   return result;
 }
 
-// 异常数据导出 - 二级页面
-export async function exportExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionPointList`, params);
+// 异常数据报警导出 - 二级页面
+export async function exportExceptionAlarmListForEnt(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmListForEnt`, params);
   return result;
 }
 

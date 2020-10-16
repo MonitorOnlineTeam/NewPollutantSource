@@ -829,6 +829,11 @@ export default {
                   component: './monitoring/exceptionrecordNew',
                 },
                 {
+                  name: 'exceptionrecordDetails',
+                  path: '/dataquerymanager/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
+                },
+                {
                   name: 'overrecord',
                   path: '/dataquerymanager/overrecord',
                   component: './monitoring/overRecord',
@@ -883,8 +888,8 @@ export default {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
                     }`,
                 },
                 {
@@ -1227,7 +1232,7 @@ export default {
                   name: 'dataAlarm',
 
                   routes: [
-                     /* 缺失数据报警统计 */
+                    /* 缺失数据报警统计 */
                     {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
@@ -1246,7 +1251,7 @@ export default {
                     },
 
 
-                   /* 缺失数据报警响应率 */
+                    /* 缺失数据报警响应率 */
 
                     { //缺失数据报警响应率 企业
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
