@@ -97,6 +97,7 @@ export default class Index extends Component {
         dataIndex: 'message',
         key: 'message',
         align: 'center',
+        width:250
       },
       {
         title: <span>响应状态</span>,
@@ -118,6 +119,15 @@ export default class Index extends Component {
         key: 'xiangyingTime',
         align: 'center',
       
+      },
+      {
+        title: <span>处理详情</span>,
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render:(text,record)=>{
+          return text==0?
+           '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>}
       },
     ];
   }
