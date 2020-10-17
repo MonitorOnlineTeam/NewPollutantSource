@@ -161,7 +161,7 @@ export default class Index extends Component {
       // RegionCode: '',
       // Atmosphere:Atmosphere
       RegionCode:location.query.regionCode,
-      statusInfo:'',
+      Status:'',
      });
      
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
@@ -359,7 +359,7 @@ export default class Index extends Component {
   // }
   reponseChange=(e)=>{
       this.updateQueryState({
-        statusInfo: e.target.value,
+        Status: e.target.value,
       });
       setTimeout(()=>{
         this.getTableData();
@@ -387,9 +387,9 @@ export default class Index extends Component {
   </Form.Item>
   }
 reponseComp = ()=>{
-  const {queryPar:{statusInfo} } = this.props;
+  const {queryPar:{Status} } = this.props;
   return <Form.Item label=''>
-        <Radio.Group value={statusInfo} onChange={this.reponseChange}>
+        <Radio.Group value={Status} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>
