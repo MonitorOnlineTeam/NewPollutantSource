@@ -50,7 +50,8 @@ const pageUrl = {
   tableDatas: MissingRateData.tableDatil,
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateData.attentionList
+  attentionList:MissingRateData.attentionList,
+  type:MissingRateData.type,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -371,14 +372,14 @@ export default class EntTransmissionEfficiency extends Component {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title="二级页面">
+        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警响应率详情（企业）":"缺失数据报警响应率详情（空气站）"}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
                 
-                {this.reponseComp(type)}
+                {this.reponseComp()}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>

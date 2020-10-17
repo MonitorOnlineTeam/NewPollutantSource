@@ -386,7 +386,7 @@ export default class Index extends Component {
      </Button>
   </Form.Item>
   }
-reponseComp = (type)=>{
+reponseComp = ()=>{
   const {queryPar:{statusInfo} } = this.props;
   return <Form.Item label=''>
         <Radio.Group value={statusInfo} onChange={this.reponseChange}>
@@ -416,14 +416,14 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title="二级页面">
+        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警响应详情（企业）":"缺失数据报警响应详情（空气站）"}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
                 
-                {this.reponseComp(type)}
+                {this.reponseComp()}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>
