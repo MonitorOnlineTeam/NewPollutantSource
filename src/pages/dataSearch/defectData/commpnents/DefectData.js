@@ -77,7 +77,9 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
-        render: (text, record) => text,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
@@ -156,6 +158,9 @@ export default class EntTransmissionEfficiency extends Component {
     dispatch({
       type: pageUrl.getData,
       payload: { ...queryPar },
+      callback:(dataType)=>{
+        dataType==='HourData'? this.columns[4].title='缺失小时数' : this.columns[4].title='缺失日数';
+      }
     });
   };
 
@@ -173,20 +178,21 @@ export default class EntTransmissionEfficiency extends Component {
             {item.EntName}
           </Option>,
         );
-      });
-     }else{
-       if(atmoStationList.length > 0){
-        atmoStationList.map(item => {
-          selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {item.StationName}
-            </Option>,
-          );
-        }); 
-       }
+      }); 
+    } 
+   }else{
+    if(atmoStationList.length > 0){
+      atmoStationList.map(item => {
+        selectList.push(
+          <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
+            {item.StationName}
+          </Option>,
+        );
+      }); 
      }
-      return selectList;
-    }
+  }
+
+  return selectList;
   };
 
   typeChange = value => {
@@ -224,6 +230,10 @@ export default class EntTransmissionEfficiency extends Component {
   };
   //查询事件
   queryClick = () => {
+
+    const {queryPar: {dataType }, } = this.props;
+   
+
     this.getTableData();
   };
 
@@ -308,6 +318,8 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
     } = this.props;
+
+
     const BtnComponents = this.btnComponents;
     return (
         <Card
@@ -324,8 +336,8 @@ export default class EntTransmissionEfficiency extends Component {
                     value={dataType}
                     style={{ width: Atmosphere? 100 : 200}}
                   >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
+                 <Option key='0' value='HourData'>小时</Option>
+                 <Option key='1' value='DayData'> 日均</Option>
 
                   </Select>
               </Form.Item>
@@ -340,7 +352,7 @@ export default class EntTransmissionEfficiency extends Component {
                         onOk={this.dateOk}
                         allowClear={false}
                    /> */}
-                <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
@@ -371,12 +383,12 @@ export default class EntTransmissionEfficiency extends Component {
                  :
                 <Form.Item label='关注程度'>
                   <Select
+                    allowClear
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode}
+                    value={AttentionCode?AttentionCode:undefined} 
                     style={{ width: 150 }}
                   >
-                    <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
@@ -388,12 +400,12 @@ export default class EntTransmissionEfficiency extends Component {
 
                 <Form.Item label='企业类型'>
                   <Select
+                   allowClear
                     placeholder="企业类型"
                     onChange={this.typeChange}
-                    value={PollutantType}
+                    value={PollutantType?PollutantType:undefined}
                     style={{ width: 200 }}
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>

@@ -37,7 +37,7 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getDefectModel({ payload }, { call, put, update, select }) {
+    *getDefectModel({ payload,callback }, { call, put, update, select }) {
       //列表
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
@@ -45,6 +45,7 @@ export default Model.extend({
           tableDatas: response.Datas,
           total: response.Total,
         });
+        callback(payload.dataType);
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {

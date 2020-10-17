@@ -28,7 +28,7 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      Atmosphere:'',
+      // Atmosphere:'',
       PollutantType:'',
       EntType:''
       // dataType:'HourData'
