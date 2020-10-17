@@ -71,7 +71,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span>{this.props.type==='ent'? '大气站名称': '企业名称'}</span>,
+        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         // align: 'center',
@@ -280,6 +280,9 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       statusInfo: e.target.value,
     });
+    setTimeout(()=>{
+      this.getTableData();
+    })
   }
   // queryComponents=(type)=>{
   //   const { 
@@ -335,9 +338,9 @@ export default class EntTransmissionEfficiency extends Component {
   btnCompents=()=>{
     const { exloading } = this.props;
    return  <Form.Item>
-    <Button type="primary" onClick={this.queryClick}>
+    {/* <Button type="primary" onClick={this.queryClick}>
       查询
-    </Button>
+    </Button> */}
     <Button
       style={{ margin: '0 5px' }}
       icon="export"
@@ -354,7 +357,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   reponseComp = (type)=>{
     const { queryPar:{ statusInfo } } = this.props;
-    return <Form.Item label='响应状态'>
+    return <Form.Item label=''>
           <Radio.Group value={statusInfo} onChange={this.reponseChange}>
             <Radio.Button value="">全部</Radio.Button>
             <Radio.Button value="1">已响应</Radio.Button>

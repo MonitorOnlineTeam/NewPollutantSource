@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -822,7 +822,13 @@ export default {
                 {
                   name: 'exceptionrecord',
                   path: '/dataquerymanager/exceptionrecord',
-                  component: './monitoring/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
+                },
+                {
+                  name: 'exceptionrecordDetails',
+                  path: '/dataquerymanager/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
                 },
                 {
                   name: 'overrecord',
@@ -877,11 +883,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1187,10 +1192,12 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                }, //数据报警统计
+                },
+                //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
+
                   routes: [
                     /* 缺失数据报警统计 */
                     {
@@ -1212,9 +1219,11 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                       component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                     },
+
+
                     /* 缺失数据报警响应率 */
-                    {
-                      //缺失数据报警响应率 企业
+
+                    { //缺失数据报警响应率 企业
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
                     },
@@ -1263,13 +1272,15 @@ export default {
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
+
                   ],
                 },
                 {
-                  name: 'abnormalStandard',
-                  //异常标准
+
+                  name: 'abnormalStandard',   //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
+
                 },
                 {
                   name: 'dischargeStandard',
@@ -1278,8 +1289,17 @@ export default {
                   component: './dataSearch/dischargeStandard',
                 },
                 {
-                  name: 'enterpriseMonitoringInquiry',
-                  //企业监测点查询
+                  name: 'abnormalData', //异常数据
+                  path: '/dataSearch/abnormalData',
+                  component: './dataSearch/abnormalData',
+                },
+                {
+                  name: 'abnormalDetailsData', //异常数据 - 二级
+                  path: '/dataSearch/abnormalData/details',
+                  component: './dataSearch/abnormalData/DetailsPage',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
                   path: '/dataSearch/enterpriseMonitoringInquiry',
                   component: './dataSearch/enterpriseMonitoringInquiry',
                 },
@@ -1295,7 +1315,12 @@ export default {
                   path: '/dataSearch/airStation',
                   component: './dataSearch/airStation',
                 },
-              ],
+                {
+                  name: 'exceedData', //超标数据查询
+                  path: '/dataSearch/exceedData',
+                  component: './dataSearch/exceedData',
+                },
+              ]
             },
             {
               path: '/dataquery',

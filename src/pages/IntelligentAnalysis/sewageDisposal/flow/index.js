@@ -50,7 +50,7 @@ class index extends PureComponent {
     this.props.dispatch({
       //获取企业列表
       type: 'flowanalysisModel/getEntByRegion',
-      payload: { RegionCode: '' },
+      payload: { RegionCode: '' ,IsSewage:'1'},
     });
     this.props.dispatch({
         type:pageUrl.GetFlowList,
@@ -102,7 +102,7 @@ class index extends PureComponent {
 
   children = () => {
     const { priseList } = this.props;
-
+    console.log(priseList)
     const selectList = [];
     if (priseList.length > 0) {
       priseList.map(item => {

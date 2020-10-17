@@ -28,7 +28,7 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      Atmosphere:'',
+      // Atmosphere:'',
       PollutantType:'',
       EntType:''
       // dataType:'HourData'
@@ -45,8 +45,28 @@ export default Model.extend({
       //列表 响应数据
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
+        let entCount = 0,pointCount=0,responseRate=0,exceptionCount=0,weixiangyingCount=0,xiangyingCount=0;
+        response.Datas.map(item=>{
+          entCount += item.entCount;
+          pointCount += item.pointCount;
+          responseRate += item.responseRate;
+          exceptionCount += item.exceptionCount;
+          weixiangyingCount += item.weixiangyingCount;
+          xiangyingCount += item.xiangyingCount;
+        })
+        const totalRow = {
+          regionName:'全部合计',
+          regionCode:'',
+          entCount:entCount,
+          pointCount:pointCount,
+          responseRate:responseRate,
+          exceptionCount:exceptionCount,
+          weixiangyingCount:weixiangyingCount,
+          xiangyingCount:xiangyingCount
+        }
         yield update({
-          tableDatas: response.Datas,
+          tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
+          // tableDatas: response.Datas,
           total: response.Total,
         });
       }

@@ -411,8 +411,8 @@ export default class ContentList extends Component {
                     <Form layout="inline">
                         <Form.Item>
                             <Select defaultValue={Type} style={{ width: 120 }} onChange={this.handleChange}>
-                                <Option value="daySelecthour">小时数据</Option>
-                                <Option value="day">日数据</Option>
+                                <Option value="daySelecthour">小时</Option>
+                                <Option value="day">日均</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item>

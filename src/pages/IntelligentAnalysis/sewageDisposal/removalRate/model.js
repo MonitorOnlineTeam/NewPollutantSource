@@ -26,7 +26,7 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType:'011',
+      PollutantCode:'011',
       dataType:'HourData'
     },
     pointName:'COD',
