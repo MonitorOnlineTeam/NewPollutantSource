@@ -321,15 +321,15 @@ export default class EntTransmissionEfficiency extends Component {
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode}
+                    value={AttentionCode?AttentionCode:undefined} 
                     style={{ width: 170 }}
                   >
-                    <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
                 <Form.Item label='企业类型'>
                   <Select
+                    allowClear
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
