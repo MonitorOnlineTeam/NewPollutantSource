@@ -31,7 +31,7 @@ export async function ExportSewageFlowList(params)
 export async function GetEntByRegion(params) {
     const result = post(
       '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-        params.RegionCode,
+        params.RegionCode+'&IsSewage='+params.IsSewage,
       null,
       null,
     );

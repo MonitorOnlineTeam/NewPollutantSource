@@ -50,13 +50,13 @@ const pageUrl = {
   tableDatas: missingData.tableDatil,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList
+  attentionList:missingData.attentionList,
+  type:missingData.type
 }))
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
     };
     
@@ -71,18 +71,23 @@ export default class Index extends Component {
         },
       },
       {
-        title: <span>{this.props.type ==='ent'? '企业名称': '大气站名称'}</span>,
+        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-      //   align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
+        align: 'center',
+        width:250,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>首次报警时间</span>,
@@ -138,6 +143,7 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
 
+    // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
     this.updateQueryState({
       // beginTime: moment()
       //   .subtract(1, 'day')
@@ -150,7 +156,7 @@ export default class Index extends Component {
       RegionCode:location.query.regionCode,
       statusInfo:'',
      });
-
+     
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
@@ -387,13 +393,15 @@ handleTableChange = (pagination, filters, sorter) => {
       PageIndex: pagination.current,
       PageSize: pagination.pageSize,
     });
-  setTimeout(() => {
-    this.getTableData();
-  });
+    sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
+    sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
+  // setTimeout(() => {
+  //   this.getTableData();
+  // });
 };
   render() {
     const {
-      queryPar: { EntCode,PollutantType,PageSize=20,PageIndex },
+      queryPar: { EntCode,PollutantType,PageSize,PageIndex },
       type
     } = this.props;
     return (
@@ -480,15 +488,15 @@ handleTableChange = (pagination, filters, sorter) => {
               columns={this.columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
-              // onChange={this.handleTableChange}
+              onChange={this.handleTableChange}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 // sorter: true,
                 // total: this.props.total,
                 defaultPageSize:20,
-                // pageSize: PageSize,
-                // current: PageIndex,
+                pageSize:sessionStorage.getItem("missDataDetailPageSize"),
+                current:parseInt(sessionStorage.getItem("missDataDetailPageIndex")),
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
@@ -498,3 +506,4 @@ handleTableChange = (pagination, filters, sorter) => {
     );
   }
 }
+ 
