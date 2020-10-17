@@ -30,7 +30,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-
+import { routerRedux } from 'dva/router';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -56,7 +56,7 @@ const pageUrl = {
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
     };
     
@@ -67,10 +67,15 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-                   {text}
-               </Link>
-                 
+          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
+          //          {text}
+          //      </Link>
+           return <a href='javascript:;' onClick={
+             ()=>{ 
+               sessionStorage.setItem("missDataDetailPageIndex",1)
+               sessionStorage.setItem("missDataDetailPageSize",20)
+               this.props.dispatch(routerRedux.push({pathname:'/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query: {regionCode:record.regionCode}}));
+              }}>{text}</a>      
        },
       },
       {
@@ -286,24 +291,24 @@ export default class EntTransmissionEfficiency extends Component {
                     value={dataType}
                     style={{ width: 100 }}
                   >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
+                 <Option key='0' value='HourData'>小时</Option>
+                 <Option key='1' value='DayData'> 日均</Option>
 
                   </Select>
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                  <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  <RangePicker_   allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
+                    allowClear
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode} 
+                    value={AttentionCode?AttentionCode:undefined} 
                     style={{ width: 110 }}
                   >
-                    <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
@@ -320,12 +325,12 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                {type==='ent'? <Form.Item label='企业类型'>
                   <Select
+                    allowClear
                     placeholder="企业类型"
                     onChange={this.typeChange}
-                    value={PollutantType}
+                    value={PollutantType?PollutantType:undefined}
                     style={{ width: 100 }}
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>

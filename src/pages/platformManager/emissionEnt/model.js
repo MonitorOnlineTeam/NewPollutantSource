@@ -12,16 +12,17 @@ import {
   GetEntByRegion,
   ExportTransmissionEfficiencyForRegion,
   ExportTransmissionEfficiencyForEnt,
-  GetAnnualAssessmentEntAndPoint,
-  AddAnnualAssessmentEnt,
-  DeleteAnnualAssessmentEntByID,
-  ExportAnnualAssessmentEnt,
-  GetAnnualAssessmentEntList,
+  GetEmissionEntList,
+  AddEmissionEnt,
+  DeleteEmissionEntByID,
+  ExportEmissionEnt,
+  GetEmissionEntAndPoint,
+  updateEntFlag
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'yearCheckEnt',
+  namespace: 'emissionEnt',
   state: {
     entData: [],
     entDataTotal: 0,
@@ -78,7 +79,7 @@ export default Model.extend({
         pageIndex,
         pollutantType,
         entCode,
-      } = yield select(state => state.yearCheckEnt);
+      } = yield select(state => state.emissionEnt);
       let body = {
         RegionCode: RegionCode,
         beginTime: beginTime,
@@ -179,7 +180,7 @@ export default Model.extend({
       payload.callback(response.IsSuccess);
     },
 
-    *GetAnnualAssessmentEntList({ payload }, { call, put, update, select }) {
+    *GetEmissionEntList({ payload }, { call, put, update, select }) {
       //企业
       const {
         pageSize,
@@ -188,17 +189,15 @@ export default Model.extend({
         pollutantType,
         entCode,
         qutletQueryPar,
-        AssessYearStr
-      } = yield select(state => state.yearCheckEnt);
+      } = yield select(state => state.emissionEnt);
       let body = {
         RegionCode: RegionCode,
-        AssessYear: AssessYearStr,
         PollutantType: pollutantType,
         EntCode: qutletQueryPar.EntCode,
         PageSize: pageSize,
         PageIndex: pageIndex,
       };
-      const response = yield call(GetAnnualAssessmentEntList, { ...body });
+      const response = yield call(GetEmissionEntList, { ...body });
       if (response.IsSuccess) {
         yield update({
           entData: response.Datas,
@@ -207,9 +206,9 @@ export default Model.extend({
       }
     },
 
-    *ExportAnnualAssessmentEnt({ payload }, { call, put, update, select }) {
+    *ExportEmissionEnt({ payload }, { call, put, update, select }) {
       //企业
-      const response = yield call(ExportAnnualAssessmentEnt, { ...payload });
+      const response = yield call(ExportEmissionEnt, { ...payload });
       if (response.IsSuccess) {
         message.success("导出成功")
         window.open(response.Datas)
@@ -218,13 +217,13 @@ export default Model.extend({
       }
     },
 
-    *DeleteAnnualAssessmentEntByID({ payload }, { call, put, update, select }) {
+    *DeleteEmissionEntByID({ payload }, { call, put, update, select }) {
       //企业
-      const response = yield call(DeleteAnnualAssessmentEntByID, { ...payload });
+      const response = yield call(DeleteEmissionEntByID, { ...payload });
       if (response.IsSuccess) {
         message.success("删除成功");
         yield put({
-          type:'GetAnnualAssessmentEntList',
+          type:'GetEmissionEntList',
           payload:{
           }
         })
@@ -233,13 +232,13 @@ export default Model.extend({
       }
     },
 
-    *AddAnnualAssessmentEnt({ payload }, { call, put, update, select }) {
+    *AddEmissionEnt({ payload }, { call, put, update, select }) {
       //企业
-      const response = yield call(AddAnnualAssessmentEnt, { ...payload });
+      const response = yield call(AddEmissionEnt, { ...payload });
       if (response.IsSuccess) {
         message.success("添加成功");
         yield put({
-          type:'GetAnnualAssessmentEntList',
+          type:'GetEmissionEntList',
           payload:{
           }
         })
@@ -248,21 +247,28 @@ export default Model.extend({
       }
     },
 
-    *GetAnnualAssessmentEntAndPoint({ payload }, { call, put, update, select }) {
-      //企业
-      const {
-        AssessYearStr
-      } = yield select(state => state.yearCheckEnt);
-      let body = {
-        AssessYear: AssessYearStr,
-      };
-      const response = yield call(GetAnnualAssessmentEntAndPoint, { ...body });
+    *GetEmissionEntAndPoint({ payload }, { call, put, update, select }) {
+      const response = yield call(GetEmissionEntAndPoint, { ...payload });
       if (response.IsSuccess) {
-        console.log('code=',response.Datas.AnnualAssessmentEntAndPoint.map(item => item.DGIMN))
+        // console.log('code=',response.Datas.AnnualAssessmentEntAndPoint.map(item => item.DGIMN))
         yield update({
           noSelectEnt: response.Datas.AllEntAndPoint,
-          selectEnt: response.Datas.AnnualAssessmentEntAndPoint.map(item => item.DGIMN),
+          selectEnt: response.Datas.EmissionEntAndPoint.map(item => item.DGIMN),
         });
+      } else {
+        message.error(response.Datas);
+      }
+    },
+    *updateEntFlag({ payload }, { call, put, update, select }) {
+      //企业
+      const response = yield call(updateEntFlag, { ...payload });
+      if (response.IsSuccess) {
+        message.success("设置成功");
+        yield put({
+          type:'GetEmissionEntList',
+          payload:{
+          }
+        })
       } else {
         message.error(response.Datas);
       }

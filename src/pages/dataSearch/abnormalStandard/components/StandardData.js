@@ -345,12 +345,12 @@ export default class Index extends Component {
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
+                     allowClear
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode}
+                    value={AttentionCode?AttentionCode:undefined} 
                     style={{ width: 170 }}
                   >
-                    <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>

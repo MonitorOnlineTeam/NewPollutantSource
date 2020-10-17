@@ -252,8 +252,8 @@ class index extends PureComponent {
                       placeholder="请选择数据类型"
                       onChange={this.onDataTypeChange}
                     >
-                      <Option key='0' value='HourData'>小时数据</Option>
-                      <Option key='1' value='DayData'> 日数据</Option>
+                      <Option key='0' value='HourData'>小时</Option>
+                      <Option key='1' value='DayData'> 日均</Option>
                     </Select>
                   )}
                 </FormItem>
