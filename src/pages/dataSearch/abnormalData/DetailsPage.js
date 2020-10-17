@@ -135,8 +135,8 @@ class DetailsPage extends PureComponent {
       _columns = columns_Chao;
       title = "超量程"
     }
-    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD-HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
-    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD-HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
+    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
+    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
     return (
       <BreadcrumbWrapper title={title + "详情"}>
         <Card>
