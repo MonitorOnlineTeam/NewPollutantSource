@@ -75,16 +75,20 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-        // align: 'center',
-        // render: (text, record) => text,
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
         // width: '10%',
-        // align: 'center',
-      
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>缺失数据报警次数</span>,
@@ -133,7 +137,7 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       RegionCode:location.query.regionCode,
-      statusInfo:'',
+      Status:'',
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -279,7 +283,7 @@ export default class EntTransmissionEfficiency extends Component {
    }
    reponseChange=(e)=>{
     this.updateQueryState({
-      statusInfo: e.target.value,
+      Status: e.target.value,
     });
     setTimeout(()=>{
       this.getTableData();
@@ -357,9 +361,9 @@ export default class EntTransmissionEfficiency extends Component {
   </Form.Item>
   }
   reponseComp = (type)=>{
-    const { queryPar:{ statusInfo } } = this.props;
+    const { queryPar:{ Status } } = this.props;
     return <Form.Item label=''>
-          <Radio.Group value={statusInfo} onChange={this.reponseChange}>
+          <Radio.Group value={Status} onChange={this.reponseChange}>
             <Radio.Button value="">全部</Radio.Button>
             <Radio.Button value="1">已响应</Radio.Button>
             <Radio.Button value="0">待响应</Radio.Button>
@@ -451,7 +455,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
+              // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
                 showSizeChanger: true,
