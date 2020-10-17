@@ -10,6 +10,7 @@ export default Model.extend({
     exceptionAlarmDataSource: [],
     exceptionPointList: [],
     exceptionAlarmListForEntDataSource: [],
+    exceptionrecordForm: {}
   },
   effects: {
     // 获取关注列表

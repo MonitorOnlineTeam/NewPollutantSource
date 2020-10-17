@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import { Card, Row, Button, Divider, Radio } from 'antd';
+import { Card, Row, Button, Divider, Radio, Modal } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
 @connect(({ loading, autoForm, exceptionrecordNew }) => ({
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
@@ -14,6 +15,7 @@ class RegionDetails extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      visible: false,
       queryCondition: JSON.parse(this.props.location.query.queryCondition),
       columns: [
         {
@@ -70,8 +72,10 @@ class RegionDetails extends PureComponent {
           title: '处理详情',
           align: 'center',
           render: (text, record) => {
-            if (record.CompleteTime) {
-              return <a>详情</a>
+            if (record.TaskId && record.DGIMN) {
+              return <a onClick={() => {
+                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN, visible: true })
+              }}>详情</a>
             }
             return "-"
           }
@@ -116,7 +120,7 @@ class RegionDetails extends PureComponent {
 
   render() {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
-    const { columns } = this.state;
+    const { columns, DGIMN, TaskID } = this.state;
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -135,6 +139,17 @@ class RegionDetails extends PureComponent {
             </Button>
           </Row>
           <SdlTable loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
+          <Modal
+            // title="Basic Modal"
+            visible={this.state.visible}
+            footer={false}
+            width="100vw"
+            height="100vh"
+            bodyStyle={{ padding: 0 }}
+            onCancel={() => this.setState({ visible: false })}
+          >
+            <EmergencyDetailInfo DGIMN={DGIMN} TaskID={TaskID} goback={"none"} />
+          </Modal>
         </Card>
       </BreadcrumbWrapper>
     );

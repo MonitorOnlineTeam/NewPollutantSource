@@ -19,16 +19,16 @@ class DetailsPage extends PureComponent {
         dataIndex: 'RegionName',
         key: 'RegionName',
       },
-      {
-        title: '企业名称',
-        dataIndex: 'EntName',
-        key: 'EntName',
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'PointName',
-        key: 'PointName',
-      },
+      // {
+      //   title: '企业名称',
+      //   dataIndex: 'EntName',
+      //   key: 'EntName',
+      // },
+      // {
+      //   title: '监测点名称',
+      //   dataIndex: 'PointName',
+      //   key: 'PointName',
+      // },
       {
         title: '数据类型',
         dataIndex: 'DataType',
@@ -66,16 +66,16 @@ class DetailsPage extends PureComponent {
         dataIndex: 'RegionName',
         key: 'RegionName',
       },
-      {
-        title: '企业名称',
-        dataIndex: 'EntName',
-        key: 'EntName',
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'PointName',
-        key: 'PointName',
-      },
+      // {
+      //   title: '企业名称',
+      //   dataIndex: 'EntName',
+      //   key: 'EntName',
+      // },
+      // {
+      //   title: '监测点名称',
+      //   dataIndex: 'PointName',
+      //   key: 'PointName',
+      // },
       {
         title: '数据类型',
         dataIndex: 'DataType',
@@ -138,7 +138,7 @@ class DetailsPage extends PureComponent {
       <BreadcrumbWrapper title={title}>
         <Card>
           <Row style={{ marginBottom: 10 }}>
-            <Button type="primary" onClick={this.onExport}>
+            <Button type="primary" ghost icon="export" onClick={this.onExport}>
               导出
             </Button>
             <Divider type="vertical" />
@@ -146,7 +146,7 @@ class DetailsPage extends PureComponent {
               返回
             </Button>
           </Row>
-          <SdlTable dataSource={exceptionPointList} pagination={false} columns={_columns} loading={loading} />
+          <SdlTable align="center" dataSource={exceptionPointList} pagination={false} columns={_columns} loading={loading} />
         </Card>
       </BreadcrumbWrapper>
     );
