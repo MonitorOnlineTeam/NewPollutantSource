@@ -146,7 +146,7 @@ class DetailsPage extends PureComponent {
               返回
             </Button>
           </Row>
-          <SdlTable align="center" dataSource={exceptionPointList} pagination={false} columns={_columns} loading={loading} />
+          <SdlTable align="center" dataSource={exceptionPointList} columns={_columns} loading={loading} />
         </Card>
       </BreadcrumbWrapper>
     );
