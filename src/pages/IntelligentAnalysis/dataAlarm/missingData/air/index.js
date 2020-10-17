@@ -27,7 +27,7 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="空气站">
+        <BreadcrumbWrapper title="数据缺失报警（空气站）">
            <MissingData  type='air'/>
         </BreadcrumbWrapper>
     );

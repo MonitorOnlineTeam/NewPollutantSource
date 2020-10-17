@@ -416,7 +416,7 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警响应详情（企业）":"缺失数据报警响应详情（空气站）"}>
+        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
         <Card
           bordered={false}
           title={
