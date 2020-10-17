@@ -83,6 +83,7 @@ class index extends PureComponent {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.ExceptionType = 1;
+            queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
             router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
           }}>{text}</a>
@@ -97,6 +98,7 @@ class index extends PureComponent {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.ExceptionType = 2;
+            queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
             router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
           }}>{text}</a>

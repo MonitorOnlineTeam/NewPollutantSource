@@ -4,6 +4,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import { router } from 'umi'
+import moment from 'moment'
 
 @connect(({ loading, autoForm, abnormalData }) => ({
   exceptionPointList: abnormalData.exceptionPointList,
@@ -129,14 +130,19 @@ class DetailsPage extends PureComponent {
     const { exceptionPointList, loading, location } = this.props;
     const { columns, columns_Chao, queryCondition } = this._SELF_;
     let _columns = columns;
-    let title = "零值个数详情"
+    let title = "零值异常"
     if (queryCondition.ExceptionType == 2) {
       _columns = columns_Chao;
-      title = "超量程个数详情"
+      title = "超量程"
     }
+    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD-HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
+    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD-HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
     return (
-      <BreadcrumbWrapper title={title}>
+      <BreadcrumbWrapper title={title + "详情"}>
         <Card>
+          <Row style={{ fontWeight: "bold", marginBottom: 20 }}>
+            {`${queryCondition.RegionName}${beginTime}至${endTime}${title}情况`}
+          </Row>
           <Row style={{ marginBottom: 10 }}>
             <Button type="primary" ghost icon="export" onClick={this.onExport}>
               导出
