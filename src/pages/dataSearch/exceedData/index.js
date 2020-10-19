@@ -349,7 +349,7 @@ class index extends PureComponent {
                                 dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
                                 key: 'PollutantData.ExceedNum-'+item.PollutantCode,
                                 render: (text,record) => {
-                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false)}>{text}</a>
+                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode)}>{text}</a>
                                 }
                             },
                             {
@@ -417,7 +417,9 @@ class index extends PureComponent {
     //超标企业数查询
     exEntHandle =(pointCode,rCode)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
-
+        this.setState({
+            visible:true,
+        })
         let arr = []
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
@@ -457,7 +459,7 @@ class index extends PureComponent {
             if(this.props.EntCountList.length >0)
             {
                 this.setState({
-                    visible:true,
+                    
                     modalSelectPollution:modalSelectPollution,
                     modalPollutantList:arr,
                     regionCode:rCode,
@@ -467,7 +469,18 @@ class index extends PureComponent {
         })
     }
     //超标次数弹框
-    exCountHandle=(pointCode,rCode,flag)=>{
+    exCountHandle=(pointCode,rCode,flag,EntCode)=>{
+        if(flag)
+        {
+            this.setState({
+                visibleEnt:true
+            })
+        }
+        if(!flag){
+            this.setState({
+                visibleMoni:true
+            })
+        }
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
         let arr = []
         PollutantList.map(item=>{
@@ -491,7 +504,7 @@ class index extends PureComponent {
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                RegionCode: rCode,
+                RegionCode: rCode == 'All' ? '':rCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -501,7 +514,7 @@ class index extends PureComponent {
                 PollutantList: arr,
                 PageSize:25,
                 PageIndex:1,
-                EntCode:''
+                EntCode:EntCode == '' ?'':EntCode
             }
         }).then(()=>{
             if(this.props.ExceedNumList.length >0)
@@ -509,7 +522,7 @@ class index extends PureComponent {
                 if(flag)
                 {
                     this.setState({
-                        visibleEnt:true,
+                        //visibleEnt:true,
                         modalSelectPollution2:modalSelectPollution,
                         modalPollutantList:arr,
                         entCountModalTotle2:this.props.ExceedNumList[0].EntName + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
@@ -517,7 +530,7 @@ class index extends PureComponent {
                 }
                 else{
                     this.setState({
-                        visibleMoni:true,
+                        //visibleMoni:true,
                         modalSelectPollution2:modalSelectPollution,
                         modalPollutantList:arr,
                         entCountModalTotle:this.props.ExceedNumList[0].RegionName + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
@@ -1007,7 +1020,7 @@ class index extends PureComponent {
                         dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         key: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false)}>{text}</a>
+                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,'')}>{text}</a>
                         }
                     },
                     {
@@ -1259,6 +1272,7 @@ class index extends PureComponent {
     }
     render() {
         const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount} = this.props
+        console.log(ExceedNumList)
         const {modalSelectPollution,modalSelectPollution2} = this.state
         const fixed = false
         const columns = [
@@ -1319,7 +1333,7 @@ class index extends PureComponent {
                         dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         key: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,true)}>{text}</a>
+                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,true,record.EntCode)}>{text}</a>
                         }
                     },
                     {
@@ -1549,7 +1563,8 @@ class index extends PureComponent {
                             <div style={{marginBottom:10}}>
                                 <Button onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
-                            <SdlTable columns={columns3} dataSource={ExceedNumList} pagination={{
+                            {
+                                loadingCount?<PageLoading/>:<SdlTable columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
@@ -1558,6 +1573,8 @@ class index extends PureComponent {
                                     pageSizeOptions: ['25', '30', '40', '100'],
                                     total: this.props. Modaltotal,
                                   }} />
+                            }
+                            
                         </Modal>
                     </BreadcrumbWrapper>
                 </div>
