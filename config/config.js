@@ -1198,6 +1198,22 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
+                  
+                },
+                {  //排放量分析
+                  path: '/Intelligentanalysis/emissionsStatistics', 
+                  name: 'EmissionsStatistics',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissionsStatistics',
+                      redirect: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                    {
+                      //排放量变化统计
+                      path: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                      component: './Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                  ],
                 },
                 //数据报警统计
                 {
