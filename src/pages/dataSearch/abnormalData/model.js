@@ -11,11 +11,12 @@ export default Model.extend({
     exceptionPointList: [],
     abnormalDataForm: {
       dataType: 'HourData',
-      time: [moment().subtract(1, "days"), moment()],
+      // time: [moment().subtract(1, "days"), moment()],
       RegionCode: undefined,
       AttentionCode: undefined,
       PollutantType: undefined,
-    }
+    },
+    abnormalDataTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
   },
   effects: {
     // 获取关注列表
