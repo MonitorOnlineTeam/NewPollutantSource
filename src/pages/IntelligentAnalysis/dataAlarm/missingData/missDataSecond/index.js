@@ -50,13 +50,13 @@ const pageUrl = {
   tableDatas: missingData.tableDatil,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList
+  attentionList:missingData.attentionList,
+  type:missingData.type
 }))
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
     };
     
@@ -71,18 +71,23 @@ export default class Index extends Component {
         },
       },
       {
-        title: <span>{this.props.type ==='ent'? '企业名称': '大气站名称'}</span>,
+        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-      //   align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
+        align: 'center',
+        width:250,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>首次报警时间</span>,
@@ -90,14 +95,21 @@ export default class Index extends Component {
         key: 'firstTime',
         // width: '10%',
         align: 'center',
-      
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => Number(moment( new Date(a.firstTime)).valueOf()) -   Number(moment( new Date(b.firstTime)).valueOf()),
+      //   render: (text, record) => {     
+      //     return  <div>{ moment( new Date(text)).valueOf()}</div>
+      //  },
       },
       {
         title: <span>报警信息</span>,
         dataIndex: 'message',
         key: 'message',
         align: 'center',
-        width:250
+        width:250,
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>响应状态</span>,
@@ -107,7 +119,7 @@ export default class Index extends Component {
         render:(text,record)=>{return text==0?'未响应':'已响应'}
       },
       {
-        title: <span>运维负责人</span>,
+        title: <span>响应人</span>,
         dataIndex: 'operationName',
         key: 'operationName',
         align: 'center',
@@ -138,6 +150,7 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
 
+    // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
     this.updateQueryState({
       // beginTime: moment()
       //   .subtract(1, 'day')
@@ -148,7 +161,7 @@ export default class Index extends Component {
       // RegionCode: '',
       // Atmosphere:Atmosphere
       RegionCode:location.query.regionCode,
-      statusInfo:'',
+      Status:'',
      });
      
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
@@ -346,15 +359,19 @@ export default class Index extends Component {
   // }
   reponseChange=(e)=>{
       this.updateQueryState({
-        statusInfo: e.target.value,
+        Status: e.target.value,
       });
+      setTimeout(()=>{
+        this.getTableData();
+      })
+     
   }
   btnCompents=()=>{
     const { exloading } = this.props;
    return  <Form.Item>
-    <Button type="primary" onClick={this.queryClick}>
+    {/* <Button type="primary" onClick={this.queryClick}>
       查询
-    </Button>
+    </Button> */}
     <Button
       style={{ margin: '0 5px' }}
       icon="export"
@@ -369,10 +386,10 @@ export default class Index extends Component {
      </Button>
   </Form.Item>
   }
-reponseComp = (type)=>{
-  const {queryPar:{statusInfo} } = this.props;
-  return <Form.Item label='响应状态'>
-        <Radio.Group value={statusInfo} onChange={this.reponseChange}>
+reponseComp = ()=>{
+  const {queryPar:{Status} } = this.props;
+  return <Form.Item label=''>
+        <Radio.Group value={Status} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>
@@ -399,14 +416,14 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title="二级页面">
+        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
                 
-                {this.reponseComp(type)}
+                {this.reponseComp()}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>
