@@ -12,6 +12,7 @@ import {
   Divider,
   Collapse,
   Icon,
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
@@ -61,6 +62,7 @@ class EditPollutant extends Component {
               ZeroContinuityCount: this.props.editpollutant.ZeroContinuityCount,
               SerialContinuityCount: this.props.editpollutant.SerialContinuityCount,
               AlarmType: this.props.editpollutant.AlarmType,
+              IsStatisti: this.props.editpollutant.IsStatisti,
               AlarmDescription: this.props.editpollutant.AlarmDescription,
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
@@ -114,6 +116,7 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
+              IsStatisti: values.IsStatisti,
               ExceptionType: values.ExceptionType.length > 0 ? values.ExceptionType.join(',') : '',
               callback: res => {
                 if (res.IsSuccess) {
@@ -133,6 +136,7 @@ class EditPollutant extends Component {
   success = Id => {
     message.success('保存成功', 3);
   };
+
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -207,18 +211,30 @@ class EditPollutant extends Component {
                     )}
                   </FormItem>
                 </Col>
+                <Col span={12}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="是否参数考核">
+                    {getFieldDecorator('IsStatisti', {
+                      initialValue: 1,
+                    })(
+                      <Radio.Group>
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                      </Radio.Group>
+                    )}
+                  </FormItem>
+                </Col>
               </Row>
             </Panel>
             <Panel header="异常设置" key="2" style={customPanelStyle}>
               <Row>
-              <Col span={24}>
+                <Col span={24}>
                   <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 15 }} label="异常类型">
                     {getFieldDecorator('ExceptionType', {
                     })(
                       <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="请选择异常类型"
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="请选择异常类型"
                       >
                         <Option value="1">零值异常</Option>
                         <Option value="2">超量程异常</Option>
@@ -226,7 +242,7 @@ class EditPollutant extends Component {
                       </Select>,
                     )}
                   </FormItem>
-              </Col>
+                </Col>
               </Row>
               <Row>
                 <Col span={12}>
