@@ -225,6 +225,12 @@ class index extends PureComponent {
         title: '响应人',
         dataIndex: 'OperationName',
         key: 'OperationName',
+        render: (text, record) => {
+          if (record.CompleteTime === "0001-01-01 00-00-00") {
+            return "-"
+          }
+          return text ? text : "-"
+        }
       },
       {
         title: '响应时间',
@@ -232,6 +238,9 @@ class index extends PureComponent {
         key: 'CompleteTime',
         align: 'center',
         render: (text, record) => {
+          if (record.CompleteTime === "0001-01-01 00-00-00") {
+            return "-"
+          }
           return text ? text : "-"
         }
       },
@@ -455,10 +464,9 @@ class index extends PureComponent {
             <Row>
               <FormItem label="关注程度">
                 {getFieldDecorator('AttentionCode', {
-                  initialValue: '',
+                  initialValue: undefined,
                 })(
-                  <Select style={{ width: 200 }} placeholder="请选择关注程度">
-                    <Option value="">全部</Option>
+                  <Select allowClear style={{ width: 200 }} placeholder="请选择关注程度">
                     {
                       attentionList.map(item => {
                         return <Option key={item.AttentionCode} value={item.AttentionCode}>

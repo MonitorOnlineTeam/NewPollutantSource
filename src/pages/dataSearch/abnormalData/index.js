@@ -311,7 +311,7 @@ class index extends PureComponent {
                   {getFieldDecorator('AttentionCode', {
                     initialValue: undefined,
                   })(
-                    <Select placeholder="请选择关注程度">
+                    <Select allowClear placeholder="请选择关注程度">
                       {
                         attentionList.map(item => {
                           return <Option key={item.AttentionCode} value={item.AttentionCode}>

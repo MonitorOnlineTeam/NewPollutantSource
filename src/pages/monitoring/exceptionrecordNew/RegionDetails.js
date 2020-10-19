@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import { Card, Row, Button, Divider, Radio, Modal } from 'antd';
+import { Card, Row, Button, Divider, Radio, Modal, Icon } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
@@ -55,9 +55,15 @@ class RegionDetails extends PureComponent {
           key: 'ResponseStatusName',
         },
         {
-          title: '运维负责人',
+          title: '响应人',
           dataIndex: 'OperationName',
           key: 'OperationName',
+          render: (text, record) => {
+            if (record.CompleteTime === "0001-01-01 00-00-00") {
+              return "-"
+            }
+            return text ? text : "-"
+          }
         },
         {
           title: '响应时间',
@@ -65,6 +71,9 @@ class RegionDetails extends PureComponent {
           key: 'CompleteTime',
           align: 'center',
           render: (text, record) => {
+            if (record.CompleteTime === "0001-01-01 00-00-00") {
+              return "-"
+            }
             return text ? text : "-"
           }
         },
@@ -130,15 +139,15 @@ class RegionDetails extends PureComponent {
               <Radio.Button value="1">已响应</Radio.Button>
               <Radio.Button value="0">待响应</Radio.Button>
             </Radio.Group>
-            <Button type="primary" loading={exportLoading} onClick={this.onExport}>
+            <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
-            <Divider type="vertical" />
-            <Button type="dashed" onClick={() => router.push("/dataquerymanager/exceptionrecord")}>
+            <Button onClick={() => router.push("/dataquerymanager/exceptionrecord")}>
+              <Icon type="rollback" />
               返回
             </Button>
           </Row>
-          <SdlTable loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
+          <SdlTable align="center" loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
           <Modal
             // title="Basic Modal"
             visible={this.state.visible}
