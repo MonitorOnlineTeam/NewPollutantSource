@@ -219,7 +219,6 @@ export default Model.extend({
                 EntCode:payload.EntCode,
                 EntType:payload.EntType
             }
-            console.log(body)
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {
