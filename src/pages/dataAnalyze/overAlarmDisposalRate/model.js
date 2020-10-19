@@ -1,82 +1,78 @@
-/**
- * 功  能：超标报警处置率
- * 创建人：侯晓枫
- * 创建时间：2020.10.16
- */
-
 import Model from '@/utils/model';
-import {
-  GetDefectModel,
-  GetEntByRegion,
-  GetAttentionDegreeList,
-  ExportGetAlarmDataList,
-} from './service';
+import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
   namespace: 'overAlarmDisposalRate',
   state: {
-    exloading: false,
-    loading: false,
-    queryPar: {
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      Atmosphere: '',
-      PollutantType: '',
-      dataType: 'HourData',
-    },
-    tableDatas: [],
-    total: '',
     attentionList: [],
-    priseList: [],
+    divisorList: [],
+    exceptionDataSource: [],
+    exceptionPointList: [],
   },
-  subscriptions: {},
   effects: {
-    *getDefectModel({ payload }, { call, put, update, select }) {
-      //列表
-      const response = yield call(GetDefectModel, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          tableDatas: response.Datas,
-          total: response.Total,
-        });
-      }
-    },
+    // 获取关注列表
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
-      console.log('关注列表 获取');
-      //关注列表
-      const response = yield call(GetAttentionDegreeList, { ...payload });
+      const response = yield call(services.getAttentionDegreeList, { ...payload });
       if (response.IsSuccess) {
         yield update({
           attentionList: response.Datas,
         });
+      } else {
+        message.error(response.Message);
       }
     },
-    *getEntByRegion({ payload }, { call, put, update, select }) {
-      //获取所有企业列表
-      const response = yield call(GetEntByRegion, { ...payload });
+    // 根据企业类型查询监测因子
+    *getPollutantByType({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getPollutantByType, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          priseList: response.Datas,
+          divisorList: response.Datas,
         });
+        callback && callback(response.Datas);
+      } else {
+        message.error(response.Message);
       }
     },
-    *exportGetAlarmDataList({ callback, payload }, { call, put, update, select }) {
-      yield update({ exloading: true });
-      //导出
-      const response = yield call(ExportGetAlarmDataList, { ...payload });
-      if (response.IsSuccess) {
-        message.success('下载成功');
-        callback(response.Datas);
-        yield update({ exloading: false });
+    // 异常数据查询-师一级
+    *getExceptionList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getExceptionList, { ...payload });
+      console.log('getExceptionList result = ', result);
+      if (result.IsSuccess) {
+        yield update({
+          exceptionDataSource: result.Datas,
+        });
       } else {
-        message.warning(response.Message);
-        yield update({ exloading: false });
+        message.error(result.Message);
+      }
+    },
+    // 异常数据导出-师一级
+    *exportExceptionList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportExceptionList, { ...payload });
+      if (result.IsSuccess) {
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 异常数据查询-二级页面
+    *getExceptionPointList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getExceptionPointList, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          exceptionPointList: result.Datas,
+        });
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 异常数据导出-师二级
+    *exportExceptionPointList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportExceptionPointList, { ...payload });
+      if (result.IsSuccess) {
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
       }
     },
   },

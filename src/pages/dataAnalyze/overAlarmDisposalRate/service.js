@@ -1,47 +1,40 @@
 import { post } from '@/utils/request';
 
-/**
- * 缺失数据
- *
- */
-export async function GetDefectModel(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel', params, null);
-
+// 获取关注程度
+export async function getAttentionDegreeList(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
   return result;
 }
 
-//关注列表
-export async function GetAttentionDegreeList(params) {
+// 根据企业类型查询监测因子
+export async function getPollutantByType(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
+    `/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`,
+    {},
   );
-
   return result;
 }
 
-//导出
-
-export async function ExportGetAlarmDataList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
-    params,
-    null,
-  );
-
+// 异常数据查询-师一级
+export async function getExceptionList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionList`, params);
   return result;
 }
 
-//根据行政区获取 企业列表
+// 异常数据导出-师一级
+export async function exportExceptionList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionList`, params);
+  return result;
+}
 
-export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
+// 异常数据查询 - 二级页面
+export async function getExceptionPointList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionPointList`, params);
+  return result;
+}
 
+// 异常数据导出 - 二级页面
+export async function exportExceptionPointList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionPointList`, params);
   return result;
 }
