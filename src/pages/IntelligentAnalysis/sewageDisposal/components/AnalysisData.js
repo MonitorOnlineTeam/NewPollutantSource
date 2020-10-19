@@ -99,7 +99,7 @@ export default class EntTransmissionEfficiency extends Component {
             width:200,
             align:'center',
             render: (text, record) => {
-              return <span>{toDecimal3(text)}</span>;
+              return <span>{text? toDecimal3(text):"-"}</span>;
             },
           },
           {
@@ -126,7 +126,7 @@ export default class EntTransmissionEfficiency extends Component {
             width:200,
             align:'center',
             render: (text, record) => {
-              return <span>{toDecimal3(text)}</span>;
+              return <span>{text? toDecimal3(text):"-"}</span>;
             },
           },
           {
@@ -484,7 +484,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                   </Button>
-                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个检测点</span>
+                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
                 </Form.Item>
                 </Row>
               </Form>
