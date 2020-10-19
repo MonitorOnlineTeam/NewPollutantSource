@@ -6,6 +6,7 @@
  */
 
 import Model from '@/utils/model';
+import { message } from "antd"
 import {
   getlist,
   enableordisable,
@@ -29,6 +30,7 @@ import {
   getMonitorPointPollutantDetails,
   editmonitorpointPollutant,
   useallDGIMNbyid,
+  changeUseStatisti,
 } from '@/services/standardLibraryApi';
 export default Model.extend({
   namespace: 'standardLibrary',
@@ -160,7 +162,7 @@ export default Model.extend({
       const result = yield call(useStandard, {
         ...payload,
       });
-     
+
       yield put({
         type: 'getpollutantbydgimn',
         payload: {
@@ -340,8 +342,7 @@ export default Model.extend({
             ...payload,
           },
         });
-      }else
-      {
+      } else {
 
       }
       // yield update({
@@ -367,8 +368,7 @@ export default Model.extend({
       const result = yield call(editmonitorpointPollutant, {
         ...payload,
       });
-      if(result.IsSuccess)
-      {
+      if (result.IsSuccess) {
         yield put({
           type: 'getpollutantbydgimn',
           payload: {
@@ -387,6 +387,22 @@ export default Model.extend({
       //   },
       // });
       payload.callback(result);
+    },
+    *changeUseStatisti({ payload }, { call, put, update }) {
+      const result = yield call(changeUseStatisti, {
+        ...payload,
+      });
+      if (result.IsSuccess) {
+        message.success("操作成功")
+        yield put({
+          type: 'getpollutantbydgimn',
+          payload: {
+            DGIMN: payload.DGIMN,
+          },
+        });
+      } else {
+        message.error(result.Message)
+      }
     },
   },
   reducers: {

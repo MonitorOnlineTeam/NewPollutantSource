@@ -81,14 +81,14 @@ export default Model.extend({
         yield update({
           ExceedNumList: result.Datas,
           Modaltotal: result.Total,
-          ModalPageIndex: payload.PageSize || 1
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
       else {
         yield update({
           ExceedNumList: [],
           Modaltotal: 0,
-          ModalPageIndex: payload.PageSize || 1
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
     },//超标数据列表
@@ -113,14 +113,14 @@ export default Model.extend({
           yield update({
             ExceedDataList: result.Datas,
             total: result.Total,
-            PageIndex: payload.PageSize || 1
+            PageIndex: payload.PageIndex || 1
           })
         }
         else {
           yield update({
             RegionDataList: result.Datas,
             total: result.Total,
-            PageIndex: payload.PageSize || 1
+            PageIndex: payload.PageIndex || 1
           })
         }
 
@@ -129,7 +129,7 @@ export default Model.extend({
         yield update({
           ExceedDataList: [],
           total: 0,
-          PageIndex: payload.PageSize || 1
+          PageIndex: payload.PageIndex || 1
         })
       }
     },//弹框企业超标数据
@@ -153,14 +153,14 @@ export default Model.extend({
         yield update({
           EntCountList: result.Datas,
           Modaltotal: result.Total,
-          ModalPageIndex: payload.PageSize || 1
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
       else {
         yield update({
           EntCountList: [],
           Modaltotal: 0,
-          ModalPageIndex: payload.PageSize || 1
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
     },//导出超标数据列表

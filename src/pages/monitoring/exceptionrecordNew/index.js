@@ -5,6 +5,7 @@ import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -17,6 +18,7 @@ const { RangePicker } = DatePicker;
   exceptionAlarmDataSource: exceptionrecordNew.exceptionAlarmDataSource,
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
   exceptionrecordForm: exceptionrecordNew.exceptionrecordForm,
+  exceptionTime: exceptionrecordNew.exceptionTime,
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
   detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
@@ -25,7 +27,7 @@ const { RangePicker } = DatePicker;
   mapPropsToFields(props) {
     return {
       dataType: Form.createFormField(props.exceptionrecordForm.dataType),
-      time: Form.createFormField(props.exceptionrecordForm.time),
+      // time: Form.createFormField(props.exceptionrecordForm.time),
       RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
       AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
       PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
@@ -223,6 +225,12 @@ class index extends PureComponent {
         title: '响应人',
         dataIndex: 'OperationName',
         key: 'OperationName',
+        render: (text, record) => {
+          if (record.CompleteTime === "0001-01-01 00-00-00") {
+            return "-"
+          }
+          return text ? text : "-"
+        }
       },
       {
         title: '响应时间',
@@ -230,6 +238,9 @@ class index extends PureComponent {
         key: 'CompleteTime',
         align: 'center',
         render: (text, record) => {
+          if (record.CompleteTime === "0001-01-01 00-00-00") {
+            return "-"
+          }
           return text ? text : "-"
         }
       },
@@ -290,6 +301,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
+    values.time = this.props.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -323,6 +335,7 @@ class index extends PureComponent {
   exportExceptionAlarm = () => {
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
+    values.time = this.props.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -344,13 +357,14 @@ class index extends PureComponent {
 
 
   onDataTypeChange = (value) => {
-    if (value === "HourData") {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD HH", showTime: true })
-    } else {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD", showTime: false })
-    }
+    this.rangePicker.onDataTypeChange(value)
+    // if (value === "HourData") {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD HH", showTime: true })
+    // } else {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD", showTime: false })
+    // }
   }
 
   // 监测因子change
@@ -364,13 +378,21 @@ class index extends PureComponent {
     })
   }
 
+  dateChange = (date, dataType) => {
+    this.props.dispatch({
+      type: 'exceptionrecordNew/updateState',
+      payload: {
+        exceptionTime: date,
+      },
+    })
+  }
+
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, exceptionTime, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition } = this.state;
     let _detailsColumns = detailsColumns;
-    console.log("exceptionAlarmListForEntDataSource=", exceptionAlarmListForEntDataSource)
     let _regionList = regionList.length ? regionList[0].children : [];
     // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
     let showTypeText = "";
@@ -391,12 +413,12 @@ class index extends PureComponent {
     if (secondQueryCondition.ResponseStatus == "0") {
       _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "CompleteTime");
     }
+
     return (
       <BreadcrumbWrapper>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
-              {/* <Col md={5}> */}
               <FormItem label="数据类型">
                 {getFieldDecorator('dataType', {
                   initialValue: 'HourData',
@@ -404,6 +426,7 @@ class index extends PureComponent {
                   <Select
                     style={{ width: 200 }}
                     placeholder="请选择数据类型"
+                    allowClear
                     onChange={this.onDataTypeChange}
                   >
                     <Option key='0' value='HourData'>小时数据</Option>
@@ -411,17 +434,17 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-              {/* </Col> */}
-              {/* <Col md={8}> */}
               <FormItem label="日期查询">
-                {getFieldDecorator('time', {
-                  initialValue: [moment().subtract(1, "days"), moment()],
-                })(
-                  <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} />
-                )}
+                {/* {getFieldDecorator('time', {
+                  initialValue: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
+                })( */}
+                {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
+                <RangePicker_ allowClear={false} onRef={(ref) => {
+                  this.rangePicker = ref;
+                }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
+                  callback={(dates, dataType) => this.dateChange(dates, dataType)} />
+                {/* )} */}
               </FormItem>
-              {/* </Col> */}
-              {/* <Col md={5}> */}
               <FormItem label="行政区">
                 {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
@@ -439,14 +462,11 @@ class index extends PureComponent {
               </FormItem>
             </Row>
             <Row>
-              {/* </Col> */}
-              {/* <Col md={5}> */}
               <FormItem label="关注程度">
                 {getFieldDecorator('AttentionCode', {
-                  initialValue: '',
+                  initialValue: undefined,
                 })(
-                  <Select style={{ width: 200 }} placeholder="请选择关注程度">
-                    <Option value="">全部</Option>
+                  <Select allowClear style={{ width: 200 }} placeholder="请选择关注程度">
                     {
                       attentionList.map(item => {
                         return <Option key={item.AttentionCode} value={item.AttentionCode}>
@@ -457,8 +477,6 @@ class index extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
-              {/* </Col> */}
-              {/* <Col md={5}> */}
               <FormItem label="企业类型">
                 {getFieldDecorator('PollutantType', {
                   initialValue: '1',

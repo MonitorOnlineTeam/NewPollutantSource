@@ -5,6 +5,7 @@ import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -16,13 +17,14 @@ const { RangePicker } = DatePicker;
   divisorList: abnormalData.divisorList,
   exceptionDataSource: abnormalData.exceptionDataSource,
   abnormalDataForm: abnormalData.abnormalDataForm,
+  abnormalDataTime: abnormalData.abnormalDataTime,
   loading: loading.effects["abnormalData/getExceptionList"],
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
       dataType: Form.createFormField(props.abnormalDataForm.dataType),
-      time: Form.createFormField(props.abnormalDataForm.time),
+      // time: Form.createFormField(props.abnormalDataForm.time),
       RegionCode: Form.createFormField(props.abnormalDataForm.RegionCode),
       AttentionCode: Form.createFormField(props.abnormalDataForm.AttentionCode),
       PollutantList: Form.createFormField(props.abnormalDataForm.PollutantList),
@@ -145,6 +147,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
+    values.time = this.props.abnormalDataTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -181,6 +184,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
+    values.time = this.props.abnormalDataTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -204,13 +208,15 @@ class index extends PureComponent {
 
 
   onDataTypeChange = (value) => {
-    if (value === "HourData") {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD HH", showTime: true })
-    } else {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD", showTime: false })
-    }
+    this.rangePicker.onDataTypeChange(value)
+
+    // if (value === "HourData") {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD HH", showTime: true })
+    // } else {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD", showTime: false })
+    // }
   }
 
   // 监测因子change
@@ -233,9 +239,18 @@ class index extends PureComponent {
     })
   }
 
+  dateChange = (date, dataType) => {
+    this.props.dispatch({
+      type: 'abnormalData/updateState',
+      payload: {
+        abnormalDataTime: date,
+      },
+    })
+  }
+
 
   render() {
-    const { form: { getFieldDecorator }, regionList, attentionList, divisorList, exceptionDataSource, loading } = this.props;
+    const { form: { getFieldDecorator }, regionList, abnormalDataTime, attentionList, divisorList, exceptionDataSource, loading } = this.props;
     const { formLayout, columns } = this._SELF_;
     const { format, showTime, checkedValues } = this.state;
     console.log("attentionList=", attentionList)
@@ -252,6 +267,7 @@ class index extends PureComponent {
                   })(
                     <Select
                       placeholder="请选择数据类型"
+                      allowClear
                       onChange={this.onDataTypeChange}
                     >
                       <Option key='0' value='HourData'>小时</Option>
@@ -262,11 +278,15 @@ class index extends PureComponent {
               </Col>
               <Col md={7}>
                 <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
-                  {getFieldDecorator('time', {
+                  {/* {getFieldDecorator('time', {
                     initialValue: [moment().subtract(1, "days"), moment()],
                   })(
                     <RangePicker allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} />
-                  )}
+                  )} */}
+                  <RangePicker_ allowClear={false} onRef={(ref) => {
+                    this.rangePicker = ref;
+                  }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={abnormalDataTime}
+                    callback={(dates, dataType) => this.dateChange(dates, dataType)} />
                 </FormItem>
               </Col>
               <Col md={4}>
@@ -291,7 +311,7 @@ class index extends PureComponent {
                   {getFieldDecorator('AttentionCode', {
                     initialValue: undefined,
                   })(
-                    <Select placeholder="请选择关注程度">
+                    <Select allowClear placeholder="请选择关注程度">
                       {
                         attentionList.map(item => {
                           return <Option key={item.AttentionCode} value={item.AttentionCode}>
