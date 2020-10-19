@@ -131,7 +131,7 @@ class RegionDetails extends PureComponent {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
     const { columns, DGIMN, TaskID } = this.state;
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper title="异常数据报警详情">
         <Card>
           <Row style={{ marginBottom: 10 }}>
             <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
