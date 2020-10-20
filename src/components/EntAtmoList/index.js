@@ -54,13 +54,13 @@ export default class Index extends Component {
   
    }
   render() {
-      const {EntCode,changeEnt} = this.props
+      const {EntCode,changeEnt,type} = this.props
     return (
         <Select
         allowClear
         showSearch
         optionFilterProp="children"
-        placeholder="行政区"
+        placeholder={type==1? "企业列表":"大气站列表"}
         onChange={changeEnt}
         value={EntCode ? EntCode : undefined}
         style={{width:'200px'}}

@@ -303,7 +303,28 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
-
+                <Form.Item label='关注程度'>
+                  <Select
+                    placeholder="关注程度"
+                    onChange={this.changeAttent}
+                    value={AttentionCode?AttentionCode:undefined} 
+                    style={{ width: 170 }}
+                  >
+                    {this.attentchildren()}
+                  </Select>
+                </Form.Item>
+                <Form.Item label='企业类型'>
+                  <Select
+                    // allowClear
+                    placeholder="企业类型"
+                    onChange={this.typeChange}
+                    value={PollutantType}
+                    style={{ width: 170 }}
+                  >
+                    <Option value="1">废水</Option>
+                    <Option value="2">废气</Option>
+                  </Select>
+                </Form.Item>
                 <Form.Item label='企业列表'>
                   <Select
                     showSearch
@@ -317,28 +338,8 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.children()}
                   </Select>
                 </Form.Item>
-                <Form.Item label='关注程度'>
-                  <Select
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 170 }}
-                  >
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
-                <Form.Item label='企业类型'>
-                  <Select
-                    allowClear
-                    placeholder="企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType}
-                    style={{ width: 170 }}
-                  >
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item>
+
+
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

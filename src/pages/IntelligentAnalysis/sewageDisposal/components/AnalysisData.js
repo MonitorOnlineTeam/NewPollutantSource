@@ -236,7 +236,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
+    // data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
 
@@ -330,14 +330,14 @@ export default class EntTransmissionEfficiency extends Component {
     const { pointName,chartExport,chartImport,chartTime,entName} = this.props;
     return {
       color:[blue[5],red[5]],
-      title:{
-        text:entName,//图表标题文本内
-        textStyle:{//标题内容的样式
-          fontSize:14//主题文字字体大小，默认为18px
-        },
-        left:'center',
-        top:30
-      },
+      // title:{
+      //   text:entName,//图表标题文本内
+      //   textStyle:{//标题内容的样式
+      //     fontSize:14//主题文字字体大小，默认为18px
+      //   },
+      //   left:'center',
+      //   top:30
+      // },
       tooltip: {
           trigger: 'axis'
       },
@@ -406,28 +406,6 @@ export default class EntTransmissionEfficiency extends Component {
             
               <Row>
               <Form.Item label=''>
-                 <Radio.Group value={dataType} style={{ marginRight: 10 }} onChange={(e) =>this._handleDateTypeChange(e) }>
-                    <Radio.Button value="HourData">小时</Radio.Button>
-                    <Radio.Button value="DayData">日均</Radio.Button>
-                  </Radio.Group> 
-              </Form.Item>
-                <Form.Item>
-          <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-          callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-                </Form.Item>
-                {/* <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 170 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
-                </Form.Item> */}
-
-                <Form.Item label=''>
                   <Select
                     showSearch
                     allowClear
@@ -440,31 +418,24 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.children()}
                   </Select>
                 </Form.Item>
+              <Form.Item label=''>
+                 <Radio.Group value={dataType} style={{ marginRight: 10 }} onChange={(e) =>this._handleDateTypeChange(e) }>
+                    <Radio.Button value="HourData">小时</Radio.Button>
+                    <Radio.Button value="DayData">日均</Radio.Button>
+                  </Radio.Group> 
+              </Form.Item>
+                <Form.Item>
+          <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+          callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                </Form.Item>
+
+
+
                 </Row>
                 <Row>
-                {/* <Form.Item label='关注程度'>
-                  <Select
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode}
-                    style={{ width: 170 }}
-                  >
-                    <Option value="">全部</Option>
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item> */}
+
                 <Form.Item label='监测因子'>
-                {/* <Select
-                    placeholder="污染物名称"
-                    onChange={this.changePoll}
-                    value={PollutantCode}
-                    style={{ width: 170  }}
-                  >
-                 <Option key='011' value='011'>COD</Option>
-                 <Option key='060' value='060'>氨氮</Option>
-                 <Option key='101' value='101'>总磷</Option>
-                 <Option key='065' value='065'>总氮</Option>
-                  </Select> */}
+
                   <Radio.Group  onChange={this.changePoll} value={PollutantCode}>
                      <Radio value='011'>COD</Radio>
                      <Radio value='060'>氨氮</Radio>

@@ -81,79 +81,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     };
     
-    this.columns = [
-      {
-        title: '监测时间',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
-        align: 'center',
-        render: (text, record) => {
-          return <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span>;
-        },
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'pointName',
-        key: 'pointName',
-        align: 'center',
-        render: (text, record) => {
-          return <span>{this.props.pointName}</span>;
-        },
-      },
-      {
-        title: '进水口',
-        width:400,
-        children: [
-          {
-            title: '浓度(mg/L)',
-            dataIndex: 'importValue',
-            key: 'importValue',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
-            },
-          },
-          {
-            title: '是否停运',
-            dataIndex: 'importStop',
-            key: 'importStop',
-            align:'center',
-            render: (text, record) => {
-              return text==0? "否": text==1? '是' : text;
-            },
-            width:200,
-           
-          },
-        ],
-      },
-      {
-        title: '出水口',
-        width:400,
-        children: [
-          {
-            title: '浓度(mg/L)',
-            dataIndex: 'exportValue',
-            key: 'exportValue',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
-            },
-          },
-          {
-            title: '是否停运',
-            dataIndex: 'exportStop',
-            key: 'exportStop',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return text==0? "否": text==1? '是' : text;
-            },
-          },
-        ],
-      },
-    ]
+
   }
 
   componentDidMount() {
@@ -399,6 +327,27 @@ export default class EntTransmissionEfficiency extends Component {
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
     } = this.props;
     const { TabPane } = Tabs;
+
+    let columns = [
+      {
+        title: '监测时间',
+        dataIndex: 'MonitorTime',
+        key: 'MonitorTime',
+        align: 'center',
+        render: (text, record) => {
+          return <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span>;
+        },
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'pointName',
+        key: 'pointName',
+        align: 'center',
+        render: (text, record) => {
+          return text? text : '-';
+        },
+      },
+    ]
     return (
         <Card
           bordered={false}
@@ -484,6 +433,7 @@ export default class EntTransmissionEfficiency extends Component {
                      <Checkbox value='060'>氨氮</Checkbox>
                      <Checkbox value='101'>总磷</Checkbox>
                      <Checkbox value='065'>总氮</Checkbox>
+                     <Checkbox value='007'>流量</Checkbox>
                  </Checkbox.Group>
                  </Form.Item>
                 </Row>
@@ -510,7 +460,7 @@ export default class EntTransmissionEfficiency extends Component {
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
-              columns={this.columns}
+              columns={columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
