@@ -137,7 +137,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'defectCount',
         align: 'center',
         render:(text,row)=>{
-          return <Link to={{ pathname:'', query:{ aa:11 }  }}>播放</Link>
+          return <Link to={{ pathname:'/monitorCenter/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
         }
       },
     ];
@@ -234,7 +234,6 @@ export default class EntTransmissionEfficiency extends Component {
 
     const { pointName, dispatch,queryPar:{EntCode} } = this.props;
     this.getTableData();
-
   };
 
 
@@ -305,6 +304,7 @@ export default class EntTransmissionEfficiency extends Component {
                     查询
                   </Button>
                 </Form.Item>
+                <Link to={{ pathname:'/monitoring/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
                 </Row>
               </Form>
             </>

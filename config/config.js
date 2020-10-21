@@ -904,6 +904,43 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
+                {
+                  path: '/monitoring/videoMonitor',
+                  redirect: '/monitoring/videoMonitor/ent',
+                },
+                {
+                  name: 'videoMonitor',
+                  path: '/monitoring/videoMonitor/videopreview',
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videoMonitor/videopreview/hkvideo'
+                    : './monitoring/videoMonitor/videopreview/ysyvideo'
+                    }`,
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitoring/videoMonitor/ent',
+                  component: './monitoring/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitoring/videoMonitor/air',
+                  component: './monitoring/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警 企业
+                  path: '/monitoring/missingData/ent',
+                  component: './monitoring/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitoring/missingData/air',
+                  component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitoring/missingData/missDataSecond',
+                  component: './monitoring/missingData/missDataSecond',
+                },                  
               ],
             },
             {
@@ -1070,42 +1107,6 @@ export default {
                   component: './platformManager/outputstopManager/',
                 },
               ],
-            },
-            {  //监控中心  视频监控
-              path: '/monitorCenter', 
-              name: 'MonitorCenter',
-              routes: [
-                {
-                  path: '/monitorCenter/videoMonitor',
-                  redirect: '/monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 企业
-                  path: '/monitorCenter/videoMonitor/ent',
-                  component: './monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 大气
-                  path: '/monitorCenter/videoMonitor/air',
-                  component: './monitorCenter/videoMonitor/air',
-                },
-                {
-                  //缺失数据报警 企业
-                  path: '/monitorCenter/missingData/ent',
-                  component: './monitorCenter/missingData/ent',
-                },
-                {
-                  //缺失数据报警 空气站
-                  path: '/monitorCenter/missingData/air',
-                  component: './monitorCenter/missingData/air',
-                },
-                {
-                  //缺失数据报警 二级页面
-                  path: '/monitorCenter/missingData/missDataSecond',
-                  component: './monitorCenter/missingData/missDataSecond',
-                },              
-              ],
-              
             },
             {
               path: '/Intelligentanalysis',
