@@ -19,7 +19,8 @@ import {
     Row,
     Col,
     Empty,
-    Tooltip
+    Tooltip,
+    Switch
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -70,7 +71,7 @@ class MonitoringStandard extends Component {
         //         configId: 'service_StandardLibrary',
         //     },
         // });
-   
+
         this.getpollutantbydgimn(DGIMN);
     }
 
@@ -126,6 +127,17 @@ class MonitoringStandard extends Component {
             },
         });
     };
+
+    changeUseStatisti = (record) => {
+        this.props.dispatch({
+            type: 'standardLibrary/changeUseStatisti',
+            payload: {
+                DGIMN: this.state.DGIMN,
+                PollutantCode: record.PollutantCode,
+                Enalbe: record.IsStatisti == 1 ? 0 : 1
+            }
+        })
+    }
 
 
     render() {
@@ -281,6 +293,18 @@ class MonitoringStandard extends Component {
                 },
             },
             {
+                title: '是否参与考核',
+                dataIndex: 'IsStatisti',
+                key: 'IsStatisti',
+                width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    return <Switch onChange={() => {
+                        this.changeUseStatisti(record)
+                    }} disabled={record.IsUse === '0'} checkedChildren="是" unCheckedChildren="否" defaultChecked={text == 1} />
+                },
+            },
+            {
                 title: '操作',
                 width: '10%',
                 align: 'center',
@@ -329,7 +353,7 @@ class MonitoringStandard extends Component {
             <Card
                 bordered={false}
                 style={{ width: '100%' }}
-                bodyStyle={{paddingBottom:0}}
+                bodyStyle={{ paddingBottom: 0 }}
                 extra={
                     <Button
                         onClick={() => {
@@ -349,7 +373,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                  //  pagination={{ pageSize: 20 }}
+                //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
                     visible={standardlibraryModal}

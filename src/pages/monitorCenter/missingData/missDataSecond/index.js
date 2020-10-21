@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：缺失数据报警响应
+ * 创建人：贾安波
+ * 创建时间：2020/10
  */
 import React, { Component } from 'react';
 import {
@@ -31,7 +31,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-
+import EmergencyDetailInfo from '../../../../pages/EmergencyTodoList/TaskDetailModel';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -54,12 +54,15 @@ const pageUrl = {
   type:missingData.type
 }))
 @Form.create()
+
 export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      visible:false,
+      DGIMN:'',
+      TaskID:''
     };
-    
     this.columns = [
       {
         title: <span>行政区</span>,
@@ -71,7 +74,7 @@ export default class Index extends Component {
         },
       },
       {
-        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
+        title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
@@ -95,7 +98,7 @@ export default class Index extends Component {
         key: 'firstTime',
         // width: '10%',
         align: 'center',
-        defaultSortOrder: 'ascend',
+        defaultSortOrder: 'descend',
         sorter: (a, b) => Number(moment( new Date(a.firstTime)).valueOf()) -   Number(moment( new Date(b.firstTime)).valueOf()),
       //   render: (text, record) => {     
       //     return  <div>{ moment( new Date(text)).valueOf()}</div>
@@ -123,7 +126,9 @@ export default class Index extends Component {
         dataIndex: 'operationName',
         key: 'operationName',
         align: 'center',
-      
+        render: (text, record) => {     
+          return  record.status==0? "-":text
+       },
       },
       {
         title: <span>响应时间</span>,
@@ -139,11 +144,22 @@ export default class Index extends Component {
         align: 'center',
         render:(text,record)=>{
           return text==0?
-           '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>}
+           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
+          }        
+        // render:(text,record)=>{
+        //   return text==0?
+        //    '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>
+        //   }
       },
     ];
   }
 
+  detail=(record)=>{
+
+     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
+       this.setState({visible:true})
+     })
+  }
   componentDidMount() {
     this.initData();
   }
@@ -151,15 +167,19 @@ export default class Index extends Component {
     const { dispatch, location,Atmosphere,type } = this.props;
 
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
+   
+
     this.updateQueryState({
       // beginTime: moment()
-      //   .subtract(1, 'day')
-      //   .format('YYYY-MM-DD HH:mm:ss'),
-      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      // .subtract(1, 'day')
+      // .format('YYYY-MM-DD 00:00:00'),
+      // endTime: moment().format('YYYY-MM-DD 23:59:59'),
       // AttentionCode: '',
       // EntCode: '',
       // RegionCode: '',
-      // Atmosphere:Atmosphere
+      // PollutantType:'',
+      // dataType:'HourData',
+      // EntType:'',
       RegionCode:location.query.regionCode,
       Status:'',
      });
@@ -413,10 +433,11 @@ handleTableChange = (pagination, filters, sorter) => {
   render() {
     const {
       queryPar: { EntCode,PollutantType,PageSize,PageIndex },
+      location,
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
+        <BreadcrumbWrapper title={JSON.parse(location.query.queryPar).EntType==='1'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
         <Card
           bordered={false}
           title={
@@ -513,6 +534,16 @@ handleTableChange = (pagination, filters, sorter) => {
             />
           </>
         </Card>
+        <Modal
+          title="任务详情"
+          visible={this.state.visible}
+          width='100%'
+          style={{hegiht:'90%'}}
+          footer={null}
+          onCancel={()=>{this.setState({visible:false})}}
+        >
+            <EmergencyDetailInfo DGIMN={this.state.DGIMN}  TaskID={this.state.TaskID}/>
+        </Modal>
         </BreadcrumbWrapper>
     );
   }

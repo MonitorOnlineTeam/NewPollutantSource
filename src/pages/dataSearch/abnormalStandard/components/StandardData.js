@@ -329,20 +329,6 @@ export default class Index extends Component {
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
-
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="企业名称"
-                    onChange={this.changeEnt}
-                    value={EntCode? EntCode : undefined }
-                    style={{ width: 170  }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
                      allowClear
@@ -366,6 +352,20 @@ export default class Index extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
+                <Form.Item label='企业列表'>
+                  <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="企业名称"
+                    onChange={this.changeEnt}
+                    value={EntCode? EntCode : undefined }
+                    style={{ width: 170  }}
+                  >
+                    {this.children()}
+                  </Select>
+                </Form.Item>
+
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>

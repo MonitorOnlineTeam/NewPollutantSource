@@ -68,9 +68,9 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+      //   render: (text, record) => {     
+      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+      //  },
       },
       {
         title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
@@ -129,7 +129,8 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      Atmosphere:Atmosphere
+      Atmosphere:Atmosphere,
+      dataType:'HourData'
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 

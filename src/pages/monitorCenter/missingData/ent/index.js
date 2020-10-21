@@ -27,8 +27,8 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="数据缺失报警（企业）">
-           <MissingData type='ent'/>
+        <BreadcrumbWrapper title="数据缺失报警(企业)">
+           <MissingData types='ent'/>
         </BreadcrumbWrapper>
     );
   }

@@ -1073,6 +1073,42 @@ export default {
               ],
             },
             {
+              //监控中心  视频监控
+              path: '/monitorCenter',
+              name: 'MonitorCenter',
+              routes: [
+                {
+                  path: '/monitorCenter/videoMonitor',
+                  redirect: '/monitorCenter/videoMonitor/ent',
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitorCenter/videoMonitor/ent',
+                  component: './monitorCenter/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitorCenter/videoMonitor/air',
+                  component: './monitorCenter/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警 企业
+                  path: '/monitorCenter/missingData/ent',
+                  component: './monitorCenter/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitorCenter/missingData/air',
+                  component: './monitorCenter/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitorCenter/missingData/missDataSecond',
+                  component: './monitorCenter/missingData/missDataSecond',
+                },
+              ],
+            },
+            {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
@@ -1200,6 +1236,23 @@ export default {
                     },
                   ],
                 },
+                {
+                  //排放量分析
+                  path: '/Intelligentanalysis/emissionsStatistics',
+                  name: 'EmissionsStatistics',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissionsStatistics',
+                      redirect: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                    {
+                      //排放量变化统计
+                      path: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                      component: './Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                  ],
+                },
+
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
@@ -1210,21 +1263,6 @@ export default {
                     {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
-                    },
-                    {
-                      //缺失数据报警 企业
-                      path: '/Intelligentanalysis/dataAlarm/missingData/ent',
-                      component: './Intelligentanalysis/dataAlarm/missingData/ent',
-                    },
-                    {
-                      //缺失数据报警 空气站
-                      path: '/Intelligentanalysis/dataAlarm/missingData/air',
-                      component: './Intelligentanalysis/dataAlarm/missingData/air',
-                    },
-                    {
-                      //缺失数据报警 二级页面
-                      path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
-                      component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                     },
 
                     /* 缺失数据报警响应率 */
@@ -1249,6 +1287,16 @@ export default {
                       //超标数据核实率
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal/details',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
                     },
                   ],
                 },
