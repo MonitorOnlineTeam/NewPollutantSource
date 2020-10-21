@@ -1,5 +1,13 @@
+/*
+ * @Description:超标报警处置率-一级
+ * @LastEditors: hxf
+ * @Date: 2020-10-16 16:16:39
+ * @LastEditTime: 2020-10-21 14:57:08
+ * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
+ */
+
 import React, { PureComponent } from 'react';
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmponent 包含面包屑
 import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
@@ -11,11 +19,12 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 @connect(({ loading, autoForm, overAlarmDisposalRate }) => ({
+  column: overAlarmDisposalRate.column,
   regionList: autoForm.regionList,
   attentionList: overAlarmDisposalRate.attentionList,
   divisorList: overAlarmDisposalRate.divisorList,
   exceptionDataSource: overAlarmDisposalRate.exceptionDataSource,
-  loading: loading.effects['overAlarmDisposalRate/getExceptionList'],
+  loading: loading.effects['overAlarmDisposalRate/getAlarmManagementRate'],
 }))
 @Form.create()
 class index extends PureComponent {
@@ -155,97 +164,17 @@ class index extends PureComponent {
     });
 
     // 根据企业类型查询监测因子
-    this.getPollutantByType(this.getExceptionList);
+    this.getPollutantByType(this.getAlarmManagementRate);
   }
 
   // 根据企业类型查询监测因子
   getPollutantByType = cb => {
     this.props.dispatch({
-      type: 'overAlarmDisposalRate/getPollutantByType',
+      type: 'overAlarmDisposalRate/getPollutantCodeList',
       payload: {
-        type: this.state.pollutantType,
+        PollutantType: this.state.pollutantType,
       },
       callback: res => {
-        let titlePollutant = [];
-        res.map((item, key) => {
-          titlePollutant.push({
-            title: item.PollutantName,
-            children: [
-              {
-                title: '报警次数',
-                dataIndex: 'DataType',
-                key: 'DataType',
-                width: 100,
-              },
-              {
-                title: '已处置报警次数',
-                dataIndex: 'DataType',
-                key: 'DataType',
-                width: 150,
-              },
-              {
-                title: '待处置报警次数',
-                dataIndex: 'DataType',
-                key: 'DataType',
-                width: 150,
-              },
-              {
-                title: '处置率',
-                dataIndex: 'DataType',
-                key: 'DataType',
-                width: 100,
-              },
-            ],
-          });
-        });
-        let titleList = [];
-        if (titlePollutant.length > 2) {
-          titleList = [
-            {
-              title: '行政区',
-              dataIndex: 'RegionName',
-              key: 'RegionName',
-              width: 150,
-              fixed: 'left',
-            },
-            {
-              title: '工艺超标报警企业数',
-              dataIndex: 'CountEnt',
-              key: 'CountEnt',
-              width: 150,
-            },
-            {
-              title: '工艺超标报警监测点数',
-              dataIndex: 'CountPoint',
-              key: 'CountPoint',
-              width: 150,
-            },
-            ...titlePollutant,
-          ];
-        } else {
-          titleList = [
-            {
-              title: '行政区',
-              dataIndex: 'RegionName',
-              key: 'RegionName',
-              width: 150,
-            },
-            {
-              title: '工艺超标报警企业数',
-              dataIndex: 'CountEnt',
-              key: 'CountEnt',
-              width: 150,
-            },
-            {
-              title: '工艺超标报警监测点数',
-              dataIndex: 'CountPoint',
-              key: 'CountPoint',
-              width: 150,
-            },
-            ...titlePollutant,
-          ];
-        }
-
         this.setState(
           { checkedValues: res.map(item => item.PollutantCode), columns: titleList },
           () => {
@@ -256,33 +185,30 @@ class index extends PureComponent {
     });
   };
 
-  // 获取异常数据
-  getExceptionList = () => {
+  // 获取超标报警处置率-一级
+  getAlarmManagementRate = () => {
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
     if (values.time && values.time[0]) {
-      beginTime =
-        values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
-          : moment(values.time[0]).format('YYYY-MM-DD');
+      beginTime = moment(values.time[0]).format('YYYY-MM-DD 00:00:00');
     }
     if (values.time && values.time[1]) {
-      endTime =
-        values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
-          : moment(values.time[1]).format('YYYY-MM-DD');
+      endTime = moment(values.time[1]).format('YYYY-MM-DD 00:00:00');
     }
-
+    console.log('checkedValues = ', this.state.checkedValues);
     this.props.dispatch({
-      type: 'overAlarmDisposalRate/getExceptionList',
+      type: 'overAlarmDisposalRate/getAlarmManagementRate',
       payload: {
         AttentionCode: values.AttentionCode,
-        PollutantList: this.state.checkedValues,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
-        dataType: values.dataType,
+        RegionCode: '',
+        // dataType: 'DayData',
+        dataType: 'HourData',
         beginTime: beginTime,
         endTime: endTime,
+        PollutantList: this.state.checkedValues,
+        PollutantCodeList: this.state.checkedValues,
+        Rate: 1,
       },
     });
 
@@ -292,106 +218,144 @@ class index extends PureComponent {
         PollutantList: this.state.checkedValues,
         PollutantType: values.PollutantType,
         RegionCode: values.RegionCode,
-        dataType: values.dataType,
+        dataType: 'DayData',
         beginTime: beginTime,
         endTime: endTime,
       },
     });
   };
 
-  // 导出异常数据
-  exportExceptionList = () => {
-    let values = this.props.form.getFieldsValue();
-    let beginTime, endTime;
-    if (values.time && values.time[0]) {
-      beginTime =
-        values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
-          : moment(values.time[0]).format('YYYY-MM-DD');
-    }
-    if (values.time && values.time[1]) {
-      endTime =
-        values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
-          : moment(values.time[1]).format('YYYY-MM-DD');
-    }
-    this.props.dispatch({
-      type: 'overAlarmDisposalRate/exportExceptionList',
-      payload: {
-        AttentionCode: values.AttentionCode,
-        PollutantList: this.state.checkedValues,
-        PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-      },
-    });
-  };
+  // // 导出异常数据
+  // exportExceptionList = () => {
+  //   let values = this.props.form.getFieldsValue();
+  //   let beginTime, endTime;
+  //   if (values.time && values.time[0]) {
+  //     beginTime =
+  //       values.dataType === 'HourData'
+  //         ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
+  //         : moment(values.time[0]).format('YYYY-MM-DD');
+  //   }
+  //   if (values.time && values.time[1]) {
+  //     endTime =
+  //       values.dataType === 'HourData'
+  //         ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
+  //         : moment(values.time[1]).format('YYYY-MM-DD');
+  //   }
+  //   this.props.dispatch({
+  //     type: 'overAlarmDisposalRate/exportExceptionList',
+  //     payload: {
+  //       AttentionCode: values.AttentionCode,
+  //       PollutantList: this.state.checkedValues,
+  //       PollutantType: values.PollutantType,
+  //       RegionCode: values.RegionCode,
+  //       dataType: values.dataType,
+  //       beginTime: beginTime,
+  //       endTime: endTime,
+  //     },
+  //   });
+  // };
 
-  onDataTypeChange = value => {
-    if (value === 'HourData') {
-      this.props.form.setFieldsValue({ time: [moment().subtract(1, 'days'), moment()] });
-      this.setState({ format: 'YYYY-MM-DD HH', showTime: true });
-    } else {
-      this.props.form.setFieldsValue({ time: [moment().subtract(7, 'days'), moment()] });
-      this.setState({ format: 'YYYY-MM-DD', showTime: false });
-    }
-  };
+  // onDataTypeChange = value => {
+  //   if (value === 'HourData') {
+  //     this.props.form.setFieldsValue({ time: [moment().subtract(1, 'days'), moment()] });
+  //     this.setState({ format: 'YYYY-MM-DD HH', showTime: true });
+  //   } else {
+  //     this.props.form.setFieldsValue({ time: [moment().subtract(7, 'days'), moment()] });
+  //     this.setState({ format: 'YYYY-MM-DD', showTime: false });
+  //   }
+  // };
 
   // 监测因子change
   onCheckboxChange = checkedValues => {
     if (checkedValues.length < 1) {
-      message.warning('最少勾选三个监测因子！');
+      message.warning('最少勾选一个监测因子！');
       return;
     }
+    this.setState({
+      checkedValues,
+    });
+    let values = this.props.form.getFieldsValue();
+    let beginTime, endTime;
+    if (values.time && values.time[0]) {
+      beginTime = moment(values.time[0]).format('YYYY-MM-DD 00:00:00');
+    }
+    if (values.time && values.time[1]) {
+      endTime = moment(values.time[1]).format('YYYY-MM-DD 00:00:00');
+    }
+
+    this.props.dispatch({
+      type: 'overAlarmDisposalRate/getAlarmManagementRate',
+      payload: {
+        AttentionCode: values.AttentionCode,
+        PollutantType: values.PollutantType,
+        RegionCode: '',
+        // dataType: 'DayData',
+        dataType: 'HourData',
+        beginTime: beginTime,
+        endTime: endTime,
+        PollutantList: checkedValues,
+        PollutantCodeList: checkedValues,
+        Rate: 1,
+      },
+    });
+  };
+
+  render() {
+    const {
+      form: { getFieldDecorator },
+      regionList,
+      attentionList,
+      divisorList,
+      exceptionDataSource,
+      column: pollutantColumn,
+      loading,
+    } = this.props;
+    const { formLayout } = this._SELF_;
+    const { format, showTime, checkedValues } = this.state;
+    console.log('attentionList=', attentionList);
+    console.log('divisorList = ', divisorList);
+    console.log('exceptionDataSource = ', exceptionDataSource);
+    let _regionList = regionList.length ? regionList[0].children : [];
+    let columns = [];
     let titlePollutant = [];
 
-    this.props.divisorList.map((item, key) => {
-      let index = checkedValues.findIndex((checkedItem, checkedKey) => {
-        if (item.PollutantCode == checkedItem) {
-          return true;
-        }
+    pollutantColumn.map((item, key) => {
+      titlePollutant.push({
+        title: item.PollutantName,
+        children: [
+          {
+            title: '报警次数',
+            dataIndex: `${item.PollutantCode}_alarmCount`,
+            key: 'DataType',
+            width: 100,
+          },
+          {
+            title: '已处置报警次数',
+            dataIndex: `${item.PollutantCode}_respondedCount`,
+            key: 'DataType',
+            width: 150,
+          },
+          {
+            title: '待处置报警次数',
+            dataIndex: `${item.PollutantCode}_noRespondedCount`,
+            key: 'DataType',
+            width: 150,
+          },
+          {
+            title: '处置率',
+            dataIndex: `${item.PollutantCode}_RespondedRate`,
+            key: 'DataType',
+            width: 100,
+          },
+        ],
       });
-      if (index !== -1) {
-        titlePollutant.push({
-          title: item.PollutantName,
-          children: [
-            {
-              title: '报警次数',
-              dataIndex: 'DataType',
-              key: 'DataType',
-              width: 100,
-            },
-            {
-              title: '已处置报警次数',
-              dataIndex: 'DataType',
-              key: 'DataType',
-              width: 150,
-            },
-            {
-              title: '待处置报警次数',
-              dataIndex: 'DataType',
-              key: 'DataType',
-              width: 150,
-            },
-            {
-              title: '处置率',
-              dataIndex: 'DataType',
-              key: 'DataType',
-              width: 100,
-            },
-          ],
-        });
-      }
     });
-    let titleList = [];
-    if (checkedValues.length > 2) {
-      titleList = [
+    if (pollutantColumn.length > 2) {
+      columns = [
         {
           title: '行政区',
-          dataIndex: 'RegionName',
-          key: 'RegionName',
+          dataIndex: 'regionName',
+          key: 'regionName',
           fixed: 'left',
         },
         {
@@ -407,11 +371,11 @@ class index extends PureComponent {
         ...titlePollutant,
       ];
     } else {
-      titleList = [
+      columns = [
         {
           title: '行政区',
-          dataIndex: 'RegionName',
-          key: 'RegionName',
+          dataIndex: 'regionName',
+          key: 'regionName',
         },
         {
           title: '工艺超标报警企业数',
@@ -426,28 +390,6 @@ class index extends PureComponent {
         ...titlePollutant,
       ];
     }
-
-    this.setState({
-      checkedValues,
-      columns: titleList,
-    });
-  };
-
-  render() {
-    const {
-      form: { getFieldDecorator },
-      regionList,
-      attentionList,
-      divisorList,
-      exceptionDataSource,
-      loading,
-    } = this.props;
-    const { formLayout } = this._SELF_;
-    const { format, showTime, checkedValues, columns } = this.state;
-    console.log('attentionList=', attentionList);
-    console.log('divisorList = ', divisorList);
-    console.log('exceptionDataSource = ', exceptionDataSource);
-    let _regionList = regionList.length ? regionList[0].children : [];
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -497,7 +439,7 @@ class index extends PureComponent {
                       placeholder="请选择企业类型"
                       onChange={value => {
                         this.setState({ pollutantType: value }, () => {
-                          this.getPollutantByType();
+                          this.getPollutantByType(this.getAlarmManagementRate());
                         });
                       }}
                     >
@@ -532,7 +474,7 @@ class index extends PureComponent {
                   style={{ width: '100%' }}
                 >
                   {getFieldDecorator('time', {
-                    initialValue: [moment().subtract(1, 'days'), moment()],
+                    initialValue: [moment().subtract(10, 'month'), moment()],
                   })(
                     <RangePicker
                       allowClear={false}
@@ -566,7 +508,7 @@ class index extends PureComponent {
                   loading={loading}
                   type="primary"
                   style={{ marginLeft: 10 }}
-                  onClick={this.getExceptionList}
+                  onClick={this.getAlarmManagementRate}
                 >
                   查询
                 </Button>
@@ -580,7 +522,12 @@ class index extends PureComponent {
               </Col>
             </Row>
           </Form>
-          <SdlTable dataSource={exceptionDataSource} columns={columns} loading={loading} />
+          <SdlTable
+            scroll={{ xScroll: 'scroll' }}
+            dataSource={exceptionDataSource}
+            columns={columns}
+            loading={loading}
+          />
         </Card>
       </BreadcrumbWrapper>
     );

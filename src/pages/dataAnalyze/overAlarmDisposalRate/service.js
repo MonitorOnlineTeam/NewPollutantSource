@@ -1,8 +1,21 @@
+/*
+ * @Description:超标报警处置率
+ * @LastEditors: hxf
+ * @Date: 2020-10-16 17:02:34
+ * @LastEditTime: 2020-10-21 14:21:22
+ * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/service.js
+ */
 import { post } from '@/utils/request';
 
 // 获取关注程度
 export async function getAttentionDegreeList(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  return result;
+}
+
+// xinjiang根据企业类型查询监测因子
+export async function getPollutantCodeList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params);
   return result;
 }
 
@@ -12,6 +25,12 @@ export async function getPollutantByType(params) {
     `/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`,
     {},
   );
+  return result;
+}
+
+// 异常数据查询-师一级
+export async function getAlarmManagementRate(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementRate`, params);
   return result;
 }
 

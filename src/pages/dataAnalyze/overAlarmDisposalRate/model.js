@@ -1,3 +1,10 @@
+/*
+ * @Description:超标报警处置率
+ * @LastEditors: hxf
+ * @Date: 2020-10-16 16:57:56
+ * @LastEditTime: 2020-10-21 14:21:30
+ * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/model.js
+ */
 import Model from '@/utils/model';
 import * as services from './service';
 import moment from 'moment';
@@ -5,6 +12,7 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'overAlarmDisposalRate',
   state: {
+    column: [],
     attentionList: [],
     divisorList: [],
     exceptionDataSource: [],
@@ -22,6 +30,18 @@ export default Model.extend({
         message.error(response.Message);
       }
     },
+    // xinjiang根据企业类型查询监测因子
+    *getPollutantCodeList({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getPollutantCodeList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          divisorList: response.Datas,
+        });
+        callback && callback(response.Datas);
+      } else {
+        message.error(response.Message);
+      }
+    },
     // 根据企业类型查询监测因子
     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
       const response = yield call(services.getPollutantByType, { ...payload });
@@ -32,6 +52,20 @@ export default Model.extend({
         callback && callback(response.Datas);
       } else {
         message.error(response.Message);
+      }
+    },
+    // 超标报警处置率-师一级
+    *getAlarmManagementRate({ payload }, { call, put, update, select }) {
+      console.log('getAlarmManagementRate payload = ', payload);
+      const result = yield call(services.getAlarmManagementRate, { ...payload });
+      console.log('getExceptionList result = ', result);
+      if (result.IsSuccess) {
+        yield update({
+          exceptionDataSource: result.Datas.data,
+          column: result.Datas.column,
+        });
+      } else {
+        message.error(result.Message);
       }
     },
     // 异常数据查询-师一级

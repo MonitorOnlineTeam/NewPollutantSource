@@ -456,7 +456,7 @@ export default Model.extend({
     // 获取联动
     *getRegions({ payload, callback }, { call, update }) {
       const result = yield call(services.getRegions, { ...payload });
-      console.log('regionList = ', regionList);
+      console.log('regionList = ', result);
       if (result.IsSuccess) {
         yield update({
           regionList: result.Datas,
