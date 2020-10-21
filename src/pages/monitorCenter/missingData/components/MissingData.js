@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：缺失数据报警
+ * 创建人：贾安波
+ * 创建时间：2020.10
  */
 import React, { Component } from 'react';
 import {
@@ -31,6 +31,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
+
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -74,12 +76,12 @@ export default class EntTransmissionEfficiency extends Component {
              ()=>{ 
                sessionStorage.setItem("missDataDetailPageIndex",1)
                sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query: {regionCode:record.regionCode}}));
+               this.props.dispatch(routerRedux.push({pathname:'/monitorCenter/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
               }}>{text}</a>      
        },
       },
       {
-        title: <span>{this.props.type==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
+        title: <span>{this.props.types==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center',
@@ -109,11 +111,11 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type } = this.props;
+    const { dispatch, location,Atmosphere,types } = this.props;
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
 
-    type==='ent'? this.columns.splice(1,0,entObj) : null;
+    types==='ent'? this.columns.splice(1,0,entObj) : null;
 
     this.updateQueryState({
       // beginTime: moment()
@@ -125,12 +127,12 @@ export default class EntTransmissionEfficiency extends Component {
       // RegionCode: '',
       // Atmosphere:Atmosphere
       RegionCode: '',
-      EntType: type==='ent'? "1":"2"
+      EntType: types==='ent'? "1":"2"
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      //获取企业列表 or 大气站列表
-     type==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
+     types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
  
      dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
@@ -272,7 +274,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
-      type,
+      types,
       tableDatas
     } = this.props;
 
@@ -289,7 +291,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
                     value={dataType}
-                    style={{ width: 100 }}
+                    style={{ width: 150 }}
                   >  
                  <Option key='0' value='HourData'>小时</Option>
                  <Option key='1' value='DayData'> 日均</Option>
@@ -301,40 +303,56 @@ export default class EntTransmissionEfficiency extends Component {
                   <RangePicker_   allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
-                <Form.Item label='关注程度'>
-                  <Select
-                    allowClear
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 110 }}
-                  >
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
                 <Form.Item label='行政区'>
                   <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
                     value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 100 }}
+                    style={{ width: 150 }}
                   >
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
-               {type==='ent'? <Form.Item label='企业类型'>
+                {types!=='ent'? <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                    查询
+                  </Button>
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon="export"
+                    onClick={this.template}
+                    loading={exloading}
+                  >
+                    导出
+                  </Button>
+                </Form.Item> :null}
+                </Row>
+                {types==='ent'?  <Row>
+                <Form.Item label='关注程度'>
+                  <Select
+                    allowClear
+                    placeholder="关注程度"
+                    onChange={this.changeAttent}
+                    value={AttentionCode?AttentionCode:undefined} 
+                    style={{ width: 150 }}
+                  >
+                    {this.attentchildren()}
+                  </Select>
+                </Form.Item>
+
+             <Form.Item label='企业类型'>
                   <Select
                     allowClear
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType?PollutantType:undefined}
-                    style={{ width: 100 }}
+                    style={{ width: 150 }}
                   >
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item> : null }
+                </Form.Item> 
 
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -349,7 +367,7 @@ export default class EntTransmissionEfficiency extends Component {
                     导出
                   </Button>
                 </Form.Item>
-                </Row>
+                </Row>: null }
               </Form>
             </>
           }

@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：统计量变化趋势
+ * 创建人：贾安波
+ * 创建时间：2019.10.19
  */
 import React, { Component } from 'react';
 import {
@@ -21,6 +21,7 @@ import {
   Select,
   Tabs,
   Radio,
+  Checkbox,
   message
 } from 'antd';
 import moment from 'moment';
@@ -34,8 +35,16 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile,GetDataType,toDecimal3} from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
-import { blue,red } from '@ant-design/colors';
+import { blue,red,green,gold,grey} from '@ant-design/colors';
 import PageLoading from '@/components/PageLoading'
+import RegionList from '@/components/RegionList'
+import EntAtmoList from '@/components/EntAtmoList'
+import EntType from '@/components/EntType'
+import AttentList from '@/components/AttentList'
+import { EnumPropellingAlarmSourceType } from '@/utils/enum';
+
+
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -43,23 +52,24 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'removalFlowRate/updateState',
-  getData: 'removalFlowRate/getSewageHistoryList',
+  updateState: 'emissionsChange/updateState',
+  getData: 'emissionsChange/getSewageHistoryList',
 };
-@connect(({ loading, removalFlowRate,autoForm }) => ({
-  priseList: removalFlowRate.priseList,
-  exloading:removalFlowRate.exloading,
-  loading: removalFlowRate.loading,
-  total: removalFlowRate.total,
-  tableDatas: removalFlowRate.tableDatas,
-  queryPar: removalFlowRate.queryPar,
+@connect(({ loading, emissionsChange,autoForm }) => ({
+  priseList: emissionsChange.priseList,
+  exloading:emissionsChange.exloading,
+  loading: emissionsChange.loading,
+  total: emissionsChange.total,
+  tableDatas: emissionsChange.tableDatas,
+  queryPar: emissionsChange.queryPar,
   regionList: autoForm.regionList,
-  attentionList:removalFlowRate.attentionList,
-  pointName:removalFlowRate.pointName,
-  chartExport:removalFlowRate.chartExport,
-  chartImport:removalFlowRate.chartImport,
-  chartTime:removalFlowRate.chartTime,
-  entName:removalFlowRate.entName,
+  attentionList:emissionsChange.attentionList,
+  pointName:emissionsChange.pointName,
+  chartExport:emissionsChange.chartExport,
+  chartImport:emissionsChange.chartImport,
+  chartTime:emissionsChange.chartTime,
+  entName:emissionsChange.entName,
+  pollutantList:emissionsChange.pollutantList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -67,81 +77,11 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+
+
     };
     
-    this.columns = [
-      {
-        title: '监测时间',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
-        align: 'center',
-        render: (text, record) => {
-          return <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span>;
-        },
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'pointName',
-        key: 'pointName',
-        align: 'center',
-        render: (text, record) => {
-          return <span>{this.props.pointName}</span>;
-        },
-      },
-      {
-        title: '进水口',
-        width:400,
-        children: [
-          {
-            title: '浓度(mg/L)',
-            dataIndex: 'importValue',
-            key: 'importValue',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
-            },
-          },
-          {
-            title: '是否停运',
-            dataIndex: 'importStop',
-            key: 'importStop',
-            align:'center',
-            render: (text, record) => {
-              return text==0? "否": text==1? '是' : text;
-            },
-            width:200,
-           
-          },
-        ],
-      },
-      {
-        title: '出水口',
-        width:400,
-        children: [
-          {
-            title: '浓度(mg/L)',
-            dataIndex: 'exportValue',
-            key: 'exportValue',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
-            },
-          },
-          {
-            title: '是否停运',
-            dataIndex: 'exportStop',
-            key: 'exportStop',
-            width:200,
-            align:'center',
-            render: (text, record) => {
-              return text==0? "否": text==1? '是' : text;
-            },
-          },
-        ],
-      },
-    ]
+
   }
 
   componentDidMount() {
@@ -156,27 +96,20 @@ export default class EntTransmissionEfficiency extends Component {
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'removalFlowRate/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'emissionsChange/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
      this.child.onDataTypeChange('hour')
-     dispatch({ 
-           type: 'removalFlowRate/getEntByRegion',
-           payload: { RegionCode: '' }, 
-           callback:(code)=>{
-            this.updateQueryState({
-              beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-              endTime: moment().format('YYYY-MM-DD HH:59:59'),
-              AttentionCode: '',
-              EntCode: '',
-              RegionCode: '',
-              dataType:'HourData',
-              PollutantCode:'011',
-            });
-            setTimeout(() => {
-              this.getTableData();
-            });
-           }
-    
-    });//获取企业列表
+     this.updateQueryState({
+      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
+      AttentionCode: '',
+      EntCode: '',
+      RegionCode: '',
+      dataType:'HourData',
+      PollutantCode:['011','060','101','065','007'],
+    });
+    setTimeout(() => {
+      this.getTableData();
+    });
   
 
   };
@@ -189,7 +122,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = () => { 
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
@@ -217,7 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantCode: value,
+      PollutantType: value,
     });
   };
 
@@ -236,27 +169,27 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-    // data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
+    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
 
-  changePoll=(e)=>{ //污染物改变事件
+  changePoll=(value)=>{ //污染物改变事件
     this.updateQueryState({
-      PollutantCode: e.target.value,
+      PollutantCode: value,
     });
-    const pollType = {
-      '011':'COD',
-      '060':'氨氮',
-      '101':'总磷',
-      '065':'总氮'
-    }
-    sessionStorage.setItem("pointName", pollType[e.target.value])
+    // const pollType = {
+    //   '011':'COD',
+    //   '060':'氨氮',
+    //   '101':'总磷',
+    //   '065':'总氮'
+    // }
+    // sessionStorage.setItem("pointName", pollType[e.value])
   }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'removalFlowRate/exportSewageHistoryList',
+      type: 'emissionsChange/exportSewageHistoryList',
       payload: { ...queryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
@@ -327,22 +260,32 @@ export default class EntTransmissionEfficiency extends Component {
    }
    getChartData=()=>{
 
-    const { pointName,chartExport,chartImport,chartTime,entName} = this.props;
+    const { queryPar:{PollutantCode},chartExport,chartImport,chartTime,entName,pollutantList} = this.props;
+
+   let pollSelect = [],pollName=[]
+   pollutantList.map(item=>{
+    PollutantCode.map(items=>{
+      if(item.value===items){
+        pollSelect.push({ name: `${item.name}(${item.unit})`, type: 'line', data: chartImport,})
+        pollName.push( `${item.name}(${item.unit})`)
+      }
+    })
+   }) 
     return {
-      color:[blue[5],red[5]],
-      // title:{
-      //   text:entName,//图表标题文本内
-      //   textStyle:{//标题内容的样式
-      //     fontSize:14//主题文字字体大小，默认为18px
-      //   },
-      //   left:'center',
-      //   top:30
-      // },
+      color:[blue[5],red[5],green[5],gold[5],grey[5]],
+      title:{
+        // text:entName,//图表标题文本内
+        textStyle:{//标题内容的样式
+          fontSize:14//主题文字字体大小，默认为18px
+        },
+        left:'center',
+        top:30
+      },
       tooltip: {
           trigger: 'axis'
       },
       legend: {
-          data: [`进水口-${pointName}`, `出水口-${pointName}`],
+          data: pollName,
       },
       grid: {
           left: '3%',
@@ -367,20 +310,7 @@ export default class EntTransmissionEfficiency extends Component {
             type: 'value',
         }
     ],
-      series: [
-          {
-              name: `进水口-${pointName}`,
-              type: 'line',
-              // stack: '总量',
-              data: chartImport,
-          },
-          {
-              name: `出水口-${pointName}`,
-              type: 'line',
-              // stack: '总量',
-              data: chartExport,
-          },
-      ]
+      series: pollSelect
   };
    }
 
@@ -394,9 +324,30 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
     } = this.props;
     const { TabPane } = Tabs;
+
+    let columns = [
+      {
+        title: '监测时间',
+        dataIndex: 'MonitorTime',
+        key: 'MonitorTime',
+        align: 'center',
+        render: (text, record) => {
+          return <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span>;
+        },
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'pointName',
+        key: 'pointName',
+        align: 'center',
+        render: (text, record) => {
+          return text? text : '-';
+        },
+      },
+    ]
     return (
         <Card
           bordered={false}
@@ -405,43 +356,61 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline">
             
               <Row>
-              <Form.Item label=''>
-                  <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="污水处理厂名称"
-                    onChange={this.changeEnt}
-                    value={EntCode?EntCode: undefined }
-                    style={{ width: 300  }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
-              <Form.Item label=''>
-                 <Radio.Group value={dataType} style={{ marginRight: 10 }} onChange={(e) =>this._handleDateTypeChange(e) }>
-                    <Radio.Button value="HourData">小时</Radio.Button>
-                    <Radio.Button value="DayData">日均</Radio.Button>
-                  </Radio.Group> 
+              <Form.Item label='行政区'>
+               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-                <Form.Item>
-          <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-          callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              
+              <Form.Item label='关注程度'>
+               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
+              </Form.Item>
+              <Form.Item label='企业类型'>
+               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
+              </Form.Item>
+
+                <Form.Item label='重点类型'>
+                  <Select
+                    allowClear
+                    placeholder="重点类型"
+                    onChange={this.changeRegion}
+                    value={RegionCode ? RegionCode : undefined}
+                    style={{ width: 150 }}
+                  >
+                 <Option key='011' value='011'>1</Option>
+                 <Option key='060' value='060'>2</Option>
+                  </Select>
+                </Form.Item> 
+
+                <Form.Item label='企业列表'>
+                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
                 </Form.Item>
-
-
-
                 </Row>
                 <Row>
-
-                <Form.Item label='监测因子'>
-
-                  <Radio.Group  onChange={this.changePoll} value={PollutantCode}>
-                     <Radio value='011'>COD</Radio>
-                     <Radio value='060'>氨氮</Radio>
-                     <Radio value='101'>总磷</Radio>
-                     <Radio value='065'>总氮</Radio>
-                 </Radio.Group>
+                <Form.Item label='监测点'>
+                 <Select
+                    placeholder="污染物名称"
+                    onChange={this.changePoll}
+                    value={PollutantCode}
+                    style={{ width: 150  }}
+                  >
+                 <Option key='011' value='011'>监测点1</Option>
+                 <Option key='060' value='060'>监测点2</Option>
+                  </Select> 
+                </Form.Item>
+                <Form.Item label='趋势类型'>
+                  <Select
+                    allowClear
+                    placeholder="趋势类型"
+                    onChange={this.changeRegion}
+                    value={RegionCode ? RegionCode : undefined}
+                    style={{ width: 150 }}
+                  >
+                 <Option key='011' value='011'>1</Option>
+                 <Option key='060' value='060'>2</Option>
+                  </Select>
+                </Form.Item> 
+                <Form.Item label='查询日期'>
+               <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -455,14 +424,24 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                   </Button>
-                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
                 </Form.Item>
+                </Row>
+                <Row>
+                <Form.Item label='监测因子'>
+                  <Checkbox.Group  onChange={this.changePoll} defaultValue={PollutantCode}>
+                     <Checkbox value='011'>COD</Checkbox>
+                     <Checkbox value='060'>氨氮</Checkbox>
+                     <Checkbox value='101'>总磷</Checkbox>
+                     <Checkbox value='065'>总氮</Checkbox>
+                     <Checkbox value='007'>流量</Checkbox>
+                 </Checkbox.Group>
+                 </Form.Item>
                 </Row>
               </Form>
             </>
           }
         >
-          <div id='removalFlowRate'>
+          <div id='emissionsChange'>
               <Tabs>
             <TabPane tab="变化趋势" key="1"   >
             {loading?
@@ -481,7 +460,7 @@ export default class EntTransmissionEfficiency extends Component {
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
-              columns={this.columns}
+              columns={columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
