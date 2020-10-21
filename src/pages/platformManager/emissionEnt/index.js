@@ -22,8 +22,8 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const pageUrl = {
-    updateState: 'yearCheckEnt/updateState',
-    getData: 'yearCheckEnt/getTransmissionEfficiencyForRegion',
+    updateState: 'emissionEnt/updateState',
+    getData: 'emissionEnt/getTransmissionEfficiencyForRegion',
 };
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
     <Transfer {...restProps} showSelectAll={false}>
@@ -101,24 +101,24 @@ const rightTableColumns = [
     },
 ];
 
-@connect(({ loading, yearCheckEnt, autoForm }) => ({
-    RegionCode: yearCheckEnt.RegionCode,
+@connect(({ loading, emissionEnt, autoForm }) => ({
+    RegionCode: emissionEnt.RegionCode,
     regionList: autoForm.regionList,
-    pollutantType: yearCheckEnt.pollutantType,
-    priseList: yearCheckEnt.priseList,
-    queryPar: yearCheckEnt.qutletQueryPar,
-    entData: yearCheckEnt.entData,
-    entDataTotal: yearCheckEnt.entDataTotal,
-    pageSize: yearCheckEnt.pageSize,
-    pageIndex: yearCheckEnt.pageIndex,
-    AssessYear: yearCheckEnt.AssessYear,
-    AssessYearStr: yearCheckEnt.AssessYearStr,
-    loading: loading.effects['yearCheckEnt/GetAnnualAssessmentEntList'],
-    noSelectEnt: yearCheckEnt.noSelectEnt,
-    selectEnt: yearCheckEnt.selectEnt
+    pollutantType: emissionEnt.pollutantType,
+    priseList: emissionEnt.priseList,
+    queryPar: emissionEnt.qutletQueryPar,
+    entData: emissionEnt.entData,
+    entDataTotal: emissionEnt.entDataTotal,
+    pageSize: emissionEnt.pageSize,
+    pageIndex: emissionEnt.pageIndex,
+    AssessYear: emissionEnt.AssessYear,
+    AssessYearStr: emissionEnt.AssessYearStr,
+    loading: loading.effects['emissionEnt/GetEmissionEntList'],
+    noSelectEnt: emissionEnt.noSelectEnt,
+    selectEnt: emissionEnt.selectEnt
 }))
 @Form.create()
-class yearCheckEnt extends Component {
+class emissionEnt extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -130,14 +130,14 @@ class yearCheckEnt extends Component {
             selectData: [],
         };
         this._SELF_ = {
-            configId: 'yearCheckEnt',
+            configId: 'emissionEnt',
 
         }
     }
 
     componentDidMount() {
 
-        this.getTableData();
+        // this.getTableData();
         this.props.dispatch({
             type: 'autoForm/getRegions',
             payload: {
@@ -156,10 +156,10 @@ class yearCheckEnt extends Component {
 
         var selectData = this.props.noSelectEnt.filter(item => this.props.selectEnt.includes(item.key));
         this.props.dispatch({
-            type: 'yearCheckEnt/AddAnnualAssessmentEnt',
+            type: 'emissionEnt/AddEmissionEnt',
             payload: {
-                AnnualAssessmentEntList: selectData,
-                AssessYear: this.props.AssessYearStr
+                EmissionEntList: selectData,
+                // AssessYear: this.props.AssessYearStr
             }
         })
         this.setState({ visible: false })
@@ -175,7 +175,7 @@ class yearCheckEnt extends Component {
 
     getEntData = () => {
         this.props.dispatch({
-            type: 'yearCheckEnt/GetAnnualAssessmentEntList',
+            type: 'emissionEnt/GetEmissionEntList',
             payload: {
             },
         })
@@ -196,7 +196,7 @@ class yearCheckEnt extends Component {
 
         dispatch({
             //获取企业列表
-            type: 'yearCheckEnt/getEntByRegion',
+            type: 'emissionEnt/getEntByRegion',
             payload: { RegionCode: RegionCode },
         });
 
@@ -259,13 +259,21 @@ class yearCheckEnt extends Component {
     delEnt = (ID) => {
         console.log('id', ID)
         this.props.dispatch({
-            type: 'yearCheckEnt/DeleteAnnualAssessmentEntByID',
+            type: 'emissionEnt/DeleteEmissionEntByID',
             payload: {
                 ID: ID
             }
         })
     }
-
+    IsEnabled = (type, ID) => {
+        this.props.dispatch({
+            type: 'emissionEnt/updateEntFlag',
+            payload: {
+                ID:ID,
+                EntFlag:type
+            },
+        });
+    };
     typeChange = value => {
         this.updateState({
             pollutantType: value,
@@ -322,41 +330,54 @@ class yearCheckEnt extends Component {
                 title: '行政区',
                 dataIndex: 'RegionName',
                 key: 'RegionName',
-                width: '10%',
+                width: '15%',
                 align: 'center',
             },
             {
-                title: '考核年份',
-                dataIndex: 'AssessYear',
-                key: 'AssessYear',
-                width: '10%',
-                align: 'center',
-            },
-            {
-                title: '考核企业名称',
+                title: '企业名称',
                 dataIndex: 'EntName',
                 key: 'EntName',
-                width: '20%',
+                width: '30%',
             },
             {
-                title: '考核监测点名称',
+                title: '监测点名称',
                 dataIndex: 'PointName',
                 key: 'PointName',
-                width: '20%',
+                width: '30%',
             },
             {
-                title: '考核开始时间',
-                dataIndex: 'BeginTime',
-                key: 'BeginTime',
+                title: '参与企业整体排放量计算标识',
+                dataIndex: 'EntFlag',
+                key: 'EntFlag',
                 width: '15%',
-                align: 'center',
-            },
-            {
-                title: '考核结束时间',
-                dataIndex: 'EndTime',
-                key: 'EndTime',
-                width: '15%',
-                align: 'center',
+                render: (text, record, index) => {
+                    if (text === 0) {
+                        return (
+                            <span>
+                                <Button size="small" type="dashed">
+                                    <a
+                                        title="单击设置为参与"
+                                        style={{ color: '#D1D1D1' }}
+                                        onClick={() => this.IsEnabled(1, record.ID)}
+                                    >
+                                        <Icon type="exclamation-circle" /> 不参与
+                  </a>
+                                </Button>
+                            </span>
+                        );
+                    }
+                    return (
+                        <span>
+                            {' '}
+                            <Button size="small" color="blue">
+                                {' '}
+                                <a title="单击设置为不参与" onClick={() => this.IsEnabled(0, record.ID)}>
+                                    <Icon type="setting" spin={true} /> 参与
+                </a>
+                            </Button>
+                        </span>
+                    );
+                }
             },
             {
                 title: '操作',
@@ -386,23 +407,6 @@ class yearCheckEnt extends Component {
                     <Form layout="inline" style={{ marginBottom: '10' }}>
                         <Row >
                             <Col md={4} sm={24}>
-                                <FormItem label="考核年份" style={{ width: '100%' }}>
-                                    <YearPicker
-                                        allowClear={false}
-                                        // style={{ width: '100%' }}
-                                        // defaultValue={moment()}
-                                        value={this.props.AssessYear}
-                                        _onPanelChange={v => {
-                                            this.updateState({
-                                                AssessYear: moment(v),
-                                                AssessYearStr: moment(v).format('YYYY')
-                                            })
-                                            // this.props.form.setFieldsValue({ ReportTime: v });
-                                        }}
-                                    />
-                                </FormItem>
-                            </Col>
-                            <Col md={4} sm={24}>
                                 <FormItem label="行政区" style={{ width: '100%' }}>
                                     <Select
                                         allowClear
@@ -429,9 +433,6 @@ class yearCheckEnt extends Component {
                                     </Select>
                                 </FormItem>
                             </Col>
-
-                        </Row>
-                        <Row style={{ marginTop: 10, marginBottom: 10 }}>
                             <FormItem label="企业列表" >
                                 <Select
                                     showSearch
@@ -445,40 +446,35 @@ class yearCheckEnt extends Component {
                                     {this.entChildren()}
                                 </Select>
                             </FormItem>
-                            <Button type="primary" style={{ marginLeft: 46 }} onClick={() => {
+                            <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 this.getEntData()
                             }}>查询</Button>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                                if (this.props.AssessYear == null) {
-                                    message.error("请选择考核年份")
-                                } else {
-                                    this.props.dispatch({
-                                        type: 'yearCheckEnt/GetAnnualAssessmentEntAndPoint',
-                                        payload: {
-                                        }
-                                    })
-                                    this.setState({
-                                        visible: true,
-                                    })
-                                }
-
+                                this.props.dispatch({
+                                    type: 'emissionEnt/GetEmissionEntAndPoint',
+                                    payload: {
+                                    }
+                                })
+                                this.setState({
+                                    visible: true,
+                                })
                             }}>添加</Button>
                             {/* <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 this.props.dispatch({
-                                    type: 'yearCheckEnt/ExportAnnualAssessmentEnt',
+                                    type: 'emissionEnt/ExportAnnualAssessmentEnt',
                                     payload: {
                                     }
                                 })
                             }}>导出</Button> */}
                             <Button style={{ marginLeft: 10 }} onClick={() => {
                                 this.props.dispatch({
-                                    type: 'yearCheckEnt/ExportAnnualAssessmentEnt',
+                                    type: 'emissionEnt/ExportEmissionEnt',
                                     payload: {
                                     }
                                 })
                             }}><Icon type="export" />导出</Button>
-                             <span style={{color:'red',marginLeft:20,fontSize:12}}>设置年度参与国家有效传输率考核的企业监测点名单</span>
                         </Row>
+                            <span style={{ color: 'red', fontSize: 12 }}>设置参与排放量计算的监测点名单</span>
                     </Form>
                     <SdlTable
                         loading={this.props.loading}
@@ -496,7 +492,7 @@ class yearCheckEnt extends Component {
                     />
                 </Card>
                 <Modal
-                    title={'添加考核企业监测点-' + this.props.AssessYearStr + '年'}
+                    title={'添加监测点'}
                     visible={this.state.visible}
                     width={1600}
                     destroyOnClose
@@ -508,7 +504,7 @@ class yearCheckEnt extends Component {
                 >
                     <TableTransfer
                         rowKey={record => record.key}
-                        titles={['待选企业监测点', '参与考核企业监测点']}
+                        titles={['待选企业监测点', '参与排放量计算的监测点']}
                         dataSource={this.props.noSelectEnt}
                         targetKeys={this.props.selectEnt}
                         disabled={false}
@@ -527,4 +523,4 @@ class yearCheckEnt extends Component {
     }
 }
 
-export default yearCheckEnt;
+export default emissionEnt;

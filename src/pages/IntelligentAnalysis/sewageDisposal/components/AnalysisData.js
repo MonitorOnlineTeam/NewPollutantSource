@@ -20,7 +20,8 @@ import {
   Form,
   Select,
   Tabs,
-  Radio
+  Radio,
+  message
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -30,7 +31,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile,GetDataType } from '@/utils/utils';
+import { downloadFile,GetDataType,toDecimal3} from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
 import { blue,red } from '@ant-design/colors';
@@ -97,6 +98,9 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'importValue',
             width:200,
             align:'center',
+            render: (text, record) => {
+              return <span>{text? toDecimal3(text):"-"}</span>;
+            },
           },
           {
             title: '是否停运',
@@ -121,6 +125,9 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'exportValue',
             width:200,
             align:'center',
+            render: (text, record) => {
+              return <span>{text? toDecimal3(text):"-"}</span>;
+            },
           },
           {
             title: '是否停运',
@@ -229,7 +236,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-    sessionStorage.setItem("entName", data.props.title)
+    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
 
@@ -258,14 +265,20 @@ export default class EntTransmissionEfficiency extends Component {
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+  
 
-    const { pointName, dispatch } = this.props;
+    const { pointName, dispatch,queryPar:{EntCode} } = this.props;
 
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { pointName: sessionStorage.getItem("pointName"),entName:sessionStorage.getItem("entName")},
-    });
+    if(EntCode){
+      this.getTableData();
+      dispatch({
+        type: pageUrl.updateState,
+        payload: { pointName: sessionStorage.getItem("pointName"),entName:sessionStorage.getItem("entName")},
+      });
+    }else{
+      message.warning('污水处理厂名称不能为空')
+    }
+
   };
 
 
@@ -399,7 +412,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Radio.Group> 
               </Form.Item>
                 <Form.Item>
-          <RangePicker_  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+          <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
           callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 {/* <Form.Item label='行政区'>
@@ -471,7 +484,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                   </Button>
-                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个检测点</span>
+                  <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
                 </Form.Item>
                 </Row>
               </Form>
@@ -502,8 +515,8 @@ export default class EntTransmissionEfficiency extends Component {
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
+                showSizeChanger: true,
+                showQuickJumper: true,
                 // sorter: true,
                 total: this.props.total,
                 defaultPageSize:20

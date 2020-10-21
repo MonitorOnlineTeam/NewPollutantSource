@@ -1,11 +1,12 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
+
 import Cookie from 'js-cookie';
 import slash from 'slash2';
 import webpackPlugin from './plugin.config';
 import config from '@/config';
-
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
+
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
@@ -15,7 +16,8 @@ const plugins = [
     {
       antd: true,
       dva: {
-        hmr: true,
+        hmr: false,
+        immer: false,
       },
       locale: {
         // default false
@@ -32,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -88,7 +90,12 @@ export default {
     {
       path: '/hrefLogin',
       component: '../layouts/BlankLayout',
-      routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
+      routes: [
+        {
+          path: '/hrefLogin',
+          component: './user/login/hrefLogin',
+        },
+      ],
     },
     {
       path: '/',
@@ -98,9 +105,7 @@ export default {
           name: 'homepage',
           path: '/homepage',
           component: './home',
-        },
-
-        // appoperation
+        }, // appoperation
         {
           path: '/appoperation',
           component: '../layouts/BlankLayout',
@@ -171,9 +176,15 @@ export default {
               component: './AppOperation/AppSparePartReplaceRecord',
             },
             /* 手机端二维码 */
-            { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
+            {
+              path: '/appoperation/appqrcodemain',
+              component: './AppOperation/AppQRCodeMain',
+            },
             /* 扫码查运维页面 */
-            { path: '/appoperation/scanningCode/:DGIMN', component: './AppOperation/ScanningCode' },
+            {
+              path: '/appoperation/scanningCode/:DGIMN',
+              component: './AppOperation/ScanningCode',
+            },
             /* 扫码查运维页面(更多) */
             {
               path: '/appoperation/operationFormDetail/:DGIMN/:TaskID',
@@ -211,13 +222,15 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: defaultNavigateUrl },
+            {
+              path: '/',
+              redirect: defaultNavigateUrl,
+            },
             {
               name: 'home',
               path: '/home',
               component: './newHome',
-            },
-            // {
+            }, // {
             //   name: 'test',
             //   path: '/test',
             //   component: './Test/Test',
@@ -279,8 +292,7 @@ export default {
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
-            },
-            //污水处理台
+            }, //污水处理台
             // {
             //   path: '/SewagePlant',
             //   name: 'SewagePlant',
@@ -400,7 +412,6 @@ export default {
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
-
                 {
                   name: 'sparepartmanage',
                   path: '/platformconfig/sparepartmanage/:configId',
@@ -416,7 +427,6 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-
                 {
                   name: 'certificatemanage',
                   path: '/platformconfig/certificatemanage/:configId',
@@ -439,26 +449,22 @@ export default {
                   name: 'maintenancecycle',
                   path: '/platformconfig/maintenancecycle',
                   component: './platformManager/maintenancecycle',
-                },
-                // 标准库管理
+                }, // 标准库管理
                 {
                   name: 'StandardLibrary',
                   path: '/platformconfig/StandardLibrary',
                   component: './platformManager/standardLibrary',
-                },
-                // 添加标准库
+                }, // 添加标准库
                 {
                   name: 'addLibrary',
                   path: '/platformconfig/StandardLibrary/addLibrary',
                   component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
+                }, // 编辑标准库
                 {
                   name: 'editLibrary',
                   path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
                   component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
+                }, // 编辑标准库
                 {
                   name: 'viewLibrary',
                   path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
@@ -473,18 +479,22 @@ export default {
                   name: 'factorytest',
                   path: '/platformconfig/factorytest',
                   component: './platformManager/factorytest',
-                },
-                //停产管理
+                }, //停产管理
                 {
                   name: 'outputstopmanage',
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
-                },
-                //年度考核企业
+                }, //年度考核企业
                 {
                   name: 'yearCheckEnt',
                   path: '/platformconfig/yearCheckEnt',
                   component: './platformManager/yearCheckEnt/',
+                },
+                //企业排放量统计
+                {
+                  name: 'emissionEnt',
+                  path: '/platformconfig/emissionEnt',
+                  component: './platformManager/emissionEnt/',
                 },
               ],
             },
@@ -495,8 +505,7 @@ export default {
                 {
                   path: '/report',
                   redirect: '/report/wry',
-                },
-                // {
+                }, // {
                 //   name: 'dateReportPage',
                 //   path: '/report/:reportType',
                 //   component: './report/DateReportPage',
@@ -549,7 +558,6 @@ export default {
                 },
               ],
             },
-
             {
               path: '/operations',
               name: 'operations',
@@ -579,9 +587,9 @@ export default {
                     },
                   ],
                 },
-
                 {
-                  path: '/operations/log', //运维日志
+                  path: '/operations/log',
+                  //运维日志
                   name: 'log',
                   component: './operations/operationRecord',
                 },
@@ -659,9 +667,7 @@ export default {
                       component: './OperationSysManager/VehicleManage/',
                     },
                   ],
-                },
-
-                // {
+                }, // {
                 //   path: '/operations/operationRecord',
                 //   name: "operationRecord",
                 //   component: "./operations/operationRecord"
@@ -671,13 +677,11 @@ export default {
                   name: 'taskRecord',
                   component: './operations/TaskRecord',
                 },
-
                 {
                   path: '/operations/taskRecord/details/:TaskID/:DGIMN',
                   name: 'taskRecordDetail',
                   component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
-
                 {
                   path: '/operations/:from/recordForm/:typeID/:taskID',
                   name: 'recordForm',
@@ -773,8 +777,7 @@ export default {
                   ],
                 },
               ],
-            },
-            // {
+            }, // {
             //   path: '/overview',
             //   name: 'overview',
             //   // redirect: '/AutoFormManager',
@@ -867,8 +870,7 @@ export default {
                   name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
-                },
-                // 数据一览 - 实时
+                }, // 数据一览 - 实时
                 {
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
@@ -887,10 +889,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videopreview/hkvideo/index'
-                    : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -902,16 +905,6 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                // {
-                //   name: 'exceptionrecord',
-                //   path: '/monitoring/exceptionrecord',
-                //   component: './monitoring/exceptionrecord',
-                // },
-                // {
-                //   name: 'overrecord',
-                //   path: '/monitoring/overrecord',
-                //   component: './monitoring/overRecord',
-                // },
               ],
             },
             {
@@ -1004,7 +997,6 @@ export default {
                   path: '/platformconfig/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
-
                 {
                   name: 'sparepartmanage',
                   path: '/platformconfig/sparepartmanage/:configId',
@@ -1020,7 +1012,6 @@ export default {
                   path: '/platformconfig/handhelddevicesmanage/:configId',
                   component: './OperationSysManager/HandheldDevicesManage/',
                 },
-
                 {
                   name: 'certificatemanage',
                   path: '/platformconfig/certificatemanage/:configId',
@@ -1043,26 +1034,22 @@ export default {
                   name: 'maintenancecycle',
                   path: '/platformconfig/maintenancecycle',
                   component: './platformManager/maintenancecycle',
-                },
-                // 标准库管理
+                }, // 标准库管理
                 {
                   name: 'StandardLibrary',
                   path: '/platformconfig/StandardLibrary',
                   component: './platformManager/standardLibrary',
-                },
-                // 添加标准库
+                }, // 添加标准库
                 {
                   name: 'addLibrary',
                   path: '/platformconfig/StandardLibrary/addLibrary',
                   component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
+                }, // 编辑标准库
                 {
                   name: 'editLibrary',
                   path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
                   component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
+                }, // 编辑标准库
                 {
                   name: 'viewLibrary',
                   path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
@@ -1077,8 +1064,7 @@ export default {
                   name: 'factorytest',
                   path: '/platformconfig/factorytest',
                   component: './platformManager/factorytest',
-                },
-                //停产管理
+                }, //停产管理
                 {
                   name: 'outputstopmanage',
                   path: '/platformconfig/outputstopmanage/:configId',
@@ -1101,23 +1087,20 @@ export default {
                     {
                       path: '/Intelligentanalysis/SewagePlant',
                       redirect: '/Intelligentanalysis/SewagePlant/DataReporting/DataReporting/1/1',
-                    },
-                    // 数据上报列表
+                    }, // 数据上报列表
                     {
                       name: 'DataReporting',
                       path:
                         '/Intelligentanalysis/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
                       ///:monitortime/:entcode
                       component: './platformManager/dataReport/',
-                    },
-                    // 数据上报添加或修改
+                    }, // 数据上报添加或修改
                     {
                       name: 'DataReportingAdd',
                       path:
                         '/Intelligentanalysis/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
                       component: './platformManager/dataReport/components/addDataReport',
-                    },
-                    //统计报表
+                    }, //统计报表
                     {
                       name: 'statisticsReportDataList',
                       path:
@@ -1132,8 +1115,7 @@ export default {
                       component: './platformManager/dataReport/components/dataReportView',
                     },
                   ],
-                },
-                // {
+                }, // {
                 //   name: 'Intelligentanalysis',
                 //   path: '/Intelligentanalysis/transmissionefficiency',
                 //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
@@ -1157,70 +1139,62 @@ export default {
                   name: 'effluentFee',
                   path: '/Intelligentanalysis/effluentFee',
                   component: './Intelligentanalysis/effluentFee',
-                },
-                // 单站多参对比分析
+                }, // 单站多参对比分析
                 {
                   name: 'siteParamsPage',
                   path: '/Intelligentanalysis/siteParamsPage/:type',
                   component: './dataAnalyze/SiteParamsPage',
-                },
-                // 多站多参对比分析
+                }, // 多站多参对比分析
                 {
                   name: 'multiSiteParamsPage',
                   path: '/Intelligentanalysis/multiSiteParamsPage/:type',
                   component: './dataAnalyze/MultiSiteParamsPage',
-                },
-                // 数据获取率
+                }, // 数据获取率
                 {
                   name: 'dataGainRate',
                   path: '/Intelligentanalysis/dataGainRatePage',
                   component: './dataAnalyze/DataGainRatePage',
-                },
-                // 数据获取率`
+                }, // 数据获取率`
                 {
                   name: 'report',
                   path: '/Intelligentanalysis/report/:type',
                   component: './dataAnalyze/Report',
-                },
-                // 综合指数报表
+                }, // 综合指数报表
                 {
                   name: 'compositeIndexReport',
                   path: '/Intelligentanalysis/compositeIndex/:reportType',
                   component: './dataAnalyze/CompositeIndexReport',
-                },
-                // 综合指数范围报表
+                }, // 综合指数范围报表
                 {
                   name: 'compositeIndexRangeReport',
                   path: '/Intelligentanalysis/compositeIndexRange',
                   component: './dataAnalyze/CompositeRangeReport',
-                },
-                // 综合指数对比
+                }, // 综合指数对比
                 {
                   name: 'compositeIndexContrast',
                   path: '/Intelligentanalysis/compositeIndexContrast',
                   component: './dataAnalyze/CompositeIndexContrast',
-                },
-                // 季度有效数据捕集率
+                }, // 季度有效数据捕集率
                 {
                   name: 'quartDataCaptureRate',
                   path: '/Intelligentanalysis/quartDataCaptureRate',
                   component: './dataAnalyze/QuartDataCaptureRate',
-                },
-                //污水处理分析
+                }, //污水处理分析
                 {
                   path: '/Intelligentanalysis/sewageDisposal',
                   name: 'SewageDisposal',
-
                   routes: [
                     {
                       path: '/Intelligentanalysis/sewageDisposal',
                       redirect: '/Intelligentanalysis/sewageDisposal/removalRate',
                     },
-                    { //去除率分析
+                    {
+                      //去除率分析
                       path: '/Intelligentanalysis/sewageDisposal/removalRate',
                       component: './Intelligentanalysis/sewageDisposal/removalRate',
                     },
-                    { //流量分析
+                    {
+                      //流量分析
                       path: '/Intelligentanalysis/sewageDisposal/flow',
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
@@ -1237,41 +1211,53 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
                     },
-                    { //缺失数据报警 企业
+                    {
+                      //缺失数据报警 企业
                       path: '/Intelligentanalysis/dataAlarm/missingData/ent',
                       component: './Intelligentanalysis/dataAlarm/missingData/ent',
                     },
-                    { //缺失数据报警 空气站
+                    {
+                      //缺失数据报警 空气站
                       path: '/Intelligentanalysis/dataAlarm/missingData/air',
                       component: './Intelligentanalysis/dataAlarm/missingData/air',
                     },
-                    { //缺失数据报警 二级页面
+                    {
+                      //缺失数据报警 二级页面
                       path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                       component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
                     },
 
-
                     /* 缺失数据报警响应率 */
 
-                    { //缺失数据报警响应率 企业
+                    {
+                      //缺失数据报警响应率 企业
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
                     },
-                    { //缺失数据报警响应率 空气站
+                    {
+                      //缺失数据报警响应率 空气站
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
                     },
-                    { //缺失数据报警响应率 二级页面
+                    {
+                      //缺失数据报警响应率 二级页面
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                      component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                      component:
+                        './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    },
+                    {
+                      //超标数据核实率
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
                   ],
-                },  
-                {//超标报警处置率
+                },
+                {
+                  //超标报警处置率
                   name: 'overAlarmDisposalRate',
                   path: '/Intelligentanalysis/baojing/4',
                   component: './dataAnalyze/overAlarmDisposalRate',
-                },                            
+                },
               ],
             },
             {
@@ -1283,31 +1269,32 @@ export default {
                   redirect: '/dataquery/defectData',
                 },
                 {
-                  name: 'defectData', //数据缺失
+                  name: 'defectData',
+                  //数据缺失
                   path: '/dataSearch/defectData',
                   routes: [
                     {
-                      name: 'defectDatEnt', //数据缺失 - 企业
+                      name: 'defectDatEnt',
+                      //数据缺失 - 企业
                       path: '/dataSearch/defectData/ent',
                       component: './dataSearch/defectData/ent',
                     },
                     {
-                      name: 'defectDatAir', //数据缺失 - 空气站
+                      name: 'defectDatAir',
+                      //数据缺失 - 空气站
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
-
                   ],
                 },
                 {
-
-                  name: 'abnormalStandard',   //异常标准
+                  name: 'abnormalStandard', //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
-
                 },
                 {
-                  name: 'dischargeStandard', //排放标准
+                  name: 'dischargeStandard',
+                  //排放标准
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
                 },
@@ -1327,12 +1314,14 @@ export default {
                   component: './dataSearch/enterpriseMonitoringInquiry',
                 },
                 {
-                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  name: 'enterpriseMonitoringInquiry',
+                  //企业监测点查询
                   path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
                   component: './dataSearch/enterpriseInquiryDetail',
                 },
                 {
-                  name: 'airStation', //空气站查询
+                  name: 'airStation',
+                  //空气站查询
                   path: '/dataSearch/airStation',
                   component: './dataSearch/airStation',
                 },
@@ -1341,7 +1330,7 @@ export default {
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
                 },
-              ]
+              ],
             },
             {
               path: '/dataquery',
@@ -1388,8 +1377,7 @@ export default {
                   component: '../components/GlobalHeader/ChangePwdView',
                 },
               ],
-            },
-            // 智能质控
+            }, // 智能质控
             {
               path: '/qualityControl',
               name: 'qualityControl',
@@ -1397,8 +1385,7 @@ export default {
                 {
                   path: '/qualityControl',
                   redirect: '/qualityControl/remoteControl',
-                },
-                // 质控管理
+                }, // 质控管理
                 {
                   name: 'qcaManager',
                   path: '/qualityControl/qcaManager',
@@ -1406,64 +1393,54 @@ export default {
                     {
                       path: '/qualityControl/qcaManager',
                       redirect: '/qualityControl/qcaManager/maintainRecord',
-                    },
-                    // 运维人管理
+                    }, // 运维人管理
                     {
                       name: 'QCAnalyzeOperator',
                       path: '/qualityControl/qcaManager/QCAnalyzeOperator',
                       component: './qualityControl/QCAnalyzeOperator',
-                    },
-                    // 质控仪维护记录
+                    }, // 质控仪维护记录
                     {
                       name: 'maintainRecord',
                       path: '/qualityControl/qcaManager/maintainRecord',
                       component: './qualityControl/maintainRecord',
-                    },
-                    // 质控仪管理
+                    }, // 质控仪管理
                     {
                       name: 'instrumentManage',
                       path: '/qualityControl/qcaManager/instrumentManage',
                       component: './qualityControl/instrumentManage',
-                    },
-                    // 质控仪 - 添加
+                    }, // 质控仪 - 添加
                     {
                       name: 'instrumentAdd',
                       path: '/qualityControl/qcaManager/instrumentManage/add',
                       component: './qualityControl/instrumentManage/AddInstrument',
-                    },
-                    // 质控仪 - 编辑
+                    }, // 质控仪 - 编辑
                     {
                       name: 'instrumentEdit',
                       path: '/qualityControl/qcaManager/instrumentManage/edit/:id/:QCAMN',
                       component: './qualityControl/instrumentManage/AddInstrument',
-                    },
-                    // 质控仪 - 详情
+                    }, // 质控仪 - 详情
                     {
                       name: 'instrumentView',
                       path: '/qualityControl/qcaManager/instrumentManage/view/:id',
                       component: './qualityControl/instrumentManage/ViewInstrument',
-                    },
-                    // 工作模式 - 列表
+                    }, // 工作模式 - 列表
                     {
                       name: 'workPatternAdd',
                       path: '/qualityControl/qcaManager/workPattern',
                       component: './qualityControl/workPattern/index',
-                    },
-                    // 工作模式 - 添加
+                    }, // 工作模式 - 添加
                     {
                       name: 'workPatternAdd',
                       path: '/qualityControl/qcaManager/workPattern/add',
                       component: './qualityControl/workPattern/Add',
-                    },
-                    // 工作模式 - 编辑
+                    }, // 工作模式 - 编辑
                     {
                       name: 'workPatternAdd',
                       path: '/qualityControl/qcaManager/workPattern/edit/:modelName',
                       component: './qualityControl/workPattern/Add',
                     },
                   ],
-                },
-                // 质控记录
+                }, // 质控记录
                 {
                   name: 'qcaRecord',
                   path: '/qualityControl/qcaRecord',
@@ -1471,64 +1448,54 @@ export default {
                     {
                       path: '/qualityControl/qcaRecord',
                       redirect: '/qualityControl/qcaRecord/operationRecords',
-                    },
-                    // 质控纪要
+                    }, // 质控纪要
                     {
                       name: 'playback',
                       path: '/qualityControl/qcaRecord/playback',
                       component: './qualityControl/playback',
-                    },
-                    // 质控仪操作记录
+                    }, // 质控仪操作记录
                     {
                       name: 'operationRecords',
                       path: '/qualityControl/qcaRecord/operationRecords',
                       component: './qualityControl/operationRecords',
-                    },
-                    // 质控仪参数记录
+                    }, // 质控仪参数记录
                     {
                       name: 'paramsRecord',
                       path: '/qualityControl/qcaRecord/paramsRecord',
                       component: './qualityControl/paramsRecord',
-                    },
-                    //质控仪状态记录
+                    }, //质控仪状态记录
                     {
                       name: 'statusRecord',
                       path: '/qualityControl/qcaRecord/statusRecord',
                       component: './qualityControl/statusRecord',
-                    },
-                    // 质控报警记录
+                    }, // 质控报警记录
                     {
                       name: 'alarmMessage',
                       path: '/qualityControl/qcaRecord/alarmMessage',
                       component: './qualityControl/alarmMessage',
                     },
                   ],
-                },
-                //质控仪视频
+                }, //质控仪视频
                 {
                   name: 'qcavideopreview',
                   path: '/qualityControl/qcavideopreview',
                   component: './qualityControl/qcavideopreview',
-                },
-                // 远程质控
+                }, // 远程质控
                 {
                   name: 'remoteControl',
                   path: '/qualityControl/remoteControl',
                   component: './qualityControl/remoteControl',
-                },
-                // 质控结果统计
+                }, // 质控结果统计
                 {
                   name: 'resultStatistics',
                   path: '/qualityControl/resultStatistics',
                   component: './qualityControl/resultStatistics',
-                },
-                // 质控结果比对
+                }, // 质控结果比对
                 {
                   name: 'resultContrast',
                   path: '/qualityControl/resultContrast',
                   component: './qualityControl/resultContrast',
-                },
-                // 质控结果实时比对
+                }, // 质控结果实时比对
                 {
                   name: 'realTimeContrast',
                   path: '/qualityControl/realTimeContrast',
@@ -1541,7 +1508,6 @@ export default {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
             },
-
             {
               component: '404',
             },
@@ -1592,22 +1558,31 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-
   proxy: {
     '/api': {
       target: config.apiHost,
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: {
+        '^/api': '',
+      },
     },
     '/upload': {
-      target: config.uploadHost, // 接口的域名
-      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-      pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+      target: config.uploadHost,
+      // 接口的域名
+      changeOrigin: true,
+      // 如果接口跨域，需要进行这个参数配置
+      pathRewrite: {
+        '^/upload/upload': '',
+      }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
     '/uploadplantform': {
-      target: config.uploadHost, // 接口的域名
-      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-      pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+      target: config.uploadHost,
+      // 接口的域名
+      changeOrigin: true,
+      // 如果接口跨域，需要进行这个参数配置
+      pathRewrite: {
+        '^/upload/upload': '',
+      }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
   },
 };

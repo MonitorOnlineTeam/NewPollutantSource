@@ -306,4 +306,15 @@ export  function interceptTwo(value){
   const data = value.toString();
   const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
   return result;
+} 
+
+//保持小数点 最少后三位
+export function toDecimal3(x) {
+  if(x){
+    let res = '', data = x.toString()
+    res = data.indexOf(".") ==-1? `${ Number(x).toFixed(3)}` :  data.split(".")[1].length<3 ?  res = data + '0' : data; // 如果是整数 toFixed(3) 补三位
+    return res;
+  }else{
+    return x;
+  }
 }

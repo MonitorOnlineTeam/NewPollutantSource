@@ -5,6 +5,7 @@ import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -16,11 +17,34 @@ const { RangePicker } = DatePicker;
   divisorList: exceptionrecordNew.divisorList,
   exceptionAlarmDataSource: exceptionrecordNew.exceptionAlarmDataSource,
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
+  exceptionrecordForm: exceptionrecordNew.exceptionrecordForm,
+  exceptionTime: exceptionrecordNew.exceptionTime,
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
   detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
 }))
-@Form.create()
+@Form.create({
+  mapPropsToFields(props) {
+    return {
+      dataType: Form.createFormField(props.exceptionrecordForm.dataType),
+      // time: Form.createFormField(props.exceptionrecordForm.time),
+      RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
+      AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
+      PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
+    };
+  },
+  onFieldsChange(props, fields) {
+    props.dispatch({
+      type: 'exceptionrecordNew/updateState',
+      payload: {
+        exceptionrecordForm: {
+          ...props.exceptionrecordForm,
+          ...fields,
+        },
+      },
+    })
+  },
+})
 class index extends PureComponent {
   state = {
     showTime: true,
@@ -198,7 +222,7 @@ class index extends PureComponent {
         key: 'ResponseStatusName',
       },
       {
-        title: '运维负责人',
+        title: '响应人',
         dataIndex: 'OperationName',
         key: 'OperationName',
       },
@@ -268,6 +292,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
+    values.time = this.props.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -301,6 +326,7 @@ class index extends PureComponent {
   exportExceptionAlarm = () => {
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
+    values.time = this.props.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -322,13 +348,14 @@ class index extends PureComponent {
 
 
   onDataTypeChange = (value) => {
-    if (value === "HourData") {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD HH", showTime: true })
-    } else {
-      this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
-      this.setState({ format: "YYYY-MM-DD", showTime: false })
-    }
+    this.rangePicker.onDataTypeChange(value)
+    // if (value === "HourData") {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(1, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD HH", showTime: true })
+    // } else {
+    //   this.props.form.setFieldsValue({ "time": [moment().subtract(7, "days"), moment()] })
+    //   this.setState({ format: "YYYY-MM-DD", showTime: false })
+    // }
   }
 
   // 监测因子change
@@ -342,97 +369,121 @@ class index extends PureComponent {
     })
   }
 
+  dateChange = (date, dataType) => {
+    this.props.dispatch({
+      type: 'exceptionrecordNew/updateState',
+      payload: {
+        exceptionTime: date,
+      },
+    })
+  }
+
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, exceptionTime, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition } = this.state;
-    console.log("exceptionAlarmListForEntDataSource=", exceptionAlarmListForEntDataSource)
+    let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
-    let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
+    // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
+    let showTypeText = "";
+    if (secondQueryCondition.ResponseStatus == "0") {
+      showTypeText = "待响应报警情况"
+    } else if (secondQueryCondition.ResponseStatus == "1") {
+      showTypeText = "已响应报警情况"
+    } else {
+      if (secondQueryCondition.ExceptionType == "1") {
+        showTypeText = "零值报警情况"
+      } else {
+        showTypeText = "超量程报警情况"
+      }
+    }
     let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")
     let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.endTime).format("YYYY年MM月DD号")
     let modelTitle = `${RegionName}${beginTime} - ${endTime}${showTypeText}`
+    if (secondQueryCondition.ResponseStatus == "0") {
+      _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "CompleteTime");
+    }
+
     return (
       <BreadcrumbWrapper>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row gutter={16}>
-              <Col md={5}>
-                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                  {getFieldDecorator('RegionCode', {
-                    // initialValue: 'siteDaily',
-                  })(
-                    <Select allowClear placeholder="请选择行政区">
-                      {
-                        _regionList.map(item => {
-                          return <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        })
-                      }
-                    </Select>,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5}>
-                <FormItem {...formLayout} label="关注程度" style={{ width: '100%' }}>
-                  {getFieldDecorator('AttentionCode', {
-                    initialValue: '',
-                  })(
-                    <Select placeholder="请选择关注程度">
-                      <Option value="">全部</Option>
-                      {
-                        attentionList.map(item => {
-                          return <Option key={item.AttentionCode} value={item.AttentionCode}>
-                            {item.AttentionName}
-                          </Option>
-                        })
-                      }
-                    </Select>,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5}>
-                <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('PollutantType', {
-                    initialValue: '1',
-                  })(
-                    <Select placeholder="请选择企业类型" onChange={(value) => {
-                      this.setState({ pollutantType: value }, () => {
+            <Row>
+              <FormItem label="数据类型">
+                {getFieldDecorator('dataType', {
+                  initialValue: 'HourData',
+                })(
+                  <Select
+                    style={{ width: 200 }}
+                    placeholder="请选择数据类型"
+                    allowClear
+                    onChange={this.onDataTypeChange}
+                  >
+                    <Option key='0' value='HourData'>小时数据</Option>
+                    <Option key='1' value='DayData'> 日数据</Option>
+                  </Select>
+                )}
+              </FormItem>
+              <FormItem label="日期查询">
+                {/* {getFieldDecorator('time', {
+                  initialValue: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
+                })( */}
+                {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
+                <RangePicker_ allowClear={false} onRef={(ref) => {
+                  this.rangePicker = ref;
+                }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
+                  callback={(dates, dataType) => this.dateChange(dates, dataType)} />
+                {/* )} */}
+              </FormItem>
+              <FormItem label="行政区">
+                {getFieldDecorator('RegionCode', {
+                  // initialValue: 'siteDaily',
+                })(
+                  <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                    {
+                      _regionList.map(item => {
+                        return <Option key={item.key} value={item.value}>
+                          {item.title}
+                        </Option>
                       })
-                    }}>
-                      <Option value="1">废水</Option>
-                      <Option value="2">废气</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5}>
-                <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('dataType', {
-                    initialValue: 'HourData',
-                  })(
-                    <Select
-                      placeholder="请选择数据类型"
-                      onChange={this.onDataTypeChange}
-                    >
-                      <Option key='0' value='HourData'>小时数据</Option>
-                      <Option key='1' value='DayData'> 日数据</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={8}>
-                <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
-                  {getFieldDecorator('time', {
-                    initialValue: [moment().subtract(1, "days"), moment()],
-                  })(
-                    <RangePicker allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} />
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={16} style={{ marginTop: 5 }}>
+                    }
+                  </Select>,
+                )}
+              </FormItem>
+            </Row>
+            <Row>
+              <FormItem label="关注程度">
+                {getFieldDecorator('AttentionCode', {
+                  initialValue: '',
+                })(
+                  <Select style={{ width: 200 }} placeholder="请选择关注程度">
+                    <Option value="">全部</Option>
+                    {
+                      attentionList.map(item => {
+                        return <Option key={item.AttentionCode} value={item.AttentionCode}>
+                          {item.AttentionName}
+                        </Option>
+                      })
+                    }
+                  </Select>,
+                )}
+              </FormItem>
+              <FormItem label="企业类型">
+                {getFieldDecorator('PollutantType', {
+                  initialValue: '1',
+                })(
+                  <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={(value) => {
+                    this.setState({ pollutantType: value }, () => {
+                    })
+                  }}>
+                    <Option value="1">废水</Option>
+                    <Option value="2">废气</Option>
+                  </Select>
+                )}
+              </FormItem>
+
+              <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
                   查询
                       </Button>
@@ -444,12 +495,11 @@ class index extends PureComponent {
                 >
                   导出
                       </Button>
-                <Icon type="question-circle" style={{ marginLeft: 20, marginRight: 6 }} />
-                <span style={{ color: "red" }}>已响应指：监测点运维负责人，响应报警并完成响应，生成运维工单</span>
-              </Col>
+                <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span>
+              </div>
             </Row>
           </Form>
-          <SdlTable dataSource={exceptionAlarmDataSource} columns={columns} loading={loading} />
+          <SdlTable align="center" dataSource={exceptionAlarmDataSource} columns={columns} loading={loading} />
         </Card>
         <Modal
           title={modelTitle}
@@ -464,7 +514,7 @@ class index extends PureComponent {
               导出
             </Button>
           </Row>
-          <SdlTable loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={detailsColumns} pagination={false} />
+          <SdlTable align="center" loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={_detailsColumns} />
         </Modal>
       </BreadcrumbWrapper>
     );

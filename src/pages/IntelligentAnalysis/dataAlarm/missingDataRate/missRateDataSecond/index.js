@@ -50,7 +50,8 @@ const pageUrl = {
   tableDatas: MissingRateData.tableDatil,
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateData.attentionList
+  attentionList:MissingRateData.attentionList,
+  type:MissingRateData.type,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -74,16 +75,20 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
-        // align: 'center',
-        // render: (text, record) => text,
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
         // width: '10%',
-        // align: 'center',
-      
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
       },
       {
         title: <span>缺失数据报警次数</span>,
@@ -132,7 +137,7 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       RegionCode:location.query.regionCode,
-      statusInfo:'',
+      Status:'',
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -278,8 +283,11 @@ export default class EntTransmissionEfficiency extends Component {
    }
    reponseChange=(e)=>{
     this.updateQueryState({
-      statusInfo: e.target.value,
+      Status: e.target.value,
     });
+    setTimeout(()=>{
+      this.getTableData();
+    })
   }
   // queryComponents=(type)=>{
   //   const { 
@@ -335,9 +343,9 @@ export default class EntTransmissionEfficiency extends Component {
   btnCompents=()=>{
     const { exloading } = this.props;
    return  <Form.Item>
-    <Button type="primary" onClick={this.queryClick}>
+    {/* <Button type="primary" onClick={this.queryClick}>
       查询
-    </Button>
+    </Button> */}
     <Button
       style={{ margin: '0 5px' }}
       icon="export"
@@ -353,9 +361,9 @@ export default class EntTransmissionEfficiency extends Component {
   </Form.Item>
   }
   reponseComp = (type)=>{
-    const { queryPar:{ statusInfo } } = this.props;
-    return <Form.Item label='响应状态'>
-          <Radio.Group value={statusInfo} onChange={this.reponseChange}>
+    const { queryPar:{ Status } } = this.props;
+    return <Form.Item label=''>
+          <Radio.Group value={Status} onChange={this.reponseChange}>
             <Radio.Button value="">全部</Radio.Button>
             <Radio.Button value="1">已响应</Radio.Button>
             <Radio.Button value="0">待响应</Radio.Button>
@@ -368,14 +376,14 @@ export default class EntTransmissionEfficiency extends Component {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title="二级页面">
+        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)"}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
                 
-                {this.reponseComp(type)}
+                {this.reponseComp()}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>
@@ -447,7 +455,7 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              bordered={false}
+              // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
                 showSizeChanger: true,
