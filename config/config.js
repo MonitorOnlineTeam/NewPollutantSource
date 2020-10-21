@@ -1295,6 +1295,11 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/abnormal/details',
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
                     },
+                    {
+                      //超标数据核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    },
                   ],
                 },
               ],
