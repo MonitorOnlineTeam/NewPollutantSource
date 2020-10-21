@@ -11,28 +11,29 @@ import {
   GetAttentionDegreeList,
   ExportDefectDataSummary,
   ExportDefectPointDetail,
-  GetDefectPointDetail
+  GetDefectPointDetail,
+  GetPollutantByType
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'missingData',
+  namespace: 'overVerifyRate',
   state: {
     exloading: false,
     loading: false,
-    queryPar: {
+    
+    overVerifyRateForm: {
       beginTime: moment()
         .subtract(1, 'day')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
-      EntCode: '',
       RegionCode: '',
-      Atmosphere:'',
-      PollutantType:'',
-      dataType:'HourData',
-      EntType:''
+      PollutantType:'1',
+      PollutantList :[],
+      Rate :1
     },
+    divisorList: [],
     tableDatas: [],
     total: '',
     attentionList:[],
@@ -53,7 +54,7 @@ export default Model.extend({
       }
     },
     *getDefectPointDetail({ payload }, { call, put, update, select }) {
-      //列表 响应数据详情
+      //超标核实率详情
       const response = yield call(GetDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         yield update({
@@ -103,6 +104,18 @@ export default Model.extend({
       } else {
         message.warning(response.Message);
         yield update({ exloading: false });
+      }
+    },
+     // 根据企业类型查询监测因子
+     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(GetPollutantByType, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          divisorList: response.Datas,
+        });
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
       }
     },
     
