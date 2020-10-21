@@ -1249,6 +1249,16 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal/details',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
+                    },
                   ],
                 },
               ],
