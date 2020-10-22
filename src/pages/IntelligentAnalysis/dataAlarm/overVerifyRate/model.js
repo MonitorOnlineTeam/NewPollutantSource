@@ -24,7 +24,7 @@ export default Model.extend({
     
     overVerifyRateForm: {
       beginTime: moment()
-        .subtract(1, 'day')
+        .subtract(1, 'months')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
