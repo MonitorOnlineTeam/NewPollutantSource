@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @LastEditors: hxf
+ * @Date: 2020-10-15 16:18:14
+ * @LastEditTime: 2020-10-22 10:18:09
+ * @FilePath: /NewPollutantSource/.eslintrc.js
+ */
 const { strictEslint } = require('@umijs/fabric');
 
 module.exports = {

@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 17:02:34
- * @LastEditTime: 2020-10-21 14:21:22
+ * @LastEditTime: 2020-10-22 16:02:08
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/service.js
  */
 import { post } from '@/utils/request';
@@ -28,9 +28,45 @@ export async function getPollutantByType(params) {
   return result;
 }
 
-// 异常数据查询-师一级
+// 超标报警处置率-一级
 export async function getAlarmManagementRate(params) {
   const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementRate`, params);
+  return result;
+}
+
+// 超标报警处置率导出-师一级
+export async function exportAlarmManagementRate(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmManagementRate`, params);
+  return result;
+}
+
+// 超标报警处置率-二级
+export async function getAlarmManagementRateDetail(params) {
+  const result = post(
+    `/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementRateDetail`,
+    params,
+  );
+  return result;
+}
+
+// 超标报警处置率导出-二级
+export async function exportAlarmManagementRateDetail(params) {
+  const result = post(
+    `/api/rest/PollutantSourceApi/BaseDataApi/xportAlarmManagementRateDetail`,
+    params,
+  );
+  return result;
+}
+
+// 根据行政区获取 企业列表
+export async function GetEntByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+      params.RegionCode,
+    null,
+    null,
+  );
+
   return result;
 }
 

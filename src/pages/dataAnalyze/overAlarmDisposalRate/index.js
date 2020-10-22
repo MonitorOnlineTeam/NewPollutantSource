@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-10-21 14:57:08
+ * @LastEditTime: 2020-10-22 17:47:37
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -11,6 +11,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmpone
 import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
+import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
 
@@ -19,128 +20,27 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 @connect(({ loading, autoForm, overAlarmDisposalRate }) => ({
+  checkedValues: overAlarmDisposalRate.checkedValues,
+  dataType: overAlarmDisposalRate.dataType,
+  PollutantType: overAlarmDisposalRate.PollutantType,
+  RegionCode: overAlarmDisposalRate.RegionCode,
+  AttentionCode: overAlarmDisposalRate.AttentionCode,
+  beginTime: overAlarmDisposalRate.beginTime,
+  endTime: overAlarmDisposalRate.endTime,
   column: overAlarmDisposalRate.column,
   regionList: autoForm.regionList,
   attentionList: overAlarmDisposalRate.attentionList,
   divisorList: overAlarmDisposalRate.divisorList,
-  exceptionDataSource: overAlarmDisposalRate.exceptionDataSource,
+  alarmManagementRateDataSource: overAlarmDisposalRate.alarmManagementRateDataSource,
+  alarmManagementRateExportLoading: overAlarmDisposalRate.alarmManagementRateExportLoading,
   loading: loading.effects['overAlarmDisposalRate/getAlarmManagementRate'],
 }))
 @Form.create()
 class index extends PureComponent {
   state = {
     showTime: true,
-    // format: 'YYYY-MM-DD HH',
     format: 'YYYY-MM-DD',
-    pollutantType: '1',
     checkedValues: [],
-    columns: [
-      {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 150,
-      },
-      {
-        title: '工艺超标报警企业数',
-        dataIndex: 'CountEnt',
-        key: 'CountEnt',
-        width: 150,
-      },
-      {
-        title: '工艺超标报警监测点数',
-        dataIndex: 'CountPoint',
-        key: 'CountPoint',
-        width: 150,
-      },
-      {
-        title: 'pH值',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-          {
-            title: '已处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '待处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '处置率',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-        ],
-      },
-      {
-        title: 'COD',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-          {
-            title: '已处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '待处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '处置率',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-        ],
-      },
-      {
-        title: '氨氮',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-          {
-            title: '已处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '待处置报警次数',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 150,
-          },
-          {
-            title: '处置率',
-            dataIndex: 'DataType',
-            key: 'DataType',
-            width: 100,
-          },
-        ],
-      },
-    ],
   };
 
   _SELF_ = {
@@ -151,119 +51,114 @@ class index extends PureComponent {
   };
 
   componentDidMount() {
+    const { dispatch, divisorList } = this.props;
     // 获取行政区列表
-    this.props.dispatch({
+    dispatch({
       type: 'autoForm/getRegions',
       payload: { RegionCode: '', PointMark: '2' },
     });
 
     // 获取关注列表
-    this.props.dispatch({
+    dispatch({
       type: 'overAlarmDisposalRate/getAttentionDegreeList',
       payload: { RegionCode: '' },
     });
 
     // 根据企业类型查询监测因子
-    this.getPollutantByType(this.getAlarmManagementRate);
+    if (divisorList.length === 0) {
+      this.getPollutantByType(this.getAlarmManagementRate);
+    }
   }
 
   // 根据企业类型查询监测因子
   getPollutantByType = cb => {
-    this.props.dispatch({
+    const { dispatch, PollutantType } = this.props;
+    dispatch({
       type: 'overAlarmDisposalRate/getPollutantCodeList',
       payload: {
-        PollutantType: this.state.pollutantType,
+        PollutantType,
       },
       callback: res => {
-        this.setState(
-          { checkedValues: res.map(item => item.PollutantCode), columns: titleList },
-          () => {
-            cb && cb();
+        dispatch({
+          type: 'overAlarmDisposalRate/updateState',
+          payload: {
+            checkedValues: res.map(item => item.PollutantCode),
           },
-        );
+        });
+        this.setState({ checkedValues: res.map(item => item.PollutantCode) }, () => {
+          cb && cb();
+        });
       },
     });
   };
 
   // 获取超标报警处置率-一级
   getAlarmManagementRate = () => {
-    let values = this.props.form.getFieldsValue();
-    let beginTime, endTime;
-    if (values.time && values.time[0]) {
-      beginTime = moment(values.time[0]).format('YYYY-MM-DD 00:00:00');
-    }
-    if (values.time && values.time[1]) {
-      endTime = moment(values.time[1]).format('YYYY-MM-DD 00:00:00');
-    }
-    console.log('checkedValues = ', this.state.checkedValues);
-    this.props.dispatch({
+    const {
+      dispatch,
+      dataType,
+      AttentionCode,
+      RegionCode,
+      beginTime,
+      endTime,
+      PollutantType,
+      checkedValues,
+    } = this.props;
+    dispatch({
       type: 'overAlarmDisposalRate/getAlarmManagementRate',
       payload: {
-        AttentionCode: values.AttentionCode,
-        PollutantType: values.PollutantType,
-        RegionCode: '',
-        // dataType: 'DayData',
-        dataType: 'HourData',
-        beginTime: beginTime,
-        endTime: endTime,
-        PollutantList: this.state.checkedValues,
-        PollutantCodeList: this.state.checkedValues,
+        AttentionCode,
+        PollutantType,
+        RegionCode,
+        dataType,
+        beginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
+        endTime: endTime.format('YYYY-MM-DD 23:59:59'),
+        PollutantList: checkedValues,
+        PollutantCodeList: checkedValues,
         Rate: 1,
-      },
-    });
-
-    this.setState({
-      queryCondition: {
-        AttentionCode: values.AttentionCode,
-        PollutantList: this.state.checkedValues,
-        PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
-        dataType: 'DayData',
-        beginTime: beginTime,
-        endTime: endTime,
       },
     });
   };
 
-  // // 导出异常数据
-  // exportExceptionList = () => {
-  //   let values = this.props.form.getFieldsValue();
-  //   let beginTime, endTime;
-  //   if (values.time && values.time[0]) {
-  //     beginTime =
-  //       values.dataType === 'HourData'
-  //         ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
-  //         : moment(values.time[0]).format('YYYY-MM-DD');
-  //   }
-  //   if (values.time && values.time[1]) {
-  //     endTime =
-  //       values.dataType === 'HourData'
-  //         ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
-  //         : moment(values.time[1]).format('YYYY-MM-DD');
-  //   }
-  //   this.props.dispatch({
-  //     type: 'overAlarmDisposalRate/exportExceptionList',
-  //     payload: {
-  //       AttentionCode: values.AttentionCode,
-  //       PollutantList: this.state.checkedValues,
-  //       PollutantType: values.PollutantType,
-  //       RegionCode: values.RegionCode,
-  //       dataType: values.dataType,
-  //       beginTime: beginTime,
-  //       endTime: endTime,
-  //     },
-  //   });
-  // };
+  exportAlarmManagementRate = () => {
+    const {
+      dispatch,
+      dataType,
+      AttentionCode,
+      RegionCode,
+      beginTime,
+      endTime,
+      PollutantType,
+      checkedValues,
+    } = this.props;
+    dispatch({
+      type: 'overAlarmDisposalRate/exportAlarmManagementRate',
+      payload: {
+        AttentionCode,
+        PollutantType,
+        RegionCode,
+        dataType,
+        beginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
+        endTime: endTime.format('YYYY-MM-DD 23:59:59'),
+        PollutantList: checkedValues,
+        PollutantCodeList: checkedValues,
+        Rate: 1,
+      },
+      callback: data => {
+        downloadFile(`/upload${data}`);
+      },
+    });
+  };
 
-  // onDataTypeChange = value => {
-  //   if (value === 'HourData') {
-  //     this.props.form.setFieldsValue({ time: [moment().subtract(1, 'days'), moment()] });
-  //     this.setState({ format: 'YYYY-MM-DD HH', showTime: true });
-  //   } else {
-  //     this.props.form.setFieldsValue({ time: [moment().subtract(7, 'days'), moment()] });
-  //     this.setState({ format: 'YYYY-MM-DD', showTime: false });
-  //   }
-  // };
+  onDataTypeChange = value => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'overAlarmDisposalRate/updateState',
+      payload: {
+        dataType: value,
+      },
+    });
+  };
 
   // 监测因子change
   onCheckboxChange = checkedValues => {
@@ -274,47 +169,36 @@ class index extends PureComponent {
     this.setState({
       checkedValues,
     });
-    let values = this.props.form.getFieldsValue();
-    let beginTime, endTime;
-    if (values.time && values.time[0]) {
-      beginTime = moment(values.time[0]).format('YYYY-MM-DD 00:00:00');
-    }
-    if (values.time && values.time[1]) {
-      endTime = moment(values.time[1]).format('YYYY-MM-DD 00:00:00');
-    }
-
-    this.props.dispatch({
-      type: 'overAlarmDisposalRate/getAlarmManagementRate',
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'overAlarmDisposalRate/updateState',
       payload: {
-        AttentionCode: values.AttentionCode,
-        PollutantType: values.PollutantType,
-        RegionCode: '',
-        // dataType: 'DayData',
-        dataType: 'HourData',
-        beginTime: beginTime,
-        endTime: endTime,
-        PollutantList: checkedValues,
-        PollutantCodeList: checkedValues,
-        Rate: 1,
+        checkedValues,
       },
     });
   };
 
   render() {
     const {
+      dispatch,
+      checkedValues,
+      dataType,
+      PollutantType,
+      RegionCode,
+      AttentionCode,
+      beginTime,
+      endTime,
       form: { getFieldDecorator },
       regionList,
       attentionList,
       divisorList,
-      exceptionDataSource,
+      alarmManagementRateDataSource,
       column: pollutantColumn,
+      alarmManagementRateExportLoading,
       loading,
     } = this.props;
     const { formLayout } = this._SELF_;
-    const { format, showTime, checkedValues } = this.state;
-    console.log('attentionList=', attentionList);
-    console.log('divisorList = ', divisorList);
-    console.log('exceptionDataSource = ', exceptionDataSource);
+    const { format, showTime } = this.state;
     let _regionList = regionList.length ? regionList[0].children : [];
     let columns = [];
     let titlePollutant = [];
@@ -357,16 +241,49 @@ class index extends PureComponent {
           dataIndex: 'regionName',
           key: 'regionName',
           fixed: 'left',
+          render: (text, record) => {
+            if (record.regionCode === '') {
+              return <div>{text}</div>;
+            } else {
+              return (
+                <a
+                  onClick={() => {
+                    let params = {};
+                    params.regionName = record.regionName;
+                    params.regionCode = record.regionCode;
+
+                    let values = this.props.form.getFieldsValue();
+
+                    params.beginTime = moment(values.time[0]).format('YYYY-MM-DD');
+                    params.endTime = moment(values.time[1]).format('YYYY-MM-DD');
+
+                    params.AttentionCode = values.AttentionCode;
+                    params.PollutantList = this.state.checkedValues;
+                    params.PollutantType = values.PollutantType;
+                    params.dataType = values.dataType;
+                    router.push(
+                      `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
+                        params,
+                      )}`,
+                    );
+                  }}
+                >
+                  {text}
+                </a>
+              );
+            }
+          },
         },
         {
           title: '工艺超标报警企业数',
-          dataIndex: 'CountEnt',
-          key: 'CountEnt',
+          dataIndex: 'entCount',
+          key: 'entCount',
         },
         {
           title: '工艺超标报警监测点数',
-          dataIndex: 'CountPoint',
-          key: 'CountPoint',
+          dataIndex: 'pointCount',
+          key: 'pointCount',
+          width: 150,
         },
         ...titlePollutant,
       ];
@@ -376,16 +293,45 @@ class index extends PureComponent {
           title: '行政区',
           dataIndex: 'regionName',
           key: 'regionName',
+          render: (text, record) => {
+            return (
+              <a
+                onClick={() => {
+                  let params = {};
+                  params.regionName = record.regionName;
+                  params.regionCode = record.regionCode;
+
+                  let values = this.props.form.getFieldsValue();
+
+                  params.beginTime = moment(values.time[0]).format('YYYY-MM-DD');
+                  params.endTime = moment(values.time[1]).format('YYYY-MM-DD');
+
+                  params.AttentionCode = values.AttentionCode;
+                  params.PollutantList = this.state.checkedValues;
+                  params.PollutantType = values.PollutantType;
+                  params.dataType = values.dataType;
+                  router.push(
+                    `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
+                      params,
+                    )}`,
+                  );
+                }}
+              >
+                {text}
+              </a>
+            );
+          },
         },
         {
           title: '工艺超标报警企业数',
-          dataIndex: 'CountEnt',
-          key: 'CountEnt',
+          dataIndex: 'entCount',
+          key: 'entCount',
         },
         {
           title: '工艺超标报警监测点数',
-          dataIndex: 'CountPoint',
-          key: 'CountPoint',
+          dataIndex: 'pointCount',
+          key: 'pointCount',
+          width: 150,
         },
         ...titlePollutant,
       ];
@@ -398,9 +344,21 @@ class index extends PureComponent {
               <Col md={4}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator('RegionCode', {
-                    // initialValue: 'siteDaily',
+                    initialValue: RegionCode,
                   })(
-                    <Select allowClear placeholder="请选择行政区">
+                    <Select
+                      allowClear
+                      placeholder="请选择行政区"
+                      onChange={value => {
+                        this.setState({ RegionCode: value }, () => {});
+                        dispatch({
+                          type: 'overAlarmDisposalRate/updateState',
+                          payload: {
+                            RegionCode: value,
+                          },
+                        });
+                      }}
+                    >
                       {_regionList.map(item => {
                         return (
                           <Option key={item.key} value={item.value}>
@@ -415,9 +373,20 @@ class index extends PureComponent {
               <Col md={5}>
                 <FormItem {...formLayout} label="关注程度" style={{ width: '100%' }}>
                   {getFieldDecorator('AttentionCode', {
-                    initialValue: '',
+                    initialValue: AttentionCode,
                   })(
-                    <Select placeholder="请选择关注程度">
+                    <Select
+                      placeholder="请选择关注程度"
+                      onChange={value => {
+                        this.setState({ AttentionCode: value }, () => {});
+                        dispatch({
+                          type: 'overAlarmDisposalRate/updateState',
+                          payload: {
+                            AttentionCode: value,
+                          },
+                        });
+                      }}
+                    >
                       <Option value="">全部</Option>
                       {attentionList.map(item => {
                         return (
@@ -433,13 +402,19 @@ class index extends PureComponent {
               <Col md={4}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
-                    initialValue: '1',
+                    initialValue: PollutantType,
                   })(
                     <Select
                       placeholder="请选择企业类型"
                       onChange={value => {
                         this.setState({ pollutantType: value }, () => {
-                          this.getPollutantByType(this.getAlarmManagementRate());
+                          this.getPollutantByType();
+                        });
+                        dispatch({
+                          type: 'overAlarmDisposalRate/updateState',
+                          payload: {
+                            PollutantType: value,
+                          },
                         });
                       }}
                     >
@@ -449,10 +424,10 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              {/* <Col md={4}>
+              <Col md={4}>
                 <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
                   {getFieldDecorator('dataType', {
-                    initialValue: 'HourData',
+                    initialValue: dataType,
                   })(
                     <Select placeholder="请选择数据类型" onChange={this.onDataTypeChange}>
                       <Option key="0" value="HourData">
@@ -465,7 +440,7 @@ class index extends PureComponent {
                     </Select>,
                   )}
                 </FormItem>
-              </Col> */}
+              </Col>
               <Col md={7}>
                 <FormItem
                   labelCol={{ span: 5 }}
@@ -474,13 +449,23 @@ class index extends PureComponent {
                   style={{ width: '100%' }}
                 >
                   {getFieldDecorator('time', {
-                    initialValue: [moment().subtract(10, 'month'), moment()],
+                    initialValue: [beginTime, endTime],
                   })(
                     <RangePicker
                       allowClear={false}
                       // showTime={showTime}
                       format={format}
                       style={{ width: '100%' }}
+                      onChange={(dates, dateStrings) => {
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
+                        dispatch({
+                          type: 'overAlarmDisposalRate/updateState',
+                          payload: {
+                            beginTime: dates[0],
+                            endTime: dates[1],
+                          },
+                        });
+                      }}
                     />,
                   )}
                 </FormItem>
@@ -515,7 +500,8 @@ class index extends PureComponent {
                 <Button
                   style={{ margin: '0 5px' }}
                   icon="export"
-                  onClick={this.exportExceptionList}
+                  onClick={this.exportAlarmManagementRate}
+                  loading={alarmManagementRateExportLoading}
                 >
                   导出
                 </Button>
@@ -524,7 +510,7 @@ class index extends PureComponent {
           </Form>
           <SdlTable
             scroll={{ xScroll: 'scroll' }}
-            dataSource={exceptionDataSource}
+            dataSource={alarmManagementRateDataSource}
             columns={columns}
             loading={loading}
           />

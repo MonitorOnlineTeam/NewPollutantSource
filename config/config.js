@@ -1306,6 +1306,13 @@ export default {
                   path: '/Intelligentanalysis/baojing/4',
                   component: './dataAnalyze/overAlarmDisposalRate',
                 },
+                {
+                  //超标报警处置率-二级
+                  name: 'RegionOverAlarmDisposalRate',
+                  path:
+                    '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                  component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                },
               ],
             },
             {

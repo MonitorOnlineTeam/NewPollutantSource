@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @LastEditors: hxf
+ * @Date: 2020-10-15 16:19:00
+ * @LastEditTime: 2020-10-22 15:15:06
+ * @FilePath: /NewPollutantSource/src/pages/dataSearch/abnormalStandard/model.js
+ */
 /**
  * 功  能：排放标准
  * 创建人：贾安波
@@ -11,7 +18,7 @@ import {
   GetAttentionDegreeList,
   ExportExceptionStandValue,
 } from './service';
-import moment from 'moment';                                                                                                                                                                                                                  
+import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
   namespace: 'abnormalStandard',
@@ -19,21 +26,21 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      PollutantCode:'',
+      PollutantCode: '',
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType:'1',
+      PollutantType: '1',
     },
-    pointName:'',
+    pointName: '',
     tableDatas: [],
-    column:[],
+    column: [],
     total: '',
-    attentionList:[],
+    attentionList: [],
     priseList: [],
-    chartExport:[],
-    chartImport:[],
-    chartTime:[]
+    chartExport: [],
+    chartImport: [],
+    chartTime: [],
   },
   subscriptions: {},
   effects: {
@@ -44,9 +51,9 @@ export default Model.extend({
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas.data,
-          column:response.Datas.column,
+          column: response.Datas.column,
           total: response.Total,
-          loading: false
+          loading: false,
         });
       }
     },
@@ -59,8 +66,8 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.abnormalStandard);
+    *getEntByRegion({ payload }, { call, put, update, select }) {
+      const { queryPar } = yield select(state => state.abnormalStandard);
       //获取所有企业列表
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
@@ -69,7 +76,7 @@ export default Model.extend({
         });
       }
     },
-    *exportExceptionStandValue({callback, payload }, { call, put, update, select }) {
+    *exportExceptionStandValue({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出 异常
       const response = yield call(ExportExceptionStandValue, { ...payload });
@@ -82,7 +89,5 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-
-
   },
 });

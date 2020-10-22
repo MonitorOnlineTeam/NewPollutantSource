@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:57:56
- * @LastEditTime: 2020-10-21 14:21:30
+ * @LastEditTime: 2020-10-22 17:48:55
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/model.js
  */
 import Model from '@/utils/model';
@@ -12,11 +12,23 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'overAlarmDisposalRate',
   state: {
+    checkedValues: [],
+    dataType: 'HourData',
+    PollutantType: '1',
+    beginTime: moment().subtract(1, 'days'),
+    endTime: moment(),
+    RegionCode: undefined,
+    AttentionCode: '',
+    EntCode: undefined,
+    priseList: [],
     column: [],
     attentionList: [],
     divisorList: [],
-    exceptionDataSource: [],
-    exceptionPointList: [],
+    alarmManagementRateExportLoading: false,
+    alarmManagementRateDetailExportLoading: false,
+    alarmManagementRateDataSource: [],
+    alarmManagementRateDetailSource: [],
+    alarmManagementRateDetailcolumn: [],
   },
   effects: {
     // 获取关注列表
@@ -54,59 +66,64 @@ export default Model.extend({
         message.error(response.Message);
       }
     },
+    *getEntByRegion({ payload }, { call, put, update, select }) {
+      // 获取所有企业列表
+      const response = yield call(services.GetEntByRegion, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          priseList: response.Datas,
+        });
+      }
+    },
     // 超标报警处置率-师一级
     *getAlarmManagementRate({ payload }, { call, put, update, select }) {
-      console.log('getAlarmManagementRate payload = ', payload);
+      const { RegionCode } = yield select(state => state.overAlarmDisposalRate);
       const result = yield call(services.getAlarmManagementRate, { ...payload });
-      console.log('getExceptionList result = ', result);
       if (result.IsSuccess) {
         yield update({
-          exceptionDataSource: result.Datas.data,
+          alarmManagementRateDataSource: result.Datas.data,
           column: result.Datas.column,
         });
       } else {
         message.error(result.Message);
       }
     },
-    // 异常数据查询-师一级
-    *getExceptionList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getExceptionList, { ...payload });
-      console.log('getExceptionList result = ', result);
+    // 超标报警处置率-二级
+    *getAlarmManagementRateDetail({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getAlarmManagementRateDetail, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          exceptionDataSource: result.Datas,
+          alarmManagementRateDetailSource: result.Datas.data,
+          alarmManagementRateDetailcolumn: result.Datas.column,
         });
       } else {
         message.error(result.Message);
       }
     },
-    // 异常数据导出-师一级
-    *exportExceptionList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.exportExceptionList, { ...payload });
+    // 超标报警处置率导出-师一级
+    *exportAlarmManagementRate({ callback, payload }, { call, put, update, select }) {
+      yield update({ alarmManagementRateExportLoading: true });
+      const result = yield call(services.exportAlarmManagementRate, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        message.success('下载成功');
+        callback(result.Datas);
+        yield update({ alarmManagementRateExportLoading: false });
       } else {
         message.error(result.Message);
+        yield update({ alarmManagementRateExportLoading: false });
       }
     },
-    // 异常数据查询-二级页面
-    *getExceptionPointList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getExceptionPointList, { ...payload });
+    // 超标报警处置率导出-师二级
+    *exportAlarmManagementRateDetail({ callback, payload }, { call, put, update, select }) {
+      yield update({ alarmManagementRateDetailExportLoading: true });
+      const result = yield call(services.exportAlarmManagementRateDetail, { ...payload });
       if (result.IsSuccess) {
-        yield update({
-          exceptionPointList: result.Datas,
-        });
+        message.success('下载成功');
+        callback(result.Datas);
+        yield update({ alarmManagementRateDetailExportLoading: false });
       } else {
         message.error(result.Message);
-      }
-    },
-    // 异常数据导出-师二级
-    *exportExceptionPointList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.exportExceptionPointList, { ...payload });
-      if (result.IsSuccess) {
-        window.open(result.Datas);
-      } else {
-        message.error(result.Message);
+        yield update({ alarmManagementRateDetailExportLoading: false });
       }
     },
   },
