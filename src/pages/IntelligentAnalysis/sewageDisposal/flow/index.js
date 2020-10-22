@@ -26,6 +26,7 @@ const pageUrl = {
     loading:loading.effects["flowanalysisModel/GetSewageFlowList"],
     priseList:flowanalysisModel.priseList,
     FlowList:flowanalysisModel.FlowList,
+    FlowListArr:flowanalysisModel.FlowListArr,
     total:flowanalysisModel.total,
     PageSize:flowanalysisModel.PageSize,
     PageIndex:flowanalysisModel.PageIndex
@@ -94,7 +95,7 @@ class index extends PureComponent {
         BeginTime: moment(this.state.time[0]),
         EndTime: moment(this.state.time[1]),
         DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
-        PageSize:25,
+        PageSize:10,
         PageIndex:1,
       }
     })
@@ -184,49 +185,108 @@ class index extends PureComponent {
   
   pageContent =()=>{
     const { showType,dataType } = this.state;
-    const {FlowList,loading} = this.props
+    const {FlowList,loading ,FlowListArr} = this.props
     const hourTime = []
     const importValue = [] //进水口
     const exportValue = [] //出水口
     const backValue = [] //回口
+    const legend = []
+    const series=[]
+    console.log(FlowListArr)
+    
 
-    FlowList.map(item=>{
-        if(item.backValue == "-")
-        {
+    if(FlowListArr.length >0 )
+    {
+      FlowListArr.map(item => {
+        if (item.backValue != '-') {
+          if (item.backValue == null) {
             backValue.push(0)
-        }
-        else
-        {
+          }
+          else {
             backValue.push(item.backValue)
+          }
         }
-        if(item.exportValue == null)
-        {
+        if (item.exportValue != '-') {
+          if (item.exportValue == null) {
             exportValue.push(0)
-        }
-        else
-        {
+          }
+          else {
             exportValue.push(item.exportValue)
+          }
         }
-        if(item.importValue == null)
-        {
+        if (item.importValue != '-') {
+          if (item.importValue == null) {
             importValue.push(0)
-        }
-        else
-        {
+          }
+          else {
             importValue.push(item.importValue)
+          }
         }
         hourTime.push(item.MonitorTime)
-    })
+      })
+      if(backValue.length > 0)
+      {
+        legend.push('回水口-流量')
+        series.push({
+          name: '回水口-流量',
+          type: 'line',
+          stack: '总量',
+          data: backValue
+        })
+      }
+      if(importValue.length > 0)
+      {
+        legend.push('进水口-流量')
+        series.push({
+          name: '进水口-流量',
+          type: 'line',
+          stack: '总量',
+          data: importValue
+        })
+      }
+      if(exportValue.length > 0)
+      {
+        legend.push('出水口-流量')
+        series.push({
+          name: '出水口-流量',
+          type: 'line',
+          stack: '总量',
+          data: exportValue
+        })
+      }
+    }
+    else{
+      legend.push('进水口-流量', '回水口-流量', '出水口-流量')
+      series.push({
+        name: '进水口-流量',
+        type: 'line',
+        stack: '总量',
+        data: importValue
+      },
+      {
+        name: '回水口-流量',
+        type: 'line',
+        stack: '总量',
+        data: backValue
+      },
+      {
+        name: '出水口-流量',
+        type: 'line',
+        stack: '总量',
+        data: exportValue
+      },
+      )
+    }
 
       const option = {
         title: {
-            //text: '折线图堆叠'
+            text: this.state.pollutantValue
         },
         tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data: ['进水口-流量', '回水口-流量', '出水口-流量']
+            data: legend
         },
         grid: {
             left: '3%',
@@ -248,26 +308,7 @@ class index extends PureComponent {
             name:'流量(m³)',
             type: 'value'
         },
-        series: [
-            {
-                name: '进水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: importValue
-            },
-            {
-                name: '回水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: backValue
-            },
-            {
-                name: '出水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: exportValue
-            }
-        ]
+        series: series
       }  
 
       const fixed = false
@@ -403,7 +444,7 @@ class index extends PureComponent {
                           pageSize: this.props.PageSize,
                           current: this.props.PageIndex,
                           onChange: this.onChange,
-                          pageSizeOptions: ['25', '30', '40', '100'],
+                          pageSizeOptions: ['10','20', '30', '40', '100'],
                           total: this.props.total,
                         }} />
                         :<PageLoading />

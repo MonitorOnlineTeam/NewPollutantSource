@@ -11,7 +11,7 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
     namespace: 'airStationModel',
     state: {
-        PageSize:25,
+        PageSize:10,
         PageIndex:1,
         total:0,
         airStationList:[]
@@ -27,8 +27,6 @@ export default Model.extend({
                 PageIndex: payload.PageIndex,
                 EntType:payload.EntType
             }
-
-            console.log(body)
 
             const result = yield call(GetPointSummary,body,null)
             if(result.IsSuccess)

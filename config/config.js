@@ -534,7 +534,38 @@ export default {
                       path: '/report/wry/summary',
                       component: './report/summaryReportPage',
                     },
+                    
                   ],
+                },
+                //小时平均值日报
+                {
+                  name: 'DailyReport',
+                  path: '/report/DailyReport',
+                  component: './report/DailyReport/DailyReport',
+                },
+                //日平均值月报
+                {
+                  name: 'MonthReport',
+                  path: '/report/MonthReport',
+                  component: './report/MonthReport/MonthReport',
+                },
+                //月平均值季报
+                {
+                  name: 'SeasonReport',
+                  path: '/report/SeasonReport',
+                  component: './report/SeasonReport/SeasonReport',
+                },
+                //月平均值年报
+                {
+                  name: 'YearReport',
+                  path: '/report/YearReport',
+                  component: './report/YearReport/YearReport',
+                },
+                //停运记录
+                {
+                  name: 'StopRecord',
+                  path: '/report/StopRecord',
+                  component: './report/StopRecord/stopRecord',
                 },
                 {
                   name: 'smokeReportPage',
@@ -1325,6 +1356,16 @@ export default {
                   name: 'exceedData', //超标数据查询
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
+                },
+                {
+                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                  path: '/dataSearch/exceedDataAlarmRecord',
+                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                },
+                {
+                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                  path: '/dataSearch/exceedDataDispositionRecord',
+                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
                 },
               ]
             },

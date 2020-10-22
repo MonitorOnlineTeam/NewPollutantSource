@@ -84,7 +84,7 @@ class index extends PureComponent {
       type: pageUrl.GetPointSummary,
       payload: {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
-        PageSize: 25,
+        PageSize: 10,
         PageIndex: 1,
         EntType: 2
       },
@@ -167,7 +167,7 @@ class index extends PureComponent {
       {
         title: "企业名称",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'entName',
         key: 'entName'
@@ -175,7 +175,7 @@ class index extends PureComponent {
       {
         title: "空气监测点名称",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'pointName',
         key: 'pointName'
@@ -191,7 +191,7 @@ class index extends PureComponent {
       {
         title: "监测因子设置",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'pollutantNames',
         key: 'pollutantNames'
@@ -217,7 +217,7 @@ class index extends PureComponent {
         pageSize: this.props.PageSize,
         current: this.props.PageIndex,
         onChange: this.onChange,
-        pageSizeOptions: ['25', '30', '40', '100'],
+        pageSizeOptions: ['10','20', '30', '40', '100'],
         total: this.props.total,
       }} />
     }
