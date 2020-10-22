@@ -15,6 +15,7 @@ import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import CheckboxGroup from 'antd/lib/checkbox/Group';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -170,7 +171,8 @@ class index extends PureComponent {
                   BeginTime: values.dateTime[0],
                   EndTime: values.dateTime[1],
                   TabType: values.outlet == undefined ? '' : values.outlet,
-                  PollutantList: pollutionData
+                  PollutantList: pollutionData,
+                  entType: values.outlet == undefined ? '' : values.outlet,
               })
 
             this.props.dispatch({
@@ -284,7 +286,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: region,
                 PollutantList: PollutantList,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1
             }
         }).then(()=>{
@@ -451,7 +453,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: rCode,
                 PollutantList: arr,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1,
                 EntCode:''
             }
@@ -512,7 +514,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: arr,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1,
                 EntCode:EntCode == '' ?'':EntCode
             }
@@ -667,10 +669,6 @@ class index extends PureComponent {
                                                     payload: {
                                                         type: value
                                                     }
-                                                }).then(() => {
-                                                    this.setState({
-                                                        entType: value,
-                                                    })
                                                 })
                                             }}>
                                             <Option value="1">废水</Option>
@@ -734,7 +732,7 @@ class index extends PureComponent {
                                         <Form.Item>
                                             {
                                                 getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:''
+                                                    initialValue:item.PollutantCode
                                                 })
                                                     (
                                                         <Checkbox.Group>
@@ -773,7 +771,7 @@ class index extends PureComponent {
                                         <Form.Item>
                                             {
                                                 getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:''
+                                                    initialValue:item.PollutantCode
                                                 })
                                                     (
                                                         <Checkbox.Group>
@@ -818,10 +816,12 @@ class index extends PureComponent {
                                     <span>
                                         <Form.Item>
                                             {
-                                                getFieldDecorator(item.PollutantCode, {})
+                                                getFieldDecorator(item.PollutantCode, {
+                                                    initialValue:item.PollutantCode
+                                                })
                                                     (
                                                         <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantName}>{item.PollutantName}</Checkbox>
+                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
                                                         </Checkbox.Group>
                                                     )
                                             }
@@ -847,10 +847,12 @@ class index extends PureComponent {
                                     <span>
                                         <Form.Item>
                                             {
-                                                getFieldDecorator(item.PollutantCode, {})
+                                                getFieldDecorator(item.PollutantCode, {
+                                                    initialValue:item.PollutantCode
+                                                })
                                                     (
                                                         <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantName}>{item.PollutantName}</Checkbox>
+                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
                                                         </Checkbox.Group>
                                                     )
                                             }
@@ -939,6 +941,9 @@ class index extends PureComponent {
           } else {
             activeKey = panes[0].key;
           }
+        }
+        else{
+            activeKey = '1'
         }
         this.setState({ panes, activeKey });
       };
@@ -1048,29 +1053,29 @@ class index extends PureComponent {
             activeKey={this.state.activeKey}
             onEdit={this.onEdit}
             >
-            <TabPane tab={this.state.entType == '1'?'废水':'废气'} key='1' closable={false}>
-            {
+                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
+                    {
                         loading ? <PageLoading /> :
                             <SdlTable columns={columns} dataSource={ExceedDataList}
-                            pagination={{
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                pageSize: this.props.PageSize,
-                                current: this.props.PageIndex,
-                                onChange: this.onChange,
-                                pageSizeOptions: ['25', '30', '40', '100'],
-                                total: this.props.total,
-                              }}
+                                pagination={{
+                                    showSizeChanger: true,
+                                    showQuickJumper: true,
+                                    pageSize: this.props.PageSize,
+                                    current: this.props.PageIndex,
+                                    onChange: this.onChange,
+                                    pageSizeOptions: ['25', '30', '40', '100'],
+                                    total: this.props.total,
+                                }}
                             />
-            }
-            </TabPane>
-            {
-                    this.state.panes.map(pane=>(
+                    }
+                </TabPane>
+                {
+                    this.state.panes.map(pane => (
                         <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                             {pane.content}
                         </TabPane>
                     ))
-            }
+                }
             </Tabs>
         }
         </>
@@ -1099,7 +1104,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1
             }
         })
@@ -1129,7 +1134,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1
             }
         })
@@ -1189,7 +1194,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:25,
+                PageSize:10,
                 PageIndex:1
             }
         })
@@ -1287,7 +1292,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'EntName',
                 key: 'EntName',
@@ -1365,7 +1370,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'EntName',
                 key: 'EntName',
@@ -1387,9 +1392,9 @@ class index extends PureComponent {
                 key: 'DataType',
             },
             {
-                title: "监测点",
+                title: "监测时间",
                 width: 100,
-                align: '监测时间',
+                align: 'center',
                 fixed: fixed,
                 dataIndex: 'OverTime',
                 key: 'OverTime',
@@ -1451,7 +1456,7 @@ class index extends PureComponent {
                                 <>
                                 </>
                             }
-                            className="contentContainer"
+                            className={style.dataTable}
                         >
                             {loading ? <PageLoading /> : this.pageContent()}
                         </Card>
@@ -1460,7 +1465,7 @@ class index extends PureComponent {
                             title={this.state.entModalTitle}
                             visible={this.state.visible}
                             footer={null}
-                            width={800}
+                            width={1300}
                             onCancel={this.CancelHandel}
                         >
                             <div style={{marginBottom:10}}>
@@ -1491,13 +1496,13 @@ class index extends PureComponent {
                                 <Button onClick={this.EntButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingEnt?<PageLoading/>:<SdlTable columns={columns} dataSource={EntCountList} pagination={{
+                                loadingEnt?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns} dataSource={EntCountList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
                                     current: this.props. ModalPageIndex,
                                     onChange: this.EntButtonCountHandlePageChange,
-                                    pageSizeOptions: ['25', '30', '40', '100'],
+                                    pageSizeOptions: ['10','20', '30', '40', '100'],
                                     total: this.props. Modaltotal,
                                   }} />
                             }
@@ -1509,7 +1514,7 @@ class index extends PureComponent {
                             title={this.state.entCountModalTotle}
                             visible={this.state.visibleMoni}
                             footer={null}
-                            width={800}
+                            width={1300}
                             onCancel={this.CancelHandel}
                         >
                             <div style={{marginBottom:10}}>
@@ -1540,13 +1545,13 @@ class index extends PureComponent {
                                 <Button onClick={this.ExButtonCountHandleExport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingCount?<PageLoading/>:<SdlTable columns={columns3} dataSource={ExceedNumList} pagination={{
+                                loadingCount?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
                                     current: this.props. ModalPageIndex,
                                     onChange: this.ExButtonCountHandlePageChange,
-                                    pageSizeOptions: ['25', '30', '40', '100'],
+                                    pageSizeOptions: ['10','20', '30', '40', '100'],
                                     total: this.props. Modaltotal,
                                   }} />
                             }
@@ -1557,20 +1562,20 @@ class index extends PureComponent {
                             title={this.state.entCountModalTotle2}
                             visible={this.state.visibleEnt}
                             footer={null}
-                            width={800}
+                            width={1300}
                             onCancel={this.entCancelHandel}
                         >
                             <div style={{marginBottom:10}}>
                                 <Button onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingCount?<PageLoading/>:<SdlTable columns={columns3} dataSource={ExceedNumList} pagination={{
+                                loadingCount?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
                                     current: this.props. ModalPageIndex,
                                     onChange: this.EntPageChange,
-                                    pageSizeOptions: ['25', '30', '40', '100'],
+                                    pageSizeOptions: ['10','20', '30', '40', '100'],
                                     total: this.props. Modaltotal,
                                   }} />
                             }

@@ -7,7 +7,7 @@ import { post } from '@/utils/request';
 import { async } from 'q';
 //获取流量数据
 export async function GetPollutantByType(params){
-    const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`,{})
+    const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceedPollutantByType?type=${params.type}`,{})
     return result 
 }
 //查询超标数据
