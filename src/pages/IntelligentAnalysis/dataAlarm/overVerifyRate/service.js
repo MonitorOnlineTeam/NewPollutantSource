@@ -43,11 +43,11 @@ export async function GetAttentionDegreeList(params) {
   return result;
 }
 
-//导出 缺失数据报警响应
+//导出 报警核实率首页
 
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectDataSummary',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',
     params,
     null,
   );
@@ -55,10 +55,10 @@ export async function ExportDefectDataSummary(params) {
   return result;
 }
 
-//导出 缺失数据报警响应  详情
+//导出 报警核实率  详情
 export async function ExportDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetail',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',
     params,
     null,
   );

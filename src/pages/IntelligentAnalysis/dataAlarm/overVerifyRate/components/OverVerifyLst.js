@@ -219,33 +219,7 @@ export default class OverVerifyLst extends Component {
 
 
 
-  children = () => { //企业列表 or 大气站列表
-    const { priseList,atmoStationList,type } = this.props;
-
-    const selectList = [];
-    if(type==='ent'){
-     if (priseList.length > 0) {
-      priseList.map(item => {
-        selectList.push(
-          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-            {item.EntName}
-          </Option>,
-        );
-      });
-     }else{
-       if(atmoStationList.length > 0){
-        atmoStationList.map(item => {
-          selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {item.StationName}
-            </Option>,
-          );
-        }); 
-       }
-     }
-      return selectList;
-    }
-  };
+ 
 
   typeChange = value => {
     this.updateQueryState({
@@ -461,9 +435,10 @@ export default class OverVerifyLst extends Component {
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
+                    value={RegionCode}
                     style={{ width: 100 }}
                   >
+                   <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
