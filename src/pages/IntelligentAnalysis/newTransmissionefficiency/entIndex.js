@@ -297,16 +297,8 @@ export default class EntTransmissionEfficiency extends Component {
           if (record.AvgTransmissionRate <= text) {
             return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
-          // const content = (
-          //   <span>
-          //     <Icon type="warning" style={{ color: '#EEC900' }} />
-          //     平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
-          //   </span>
-          // );
           return (
-            // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              {/* <Badge className={styles.warningdata} status="warning" /> */}
               {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // </Popover>
@@ -352,7 +344,6 @@ export default class EntTransmissionEfficiency extends Component {
             </div>
           );
         },
-        // ...this.getColumnSearchProps('TransmissionEffectiveRate'),
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>低于90%的监测点个数</span>,

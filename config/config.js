@@ -236,6 +236,11 @@ export default {
             //   component: './Test/Test',
             // },
             {
+              name: 'homepage',
+              path: '/newHomePage',
+              component: './newHomePage',
+            }, 
+            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
