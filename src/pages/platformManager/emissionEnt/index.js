@@ -91,6 +91,29 @@ const leftTableColumns = [
     {
         dataIndex: 'PointName',
         title: '监测点名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
+    },
+    {
+        dataIndex: 'PollutantType',
+        title: '监测点类型',
+        render: (text, record, index) => {
+            var str = ''
+            switch (text) {
+                case '1':
+                    str = '废水';
+                    break;
+                case '2':
+                    str = '废气';
+                    break;
+            }
+            return str;
+        }
     },
 ];
 const rightTableColumns = [
@@ -112,6 +135,29 @@ const rightTableColumns = [
     {
         dataIndex: 'PointName',
         title: '监测点名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
+    },
+    {
+        dataIndex: 'PollutantType',
+        title: '监测点类型',
+        render: (text, record, index) => {
+            var str = ''
+            switch (text) {
+                case '1':
+                    str = '废水';
+                    break;
+                case '2':
+                    str = '废气';
+                    break;
+            }
+            return str;
+        }
     },
 ];
 
