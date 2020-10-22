@@ -1,6 +1,6 @@
 /**
- * 功  能：传输有效率
- * 创建人：贾安波
+ * 功  能：报警核实率
+ * 创建人：张赟
  * 创建时间：2020.09.27
  */
 
@@ -24,14 +24,15 @@ export default Model.extend({
     
     overVerifyRateForm: {
       beginTime: moment()
-        .subtract(1, 'day')
+        .subtract(1, 'months')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
       RegionCode: '',
       PollutantType:'1',
       PollutantList :[],
-      Rate :1
+      Rate :1,
+      EntCode:''
     },
     divisorList: [],
     tableDatas: [],
@@ -82,7 +83,7 @@ export default Model.extend({
     },
     *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应
+      //导出  报警核实率首页
       const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
@@ -95,7 +96,7 @@ export default Model.extend({
     },
     *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应  详情
+      //导出  报警核实率  详情
       const response = yield call(ExportDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
