@@ -67,7 +67,7 @@ class SmokeReportPage extends PureComponent {
     this.getEntAndPoint();
   }
 
-  switchInfo = reportType => {
+  switchInfo = (reportType, flag) => {
     let beginTime;
     let endTime;
     switch (reportType) {
@@ -136,6 +136,7 @@ class SmokeReportPage extends PureComponent {
         },
       },
     })
+    this.props.form.setFieldsValue({"time": moment()})
     this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
   }
 

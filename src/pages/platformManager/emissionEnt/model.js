@@ -26,6 +26,7 @@ export default Model.extend({
   state: {
     entData: [],
     entDataTotal: 0,
+    entFlag:'',
     noSelectEnt: [],
     AssessYear:moment(),
     AssessYearStr:moment().format('YYYY'),
@@ -189,6 +190,7 @@ export default Model.extend({
         pollutantType,
         entCode,
         qutletQueryPar,
+        entFlag,
       } = yield select(state => state.emissionEnt);
       let body = {
         RegionCode: RegionCode,
@@ -196,6 +198,7 @@ export default Model.extend({
         EntCode: qutletQueryPar.EntCode,
         PageSize: pageSize,
         PageIndex: pageIndex,
+        EntFlag:entFlag
       };
       const response = yield call(GetEmissionEntList, { ...body });
       if (response.IsSuccess) {

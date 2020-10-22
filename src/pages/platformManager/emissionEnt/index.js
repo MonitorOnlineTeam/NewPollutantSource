@@ -80,6 +80,13 @@ const leftTableColumns = [
     {
         dataIndex: 'EntName',
         title: '企业名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
     },
     {
         dataIndex: 'PointName',
@@ -94,6 +101,13 @@ const rightTableColumns = [
     {
         dataIndex: 'EntName',
         title: '企业名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
     },
     {
         dataIndex: 'PointName',
@@ -105,6 +119,7 @@ const rightTableColumns = [
     RegionCode: emissionEnt.RegionCode,
     regionList: autoForm.regionList,
     pollutantType: emissionEnt.pollutantType,
+    entFlag: emissionEnt.entFlag,
     priseList: emissionEnt.priseList,
     queryPar: emissionEnt.qutletQueryPar,
     entData: emissionEnt.entData,
@@ -269,14 +284,19 @@ class emissionEnt extends Component {
         this.props.dispatch({
             type: 'emissionEnt/updateEntFlag',
             payload: {
-                ID:ID,
-                EntFlag:type
+                ID: ID,
+                EntFlag: type
             },
         });
     };
     typeChange = value => {
         this.updateState({
             pollutantType: value,
+        });
+    };
+    flagChange = value => {
+        this.updateState({
+            entFlag: value,
         });
     };
     confirm = (TaskID) => {
@@ -330,20 +350,38 @@ class emissionEnt extends Component {
                 title: '行政区',
                 dataIndex: 'RegionName',
                 key: 'RegionName',
-                width: '15%',
+                width: '10%',
                 align: 'center',
             },
             {
                 title: '企业名称',
                 dataIndex: 'EntName',
                 key: 'EntName',
-                width: '30%',
+                width: '25%',
             },
             {
                 title: '监测点名称',
                 dataIndex: 'PointName',
                 key: 'PointName',
-                width: '30%',
+                width: '25%',
+            },
+            {
+                title: '监测点类型',
+                dataIndex: 'PollutantType',
+                key: 'PollutantType',
+                width: '10%',
+                render: (text, record, index) => {
+                    var str = ''
+                    switch (text) {
+                        case '1':
+                            str = '废水';
+                            break;
+                        case '2':
+                            str = '废气';
+                            break;
+                    }
+                    return str;
+                }
             },
             {
                 title: '参与企业整体排放量计算标识',
@@ -406,33 +444,41 @@ class emissionEnt extends Component {
                 <Card className="contentContainer">
                     <Form layout="inline" style={{ marginBottom: '10' }}>
                         <Row >
-                            <Col md={4} sm={24}>
-                                <FormItem label="行政区" style={{ width: '100%' }}>
-                                    <Select
-                                        allowClear
-                                        placeholder="请选择行政区"
-                                        onChange={this.changeRegion}
-                                        value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                                        style={{ width: 200, marginLeft: 10 }}
-                                    >
-                                        {this.children()}
-                                    </Select>
-                                </FormItem>
-                            </Col>
-                            <Col md={4} sm={24}>
-                                <FormItem label="企业类型" style={{ width: '100%' }}>
-                                    <Select
-                                        allowClear
-                                        placeholder="请选择企业类型"
-                                        onChange={this.typeChange}
-                                        value={this.props.pollutantType}
-                                        style={{ width: 200, marginLeft: 10 }}
-                                    >
-                                        <Option value="1">废水</Option>
-                                        <Option value="2">废气</Option>
-                                    </Select>
-                                </FormItem>
-                            </Col>
+                            <FormItem label="行政区" >
+                                <Select
+                                    allowClear
+                                    placeholder="请选择行政区"
+                                    onChange={this.changeRegion}
+                                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                                    style={{ width: 200, marginLeft: 10 }}
+                                >
+                                    {this.children()}
+                                </Select>
+                            </FormItem>
+                            <FormItem label="监测点类型" >
+                                <Select
+                                    allowClear
+                                    placeholder="请选择监测点类型"
+                                    onChange={this.typeChange}
+                                    value={this.props.pollutantType}
+                                    style={{ width: 200, marginLeft: 10 }}
+                                >
+                                    <Option value="1">废水</Option>
+                                    <Option value="2">废气</Option>
+                                </Select>
+                            </FormItem>
+                            <FormItem label="计算标识" >
+                                <Select
+                                    allowClear
+                                    placeholder="请选择计算标识"
+                                    onChange={this.flagChange}
+                                    value={this.props.entFlag}
+                                    style={{ width: 200, marginLeft: 10 }}
+                                >
+                                    <Option value="1">参与</Option>
+                                    <Option value="0">不参与</Option>
+                                </Select>
+                            </FormItem>
                             <FormItem label="企业列表" >
                                 <Select
                                     showSearch
@@ -474,7 +520,7 @@ class emissionEnt extends Component {
                                 })
                             }}><Icon type="export" />导出</Button>
                         </Row>
-                            <span style={{ color: 'red', fontSize: 12 }}>设置参与排放量计算的监测点名单</span>
+                        <span style={{ color: 'red', fontSize: 12 }}>设置参与排放量计算的监测点名单</span>
                     </Form>
                     <SdlTable
                         loading={this.props.loading}
@@ -494,7 +540,7 @@ class emissionEnt extends Component {
                 <Modal
                     title={'添加监测点'}
                     visible={this.state.visible}
-                    width={1600}
+                    width={1200}
                     destroyOnClose
                     //   confirmLoading={loading}
                     onOk={this.addEntAndPoint}
@@ -511,7 +557,7 @@ class emissionEnt extends Component {
                         showSearch={true}
                         onChange={this.onChangeTranTable}
                         filterOption={(inputValue, item) =>
-                            item.EntName.indexOf(inputValue) !== -1 
+                            item.EntName.indexOf(inputValue) !== -1
                         }
                         leftColumns={leftTableColumns}
                         rightColumns={rightTableColumns}
