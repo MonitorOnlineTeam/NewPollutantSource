@@ -146,6 +146,7 @@ class YsyShowVideo extends Component {
 
   /** 切换排口 */
   changeDgimn=DGIMN => {
+
     this.getvideolist(DGIMN);
   }
 

@@ -935,6 +935,43 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
+                {
+                  path: '/monitoring/videoMonitor',
+                  redirect: '/monitoring/videoMonitor/ent',
+                },
+                {
+                  name: 'videoMonitor',
+                  path: '/monitoring/videoMonitor/videopreview',
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videoMonitor/videopreview/hkvideo'
+                    : './monitoring/videoMonitor/videopreview/ysyvideo'
+                    }`,
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitoring/videoMonitor/ent',
+                  component: './monitoring/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitoring/videoMonitor/air',
+                  component: './monitoring/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警 企业
+                  path: '/monitoring/missingData/ent',
+                  component: './monitoring/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitoring/missingData/air',
+                  component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitoring/missingData/missDataSecond',
+                  component: './monitoring/missingData/missDataSecond',
+                },                  
               ],
             },
             {
@@ -1229,7 +1266,24 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
+                  
                 },
+                {  //排放量分析
+                  path: '/Intelligentanalysis/emissionsStatistics', 
+                  name: 'EmissionsStatistics',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissionsStatistics',
+                      redirect: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                    {
+                      //排放量变化统计
+                      path: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                      component: './Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                  ],
+                },
+
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
@@ -1241,44 +1295,42 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
                     },
-                    {
-                      //缺失数据报警 企业
-                      path: '/Intelligentanalysis/dataAlarm/missingData/ent',
-                      component: './Intelligentanalysis/dataAlarm/missingData/ent',
-                    },
-                    {
-                      //缺失数据报警 空气站
-                      path: '/Intelligentanalysis/dataAlarm/missingData/air',
-                      component: './Intelligentanalysis/dataAlarm/missingData/air',
-                    },
-                    {
-                      //缺失数据报警 二级页面
-                      path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
-                      component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
-                    },
 
+                 /* 缺失数据报警响应率 */
 
-                    /* 缺失数据报警响应率 */
-
-                    { //缺失数据报警响应率 企业
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                    },
-                    {
-                      //缺失数据报警响应率 空气站
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
-                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
-                    },
-                    {
-                      //缺失数据报警响应率 二级页面
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                      component:
-                        './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                    },
+                 { //缺失数据报警响应率 企业
+                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                  component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                },
+                {
+                  //缺失数据报警响应率 空气站
+                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                  component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                },
+                {
+                  //缺失数据报警响应率 二级页面
+                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                  component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                },                      
                     {
                       //超标数据核实率
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal/details',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
+                    },
+                    {
+                      //超标数据核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                     },
                   ],
                 },

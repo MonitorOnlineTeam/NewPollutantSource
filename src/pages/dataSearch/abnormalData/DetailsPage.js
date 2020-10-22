@@ -20,16 +20,16 @@ class DetailsPage extends PureComponent {
         dataIndex: 'RegionName',
         key: 'RegionName',
       },
-      // {
-      //   title: '企业名称',
-      //   dataIndex: 'EntName',
-      //   key: 'EntName',
-      // },
-      // {
-      //   title: '监测点名称',
-      //   dataIndex: 'PointName',
-      //   key: 'PointName',
-      // },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+      },
       {
         title: '数据类型',
         dataIndex: 'DataType',
@@ -67,16 +67,16 @@ class DetailsPage extends PureComponent {
         dataIndex: 'RegionName',
         key: 'RegionName',
       },
-      // {
-      //   title: '企业名称',
-      //   dataIndex: 'EntName',
-      //   key: 'EntName',
-      // },
-      // {
-      //   title: '监测点名称',
-      //   dataIndex: 'PointName',
-      //   key: 'PointName',
-      // },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+      },
       {
         title: '数据类型',
         dataIndex: 'DataType',

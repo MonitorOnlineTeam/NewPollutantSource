@@ -1,22 +1,31 @@
 import { post } from '@/utils/request';
 
+// 根据企业类型查询监测因子
+export async function GetPollutantByType(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params,null);
+  return result;
+}
+
 /**
- * 缺失数据 响应
+ * 超标核实率列表
  *
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectDataSummary',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRate',
     params,
     null,
   );
 
   return result;
 }
-//缺失数据查询响应 二级
+/**
+ * 超标核实率详情
+ *
+ */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectPointDetail',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
     params,
     null,
   );

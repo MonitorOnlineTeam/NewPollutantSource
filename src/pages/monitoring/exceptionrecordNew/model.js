@@ -10,7 +10,9 @@ export default Model.extend({
     exceptionAlarmDataSource: [],
     exceptionPointList: [],
     exceptionAlarmListForEntDataSource: [],
-    exceptionrecordForm: {}
+    exceptionrecordForm: {
+    },
+    exceptionTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
   },
   effects: {
     // 获取关注列表

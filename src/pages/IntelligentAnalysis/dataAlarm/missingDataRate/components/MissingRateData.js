@@ -68,7 +68,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',query: {regionCode :record.regionCode} }} >
+          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
                    {text}
                </Link>
                  
@@ -106,7 +106,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'responseRate',
         align: 'center',
         render:(text,row)=>{
-          return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>
+          return <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       
       },
@@ -131,6 +131,10 @@ export default class EntTransmissionEfficiency extends Component {
       EntType: types==='ent'? "1":"2",
       // Atmosphere:Atmosphere
     });
+    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+
+    types ==='ent'? this.columns.splice(1,0,entObj) : null;
+
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表

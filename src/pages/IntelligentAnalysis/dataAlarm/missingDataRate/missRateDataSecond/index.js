@@ -42,6 +42,7 @@ const pageUrl = {
   updateState: 'MissingRateData/updateState',
   getData: 'MissingRateData/getDefectPointDetailRate',
 };
+let query = JSON.parse(location.query.queryPar)
 @connect(({ loading, MissingRateData,autoForm }) => ({
   priseList: MissingRateData.priseList,
   exloading:MissingRateData.exloading,
@@ -72,7 +73,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span>{this.props.type==='ent'? '企业名称': '大气站名称'}</span>,
+        title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
@@ -116,7 +117,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'xiangyingRate',
         align: 'center',
         render:(text,row)=>{
-          return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>
+          return <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       }
     ];
@@ -376,7 +377,7 @@ export default class EntTransmissionEfficiency extends Component {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title={type==='ent'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)"}>
+        <BreadcrumbWrapper title={JSON.parse(location.query.queryPar).EntType==='1'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)"}>
         <Card
           bordered={false}
           title={
