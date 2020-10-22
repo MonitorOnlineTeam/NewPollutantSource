@@ -1,22 +1,31 @@
 import { post } from '@/utils/request';
 
+// 根据企业类型查询监测因子
+export async function GetPollutantByType(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params,null);
+  return result;
+}
+
 /**
- * 缺失数据 响应
+ * 超标核实率列表
  *
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectDataSummary',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRate',
     params,
     null,
   );
 
   return result;
 }
-//缺失数据查询响应 二级
+/**
+ * 超标核实率详情
+ *
+ */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectPointDetail',
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
     params,
     null,
   );
@@ -34,11 +43,11 @@ export async function GetAttentionDegreeList(params) {
   return result;
 }
 
-//导出 缺失数据报警响应
+//导出 报警核实率首页
 
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectDataSummary',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',
     params,
     null,
   );
@@ -46,10 +55,10 @@ export async function ExportDefectDataSummary(params) {
   return result;
 }
 
-//导出 缺失数据报警响应  详情
+//导出 报警核实率  详情
 export async function ExportDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetail',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',
     params,
     null,
   );

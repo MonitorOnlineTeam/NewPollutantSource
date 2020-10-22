@@ -18,6 +18,7 @@ import {
   Input,
   Button,
   Form,
+  Checkbox,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -38,96 +39,160 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'missingData/updateState',
-  getData: 'missingData/getDefectModel',
+  updateState: 'overVerifyRate/updateState',
+  getData: 'overVerifyRate/getDefectModel',
 };
-@connect(({ loading, missingData,autoForm,common }) => ({
-  priseList: missingData.priseList,
-  exloading:missingData.exloading,
+@connect(({ loading, overVerifyRate,autoForm,common }) => ({
+  priseList: overVerifyRate.priseList,
+  exloading:overVerifyRate.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: missingData.total,
-  tableDatas: missingData.tableDatas,
-  queryPar: missingData.queryPar,
+  total: overVerifyRate.total,
+  tableDatas: overVerifyRate.tableDatas,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList,
-  atmoStationList:common.atmoStationList
+  attentionList:overVerifyRate.attentionList,
+  atmoStationList:common.atmoStationList,
+  overVerifyRateForm:overVerifyRate.overVerifyRateForm,
+  divisorList: overVerifyRate.divisorList,
+
+
 }))
-@Form.create()
-export default class EntTransmissionEfficiency extends Component {
+@Form.create({
+  mapPropsToFields(props) {
+    return {
+     
+      PollutantList: Form.createFormField(props.overVerifyRateForm.PollutantList),
+      PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
+    };
+  },
+  onFieldsChange(props, fields) {
+    props.dispatch({
+      type: 'overVerifyRate/updateState',
+      payload: {
+        overVerifyRateForm: {
+          ...props.overVerifyRateForm,
+          ...fields,
+        },
+      },
+    })
+  },
+})
+export default class OverVerifyLst extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      checkedValues:[],
+      columns :[]
+    
     };
     
-    this.columns = [
-      {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-                   {text}
-               </Link>
-                 
-       },
-      },
-      {
-        title: <span>{this.props.type==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
-        dataIndex: 'pointCount',
-        key: 'pointCount',
-        align: 'center',
-      },
-      {
-        title: <span>缺失数据报警次数</span>,
-        dataIndex: 'exceptionCount',
-        key: 'exceptionCount',
-        align: 'center'
-      },
-      {
-        title: <span>已响应报警次数</span>,
-        dataIndex: 'xiangyingCount',
-        key: 'xiangyingCount',
-        align: 'center',
-      },
-      {
-        title: <span>待响应报警次数</span>,
-        dataIndex: 'weixiangyingCount',
-        key: 'weixiangyingCount',
-        align: 'center',
-      },
-    ];
   }
 
   componentDidMount() {
     this.initData();
+      // 根据企业类型查询监测因子
+      this.getPollutantByType('1', this.getExceptionList);
+  }
+   // 根据企业类型查询监测因子
+   getPollutantByType = (val, cb) => {
+    const { dispatch, overVerifyRateForm } = this.props;
+    this.props.dispatch({
+      type: "overVerifyRate/getPollutantByType",
+      payload: {
+        PollutantType: val,
+    
+      },
+      callback: (res) => {
+       
+        let newCloum =  [
+          {
+            title: <span>行政区</span>,
+            dataIndex: 'regionName',
+            key: 'regionName',
+            align: 'center',
+            
+            render: (text, record) => { 
+              return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',query:  {regionCode:record.regionCode} }} >
+                       {text}
+                   </Link>
+                     
+           },
+          },
+          {
+            title: <span>{'数据超标报警企业数'}</span>,
+            dataIndex: 'entCount',
+            key: 'entCount',
+            
+            align: 'center',
+          },
+          {
+            title: <span>数据超标报警监测点数</span>,
+            dataIndex: 'pointCount',
+            key: 'pointCount',
+            width:210,
+            align: 'center'
+          },
+         
+        ]
+        res.map(item=>{
+            newCloum.push( {
+              title: <span>{item.PollutantName}</span>,
+              dataIndex: item.PollutantCode,
+              key: item.PollutantCode,
+              
+              align: 'center',
+              children:[{
+                title: <span>报警次数</span>,
+                width:100,
+              dataIndex: item.PollutantCode + '_alarmCount',
+              key: item.PollutantCode + '_alarmCount',
+              align: 'center',
+              },{
+                title: <span>已核实报警次数</span>,
+                width:110,
+              dataIndex: item.PollutantCode + '_respondedCount',
+              key:item.PollutantCode + '_respondedCount',
+              align: 'center',
+              },{
+                title: <span>未核实报警次数</span>,
+                width:110,
+              dataIndex:item.PollutantCode + '_noRespondedCount',
+              key: item.PollutantCode + '_noRespondedCount',
+              align: 'center',
+              },{
+                title: <span>核实率</span>,
+                width:100,
+              dataIndex: item.PollutantCode + '_RespondedRate',
+              key: item.PollutantCode + '_RespondedRate',
+              align: 'center',
+              }]
+            },)
+          })
+          newCloum.push({
+           title: <span>核实率</span>,
+          dataIndex: 'AllRespondedRate',
+          key: 'AllRespondedRate',
+          align: 'center',
+          fixed:'right'
+          
+        });
+        this.setState({ checkedValues: res.map(item => item.PollutantCode),columns:newCloum }, () => {
+          this.updateQueryState({
+            PollutantList: this.state.checkedValues,
+          });
+          cb && cb()
+        })
+      }
+    })
   }
   initData = () => {
     const { dispatch, location,Atmosphere,type } = this.props;
 
-    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
-
-    type==='ent'? this.columns.splice(1,0,entObj) : null;
-
-    this.updateQueryState({
-      // beginTime: moment()
-      //   .subtract(1, 'day')
-      //   .format('YYYY-MM-DD HH:mm:ss'),
-      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      // AttentionCode: '',
-      // EntCode: '',
-      // RegionCode: '',
-      // Atmosphere:Atmosphere
-      RegionCode: '',
-      EntType: type==='ent'? "1":"2"
-    });
+  
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     //获取企业列表 or 大气站列表
-     type==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
- 
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     
+     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -135,57 +200,33 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { overVerifyRateForm, dispatch } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { overVerifyRateForm: { ...overVerifyRateForm, ...payload } },
     });
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...overVerifyRateForm },
     });
   };
 
 
 
 
-  children = () => { //企业列表 or 大气站列表
-    const { priseList,atmoStationList,type } = this.props;
-
-    const selectList = [];
-    if(type==='ent'){
-     if (priseList.length > 0) {
-      priseList.map(item => {
-        selectList.push(
-          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-            {item.EntName}
-          </Option>,
-        );
-      });
-     }else{
-       if(atmoStationList.length > 0){
-        atmoStationList.map(item => {
-          selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {item.StationName}
-            </Option>,
-          );
-        }); 
-       }
-     }
-      return selectList;
-    }
-  };
+ 
 
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
     });
+    this.getPollutantByType(value, this.getExceptionList);
+    
   };
 
   changeRegion = (value) => { //行政区事件
@@ -206,10 +247,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
-      type: 'missingData/exportDefectDataSummary',
-      payload: { ...queryPar },
+      type: 'overVerifyRate/exportDefectDataSummary',
+      payload: { ...overVerifyRateForm },
       callback: data => {
          downloadFile(`/upload${data}`);
         },
@@ -218,6 +259,7 @@ export default class EntTransmissionEfficiency extends Component {
   //查询事件
   queryClick = () => {
     this.getTableData();
+
   };
 
 
@@ -260,22 +302,118 @@ export default class EntTransmissionEfficiency extends Component {
         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
+      // 监测因子change
+  onCheckboxChange = (checkedValues) => {
+    let newCloum = [{
+      title: <span>行政区</span>,
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+      render: (text, record) => { 
+        return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',query:  {regionCode:record.regionCode} }} >
+                 {text}
+             </Link>
+               
+     },
+    },
+    {
+      title: <span>{'数据超标报警企业数'}</span>,
+      dataIndex: 'entCount',
+      key: 'entCount',
+      align: 'center',
+    },
+    {
+      title: <span>数据超标报警监测点数</span>,
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      width:210,
+      align: 'center'
+    },]
+    if (checkedValues.length < 1) {
+      message.warning("最少勾选一个监测因子！")
+      return;
+    }
+
+    this.props.divisorList.map((item, key) => {
+      let index = checkedValues.findIndex((checkedItem, checkedKey) => {
+        if (item.PollutantCode == checkedItem) {
+          return true;
+        }
+      })
+      if (index !== -1) {
+        newCloum.push({
+          title: <span>{item.PollutantName}</span>,
+          dataIndex: item.PollutantCode,
+          key: item.PollutantCode,
+          
+         children:[{
+          title: <span>报警次数</span>,
+          width:100,
+        dataIndex: item.PollutantCode + '_alarmCount',
+        key: item.PollutantCode + '_alarmCount',
+        align: 'center',
+        },{
+          title: <span>已核实报警次数</span>,
+          width:110,
+        dataIndex: item.PollutantCode + '_respondedCount',
+        key:item.PollutantCode + '_respondedCount',
+        align: 'center',
+        },{
+          title: <span>未核实报警次数</span>,
+          width:110,
+        dataIndex:item.PollutantCode + '_noRespondedCount',
+        key: item.PollutantCode + '_noRespondedCount',
+        align: 'center',
+        },{
+          title: <span>核实率</span>,
+          width:100,
+        dataIndex: item.PollutantCode + '_RespondedRate',
+        key: item.PollutantCode + '_RespondedRate',
+        align: 'center',
+        }]
+        });
+      }else{
+      }
+    })
+    newCloum.push({
+      title: <span>核实率</span>,
+    dataIndex: 'AllRespondedRate',
+    key: 'AllRespondedRate',
+    align: 'center',
+    
+  });
+    this.setState({
+      columns: newCloum
+    })
+    this.props.dispatch({
+      type: 'overVerifyRate/updateState',
+      payload: {
+        overVerifyRateForm: {
+          ...this.props.overVerifyRateForm,
+          PollutantList: checkedValues
+        }
+      }
+    })
+  
+  }
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      form: { getFieldDecorator, getFieldValue,},
+      divisorList,
+      overVerifyRateForm: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType }, 
       type
     } = this.props;
-
+    const {  checkedValues } = this.state;
     return (
         <Card
           bordered={false}
           title={
-            <>
+            
               <Form layout="inline">
             
               <Row>
-             
+              <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
                 <Form.Item>
                   日期查询：
                   <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
@@ -297,25 +435,45 @@ export default class EntTransmissionEfficiency extends Component {
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
+                    value={RegionCode}
                     style={{ width: 100 }}
                   >
+                   <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
               <Form.Item label='企业类型'>
+            
                   <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
                     style={{ width: 100 }}
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
+             
+                  
                 </Form.Item> 
 
+                
+                </Col>
+                <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+                <div class="ant-form-item-label" style={{ width: '5.3%' }}>
+                  <label for="RegionCode" class="" title="监测因子">监测因子</label>
+                </div>
+                {getFieldDecorator('PollutantList', {
+                  initialValue: checkedValues,
+                })(
+                  <Checkbox.Group style={{ maxWidth: "calc(100% - 5.3% - 168px)" }} onChange={this.onCheckboxChange}>
+                    {
+                      divisorList.map(item => {
+                        return <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                      })
+                    }
+                  </Checkbox.Group>
+                )}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
@@ -329,17 +487,16 @@ export default class EntTransmissionEfficiency extends Component {
                     导出
                   </Button>
                 </Form.Item>
+              </Col>
                 </Row>
               </Form>
-            </>
           }
         >
-          <>
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
-              columns={this.columns}
-              dataSource={this.props.tableDatas}
+              columns={this.state.columns}
+              dataSource={this.props.tableDatas.data}
               pagination={{
                 // showSizeChanger: true,
                 // showQuickJumper: true,
@@ -349,9 +506,7 @@ export default class EntTransmissionEfficiency extends Component {
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
-            />
-          </>
+              }} />
         </Card>
     );
   }

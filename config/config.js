@@ -536,6 +536,36 @@ export default {
                     },
                   ],
                 },
+                //小时平均值日报
+                {
+                  name: 'DailyReport',
+                  path: '/report/DailyReport',
+                  component: './report/DailyReport/DailyReport',
+                },
+                //日平均值月报
+                {
+                  name: 'MonthReport',
+                  path: '/report/MonthReport',
+                  component: './report/MonthReport/MonthReport',
+                },
+                //月平均值季报
+                {
+                  name: 'SeasonReport',
+                  path: '/report/SeasonReport',
+                  component: './report/SeasonReport/SeasonReport',
+                },
+                //月平均值年报
+                {
+                  name: 'YearReport',
+                  path: '/report/YearReport',
+                  component: './report/YearReport/YearReport',
+                },
+                //停运记录
+                {
+                  name: 'StopRecord',
+                  path: '/report/StopRecord',
+                  component: './report/StopRecord/stopRecord',
+                },
                 {
                   name: 'smokeReportPage',
                   path: '/report/smoke',
@@ -905,6 +935,44 @@ export default {
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
+                {
+                  path: '/monitoring/videoMonitor',
+                  redirect: '/monitoring/videoMonitor/ent',
+                },
+                {
+                  name: 'videoMonitor',
+                  path: '/monitoring/videoMonitor/videopreview',
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitoring/videoMonitor/ent',
+                  component: './monitoring/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitoring/videoMonitor/air',
+                  component: './monitoring/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警 企业
+                  path: '/monitoring/missingData/ent',
+                  component: './monitoring/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitoring/missingData/air',
+                  component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitoring/missingData/missDataSecond',
+                  component: './monitoring/missingData/missDataSecond',
+                },
               ],
             },
             {
@@ -1069,42 +1137,6 @@ export default {
                   name: 'outputstopmanage',
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
-                },
-              ],
-            },
-            {
-              //监控中心  视频监控
-              path: '/monitorCenter',
-              name: 'MonitorCenter',
-              routes: [
-                {
-                  path: '/monitorCenter/videoMonitor',
-                  redirect: '/monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 企业
-                  path: '/monitorCenter/videoMonitor/ent',
-                  component: './monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 大气
-                  path: '/monitorCenter/videoMonitor/air',
-                  component: './monitorCenter/videoMonitor/air',
-                },
-                {
-                  //缺失数据报警 企业
-                  path: '/monitorCenter/missingData/ent',
-                  component: './monitorCenter/missingData/ent',
-                },
-                {
-                  //缺失数据报警 空气站
-                  path: '/monitorCenter/missingData/air',
-                  component: './monitorCenter/missingData/air',
-                },
-                {
-                  //缺失数据报警 二级页面
-                  path: '/monitorCenter/missingData/missDataSecond',
-                  component: './monitorCenter/missingData/missDataSecond',
                 },
               ],
             },
@@ -1298,6 +1330,11 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/abnormal/details',
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
                     },
+                    {
+                      //超标数据核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    },
                   ],
                 },
                 {
@@ -1384,6 +1421,16 @@ export default {
                   name: 'exceedData', //超标数据查询
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
+                },
+                {
+                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                  path: '/dataSearch/exceedDataAlarmRecord',
+                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                },
+                {
+                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                  path: '/dataSearch/exceedDataDispositionRecord',
+                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
                 },
               ],
             },

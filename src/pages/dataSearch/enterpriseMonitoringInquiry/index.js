@@ -530,7 +530,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName',
@@ -549,7 +549,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName',
@@ -557,7 +557,7 @@ class index extends PureComponent {
             {
                 title: "监测点",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'pointName',
                 key: 'pointName',
@@ -586,7 +586,7 @@ class index extends PureComponent {
                             width={800}
                             onCancel={this.CancelHandel}
                         >
-                            <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} />
+                            <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
                             <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
                                 <Button style={{ float: 'right' }} onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
@@ -599,7 +599,7 @@ class index extends PureComponent {
                             width={800}
                             onCancel={this.CancelHandel}
                         >
-                            <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} />
+                            <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
                             <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
                                 <Button style={{ float: 'right' }} onClick={this.PointexportReport}><Icon type="export" />导出</Button>
                             </div>

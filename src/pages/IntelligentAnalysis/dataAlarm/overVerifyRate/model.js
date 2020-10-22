@@ -1,6 +1,6 @@
 /**
- * 功  能：传输有效率
- * 创建人：贾安波
+ * 功  能：报警核实率
+ * 创建人：张赟
  * 创建时间：2020.09.27
  */
 
@@ -11,28 +11,30 @@ import {
   GetAttentionDegreeList,
   ExportDefectDataSummary,
   ExportDefectPointDetail,
-  GetDefectPointDetail
+  GetDefectPointDetail,
+  GetPollutantByType
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'missingData',
+  namespace: 'overVerifyRate',
   state: {
     exloading: false,
     loading: false,
-    queryPar: {
+    
+    overVerifyRateForm: {
       beginTime: moment()
-        .subtract(1, 'day')
+        .subtract(1, 'months')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
-      EntCode: '',
       RegionCode: '',
-      Atmosphere:'',
-      PollutantType:'',
-      dataType:'HourData',
-      EntType:''
+      PollutantType:'1',
+      PollutantList :[],
+      Rate :1,
+      EntCode:''
     },
+    divisorList: [],
     tableDatas: [],
     total: '',
     attentionList:[],
@@ -53,7 +55,7 @@ export default Model.extend({
       }
     },
     *getDefectPointDetail({ payload }, { call, put, update, select }) {
-      //列表 响应数据详情
+      //超标核实率详情
       const response = yield call(GetDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         yield update({
@@ -81,7 +83,7 @@ export default Model.extend({
     },
     *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应
+      //导出  报警核实率首页
       const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
@@ -94,7 +96,7 @@ export default Model.extend({
     },
     *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  缺失数据报警响应  详情
+      //导出  报警核实率  详情
       const response = yield call(ExportDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
@@ -103,6 +105,18 @@ export default Model.extend({
       } else {
         message.warning(response.Message);
         yield update({ exloading: false });
+      }
+    },
+     // 根据企业类型查询监测因子
+     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(GetPollutantByType, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          divisorList: response.Datas,
+        });
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
       }
     },
     
