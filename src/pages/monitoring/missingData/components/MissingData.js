@@ -76,7 +76,7 @@ export default class EntTransmissionEfficiency extends Component {
              ()=>{ 
                sessionStorage.setItem("missDataDetailPageIndex",1)
                sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/monitorCenter/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
+               this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
               }}>{text}</a>      
        },
       },

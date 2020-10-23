@@ -70,7 +70,8 @@ const pageUrl = {
   chartImport:home.chartImport,
   chartTime:home.chartTime,
   entName:home.entName,
-  pollutantList:home.pollutantList
+  pollutantList:home.pollutantList,
+  isWorkRate:home.isWorkRate
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -276,6 +277,7 @@ export default class EntTransmissionEfficiency extends Component {
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       Atmosphere,
       pointVisible,
+      isWorkRate,
       pointCancel
     } = this.props;
     const { TabPane } = Tabs;
@@ -285,6 +287,7 @@ export default class EntTransmissionEfficiency extends Component {
           title={
             <Row type="flex" justify="space-between">
          <div>公司名称</div>  
+         {isWorkRate?
          <div style={{paddingRight:30}}>
             <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
             <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
@@ -294,7 +297,10 @@ export default class EntTransmissionEfficiency extends Component {
             <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
               ≤90%未达标
             </span>
-          </div>    
+          </div> 
+          :
+          null
+         }   
             </Row>
           }
           width='95%'

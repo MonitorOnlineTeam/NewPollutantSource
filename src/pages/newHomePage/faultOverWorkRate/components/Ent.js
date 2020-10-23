@@ -70,7 +70,7 @@ const pageUrl = {
   chartImport:home.chartImport,
   chartTime:home.chartTime,
   entName:home.entName,
-  pollutantList:home.pollutantList
+  isWorkRate:home.isWorkRate
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -283,6 +283,7 @@ export default class EntTransmissionEfficiency extends Component {
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       Atmosphere,
       entVisible,
+      isWorkRate,
       entCancel
     } = this.props;
 
@@ -296,6 +297,7 @@ export default class EntTransmissionEfficiency extends Component {
           visible={entVisible}  
           onCancel={entCancel}
         >
+           {isWorkRate?
            <div style={{ paddingBottom: 10 }}>
                 <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
@@ -306,6 +308,9 @@ export default class EntTransmissionEfficiency extends Component {
                   ≤90%未达标
                 </span>
               </div>
+              :
+              null
+           }
               <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
           <div id=''>
 
