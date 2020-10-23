@@ -568,9 +568,11 @@ class index extends PureComponent {
                 <div id="siteParamsPage">
                     <BreadcrumbWrapper title="企业监测点查询">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                <div style={{float:'left'}}>
+                                    {this.cardTitle()}
+                                </div>
                                 </>
                             }
                             className="contentContainer"

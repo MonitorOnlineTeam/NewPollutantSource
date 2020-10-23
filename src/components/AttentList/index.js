@@ -37,10 +37,12 @@ export default class Index extends Component {
       const {AttentionCode,changeAttent} = this.props
     return (
       <Select
+      allowClear
       placeholder="关注程度"
       onChange={changeAttent}
       value={AttentionCode? AttentionCode : undefined}
       style={{ width: 150 }}
+      {...this.props}
     >
       {this.attentchildren()}
     </Select>
