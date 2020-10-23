@@ -48,7 +48,9 @@ export default class Index extends Component {
     const { regionVisible } = this.state;
     return (
         <BreadcrumbWrapper title="首页">
-          <div onClick={this.workNextPage}>运转率</div>
+          <a href='javascript:;' onClick={this.workNextPage}>运转率</a>
+          <a href='javascript:;' onClick={this.faultNextPage}>故障率</a>
+          <a href='javascript:;' onClick={this.workNextPage}>率</a>
           {regionVisible?  <RegionData regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         </BreadcrumbWrapper>
     );

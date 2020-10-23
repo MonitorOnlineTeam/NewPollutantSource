@@ -24,26 +24,34 @@ const pageUrl = {
     GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
     getRegions: 'autoForm/getRegions',
     GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
+    GetEntByRegionAndAtt:'wasteWaterReportModel/GetEntByRegionAndAtt',
+    GetPointByEntCode:'wasteWaterReportModel/GetPointByEntCode',
+    GetAllTypeDataListWater:'wasteWaterReportModel/GetAllTypeDataListWater',
+    ExportAllTypeDataListWater:'wasteWaterReportModel/ExportAllTypeDataListWater',
 }
-@connect(({ loading, autoForm, enterpriseMonitoringModel ,exceedDataAlarmModel}) => ({
-    loading: loading.effects["enterpriseMonitoringModel/GetEntSummary"],
+@connect(({ loading, autoForm, wasteWaterReportModel ,exceedDataAlarmModel,enterpriseMonitoringModel}) => ({
+    loading: loading.effects['wasteWaterReportModel/GetAllTypeDataListWater'],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
-    total: enterpriseMonitoringModel.total,
-    PageSize: enterpriseMonitoringModel.PageSize,
-    PageIndex: enterpriseMonitoringModel.PageIndex,
+    total: wasteWaterReportModel.total,
+    PageSize: wasteWaterReportModel.PageSize,
+    PageIndex: wasteWaterReportModel.PageIndex,
     priseList: exceedDataAlarmModel.priseList,
+    EntByRegionAndAttList:wasteWaterReportModel.EntByRegionAndAttList,
+    PointByEntCodeList:wasteWaterReportModel.PointByEntCodeList,
+    AllTypeDataListWaterList:wasteWaterReportModel.AllTypeDataListWaterList,
 }))
 class index extends PureComponent {
     constructor(props) {
         super(props);
         this.newTabIndex = 0
         this.state = {
-            time: [moment().add(-24, "hour"), moment()],
+            time: moment(new Date(),'YYYY-MM-DD'),
             regionValue: '',
             attentionValue: '',
             outletValue: '',
-            entValue:''
+            entValue:'',
+            pointValue:''
         };
     }
 
@@ -67,19 +75,54 @@ class index extends PureComponent {
         });
         this.props.dispatch({
             //获取企业列表
-            type: pageUrl.GetEntByRegion,
-            payload: { RegionCode: '' },
+            type: pageUrl.GetEntByRegionAndAtt,
+            payload: { RegionCode: '' ,Attention:''},
         });
     };
 
 
     // 导出
     exportReport = () => {
+        const {time,pointValue} = this.state
+
+        if(pointValue == '' || pointValue == undefined)
+        {
+            return message.error('请选择监测点')
+        }
+        let  begintime = moment(time).format("YYYY-MM-DD 00:00:00")
+        let endTime = moment(time).format("YYYY-MM-DD 23:59:59")
+        this.props.dispatch({
+            type:pageUrl.ExportAllTypeDataListWater,
+            payload:{
+                BeginTime:begintime,
+                EndTime: endTime,
+                DGIMN: pointValue,
+                dataType: 'day',
+                time: moment(time).format('YYYY-MM-DD HH:mm:ss')
+            }
+        })
     }
 
     //查询数据
     getChartAndTableData =()=>{
+        const {time,pointValue} = this.state
 
+        if(pointValue == '' || pointValue == undefined)
+        {
+            return message.error('请选择监测点')
+        }
+        let  begintime = moment(time).format("YYYY-MM-DD 00:00:00")
+        let endTime = moment(time).format("YYYY-MM-DD 23:59:59")
+        this.props.dispatch({
+            type:pageUrl.GetAllTypeDataListWater,
+            payload:{
+                BeginTime:begintime,
+                EndTime: endTime,
+                DGIMN: pointValue,
+                dataType: 'day',
+                time: moment(time).format('YYYY-MM-DD HH:mm:ss')
+            }
+        })
     }
     //行政区
     children = () => {
@@ -113,10 +156,10 @@ class index extends PureComponent {
     }
     //获取企业列表
     entList = () => {
-        const { priseList } = this.props;
+        const { EntByRegionAndAttList } = this.props;
         const selectList = [];
-        if (priseList.length > 0) {
-            priseList.map(item => {
+        if (EntByRegionAndAttList.length > 0) {
+            EntByRegionAndAttList.map(item => {
                 selectList.push(
                     <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
                         {item.EntName}
@@ -126,6 +169,26 @@ class index extends PureComponent {
             return selectList;
         }
     };
+    //监测列表
+    pointList = ()=>{
+        const { PointByEntCodeList } = this.props;
+        const selectList = [];
+        if (PointByEntCodeList.length > 0) {
+            PointByEntCodeList.map(item => {
+                selectList.push(
+                    <Option key={item.DGIMN} value={item.DGIMN} >
+                        {item.PointName}
+                    </Option>,
+                );
+            });
+            return selectList;
+        }
+    }
+    DatePickerHandle=(date,dateString)=>{
+        this.setState({
+            time:dateString
+        })
+    }
     cardTitle = () => {
         const { time} = this.state;
 
@@ -148,6 +211,14 @@ class index extends PureComponent {
                         }
                     }}
                     onChange={(value) => {
+                        //获取关注度列表
+                        this.props.dispatch({
+                            type: pageUrl.GetEntByRegionAndAtt,
+                            payload: {
+                                RegionCode:value,
+                                Attention:this.state.attentionValue
+                            },
+                        });
                         this.setState({
                             regionValue: value
                         })
@@ -162,6 +233,14 @@ class index extends PureComponent {
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
+                        //获取企业列表
+                        this.props.dispatch({
+                            type: pageUrl.GetEntByRegionAndAtt,
+                            payload: {
+                                RegionCode:this.state.regionValue,
+                                Attention:value
+                            },
+                        });
                         this.setState({
                             attentionValue: value,
                         })
@@ -177,6 +256,13 @@ class index extends PureComponent {
                     defaultValue={this.state.entType}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
+                        //获取企业列表
+                        this.props.dispatch({
+                            type: pageUrl.GetPointByEntCode,
+                            payload: {
+                                EntCode:value
+                            },
+                        });    
                         this.setState({
                             entValue: value,
                         })
@@ -194,12 +280,12 @@ class index extends PureComponent {
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({
-                                entValue: value,
-                            })
+                                pointValue: value,
+                            })  
                         }}>
-                        {this.entList()}
+                        {this.pointList()}
                     </Select>
-                    <label>监测时间:</label><DatePicker size='default' style={{ marginLeft: 10, marginRight: 10 }}/>
+                    <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time}  style={{ marginLeft: 10, marginRight: 10 }}/>
 
                     <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                     <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
@@ -214,7 +300,7 @@ class index extends PureComponent {
     }
 
     pageContent = () => {
-        const { attentionSummaryList } = this.props
+        const { AllTypeDataListWaterList ,loading} = this.props
         const fixed = false
         const columns = [
             {
@@ -222,8 +308,8 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'moniTime',
-                key: 'moniTime',
+                dataIndex: 'Time',
+                key: 'Time',
             },
             {
                 title: "COD",
@@ -236,16 +322,16 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'CODAvg',
-                        key: 'CODAvg',
+                        dataIndex: '011',
+                        key: '011',
                     },
                     {
                         title: "排放量(Kg)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'CODkg',
-                        key: 'CODkg',
+                        dataIndex: '011sum',
+                        key: '011sum',
                     },
                 ]
             },
@@ -260,16 +346,16 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'andanAvg',
-                        key: 'andanAvg',
+                        dataIndex: '060',
+                        key: '060   ',
                     },
                     {
                         title: "排放量(Kg)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'andankg',
-                        key: 'andankg',
+                        dataIndex: '060sum',
+                        key: '060sum',
                     },
                 ]
             },
@@ -284,62 +370,72 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'zonglinAvg',
-                        key: 'zonglinAvg',
+                        dataIndex: '101',
+                        key: '101',
                     },
                     {
                         title: "排放量(Kg)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'zonglinkg',
-                        key: 'zonglinkg',
+                        dataIndex: '101sum',
+                        key: '101sum',
+                    },
+                ]
+            },
+            {
+                title: "总氮",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                children:[
+                    {
+                        title: "平均值(mg/L)",
+                        width: 100,
+                        align: 'center',
+                        fixed: fixed,
+                        dataIndex: '065',
+                        key: '065',
+                    },
+                    {
+                        title: "排放量(Kg)",
+                        width: 100,
+                        align: 'center',
+                        fixed: fixed,
+                        dataIndex: '065sum',
+                        key: '065sum',
+                    },
+                ]
+            },
+            {
+                title: "流量",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                children:[
+                    {
+                        title: "平均值(mg/L)",
+                        width: 100,
+                        align: 'center',
+                        fixed: fixed,
+                        dataIndex: 'b01',
+                        key: 'b01',
+                    },
+                    {
+                        title: "排放量(Kg)",
+                        width: 100,
+                        align: 'center',
+                        fixed: fixed,
+                        dataIndex: 'b01sum',
+                        key: 'b01sum',
                     },
                 ]
             },
         ]
 
-        let arr = [
-            {
-                moniTime:'2010-10-02 12:12:22',
-                CODAvg:2,
-                CODkg:1.001,
-                andanAvg:1.001,
-                andankg:1.001,
-                zonglinkg:1.001,
-                zonglinkg:1.001,
-            },
-            {
-                moniTime:'2010-10-03 12:12:22',
-                CODAvg:2,
-                CODkg:1.001,
-                andanAvg:1.001,
-                andankg:1.001,
-                zonglinkg:1.001,
-                zonglinkg:1.001,
-            },
-            {
-                moniTime:'2010-10-04 12:12:22',
-                CODAvg:2,
-                CODkg:1.001,
-                andanAvg:1.001,
-                andankg:1.001,
-                zonglinkg:1.001,
-                zonglinkg:1.001,
-            },
-            {
-                moniTime:'2010-10-05 12:12:22',
-                CODAvg:2,
-                CODkg:1.001,
-                andanAvg:1.001,
-                andankg:1.001,
-                zonglinkg:1.001,
-                zonglinkg:1.001,
-            },
-        ]
-
         return <>{
-            <SdlTable columns={columns} dataSource={arr}
+            loading?<PageLoading/>:
+            <SdlTable columns={columns} dataSource={AllTypeDataListWaterList}
                 // pagination={{
                 //     showSizeChanger: true,
                 //     showQuickJumper: true,

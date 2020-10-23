@@ -291,7 +291,12 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-
+  dateChange=(date)=>{
+    this.updateQueryState({
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
   workNextPage=()=>{
     const { isWorkRate,dispatch } = this.props;
     setTimeout(()=>{
@@ -302,6 +307,17 @@ export default class EntTransmissionEfficiency extends Component {
   entCancel=()=>{
     this.setState({entVisible:false})
   }
+  //创建并获取模板   导出
+  template = () => {
+    const { dispatch, queryPar } = this.props;
+    dispatch({
+      type: 'abnormalStandard/exportExceptionStandValue',
+      payload: { ...queryPar },
+      callback: data => {
+          downloadFile(`/upload${data}`);
+        },
+    });
+  };
 
   render() {
     const {
@@ -311,6 +327,7 @@ export default class EntTransmissionEfficiency extends Component {
       Atmosphere,
       regionVisible,
       regionCancel,
+      isWorkRate
     } = this.props;
     const { TabPane } = Tabs;
    
@@ -318,25 +335,22 @@ export default class EntTransmissionEfficiency extends Component {
     return (
        <div>
         <Modal
-          title="这是标题"
+          // title={isWorkRate?
           footer={null}
+          width='95%'
           visible={regionVisible}  
           onCancel={regionCancel}
         >
             <>
-              <Form layout="inline">
-            
+              <Form layout="inline" style={{paddingBottom:10}}>
               <Row>
+              <Form.Item label='查询日期'>
+              <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                   </Form.Item>     
               <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-              
-              <Form.Item label='关注程度'>
-               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item>
-              {/* <Form.Item label='企业类型'>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
-              </Form.Item> */}
                 <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
                  <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
                 </Form.Item>
@@ -344,13 +358,33 @@ export default class EntTransmissionEfficiency extends Component {
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon="export"
+                    onClick={this.template}
+                    loading={exloading}
+                  >
+                    导出
+                  </Button>
                 </Form.Item>
                 <a href='javascript:;' onClick={this.workNextPage}>下级页面</a>
                 </Row>
               </Form>
             </>
           <div id=''>
-
+          {isWorkRate?
+           <div style={{ paddingBottom: 10 }}>
+                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
+                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                  ≥90%达标
+                </span>
+                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
+                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                  ≤90%未达标
+                </span>
+              </div>
+            :null
+          }
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}

@@ -964,7 +964,7 @@ export default {
                   component: './monitoring/videoMonitor/air',
                 },
                 {
-                  //缺失数据报警 企业
+                  //缺失数据报警  企业
                   path: '/monitoring/missingData/ent',
                   component: './monitoring/missingData/ent',
                 },
@@ -1145,42 +1145,42 @@ export default {
                 },
               ],
             },
-            {  //监控中心  视频监控
-              path: '/monitorCenter',
-              name: 'MonitorCenter',
-              routes: [
-                {
-                  path: '/monitorCenter/videoMonitor',
-                  redirect: '/monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 企业
-                  path: '/monitorCenter/videoMonitor/ent',
-                  component: './monitorCenter/videoMonitor/ent',
-                },
-                {
-                  //视频监控 大气
-                  path: '/monitorCenter/videoMonitor/air',
-                  component: './monitorCenter/videoMonitor/air',
-                },
-                {
-                  //缺失数据报警 企业
-                  path: '/monitorCenter/missingData/ent',
-                  component: './monitorCenter/missingData/ent',
-                },
-                {
-                  //缺失数据报警 空气站
-                  path: '/monitorCenter/missingData/air',
-                  component: './monitorCenter/missingData/air',
-                },
-                {
-                  //缺失数据报警 二级页面
-                  path: '/monitorCenter/missingData/missDataSecond',
-                  component: './monitorCenter/missingData/missDataSecond',
-                },
-              ],
+            // {  //监控中心  视频监控
+            //   path: '/monitorCenter',
+            //   name: 'MonitorCenter',
+            //   routes: [
+            //     {
+            //       path: '/monitorCenter/videoMonitor',
+            //       redirect: '/monitorCenter/videoMonitor/ent',
+            //     },
+            //     {
+            //       //视频监控 企业
+            //       path: '/monitorCenter/videoMonitor/ent',
+            //       component: './monitorCenter/videoMonitor/ent',
+            //     },
+            //     {
+            //       //视频监控 大气
+            //       path: '/monitorCenter/videoMonitor/air',
+            //       component: './monitorCenter/videoMonitor/air',
+            //     },
+            //     {
+            //       //缺失数据报警 企业
+            //       path: '/monitorCenter/missingData/ent',
+            //       component: './monitorCenter/missingData/ent',
+            //     },
+            //     {
+            //       //缺失数据报警 空气站
+            //       path: '/monitorCenter/missingData/air',
+            //       component: './monitorCenter/missingData/air',
+            //     },
+            //     {
+            //       //缺失数据报警 二级页面
+            //       path: '/monitorCenter/missingData/missDataSecond',
+            //       component: './monitorCenter/missingData/missDataSecond',
+            //     },
+            //   ],
 
-            },
+            // },
             {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',

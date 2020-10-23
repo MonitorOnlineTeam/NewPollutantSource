@@ -318,7 +318,7 @@ export default class Index extends Component {
           title={
             <>
               <Form layout="inline">
-               <Form.Item label='行政区'>
+               <Form.Item label='行政区' >
                   <Select
                     allowClear
                     placeholder="行政区"
