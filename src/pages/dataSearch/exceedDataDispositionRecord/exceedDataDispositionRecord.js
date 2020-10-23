@@ -73,7 +73,7 @@ class index extends PureComponent {
             detailsVisible:false,
             detailsVisible2:false,
             statusAlram:'',
-            pollutantList:[],
+            pollutantCodeList:[],
             AlarmDealTypeList:[],
             DealType:'2',
             enterpriseValue:'',
@@ -115,7 +115,7 @@ class index extends PureComponent {
             if(this.props.pollutantCodeList.length > 0)
             {
                 this.setState({
-                    pollutantList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
+                    pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
             }
         })
@@ -211,14 +211,14 @@ class index extends PureComponent {
       }
     checkBoxChange =(checkedValues)=>{
         this.setState({
-            pollutantList:checkedValues
+            pollutantCodeList:checkedValues
         })
     }
     cardTitle = () => {
         const { time} = this.state;
         const {pollutantCodeList} = this.props
         return (
-            <>
+            < >
                 <Select
                     allowClear
                     showSearch
@@ -274,7 +274,7 @@ class index extends PureComponent {
                         }).then(() => {
                             if (this.props.pollutantCodeList.length > 0) {
                                 this.setState({
-                                    pollutantList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
+                                    pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
                                 })
                             }
                         })
@@ -287,14 +287,14 @@ class index extends PureComponent {
                 </Select>
                 <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
                     this.setState({
-                      dataType: e.target.value,
-                      time:e.target.value === 'Day' ?[moment().add(-1, "month")]:[moment().add(-24, "hour"), moment()]
+                        dataType: e.target.value,
+                        time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
                     })
-                    e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                  }}>
+                    e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                }}>
                     <Radio.Button value="Hour">小时</Radio.Button>
                     <Radio.Button value="Day">日均</Radio.Button>
-                  </Radio.Group>
+                </Radio.Group>
 
                 <RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                     (dates, dataType) => {
@@ -306,16 +306,17 @@ class index extends PureComponent {
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <div style={{ marginTop: 10 }}>
-                    <label style={{ fontSize: 14 ,marginRight:10,marginLeft:10}}>监测因子:</label>
-                    <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantList} onChange={this.checkBoxChange}>
-                    {
-                        pollutantCodeList.map(poll=>
-                        <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
-                        )
-                    }
+                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
+                    <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+                        {
+                            pollutantCodeList.map(poll =>
+                                <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
+                            )
+                        }
                     </Checkbox.Group>
                     <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标预警,由监管人员进行处置</span>
                 </div>
+                
             </>
         )
     }
@@ -513,7 +514,7 @@ class index extends PureComponent {
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
-        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantList} = this.state
+        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         const activeKey = `newTab${this.newTabIndex++}`;
 
         this.props.dispatch({
@@ -527,7 +528,7 @@ class index extends PureComponent {
                 EndTime: time[1],
                 PageSize: 11,
                 PageIndex: 1,
-                PollutantCodeList: pollutantList,
+                PollutantCodeList: pollutantCodeList,
             }
         }).then(()=>{
             if(this.props.AlarmDetailList.length > 0)
@@ -550,7 +551,7 @@ class index extends PureComponent {
                         dataIndex: 'entName',
                         key: 'entName',
                         render:(text)=>{
-                            return text == ''?'-':text
+                            return typeof(text) == 'number'?'-':text
                         }
                     },
                     {
@@ -561,7 +562,7 @@ class index extends PureComponent {
                         dataIndex: 'pointName',
                         key: 'pointName',
                         render:(text)=>{
-                            return text == ''?'-':text
+                            return typeof(text) == 'number'?'-':text
                         }
                     },
                     {
@@ -1377,12 +1378,12 @@ class index extends PureComponent {
         ]
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="超标数据报警处置记录查询">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                    {this.cardTitle()}
                                 </>
                             }
                             className={style.dataTable}
