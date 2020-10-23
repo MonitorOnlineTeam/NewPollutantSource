@@ -53,7 +53,8 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'videoMonitor/updateState',
-  getData: 'videoMonitor/getSewageHistoryList',
+  getData: 'videoMonitor/getCameraListEnt',
+  getStationData:'videoMonitor/getCameraListStation'
 };
 @connect(({ loading, videoMonitor,autoForm }) => ({
   priseList: videoMonitor.priseList,
@@ -69,7 +70,7 @@ const pageUrl = {
   chartImport:videoMonitor.chartImport,
   chartTime:videoMonitor.chartTime,
   entName:videoMonitor.entName,
-  pollutantList:videoMonitor.pollutantList
+  stationTableDatas:videoMonitor.stationTableDatas
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -84,17 +85,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.columns = [
       {
         title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
       },
       {
         title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
+        dataIndex: 'EntName',
+        key: 'EntName',
         align: 'center',
         render: (text, record) => {     
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
@@ -102,33 +100,26 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: <span>监测点名称</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
-        // width: '10%',
+        dataIndex: 'PointName',
+        key: 'PointName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
       },
       {
         title: <span>关注程度</span>,
-        dataIndex: 'TransmissionRate',
-        key: 'TransmissionRate',
+        dataIndex: 'AttentionName',
+        key: 'AttentionName',
         align: 'center',
       },
       {
         title: <span>排口类型</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
+        dataIndex: 'PollutantType',
+        key: 'PollutantType',
         align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
       },
       {
         title: <span>相机名称</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        dataIndex: 'CameraName',
+        key: 'CameraName',
         align: 'center',
       },
       {
@@ -137,7 +128,9 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'defectCount',
         align: 'center',
         render:(text,row)=>{
-          return <Link to={{ pathname:'/monitorCenter/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
+          // return <Link to={{ pathname:'/monitorCenter/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
+          return <a href='#'>播放</a>
+
         }
       },
     ];
@@ -147,21 +140,20 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
+    const { dispatch, location,Atmosphere} = this.props;
     
+    if(Atmosphere){
+      this.columns.splice(3,2)
+    }
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
      dispatch({ type: 'videoMonitor/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
      this.updateQueryState({
-      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      dataType:'HourData',
-      PollutantCode:['011','060','101','065','007'],
+      RegionCode: "",
+      EntCode: "",
+      AttentionCode: ""
     });
     setTimeout(() => {
       this.getTableData();
@@ -179,11 +171,18 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => { 
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,Atmosphere } = this.props;
+    if(Atmosphere){
+      dispatch({
+        type: pageUrl.getStationData,
+        payload: {},
+      });
+    }else{
     dispatch({
       type: pageUrl.getData,
       payload: { ...queryPar },
     });
+   }
   };
 
 
@@ -204,28 +203,21 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
 
   changeRegion = (value) => { //行政区事件
-    
     this.updateQueryState({
-      RegionCode: value,
+      RegionCode: value? value : '',
     });
   };
   changeAttent=(value)=>{
     this.updateQueryState({
-      AttentionCode: value,
+      AttentionCode: value? value : '',
     });
   }
   changeEnt=(value,data)=>{ //企业事件
     this.updateQueryState({
-      EntCode: value,
+      EntCode: value? value : '',
     });
-    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
   //查询事件
@@ -274,7 +266,9 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
-      Atmosphere
+      Atmosphere,
+      tableDatas,
+      stationTableDatas
     } = this.props;
     const { TabPane } = Tabs;
 
@@ -282,20 +276,18 @@ export default class EntTransmissionEfficiency extends Component {
         <Card
           bordered={false}
           title={
+            !Atmosphere?
             <>
-              <Form layout="inline">
-            
+           
+              <Form layout="inline">   
               <Row>
               <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               
               <Form.Item label='关注程度'>
-               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
+               <AttentList  changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
               </Form.Item>
-              {/* <Form.Item label='企业类型'>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
-              </Form.Item> */}
                 <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
                  <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
                 </Form.Item>
@@ -304,10 +296,12 @@ export default class EntTransmissionEfficiency extends Component {
                     查询
                   </Button>
                 </Form.Item>
-                <Link to={{ pathname:'/monitoring/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
                 </Row>
               </Form>
+          
             </>
+            :
+            null
           }
         >
           <div id='videoMonitor'>
@@ -317,7 +311,7 @@ export default class EntTransmissionEfficiency extends Component {
               loading={loading}
               columns={this.columns}
               // bordered={false}
-              dataSource={this.props.tableDatas}
+              dataSource={ Atmosphere?stationTableDatas : tableDatas  }
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
