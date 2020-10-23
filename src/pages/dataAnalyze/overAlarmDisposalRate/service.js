@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 17:02:34
- * @LastEditTime: 2020-10-22 16:02:08
+ * @LastEditTime: 2020-10-23 09:00:16
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/service.js
  */
 import { post } from '@/utils/request';
@@ -52,7 +52,7 @@ export async function getAlarmManagementRateDetail(params) {
 // 超标报警处置率导出-二级
 export async function exportAlarmManagementRateDetail(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/xportAlarmManagementRateDetail`,
+    `/api/rest/PollutantSourceApi/BaseDataApi/exportAlarmManagementRateDetail`,
     params,
   );
   return result;

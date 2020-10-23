@@ -5,6 +5,7 @@ import { Card, Row, Button, Divider, Radio, Modal, Icon, Select } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+import moment from 'moment'
 
 const { Option } = Select;
 
@@ -159,10 +160,15 @@ class RegionDetails extends PureComponent {
 
   render() {
     const { secondTableDataSource, loading, exportLoading, entByRegionList } = this.props;
-    const { columns, DGIMN, TaskID } = this.state;
+    const { columns, DGIMN, TaskID, queryCondition } = this.state;
+    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
+    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
     return (
       <BreadcrumbWrapper title="数据异常报警响应率详情">
         <Card>
+          <Row style={{ fontWeight: "bold", marginBottom: 20 }}>
+            {`${queryCondition.RegionName}${beginTime}至${endTime}数据异常报警响应情况`}
+          </Row>
           <Row style={{ marginBottom: 10 }}>
             <Select allowClear style={{ width: 240 }} placeholder="请选择企业" onChange={(value) => {
               this.setState({ EntCode: value })

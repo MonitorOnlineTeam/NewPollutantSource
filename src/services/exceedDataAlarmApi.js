@@ -29,6 +29,24 @@ export async function GetAlarmVerifyDetail(params)
     const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyDetail',params,null)
     return result 
 }
+//导出超标报警审核
+export async function ExportAlarmVerifyRate(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',params,null)
+    return result 
+}
+//导出超标报警审核详情
+export async function ExportAlarmVerifyRateDetail(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',params,null)
+    return result 
+}
+//导出超标报警审核详细
+export async function ExportAlarmVerifyDetail(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyDetail',params,null)
+    return result 
+}
 //监测因子列表
 export async function GetPollutantCodeList(params)
 {

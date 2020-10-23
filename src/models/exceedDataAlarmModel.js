@@ -4,7 +4,11 @@
  * 创建时间：2020.10.20
  */
 import Model from '@/utils/model';
-import {GetEntByRegion,GetAlarmVerifyRate,GetAlarmVerifyRateDetail,GetAlarmVerifyDetail,GetOverToExamineOperation,GetPollutantCodeList} from '../services/exceedDataAlarmApi'
+import {GetEntByRegion,GetAlarmVerifyRate,GetAlarmVerifyRateDetail,GetAlarmVerifyDetail,GetOverToExamineOperation,GetPollutantCodeList,
+  ExportAlarmVerifyRate,
+  ExportAlarmVerifyRateDetail,
+  ExportAlarmVerifyDetail
+} from '../services/exceedDataAlarmApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -109,8 +113,6 @@ export default Model.extend({
           DataType: payload.DataType,
           BeginTime: payload.BeginTime,
           EndTime: payload.EndTime,
-          PageSize: payload.PageSize,
-          PageIndex: payload.PageIndex,
           PollutantCode: payload.PollutantCode,
           Status:payload.Status,
           EntCode:payload.EntCode,
@@ -162,6 +164,58 @@ export default Model.extend({
           yield update({
               AlarmDealTypeList: [],
           })
+      }
+    },
+    //超标报警核实
+    *ExportAlarmVerifyRate({ payload }, { call, put, update, select }){
+
+      const body = {
+          RegionCode: payload.RegionCode,
+          attentionCode: payload.attentionCode,
+          PollutantType: payload.PollutantType,
+          DataType: payload.DataType,
+          BeginTime: payload.BeginTime,
+          EndTime: payload.EndTime,
+          PollutantCodeList: payload.PollutantCodeList,
+      }
+    const result = yield call(ExportAlarmVerifyRate,body,null)
+    if(result.IsSuccess)
+    {
+      downloadFile(result.Datas)
+    }
+  },//超标报警核实详情
+    *ExportAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
+
+        const body = {
+            RegionCode: payload.RegionCode,
+            attentionCode: payload.attentionCode,
+            PollutantType: payload.PollutantType,
+            DataType: payload.DataType,
+            BeginTime: payload.BeginTime,
+            EndTime: payload.EndTime,
+            PollutantCodeList: payload.PollutantCodeList,
+        }
+        const result = yield call(ExportAlarmVerifyRateDetail, body, null)
+        if (result.IsSuccess) {
+          downloadFile(result.Datas)
+        }
+    },//超标报警核实详细
+  *ExportAlarmVerifyDetail({ payload }, { call, put, update, select }){
+      const body = {
+          RegionCode: payload.RegionCode,
+          attentionCode: payload.attentionCode,
+          PollutantType: payload.PollutantType,
+          DataType: payload.DataType,
+          BeginTime: payload.BeginTime,
+          EndTime: payload.EndTime,
+          PollutantCode: payload.PollutantCode,
+          Status:payload.Status,
+          EntCode:payload.EntCode,
+          PollutantCodeList:payload.PollutantCodeList,
+      }
+      const result = yield call(ExportAlarmVerifyDetail, body, null)
+      if (result.IsSuccess) {
+        downloadFile(result.Datas)
       }
     },
   },

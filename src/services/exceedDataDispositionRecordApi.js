@@ -29,6 +29,24 @@ export async function GetAlarmManagementDetail(params)
     const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementDetail',params,null)
     return result 
 }
+//导出报警处置
+export async function ExportAlarmManagementRate(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmManagementRate',params,null)
+    return result 
+}
+//导出报警处置详情
+export async function ExportAlarmManagementRateDetail(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmManagementRateDetail',params,null)
+    return result 
+}
+//导出报警处置详细
+export async function ExportAlarmManagementDetail(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmManagementDetail',params,null)
+    return result 
+}
 //监测因子列表
 export async function GetPollutantCodeList(params)
 {
