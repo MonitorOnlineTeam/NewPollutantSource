@@ -77,6 +77,7 @@ export default class OverVerifyLst extends Component {
     this.initData();
     // 根据企业类型查询监测因子
     this.getPollutantByType('1', this.getExceptionList);
+    
   }
   // 根据企业类型查询监测因子
   getPollutantByType = (val, cb) => {

@@ -264,6 +264,9 @@ export default class PointVerifyLst extends Component {
                   <Button
               style={{ marginLeft: 8 }}
               onClick={() => {
+                this.updateQueryState({
+                    EntCode: '',
+                  });
                 history.go(-1);
               }}
             >返回</Button>
