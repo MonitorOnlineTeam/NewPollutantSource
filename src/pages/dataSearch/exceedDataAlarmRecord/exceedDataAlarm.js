@@ -75,7 +75,7 @@ class index extends PureComponent {
             statusAlram:'',
             pollutantCodeList:[],
             AlarmDealTypeList:[],
-            DealType:'0',
+            DealType:'2',
             enterpriseValue:'',
             ModalTitle:'',
             PollutantCode:'',
