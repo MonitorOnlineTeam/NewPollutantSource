@@ -41,16 +41,45 @@ export default class Index extends Component {
       
     })
    }
-   regionCancel=()=>{
+
+   faultNextPage=()=>{ //故障率
+    const { dispatch } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isFaultRate: true},
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+      
+    })
+   }
+   overNextPage=()=>{ //超标率
+    const { dispatch } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isOverRate: true},
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+      
+    })
+   }
+
+   regionCancel=()=>{ //行政区页面
+    const { dispatch } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isWorkRate: false,isFaultRate:false,isOverRate:false},
+    });
      this.setState({regionVisible:false})
    }
   render() {
     const { regionVisible } = this.state;
     return (
         <BreadcrumbWrapper title="首页">
-          <a href='javascript:;' onClick={this.workNextPage}>运转率</a>
-          <a href='javascript:;' onClick={this.faultNextPage}>故障率</a>
-          <a href='javascript:;' onClick={this.workNextPage}>率</a>
+          <a href='javascript:;' onClick={this.workNextPage} style={{paddingLeft:10}}>运转率</a>
+          <a href='javascript:;' onClick={this.faultNextPage} style={{paddingLeft:10}}>故障率</a>
+          <a href='javascript:;' onClick={this.overNextPage} style={{paddingLeft:10}}>超标率</a>
           {regionVisible?  <RegionData regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         </BreadcrumbWrapper>
     );

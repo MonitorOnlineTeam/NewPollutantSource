@@ -26,7 +26,7 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:['011','060','101','065'],
+      PollutantCode:['011','060','101','065','007'],
       PollutantType:'',
       dataType:'HourData'
     },
