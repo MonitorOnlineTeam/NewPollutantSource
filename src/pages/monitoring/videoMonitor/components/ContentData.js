@@ -128,7 +128,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'defectCount',
         align: 'center',
         render:(text,row)=>{
-          // return <Link to={{ pathname:'/monitorCenter/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
+          // return <Link to={{ pathname:'/monitoring/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
           return <a href='#'>播放</a>
 
         }
