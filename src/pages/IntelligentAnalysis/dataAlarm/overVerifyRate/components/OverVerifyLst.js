@@ -30,7 +30,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
-import ButtonGroup_ from '@/components/ButtonGroup'
+import ButtonGroup_ from '@/components/ButtonGroup';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -42,24 +42,21 @@ const pageUrl = {
   updateState: 'overVerifyRate/updateState',
   getData: 'overVerifyRate/getDefectModel',
 };
-@connect(({ loading, overVerifyRate,autoForm,common }) => ({
+@connect(({ loading, overVerifyRate, autoForm, common }) => ({
   priseList: overVerifyRate.priseList,
-  exloading:overVerifyRate.exloading,
+  exloading: overVerifyRate.exloading,
   loading: loading.effects[pageUrl.getData],
   total: overVerifyRate.total,
   tableDatas: overVerifyRate.tableDatas,
   regionList: autoForm.regionList,
-  attentionList:overVerifyRate.attentionList,
-  atmoStationList:common.atmoStationList,
-  overVerifyRateForm:overVerifyRate.overVerifyRateForm,
+  attentionList: overVerifyRate.attentionList,
+  atmoStationList: common.atmoStationList,
+  overVerifyRateForm: overVerifyRate.overVerifyRateForm,
   divisorList: overVerifyRate.divisorList,
-
-
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
-     
       PollutantList: Form.createFormField(props.overVerifyRateForm.PollutantList),
       PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
     };
@@ -73,7 +70,7 @@ const pageUrl = {
           ...fields,
         },
       },
-    })
+    });
   },
 })
 export default class OverVerifyLst extends Component {
@@ -81,119 +78,124 @@ export default class OverVerifyLst extends Component {
     super(props);
 
     this.state = {
-      checkedValues:[],
-      columns :[]
-    
+      checkedValues: [],
+      columns: [],
     };
-    
   }
 
   componentDidMount() {
     this.initData();
-      // 根据企业类型查询监测因子
-      this.getPollutantByType('1', this.getExceptionList);
+    // 根据企业类型查询监测因子
+    this.getPollutantByType('1', this.getExceptionList);
   }
-   // 根据企业类型查询监测因子
-   getPollutantByType = (val, cb) => {
+  // 根据企业类型查询监测因子
+  getPollutantByType = (val, cb) => {
     const { dispatch, overVerifyRateForm } = this.props;
     this.props.dispatch({
-      type: "overVerifyRate/getPollutantByType",
+      type: 'overVerifyRate/getPollutantByType',
       payload: {
         PollutantType: val,
-    
       },
-      callback: (res) => {
-       
-        let newCloum =  [
+      callback: res => {
+        let newCloum = [
           {
             title: <span>行政区</span>,
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
-            
-            render: (text, record) => { 
-              return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',query:  {regionCode:record.regionCode} }} >
-                       {text}
-                   </Link>
-                     
-           },
+
+            render: (text, record) => {
+              return (
+                <Link
+                  to={{
+                    pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    query: { regionCode: record.regionCode },
+                  }}
+                >
+                  {text}
+                </Link>
+              );
+            },
           },
           {
             title: <span>{'数据超标报警企业数'}</span>,
             dataIndex: 'entCount',
             key: 'entCount',
-            
+
             align: 'center',
           },
           {
             title: <span>数据超标报警监测点数</span>,
             dataIndex: 'pointCount',
             key: 'pointCount',
-            width:210,
-            align: 'center'
+            width: 210,
+            align: 'center',
           },
-         
-        ]
-        res.map(item=>{
-            newCloum.push( {
-              title: <span>{item.PollutantName}</span>,
-              dataIndex: item.PollutantCode,
-              key: item.PollutantCode,
-              
-              align: 'center',
-              children:[{
-                title: <span>报警次数</span>,
-                width:100,
-              dataIndex: item.PollutantCode + '_alarmCount',
-              key: item.PollutantCode + '_alarmCount',
-              align: 'center',
-              },{
-                title: <span>已核实报警次数</span>,
-                width:110,
-              dataIndex: item.PollutantCode + '_respondedCount',
-              key:item.PollutantCode + '_respondedCount',
-              align: 'center',
-              },{
-                title: <span>未核实报警次数</span>,
-                width:110,
-              dataIndex:item.PollutantCode + '_noRespondedCount',
-              key: item.PollutantCode + '_noRespondedCount',
-              align: 'center',
-              },{
-                title: <span>核实率</span>,
-                width:100,
-              dataIndex: item.PollutantCode + '_RespondedRate',
-              key: item.PollutantCode + '_RespondedRate',
-              align: 'center',
-              }]
-            },)
-          })
+        ];
+        res.map(item => {
           newCloum.push({
-           title: <span>核实率</span>,
+            title: <span>{item.PollutantName}</span>,
+            dataIndex: item.PollutantCode,
+            key: item.PollutantCode,
+
+            align: 'center',
+            children: [
+              {
+                title: <span>报警次数</span>,
+                width: 100,
+                dataIndex: item.PollutantCode + '_alarmCount',
+                key: item.PollutantCode + '_alarmCount',
+                align: 'center',
+              },
+              {
+                title: <span>已核实报警次数</span>,
+                width: 110,
+                dataIndex: item.PollutantCode + '_respondedCount',
+                key: item.PollutantCode + '_respondedCount',
+                align: 'center',
+              },
+              {
+                title: <span>未核实报警次数</span>,
+                width: 110,
+                dataIndex: item.PollutantCode + '_noRespondedCount',
+                key: item.PollutantCode + '_noRespondedCount',
+                align: 'center',
+              },
+              {
+                title: <span>核实率</span>,
+                width: 100,
+                dataIndex: item.PollutantCode + '_RespondedRate',
+                key: item.PollutantCode + '_RespondedRate',
+                align: 'center',
+              },
+            ],
+          });
+        });
+        newCloum.push({
+          title: <span>核实率</span>,
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
-          fixed:'right'
-          
+          fixed: 'right',
         });
-        this.setState({ checkedValues: res.map(item => item.PollutantCode),columns:newCloum }, () => {
-          this.updateQueryState({
-            PollutantList: this.state.checkedValues,
-          });
-          cb && cb()
-        })
-      }
-    })
-  }
+        this.setState(
+          { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
+          () => {
+            this.updateQueryState({
+              PollutantList: this.state.checkedValues,
+            });
+            cb && cb();
+          },
+        );
+      },
+    });
+  };
   initData = () => {
-    const { dispatch, location,Atmosphere,type } = this.props;
+    const { dispatch, location, Atmosphere, type } = this.props;
 
-  
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
-     
-     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-  
+    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
 
     setTimeout(() => {
       this.getTableData();
@@ -216,35 +218,31 @@ export default class OverVerifyLst extends Component {
     });
   };
 
-
-
-
- 
-
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
     });
     this.getPollutantByType(value, this.getExceptionList);
-    
   };
 
-  changeRegion = (value) => { //行政区事件
-    
+  changeRegion = value => {
+    //行政区事件
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = value => {
     this.updateQueryState({
       AttentionCode: value,
     });
-  }
-  changeEnt=(value,data)=>{ //企业事件
+  };
+  changeEnt = (value, data) => {
+    //企业事件
     this.updateQueryState({
       EntCode: value,
     });
-  }
+  };
   //创建并获取模板   导出
   template = () => {
     const { dispatch, overVerifyRateForm } = this.props;
@@ -252,18 +250,16 @@ export default class OverVerifyLst extends Component {
       type: 'overVerifyRate/exportDefectDataSummary',
       payload: { ...overVerifyRateForm },
       callback: data => {
-         downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+      },
     });
   };
   //查询事件
   queryClick = () => {
     this.getTableData();
-
   };
 
-
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -276,12 +272,12 @@ export default class OverVerifyLst extends Component {
       });
       return selectList;
     }
-  }
-  attentchildren=()=>{
+  };
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -290,47 +286,55 @@ export default class OverVerifyLst extends Component {
       });
       return selectList;
     }
-  }
-  onRef1 = (ref) => {
+  };
+  onRef1 = ref => {
     this.child = ref;
-  }
-    
-  dateChange=(date,dataType)=>{
-      this.updateQueryState({
-        dataType:dataType,
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }
-      // 监测因子change
-  onCheckboxChange = (checkedValues) => {
-    let newCloum = [{
-      title: <span>行政区</span>,
-      dataIndex: 'regionName',
-      key: 'regionName',
-      align: 'center',
-      render: (text, record) => { 
-        return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',query:  {regionCode:record.regionCode} }} >
-                 {text}
-             </Link>
-               
-     },
-    },
-    {
-      title: <span>{'数据超标报警企业数'}</span>,
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-    },
-    {
-      title: <span>数据超标报警监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      width:210,
-      align: 'center'
-    },]
+  };
+
+  dateChange = (date, dataType) => {
+    this.updateQueryState({
+      dataType: dataType,
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  };
+  // 监测因子change
+  onCheckboxChange = checkedValues => {
+    let newCloum = [
+      {
+        title: <span>行政区</span>,
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        render: (text, record) => {
+          return (
+            <Link
+              to={{
+                pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',
+                query: { regionCode: record.regionCode },
+              }}
+            >
+              {text}
+            </Link>
+          );
+        },
+      },
+      {
+        title: <span>{'数据超标报警企业数'}</span>,
+        dataIndex: 'entCount',
+        key: 'entCount',
+        align: 'center',
+      },
+      {
+        title: <span>数据超标报警监测点数</span>,
+        dataIndex: 'pointCount',
+        key: 'pointCount',
+        width: 210,
+        align: 'center',
+      },
+    ];
     if (checkedValues.length < 1) {
-      message.warning("最少勾选一个监测因子！")
+      message.warning('最少勾选一个监测因子！');
       return;
     }
 
@@ -339,98 +343,112 @@ export default class OverVerifyLst extends Component {
         if (item.PollutantCode == checkedItem) {
           return true;
         }
-      })
+      });
       if (index !== -1) {
         newCloum.push({
           title: <span>{item.PollutantName}</span>,
           dataIndex: item.PollutantCode,
           key: item.PollutantCode,
-          
-         children:[{
-          title: <span>报警次数</span>,
-          width:100,
-        dataIndex: item.PollutantCode + '_alarmCount',
-        key: item.PollutantCode + '_alarmCount',
-        align: 'center',
-        },{
-          title: <span>已核实报警次数</span>,
-          width:110,
-        dataIndex: item.PollutantCode + '_respondedCount',
-        key:item.PollutantCode + '_respondedCount',
-        align: 'center',
-        },{
-          title: <span>未核实报警次数</span>,
-          width:110,
-        dataIndex:item.PollutantCode + '_noRespondedCount',
-        key: item.PollutantCode + '_noRespondedCount',
-        align: 'center',
-        },{
-          title: <span>核实率</span>,
-          width:100,
-        dataIndex: item.PollutantCode + '_RespondedRate',
-        key: item.PollutantCode + '_RespondedRate',
-        align: 'center',
-        }]
+
+          children: [
+            {
+              title: <span>报警次数</span>,
+              width: 100,
+              dataIndex: item.PollutantCode + '_alarmCount',
+              key: item.PollutantCode + '_alarmCount',
+              align: 'center',
+            },
+            {
+              title: <span>已核实报警次数</span>,
+              width: 110,
+              dataIndex: item.PollutantCode + '_respondedCount',
+              key: item.PollutantCode + '_respondedCount',
+              align: 'center',
+            },
+            {
+              title: <span>未核实报警次数</span>,
+              width: 110,
+              dataIndex: item.PollutantCode + '_noRespondedCount',
+              key: item.PollutantCode + '_noRespondedCount',
+              align: 'center',
+            },
+            {
+              title: <span>核实率</span>,
+              width: 100,
+              dataIndex: item.PollutantCode + '_RespondedRate',
+              key: item.PollutantCode + '_RespondedRate',
+              align: 'center',
+            },
+          ],
         });
-      }else{
+      } else {
       }
-    })
+    });
     newCloum.push({
       title: <span>核实率</span>,
-    dataIndex: 'AllRespondedRate',
-    key: 'AllRespondedRate',
-    align: 'center',
-    
-  });
+      dataIndex: 'AllRespondedRate',
+      key: 'AllRespondedRate',
+      align: 'center',
+    });
     this.setState({
-      columns: newCloum
-    })
+      columns: newCloum,
+    });
     this.props.dispatch({
       type: 'overVerifyRate/updateState',
       payload: {
         overVerifyRateForm: {
           ...this.props.overVerifyRateForm,
-          PollutantList: checkedValues
-        }
-      }
-    })
-  
-  }
+          PollutantList: checkedValues,
+        },
+      },
+    });
+  };
   render() {
     const {
       exloading,
-      form: { getFieldDecorator, getFieldValue,},
+      form: { getFieldDecorator, getFieldValue },
       divisorList,
-      overVerifyRateForm: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType }, 
-      type
+      overVerifyRateForm: {
+        beginTime,
+        endTime,
+        EntCode,
+        RegionCode,
+        AttentionCode,
+        dataType,
+        PollutantType,
+      },
+      type,
     } = this.props;
-    const {  checkedValues } = this.state;
+    const { checkedValues } = this.state;
     return (
-        <Card
-          bordered={false}
-          title={
-            
-              <Form layout="inline">
-            
-              <Row>
-              <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+      <Card
+        bordered={false}
+        title={
+          <Form layout="inline">
+            <Row>
+              <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                 <Form.Item>
                   日期查询：
-                  <RangePicker_  onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                  <RangePicker_
+                    onRef={this.onRef1}
+                    dataType={dataType}
+                    style={{ minWidth: '200px', marginRight: '10px' }}
+                    dateValue={[moment(beginTime), moment(endTime)]}
+                    callback={(dates, dataType) => this.dateChange(dates, dataType)}
+                  />
                 </Form.Item>
-                <Form.Item label='关注程度'>
+                <Form.Item label="关注程度">
                   <Select
                     placeholder="关注程度"
                     onChange={this.changeAttent}
-                    value={AttentionCode} 
+                    value={AttentionCode}
                     style={{ width: 110 }}
                   >
                     <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
-                <Form.Item label='行政区'>
+                <Form.Item label="行政区">
                   <Select
                     allowClear
                     placeholder="行政区"
@@ -438,12 +456,11 @@ export default class OverVerifyLst extends Component {
                     value={RegionCode}
                     style={{ width: 100 }}
                   >
-                   <Option value="">全部</Option>
+                    <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
-              <Form.Item label='企业类型'>
-            
+                <Form.Item label="企业类型">
                   <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
@@ -453,26 +470,29 @@ export default class OverVerifyLst extends Component {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-             
-                  
-                </Form.Item> 
-
-                
-                </Col>
-                <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+                </Form.Item>
+              </Col>
+              <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                 <div class="ant-form-item-label" style={{ width: '5.3%' }}>
-                  <label for="RegionCode" class="" title="监测因子">监测因子</label>
+                  <label for="RegionCode" class="" title="监测因子">
+                    监测因子
+                  </label>
                 </div>
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(
-                  <Checkbox.Group style={{ maxWidth: "calc(100% - 5.3% - 168px)" }} onChange={this.onCheckboxChange}>
-                    {
-                      divisorList.map(item => {
-                        return <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                      })
-                    }
-                  </Checkbox.Group>
+                  <Checkbox.Group
+                    style={{ maxWidth: 'calc(100% - 5.3% - 168px)' }}
+                    onChange={this.onCheckboxChange}
+                  >
+                    {divisorList.map(item => {
+                      return (
+                        <Checkbox key={item.PollutantCode} value={item.PollutantCode}>
+                          {item.PollutantName}
+                        </Checkbox>
+                      );
+                    })}
+                  </Checkbox.Group>,
                 )}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -488,26 +508,27 @@ export default class OverVerifyLst extends Component {
                   </Button>
                 </Form.Item>
               </Col>
-                </Row>
-              </Form>
-          }
-        >
-            <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={this.props.loading}
-              columns={this.state.columns}
-              dataSource={this.props.tableDatas.data}
-              pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
-                // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }} />
-        </Card>
+            </Row>
+          </Form>
+        }
+      >
+        <SdlTable
+          rowKey={(record, index) => `complete${index}`}
+          loading={this.props.loading}
+          columns={this.state.columns}
+          dataSource={this.props.tableDatas.data}
+          pagination={{
+            // showSizeChanger: true,
+            // showQuickJumper: true,
+            // sorter: true,
+            total: this.props.total,
+            defaultPageSize: 20,
+            // pageSize: PageSize,
+            // current: PageIndex,
+            // pageSizeOptions: ['10', '20', '30', '40', '50'],
+          }}
+        />
+      </Card>
     );
   }
 }

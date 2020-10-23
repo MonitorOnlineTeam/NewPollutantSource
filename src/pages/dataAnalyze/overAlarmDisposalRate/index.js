@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-10-23 17:28:00
+ * @LastEditTime: 2020-10-23 17:56:40
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -235,7 +235,11 @@ class index extends PureComponent {
             width: 100,
             align: 'center',
             render: (text, record) => {
-              return <div>{`${text}%`}</div>;
+              if (text == '-') {
+                return <div>{`${text}`}</div>;
+              } else {
+                return <div>{`${text}%`}</div>;
+              }
             },
           },
         ],
