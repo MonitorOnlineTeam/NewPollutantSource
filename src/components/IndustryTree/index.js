@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-12-09 15:58:41 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-10 10:46:27
+ * @Last Modified time: 2020-10-22 17:09:49
  * @desc: 产业级联组件
  */
 import React, { PureComponent } from 'react';
@@ -43,10 +43,14 @@ class IndustryTree extends PureComponent {
     })
   }
 
+  filter = (inputValue, path) => {
+    return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+  }
+
   render() {
     const { industryTreeList } = this.state;
     return (
-      <Cascader options={industryTreeList} placeholder="请选择产业" {...this.props} />
+      <Cascader options={industryTreeList} placeholder="请选择产业" showSearch={this.filter} {...this.props} />
     );
   }
 }

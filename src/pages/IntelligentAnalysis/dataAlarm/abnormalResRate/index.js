@@ -64,6 +64,7 @@ class index extends PureComponent {
           return <a onClick={() => {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.RegionCode;
+            queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
             router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>

@@ -179,7 +179,7 @@ export default class PointVerifyLst extends Component {
   template = () => {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
-      type: 'overVerifyRate/exportDefectDataSummary',
+      type: 'overVerifyRate/exportDefectPointDetail',
       payload: { ...overVerifyRateForm },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -236,10 +236,6 @@ export default class PointVerifyLst extends Component {
                                     {this.entChildren()}
                                 </Select>
                             </Form.Item>
-              
-
-                
-                
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

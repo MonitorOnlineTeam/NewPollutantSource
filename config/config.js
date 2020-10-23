@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -235,6 +235,11 @@ export default {
             //   path: '/test',
             //   component: './Test/Test',
             // },
+            {
+              name: 'homepage',
+              path: '/newHomePage',
+              component: './newHomePage',
+            },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -534,7 +539,6 @@ export default {
                       path: '/report/wry/summary',
                       component: './report/summaryReportPage',
                     },
-                    
                   ],
                 },
                 //小时平均值日报
@@ -920,10 +924,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videopreview/hkvideo/index'
-                    : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -942,10 +947,11 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videoMonitor/videopreview/hkvideo'
-                    : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -971,7 +977,7 @@ export default {
                   //缺失数据报警 二级页面
                   path: '/monitoring/missingData/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
-                },                  
+                },
               ],
             },
             {
@@ -1139,6 +1145,42 @@ export default {
                 },
               ],
             },
+            {  //监控中心  视频监控
+              path: '/monitorCenter',
+              name: 'MonitorCenter',
+              routes: [
+                {
+                  path: '/monitorCenter/videoMonitor',
+                  redirect: '/monitorCenter/videoMonitor/ent',
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitorCenter/videoMonitor/ent',
+                  component: './monitorCenter/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitorCenter/videoMonitor/air',
+                  component: './monitorCenter/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警 企业
+                  path: '/monitorCenter/missingData/ent',
+                  component: './monitorCenter/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitorCenter/missingData/air',
+                  component: './monitorCenter/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitorCenter/missingData/missDataSecond',
+                  component: './monitorCenter/missingData/missDataSecond',
+                },
+              ],
+
+            },
             {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
@@ -1200,7 +1242,19 @@ export default {
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',
-                  component: './Intelligentanalysis/emissions',
+                  // component: './Intelligentanalysis/emissions',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissions',
+                      redirect: '/Intelligentanalysis/emissions/gas',
+                    },
+                    {
+                      // 废气排放量统计
+                      name: 'gas',
+                      path: '/Intelligentanalysis/emissions/gas',
+                      component: './IntelligentAnalysis/emissions/Gas',
+                    },
+                  ]
                 },
                 {
                   name: 'effluentFee',
@@ -1266,10 +1320,9 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                  
                 },
                 {  //排放量分析
-                  path: '/Intelligentanalysis/emissionsStatistics', 
+                  path: '/Intelligentanalysis/emissionsStatistics',
                   name: 'EmissionsStatistics',
                   routes: [
                     {
@@ -1296,22 +1349,24 @@ export default {
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
                     },
 
-                 /* 缺失数据报警响应率 */
+                    /* 缺失数据报警响应率 */
 
-                 { //缺失数据报警响应率 企业
-                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                  component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                },
-                {
-                  //缺失数据报警响应率 空气站
-                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
-                  component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
-                },
-                {
-                  //缺失数据报警响应率 二级页面
-                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                  component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                },                      
+                    {
+                      //缺失数据报警响应率 企业
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    },
+                    {
+                      //缺失数据报警响应率 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    {
+                      //缺失数据报警响应率 二级页面
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                      component:
+                        './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    },
                     {
                       //超标数据核实率
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
@@ -1333,6 +1388,19 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                     },
                   ],
+                },
+                {
+                  //超标报警处置率
+                  name: 'overAlarmDisposalRate',
+                  path: '/Intelligentanalysis/baojing/4',
+                  component: './dataAnalyze/overAlarmDisposalRate',
+                },
+                {
+                  //超标报警处置率-二级
+                  name: 'RegionOverAlarmDisposalRate',
+                  path:
+                    '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                  component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
               ],
             },
@@ -1361,15 +1429,12 @@ export default {
                       path: '/dataSearch/defectData/air',
                       component: './dataSearch/defectData/air',
                     },
-
                   ],
                 },
                 {
-
-                  name: 'abnormalStandard',   //异常标准
+                  name: 'abnormalStandard', //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
-
                 },
                 {
                   name: 'dischargeStandard',
@@ -1419,7 +1484,7 @@ export default {
                   path: '/dataSearch/exceedDataDispositionRecord',
                   component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
                 },
-              ]
+              ],
             },
             {
               path: '/dataquery',
@@ -1675,4 +1740,3 @@ export default {
     },
   },
 };
-
