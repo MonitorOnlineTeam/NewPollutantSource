@@ -64,17 +64,7 @@ const pageUrl = {
       PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
     };
   },
-  onFieldsChange(props, fields) {
-    props.dispatch({
-      type: 'overVerifyRate/updateState',
-      payload: {
-        overVerifyRateForm: {
-          ...props.overVerifyRateForm,
-          ...fields,
-        },
-      },
-    })
-  },
+  
 })
 export default class OverVerifyLst extends Component {
   constructor(props) {
@@ -165,6 +155,12 @@ export default class OverVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_RespondedRate',
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
+              render: (text, record) => { 
+                return <div>
+                         {text == '-'?text:`${text}%`}
+                     </div>
+                       
+             },
               }]
             },)
           })
@@ -173,7 +169,13 @@ export default class OverVerifyLst extends Component {
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
-          fixed:'right'
+          fixed:'right',
+          render: (text, record) => { 
+            return <div>
+                     {text == '-'?text:`${text}%`}
+                 </div>
+                   
+         },
           
         });
         this.setState({ checkedValues: res.map(item => item.PollutantCode),columns:newCloum }, () => {
@@ -258,6 +260,97 @@ export default class OverVerifyLst extends Component {
   };
   //查询事件
   queryClick = () => {
+    let newCloum = [{
+      title: <span>行政区</span>,
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+      render: (text, record) => { 
+        return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',query:  {regionCode:record.regionCode} }} >
+        {text}
+    </Link>
+               
+     },
+    },
+    {
+      title: <span>{'数据超标报警企业数'}</span>,
+      dataIndex: 'entCount',
+      key: 'entCount',
+      align: 'center',
+    },
+    {
+      title: <span>数据超标报警监测点数</span>,
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      width:210,
+      align: 'center'
+    },]
+ 
+
+    this.props.divisorList.map((item, key) => {
+      let index = this.state.checkedValues.findIndex((checkedItem, checkedKey) => {
+        if (item.PollutantCode == checkedItem) {
+          return true;
+        }
+      })
+      if (index !== -1) {
+        newCloum.push({
+          title: <span>{item.PollutantName}</span>,
+          dataIndex: item.PollutantCode,
+          key: item.PollutantCode,
+          
+         children:[{
+          title: <span>报警次数</span>,
+          width:100,
+        dataIndex: item.PollutantCode + '_alarmCount',
+        key: item.PollutantCode + '_alarmCount',
+        align: 'center',
+        },{
+          title: <span>已核实报警次数</span>,
+          width:110,
+        dataIndex: item.PollutantCode + '_respondedCount',
+        key:item.PollutantCode + '_respondedCount',
+        align: 'center',
+        },{
+          title: <span>未核实报警次数</span>,
+          width:110,
+        dataIndex:item.PollutantCode + '_noRespondedCount',
+        key: item.PollutantCode + '_noRespondedCount',
+        align: 'center',
+        },{
+          title: <span>核实率</span>,
+          width:100,
+        dataIndex: item.PollutantCode + '_RespondedRate',
+        key: item.PollutantCode + '_RespondedRate',
+        align: 'center',
+        render: (text, record) => { 
+          return <div>
+                   {text == '-'?text:`${text}%`}
+               </div>
+                 
+       },
+        
+        }]
+        });
+      }else{
+      }
+    })
+    newCloum.push({
+      title: <span>核实率</span>,
+    dataIndex: 'AllRespondedRate',
+    key: 'AllRespondedRate',
+    align: 'center',
+    render: (text, record) => { 
+      return <div>
+               {text == '-'?text:`${text}%`}
+           </div>
+             
+   },
+    
+  });
+    this.setState({
+      columns: newCloum
+    })
     this.getTableData();
 
   };
@@ -304,96 +397,16 @@ export default class OverVerifyLst extends Component {
     }
       // 监测因子change
   onCheckboxChange = (checkedValues) => {
-    let newCloum = [{
-      title: <span>行政区</span>,
-      dataIndex: 'regionName',
-      key: 'regionName',
-      align: 'center',
-      render: (text, record) => { 
-        return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',query:  {regionCode:record.regionCode} }} >
-                 {text}
-             </Link>
-               
-     },
-    },
-    {
-      title: <span>{'数据超标报警企业数'}</span>,
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-    },
-    {
-      title: <span>数据超标报警监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      width:210,
-      align: 'center'
-    },]
+
     if (checkedValues.length < 1) {
       message.warning("最少勾选一个监测因子！")
       return;
     }
-
-    this.props.divisorList.map((item, key) => {
-      let index = checkedValues.findIndex((checkedItem, checkedKey) => {
-        if (item.PollutantCode == checkedItem) {
-          return true;
-        }
-      })
-      if (index !== -1) {
-        newCloum.push({
-          title: <span>{item.PollutantName}</span>,
-          dataIndex: item.PollutantCode,
-          key: item.PollutantCode,
-          
-         children:[{
-          title: <span>报警次数</span>,
-          width:100,
-        dataIndex: item.PollutantCode + '_alarmCount',
-        key: item.PollutantCode + '_alarmCount',
-        align: 'center',
-        },{
-          title: <span>已核实报警次数</span>,
-          width:110,
-        dataIndex: item.PollutantCode + '_respondedCount',
-        key:item.PollutantCode + '_respondedCount',
-        align: 'center',
-        },{
-          title: <span>未核实报警次数</span>,
-          width:110,
-        dataIndex:item.PollutantCode + '_noRespondedCount',
-        key: item.PollutantCode + '_noRespondedCount',
-        align: 'center',
-        },{
-          title: <span>核实率</span>,
-          width:100,
-        dataIndex: item.PollutantCode + '_RespondedRate',
-        key: item.PollutantCode + '_RespondedRate',
-        align: 'center',
-        }]
-        });
-      }else{
-      }
-    })
-    newCloum.push({
-      title: <span>核实率</span>,
-    dataIndex: 'AllRespondedRate',
-    key: 'AllRespondedRate',
-    align: 'center',
-    
-  });
-    this.setState({
-      columns: newCloum
-    })
-    this.props.dispatch({
-      type: 'overVerifyRate/updateState',
-      payload: {
-        overVerifyRateForm: {
-          ...this.props.overVerifyRateForm,
-          PollutantList: checkedValues
-        }
-      }
-    })
+    this.setState({checkedValues:checkedValues})
+    this.updateQueryState({
+      PollutantList: checkedValues
+    });
+   
   
   }
   render() {
@@ -426,7 +439,6 @@ export default class OverVerifyLst extends Component {
                     value={AttentionCode} 
                     style={{ width: 110 }}
                   >
-                    <Option value="">全部</Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
@@ -438,7 +450,6 @@ export default class OverVerifyLst extends Component {
                     value={RegionCode}
                     style={{ width: 100 }}
                   >
-                   <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select>
                 </Form.Item>

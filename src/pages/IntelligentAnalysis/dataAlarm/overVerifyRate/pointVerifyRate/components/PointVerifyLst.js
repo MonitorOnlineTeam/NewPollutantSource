@@ -90,13 +90,13 @@ export default class PointVerifyLst extends Component {
       title: <span>{'企业名称'}</span>,
       dataIndex: 'entName',
       key: 'entName',
-      align: 'center',
+      align: 'left',
     },
     {
       title: <span>监测点名称</span>,
       dataIndex: 'pointName',
       key: 'pointName',
-      align: 'center'
+      align: 'left'
     },];
     this.props.divisorList.map((item, key) => {
       let index = this.props.overVerifyRateForm.PollutantList.findIndex((checkedItem, checkedKey) => {
@@ -174,6 +174,9 @@ export default class PointVerifyLst extends Component {
     this.updateQueryState({
       EntCode: value,
     });
+    setTimeout(() => {
+    this.queryClick();
+      });
   }
   //创建并获取模板   导出
   template = () => {
@@ -224,7 +227,7 @@ export default class PointVerifyLst extends Component {
             
               <Row>
              
-              <Form.Item label="企业列表" >
+              <Form.Item  >
                                 <Select
                                     showSearch
                                     optionFilterProp="children"
@@ -237,9 +240,7 @@ export default class PointVerifyLst extends Component {
                                 </Select>
                             </Form.Item>
                 <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
+                 
                   <Button
                     style={{ margin: '0 5px' }}
                     icon="export"
@@ -270,9 +271,7 @@ export default class PointVerifyLst extends Component {
                 // sorter: true,
                 total: this.props.total,
                 defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
+               
               }} />
         </Card>
     );
