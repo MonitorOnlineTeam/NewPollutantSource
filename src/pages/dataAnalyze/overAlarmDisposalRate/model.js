@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:57:56
- * @LastEditTime: 2020-10-22 17:48:55
+ * @LastEditTime: 2020-10-23 17:15:13
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/model.js
  */
 import Model from '@/utils/model';
@@ -15,8 +15,15 @@ export default Model.extend({
     checkedValues: [],
     dataType: 'HourData',
     PollutantType: '1',
-    beginTime: moment().subtract(1, 'days'),
-    endTime: moment(),
+    beginTime: moment()
+      .subtract(1, 'days')
+      .hour(0)
+      .minute(0)
+      .second(0),
+    endTime: moment()
+      .hour(23)
+      .minute(59)
+      .second(59),
     RegionCode: undefined,
     AttentionCode: '',
     EntCode: undefined,
