@@ -408,12 +408,14 @@ class index extends PureComponent {
         const { loading,priseList } = this.props
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="停运记录">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                <div style={{float:'left'}}>
+                                    {this.cardTitle()}
+                                </div>
                                 </>
                             }
                             className={style.dataTable}

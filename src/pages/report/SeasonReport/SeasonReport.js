@@ -78,7 +78,7 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegionAndAtt,
-            payload: { RegionCode: '' ,Attention:''},
+            payload: { RegionCode: '' ,Attention:'',PollutantTypeCode:'1'},
         });
     };
 
@@ -257,7 +257,8 @@ class index extends PureComponent {
                             type: pageUrl.GetEntByRegionAndAtt,
                             payload: {
                                 RegionCode:value,
-                                Attention:this.state.attentionValue
+                                Attention:this.state.attentionValue,
+                                PollutantTypeCode:'1'
                             },
                         });
                         this.setState({
@@ -279,7 +280,8 @@ class index extends PureComponent {
                             type: pageUrl.GetEntByRegionAndAtt,
                             payload: {
                                 RegionCode:this.state.regionValue,
-                                Attention:value
+                                Attention:value,
+                                PollutantTypeCode:'1'
                             },
                         });
                         this.setState({
@@ -301,7 +303,8 @@ class index extends PureComponent {
                         this.props.dispatch({
                             type: pageUrl.GetPointByEntCode,
                             payload: {
-                                EntCode:value
+                                EntCode:value,
+                                PollutantTypeCode:'1'
                             },
                         });    
                         this.setState({
@@ -488,7 +491,7 @@ class index extends PureComponent {
                         key: 'b01',
                     },
                     {
-                        title: "排放量(Kg)",
+                        title: "排放量(t)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
@@ -523,12 +526,12 @@ class index extends PureComponent {
         const { loading,priseList } = this.props
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="月平均值季报">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                    {this.cardTitle()}
                                 </>
                             }
                             className={style.dataTable}

@@ -73,7 +73,7 @@ class index extends PureComponent {
             detailsVisible:false,
             detailsVisible2:false,
             statusAlram:'',
-            pollutantList:[],
+            pollutantCodeList:[],
             AlarmDealTypeList:[],
             DealType:'0',
             enterpriseValue:'',
@@ -115,7 +115,7 @@ class index extends PureComponent {
             if(this.props.pollutantCodeList.length > 0)
             {
                 this.setState({
-                    pollutantList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
+                    pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
             }
         })
@@ -210,7 +210,7 @@ class index extends PureComponent {
     }
     checkBoxChange =(checkedValues)=>{
         this.setState({
-            pollutantList:checkedValues
+            pollutantCodeList:checkedValues
         })
     }
     onRef1 = (ref) => {
@@ -276,7 +276,7 @@ class index extends PureComponent {
                         }).then(() => {
                             if (this.props.pollutantCodeList.length > 0) {
                                 this.setState({
-                                    pollutantList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
+                                    pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
                                 })
                             }
                         })
@@ -309,7 +309,7 @@ class index extends PureComponent {
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <div style={{ marginTop: 10 }}>
                     <label style={{ fontSize: 14 ,marginRight:10,marginLeft:10}}>监测因子:</label>
-                    <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantList} onChange={this.checkBoxChange}>
+                    <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                     {
                         pollutantCodeList.map(poll=>
                         <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
@@ -520,7 +520,7 @@ class index extends PureComponent {
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
-        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantList} = this.state
+        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         const activeKey = `newTab${this.newTabIndex++}`;
         
         
@@ -535,7 +535,7 @@ class index extends PureComponent {
                 EndTime: time[1],
                 PageSize: 11,
                 PageIndex: 1,
-                PollutantCodeList: pollutantList,
+                PollutantCodeList: pollutantCodeList,
             }
         }).then(()=>{
             if(this.props.AlarmDetailList.length > 0)
@@ -558,7 +558,7 @@ class index extends PureComponent {
                         dataIndex: 'entName',
                         key: 'entName',
                         render:(text)=>{
-                            return text == ''?'-':text
+                            return typeof(text) == 'number'?'-':text
                         }
                     },
                     {
@@ -569,7 +569,7 @@ class index extends PureComponent {
                         dataIndex: 'pointName',
                         key: 'pointName',
                         render:(text)=>{
-                            return text == ''?'-':text
+                            return typeof(text) == 'number'?'-':text
                         }
                     },
                     {
@@ -1372,12 +1372,14 @@ class index extends PureComponent {
         ]
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="超标数据报警核实记录查询">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                   {
+                                       this.cardTitle()
+                                   }
                                 </>
                             }
                             className={style.dataTable}
