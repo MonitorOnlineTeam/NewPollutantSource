@@ -18,7 +18,7 @@ export default Model.extend({
         RegionCode: '',
         AttentionCode: '',
         PollutantType: '',
-        PageSize:25,
+        PageSize:10,
         PageIndex:1,
         total:0,
         EntOrPointDetail:[]
