@@ -292,35 +292,21 @@ export default class EntTransmissionEfficiency extends Component {
         <Modal
           title="这是企业"
           footer={null}
+          width='95%'
           visible={entVisible}  
           onCancel={entCancel}
         >
-            <>
-              <Form layout="inline">
-            
-              <Row>
-              <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-              
-              <Form.Item label='关注程度'>
-               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item>
-              {/* <Form.Item label='企业类型'>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
-              </Form.Item> */}
-                <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                </Form.Item>
-                <a onClick={this.nextPage}>下级页面</a>
-                </Row>
-              </Form>
-            </>
+           <div style={{ paddingBottom: 10 }}>
+                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
+                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                  ≥90%达标
+                </span>
+                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
+                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                  ≤90%未达标
+                </span>
+              </div>
+              <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
           <div id=''>
 
              <SdlTable

@@ -13,6 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { red } from '@ant-design/colors';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -458,12 +459,12 @@ class index extends PureComponent {
   render() {
     return (
       <>
-        <div id="siteParamsPage">
+        <div id="siteParamsPage" className={style.cardTitle}>
           <BreadcrumbWrapper title="流量对比分析">
             <Card
-              title={this.cardTitle()}
               extra={
                 <>
+                                    {this.cardTitle()}
                 </>
               }
               className="contentContainer"

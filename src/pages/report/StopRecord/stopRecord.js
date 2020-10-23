@@ -23,28 +23,29 @@ const { MonthPicker } = DatePicker;
 const pageUrl = {
     getRegions: 'autoForm/getRegions',
     GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
-    GetPointByEntCode:'StopRecordModel/GetPointByEntCode'
+    GetPointByEntCode:'StopRecordModel/GetPointByEntCode',
+    GetStopList:'StopRecordModel/GetStopList',
+    ExportStopList:'StopRecordModel/ExportStopList',
 }
 @connect(({ loading, autoForm, enterpriseMonitoringModel ,exceedDataAlarmModel,StopRecordModel}) => ({
-    loading: loading.effects["enterpriseMonitoringModel/GetEntSummary"],
+    loading: loading.effects["StopRecordModel/GetStopList"],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
     total: StopRecordModel.total,
     PageSize: StopRecordModel.PageSize,
     PageIndex: StopRecordModel.PageIndex,
     priseList: exceedDataAlarmModel.priseList,
-    PointByEntList:StopRecordModel.PointByEntList
+    PointByEntList:StopRecordModel.PointByEntList,
+    StopList:StopRecordModel.StopList,
 }))
 class index extends PureComponent {
     constructor(props) {
         super(props);
         this.newTabIndex = 0
         this.state = {
-            Begintime: [moment().add(-24, "hour"), moment()],
-            Endtime: [moment().add(-24, "hour"), moment()],
+            Begintime: [moment().add(-1, "month"), moment()],
+            Endtime: [moment().add(-1, "month"), moment()],
             regionValue: '',
-            attentionValue: '',
-            outletValue: '',
             entValue:'',
             voucher:'',
             pointValue:''
@@ -74,11 +75,42 @@ class index extends PureComponent {
 
     // 导出
     exportReport = () => {
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
+
+        this.props.dispatch({
+            type:pageUrl.ExportStopList,
+            payload:{
+                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                RegionCode: regionValue == undefined ?'':regionValue,
+                EntCode: entValue== undefined ?'':entValue,
+                DGIMN: pointValue== undefined ?'':pointValue,
+                Status: voucher== undefined ?'':voucher,
+            }
+        })
     }
 
     //查询数据
     getChartAndTableData =()=>{
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
 
+        this.props.dispatch({
+            type:pageUrl.GetStopList,
+            payload:{
+                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                RegionCode: regionValue == undefined ?'':regionValue,
+                EntCode: entValue== undefined ?'':entValue,
+                DGIMN: pointValue== undefined ?'':pointValue,
+                Status: voucher== undefined ?'':voucher,
+                PageSize:10,
+                PageIndex:1
+            }
+        })
     }
     //行政区
     children = () => {
@@ -129,18 +161,17 @@ class index extends PureComponent {
     //获取监测点
     PointByEntList = () => {
         const { PointByEntList } = this.props;
-        console.log(PointByEntList)
         const selectList = [];
-        // if (PointByEntList.length > 0) {
-        //     PointByEntList.map(item => {
-        //         selectList.push(
-        //             <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-        //                 {item.EntName}
-        //             </Option>,
-        //         );
-        //     });
-        //     return selectList;
-        // }
+        if (PointByEntList.length > 0) {
+            PointByEntList.map(item => {
+                selectList.push(
+                    <Option key={item.DGIMN} value={item.DGIMN} title={item.PointName}>
+                        {item.PointName}
+                    </Option>,
+                );
+            });
+            return selectList;
+        }
     };
     cardTitle = () => {
         const { Begintime,Endtime} = this.state;
@@ -204,7 +235,7 @@ class index extends PureComponent {
                                 },
                             });
                             this.setState({
-                                pointValue: value,
+                                entValue: value,
                             })
                         }}>
                         {this.entList()}
@@ -219,7 +250,7 @@ class index extends PureComponent {
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({
-                                entValue: value,
+                                pointValue: value,
                             })
                         }}>
                         {this.PointByEntList()}
@@ -244,11 +275,27 @@ class index extends PureComponent {
     }
 
     onChange = (PageIndex, PageSize) => {
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
 
+        this.props.dispatch({
+            type:pageUrl.GetStopList,
+            payload:{
+                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                RegionCode: regionValue == undefined ?'':regionValue,
+                EntCode: entValue== undefined ?'':entValue,
+                DGIMN: pointValue== undefined ?'':pointValue,
+                Status: voucher== undefined ?'':voucher,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
     }
 
     pageContent = () => {
-        const { attentionSummaryList } = this.props
+        const { StopList ,loading} = this.props
         const fixed = false
         const columns = [
             {
@@ -262,7 +309,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName',
@@ -270,7 +317,7 @@ class index extends PureComponent {
             {
                 title: "监测点名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'pointName',
                 key: 'pointName',
@@ -280,40 +327,40 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'entType',
-                key: 'entType',
+                dataIndex: 'pollutantTypeName',
+                key: 'pollutantTypeName',
             },
             {
                 title: "停运开始时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'stopBeginTime',
-                key: 'stopBeginTime',
+                dataIndex: 'beginTime',
+                key: 'beginTime',
             },
             {
                 title: "停运结束时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'stopEndTime',
-                key: 'stopEndTime',
+                dataIndex: 'endTime',
+                key: 'endTime',
             },
             {
                 title: "停运时长",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'stopDuratoin',
-                key: 'stopDuratoin',
+                dataIndex: 'stopHour',
+                key: 'stopHour',
             },
             {
                 title: "停运描述",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
-                dataIndex: 'stopDes',
-                key: 'stopDes',
+                dataIndex: 'remark',
+                key: 'remark',
             },
             {
                 title: "凭证",
@@ -328,62 +375,30 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'creator',
-                key: 'creator',
+                dataIndex: 'person',
+                key: 'person',
             },
             {
                 title: "创建时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'creationTime',
-                key: 'creationTime',
+                dataIndex: 'createTime',
+                key: 'createTime',
             },
         ]
-
-        let arr = [
-            {
-                regionName:'第一师',
-                entName:'阿拉尔艾特克有限公司',
-                pointName:'出口',
-                entType:'废水',
-                stopBeginTime:'2020-09-11 19:12:00',
-                stopEndTime:'2020-09-12 14:11:11',
-                stopDuratoin:3,
-                stopDes:'止料',
-                vouche:'查看',
-                creator:'小王',
-                creationTime:'2020-09-20 12:12:11'
-            },
-            {
-                regionName:'第一师',
-                entName:'阿拉尔艾特克有限公司',
-                pointName:'出口',
-                entType:'废水',
-                stopBeginTime:'2020-09-11 19:12:00',
-                stopEndTime:'2020-09-12 14:11:11',
-                stopDuratoin:3,
-                stopDes:'停运,开机',
-                vouche:'查看',
-                creator:'小王',
-                creationTime:'2020-09-20 12:12:11'
-            },
-        ]
-
         return <>{
-            <SdlTable columns={columns} dataSource={arr}
-                // pagination={{
-                //     showSizeChanger: true,
-                //     showQuickJumper: true,
-                //     pageSize: this.props.pageSize,
-                //     current: this.props.PageIndex,
-                //     onChange: this.onChange,
-                //     pageSizeOptions: ['20', '30', '40', '100'],
-                //     total: this.props.total,
-                // }} 
-                pagination={
-                    false
-                }
+            loading?<PageLoading/>:
+            <SdlTable columns={columns} dataSource={StopList}
+                pagination={{
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    pageSize: this.props.pageSize,
+                    current: this.props.PageIndex,
+                    onChange: this.onChange,
+                    pageSizeOptions: ['10','20', '30', '40', '100'],
+                    total: this.props.total,
+                }} 
             />
         }
         </>
@@ -393,12 +408,14 @@ class index extends PureComponent {
         const { loading,priseList } = this.props
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="停运记录">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                <div style={{float:'left'}}>
+                                    {this.cardTitle()}
+                                </div>
                                 </>
                             }
                             className={style.dataTable}

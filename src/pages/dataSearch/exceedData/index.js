@@ -595,290 +595,286 @@ class index extends PureComponent {
         const { getFieldDecorator  } = this.props.form;
         return (
             <>
-                <div>
-                    
-                    <Form onSubmit={this.handleSummit} layout="inline">
-                       
-                        <Form.Item label='行政区' >
-                            {
-                                getFieldDecorator('Region', {
-                                    
-                                })(
-                                        <Select
-                                            allowClear
-                                            showSearch
-                                            style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                            placeholder="行政区"
-                                            maxTagCount={2}
-                                            maxTagTextLength={5}
-                                            maxTagPlaceholder="..."
-                                            optionFilterProp="children"
-                                            filterOption={(input, option) => {
-                                                if (option && option.props && option.props.title) {
-                                                    return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                                } else {
-                                                    return true
-                                                }
-                                            }}
-                                            onChange={(value) => {
-                                                
-                                            }}>
-                                            {this.children()}
-                                        </Select>
-                                )
-                            }
+                <Form onSubmit={this.handleSummit} layout="inline">
 
-                        </Form.Item>
-                        <Form.Item label="关注度" >
-                            {
-                                getFieldDecorator('attention', {
+                    <Form.Item label='行政区' >
+                        {
+                            getFieldDecorator('Region', {
 
-                                })(
-                                    <Select
-                                            allowClear
-                                            style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                            placeholder="关注度"
-                                            maxTagCount={2}
-                                            maxTagTextLength={5}
-                                            maxTagPlaceholder="..."
-                                            onChange={(value) => {
-                                                
-                                            }}>
-                                            {this.attention()}
-                                        </Select>
-                                )
-                            }
-
-                        </Form.Item>
-                        <Form.Item label="企业类型" >
-                            {
-                                getFieldDecorator('outlet', {
-                                    initialValue:'1'
-                                })(
-                                    <Select
-                                            allowClear
-                                            style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                            //defaultValue={'1'}
-                                            placeholder="企业类型"
-                                            maxTagCount={2}
-                                            maxTagTextLength={5}
-                                            maxTagPlaceholder="..."
-                                            onChange={(value) => {
-                                                this.props.dispatch({
-                                                    type: pageUrl.GetPollutantByType,
-                                                    payload: {
-                                                        type: value
-                                                    }
-                                                })
-                                            }}>
-                                            <Option value="1">废水</Option>
-                                            <Option value="2">废气</Option>
-                                        </Select>
-                                )
-                            }
-
-                        </Form.Item>
-                        <Form.Item label='数据类型' >
-                            {
-                                getFieldDecorator('dataType', {
-                                    initialValue:'Hour'
-                                })(
-                                        <Radio.Group  style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
-                                            this.setState({
-                                                dataType: e.target.value,
-                                                time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
-                                            })
-                                            e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                                        }}>
-                                            <Radio.Button value="Hour">小时</Radio.Button>
-                                            <Radio.Button value="Day">日均</Radio.Button>
-                                        </Radio.Group>
-                                )
-                            }
-
-                        </Form.Item>
-                        <Form.Item >
-                            {
-                                getFieldDecorator('dateTime',{
-                                    initialValue:this.state.time
-                                })(
-                                    <RangePicker_ onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
-                                        (dates, dataType) => {
-                                            this.setState({
-                                                time: dates
-                                            })
+                            })(
+                                <Select
+                                    allowClear
+                                    showSearch
+                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    placeholder="行政区"
+                                    maxTagCount={2}
+                                    maxTagTextLength={5}
+                                    maxTagPlaceholder="..."
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) => {
+                                        if (option && option.props && option.props.title) {
+                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                        } else {
+                                            return true
                                         }
-                                    } />    
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item >
-                            <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
-                        </Form.Item>
-                        <Form.Item >
+                                    }}
+                                    onChange={(value) => {
+
+                                    }}>
+                                    {this.children()}
+                                </Select>
+                            )
+                        }
+
+                    </Form.Item>
+                    <Form.Item label="关注度" >
+                        {
+                            getFieldDecorator('attention', {
+
+                            })(
+                                <Select
+                                    allowClear
+                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    placeholder="关注度"
+                                    maxTagCount={2}
+                                    maxTagTextLength={5}
+                                    maxTagPlaceholder="..."
+                                    onChange={(value) => {
+
+                                    }}>
+                                    {this.attention()}
+                                </Select>
+                            )
+                        }
+
+                    </Form.Item>
+                    <Form.Item label="企业类型" >
+                        {
+                            getFieldDecorator('outlet', {
+                                initialValue: '1'
+                            })(
+                                <Select
+                                    allowClear
+                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    //defaultValue={'1'}
+                                    placeholder="企业类型"
+                                    maxTagCount={2}
+                                    maxTagTextLength={5}
+                                    maxTagPlaceholder="..."
+                                    onChange={(value) => {
+                                        this.props.dispatch({
+                                            type: pageUrl.GetPollutantByType,
+                                            payload: {
+                                                type: value
+                                            }
+                                        })
+                                    }}>
+                                    <Option value="1">废水</Option>
+                                    <Option value="2">废气</Option>
+                                </Select>
+                            )
+                        }
+
+                    </Form.Item>
+                    <Form.Item label='数据类型' >
+                        {
+                            getFieldDecorator('dataType', {
+                                initialValue: 'Hour'
+                            })(
+                                <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
+                                    this.setState({
+                                        dataType: e.target.value,
+                                        time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
+                                    })
+                                    e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                                }}>
+                                    <Radio.Button value="Hour">小时</Radio.Button>
+                                    <Radio.Button value="Day">日均</Radio.Button>
+                                </Radio.Group>
+                            )
+                        }
+
+                    </Form.Item>
+                    <Form.Item >
+                        {
+                            getFieldDecorator('dateTime', {
+                                initialValue: this.state.time
+                            })(
+                                <RangePicker_ onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                                    (dates, dataType) => {
+                                        this.setState({
+                                            time: dates
+                                        })
+                                    }
+                                } />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item >
+                        <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
+                    </Form.Item>
+                    <Form.Item >
                         <Button style={{ marginRight: 10 }} htmlType='submit' onClick={this.exportReport}><Icon type="export" />导出</Button>
-                        </Form.Item>
-                        <div >
+                    </Form.Item>
+                    <div >
                         <Form.Item label='监测因子'></Form.Item>
-                        
+
                         {
                             this.state.entType == '1' &&
-                            PollutantByType.map((item,i) =>
-                            (i+1) % 6 == 0 ?
-                            <span>
-                                <br/>
-                                <Form.Item >
+                            PollutantByType.map((item, i) =>
+                                (i + 1) % 6 == 0 ?
                                     <span>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:item.PollutantCode
-                                                })
-                                                    (
-                                                        <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                        </Checkbox.Group>
-                                                    )
-                                            }
-                                        </Form.Item>
-                                        <Form.Item>
+                                        <br />
+                                        <Form.Item >
+                                            <span>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode, {
+                                                            initialValue: item.PollutantCode
+                                                        })
+                                                            (
+                                                                <Checkbox.Group>
+                                                                    <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                                </Checkbox.Group>
+                                                            )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    <Form.Item>
+                                                        {
+                                                            getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                                <span style={{ marginLeft: -10 }}>
+                                                                    <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                    <span style={{ fontSize: 14 }}>至</span>
+                                                                </span>
+                                                            )
+                                                        }
+                                                    </Form.Item>
+                                                    <Form.Item>
+                                                        {
+                                                            getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                                <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                            )
+                                                        }
+                                                    </Form.Item>
+                                                </Form.Item>
+
+                                            </span>
+
+                                        </Form.Item></span>
+
+                                    : <Form.Item >
+                                        <span>
                                             <Form.Item>
                                                 {
-                                                    getFieldDecorator(item.PollutantCode+'Min',{})(
-                                                    <span style={{marginLeft: -10 }}>
-                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5,marginLeft: 5 }} />
-                                                        <span style={{ fontSize: 14 }}>至</span>
-                                                    </span>
-                                                    )
+                                                    getFieldDecorator(item.PollutantCode, {
+                                                        initialValue: item.PollutantCode
+                                                    })
+                                                        (
+                                                            <Checkbox.Group>
+                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                            </Checkbox.Group>
+                                                        )
                                                 }
                                             </Form.Item>
                                             <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode+'Max',{})(
-                                                        <InputNumber size='small' style={{ marginRight: 5,marginLeft: -12, width: 50 }} />
-                                                    )
-                                                }
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
                                             </Form.Item>
-                                        </Form.Item>
 
-                                    </span>
+                                        </span>
 
-                                </Form.Item></span>
-                            
-                            :<Form.Item >
-                                    <span>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:item.PollutantCode
-                                                })
-                                                    (
-                                                        <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                        </Checkbox.Group>
-                                                    )
-                                            }
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode+'Min',{})(
-                                                    <span style={{marginLeft: -10 }}>
-                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5,marginLeft: 5 }} />
-                                                        <span style={{ fontSize: 14 }}>至</span>
-                                                    </span>
-                                                    )
-                                                }
-                                            </Form.Item>
-                                            <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode+'Max',{})(
-                                                        <InputNumber size='small' style={{ marginRight: 5,marginLeft: -12, width: 50 }} />
-                                                    )
-                                                }
-                                            </Form.Item>
-                                        </Form.Item>
+                                    </Form.Item>
 
-                                    </span>
-
-                                </Form.Item>
-                                
                             )
                         }
                         {
                             this.state.entType == '2' &&
-                            PollutantByType.map((item,i) =>
-                            (i+1) % 6 == 0 ? <span>
-                                <br/>
-                                <Form.Item >
-                                    <span>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:item.PollutantCode
-                                                })
-                                                    (
-                                                        <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                        </Checkbox.Group>
+                            PollutantByType.map((item, i) =>
+                                (i + 1) % 6 == 0 ? <span>
+                                    <br />
+                                    <Form.Item >
+                                        <span>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode, {
+                                                        initialValue: item.PollutantCode
+                                                    })
+                                                        (
+                                                            <Checkbox.Group>
+                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                            </Checkbox.Group>
+                                                        )
+                                                }
+                                            </Form.Item>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Value', {})(
+                                                        <span>
+                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                            <span style={{ fontSize: 14 }}>至</span>
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
+                                                        </span>
                                                     )
-                                            }
-                                        </Form.Item>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
-                                                    <span>
-                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
-                                                        <span style={{ fontSize: 14 }}>至</span>
-                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
-                                                    </span>
-                                                )
-                                            }
-                                        </Form.Item>
+                                                }
+                                            </Form.Item>
 
-                                    </span>
+                                        </span>
 
-                                </Form.Item>
+                                    </Form.Item>
                                 </span>
-                            :  <Form.Item >
-                                    <span>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode, {
-                                                    initialValue:item.PollutantCode
-                                                })
-                                                    (
-                                                        <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                        </Checkbox.Group>
+                                    : <Form.Item >
+                                        <span>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode, {
+                                                        initialValue: item.PollutantCode
+                                                    })
+                                                        (
+                                                            <Checkbox.Group>
+                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                            </Checkbox.Group>
+                                                        )
+                                                }
+                                            </Form.Item>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Value', {})(
+                                                        <span>
+                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                            <span style={{ fontSize: 14 }}>至</span>
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
+                                                        </span>
                                                     )
-                                            }
-                                        </Form.Item>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
-                                                    <span>
-                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
-                                                        <span style={{ fontSize: 14 }}>至</span>
-                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
-                                                    </span>
-                                                )
-                                            }
-                                        </Form.Item>
+                                                }
+                                            </Form.Item>
 
-                                    </span>
+                                        </span>
 
-                                </Form.Item>
+                                    </Form.Item>
                             )
                         }
-                        </div>
-                    </Form>
-
-                </div>
+                    </div>
+                </Form>
             </>
         )
     }
@@ -1448,12 +1444,14 @@ class index extends PureComponent {
 
         return (
             <>
-                <div id="siteParamsPage">
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="超标数据查询">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                        {
+                                            this.cardTitle()
+                                        }
                                 </>
                             }
                             className={style.dataTable}

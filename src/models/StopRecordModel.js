@@ -4,10 +4,11 @@
  * 创建时间：2020.10.22
  */
 import Model from '@/utils/model';
-import {GetPointByEntCode,GetStopList} from '../services/StopRecordApi'
+import {GetPointByEntCode,GetStopList,ExportStopList} from '../services/StopRecordApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
+import { fileUpload } from '@/services/autoformapi';
 
 export default Model.extend({
   namespace: 'StopRecordModel',
@@ -18,6 +19,7 @@ export default Model.extend({
     PageSize: 10,
     PageIndex: 1,
     total: 0,
+    StopList:[]
   },
   subscriptions: {},
   effects: {
@@ -35,23 +37,54 @@ export default Model.extend({
           })
         }
       },
-      *GetStopList({ payload }, { call, put, update, select }) {
+    *GetStopList({ payload }, { call, put, update, select }) {
 
         const body = {
-            
+          BeginTime: payload.BeginTime,
+          BeginTimeEnd: payload.BeginTimeEnd,
+          EndTime: payload.EndTime,
+          EndTimeEnd: payload.EndTimeEnd,
+          RegionCode: payload.RegionCode,
+          EntCode: payload.EntCode,
+          DGIMN: payload.DGIMN,
+          Status: payload.Status,
+          PageSize: payload.PageSize,
+          PageIndex: payload.PageIndex,
         }
-      
-        const result = yield call(GetStopList, payload, null)
+        console.log(body)
+        const result = yield call(GetStopList, body, null)
+        console.log(result)
         if (result.IsSuccess) {
           yield update({
-            PointByEntList: result.Datas
+            StopList: result.Datas,
+            total:result.Total,
+            PageIndex:payload.PageIndex || 1
           })
         }
         else {
           yield update({
-            PointByEntList: []
+            StopList: [],
+            total:0,
+            PageIndex:payload.PageIndex || 1
           })
         }
       },
+    *ExportStopList({ payload }, { call, put, update, select }) {
+
+      const body = {
+        BeginTime: payload.BeginTime,
+        BeginTimeEnd: payload.BeginTimeEnd,
+        EndTime: payload.EndTime,
+        EndTimeEnd: payload.EndTimeEnd,
+        RegionCode: payload.RegionCode,
+        EntCode: payload.EntCode,
+        DGIMN: payload.DGIMN,
+        Status: payload.Status,
+      }
+      const result = yield call(ExportStopList, body, null)
+      if (result.IsSuccess) {
+        downloadFile(result.Datas)
+      }
+    },
   },
 });

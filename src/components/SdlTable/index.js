@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-10-17 15:13:49
+ * @Last Modified time: 2020-10-22 15:47:51
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -193,7 +193,7 @@ class SdlTable extends PureComponent {
         <Table
           ref={table => { this.sdlTable = table }}
           id="sdlTable"
-          rowKey={record => record.id || record.ID}
+          rowKey={(record,index) => record.id || record.ID || index}
           size="middle"
           components={resizable ? this.components : undefined}
           // className={styles.dataTable}
