@@ -964,7 +964,7 @@ export default {
                   component: './monitoring/videoMonitor/air',
                 },
                 {
-                  //缺失数据报警 企业
+                  //缺失数据报警  企业
                   path: '/monitoring/missingData/ent',
                   component: './monitoring/missingData/ent',
                 },
