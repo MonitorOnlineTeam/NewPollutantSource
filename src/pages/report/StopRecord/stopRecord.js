@@ -4,7 +4,7 @@
  * 创建时间：2020.10.22
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon } from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon ,List} from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -16,6 +16,7 @@ import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
+import { downloadFile } from '@/utils/utils';
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { MonthPicker } = DatePicker;
@@ -48,7 +49,9 @@ class index extends PureComponent {
             regionValue: '',
             entValue:'',
             voucher:'',
-            pointValue:''
+            pointValue:'',
+            visible:false,
+            fileArr:[]
         };
     }
 
@@ -173,27 +176,31 @@ class index extends PureComponent {
             return selectList;
         }
     };
+    onRef1 = (ref) => {
+        this.childrenHand = ref;
+      }
     cardTitle = () => {
         const { Begintime,Endtime} = this.state;
-
+        
         return (
             <>
-                <label>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginRight: 10 }} callback={
+                <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
                         this.setState({
                             Begintime: dates
                         })
                     }
                 } />
-                <label>停运结束时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Endtime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginRight: 10 }} callback={
+                <label style={{fontSize:14}}>停运结束时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Endtime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
+                        console.log(dates,dataType)
                         this.setState({
                             Endtime: dates
                         })
                     }
                 } />
                 
-                <div style={{ marginTop: 10 }}>
+                <div style={{ marginTop: 10,fontSize:14 }}>
                     <label>行政区:</label><Select
                         allowClear
                         showSearch
@@ -220,13 +227,22 @@ class index extends PureComponent {
                    
                     <label>企业列表:</label><Select
                         allowClear
+                        showSearch
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                         placeholder="企业列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        defaultValue={this.state.entType}
                         maxTagPlaceholder="..."
+                        optionFilterProp="children"
+                        filterOption={(input, option) => {
+                            if (option && option.props && option.props.title) {
+                                return option.props.title === input || option.props.title.indexOf(input) !== -1
+                            } else {
+                                return true
+                            }
+                        }}
                         onChange={(value) => {
+
                             //获取监测点
                             this.props.dispatch({
                                 type: pageUrl.GetPointByEntCode,
@@ -236,6 +252,7 @@ class index extends PureComponent {
                             });
                             this.setState({
                                 entValue: value,
+                                pointValue:''
                             })
                         }}>
                         {this.entList()}
@@ -245,8 +262,8 @@ class index extends PureComponent {
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                         placeholder="监测点列表"
                         maxTagCount={2}
+                        value={this.state.pointValue}
                         maxTagTextLength={5}
-                        defaultValue={this.state.entType}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({
@@ -294,6 +311,23 @@ class index extends PureComponent {
         })
     }
 
+    lookChange=(fileList)=>{
+        console.log(fileList)
+        let file;
+        if(fileList == null)
+        {
+            file =[]
+        }
+        else{
+            file = fileList
+        }
+        console.log(file)
+        this.setState({
+            visible:true,
+            fileArr:file
+        })
+
+    }
     pageContent = () => {
         const { StopList ,loading} = this.props
         const fixed = false
@@ -369,6 +403,9 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'vouche',
                 key: 'vouche',
+                render:(text,record)=>{
+                    return <a onClick={this.lookChange.bind(this,record.field)}>查看</a>
+                }
             },
             {
                 title: "创建人",
@@ -404,6 +441,14 @@ class index extends PureComponent {
         </>
         //
     }
+    onCancel =()=>{
+        this.setState({
+            visible:false
+        })
+    }
+    onClick =(name)=>{
+        downloadFile(name)
+    }
     render() {
         const { loading,priseList } = this.props
         return (
@@ -423,6 +468,22 @@ class index extends PureComponent {
 
                             {loading ? <PageLoading /> : this.pageContent()}
                         </Card>
+                        <Modal
+                        centered
+                        visible={this.state.visible}
+                        onCancel={this.onCancel}
+                        footer={null}
+                        title='文件'
+                        >
+                            {
+                                
+                                this.state.fileArr.length > 0 ?
+                                    this.state.fileArr.map(arr =>
+                                        <a onClick={this.onClick.bind(this, arr.FileName)}>{arr.FileName}</a>)
+                                    : ''
+
+                            }
+                        </Modal>
                     </BreadcrumbWrapper>
                 </div>
             </>

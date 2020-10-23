@@ -511,6 +511,10 @@ class index extends PureComponent {
         }
     };
 
+    ExceedonChange=()=>{
+        
+    }
+
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
@@ -526,7 +530,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 11,
+                PageSize: 10,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -634,8 +638,8 @@ class index extends PureComponent {
                                 showQuickJumper: true,
                                 pageSize: this.props.PageSize,
                                 current: this.props.PageIndex,
-                                onChange: this.RegiononChange,
-                                pageSizeOptions: ['25', '30', '40', '100'],
+                                onChange: this.ExceedonChange,
+                                pageSizeOptions: ['10','20', '30', '40', '100'],
                                 total: this.props.total,
                             }}
                         />, key: key, closable: true
@@ -652,8 +656,8 @@ class index extends PureComponent {
                                 showQuickJumper: true,
                                 pageSize: this.props.PageSize,
                                 current: this.props.PageIndex,
-                                onChange: this.RegiononChange,
-                                pageSizeOptions: ['25', '30', '40', '100'],
+                                onChange: this.ExceedonChange,
+                                pageSizeOptions: ['10','20','30', '40', '100'],
                                 total: this.props.total,
                             }}
                         />, key: activeKey, closable: true

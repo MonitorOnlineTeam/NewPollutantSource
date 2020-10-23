@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-10-23 15:54:12
+ * @LastEditTime: 2020-10-23 17:56:40
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -39,7 +39,7 @@ const { RangePicker } = DatePicker;
 class index extends PureComponent {
   state = {
     showTime: true,
-    format: 'YYYY-MM-DD',
+    format: 'YYYY-MM-DD HH:mm:ss',
     checkedValues: [],
   };
 
@@ -212,26 +212,34 @@ class index extends PureComponent {
             dataIndex: `${item.PollutantCode}_alarmCount`,
             key: 'DataType',
             width: 100,
+            align: 'center',
           },
           {
             title: '已处置报警次数',
             dataIndex: `${item.PollutantCode}_respondedCount`,
             key: 'DataType',
             width: 150,
+            align: 'center',
           },
           {
             title: '待处置报警次数',
             dataIndex: `${item.PollutantCode}_noRespondedCount`,
             key: 'DataType',
             width: 150,
+            align: 'center',
           },
           {
             title: '处置率',
             dataIndex: `${item.PollutantCode}_RespondedRate`,
             key: 'DataType',
             width: 100,
+            align: 'center',
             render: (text, record) => {
-              return <div>{`${text}%`}</div>;
+              if (text == '-') {
+                return <div>{`${text}`}</div>;
+              } else {
+                return <div>{`${text}%`}</div>;
+              }
             },
           },
         ],
@@ -244,58 +252,7 @@ class index extends PureComponent {
           dataIndex: 'regionName',
           key: 'regionName',
           fixed: 'left',
-          render: (text, record) => {
-            if (record.regionCode === '') {
-              return <div>{text}</div>;
-            } else {
-              return (
-                <a
-                  onClick={() => {
-                    let params = {};
-                    params.regionName = record.regionName;
-                    params.regionCode = record.regionCode;
-
-                    let values = this.props.form.getFieldsValue();
-
-                    params.beginTime = moment(values.time[0]).format('YYYY-MM-DD');
-                    params.endTime = moment(values.time[1]).format('YYYY-MM-DD');
-
-                    params.AttentionCode = values.AttentionCode;
-                    params.PollutantList = this.state.checkedValues;
-                    params.PollutantType = values.PollutantType;
-                    params.dataType = values.dataType;
-                    router.push(
-                      `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
-                        params,
-                      )}`,
-                    );
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            }
-          },
-        },
-        {
-          title: '工艺超标报警企业数',
-          dataIndex: 'entCount',
-          key: 'entCount',
-        },
-        {
-          title: '工艺超标报警监测点数',
-          dataIndex: 'pointCount',
-          key: 'pointCount',
-          width: 150,
-        },
-        ...titlePollutant,
-      ];
-    } else {
-      columns = [
-        {
-          title: '行政区',
-          dataIndex: 'regionName',
-          key: 'regionName',
+          align: 'center',
           render: (text, record) => {
             return (
               <a
@@ -329,12 +286,65 @@ class index extends PureComponent {
           title: '工艺超标报警企业数',
           dataIndex: 'entCount',
           key: 'entCount',
+          align: 'center',
         },
         {
           title: '工艺超标报警监测点数',
           dataIndex: 'pointCount',
           key: 'pointCount',
           width: 150,
+          align: 'center',
+        },
+        ...titlePollutant,
+      ];
+    } else {
+      columns = [
+        {
+          title: '行政区',
+          dataIndex: 'regionName',
+          key: 'regionName',
+          align: 'center',
+          render: (text, record) => {
+            return (
+              <a
+                onClick={() => {
+                  let params = {};
+                  params.regionName = record.regionName;
+                  params.regionCode = record.regionCode;
+
+                  let values = this.props.form.getFieldsValue();
+
+                  params.beginTime = moment(values.time[0]).format('YYYY-MM-DD');
+                  params.endTime = moment(values.time[1]).format('YYYY-MM-DD');
+
+                  params.AttentionCode = values.AttentionCode;
+                  params.PollutantList = this.state.checkedValues;
+                  params.PollutantType = values.PollutantType;
+                  params.dataType = values.dataType;
+                  router.push(
+                    `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
+                      params,
+                    )}`,
+                  );
+                }}
+              >
+                {text}
+              </a>
+            );
+          },
+        },
+        {
+          title: '工艺超标报警企业数',
+          dataIndex: 'entCount',
+          key: 'entCount',
+          align: 'center',
+        },
+        {
+          title: '工艺超标报警监测点数',
+          dataIndex: 'pointCount',
+          key: 'pointCount',
+          width: 150,
+          align: 'center',
         },
         ...titlePollutant,
       ];
@@ -344,6 +354,52 @@ class index extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={16}>
+              <Col md={4}>
+                <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
+                  {getFieldDecorator('dataType', {
+                    initialValue: dataType,
+                  })(
+                    <Select placeholder="请选择数据类型" onChange={this.onDataTypeChange}>
+                      <Option key="0" value="HourData">
+                        小时数据
+                      </Option>
+                      <Option key="1" value="DayData">
+                        {' '}
+                        日数据
+                      </Option>
+                    </Select>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={7}>
+                <FormItem
+                  labelCol={{ span: 5 }}
+                  wrapperCol={{ span: 19 }}
+                  label="日期查询"
+                  style={{ width: '100%' }}
+                >
+                  {getFieldDecorator('time', {
+                    initialValue: [beginTime, endTime],
+                  })(
+                    <RangePicker
+                      allowClear={false}
+                      // showTime={showTime}
+                      format={format}
+                      style={{ width: '100%' }}
+                      onChange={(dates, dateStrings) => {
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
+                        dispatch({
+                          type: 'overAlarmDisposalRate/updateState',
+                          payload: {
+                            beginTime: dates[0],
+                            endTime: dates[1],
+                          },
+                        });
+                      }}
+                    />,
+                  )}
+                </FormItem>
+              </Col>
               <Col md={4}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator('RegionCode', {
@@ -402,7 +458,9 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={4}>
+            </Row>
+            <Row gutter={16}>
+              <Col md={4} style={{ marginTop: 10 }}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
                     initialValue: PollutantType,
@@ -427,53 +485,7 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={4}>
-                <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('dataType', {
-                    initialValue: dataType,
-                  })(
-                    <Select placeholder="请选择数据类型" onChange={this.onDataTypeChange}>
-                      <Option key="0" value="HourData">
-                        小时数据
-                      </Option>
-                      <Option key="1" value="DayData">
-                        {' '}
-                        日数据
-                      </Option>
-                    </Select>,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={7}>
-                <FormItem
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 19 }}
-                  label="日期查询"
-                  style={{ width: '100%' }}
-                >
-                  {getFieldDecorator('time', {
-                    initialValue: [beginTime, endTime],
-                  })(
-                    <RangePicker
-                      allowClear={false}
-                      // showTime={showTime}
-                      format={format}
-                      style={{ width: '100%' }}
-                      onChange={(dates, dateStrings) => {
-                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
-                        dispatch({
-                          type: 'overAlarmDisposalRate/updateState',
-                          payload: {
-                            beginTime: dates[0],
-                            endTime: dates[1],
-                          },
-                        });
-                      }}
-                    />,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+              <Col md={12} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                 <div class="ant-form-item-label" style={{ width: '5.3%' }}>
                   <label for="RegionCode" class="" title="监测因子">
                     监测因子

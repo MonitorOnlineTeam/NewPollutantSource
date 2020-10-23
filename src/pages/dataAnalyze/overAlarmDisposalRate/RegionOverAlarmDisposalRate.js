@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-二级
  * @LastEditors: hxf
  * @Date: 2020-10-22 09:08:17
- * @LastEditTime: 2020-10-23 15:56:36
+ * @LastEditTime: 2020-10-23 17:09:42
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate.js
  */
 import React, { PureComponent } from 'react';
@@ -116,6 +116,24 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
 
   changeEnt = value => {
     this.setState({ EntCode: value });
+    const { dispatch } = this.props;
+    const params = JSON.parse(this.props.location.query.params);
+    // 获取超标报警处置率-二级列表
+    dispatch({
+      type: 'overAlarmDisposalRate/getAlarmManagementRateDetail',
+      payload: {
+        EntCode: value,
+        AttentionCode: params.AttentionCode,
+        PollutantType: params.PollutantType,
+        RegionCode: params.regionCode,
+        dataType: params.dataType,
+        beginTime: moment(params.beginTime).format('YYYY-MM-DD 00:00:00'),
+        endTime: moment(params.endTime).format('YYYY-MM-DD 23:59:59'),
+        PollutantList: params.PollutantList,
+        PollutantCodeList: params.PollutantList,
+        Rate: 1,
+      },
+    });
   };
 
   exportAlarmManagementRateDetail = () => {
@@ -165,24 +183,28 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
             dataIndex: `${item.PollutantCode}_alarmCount`,
             key: 'DataType',
             width: 100,
+            align: 'center',
           },
           {
             title: '已处置报警次数',
             dataIndex: `${item.PollutantCode}_respondedCount`,
             key: 'DataType',
             width: 150,
+            align: 'center',
           },
           {
             title: '待处置报警次数',
             dataIndex: `${item.PollutantCode}_noRespondedCount`,
             key: 'DataType',
             width: 150,
+            align: 'center',
           },
           {
             title: '处置率',
             dataIndex: `${item.PollutantCode}_RespondedRate`,
             key: 'DataType',
             width: 100,
+            align: 'center',
             render: (text, record) => {
               return <div>{`${text}%`}</div>;
             },
@@ -195,13 +217,12 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
         title: '行政区',
         dataIndex: 'regionName',
         key: 'regionName',
-        // fixed: 'left',
+        align: 'center',
       },
       {
         title: '企业名称',
         dataIndex: 'entName',
         key: 'entName',
-        // fixed: 'left',
       },
       {
         title: '监测点名称',
@@ -235,7 +256,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
                     </Select>,
                   )}
                 </Form.Item>
-                <Button
+                {/* <Button
                   loading={loading}
                   type="primary"
                   style={{ marginLeft: 10 }}
@@ -244,7 +265,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
                   }}
                 >
                   查询
-                </Button>
+                </Button> */}
                 <Button
                   style={{ margin: '0 5px' }}
                   icon="export"
