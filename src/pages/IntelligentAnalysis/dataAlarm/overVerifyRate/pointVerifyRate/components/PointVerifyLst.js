@@ -134,6 +134,12 @@ export default class PointVerifyLst extends Component {
         dataIndex: item.PollutantCode + '_RespondedRate',
         key: item.PollutantCode + '_RespondedRate',
         align: 'center',
+        render: (text, record) => { 
+            return <div>
+                     {text == '-'?text:`${text}%`}
+                 </div>
+                   
+         },
         }]
         });
       }else{
@@ -144,6 +150,12 @@ export default class PointVerifyLst extends Component {
     dataIndex: 'AllRespondedRate',
     key: 'AllRespondedRate',
     align: 'center',
+    render: (text, record) => { 
+        return <div>
+                 {text == '-'?text:`${text}%`}
+             </div>
+               
+     },
     
   });
   this.setState({columns:newColumns})
