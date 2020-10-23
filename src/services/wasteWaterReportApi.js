@@ -17,4 +17,18 @@ export async function GetPointByEntCode(params)
     const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode',params,null)
     return result 
 }
+//数据列表
+export async function GetAllTypeDataListWater(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataListWater',params,null)
+    return result 
+}
+
+//导出 数据列表
+export async function ExportAllTypeDataListWater(params)
+{
+    const result = post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataListWater',params,null)
+    return result 
+}
+
 
