@@ -1254,6 +1254,12 @@ export default {
                       path: '/Intelligentanalysis/emissions/gas',
                       component: './IntelligentAnalysis/emissions/Gas',
                     },
+                    {
+                      // 废水排放量统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterEmissions',
+                      component: './IntelligentAnalysis/emissions/Water',
+                    },
                   ]
                 },
                 {
