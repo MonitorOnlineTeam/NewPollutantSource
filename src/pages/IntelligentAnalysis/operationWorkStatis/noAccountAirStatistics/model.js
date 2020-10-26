@@ -17,12 +17,12 @@ import {
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'overVerifyRate',
+  namespace: 'noAccountAirStatistics',
   state: {
     exloading: false,
     loading: false,
 
-    overVerifyRateForm: {
+    airMissingForm: {
       beginTime: moment()
         .subtract(1, 'months')
         .format('YYYY-MM-DD 00:00:00'),
@@ -33,6 +33,7 @@ export default Model.extend({
       PollutantList: [],
       Rate: 1,
       EntCode: '',
+      dataType:'DayData'
     },
     divisorList: [],
     tableDatas: [],

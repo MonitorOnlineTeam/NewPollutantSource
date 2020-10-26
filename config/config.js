@@ -1349,19 +1349,7 @@ export default {
                     },
                   ],
                 },
-                //统计-运维工单
-                {
-                  path: '/Intelligentanalysis/operationWorkStatis',
-                  name: 'operationWorkStatis',
-
-                  routes: [
-                    /* 缺失台账工单统计 */
-                    {
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
-                    },
-                  ],
-                },
+                
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
