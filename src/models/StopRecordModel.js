@@ -83,7 +83,7 @@ export default Model.extend({
       }
       const result = yield call(ExportStopList, body, null)
       if (result.IsSuccess) {
-        downloadFile(result.Datas)
+        downloadFile(`/upload${result.Datas}`)
       }
     },
   },

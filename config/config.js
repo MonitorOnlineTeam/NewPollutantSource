@@ -1260,7 +1260,7 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'effluentFee',
@@ -1327,7 +1327,8 @@ export default {
                     },
                   ],
                 },
-                {  //排放量分析
+                {
+                  //排放量分析
                   path: '/Intelligentanalysis/emissionsStatistics',
                   name: 'EmissionsStatistics',
                   routes: [
@@ -1342,7 +1343,19 @@ export default {
                     },
                   ],
                 },
+                //统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
 
+                  routes: [
+                    /* 缺失台账工单统计 */
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
+                    },
+                  ],
+                },
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
@@ -1395,6 +1408,24 @@ export default {
                     },
                   ],
                 },
+
+                  //统计-运维工单
+                  {
+                    path: '/Intelligentanalysis/operationWorkStatis',
+                    name: 'operationWorkStatis',
+  
+                    routes: [
+                      {
+                        // 运维工单统计（企业）
+                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      },
+                      /* 缺失台账工单统计 */
+                      {
+                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                        component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      },]
+                    },
                 {
                   //超标报警处置率
                   name: 'overAlarmDisposalRate',

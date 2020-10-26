@@ -181,7 +181,7 @@ export default Model.extend({
     const result = yield call(ExportAlarmVerifyRate,body,null)
     if(result.IsSuccess)
     {
-      downloadFile(result.Datas)
+      downloadFile(`/upload${result.Datas}`)
     }
   },//超标报警核实详情
     *ExportAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
@@ -197,7 +197,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAlarmVerifyRateDetail, body, null)
         if (result.IsSuccess) {
-          downloadFile(result.Datas)
+          downloadFile(`/upload${result.Datas}`)
         }
     },//超标报警核实详细
   *ExportAlarmVerifyDetail({ payload }, { call, put, update, select }){
@@ -215,7 +215,7 @@ export default Model.extend({
       }
       const result = yield call(ExportAlarmVerifyDetail, body, null)
       if (result.IsSuccess) {
-        downloadFile(result.Datas)
+        downloadFile(`/upload${result.Datas}`)
       }
     },
   },

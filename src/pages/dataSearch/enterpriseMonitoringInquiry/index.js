@@ -14,6 +14,7 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -565,14 +566,12 @@ class index extends PureComponent {
         ]
         return (
             <>
-                <div id="siteParamsPage">
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="企业监测点查询">
                         <Card
                             extra={
                                 <>
-                                <div style={{float:'left'}}>
                                     {this.cardTitle()}
-                                </div>
                                 </>
                             }
                             className="contentContainer"

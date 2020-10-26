@@ -193,7 +193,6 @@ class index extends PureComponent {
     const backValue = [] //回口
     const legend = []
     const series=[]
-    console.log(FlowListArr)
     
 
     if(FlowListArr.length >0 )
@@ -281,7 +280,7 @@ class index extends PureComponent {
 
       const option = {
         title: {
-            text: this.state.pollutantValue
+            //text: this.state.pollutantValue
         },
         tooltip: {
             trigger: 'axis'

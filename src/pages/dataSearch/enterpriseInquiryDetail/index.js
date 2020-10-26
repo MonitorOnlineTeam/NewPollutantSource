@@ -261,7 +261,6 @@ class index extends PureComponent {
                                     {this.cardTitle()}
                                 </>
                             }
-                            className="contentContainer"
                         >
                             {this.pageContent()}
                         </Card>

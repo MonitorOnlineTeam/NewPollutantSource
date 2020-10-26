@@ -182,7 +182,7 @@ export default Model.extend({
     const result = yield call(ExportAlarmManagementRate,body,null)
     if(result.IsSuccess)
     {
-      downloadFile(result.Datas)
+      downloadFile(`/upload${result.Datas}`)
     }
   },//导出超标报警处置详情
     *ExportAlarmManagementRateDetail({ payload }, { call, put, update, select }) {
@@ -198,7 +198,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAlarmManagementRateDetail, body, null)
         if (result.IsSuccess) {
-          downloadFile(result.Datas)
+          downloadFile(`/upload${result.Datas}`)
         }
     },//导出超标报警处置详细
   *ExportAlarmManagementDetail({ payload }, { call, put, update, select }){
@@ -216,7 +216,7 @@ export default Model.extend({
       }
       const result = yield call(ExportAlarmManagementDetail, body, null)
       if (result.IsSuccess) {
-        downloadFile(result.Datas)
+        downloadFile(`/upload${result.Datas}`)
       }
     },
   },

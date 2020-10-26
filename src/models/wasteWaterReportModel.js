@@ -24,8 +24,13 @@ export default Model.extend({
   subscriptions: {},
   effects: {
       *GetEntByRegionAndAtt({ payload }, { call, put, update, select }) {
+
+        const body = {
+          RegionCode:payload.RegionCode,
+          Attention:payload.Attention,
+        }
       
-        const result = yield call(GetEntByRegionAndAtt, payload, null)
+        const result = yield call(GetEntByRegionAndAtt, body, null)
         if (result.IsSuccess) {
           yield update({
             EntByRegionAndAttList: result.Datas
@@ -61,9 +66,7 @@ export default Model.extend({
           dataType:payload.dataType,
           time:payload.time
         }
-        console.log(body)
         const result = yield call(GetAllTypeDataListWater, body, null)
-        console.log(result)
         if (result.IsSuccess) {
           yield update({
             AllTypeDataListWaterList: result.Datas
@@ -85,7 +88,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAllTypeDataListWater, body, null)
         if (result.IsSuccess) {
-          downloadFile(result.Datas)
+          downloadFile(`/upload${result.Datas}`)
         }
       },
   },
