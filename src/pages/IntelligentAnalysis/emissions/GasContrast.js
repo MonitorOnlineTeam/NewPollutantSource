@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react'
-import { Card, Form, Col, Row, Select, Input, Checkbox, Tabs, Button, message, Divider } from 'antd';
+import { Card, Form, Col, Row, Select, Input, Checkbox, Tabs, Button, message, Divider, DatePicker } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import IndustryTree from '@/components/IndustryTree'
 
-
+const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -28,20 +27,19 @@ const ImportantTypeList = [
   regionList: autoForm.regionList,
   industryTreeList: common.industryTreeList,
   attentionList: emissionsStatistics.attentionList,
-  regionTableDataSource: emissionsStatistics.regionTableDataSource,
-  entTableDataSource: emissionsStatistics.entTableDataSource,
-  pointTableDataSource: emissionsStatistics.pointTableDataSource,
-  regionLoading: emissionsStatistics.regionLoading,
-  entLoading: emissionsStatistics.entLoading,
-  pointLoading: emissionsStatistics.pointLoading,
-  regionExportLoading: emissionsStatistics.regionExportLoading,
-  entExportLoading: emissionsStatistics.entExportLoading,
+  regionContrastTableDataSource: emissionsStatistics.regionContrastTableDataSource,
+  entContrastTableDataSource: emissionsStatistics.entContrastTableDataSource,
+  pointContrastTableDataSource: emissionsStatistics.pointContrastTableDataSource,
+  regionContrastExportLoading: emissionsStatistics.regionContrastExportLoading,
+  entContrastExportLoading: emissionsStatistics.entContrastExportLoading,
+  pointContrastExportLoading: emissionsStatistics.pointContrastExportLoading,
+  regionContrastLoading: emissionsStatistics.regionContrastLoading,
+  entContrastLoading: emissionsStatistics.entContrastLoading,
   pointExportLoading: emissionsStatistics.pointExportLoading,
 }))
 @Form.create()
-class Water extends PureComponent {
+class GasContrast extends PureComponent {
   state = {
-    time: [moment().subtract(1, 'days').startOf("day"), moment().endOf("day")],
     DataType: "region",
   }
   _SELF_ = {
@@ -49,7 +47,6 @@ class Water extends PureComponent {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     },
-
   }
 
   componentDidMount() {
@@ -73,19 +70,28 @@ class Water extends PureComponent {
   // 获取table数据
   getTableData = (DataType) => {
     let values = this.props.form.getFieldsValue();
+    if (values.time2 && values.time1) {
+      if (values.time2[0] <= values.time1[1]) {
+        message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+        return;
+      }
+    } else {
+      message.error("请将时间填写完整");
+      return;
+    }
     console.log("values=", values)
-    console.log("values-time=", this.state.time)
     this.props.dispatch({
-      type: "emissionsStatistics/getTableDataByType",
+      type: "emissionsStatistics/getContrastTableDataByType",
       payload: {
         AttentionCode: values.AttentionCode,
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
-        PollutantType: 1,
-        beginTime: moment(this.state.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(this.state.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-        // DataType: this.state.DataType,
+        PollutantType: 2,
+        beginTime: moment(values.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(values.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
+        ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD HH:mm:ss'),
+        ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD HH:mm:ss'),
         DataType: DataType,
       }
     })
@@ -94,63 +100,72 @@ class Water extends PureComponent {
   // 导出
   onExport = () => {
     let values = this.props.form.getFieldsValue();
+    if (values.time2 && values.time1) {
+      if (values.time2[0] <= values.time1[1]) {
+        message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+        return;
+      }
+    } else {
+      message.error("请将时间填写完整");
+      return;
+    }
     this.props.dispatch({
-      type: "emissionsStatistics/exportTableDataByType",
+      type: "emissionsStatistics/exportContrastTableDataByType",
       payload: {
         AttentionCode: values.AttentionCode,
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
-        PollutantType: 1,
-        beginTime: moment(this.state.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(this.state.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        PollutantType: 2,
+        beginTime: moment(values.time1[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: moment(values.time1[1]).format('YYYY-MM-DD 00:00:00'),
+        ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
+        ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD 00:00:00'),
         DataType: this.state.DataType,
       }
     })
   }
 
-  dateChange = (date, dataType) => {
-    this.setState({
-      time: date
-    })
-  }
-
-  getColumns = () => {
-
-  }
-
   render() {
-    const { form: { getFieldDecorator }, regionExportLoading, entExportLoading, pointExportLoading, regionLoading, entLoading, pointLoading, regionList, attentionList, regionTableDataSource, entTableDataSource, pointTableDataSource } = this.props;
-    let loading = regionLoading || entLoading || pointLoading;
-    let exportLoading = regionExportLoading || entExportLoading || pointExportLoading;
-    // const { columns, RegionColumns, EntColumns } = this._SELF_;
-    const { time } = this.state;
+    const { form: { getFieldDecorator, getFieldValue }, regionContrastLoading, entContrastLoading, pointExportLoading, regionContrastExportLoading, entContrastExportLoading, pointContrastExportLoading, regionList, attentionList, regionContrastTableDataSource, entContrastTableDataSource, pointContrastTableDataSource } = this.props;
+    let loading = regionContrastLoading || entContrastLoading || pointExportLoading;
+    let exportLoading = regionContrastExportLoading || entContrastExportLoading || pointContrastExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
       width: 60,
       textAlign: 'right',
       display: 'inline-block',
     }
-    let beginTime = time[0].format("YYYY年MM月DD日")
-    let endTime = time[1].format("YYYY年MM月DD日")
+    let beginTime, endTime, beginTime2, endTime2;
+    let formTime1 = getFieldValue("time1");
+    let formTime2 = getFieldValue("time2");
+    if (formTime1) {
+      beginTime = formTime1[0].format("YYYY年MM月DD日")
+      endTime = formTime1[1].format("YYYY年MM月DD日")
+    }
+    if (formTime2) {
+      beginTime2 = formTime2[0].format("YYYY年MM月DD日")
+      endTime2 = formTime2[1].format("YYYY年MM月DD日")
+    }
+
     let RegionColumns = [
       {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 150,
+        width: 120,
       },
       {
         title: '企业数',
         dataIndex: 'CountEnt',
         key: 'CountEnt',
-        width: 150,
+        width: 100,
       },
       {
         title: '监测点数',
         dataIndex: 'CountPoint',
         key: 'CountPoint',
-        width: 150,
+        width: 100,
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
@@ -159,71 +174,115 @@ class Water extends PureComponent {
             title: '生产企业数',
             dataIndex: 'ProductionCountEnt',
             key: 'ProductionCountEnt',
-            width: 150,
+            width: 100,
             align: 'center',
           },
           {
             title: '生产监控点数',
             dataIndex: 'ProductionCountPoint',
             key: 'ProductionCountPoint',
-            width: 150,
+            width: 100,
             align: 'center',
           },
           {
             title: '排放量（kg）',
             children: [
               {
-                title: 'COD',
-                dataIndex: 'CODEmissionsValue',
-                key: 'CODEmissionsValue',
-                width: 140,
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValue',
+                key: 'SmokeEmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '氨氮',
-                dataIndex: 'AndanEmissionsValue',
-                key: 'AndanEmissionsValue',
-                width: 140,
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValue',
+                key: 'So2EmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '总磷',
-                dataIndex: 'ZonglinEmissionsValue',
-                key: 'ZonglinEmissionsValue',
-                width: 140,
-                align: 'center',
-              },
-              {
-                title: '总氮',
-                dataIndex: 'ZongdanEmissionsValue',
-                key: 'ZongdanEmissionsValue',
-                width: 140,
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValue',
+                key: 'NOXEmissionsValue',
+                width: 180,
                 align: 'center',
               },
             ]
           },
+        ]
+      },
+      {
+        title: `时间（${beginTime2}至${endTime2}）`,
+        children: [
           {
-            title: '流量（吨）',
-            dataIndex: 'FlowValue',
-            key: 'FlowValue',
-            width: 140,
+            title: '生产企业数',
+            dataIndex: 'ProductionCountEntC',
+            key: 'ProductionCountEntC',
+            width: 100,
             align: 'center',
+          },
+          {
+            title: '生产监控点数',
+            dataIndex: 'ProductionCountPointC',
+            key: 'ProductionCountPointC',
+            width: 100,
+            align: 'center',
+          },
+          {
+            title: '排放量（kg）',
+            children: [
+              {
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValueC',
+                key: 'SmokeEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValueC',
+                key: 'So2EmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValueC',
+                key: 'NOXEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+            ]
           },
         ]
       },
-
+      {
+        title: '差额（kg）',
+        dataIndex: 'Difference',
+        key: 'Difference',
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '百分比（%）',
+        dataIndex: 'Percentage',
+        key: 'Percentage',
+        width: 120,
+        align: 'center',
+      },
     ];
     let EntColumns = [
       {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        // width: 150,
+        width: 120,
       },
       {
         title: '序号',
         key: 'index',
-        width: 80,
+        width: 60,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -232,34 +291,34 @@ class Water extends PureComponent {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
-        // width: 200,
+        width: 200,
       },
       {
         title: '关注程度',
         dataIndex: 'AttentionName',
         key: 'AttentionName',
-        // width: 150,
+        width: 120,
       },
       {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
+        width: 120,
         render: (text, record) => {
           if (text && text != "0") {
             return ImportantTypeList.find(item => item.value == text)["text"]
           }
           return "-"
         }
-        // width: 200,
       },
       {
         title: '行业',
         dataIndex: 'TradeName',
         key: 'TradeName',
+        width: 180,
         render: (text, record) => {
           return text ? text : "-"
         }
-        // width: 200,
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
@@ -268,43 +327,74 @@ class Water extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: 'COD',
-                dataIndex: 'CODEmissionsValue',
-                key: 'CODEmissionsValue',
-                width: 140,
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValue',
+                key: 'SmokeEmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '氨氮',
-                dataIndex: 'AndanEmissionsValue',
-                key: 'AndanEmissionsValue',
-                width: 140,
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValue',
+                key: 'So2EmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '总磷',
-                dataIndex: 'ZonglinEmissionsValue',
-                key: 'ZonglinEmissionsValue',
-                width: 140,
-                align: 'center',
-              },
-              {
-                title: '总氮',
-                dataIndex: 'ZongdanEmissionsValue',
-                key: 'ZongdanEmissionsValue',
-                width: 140,
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValue',
+                key: 'NOXEmissionsValue',
+                width: 180,
                 align: 'center',
               },
             ]
           },
+        ]
+      },
+      {
+        title: `时间（${beginTime2}至${endTime2}）`,
+        children: [
           {
-            title: '流量（吨）',
-            dataIndex: 'FlowValue',
-            key: 'FlowValue',
-            align: 'center',
-            width: 140,
+            title: '排放量（kg）',
+            children: [
+              {
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValueC',
+                key: 'SmokeEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValueC',
+                key: 'So2EmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValueC',
+                key: 'NOXEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+            ]
           },
         ]
+      },
+      {
+        title: '差额（kg）',
+        dataIndex: 'Difference',
+        key: 'Difference',
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '百分比（%）',
+        dataIndex: 'Percentage',
+        key: 'Percentage',
+        width: 120,
+        align: 'center',
       },
     ]
     let PointColumns = [
@@ -312,12 +402,13 @@ class Water extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
+        width: 120,
         // width: 150,
       },
       {
         title: '序号',
         key: 'index',
-        width: 80,
+        width: 60,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -326,18 +417,19 @@ class Water extends PureComponent {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
-        // width: 200,
+        width: 200,
       },
       {
         title: '关注程度',
         dataIndex: 'AttentionName',
         key: 'AttentionName',
-        // width: 150,
+        width: 120,
       },
       {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
+        width: 120,
         render: (text, record) => {
           if (text && text != "0") {
             return ImportantTypeList.find(item => item.value == text)["text"]
@@ -349,6 +441,7 @@ class Water extends PureComponent {
         title: '行业',
         dataIndex: 'TradeName',
         key: 'TradeName',
+        width: 180,
         render: (text, record) => {
           return text ? text : "-"
         }
@@ -358,12 +451,13 @@ class Water extends PureComponent {
         title: '监测点',
         dataIndex: 'PointName',
         key: 'PointName',
-        // width: 200,
+        width: 180,
       },
       {
         title: '是否参与企业排放量计算',
         dataIndex: 'IsStatisti',
         key: 'IsStatisti',
+        width: 80,
         render: (text, record) => {
           if (text !== undefined) {
             return text == 0 ? "否" : "是"
@@ -376,97 +470,91 @@ class Water extends PureComponent {
         title: `时间（${beginTime}至${endTime}）`,
         children: [
           {
+            title: '生产天数',
+            dataIndex: 'CountDay',
+            key: 'CountDay',
+            width: 80,
+            align: 'center',
+          },
+          {
             title: '排放量（kg）',
             children: [
               {
-                title: 'COD',
-                dataIndex: 'CODEmissionsValue',
-                key: 'CODEmissionsValue',
-                width: 140,
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValue',
+                key: 'SmokeEmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '氨氮',
-                dataIndex: 'AndanEmissionsValue',
-                key: 'AndanEmissionsValue',
-                width: 140,
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValue',
+                key: 'So2EmissionsValue',
+                width: 180,
                 align: 'center',
               },
               {
-                title: '总磷',
-                dataIndex: 'ZonglinEmissionsValue',
-                key: 'ZonglinEmissionsValue',
-                width: 140,
-                align: 'center',
-              },
-              {
-                title: '总氮',
-                dataIndex: 'ZongdanEmissionsValue',
-                key: 'ZongdanEmissionsValue',
-                width: 140,
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValue',
+                key: 'NOXEmissionsValue',
+                width: 180,
                 align: 'center',
               },
             ]
-          },
-          {
-            title: '平均浓度（mg/m³）',
-            children: [
-              {
-                title: 'COD',
-                dataIndex: 'CODAVGValue',
-                key: 'CODAVGValue',
-                width: 140,
-                align: 'center',
-                render: (text, record) => {
-                  return text ? text : "-"
-                }
-              },
-              {
-                title: '氨氮',
-                dataIndex: 'AndanAVGValue',
-                key: 'AndanAVGValue',
-                width: 140,
-                align: 'center',
-                render: (text, record) => {
-                  return text ? text : "-"
-                }
-              },
-              {
-                title: '总磷',
-                dataIndex: 'ZonglinAVGValue',
-                key: 'ZonglinAVGValue',
-                width: 140,
-                align: 'center',
-                render: (text, record) => {
-                  return text ? text : "-"
-                }
-              },
-              {
-                title: '总氮',
-                dataIndex: 'ZongdanAVGValue',
-                key: 'ZongdanAVGValue',
-                width: 140,
-                align: 'center',
-                render: (text, record) => {
-                  return text ? text : "-"
-                }
-              },
-            ]
-          },
-          {
-            title: '流量（吨）',
-            dataIndex: 'FlowValue',
-            key: 'FlowValue',
-            align: 'center',
-            width: 180,
           },
         ]
       },
       {
-        title: '生产天数',
-        dataIndex: 'CountDay',
-        key: 'CountDay',
-        // width: 200,
+        title: `时间（${beginTime2}至${endTime2}）`,
+        children: [
+          {
+            title: '生产天数',
+            dataIndex: 'CountDayC',
+            key: 'CountDayC',
+            width: 80,
+            align: 'center',
+          },
+          {
+            title: '排放量（kg）',
+            children: [
+              {
+                title: '烟尘',
+                dataIndex: 'SmokeEmissionsValueC',
+                key: 'SmokeEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '二氧化硫',
+                dataIndex: 'So2EmissionsValueC',
+                key: 'So2EmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+              {
+                title: '氮氧化物',
+                dataIndex: 'NOXEmissionsValueC',
+                key: 'NOXEmissionsValueC',
+                width: 180,
+                align: 'center',
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: '差额（kg）',
+        dataIndex: 'Difference',
+        key: 'Difference',
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '百分比（%）',
+        dataIndex: 'Percentage',
+        key: 'Percentage',
+        width: 180,
+        align: 'center',
       },
     ]
     return (
@@ -474,6 +562,20 @@ class Water extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 10 }}>
             <Row>
+              <FormItem label={<span style={{ ..._style }}>时间段1</span>}>
+                {getFieldDecorator('time1', {
+                  initialValue: [moment().subtract(14, 'days'), moment().subtract(7, 'days')]
+                })(
+                  <RangePicker />
+                )}
+              </FormItem>
+              <FormItem label={<span style={{ ..._style }}>时间段2</span>}>
+                {getFieldDecorator('time2', {
+                  initialValue: [moment().subtract(6, 'days'), moment()]
+                })(
+                  <RangePicker />
+                )}
+              </FormItem>
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
                 {getFieldDecorator('RegionCode', {
                 })(
@@ -488,6 +590,9 @@ class Water extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
+
+            </Row>
+            <Row>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
@@ -503,16 +608,6 @@ class Water extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
-              <FormItem label={<span style={{ ..._style }}>日期查询</span>}>
-                <RangePicker_
-                  dateValue={time}
-                  format="YYYY-MM-DD"
-                  callback={(dates, dataType) => this.dateChange(dates, dataType)}
-                  allowClear={false}
-                />
-              </FormItem>
-            </Row>
-            <Row>
               <FormItem label={<span style={{ ..._style }}>重点类型</span>}>
                 {getFieldDecorator('ImportantType', {
                 })(
@@ -562,13 +657,13 @@ class Water extends PureComponent {
           {/* <Divider /> */}
           <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
             <TabPane tab="师市排放量" key="region">
-              <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
+              <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
+              <SdlTable loading={entContrastLoading} pagination={false} align="center" dataSource={entContrastTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointLoading} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
+              <SdlTable loading={pointExportLoading} pagination={false} align="center" dataSource={pointContrastTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>
@@ -576,5 +671,4 @@ class Water extends PureComponent {
     );
   }
 }
-
-export default Water;
+export default GasContrast;

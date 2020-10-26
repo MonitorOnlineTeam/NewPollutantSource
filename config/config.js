@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -928,7 +928,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -951,7 +951,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -1259,6 +1259,12 @@ export default {
                       name: 'water',
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
+                    },
+                    {
+                      // 废气排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      component: './IntelligentAnalysis/emissions/GasContrast',
                     },
                   ]
                 },
