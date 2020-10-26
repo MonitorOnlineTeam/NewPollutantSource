@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-二级
  * @LastEditors: hxf
  * @Date: 2020-10-22 09:08:17
- * @LastEditTime: 2020-10-23 17:09:42
+ * @LastEditTime: 2020-10-26 10:12:56
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate.js
  */
 import React, { PureComponent } from 'react';
@@ -206,7 +206,11 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
             width: 100,
             align: 'center',
             render: (text, record) => {
-              return <div>{`${text}%`}</div>;
+              if (text == '-') {
+                return <div>{`${text}`}</div>;
+              } else {
+                return <div>{`${text}%`}</div>;
+              }
             },
           },
         ],

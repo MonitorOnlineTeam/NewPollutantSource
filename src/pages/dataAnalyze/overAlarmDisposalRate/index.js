@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-10-23 17:56:40
+ * @LastEditTime: 2020-10-26 10:13:45
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -352,7 +352,7 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Form layout="inline" style={{ marginBottom: 0 }}>
             <Row gutter={16}>
               <Col md={4}>
                 <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
@@ -523,6 +523,11 @@ class index extends PureComponent {
               </Col>
             </Row>
           </Form>
+          <Row gutter={16}>
+            <div style={{ color: 'red', marginBottom: 8, marginLeft: 28 }}>
+              核实结果为工艺超标、工艺设备故障的超标报警 ，由监管人员进行处置
+            </div>
+          </Row>
           <SdlTable
             scroll={{ xScroll: 'scroll' }}
             dataSource={alarmManagementRateDataSource}
