@@ -73,6 +73,7 @@ const pageUrl = {
   entName:home.entName,
   pollutantList:home.pollutantList,
   isWorkRate:home.isWorkRate,
+  Atmosphere:home.Atmosphere
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -90,6 +91,9 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
+        render:(text)=>{
+        return <a href='#' onClick={this.nextPage}>{text}</a>
+        }
       },
       {
         title: <span>企业数</span>,
@@ -98,19 +102,10 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
       },
       {
-        title: <span>{this.props.Atmosphere? '监测点数': '空气监测点数'}</span>,
+        title: <span>{this.props.Atmosphere?  '空气监测点数':'监测点数'}</span>,
         dataIndex: 'pointName',
         key: 'pointName',
         align: 'center',
-      },
-      {
-        title: <span>排口类型</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
-        align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
       },
       {
         title: <span>运转率</span>,
@@ -121,34 +116,27 @@ export default class EntTransmissionEfficiency extends Component {
           if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
-          // 红色：#f5222d 绿色：#52c41a
           const percent = interceptTwo(Number(text) * 100);
+          if(this.props.isWorkRate){ // 运转率 
           if (percent >= 90) {
-            return (
-              <div>
-                <Progress
-                  successPercent={percent}
-                  percent={percent}
-                  size="small"
-                  style={{width:'90%'}}
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
-                />
+            return <div>
+                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
+                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
               </div>
-            );
           }
-          return (
-            <div>
-              <Progress
-                successPercent={0}
-                percent={percent}
-                status="exception"
-                size="small"
-                style={{width:'90%'}}
-                format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
-              />
+          return  <div>
+              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
             </div>
-          );
-        },
+         }else{
+          <div>
+          <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+            style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+        </div>
+         }
+
+
+        }
       },
       {
         title: <span>低于90%的监测点个数</span>,
@@ -173,8 +161,6 @@ export default class EntTransmissionEfficiency extends Component {
   initData = () => {
     const { dispatch, location,isWorkRate } = this.props;
     
-    console.log("111111")
-    console.log(isWorkRate)
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -297,7 +283,7 @@ export default class EntTransmissionEfficiency extends Component {
       endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
     });
   }
-  workNextPage=()=>{
+  nextPage=()=>{
     const { isWorkRate,dispatch } = this.props;
     setTimeout(()=>{
       this.setState({entVisible:true})
@@ -367,7 +353,7 @@ export default class EntTransmissionEfficiency extends Component {
                     导出
                   </Button>
                 </Form.Item>
-                <a href='javascript:;' onClick={this.workNextPage}>下级页面</a>
+                <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
                 </Row>
               </Form>
             </>

@@ -1,7 +1,7 @@
 /**
- * 功  能：统计量变化趋势
+ * 功  能：无台账工单统计
  * 创建人：贾安波
- * 创建时间：2019.10.19
+ * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
 import {
@@ -22,7 +22,7 @@ import {
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -52,25 +52,24 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'videoMonitor/updateState',
-  getData: 'videoMonitor/getCameraListEnt',
-  getStationData:'videoMonitor/getCameraListStation'
+  updateState: 'noAccountStatistics/updateState',
+  getData: 'noAccountStatistics/getSewageHistoryList',
 };
-@connect(({ loading, videoMonitor,autoForm }) => ({
-  priseList: videoMonitor.priseList,
-  exloading:videoMonitor.exloading,
-  loading: videoMonitor.loading,
-  total: videoMonitor.total,
-  tableDatas: videoMonitor.tableDatas,
-  queryPar: videoMonitor.queryPar,
+@connect(({ loading, noAccountStatistics,autoForm }) => ({
+  priseList: noAccountStatistics.priseList,
+  exloading:noAccountStatistics.exloading,
+  loading: noAccountStatistics.loading,
+  total: noAccountStatistics.total,
+  tableDatas: noAccountStatistics.tableDatas,
+  queryPar: noAccountStatistics.queryPar,
   regionList: autoForm.regionList,
-  attentionList:videoMonitor.attentionList,
-  pointName:videoMonitor.pointName,
-  chartExport:videoMonitor.chartExport,
-  chartImport:videoMonitor.chartImport,
-  chartTime:videoMonitor.chartTime,
-  entName:videoMonitor.entName,
-  stationTableDatas:videoMonitor.stationTableDatas
+  attentionList:noAccountStatistics.attentionList,
+  pointName:noAccountStatistics.pointName,
+  chartExport:noAccountStatistics.chartExport,
+  chartImport:noAccountStatistics.chartImport,
+  chartTime:noAccountStatistics.chartTime,
+  entName:noAccountStatistics.entName,
+  pollutantList:noAccountStatistics.pollutantList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -84,76 +83,97 @@ export default class EntTransmissionEfficiency extends Component {
     
     this.columns = [
       {
-        title: <span>行政区</span>,
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        title: '排口类型',
+        dataIndex: 'MonitorTime',
+        key: 'MonitorTime',
         align: 'center',
       },
       {
-        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
-        dataIndex: 'EntName',
-        key: 'EntName',
-        align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        title: '监测点名称',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render:(text,record)=>{
+                return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>;
+            }
       },
       {
-        title: <span>监测点名称</span>,
-        dataIndex: 'PointName',
-        key: 'PointName',
-        align: 'center',
-      },
-      {
-        title: <span>关注程度</span>,
-        dataIndex: 'AttentionName',
-        key: 'AttentionName',
-        align: 'center',
-      },
-      {
-        title: <span>排口类型</span>,
-        dataIndex: 'PollutantType',
-        key: 'PollutantType',
-        align: 'center',
-      },
-      {
-        title: <span>相机名称</span>,
-        dataIndex: 'CameraName',
-        key: 'CameraName',
-        align: 'center',
-      },
-      {
-        title: <span>操作</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
-        align: 'center',
-        render:(text,row)=>{
-          // return <Link to={{ pathname:'/monitoring/videoMonitor/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
-          return <a href='#'>播放</a>
+        title: '缺失台账监测点名称',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
 
-        }
       },
-    ];
+      {
+        title: '巡检工单',
+        children: [
+          {
+            title:'完成工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },
+          {
+            title:'缺失台账工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },        
+      ]
+      },   
+      {
+        title: '校准工单',
+        children: [
+          {
+            title:'完成工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },
+          {
+            title:'缺失台账工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },        
+      ]
+      },             
+    ]
   }
 
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere} = this.props;
-    
-    if(Atmosphere){
-      this.columns.splice(3,2)
-    }
+    const { dispatch, location } = this.props;
+
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'videoMonitor/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
      this.updateQueryState({
-      RegionCode: "",
-      EntCode: "",
-      AttentionCode: ""
+      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
+      AttentionCode: '',
+      EntCode: '',
+      RegionCode: '',
+      dataType:'HourData',
     });
     setTimeout(() => {
       this.getTableData();
@@ -171,18 +191,11 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => { 
-    const { dispatch, queryPar,Atmosphere } = this.props;
-    if(Atmosphere){
-      dispatch({
-        type: pageUrl.getStationData,
-        payload: {},
-      });
-    }else{
+    const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
       payload: { ...queryPar },
     });
-   }
   };
 
 
@@ -203,29 +216,55 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
+  typeChange = value => {
+    this.updateQueryState({
+      PollutantType: value,
+    });
+  };
 
   changeRegion = (value) => { //行政区事件
+    
     this.updateQueryState({
-      RegionCode: value? value : '',
+      RegionCode: value,
     });
   };
   changeAttent=(value)=>{
     this.updateQueryState({
-      AttentionCode: value? value : '',
+      AttentionCode: value,
     });
   }
   changeEnt=(value,data)=>{ //企业事件
     this.updateQueryState({
-      EntCode: value? value : '',
+      EntCode: value,
     });
 
   }
+
+  changePoll=(value)=>{ //污染物改变事件
+    this.updateQueryState({
+      PollutantCode: value,
+    });
+
+  }
+  //创建并获取模板   导出
+  template = () => {
+    const { dispatch, queryPar } = this.props;
+    dispatch({
+      type: 'noAccountStatistics/exportSewageHistoryList',
+      payload: { ...queryPar },
+      callback: data => {
+          downloadFile(`/upload${data}`);
+        },
+    });
+  };
   //查询事件
   queryClick = () => {
   
 
     const { pointName, dispatch,queryPar:{EntCode} } = this.props;
-    this.getTableData();
+
+      this.getTableData();
+
   };
 
 
@@ -259,59 +298,50 @@ export default class EntTransmissionEfficiency extends Component {
   }
   
 
+  dateChange=(date,dataType)=>{
+      this.updateQueryState({
+        dataType:GetDataType(dataType),
+        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }
+    dateOk=()=>{ 
+
+   }
 
 
+  onChange3=(e)=>{
+   console.log(e)
+  }
+  regionDetail=()=>{
+
+  }
   render() {
     const {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
-      Atmosphere,
-      tableDatas,
-      stationTableDatas
+      entVisible,
+      entCancel
     } = this.props;
     const { TabPane } = Tabs;
 
-    return (
-        <Card
-          bordered={false}
-          title={
-            !Atmosphere?
-            <>
-           
-              <Form layout="inline">   
-              <Row>
-              <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-              
-              <Form.Item label='关注程度'>
-               <AttentList  changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item>
-                <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                </Form.Item>
-                </Row>
-              </Form>
-          
-            </>
-            :
-            null
-          }
-        >
-          <div id='videoMonitor'>
 
+    return (
+        <Modal
+          title="这是企业"
+          footer={null}
+          width='95%'
+          visible={entVisible}  
+          onCancel={entCancel}
+        >          
+          <div id='noAccountStatistics'>
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={this.columns}
               // bordered={false}
-              dataSource={ Atmosphere?stationTableDatas : tableDatas  }
+              dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
@@ -325,7 +355,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
-        </Card>
+        </Modal>
     );
   }
 }

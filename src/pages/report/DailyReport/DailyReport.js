@@ -76,7 +76,7 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegionAndAtt,
-            payload: { RegionCode: '' ,Attention:''},
+            payload: { RegionCode: '' ,Attention:'',PollutantTypeCode:'1'},
         });
     };
 
@@ -194,7 +194,7 @@ class index extends PureComponent {
 
         return (
             <>
-                <label>行政区:</label><Select
+                <label style={{fontSize:14}}>行政区:</label><Select
                     allowClear
                     showSearch
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -216,16 +216,18 @@ class index extends PureComponent {
                             type: pageUrl.GetEntByRegionAndAtt,
                             payload: {
                                 RegionCode:value,
-                                Attention:this.state.attentionValue
+                                Attention:this.state.attentionValue,
+                                PollutantTypeCode:'1'
                             },
                         });
                         this.setState({
-                            regionValue: value
+                            regionValue: value,
+                            entValue:''
                         })
                     }}>
                     {this.children()}
                 </Select>
-                <label>关注程度:</label><Select
+                <label style={{fontSize:14}}>关注程度:</label><Select
                     allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                     placeholder="关注度"
@@ -238,45 +240,58 @@ class index extends PureComponent {
                             type: pageUrl.GetEntByRegionAndAtt,
                             payload: {
                                 RegionCode:this.state.regionValue,
-                                Attention:value
+                                Attention:value,
+                                PollutantTypeCode:'1'
                             },
                         });
                         this.setState({
                             attentionValue: value,
+                            entValue:''
                         })
                     }}>
                     {this.attention()}
                 </Select>
-                <label>企业列表:</label><Select
+                <label style={{fontSize:14}}>企业列表:</label><Select
                     allowClear
+                    showSearch
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                     placeholder="企业列表"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    defaultValue={this.state.entType}
                     maxTagPlaceholder="..."
+                    value={this.state.entValue}
+                    optionFilterProp="children"
+                    filterOption={(input, option) => {
+                        if (option && option.props && option.props.title) {
+                            return option.props.title === input || option.props.title.indexOf(input) !== -1
+                        } else {
+                            return true
+                        }
+                    }}
                     onChange={(value) => {
                         //获取企业列表
                         this.props.dispatch({
                             type: pageUrl.GetPointByEntCode,
                             payload: {
-                                EntCode:value
+                                EntCode:value,
+                                PollutantTypeCode:'1'
                             },
                         });    
                         this.setState({
                             entValue: value,
+                            pointValue:''
                         })
                     }}>
                     {this.entList()}
                 </Select>
-                <div style={{marginTop:10}}>
+                <div style={{marginTop:10,fontSize:14}}>
                     <label>监测点:</label><Select
                         allowClear
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                         placeholder="监测点列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        defaultValue={this.state.entType}
+                        value={this.state.pointValue}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({
@@ -422,7 +437,7 @@ class index extends PureComponent {
                         key: 'b01',
                     },
                     {
-                        title: "排放量(Kg)",
+                        title: "排放量(t)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
@@ -457,12 +472,12 @@ class index extends PureComponent {
         const { loading,priseList } = this.props
         return (
             <>
-                <div id="siteParamsPage" className={{}}>
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="小时平均值日报">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                    {this.cardTitle()}
                                 </>
                             }
                             className={style.dataTable}
