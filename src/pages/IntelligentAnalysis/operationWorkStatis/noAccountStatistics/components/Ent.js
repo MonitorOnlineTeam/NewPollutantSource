@@ -1,8 +1,7 @@
-
 /**
- * 功  能：首页弹框
+ * 功  能：无台账工单统计
  * 创建人：贾安波
- * 创建时间：2020.10
+ * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
 import {
@@ -12,7 +11,7 @@ import {
   Progress,
   Row,
   Popover,
-  Col, 
+  Col,
   Icon,
   Badge,
   Modal,
@@ -23,7 +22,7 @@ import {
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -33,7 +32,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile,GetDataType,toDecimal3,interceptTwo} from '@/utils/utils';
+import { downloadFile,GetDataType,toDecimal3} from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
 import { blue,red,green,gold,grey} from '@ant-design/colors';
@@ -42,9 +41,9 @@ import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
-import { EnumPropellingAlarmSourceType } from '@/utils/enum'
+import { EnumPropellingAlarmSourceType } from '@/utils/enum';
 
-import MonPoint from './MonPoint'
+
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -53,25 +52,24 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'home/updateState',
-  getData: 'home/getSewageHistoryList',
+  updateState: 'noAccountStatistics/updateState',
+  getData: 'noAccountStatistics/getSewageHistoryList',
 };
-@connect(({ loading, home,autoForm }) => ({
-  priseList: home.priseList,
-  exloading:home.exloading,
-  loading: home.loading,
-  total: home.total,
-  tableDatas: home.tableDatas,
-  queryPar: home.queryPar,
+@connect(({ loading, noAccountStatistics,autoForm }) => ({
+  priseList: noAccountStatistics.priseList,
+  exloading:noAccountStatistics.exloading,
+  loading: noAccountStatistics.loading,
+  total: noAccountStatistics.total,
+  tableDatas: noAccountStatistics.tableDatas,
+  queryPar: noAccountStatistics.queryPar,
   regionList: autoForm.regionList,
-  attentionList:home.attentionList,
-  pointName:home.pointName,
-  chartExport:home.chartExport,
-  chartImport:home.chartImport,
-  chartTime:home.chartTime,
-  entName:home.entName,
-  isWorkRate:home.isWorkRate,
-  Atmosphere:home.Atmosphere
+  attentionList:noAccountStatistics.attentionList,
+  pointName:noAccountStatistics.pointName,
+  chartExport:noAccountStatistics.chartExport,
+  chartImport:noAccountStatistics.chartImport,
+  chartTime:noAccountStatistics.chartTime,
+  entName:noAccountStatistics.entName,
+  pollutantList:noAccountStatistics.pollutantList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -79,55 +77,83 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      pointVisible:false
+
 
     };
     
     this.columns = [
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: '排口类型',
+        dataIndex: 'MonitorTime',
+        key: 'MonitorTime',
         align: 'center',
       },
       {
-        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
-        align: 'center',
-        render: (text, record) => {     
-          return  <a href='#'  onClick={this.nextPage} style={{textAlign:'left',width:'100%'}}>{text}</a>
-       },
+        title: '监测点名称',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render:(text,record)=>{
+                return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>;
+            }
       },
       {
-        title: <span>监测点数</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
-        align: 'center',
+        title: '缺失台账监测点名称',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+
       },
       {
-        title: <span>运转率</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
-        align: 'center',
-        render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }
-          const percent = interceptTwo(Number(text) * 100);
-          if (percent >= 90) {
-            return <div>
-                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
-              </div>
-          }
-          return  <div>
-              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
-            </div>
-         },
-      }
-    ];
+        title: '巡检工单',
+        children: [
+          {
+            title:'完成工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },
+          {
+            title:'缺失台账工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },        
+      ]
+      },   
+      {
+        title: '校准工单',
+        children: [
+          {
+            title:'完成工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },
+          {
+            title:'缺失台账工单数',
+            dataIndex: 'pointName',
+            key: 'pointName',
+            align: 'center',
+            render: (text, record) => {
+              return text? text : '-';
+            },
+          },        
+      ]
+      },             
+    ]
   }
 
   componentDidMount() {
@@ -135,12 +161,12 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location } = this.props;
-    
+
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
      this.updateQueryState({
       beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),
@@ -148,7 +174,6 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: '',
       RegionCode: '',
       dataType:'HourData',
-      PollutantCode:['011','060','101','065','007'],
     });
     setTimeout(() => {
       this.getTableData();
@@ -212,15 +237,34 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
+
+  changePoll=(value)=>{ //污染物改变事件
+    this.updateQueryState({
+      PollutantCode: value,
+    });
+
+  }
+  //创建并获取模板   导出
+  template = () => {
+    const { dispatch, queryPar } = this.props;
+    dispatch({
+      type: 'noAccountStatistics/exportSewageHistoryList',
+      payload: { ...queryPar },
+      callback: data => {
+          downloadFile(`/upload${data}`);
+        },
+    });
+  };
   //查询事件
   queryClick = () => {
   
 
     const { pointName, dispatch,queryPar:{EntCode} } = this.props;
-    this.getTableData();
+
+      this.getTableData();
+
   };
 
 
@@ -254,52 +298,44 @@ export default class EntTransmissionEfficiency extends Component {
   }
   
 
-  nextPage=()=>{
-    this.setState({pointVisible:true}) 
-  }
+  dateChange=(date,dataType)=>{
+      this.updateQueryState({
+        dataType:GetDataType(dataType),
+        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }
+    dateOk=()=>{ 
 
-  
-  pointCancel=()=>{
-    this.setState({pointVisible:false})
+   }
+
+
+  onChange3=(e)=>{
+   console.log(e)
+  }
+  regionDetail=()=>{
+
   }
   render() {
     const {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
-      Atmosphere,
       entVisible,
-      isWorkRate,
       entCancel
     } = this.props;
+    const { TabPane } = Tabs;
 
-    const { pointVisible }  = this.state;
+
     return (
-        <div>
         <Modal
           title="这是企业"
           footer={null}
           width='95%'
           visible={entVisible}  
           onCancel={entCancel}
-        >
-           {isWorkRate?
-           <div style={{ paddingBottom: 10 }}>
-                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≥90%达标
-                </span>
-                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
-                </span>
-              </div>
-              :
-              null
-           }
-              <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
-          <div id=''>
-
+        >          
+          <div id='noAccountStatistics'>
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
@@ -319,9 +355,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
-          </Modal>
-        <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/>
-       </div>
+        </Modal>
     );
   }
 }

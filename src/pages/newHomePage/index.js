@@ -30,11 +30,11 @@ export default class Index extends Component {
 
   
    }
-   workNextPage=()=>{
+   workNextPage=(type)=>{
     const { dispatch } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { isWorkRate: true},
+      payload: { isWorkRate: true,Atmosphere:type=='air'?true:false},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -42,22 +42,22 @@ export default class Index extends Component {
     })
    }
 
-   faultNextPage=()=>{ //故障率
+   faultNextPage=(type)=>{ //故障率
     const { dispatch } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { isFaultRate: true},
+      payload: { isFaultRate: true,Atmosphere:type=='air'?true:false},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
       
     })
    }
-   overNextPage=()=>{ //超标率
+   overNextPage=(type)=>{ //超标率
     const { dispatch } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { isOverRate: true},
+      payload: { isOverRate: true,Atmosphere:type=='air'?true:false},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -77,9 +77,12 @@ export default class Index extends Component {
     const { regionVisible } = this.state;
     return (
         <BreadcrumbWrapper title="首页">
-          <a href='javascript:;' onClick={this.workNextPage} style={{paddingLeft:10}}>运转率</a>
-          <a href='javascript:;' onClick={this.faultNextPage} style={{paddingLeft:10}}>故障率</a>
-          <a href='javascript:;' onClick={this.overNextPage} style={{paddingLeft:10}}>超标率</a>
+          <a href='#' onClick={this.workNextPage} style={{paddingLeft:10}}>运转率</a>
+          <a href='#' onClick={()=>{this.workNextPage("air")}} style={{paddingLeft:10}}>运转率空气站</a>
+          <a href='#' onClick={this.faultNextPage} style={{paddingLeft:10}}>故障率</a>
+          <a href='#' onClick={()=>{this.faultNextPage("air")}} style={{paddingLeft:10}}>故障率空气站</a>
+          <a href='#' onClick={this.overNextPage} style={{paddingLeft:10}}>超标率</a>
+          <a href='#' onClick={()=>{this.overNextPage('air')}} style={{paddingLeft:10}}>超标率空气站</a>
           {regionVisible?  <RegionData regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         </BreadcrumbWrapper>
     );
