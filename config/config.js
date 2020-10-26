@@ -1401,10 +1401,10 @@ export default {
                     name: 'operationWorkStatis',
   
                     routes: [
-                      /* 缺失数据报警统计 */
+                      /* 缺失台账工单统计 */
                       {
-                        path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
-                        redirect: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
+                        redirect: './Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
                       },]
                     },
                 {

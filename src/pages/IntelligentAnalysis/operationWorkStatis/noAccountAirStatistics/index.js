@@ -18,7 +18,7 @@ export default class Index extends Component {
   }
   render() {
     return (
-      <BreadcrumbWrapper title="缺失台账工单统计">
+      <BreadcrumbWrapper title="超标报警核实率">
       </BreadcrumbWrapper>
     );
   }
