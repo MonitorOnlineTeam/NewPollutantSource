@@ -1427,6 +1427,32 @@ export default {
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
+                {
+                  name:'operationWorkStatis', //运维工单统计
+                  path:'/Intelligentanalysis/operationWorkStatis',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis',
+                      redirect: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics',
+                    },
+                    // {
+                    //   name:'',
+                    //   path:'',
+                    //   component:''
+                    // },
+                    {
+                      name:'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
+                      name:'noAccountStatisticsAir', //无台账上传统计 空气站
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                    },
+                  
+                  ]
+                }
               ],
             },
             {
