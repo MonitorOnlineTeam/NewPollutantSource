@@ -123,7 +123,7 @@ export default class PointVerifyLst extends Component {
         key:item.PollutantCode + '_respondedCount',
         align: 'center',
         },{
-          title: <span>未核实报警次数</span>,
+          title: <span>待核实报警次数</span>,
           width:110,
         dataIndex:item.PollutantCode + '_noRespondedCount',
         key: item.PollutantCode + '_noRespondedCount',

@@ -146,7 +146,7 @@ export default class OverVerifyLst extends Component {
                 align: 'center',
               },
               {
-                title: <span>未核实报警次数</span>,
+                title: <span>待核实报警次数</span>,
                 width: 110,
                 dataIndex: item.PollutantCode + '_noRespondedCount',
                 key: item.PollutantCode + '_noRespondedCount',
@@ -311,7 +311,7 @@ export default class OverVerifyLst extends Component {
         key:item.PollutantCode + '_respondedCount',
         align: 'center',
         },{
-          title: <span>未核实报警次数</span>,
+          title: <span>待核实报警次数</span>,
           width:110,
         dataIndex:item.PollutantCode + '_noRespondedCount',
         key: item.PollutantCode + '_noRespondedCount',
@@ -509,6 +509,13 @@ export default class OverVerifyLst extends Component {
                   >
                     导出
                   </Button>
+                 
+                </Form.Item>
+                <Form.Item>
+              
+                  <div style={{ margin: '0 5px',color:'red' }}>
+                   {'已核实指运维人员已将超标报警进行核实'}
+               </div>
                 </Form.Item>
               </Col>
             </Row>
