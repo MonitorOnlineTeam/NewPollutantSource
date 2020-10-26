@@ -57,9 +57,207 @@ class SmokeReportPage extends PureComponent {
     super(props);
     this.state = {
       dataSource: [],
-      columns: {
-        day: [],
-      },
+      columns:  [
+        {
+          title: '时间',
+          dataIndex: 'Time',
+          width: 200,
+          align: 'center',
+        },
+        {
+          title: '烟尘',
+          // width: 330,
+          children: [
+            {
+              title: '浓度(mg/m³)',
+              dataIndex: '01',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 2;
+                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
+                //   // return "-";
+                //   // }else{
+                // }
+                return obj;
+              },
+            },
+            {
+              title: '折算浓度(mg/m³)',
+              dataIndex: 'zs01',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 0;
+                // }
+                return obj;
+              },
+            },
+            {
+              title: `排放量(Kg)`,
+              dataIndex: '01sum',
+              width: 140,
+              align: 'center',
+            },
+          ],
+        },
+        {
+          title: 'SO₂',
+          // width: 330,
+          children: [
+            {
+              title: '浓度(mg/m³)',
+              dataIndex: '02',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 2;
+                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
+                // }
+                return obj;
+              },
+            },
+            {
+              title: '折算浓度(mg/m³)',
+              dataIndex: 'zs02',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 0;
+                // }
+                return obj;
+              },
+            },
+            {
+              title: `排放量(Kg)`,
+              dataIndex: '02sum',
+              width: 140,
+              align: 'center',
+            },
+          ],
+        },
+        {
+          title: 'NOx',
+          // width: 330,
+          children: [
+            {
+              title: '浓度(mg/m³)',
+              dataIndex: '03',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 2;
+                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
+                // }
+                return obj;
+              },
+            },
+            {
+              title: '折算浓度(mg/m³)',
+              dataIndex: 'zs03',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                // if (index === dataLength) {
+                //   obj.props.colSpan = 0;
+                // }
+                return obj;
+              },
+            },
+            {
+              title: `排放量(Kg)`,
+              dataIndex: '03sum',
+              width: 140,
+              align: 'center',
+            },
+          ],
+        },
+        {
+          title: `流量(m³)`,
+          dataIndex: 'b02',
+          width: 140,
+          align: 'center',
+        },
+        {
+          title: '氧含量(%)',
+          dataIndex: 's01',
+          width: 140,
+          align: 'center',
+          render: (value, row, index) => {
+            const obj = {
+              children: value,
+              props: {},
+            };
+            // if (index === dataLength) {
+            //   obj.props.colSpan = 5;
+            //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
+            // }
+            return obj;
+          },
+        },
+        {
+          title: '温度(°C)',
+          dataIndex: 's03',
+          width: 140,
+          align: 'center',
+          render: (value, row, index) => {
+            const obj = {
+              children: value,
+              props: {},
+            };
+            // if (index === dataLength) {
+            //   obj.props.colSpan = 0;
+            // }
+            return obj;
+          },
+        },
+        {
+          title: '湿度(%)',
+          dataIndex: 's05',
+          width: 140,
+          align: 'center',
+          render: (value, row, index) => {
+            const obj = {
+              children: value,
+              props: {},
+            };
+            // if (index === dataLength) {
+            //   obj.props.colSpan = 0;
+            // }
+            return obj;
+          },
+        },
+
+      ],
       time: moment(new Date(), 'YYYY-MM-DD'),
       regionValue: '',
       attentionValue: '',
@@ -253,217 +451,21 @@ class SmokeReportPage extends PureComponent {
     if (nextProps.location.pathname != this.props.location.pathname) {
       this.switchInfo(nextProps.match.params.reportType);
       console.log("props=",this.props)
-      this.getSmokeReportData(nextProps.match.params.reportType);
+      this.props.dispatch({
+        type: 'report/updateState',
+        payload: {
+          smokeReportData:[],
+        },
+      })
+      // this.getSmokeReportData(nextProps.match.params.reportType);
     }
     if (this.props.smokeReportData !== nextProps.smokeReportData) {
       const dataLength = nextProps.smokeReportData.length - 1;
-      const dayColumns = [
-        {
-          title: '时间',
-          dataIndex: 'Time',
-          width: 200,
-          align: 'center',
-        },
-        {
-          title: '烟尘',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '01',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 2;
-                  obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                  // return "-";
-                  // }else{
-                }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs01',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 0;
-                }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '01sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: 'SO₂',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '02',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 2;
-                  obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs02',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 0;
-                }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '02sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: 'NOx',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '03',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 2;
-                  obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs03',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                if (index === dataLength) {
-                  obj.props.colSpan = 0;
-                }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '03sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: `流量(m³)`,
-          dataIndex: 'b02',
-          width: 140,
-          align: 'center',
-        },
-        {
-          title: '氧含量(%)',
-          dataIndex: 's01',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            if (index === dataLength) {
-              obj.props.colSpan = 5;
-              obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-            }
-            return obj;
-          },
-        },
-        {
-          title: '温度(°C)',
-          dataIndex: 's03',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            if (index === dataLength) {
-              obj.props.colSpan = 0;
-            }
-            return obj;
-          },
-        },
-        {
-          title: '湿度(%)',
-          dataIndex: 's05',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            if (index === dataLength) {
-              obj.props.colSpan = 0;
-            }
-            return obj;
-          },
-        },
-
-      ];
-
       this.setState({
-        columns: {
-          day: dayColumns,
-          quarter: dayColumns,
-        },
+        // columns: {
+        //   day: dayColumns,
+        //   quarter: dayColumns,
+        // },
         pointName: nextProps.pointName,
       })
     }
@@ -521,7 +523,7 @@ class SmokeReportPage extends PureComponent {
     const { form: { getFieldDecorator }, smokeReportFrom, entAndPointList, defaultEntAndPoint, smokeReportData, loading, exportLoading } = this.props;
     const { dataSource, columns } = this.state;
     const { reportType } = this.props.match.params
-    const _columns = (reportType === 'day' || reportType === 'month') ? columns.day : columns.quarter
+    // const _columns = (reportType === 'day' || reportType === 'month') ? columns.day : columns.quarter
 
     // console.log("columns-", _columns)
     return (
@@ -647,14 +649,14 @@ class SmokeReportPage extends PureComponent {
             rowKey={(record, index) => index}
             loading={loading}
             size="small"
-            columns={_columns}
+            columns={columns}
             dataSource={smokeReportData}
             pagination={false}
             // rowClassName={""}
             // defaultWidth={80}
             scroll={{ x: '1800px' }}
             bordered
-            footer={() => this.tableFooter}
+            // footer={() => this.tableFooter}
           />
         </Card>
         {/* </Spin> */}
