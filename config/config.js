@@ -1395,6 +1395,18 @@ export default {
                     },
                   ],
                 },
+                  //统计-运维工单
+                  {
+                    path: '/Intelligentanalysis/operationWorkStatis',
+                    name: 'operationWorkStatis',
+  
+                    routes: [
+                      /* 缺失数据报警统计 */
+                      {
+                        path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                        redirect: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                      },]
+                    },
                 {
                   //超标报警处置率
                   name: 'overAlarmDisposalRate',
