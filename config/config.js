@@ -1395,16 +1395,22 @@ export default {
                     },
                   ],
                 },
+
                   //统计-运维工单
                   {
                     path: '/Intelligentanalysis/operationWorkStatis',
                     name: 'operationWorkStatis',
   
                     routes: [
+                      {
+                        // 运维工单统计（企业）
+                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      },
                       /* 缺失台账工单统计 */
                       {
-                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
-                        redirect: './Intelligentanalysis/operationWorkStatis/noAccountAirStatis',
+                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                        component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                       },]
                     },
                 {
