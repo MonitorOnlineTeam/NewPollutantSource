@@ -1262,9 +1262,15 @@ export default {
                     },
                     {
                       // 废气排放量对比统计
-                      name: 'water',
+                      name: 'gasContrast',
                       path: '/Intelligentanalysis/emissions/gasContrast',
                       component: './IntelligentAnalysis/emissions/GasContrast',
+                    },
+                    {
+                      // 废水排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      component: './IntelligentAnalysis/emissions/WaterContrast',
                     },
                   ]
                 },
@@ -1349,7 +1355,7 @@ export default {
                     },
                   ],
                 },
-                
+
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
