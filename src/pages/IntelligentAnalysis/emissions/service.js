@@ -47,3 +47,40 @@ export async function exportPointData(params) {
   const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/ExportEmissionsListForPoint`, params);
   return result;
 }
+
+
+// 师 - 对比数据
+export async function getDataForRegionContrast(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForRegionComparison`, params);
+  return result;
+}
+
+// 企业 - 对比数据
+export async function getDataForEntContrast(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForEntComparison`, params);
+  return result;
+}
+
+// 排口 - 对比数据
+export async function getDataForPointContrast(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForPointComparison`, params);
+  return result;
+}
+
+// 师 - 对比数据导出
+export async function exportRegionContrastData(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/ExportEmissionsListForRegionComparison`, params);
+  return result;
+}
+
+// 企业 - 对比数据导出
+export async function exportEntContrastData(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/ExportEmissionsListForEntComparison`, params);
+  return result;
+}
+
+// 排口 - 对比数据导出
+export async function exportPointContrastData(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/ExportEmissionsListForPointComparison`, params);
+  return result;
+}

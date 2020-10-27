@@ -14,19 +14,19 @@ import {
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'home',
+  namespace: 'noAccountStatistics',
   state: {
     exloading: false,
     loading: true,
     queryPar: {
       beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:00:00'),
+        .subtract(1, 'month')
+        .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:['011','060','101','065'],
+      PollutantCode:['011','060','101','065','007'],
       PollutantType:'',
       dataType:'HourData'
     },
@@ -39,11 +39,7 @@ export default Model.extend({
     chartImport:[],
     chartTime:[],
     entName:'',
-    pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}],
-    isWorkRate:false,
-    isFaultRate:false,
-    isOverRate:false,
-    Atmosphere:false
+    pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}]
 
   },
   subscriptions: {},

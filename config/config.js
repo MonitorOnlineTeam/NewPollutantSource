@@ -1260,6 +1260,12 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
                     },
+                    {
+                      // 废气排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      component: './IntelligentAnalysis/emissions/GasContrast',
+                    },
                   ],
                 },
                 {
@@ -1396,6 +1402,25 @@ export default {
                     },
                   ],
                 },
+
+                //统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
+
+                  routes: [
+                    {
+                      // 运维工单统计（企业）
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    },
+                    /* 缺失台账工单统计 */
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
+                  ],
+                },
                 {
                   //超标报警处置率
                   name: 'overAlarmDisposalRate',
@@ -1408,6 +1433,33 @@ export default {
                   path:
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                },
+                {
+                  name: 'operationWorkStatis', //运维工单统计
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis',
+                      redirect: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics',
+                    },
+                    // {
+                    //   name:'',
+                    //   path:'',
+                    //   component:''
+                    // },
+                    {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
+                      name: 'noAccountStatisticsAir', //无台账上传统计 空气站
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                    },
+                  ],
                 },
               ],
             },

@@ -33,7 +33,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile,GetDataType,toDecimal3} from '@/utils/utils';
+import { downloadFile,GetDataType,toDecimal3,interceptTwo} from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
 import { blue,red,green,gold,grey} from '@ant-design/colors';
@@ -85,63 +85,39 @@ export default class EntTransmissionEfficiency extends Component {
     
     this.columns = [
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: <span>监测点类型</span>,
+        dataIndex: 'pointName',
+        key: 'pointName',
         align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
-      },
-      {
-        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
-        align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
-        // width: '10%',
-        align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
-      },
-      {
-        title: <span>关注程度</span>,
-        dataIndex: 'TransmissionRate',
-        key: 'TransmissionRate',
         align: 'center',
       },
       {
-        title: <span>排口类型</span>,
-        dataIndex: 'firstAlarmTime',
-        key: 'firstAlarmTime',
-        align: 'center',
-        render:(text,row)=>{
-          return `${row.firstAlarmTime}~${row.alarmTime}`
-        }
-      },
-      {
-        title: <span>相机名称</span>,
+        title: <span>运转率</span>,
         dataIndex: 'defectCount',
         key: 'defectCount',
         align: 'center',
-      },
-      {
-        title: <span>操作</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
-        align: 'center',
-        render:(text,row)=>{
-          return <Link to={{ pathname:'/monitoring/home/videopreview', query:{ DGIMN:'399435xd5febbc' }  }}>播放</Link>
-        }
-      },
+        render: (text, record) => {
+          if (record.ShouldNumber==0) {
+            return <span>停运</span>;
+          }
+          const percent = interceptTwo(Number(text) * 100);
+          if (percent >= 90) {
+            return <div>
+                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
+                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+              </div>
+          }
+          return  <div>
+              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+            </div>
+         },
+      }
     ];
   }
 
