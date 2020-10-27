@@ -10,7 +10,8 @@ import { Select,} from 'antd'
 }))
 export default class Index extends Component {
   static defaultProps = {
-    type:'1'
+    type:'1',
+    regionCode:''
   };
   constructor(props) {
     super(props);
@@ -48,8 +49,8 @@ export default class Index extends Component {
   return selectList;
   };
   componentDidMount() {
-    const {type,dispatch} = this.props;
-    type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: '' },  });  
+    const {type,dispatch,regionCode} = this.props;
+    type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
  
   
    }

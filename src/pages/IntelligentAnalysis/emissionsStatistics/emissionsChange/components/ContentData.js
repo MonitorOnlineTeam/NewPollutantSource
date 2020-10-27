@@ -245,8 +245,8 @@ export default class EntTransmissionEfficiency extends Component {
   }
   
       /** 数据类型切换 */
- _handleDateTypeChange = e => {
-    this.child.onDataTypeChange(e.target.value==='HourData'?'hour':'day')
+ _handleDateTypeChange = value => {
+    this.child.onDataTypeChange(value)
     }
   dateChange=(date,dataType)=>{
       this.updateQueryState({
@@ -397,17 +397,17 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select> 
                 </Form.Item>
                 <Form.Item label='趋势类型'>
-                  <Select
-                    allowClear
+                <Select
                     placeholder="趋势类型"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 150 }}
-                  >
-                 <Option key='011' value='011'>1</Option>
-                 <Option key='060' value='060'>2</Option>
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                    style={{ width: 150  }}
+                  >  
+                 <Option key='0' value='HourData'>小时</Option>
+                 <Option key='1' value='DayData'> 日均</Option>
+
                   </Select>
-                </Form.Item> 
+              </Form.Item>
                 <Form.Item label='查询日期'>
                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>

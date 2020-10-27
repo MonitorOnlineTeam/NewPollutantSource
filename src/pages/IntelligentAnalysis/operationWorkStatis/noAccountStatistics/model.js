@@ -1,12 +1,12 @@
 /**
- * 功  能：去除分析率
+ * 功  能：台账
  * 创建人：贾安波
  * 创建时间：2020.10.09
  */
 
 import Model from '@/utils/model';
 import {
-  GetSewageHistoryList,
+  GetTaskFormBookSta,
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
@@ -19,17 +19,18 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment()
-        .subtract(1, 'month')
-        .format('YYYY-MM-DD 00:00:00'),
+      beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:['011','060','101','065','007'],
-      PollutantType:'',
-      dataType:'HourData'
+      PollutantTypeCode:'1',
+      ModelType: "All"
     },
+    entQueryPar: {  },
+    entNumQueryPar: { },
+    regQueryPar: { },
+    workNumQueryPar: {},
     pointName:'COD',
     tableDatas: [],
     total: '',
@@ -39,33 +40,30 @@ export default Model.extend({
     chartImport:[],
     chartTime:[],
     entName:'',
-    pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}]
-
+    Regionloading:false,
+    EntNumloading:false,
+    EntNameloading:false,
+    TaskNumsloading:false
   },
   subscriptions: {},
   effects: {
-    *getSewageHistoryList({ payload }, { call, put, update, select }) {
-      //列表
+    *getTaskFormBookSta({callback, payload }, { call, put, update, select }) {
+      //无台账工单统计（企业） 列表
 
-      yield update({ loading:true }); 
-      const response = yield call(GetSewageHistoryList, { ...payload });
+
+      payload.ModelType==='All'? yield update({ loading:true })   : payload.ModelType==='Region'? yield update({ Regionloading:true }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:true }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:true }) :  yield update({ TaskNumsloading:true })
+
+       const response = yield call(GetTaskFormBookSta, { ...payload });
       if (response.IsSuccess) {
-        yield update({
-          tableDatas: response.Datas,
-          total: response.Total,
-        });
-        const chartExport = [], chartImport=[], chartTime=[];
-        response.Datas.map(item=>{
-          chartExport.push(item.exportValue);
-          chartImport.push(item.importValue);
-          chartTime.push(moment(item.MonitorTime).format('YYYY-MM-DD HH:mm'))
-        })
-        yield update({
-          chartExport:chartExport,
-          chartImport:chartImport,
-          chartTime:chartTime,
-          loading:false
-        });
+        if(payload.ModelType==='All'){
+          yield update({
+            tableDatas:response.Datas,
+            loading:false  
+          });
+        }else{
+          payload.ModelType==='Region'? yield update({ Regionloading:false }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:false }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:false }) :  yield update({ TaskNumsloading:false })
+        }
+        callback(response.Datas)
       }else{
         yield update({ loading:false }); 
       }

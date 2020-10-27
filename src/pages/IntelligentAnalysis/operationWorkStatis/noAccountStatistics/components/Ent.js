@@ -53,12 +53,12 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'noAccountStatistics/updateState',
-  getData: 'noAccountStatistics/getSewageHistoryList',
+  getData: 'noAccountStatistics/getTaskFormBookSta',
 };
 @connect(({ loading, noAccountStatistics,autoForm }) => ({
   priseList: noAccountStatistics.priseList,
   exloading:noAccountStatistics.exloading,
-  loading: noAccountStatistics.loading,
+  Entloading: noAccountStatistics.Entloading,
   total: noAccountStatistics.total,
   tableDatas: noAccountStatistics.tableDatas,
   queryPar: noAccountStatistics.queryPar,
@@ -69,7 +69,8 @@ const pageUrl = {
   chartImport:noAccountStatistics.chartImport,
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
-  pollutantList:noAccountStatistics.pollutantList
+  pollutantList:noAccountStatistics.pollutantList,
+  entQueryPar:noAccountStatistics.entQueryPar
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -77,79 +78,63 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-
+      tableDatas:[]
 
     };
     
     this.columns = [
       {
         title: '排口类型',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
+        dataIndex: 'PollutantTypeCode',
+        key: 'PollutantTypeCode',
         align: 'center',
       },
       {
         title: '监测点名称',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'PointName',
+            key: 'PointName',
             align: 'center',
             render:(text,record)=>{
                 return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>;
             }
       },
       {
-        title: '缺失台账监测点名称',
-            dataIndex: 'pointName',
-            key: 'pointName',
-            align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
-
-      },
-      {
         title: '巡检工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNum',
+            key: 'InspectionNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNotNum',
+            key: 'InspectionNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },   
       {
         title: '校准工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNum',
+            key: 'CalibrationNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNotNum',
+            key: 'CalibrationNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },             
@@ -160,41 +145,31 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
+    // const { dispatch, location } = this.props;
 
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+       this.getTableData();
 
- 
-     dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-     this.updateQueryState({
-      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      dataType:'HourData',
-    });
-    setTimeout(() => {
-      this.getTableData();
-    });
   
 
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { entQueryPar, dispatch } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { entQueryPar: { ...entQueryPar, ...payload } },
     });
   };
 
   getTableData = () => { 
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, entQueryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...entQueryPar },
+      callback:res=>{
+        this.setState({tableDatas:res})
+      }
     });
   };
 
@@ -237,6 +212,10 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
+
+    setTimeout(()=>{
+      this.getTableData();
+    })
 
   }
 
@@ -313,13 +292,11 @@ export default class EntTransmissionEfficiency extends Component {
   onChange3=(e)=>{
    console.log(e)
   }
-  regionDetail=()=>{
 
-  }
   render() {
     const {
       exloading,
-      loading,
+      Entloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       entVisible,
       entCancel
@@ -338,10 +315,10 @@ export default class EntTransmissionEfficiency extends Component {
           <div id='noAccountStatistics'>
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              loading={loading}
+              loading={Entloading}
               columns={this.columns}
               // bordered={false}
-              dataSource={this.props.tableDatas}
+              dataSource={this.state.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,

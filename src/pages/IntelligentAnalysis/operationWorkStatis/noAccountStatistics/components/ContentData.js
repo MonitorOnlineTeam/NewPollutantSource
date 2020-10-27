@@ -57,7 +57,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'noAccountStatistics/updateState',
-  getData: 'noAccountStatistics/getSewageHistoryList',
+  getData: 'noAccountStatistics/getTaskFormBookSta',
 };
 @connect(({ loading, noAccountStatistics,autoForm }) => ({
   priseList: noAccountStatistics.priseList,
@@ -89,102 +89,100 @@ export default class EntTransmissionEfficiency extends Component {
     this.columns = [
       {
         title: '行政区',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
+        dataIndex: 'Region',
+        key: 'Region',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={()=>{this.regionDetail(text)}}>{text}</a>;
+          return <a onClick={()=>{this.regionDetail(record)}}>{text}</a>;
         },
       },
       {
         title: '运维企业',
+        width:250,
         children: [
           {
             title:'企业数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'EntNum',
+            key: 'EntNum',
             align: 'center',
+            width:100,
             render: (text, record) => {
-              return <a onClick={()=>{this.entNumDetail(text)}}>{text}</a>;
+              return <a onClick={()=>{this.entNumDetail(record)}}>{text}</a>;
             },
+            
           },
           {
             title:'缺失台账企业数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'EntNotNum',
+            key: 'EntNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },
       {
         title: '运维监测点',
+        width:250,
         children: [
           {
             title:'监测点数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'PointNum',
+            key: 'PointNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:100,
           },
           {
             title:'缺失台账监测点数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'PointNotNum',
+            key: 'PointNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150
           },        
       ]
       },  
       {
         title: '巡检工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNum',
+            key: 'InspectionNum',
             align: 'center',
+            width:150,
             render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(text)}}>{text}</a>;
+              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
             },
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNotNum',
+            key: 'InspectionNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },   
       {
         title: '校准工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNum',
+            key: 'CalibrationNum',
             align: 'center',
+            width:150,
             render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(text)}}>{text}</a>;
+              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
             },
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNotNum',
+            key: 'CalibrationNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },             
@@ -208,7 +206,10 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
+      PollutantTypeCode:"1",
+      ModelType: "All"
     });
+   
     setTimeout(() => {
       this.getTableData();
     });
@@ -225,10 +226,15 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => { 
+
     const { dispatch, queryPar } = this.props;
+
     dispatch({
       type: pageUrl.getData,
       payload: { ...queryPar },
+      callback:res=>{
+
+      }
     });
   };
 
@@ -252,7 +258,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantType: value,
+      PollutantTypeCode: value,
     });
   };
 
@@ -346,22 +352,34 @@ export default class EntTransmissionEfficiency extends Component {
   onChange3=(e)=>{
    console.log(e)
   }
-  regionDetail=(text)=>{
-    const { dispatch } = this.props;
+  regionDetail=(row)=>{
+    const { dispatch,queryPar } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { regQueryPar: { ...queryPar,ModelType:"Region", RegionCode:row.RegionCode } },
+    });
     setTimeout(()=>{
       this.setState({regionVisible:true})
     })
   }
 
-  entNumDetail=()=>{
-    const { dispatch } = this.props;
+  entNumDetail=(row)=>{
+    const { dispatch,queryPar} = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { entNumQueryPar: { ...queryPar,ModelType:"EntNum", RegionCode:row.RegionCode } },
+    });
     setTimeout(()=>{
       this.setState({entNumVisible:true})
     })
   }
 
-  workNumDetail=()=>{
-    const { dispatch } = this.props;
+  workNumDetail=(row)=>{
+    const { dispatch,queryPar } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { workNumQueryPar: { ...queryPar,ModelType:"TaskNums", RegionCode:row.RegionCode } },
+    });
     setTimeout(()=>{
       this.setState({workNumVisible:true})
     })
@@ -370,27 +388,21 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantTypeCode },
 
     } = this.props;
     const { TabPane } = Tabs;
    
     const {  regionVisible, entNumVisible, workNumVisible} = this.state;
-    console.log(beginTime,endTime)
     return (
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
-
-              <a href='javascript:;' onClick={this.regionDetail}>行政区下级页面</a>
-              <a href='javascript:;' onClick={this.entNumDetail}>企业数下级页面</a>
-              <a href='javascript:;' onClick={this.workNumDetail}>工单数下级页面</a>
-
-              <Region   regionVisible={regionVisible}  regionCancel={()=>{this.setState({regionVisible:false})}}/>
-              <EntNum   entNumVisible={entNumVisible}   entNumCancel={()=>{this.setState({entNumVisible:false})}}/>          
-              <WorkNum   workNumVisible={workNumVisible}  workNumCancel={()=>{this.setState({workNumVisible:false})}}/>
+              {regionVisible?  <Region   regionVisible={regionVisible}  regionCancel={()=>{this.setState({regionVisible:false})}}/> : null}
+              {entNumVisible?  <EntNum   entNumVisible={entNumVisible}   entNumCancel={()=>{this.setState({entNumVisible:false})}}/> : null}         
+              {workNumVisible? <WorkNum   workNumVisible={workNumVisible}  workNumCancel={()=>{this.setState({workNumVisible:false})}}/> : null}
 
               <Form.Item label=''>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
@@ -404,7 +416,7 @@ export default class EntTransmissionEfficiency extends Component {
                <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
               </Form.Item>
               <Form.Item label=''>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
+               <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
               </Form.Item>
 
                 {/* <Form.Item label='企业列表'>
