@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -928,7 +928,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -951,7 +951,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -1260,7 +1260,19 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
                     },
-                  ],
+                    {
+                      // 废气排放量对比统计
+                      name: 'gasContrast',
+                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      component: './IntelligentAnalysis/emissions/GasContrast',
+                    },
+                    {
+                      // 废水排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      component: './IntelligentAnalysis/emissions/WaterContrast',
+                    },
+                  ]
                 },
                 {
                   name: 'effluentFee',
@@ -1343,7 +1355,7 @@ export default {
                     },
                   ],
                 },
-                
+
                 //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
@@ -1401,7 +1413,7 @@ export default {
                   {
                     path: '/Intelligentanalysis/operationWorkStatis',
                     name: 'operationWorkStatis',
-  
+
                     routes: [
                       {
                         // 运维工单统计（企业）
@@ -1432,7 +1444,8 @@ export default {
                   path:
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                }
+                },
+ 
               ],
             },
             {

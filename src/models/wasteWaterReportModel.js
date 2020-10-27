@@ -28,6 +28,7 @@ export default Model.extend({
         const body = {
           RegionCode:payload.RegionCode,
           Attention:payload.Attention,
+          PollutantTypeCode:payload.PollutantTypeCode,
         }
       
         const result = yield call(GetEntByRegionAndAtt, body, null)
