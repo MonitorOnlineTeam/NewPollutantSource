@@ -29,6 +29,7 @@ class IndustryTree extends PureComponent {
         industryTreeList: props.industryTreeList
       }
     }
+    return state;
   }
 
   componentDidMount() {
