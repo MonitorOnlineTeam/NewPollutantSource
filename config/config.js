@@ -1260,7 +1260,7 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'effluentFee',
@@ -1327,7 +1327,8 @@ export default {
                     },
                   ],
                 },
-                {  //排放量分析
+                {
+                  //排放量分析
                   path: '/Intelligentanalysis/emissionsStatistics',
                   name: 'EmissionsStatistics',
                   routes: [
@@ -1667,6 +1668,19 @@ export default {
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+            },
+            /* 运维工单统计 */
+            {
+              name: 'operationalWorkOrder',
+              path: '/Intelligentanalysis/operationWorkStatis',
+              routes: [
+                {
+                  /** 运维工单统计-空气站 */
+                  name: 'AirWorkOrderStatistics',
+                  path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                  component: './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                },
+              ],
             },
             {
               component: '404',
