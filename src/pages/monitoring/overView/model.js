@@ -20,6 +20,7 @@ import {
   querygetentdatalist,
   getRealTimeColumn,
   getRealTimeDataView,
+  getEntByRegion,
 } from './services';
 import Model from '@/utils/model';
 import { isNullOrUndefined } from 'util';
@@ -80,6 +81,7 @@ export default Model.extend({
     realtimeColumns: [],
     realTimeDataView: [],
     dataType: 'HourData',
+    entListByRegion: [],
   },
   effects: {
     *init({ payload }, { call, take, select }) {
@@ -572,6 +574,17 @@ export default Model.extend({
             ...realtimeColumns,
             ...result.Datas,
           ],
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 根据行政区获取企业列表
+    *getEntByRegion({ payload }, { call, update }) {
+      const result = yield call(getEntByRegion, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entListByRegion: result.Datas,
         })
       } else {
         message.error(result.Message)

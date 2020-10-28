@@ -906,6 +906,12 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 }, // 数据一览 - 实时
+                // 实时监控 - 企业
+                {
+                  name: 'realtimedataent',
+                  path: '/monitoring/realtimedata/ent',
+                  component: './monitoring/overView/realtime/Ent',
+                },
                 {
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
@@ -924,10 +930,9 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
                     }`,
                 },
                 {
@@ -947,10 +952,9 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videoMonitor/videopreview/hkvideo'
-                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videoMonitor/videopreview/hkvideo'
+                    : './monitoring/videoMonitor/videopreview/ysyvideo'
                     }`,
                 },
                 {
@@ -1230,6 +1234,11 @@ export default {
                 //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
                 // },
                 {
+                  name: 'ChaoStatistic',
+                  path: '/Intelligentanalysis/chaoStatistics',
+                  component: './IntelligentAnalysis/chaoStatistics',
+                },
+                {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
                   component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
@@ -1409,23 +1418,23 @@ export default {
                   ],
                 },
 
-                  //统计-运维工单
-                  {
-                    path: '/Intelligentanalysis/operationWorkStatis',
-                    name: 'operationWorkStatis',
+                //统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
 
-                    routes: [
-                      {
-                        // 运维工单统计（企业）
-                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                      },
-                      /* 缺失台账工单统计 */
-                      {
-                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                        component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                      },]
+                  routes: [
+                    {
+                      // 运维工单统计（企业）
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                     },
+                    /* 缺失台账工单统计 */
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },]
+                },
                 {
                   //超标报警处置率
                   name: 'overAlarmDisposalRate',
@@ -1440,8 +1449,8 @@ export default {
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
                 {
-                  name:'operationWorkStatis', //运维工单统计
-                  path:'/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis', //运维工单统计
+                  path: '/Intelligentanalysis/operationWorkStatis',
                   routes: [
                     {
                       path: '/Intelligentanalysis/operationWorkStatis',
@@ -1453,12 +1462,12 @@ export default {
                     //   component:''
                     // },
                     {
-                      name:'noAccountStatisticsEnt', //无台账上传统计 企业
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                     },
                     {
-                      name:'noAccountStatisticsAir', //无台账上传统计 空气站
+                      name: 'noAccountStatisticsAir', //无台账上传统计 空气站
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
                     },
