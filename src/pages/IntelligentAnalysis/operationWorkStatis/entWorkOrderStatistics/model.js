@@ -5,14 +5,18 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'entWorkOrderStatistics',
   state: {
-    attentionList: [],//关注程度
+    attentionList: [], //关注程度
     divisorList: [],
     tableDataSource: [],
     exceptionPointList: [],
     secondTableDataSource: [],
-    searchForm: {
-    },
-    entWorkOrderTime: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")],//企业工单默认时间
+    searchForm: {},
+    entWorkOrderTime: [
+      moment()
+        .subtract(30, 'days')
+        .startOf('day'),
+      moment().endOf('day'),
+    ], //企业工单默认时间
     entByRegionList: [],
   },
   effects: {
@@ -24,7 +28,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        message.error(response.Message);
       }
     },
     // table数据-师一级
@@ -32,19 +36,19 @@ export default Model.extend({
       const result = yield call(services.getTableDataSource, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          tableDataSource: result.Datas
-        })
+          tableDataSource: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 导出-师一级
     *exportReport({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // table数据-二级页面
@@ -52,19 +56,19 @@ export default Model.extend({
       const result = yield call(services.getSecondTableDataSource, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          secondTableDataSource: result.Datas
-        })
+          secondTableDataSource: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 导出-师二级
     *exportSecond({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 根据行政区查询企业
@@ -72,12 +76,11 @@ export default Model.extend({
       const result = yield call(services.getEntByRegion, payload);
       if (result.IsSuccess) {
         yield update({
-          entByRegionList: result.Datas
-        })
+          entByRegionList: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-
   },
 });

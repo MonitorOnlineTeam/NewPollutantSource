@@ -48,11 +48,8 @@ const pageUrl = {
   loading: loading.effects[pageUrl.getData],
   total: noAccountAirStatistics.total,
   tableDatas: noAccountAirStatistics.tableDatas,
-  regionList: autoForm.regionList,
-  attentionList: noAccountAirStatistics.attentionList,
-  atmoStationList: common.atmoStationList,
-  airMissingForm: noAccountAirStatistics.airMissingForm,
-  divisorList: noAccountAirStatistics.divisorList,
+
+  noAccountAirStatisticsForm: noAccountAirStatistics.noAccountAirStatisticsForm,
 }))
 export default class airMissing extends Component {
   constructor(props) {
@@ -62,16 +59,24 @@ export default class airMissing extends Component {
       columns: [
         {
           title: <span>行政区</span>,
-          dataIndex: 'regionName',
-          key: 'regionName',
+          dataIndex: 'Region',
+          key: 'Region',
           align: 'center',
 
           render: (text, record) => {
             return (
               <Link
                 to={{
-                  pathname: '/Intelligentanalysis/dataAlarm/noAccountAirStatistics/pointVerifyRate',
-                  query: { regionCode: record.regionCode },
+                  pathname:
+                    '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                  query: {
+                    Region: record.Region,
+                    requestData: JSON.stringify({
+                      RegionCode: record.RegionCode,
+                      BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+                      EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+                    }),
+                  },
                 }}
               >
                 {text}
@@ -85,19 +90,22 @@ export default class airMissing extends Component {
           key: 'entCount',
 
           align: 'center',
-          children: [ {
-            title: <span>监测点数</span>,
-            width: 100,
-            dataIndex: '_alarmCount',
-            key:  '_alarmCount',
-            align: 'center',
-          }, {
-            title: <span>缺失台账监测点数</span>,
-            width: 100,
-            dataIndex: '_alarmCount',
-            key:'_alarmCount',
-            align: 'center',
-          },]
+          children: [
+            {
+              title: <span>监测点数</span>,
+              width: 100,
+              dataIndex: 'PointNum',
+              key: 'PointNum',
+              align: 'center',
+            },
+            {
+              title: <span>缺失台账监测点数</span>,
+              width: 100,
+              dataIndex: 'PointNotNum',
+              key: 'PointNotNum',
+              align: 'center',
+            },
+          ],
         },
         {
           title: <span>巡检工单</span>,
@@ -105,6 +113,42 @@ export default class airMissing extends Component {
           key: 'pointCount',
           width: 210,
           align: 'center',
+          children: [
+            {
+              title: <span>完成工单数</span>,
+              width: 100,
+              dataIndex: 'InspectionNum',
+              key: 'InspectionNum',
+              align: 'center',
+            },
+            {
+              title: <span>缺失台账工单数</span>,
+              width: 100,
+              dataIndex: 'InspectionNotNum',
+              key: 'InspectionNotNum',
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <Link
+                    to={{
+                      pathname:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      query: {
+                        Region: record.Region,
+                        requestData: JSON.stringify({
+                          RegionCode: record.RegionCode,
+                          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+                          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+                        }),
+                      },
+                    }}
+                  >
+                    {text}
+                  </Link>
+                );
+              },
+            },
+          ],
         },
         {
           title: <span>质控工单</span>,
@@ -112,18 +156,54 @@ export default class airMissing extends Component {
           key: 'pointCount',
           width: 210,
           align: 'center',
+          children: [
+            {
+              title: <span>完成工单数</span>,
+              width: 100,
+              dataIndex: 'CalibrationNum',
+              key: 'CalibrationNum',
+              align: 'center',
+            },
+            {
+              title: <span>缺失台账工单数</span>,
+              width: 100,
+              dataIndex: 'CalibrationNotNum',
+              key: 'CalibrationNotNum',
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <Link
+                    to={{
+                      pathname:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      query: {
+                        Region: record.Region,
+                        requestData: JSON.stringify({
+                          RegionCode: record.RegionCode,
+                          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+                          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+                        }),
+                      },
+                    }}
+                  >
+                    {text}
+                  </Link>
+                );
+              },
+            },
+          ],
         },
       ],
     };
   }
 
   componentDidMount() {
-    this.initData();
+    this.updateQueryState({ ModelType: 'All', RegionCode: undefined });
+    setTimeout(() => {
+      this.getTableData();
+    });
   }
 
-  initData = () => {
-    this.getTableData();
-  };
   updateQueryState = payload => {
     const { noAccountAirStatisticsForm, dispatch } = this.props;
 
@@ -164,20 +244,20 @@ export default class airMissing extends Component {
   dateChange = (date, dataType) => {
     this.updateQueryState({
       dataType: dataType,
-      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
     });
   };
 
   render() {
     const {
-      airMissingForm: {
-        beginTime,
-        endTime,
+      noAccountAirStatisticsForm: {
+        BeginTime,
+        EndTime,
 
         dataType,
       },
-      exloading
+      exloading,
     } = this.props;
     return (
       <Card
@@ -191,7 +271,7 @@ export default class airMissing extends Component {
                   onRef={this.onRef1}
                   dataType={dataType}
                   style={{ minWidth: '200px', marginRight: '10px' }}
-                  dateValue={[moment(beginTime), moment(endTime)]}
+                  dateValue={[moment(BeginTime), moment(EndTime)]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />
               </Form.Item>
@@ -209,7 +289,6 @@ export default class airMissing extends Component {
                   导出
                 </Button>
               </Form.Item>
-             
             </Row>
           </Form>
         }
@@ -218,7 +297,7 @@ export default class airMissing extends Component {
           rowKey={(record, index) => `complete${index}`}
           loading={false}
           columns={this.state.columns}
-          dataSource={[]}
+          dataSource={this.props.tableDatas}
           pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,

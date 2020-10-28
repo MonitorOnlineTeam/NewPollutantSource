@@ -2,7 +2,7 @@
  * @Description:
  * @LastEditors: hxf
  * @Date: 2020-10-15 16:18:14
- * @LastEditTime: 2020-10-22 17:50:35
+ * @LastEditTime: 2020-10-28 16:03:26
  * @FilePath: /NewPollutantSource/.eslintrc.js
  */
 const { strictEslint } = require('@umijs/fabric');
@@ -14,6 +14,7 @@ module.exports = {
     page: true,
   },
   rules: {
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'comma-dangle': 1,
     quotes: [0, 'single'],
     'global-strict': 0,
