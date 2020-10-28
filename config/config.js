@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -928,7 +928,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -951,7 +951,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -1260,19 +1260,7 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterEmissions',
                       component: './IntelligentAnalysis/emissions/Water',
                     },
-                    {
-                      // 废气排放量对比统计
-                      name: 'gasContrast',
-                      path: '/Intelligentanalysis/emissions/gasContrast',
-                      component: './IntelligentAnalysis/emissions/GasContrast',
-                    },
-                    {
-                      // 废水排放量对比统计
-                      name: 'water',
-                      path: '/Intelligentanalysis/emissions/waterContrast',
-                      component: './IntelligentAnalysis/emissions/WaterContrast',
-                    },
-                  ]
+                  ],
                 },
                 {
                   name: 'effluentFee',
@@ -1409,29 +1397,39 @@ export default {
                   ],
                 },
 
-                  //统计-运维工单
-                  {
-                    path: '/Intelligentanalysis/operationWorkStatis',
-                    name: 'operationWorkStatis',
+                //统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
 
-                    routes: [
-                      {
-                        // 运维工单统计（企业）
-                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                      },
-                      /* 缺失台账工单统计 */
-                      {
-                        path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                        component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                      },
-                      {
-                        name:'noAccountStatisticsEnt', //无台账上传统计 企业
-                        path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                        component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                      },
-                    ]
+                  routes: [
+                    {
+                      // 运维工单统计（企业）
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                     },
+                    /* 缺失台账工单统计 */
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
+
+                    /* 缺失台账工单详情 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    },
+                    /* 缺失台账照片统计 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    },
+                  ],
+                },
                 {
                   //超标报警处置率
                   name: 'overAlarmDisposalRate',
@@ -1445,7 +1443,33 @@ export default {
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
- 
+                {
+                  name: 'operationWorkStatis', //运维工单统计
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis',
+                      redirect: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics',
+                    },
+                    // {
+                    //   name:'',
+                    //   path:'',
+                    //   component:''
+                    // },
+                    {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
+                      name: 'noAccountStatisticsAir', //无台账上传统计 空气站
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                    },
+                  ],
+                },
               ],
             },
             {
