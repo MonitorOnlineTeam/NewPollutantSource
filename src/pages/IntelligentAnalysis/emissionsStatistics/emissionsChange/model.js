@@ -1,12 +1,12 @@
 /**
- * 功  能：去除分析率
+ * 功  能：排放量
  * 创建人：贾安波
- * 创建时间：2020.10.09
+ * 创建时间：2020.10.28
  */
 
 import Model from '@/utils/model';
 import {
-  GetSewageHistoryList,
+  GetEmissionsTrendList,
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
@@ -19,16 +19,15 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantCode:['011','060','101','065','007'],
-      PollutantType:'',
-      dataType:'HourData'
+      RegionCode: "",
+      EntCode: "",
+      DGIMN: "",
+      ImportantType: "",
+      PollutantType: "",
+      AttentionCode: "",
+      beginTime: "",
+      endTime: "",
+      DataType: "HourData"
     },
     pointName:'COD',
     tableDatas: [],
@@ -44,11 +43,11 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getSewageHistoryList({ payload }, { call, put, update, select }) {
+    *getEmissionsTrendList({ payload }, { call, put, update, select }) {
       //列表
 
       yield update({ loading:true }); 
-      const response = yield call(GetSewageHistoryList, { ...payload });
+      const response = yield call(GetEmissionsTrendList, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,

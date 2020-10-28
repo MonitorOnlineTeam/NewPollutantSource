@@ -53,7 +53,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'emissionsChange/updateState',
-  getData: 'emissionsChange/getSewageHistoryList',
+  getData: 'emissionsChange/getEmissionsTrendList',
 };
 @connect(({ loading, emissionsChange,autoForm }) => ({
   priseList: emissionsChange.priseList,
@@ -177,13 +177,16 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       PollutantCode: value,
     });
-    // const pollType = {
-    //   '011':'COD',
-    //   '060':'氨氮',
-    //   '101':'总磷',
-    //   '065':'总氮'
-    // }
-    // sessionStorage.setItem("pointName", pollType[e.value])
+  }
+  changePoint=(value)=>{ //监测点名称
+    this.updateQueryState({
+      PollutantCode: value,
+    });
+  }
+  changeImportant=(value)=>{ //重点类型
+    this.updateQueryState({
+      ImportantType: value,
+    });
   }
   //创建并获取模板   导出
   template = () => {
@@ -209,7 +212,7 @@ export default class EntTransmissionEfficiency extends Component {
         payload: { pointName: sessionStorage.getItem("pointName"),entName:sessionStorage.getItem("entName")},
       });
     }else{
-      message.warning('污水处理厂名称不能为空')
+      message.warning('监测点厂名称不能为空')
     }
 
   };
@@ -320,11 +323,12 @@ export default class EntTransmissionEfficiency extends Component {
   onChange3=(e)=>{
    console.log(e)
   }
+
   render() {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      queryPar: { RegionCode,EntCode, DGIMN,ImportantType,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantCode},
     } = this.props;
     const { TabPane } = Tabs;
 
@@ -371,8 +375,8 @@ export default class EntTransmissionEfficiency extends Component {
                   <Select
                     allowClear
                     placeholder="重点类型"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
+                    onChange={this.changeImportant}
+                    value={ImportantType ? ImportantType : undefined}
                     style={{ width: 150 }}
                   >
                  <Option key='011' value='011'>1</Option>
@@ -381,14 +385,24 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item> 
 
                 <Form.Item label='企业列表'>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
+                 <Select
+                 allowClear
+                 showSearch
+                 optionFilterProp="children"
+                 placeholder="企业列表"
+                 onChange={this.changeEnt}
+                 value={EntCode ? EntCode : undefined}
+                 style={{width:'200px'}}
+                >
+                 {this.children()}
+                  </Select>
                 </Form.Item>
                 </Row>
                 <Row>
                 <Form.Item label='监测点'>
                  <Select
-                    placeholder="污染物名称"
-                    onChange={this.changePoll}
+                    placeholder="监测点名称"
+                    onChange={this.changePoint}
                     value={PollutantCode}
                     style={{ width: 150  }}
                   >
@@ -400,7 +414,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <Select
                     placeholder="趋势类型"
                     onChange={this._handleDateTypeChange}
-                    value={dataType}
+                    value={DataType}
                     style={{ width: 150  }}
                   >  
                  <Option key='0' value='HourData'>小时</Option>
@@ -409,7 +423,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
               </Form.Item>
                 <Form.Item label='查询日期'>
-               <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={dataType==='HourData'?'hour':'day'}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+               <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item>

@@ -42,7 +42,6 @@ const pageUrl = {
   updateState: 'MissingRateData/updateState',
   getData: 'MissingRateData/getDefectPointDetailRate',
 };
-let query = JSON.parse(location.query.queryPar)
 @connect(({ loading, MissingRateData,autoForm }) => ({
   priseList: MissingRateData.priseList,
   exloading:MissingRateData.exloading,
