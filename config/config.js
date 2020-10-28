@@ -1419,6 +1419,37 @@ export default {
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                     },
+                    {
+                      /** 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 排口 */
+                      name: 'RegionAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单站点 运维工单统计-空气站 排口 */
+                      name: 'SingleStationAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                    },
                   ],
                 },
                 {
@@ -1720,19 +1751,6 @@ export default {
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
-            },
-            /* 运维工单统计 */
-            {
-              name: 'operationalWorkOrder',
-              path: '/Intelligentanalysis/operationWorkStatis',
-              routes: [
-                {
-                  /** 运维工单统计-空气站 */
-                  name: 'AirWorkOrderStatistics',
-                  path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
-                  component: './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
-                },
-              ],
             },
             {
               component: '404',
