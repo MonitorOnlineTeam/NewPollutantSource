@@ -1,5 +1,5 @@
 /**
- * 功  能：报警核实率
+ * 功  能：缺失台账
  * 创建人：张赟
  * 创建时间：2020.09.27
  */
@@ -22,18 +22,13 @@ export default Model.extend({
     exloading: false,
     loading: false,
 
-    airMissingForm: {
-      beginTime: moment()
+    noAccountAirStatisticsForm: {
+      BeginTime: moment()
         .subtract(1, 'months')
         .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      AttentionCode: undefined,
+        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       RegionCode: undefined,
-      PollutantType: '1',
-      PollutantList: [],
-      Rate: 1,
-      EntCode: '',
-      dataType:'DayData'
+      ModelType:'All',
     },
     divisorList: [],
     tableDatas: [],
@@ -42,6 +37,9 @@ export default Model.extend({
     priseList: [],
     airList: [],
     tableDatil: [],
+    tableDatilTotal: '',
+    tablePhoto:[],
+    tablePhotoTotal:''
   },
   subscriptions: {},
   effects: {
@@ -56,20 +54,22 @@ export default Model.extend({
       }
     },
     *getDefectPointDetail({ payload }, { call, put, update, select }) {
-      //超标核实率详情
-      const response = yield call(GetDefectPointDetail, { ...payload });
+      //详情
+      const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatil: response.Datas,
+          tableDatilTotal:response.Total
         });
       }
     },
-    *getAttentionDegreeList({ payload }, { call, put, update, select }) {
-      //关注列表
-      const response = yield call(GetAttentionDegreeList, { ...payload });
+    *getDefectPointPhoto({ payload }, { call, put, update, select }) {
+      //缺失照片
+      const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          attentionList: response.Datas,
+          tablePhoto: response.Datas,
+          tablePhotoTotal:response.Total
         });
       }
     },

@@ -16,9 +16,10 @@ export default Model.extend({
     pollutantCode: [],
     industryTreeList: [],
     entAndPointList: [],
-    atmoStationList:[],
-    priseList:[],
-    attentionList:[]
+    atmoStationList: [],
+    priseList: [],
+    attentionList: [],
+    pointListByEntCode: [],
   },
 
   effects: {
@@ -26,7 +27,7 @@ export default Model.extend({
       //大气站列表
       const response = yield call(services.GetStationByRegion, { ...payload });
       if (response.IsSuccess) {
-        yield update({       
+        yield update({
           atmoStationList: response.Datas,
         });
       }
@@ -35,20 +36,20 @@ export default Model.extend({
       //企业列表
       const response = yield call(services.GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
-        yield update({       
+        yield update({
           priseList: response.Datas,
         });
       }
-    },  
+    },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
       const response = yield call(services.GetAttentionDegreeList, { ...payload });
       if (response.IsSuccess) {
-        yield update({       
+        yield update({
           attentionList: response.Datas,
         });
       }
-    }, 
+    },
     // 获取污染物类型
     *getPollutantTypeList({ payload = {}, showAll, callback }, { update, call }) {
       const { filterPollutantType } = payload;
@@ -178,6 +179,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           industryTreeList: result.Datas,
+        });
+      }
+    },
+    // 根据企业获取排口
+    *getPointByEntCode({ payload }, { call, update }) {
+      const result = yield call(services.getPointByEntCode, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pointListByEntCode: result.Datas,
         });
       }
     },

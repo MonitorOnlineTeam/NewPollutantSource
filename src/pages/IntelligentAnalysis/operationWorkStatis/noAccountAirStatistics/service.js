@@ -7,12 +7,12 @@ export async function GetPollutantByType(params) {
 }
 
 /**
- * 超标核实率列表
+ * 查询缺失台账统计
  *
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRate',
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookStaAir',
     params,
     null,
   );

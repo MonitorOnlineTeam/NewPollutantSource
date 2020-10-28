@@ -1,12 +1,12 @@
 import { post } from '@/utils/request';
 
 /**
- * 缺失数据
+ * 排放量变化趋势 
  *
  */
-export async function GetSewageHistoryList(params) {
+export async function GetEmissionsTrendList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetSewageHistoryList',
+    '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsTrendList',
     params,
     null,
   );

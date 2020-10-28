@@ -906,6 +906,12 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 }, // 数据一览 - 实时
+                // 实时监控 - 企业
+                {
+                  name: 'realtimedataent',
+                  path: '/monitoring/realtimedata/ent',
+                  component: './monitoring/overView/realtime/Ent',
+                },
                 {
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
@@ -1230,6 +1236,11 @@ export default {
                 //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
                 // },
                 {
+                  name: 'ChaoStatistic',
+                  path: '/Intelligentanalysis/chaoStatistics',
+                  component: './IntelligentAnalysis/chaoStatistics',
+                },
+                {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
                   component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
@@ -1262,9 +1273,15 @@ export default {
                     },
                     {
                       // 废气排放量对比统计
-                      name: 'water',
+                      name: 'gasContrast',
                       path: '/Intelligentanalysis/emissions/gasContrast',
                       component: './IntelligentAnalysis/emissions/GasContrast',
+                    },
+                    {
+                      // 废水排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      component: './IntelligentAnalysis/emissions/WaterContrast',
                     },
                   ],
                 },
@@ -1407,7 +1424,6 @@ export default {
                 {
                   path: '/Intelligentanalysis/operationWorkStatis',
                   name: 'operationWorkStatis',
-
                   routes: [
                     {
                       // 运维工单统计（企业）
@@ -1418,6 +1434,21 @@ export default {
                     {
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
+
+                    /* 缺失台账工单详情 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    },
+                    /* 缺失台账照片统计 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
                     },
                     {
                       /** 运维工单统计-空气站 */

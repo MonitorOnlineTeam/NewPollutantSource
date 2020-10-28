@@ -38,7 +38,7 @@ const ImportantTypeList = [
   pointExportLoading: emissionsStatistics.pointExportLoading,
 }))
 @Form.create()
-class GasContrast extends PureComponent {
+class WaterContrast extends PureComponent {
   state = {
     DataType: "region",
   }
@@ -87,7 +87,7 @@ class GasContrast extends PureComponent {
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
-        PollutantType: 2,
+        PollutantType: 1,
         beginTime: moment(values.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment(values.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
         ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD HH:mm:ss'),
@@ -116,7 +116,7 @@ class GasContrast extends PureComponent {
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
-        PollutantType: 2,
+        PollutantType: 1,
         beginTime: moment(values.time1[0]).format('YYYY-MM-DD 00:00:00'),
         endTime: moment(values.time1[1]).format('YYYY-MM-DD 00:00:00'),
         ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
@@ -139,11 +139,11 @@ class GasContrast extends PureComponent {
     let beginTime, endTime, beginTime2, endTime2;
     let formTime1 = getFieldValue("time1");
     let formTime2 = getFieldValue("time2");
-    if (formTime1) {
+    if (formTime1 && formTime1.length) {
       beginTime = formTime1[0].format("YYYY年MM月DD日")
       endTime = formTime1[1].format("YYYY年MM月DD日")
     }
-    if (formTime2) {
+    if (formTime2 && formTime2.length) {
       beginTime2 = formTime2[0].format("YYYY年MM月DD日")
       endTime2 = formTime2[1].format("YYYY年MM月DD日")
     }
@@ -188,23 +188,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValue',
-                key: 'SmokeEmissionsValue',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValue',
+                key: 'CODEmissionsValue',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValue',
-                key: 'So2EmissionsValue',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValue',
-                key: 'NOXEmissionsValue',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValue',
+                key: 'AndanEmissionsValue',
                 width: 180,
                 align: 'center',
               },
@@ -233,23 +226,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValueC',
-                key: 'SmokeEmissionsValueC',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValueC',
+                key: 'CODEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValueC',
-                key: 'So2EmissionsValueC',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValueC',
-                key: 'NOXEmissionsValueC',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValueC',
+                key: 'AndanEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
@@ -327,23 +313,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValue',
-                key: 'SmokeEmissionsValue',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValue',
+                key: 'CODEmissionsValue',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValue',
-                key: 'So2EmissionsValue',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValue',
-                key: 'NOXEmissionsValue',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValue',
+                key: 'AndanEmissionsValue',
                 width: 180,
                 align: 'center',
               },
@@ -358,23 +337,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValueC',
-                key: 'SmokeEmissionsValueC',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValueC',
+                key: 'CODEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValueC',
-                key: 'So2EmissionsValueC',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValueC',
-                key: 'NOXEmissionsValueC',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValueC',
+                key: 'AndanEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
@@ -480,23 +452,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValue',
-                key: 'SmokeEmissionsValue',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValue',
+                key: 'CODEmissionsValue',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValue',
-                key: 'So2EmissionsValue',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValue',
-                key: 'NOXEmissionsValue',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValue',
+                key: 'AndanEmissionsValue',
                 width: 180,
                 align: 'center',
               },
@@ -518,23 +483,16 @@ class GasContrast extends PureComponent {
             title: '排放量（kg）',
             children: [
               {
-                title: '烟尘',
-                dataIndex: 'SmokeEmissionsValueC',
-                key: 'SmokeEmissionsValueC',
+                title: 'COD',
+                dataIndex: 'CODEmissionsValueC',
+                key: 'CODEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
               {
-                title: '二氧化硫',
-                dataIndex: 'So2EmissionsValueC',
-                key: 'So2EmissionsValueC',
-                width: 180,
-                align: 'center',
-              },
-              {
-                title: '氮氧化物',
-                dataIndex: 'NOXEmissionsValueC',
-                key: 'NOXEmissionsValueC',
+                title: '氨氮',
+                dataIndex: 'AndanEmissionsValueC',
+                key: 'AndanEmissionsValueC',
                 width: 180,
                 align: 'center',
               },
@@ -649,7 +607,7 @@ class GasContrast extends PureComponent {
                   this.getTableData("point");
                 }}>
                   查询
-                </Button>
+                      </Button>
                 <Button
                   style={{ margin: '0 5px' }}
                   icon="export"
@@ -693,4 +651,4 @@ class GasContrast extends PureComponent {
     );
   }
 }
-export default GasContrast;
+export default WaterContrast;

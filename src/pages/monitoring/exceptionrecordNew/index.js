@@ -457,7 +457,7 @@ class index extends PureComponent {
                         </Option>
                       })
                     }
-                  </Select>,
+                  </Select>
                 )}
               </FormItem>
             </Row>

@@ -137,3 +137,9 @@ export async function getRealTimeDataView(params) {
   );
   return result;
 }
+
+// 根据行政区获取企业列表
+export async function getEntByRegion(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' + params.RegionCode, {});
+  return result;
+}

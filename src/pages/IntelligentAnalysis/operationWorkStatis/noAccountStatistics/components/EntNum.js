@@ -54,12 +54,12 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'noAccountStatistics/updateState',
-  getData: 'noAccountStatistics/getSewageHistoryList',
+  getData: 'noAccountStatistics/getTaskFormBookSta',
 };
 @connect(({ loading, noAccountStatistics,autoForm }) => ({
   priseList: noAccountStatistics.priseList,
   exloading:noAccountStatistics.exloading,
-  loading: noAccountStatistics.loading,
+  EntNumloading: noAccountStatistics.EntNumloading,
   total: noAccountStatistics.total,
   tableDatas: noAccountStatistics.tableDatas,
   queryPar: noAccountStatistics.queryPar,
@@ -70,7 +70,8 @@ const pageUrl = {
   chartImport:noAccountStatistics.chartImport,
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
-  pollutantList:noAccountStatistics.pollutantList
+  pollutantList:noAccountStatistics.pollutantList,
+  entNumQueryPar:noAccountStatistics.entNumQueryPar
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -78,83 +79,72 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      entVisible:false
+      entVisible:false,
+      tableDatas:[]
 
     };
     
     this.columns = [
       {
         title: '行政区',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
+        dataIndex: 'Region',
+        key: 'Region',
         align: 'center',
-        render: (text, record) => {
-          return <a onClick={()=>{this.regionDetail(text)}}>{moment(text).format('YYYY-MM-DD HH:mm')}</a>;
-        },
       },
       {
         title: '缺失台账企业名称',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'EntName',
+            key: 'EntName',
             align: 'center',
             render: (text, record) => {
-                return  <a style={{textAlign:'left',width:'100%'}}  onClick={()=>{this.entDetail(text)}}>{text}</a>;
+                return <div style={{textAlign:'left',width:'100%'}}  > <a onClick={()=>{this.entDetail(record)}}>{text}</a></div>;
               },
 
       },
       {
-        title: '缺失台账监测点名称',
-            dataIndex: 'pointName',
-            key: 'pointName',
+        title: '缺失台账监测点数',
+            dataIndex: 'PointNum',
+            key: 'PointNum',
             align: 'center',
-            render: (text, record) => {
-                return  <div style={{textAlign:'left',width:'100%'}} >{text}</div>;
-            },
 
       },
       {
         title: '巡检工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNum',
+            key: 'InspectionNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'InspectionNotNum',
+            key: 'InspectionNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },   
       {
         title: '校准工单',
+        width:300,
         children: [
           {
             title:'完成工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNum',
+            key: 'CalibrationNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },
           {
             title:'缺失台账工单数',
-            dataIndex: 'pointName',
-            key: 'pointName',
+            dataIndex: 'CalibrationNotNum',
+            key: 'CalibrationNotNum',
             align: 'center',
-            render: (text, record) => {
-              return text? text : '-';
-            },
+            width:150,
           },        
       ]
       },             
@@ -165,41 +155,28 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
 
-
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
-
- 
-     dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-     this.updateQueryState({
-      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      dataType:'HourData',
-    });
-    setTimeout(() => {
       this.getTableData();
-    });
   
 
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { entNumQueryPar, dispatch } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { entNumQueryPar: { ...entNumQueryPar, ...payload } },
     });
   };
 
   getTableData = () => { 
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, entNumQueryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...entNumQueryPar },
+      callback:res=>{
+        this.setState({tableDatas:res})
+      }
     });
   };
 
@@ -242,7 +219,9 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-
+    setTimeout(()=>{
+      this.getTableData()
+    })
   }
 
   changePoll=(value)=>{ //污染物改变事件
@@ -316,8 +295,12 @@ export default class EntTransmissionEfficiency extends Component {
   onChange3=(e)=>{
    console.log(e)
   }
-  entDetail=()=>{
-    const { dispatch } = this.props;
+  entDetail=(row)=>{
+    const { dispatch,queryPar } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { entQueryPar: { ...queryPar,ModelType:"Ent", EntCode:row.EntCode } },
+    });
     setTimeout(()=>{
       this.setState({entVisible:true})
     })
@@ -325,8 +308,8 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const {
       exloading,
-      loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      EntNumloading,
+      entNumQueryPar: {  EntCode, RegionCode },
       entNumVisible,
       entNumCancel
     } = this.props;
@@ -341,12 +324,12 @@ export default class EntTransmissionEfficiency extends Component {
           visible={entNumVisible}  
           onCancel={entNumCancel}
         >
-           <a href='javascript:;' onClick={this.entDetail}>企业数下级页面</a>
-          <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} />
+          
+          { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
               <Form layout="inline" style={{paddingBottom:10}}>
             
                  <Form.Item label='企业列表'>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
+                 <EntAtmoList regionCode={RegionCode} changeEnt={this.changeEnt} EntCode={EntCode}/>
                 </Form.Item> 
 
                 <Form.Item>
@@ -363,10 +346,10 @@ export default class EntTransmissionEfficiency extends Component {
           <div id='noAccountStatistics'>
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              loading={loading}
+              loading={EntNumloading}
               columns={this.columns}
               // bordered={false}
-              dataSource={this.props.tableDatas}
+              dataSource={this.state.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
