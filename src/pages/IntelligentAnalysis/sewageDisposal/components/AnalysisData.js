@@ -99,7 +99,7 @@ export default class EntTransmissionEfficiency extends Component {
             width:200,
             align:'center',
             render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
+              return <span>{text&&text!='-'? toDecimal3(text):"-"}</span>;
             },
           },
           {
@@ -126,7 +126,7 @@ export default class EntTransmissionEfficiency extends Component {
             width:200,
             align:'center',
             render: (text, record) => {
-              return <span>{text? toDecimal3(text):"-"}</span>;
+              return <span>{text&&text!='-'? toDecimal3(text):"-"}</span>;
             },
           },
           {
@@ -141,6 +141,7 @@ export default class EntTransmissionEfficiency extends Component {
           },
         ],
       },
+      
     ]
   }
 
@@ -149,7 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location } = this.props;
-    
+         
      sessionStorage.setItem("pointName", 'COD')
      sessionStorage.setItem("entName", '')
 

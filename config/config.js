@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -1433,7 +1433,23 @@ export default {
                     {
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                    },]
+                    },
+
+                    /* 缺失台账工单详情 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    },
+                    /* 缺失台账照片统计 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    },
+                  ],
                 },
                 {
                   //超标报警处置率
@@ -1464,16 +1480,17 @@ export default {
                     {
                       name: 'noAccountStatisticsEnt', //无台账上传统计 企业
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                     },
                     {
                       name: 'noAccountStatisticsAir', //无台账上传统计 空气站
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
                     },
-
-                  ]
-                }
+                  ],
+                },
               ],
             },
             {
