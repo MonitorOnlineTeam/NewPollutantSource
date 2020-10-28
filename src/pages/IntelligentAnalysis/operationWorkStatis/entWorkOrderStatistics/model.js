@@ -6,8 +6,11 @@ export default Model.extend({
   namespace: 'entWorkOrderStatistics',
   state: {
     attentionList: [],//关注程度
-    divisorList: [],
-    tableDataSource: [],
+    entList: [],//企业列表
+    tableTitleData: [],//一级标题
+    tableDataSource: [],//一级数据内容
+    secondTableTitleData:[],//二级标题
+    secondTableDataSource:[],//二级数据内容
     exceptionPointList: [],
     secondTableDataSource: [],
     searchForm: {
@@ -27,7 +30,30 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
-    // table数据-师一级
+    // 获取企业列表
+    *getEntByRegion({ payload }, { call, put, update, select }) {
+      const response = yield call(services.getEntByRegion, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          entList: response.Datas,
+        });
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // table title数据-一级
+    *getTableTitleData({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getTableTitleData, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          tableTitleData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // table数据-一级
     *getTableDataSource({ payload }, { call, put, update, select }) {
       const result = yield call(services.getTableDataSource, { ...payload });
       if (result.IsSuccess) {
@@ -38,7 +64,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 导出-师一级
+
+    // 导出一级
     *exportReport({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
@@ -47,7 +74,19 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // table数据-二级页面
+
+    // table title数据-二级
+    *getSecondTableTitleData({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getSecondTableTitleData, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          secondTableTitleData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // table数据-二级
     *getSecondTableDataSource({ payload }, { call, put, update, select }) {
       const result = yield call(services.getSecondTableDataSource, { ...payload });
       if (result.IsSuccess) {
@@ -58,6 +97,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+
     // 导出-师二级
     *exportSecond({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportSecond, { ...payload });

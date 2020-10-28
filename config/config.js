@@ -1407,6 +1407,11 @@ export default {
                         path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                         component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                       },
+                      {
+                        //行政区运维工单统计（企业）
+                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                      },
                       /* 缺失台账工单统计 */
                       {
                         path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
