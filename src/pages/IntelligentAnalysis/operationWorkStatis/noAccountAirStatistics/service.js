@@ -43,11 +43,11 @@ export async function GetAttentionDegreeList(params) {
   return result;
 }
 
-//导出 报警核实率首页
+//导出 缺失台账导出
 
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookStaAir',
     params,
     null,
   );
@@ -55,16 +55,7 @@ export async function ExportDefectDataSummary(params) {
   return result;
 }
 
-//导出 报警核实率  详情
-export async function ExportDefectPointDetail(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',
-    params,
-    null,
-  );
 
-  return result;
-}
 
 //根据行政区获取 企业列表
 
