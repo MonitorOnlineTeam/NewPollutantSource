@@ -10,6 +10,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
+  GetEmissionsEntPointPollutant
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -19,15 +20,19 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
+      DGIMN:'',
       RegionCode: "",
       EntCode: "",
-      DGIMN: "",
       ImportantType: "",
       PollutantType: "",
       AttentionCode: "",
-      beginTime: "",
-      endTime: "",
-      DataType: "HourData"
+      beginTime: moment()
+      .subtract(1, 'day')
+      .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DataType: "",
+      DGIMN:'',
+      PollutantList:[]
     },
     pointName:'COD',
     tableDatas: [],
@@ -38,8 +43,10 @@ export default Model.extend({
     chartImport:[],
     chartTime:[],
     entName:'',
-    pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}]
-
+    EntList:[],
+    PointList:[],
+    PollutantList:[],
+    parmarType:'RegionCode'
   },
   subscriptions: {},
   effects: {
@@ -78,15 +85,23 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有污水处理厂
-      const response = yield call(GetEntByRegion, { ...payload });
+    *getEmissionsEntPointPollutant({ callback,payload }, { call, put, update, select }) {
+      //获取参数列表
+
+      const  parmarType = yield select(_ =>_.emissionsChange.parmarType)
+      const  queryPar = yield select(_ =>_.emissionsChange.queryPar)
+
+      const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
-        yield update({
-          priseList: response.Datas,
-        });
-        callback(response.Datas[0].EntCode)
+        if(parmarType==='RegionCode'){
+          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantCode:''} });
+        }
+        if(parmarType==='EntCode'){
+          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantCode:''}});
+        }
+        if( parmarType==='DGIMN'){
+          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantCode:''}});
+        }
       }
     },
     *exportSewageHistoryList({callback, payload }, { call, put, update, select }) {

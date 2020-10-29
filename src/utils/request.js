@@ -7,7 +7,7 @@ import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
-import configToken from '@/config'
+import configToken from '@/config';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -40,7 +40,7 @@ export function getAuthHeader(ssoToken) {
   return {
     headers: {
       Accept: 'application/json',
-      Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
+      Authorization: ssoToken != 'null' && ssoToken != '' && `Bearer ${ssoToken}`,
       'Content-Type': 'application/json',
     },
   };
@@ -51,7 +51,7 @@ const checkStatus = response => {
     // console.log(`
     //     接口返回${response.status}：
     //     url: ${response.url}
-    //     ssToken: ${getCookie(configToken.cookieName)} 
+    //     ssToken: ${getCookie(configToken.cookieName)}
     //     `)
     return response;
   }
@@ -74,10 +74,9 @@ async function requestMy(url, options) {
   const ssoToken = `${getCookie(configToken.cookieName)}`;
   // console.log(`
   // ${url} - ssToken:
-  // ${getCookie(configToken.cookieName)} 
+  // ${getCookie(configToken.cookieName)}
   // `)
   const authHeader = getAuthHeader(ssoToken);
-
   const resp = await fetch(url, { ...options, ...authHeader })
     .then(checkStatus)
     .then(parseJSON)
@@ -89,14 +88,14 @@ async function requestMy(url, options) {
         // console.log(`
         // 接口401报错1：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         // console.log(`
         // 接口401报错2：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         router.push('/user/login');
         return;

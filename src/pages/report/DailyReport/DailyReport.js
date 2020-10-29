@@ -429,7 +429,7 @@ class index extends PureComponent {
                 fixed: fixed,
                 children:[
                     {
-                        title: "平均值(mg/L)",
+                        title: "平均值(L/s)",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
