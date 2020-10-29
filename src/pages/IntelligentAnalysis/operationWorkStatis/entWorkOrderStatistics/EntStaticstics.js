@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import { connect } from 'dva'
 import moment from 'moment'
-import { router } from 'umi'
+import { Link,router } from 'umi'
+
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
@@ -13,13 +14,14 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 @connect(({ loading, entWorkOrderStatistics }) => ({
-  secondTableTitleData:entWorkOrderStatistics.secondTableTitleData,
-  secondTableDataSource:entWorkOrderStatistics.secondTableDataSource,
+  attentionList: entWorkOrderStatistics.attentionList,
+  thirdTableTitleData:entWorkOrderStatistics.thirdTableTitleData,
+  thirdTableDataSource:entWorkOrderStatistics.thirdTableDataSource,
   entList:entWorkOrderStatistics.entList,
-  loading: loading.effects["entWorkOrderStatistics/getSecondTableDataSource"],
+  loading: loading.effects["entWorkOrderStatistics/getThirdTableDataSource"],
 }))
 @Form.create()
-class RegionStaticstics extends PureComponent {
+class EntStaticstics extends PureComponent {
   
   componentDidMount() {
     // 获取企业列表
@@ -44,13 +46,13 @@ class RegionStaticstics extends PureComponent {
 
     // 获取一级数据标题头
     this.props.dispatch({
-      type: 'entWorkOrderStatistics/getSecondTableTitleData',
+      type: 'entWorkOrderStatistics/getThirdTableTitleData',
       payload: { PollutantTypeCode: PollutantTypeCode },
     });
 
     // 获取一级数据
     this.props.dispatch({
-      type: 'entWorkOrderStatistics/getSecondTableDataSource',
+      type: 'entWorkOrderStatistics/getThirdTableDataSource',
       payload: { 
         PollutantTypeCode,
         AttentionCode,
@@ -69,13 +71,36 @@ class RegionStaticstics extends PureComponent {
 
   getColumns=()=>{
     const columns = [];
-    this.props.secondTableTitleData.map((item,index)=>{
-      columns.push({
-        title: item.TypeName,
-        dataIndex: item.ID,
-        key: item.ID,
-        width: 120,
-      });
+    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
+    this.props.thirdTableTitleData.map((item,index)=>{
+      if(item.ID=='00_EntName'){
+        columns.push({
+          title: item.TypeName,
+          dataIndex: item.ID,
+          key: item.ID,
+          render: (text, record) => { 
+            const query={
+              RegionCode,            
+              PollutantTypeCode,
+              AttentionCode,
+              BeginTime,
+              EndTime,
+              EntCode: record['00_EntCode'],
+            }
+            return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',query}} >
+                     {text}
+                 </Link>
+          },
+          width: 120,
+        });
+      }else{
+        columns.push({
+          title: item.TypeName,
+          dataIndex: item.ID,
+          key: item.ID,
+          width: 120,
+        });
+      }
     })
     return columns;
   }
@@ -83,7 +108,7 @@ class RegionStaticstics extends PureComponent {
 
   render() {
     const {
- form: { getFieldDecorator, getFieldValue }, entList, detailsLoading, secondTableDataSource, loading, exportLoading,
+ form: { getFieldDecorator, getFieldValue }, entList, detailsLoading, thirdTableDataSource, loading, exportLoading,
 } = this.props;
 
     const columns = this.getColumns();
@@ -110,7 +135,7 @@ class RegionStaticstics extends PureComponent {
                 </FormItem>
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                  <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
+                    <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
                     <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
@@ -122,11 +147,11 @@ class RegionStaticstics extends PureComponent {
                 </div>
             </Row>
           </Form>
-          <SdlTable align="center" dataSource={secondTableDataSource} columns={columns} loading={loading} />
+          <SdlTable align="center" dataSource={thirdTableDataSource} columns={columns} loading={loading} />
         </Card>
       </BreadcrumbWrapper>
     );
   }
 }
 
-export default RegionStaticstics;
+export default EntStaticstics;

@@ -14,9 +14,11 @@ const { Option } = Select;
 
 @connect(({ loading, autoForm, entWorkOrderStatistics }) => ({
   regionList: autoForm.regionList,
+  initialForm: entWorkOrderStatistics.initialForm,
   attentionList: entWorkOrderStatistics.attentionList,
   tableTitleData:entWorkOrderStatistics.tableTitleData,
   tableDataSource:entWorkOrderStatistics.tableDataSource,
+  loading: loading.effects["entWorkOrderStatistics/getTableDataSource"],
 }))
 @Form.create()
 class index extends PureComponent {
@@ -28,7 +30,7 @@ class index extends PureComponent {
     secondQueryCondition: {},
     queryCondition: {},
   }
-
+  
   _SELF_ = {
     columns:[
       {
@@ -36,7 +38,15 @@ class index extends PureComponent {
         dataIndex: '00_RegionName',
         key: '00_RegionName',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query: {regionCode :record.regionCode} }} >
+          const values = this.props.form.getFieldsValue();
+          const query={
+            RegionCode :record["00_RegionCode"],            
+            PollutantTypeCode: values.PollutantTypeCode,
+            AttentionCode: values.AttentionCode?values.AttentionCode:"",
+            BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
+            EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+          }
+          return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
                    {text}
                </Link>
         },
@@ -55,6 +65,19 @@ class index extends PureComponent {
               title: '运维企业数',
               dataIndex: '00_Opsenters',
               key: '00_Opsenters',
+              render: (text, record) => { 
+                const values = this.props.form.getFieldsValue();
+                const query={
+                  RegionCode :record["00_RegionCode"],            
+                  PollutantTypeCode: values.PollutantTypeCode,
+                  AttentionCode: values.AttentionCode?values.AttentionCode:"",
+                  BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
+                  EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+                }
+                return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
+                         {text}
+                     </Link>
+              },
               width: 120,
               align:'center',
             },
@@ -97,6 +120,20 @@ class index extends PureComponent {
     this.getTableDataSource();
   }
 
+
+  //查询
+  search=()=>{
+    let values = this.props.form.getFieldsValue();
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/updateState',
+      payload: {
+        initialForm: {
+          ...values,
+        },
+      },
+    })
+    this.getTableDataSource();
+  }
 
   // 获取标题标题头及数据
   getTableDataSource = () => {
@@ -148,7 +185,7 @@ class index extends PureComponent {
 
   render() {
     const {
- form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, tableDataSource, loading, exportLoading,
+ form: { getFieldDecorator, getFieldValue }, initialForm, regionList, attentionList, detailsLoading, tableDataSource, loading, exportLoading,
 } = this.props;
 
     const columns = this.getColumns();
@@ -161,7 +198,7 @@ class index extends PureComponent {
             <Row>
                 <FormItem label="日期查询">
                     {getFieldDecorator('Time', {
-                      initialValue: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+                      initialValue: initialForm.Time,
                     })(
                         <RangePicker_ allowClear={false} style={{ width: "100%", marginRight: '10px' }}  dataType='day'/>
                     )}
@@ -169,6 +206,7 @@ class index extends PureComponent {
 
                 <FormItem  label="行政区">
                     {getFieldDecorator('RegionCode', {
+                      initialValue:initialForm.RegionCode,
                     })(
                     <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
                         {
@@ -182,7 +220,7 @@ class index extends PureComponent {
 
                 <FormItem label="关注程度">
                     {getFieldDecorator('AttentionCode', {
-                        initialValue: undefined,
+                      initialValue:initialForm.AttentionCode,
                     })(
                         <Select allowClear style={{ width: 200 }} placeholder="请选择关注程度">
                         {
@@ -196,7 +234,7 @@ class index extends PureComponent {
 
                 <FormItem label="企业类型">
                     {getFieldDecorator('PollutantTypeCode', {
-                    initialValue: '1',
+                      initialValue: initialForm.PollutantTypeCode,
                     })(
                     <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={value => {
                         this.setState({ pollutantType: value }, () => {
@@ -209,7 +247,7 @@ class index extends PureComponent {
                 </FormItem>
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                    <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getTableDataSource}>查询</Button>
+                    <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button>
                     <Button
                         style={{ margin: '0 5px' }}
                         icon="export"

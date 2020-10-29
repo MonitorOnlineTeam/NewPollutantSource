@@ -1412,6 +1412,16 @@ export default {
                         path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
                         component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
                       },
+                      {
+                        //企业运维工单统计（企业）
+                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                      },
+                      {
+                        //站点运维工单统计（企业）
+                        path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
+                        component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
+                      },
                       /* 缺失台账工单统计 */
                       {
                         path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',

@@ -7,14 +7,22 @@ export default Model.extend({
   state: {
     attentionList: [],//关注程度
     entList: [],//企业列表
+    initialForm:{
+      Time:[moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
+      RegionCode:undefined,
+      AttentionCode:undefined,
+      PollutantTypeCode:'1',
+    },
     tableTitleData: [],//一级标题
     tableDataSource: [],//一级数据内容
     secondTableTitleData:[],//二级标题
     secondTableDataSource:[],//二级数据内容
+    thirdTableTitleData:[],//三级标题
+    thirdTableDataSource:[],//三级数据内容
+    fourTableTitleData:[],//四级标题
+    fourTableDataSource:[],//四级数据内容
     exceptionPointList: [],
     secondTableDataSource: [],
-    searchForm: {
-    },
     entWorkOrderTime: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")],//企业工单默认时间
     entByRegionList: [],
   },
@@ -107,17 +115,71 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 根据行政区查询企业
-    *getEntByRegion({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getEntByRegion, payload);
+    
+    // table title数据-三级
+    *getThirdTableTitleData({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getThirdTableTitleData, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          entByRegionList: result.Datas
+          thirdTableTitleData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // table数据-三级
+    *getThirdTableDataSource({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getThirdTableDataSource, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          thirdTableDataSource: result.Datas
         })
       } else {
         message.error(result.Message)
       }
     },
 
+    // 导出-师三级
+    *exportThird({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportThird, { ...payload });
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // table title数据-四级
+    *getFourTableTitleData({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getFourTableTitleData, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          fourTableTitleData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // table数据-四级
+    *getFourTableDataSource({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getFourTableDataSource, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          fourTableDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 导出-师四级
+    *exportFour({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportFour, { ...payload });
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 });
