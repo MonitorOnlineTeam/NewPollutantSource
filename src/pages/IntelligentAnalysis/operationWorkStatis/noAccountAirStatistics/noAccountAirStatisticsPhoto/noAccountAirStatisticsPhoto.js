@@ -135,7 +135,7 @@ export default class airMissing extends Component {
     const { dispatch, noAccountAirStatisticsForm } = this.props;
     dispatch({
       type: 'noAccountAirStatistics/exportDefectDataSummary',
-      payload: { ...noAccountAirStatisticsForm },
+      payload: { ...requestData, ...{ ModelType: 'TaskNums' ,EntCode:this.state.EntCode}  },
       callback: data => {
         downloadFile(`/upload${data}`);
       },

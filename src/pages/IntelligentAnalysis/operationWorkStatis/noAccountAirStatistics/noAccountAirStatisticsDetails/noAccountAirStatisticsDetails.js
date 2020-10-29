@@ -154,7 +154,7 @@ let requestData = JSON.parse(this.props.requestData)
     const { dispatch, noAccountAirStatisticsForm } = this.props;
     dispatch({
       type: 'noAccountAirStatistics/exportDefectDataSummary',
-      payload: { ...noAccountAirStatisticsForm },
+      payload: {  ...requestData, ...{ModelType:'Region'}  },
       callback: data => {
         downloadFile(`/upload${data}`);
       },

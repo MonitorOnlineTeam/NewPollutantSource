@@ -84,7 +84,7 @@ export default Model.extend({
     },
     *exportDefectDataSummary({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出  报警核实率首页
+      //导出  
       const response = yield call(ExportDefectDataSummary, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
@@ -95,19 +95,7 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-    *exportDefectPointDetail({ callback, payload }, { call, put, update, select }) {
-      yield update({ exloading: true });
-      //导出  报警核实率  详情
-      const response = yield call(ExportDefectPointDetail, { ...payload });
-      if (response.IsSuccess) {
-        message.success('下载成功');
-        callback(response.Datas);
-        yield update({ exloading: false });
-      } else {
-        message.warning(response.Message);
-        yield update({ exloading: false });
-      }
-    },
+    
     // 根据企业类型查询监测因子
     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
       const response = yield call(GetPollutantByType, { ...payload });
