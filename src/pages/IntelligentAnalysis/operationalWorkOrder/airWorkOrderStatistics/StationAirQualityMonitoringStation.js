@@ -2,7 +2,7 @@
  * @Description:单区域 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 10:20:28
- * @LastEditTime: 2020-10-28 16:02:34
+ * @LastEditTime: 2020-10-29 14:58:32
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation.js
  */
 
@@ -68,7 +68,6 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
         dataIndex: item.ID,
         key: item.ID,
         width: 150,
-        align: 'center',
         render: (text, record) => {
           return (
             <a

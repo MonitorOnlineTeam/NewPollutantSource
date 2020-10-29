@@ -2,7 +2,7 @@
  * @Description:单站点 运维工单统计-空气站 排口
  * @LastEditors: hxf
  * @Date: 2020-10-27 10:29:59
- * @LastEditTime: 2020-10-28 15:23:15
+ * @LastEditTime: 2020-10-29 14:59:35
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation.js
  */
 
@@ -62,6 +62,14 @@ export default class SingleStationAirQualityMonitoringStation extends PureCompon
   }
 
   createColum = item => {
+    if (item.ID === '00_PointName') {
+      return {
+        title: item.TypeName,
+        dataIndex: item.ID,
+        key: item.ID,
+        width: 150,
+      };
+    }
     return {
       title: item.TypeName,
       dataIndex: item.ID,
