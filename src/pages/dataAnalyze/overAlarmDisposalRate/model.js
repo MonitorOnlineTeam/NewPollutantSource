@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:57:56
- * @LastEditTime: 2020-10-23 17:15:13
+ * @LastEditTime: 2020-10-27 17:03:17
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/model.js
  */
 import Model from '@/utils/model';

@@ -930,10 +930,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videopreview/hkvideo/index'
-                    : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -952,10 +953,11 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videoMonitor/videopreview/hkvideo'
-                    : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -1281,7 +1283,7 @@ export default {
                       path: '/Intelligentanalysis/emissions/waterContrast',
                       component: './IntelligentAnalysis/emissions/WaterContrast',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: 'effluentFee',
@@ -1422,7 +1424,6 @@ export default {
                 {
                   path: '/Intelligentanalysis/operationWorkStatis',
                   name: 'operationWorkStatis',
-
                   routes: [
                     {
                       // 运维工单统计（企业）
@@ -1448,6 +1449,37 @@ export default {
                         '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
                       component:
                         './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    },
+                    {
+                      /** 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 排口 */
+                      name: 'RegionAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单站点 运维工单统计-空气站 排口 */
+                      name: 'SingleStationAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
                     },
                   ],
                 },
