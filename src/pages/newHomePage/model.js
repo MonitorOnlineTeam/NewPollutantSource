@@ -42,7 +42,8 @@ export default Model.extend({
     pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}],
     isWorkRate:false,
     isFaultRate:false,
-    isOverRate:false
+    isOverRate:false,
+    Atmosphere:false
 
   },
   subscriptions: {},

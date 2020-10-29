@@ -35,7 +35,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        message.error(response.Message);
       }
     },
     // 获取企业列表
@@ -66,10 +66,10 @@ export default Model.extend({
       const result = yield call(services.getTableDataSource, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          tableDataSource: result.Datas
-        })
+          tableDataSource: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
@@ -77,9 +77,9 @@ export default Model.extend({
     *exportReport({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
@@ -99,10 +99,10 @@ export default Model.extend({
       const result = yield call(services.getSecondTableDataSource, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          secondTableDataSource: result.Datas
-        })
+          secondTableDataSource: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
@@ -110,9 +110,9 @@ export default Model.extend({
     *exportSecond({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     
@@ -168,7 +168,7 @@ export default Model.extend({
           fourTableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 

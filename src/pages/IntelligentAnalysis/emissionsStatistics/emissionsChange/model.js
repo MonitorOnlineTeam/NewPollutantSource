@@ -1,15 +1,16 @@
 /**
- * 功  能：去除分析率
+ * 功  能：排放量
  * 创建人：贾安波
- * 创建时间：2020.10.09
+ * 创建时间：2020.10.28
  */
 
 import Model from '@/utils/model';
 import {
-  GetSewageHistoryList,
+  GetEmissionsTrendList,
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
+  GetEmissionsEntPointPollutant
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -19,16 +20,19 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
+      DGIMN:'',
+      RegionCode: "",
+      EntCode: "",
+      ImportantType: "",
+      PollutantType: "",
+      AttentionCode: "",
       beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantCode:['011','060','101','065','007'],
-      PollutantType:'',
-      dataType:'HourData'
+      .subtract(1, 'day')
+      .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DataType: "",
+      DGIMN:'',
+      PollutantList:[]
     },
     pointName:'COD',
     tableDatas: [],
@@ -39,16 +43,18 @@ export default Model.extend({
     chartImport:[],
     chartTime:[],
     entName:'',
-    pollutantList:[{name:'COD',unit:'kg',value:'011'},{name:'氨氮',unit:'kg',value:'060'},{name:'总磷',unit:'kg',value:'101'},{name:'总氮',unit:'kg',value:'065'},{name:'流量',unit:'t',value:'007'}]
-
+    EntList:[],
+    PointList:[],
+    PollutantList:[],
+    parmarType:'RegionCode'
   },
   subscriptions: {},
   effects: {
-    *getSewageHistoryList({ payload }, { call, put, update, select }) {
+    *getEmissionsTrendList({ payload }, { call, put, update, select }) {
       //列表
 
       yield update({ loading:true }); 
-      const response = yield call(GetSewageHistoryList, { ...payload });
+      const response = yield call(GetEmissionsTrendList, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,
@@ -79,15 +85,23 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有污水处理厂
-      const response = yield call(GetEntByRegion, { ...payload });
+    *getEmissionsEntPointPollutant({ callback,payload }, { call, put, update, select }) {
+      //获取参数列表
+
+      const  parmarType = yield select(_ =>_.emissionsChange.parmarType)
+      const  queryPar = yield select(_ =>_.emissionsChange.queryPar)
+
+      const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
-        yield update({
-          priseList: response.Datas,
-        });
-        callback(response.Datas[0].EntCode)
+        if(parmarType==='RegionCode'){
+          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantCode:''} });
+        }
+        if(parmarType==='EntCode'){
+          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantCode:''}});
+        }
+        if( parmarType==='DGIMN'){
+          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantCode:''}});
+        }
       }
     },
     *exportSewageHistoryList({callback, payload }, { call, put, update, select }) {

@@ -256,6 +256,9 @@ class Water extends PureComponent {
         title: '行业',
         dataIndex: 'TradeName',
         key: 'TradeName',
+        render: (text, record) => {
+          return text ? text : "-"
+        }
         // width: 200,
       },
       {

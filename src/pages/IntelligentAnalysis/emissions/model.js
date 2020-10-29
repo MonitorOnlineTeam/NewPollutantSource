@@ -16,6 +16,16 @@ export default Model.extend({
     regionExportLoading: false,
     entExportLoading: false,
     pointExportLoading: false,
+    // 对比数据
+    regionContrastTableDataSource: [],
+    regionContrastLoading: false,
+    entContrastTableDataSource: [],
+    entContrastLoading: false,
+    pointContrastTableDataSource: [],
+    pointContrastLoading: false,
+    regionContrastExportLoading: false,
+    entContrastExportLoading: false,
+    pointContrastExportLoading: false,
   },
   effects: {
     // 获取关注列表
@@ -78,6 +88,69 @@ export default Model.extend({
         case "point":
           actionType = "exportPointData";
           loadingName = "pointExportLoading"
+          break;
+      }
+      yield update({ [loadingName]: true })
+      const result = yield call(services[actionType], { ...payload });
+      if (result.IsSuccess) {
+        window.open(result.Datas)
+        yield update({
+          [loadingName]: false
+        })
+      } else {
+        yield update({ [loadingName]: false })
+        message.error(result.Message)
+      }
+    },
+    // 根据查询类型获取对比table数据
+    *getContrastTableDataByType({ payload, callback }, { call, put, update, select }) {
+      let queryType = payload.DataType;
+      let actionType, stateKey, loadingName;
+      switch (queryType) {
+        case "region":
+          actionType = "getDataForRegionContrast";
+          stateKey = "regionContrastTableDataSource";
+          loadingName = "regionContrastLoading"
+          break;
+        case "ent":
+          actionType = "getDataForEntContrast";
+          stateKey = "entContrastTableDataSource";
+          loadingName = "entContrastLoading"
+          break;
+        case "point":
+          actionType = "getDataForPointContrast";
+          stateKey = "pointContrastTableDataSource";
+          loadingName = "pointContrastLoading"
+          break;
+      }
+      yield update({ [loadingName]: true })
+      const result = yield call(services[actionType], { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          [stateKey]: result.Datas,
+          [loadingName]: false
+        })
+      } else {
+        yield update({ [loadingName]: false })
+        message.error(result.Message)
+      }
+    },
+    // 根据查询类型导出对比table数据
+    *exportContrastTableDataByType({ payload, callback }, { call, put, update, select }) {
+      let queryType = payload.DataType;
+      let actionType, loadingName;
+      switch (queryType) {
+        case "region":
+          actionType = "exportRegionContrastData";
+          loadingName = "regionContrastExportLoading"
+          break;
+        case "ent":
+          actionType = "exportEntContrastData";
+          loadingName = "entContrastExportLoading"
+          break;
+        case "point":
+          actionType = "exportPointContrastData";
+          loadingName = "pointContrastExportLoading"
           break;
       }
       yield update({ [loadingName]: true })

@@ -28,7 +28,10 @@ export async function getTableDataSource(params) {
 
 // 导出数据 - 全省
 export async function exportReport(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForRegion`, params);
+  const result = post(
+    `/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForRegion`,
+    params,
+  );
   return result;
 }
 
@@ -46,7 +49,10 @@ export async function getSecondTableDataSource(params) {
 
 // 导出数据 - 二级页面 行政区
 export async function exportSecond(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForPoint`, params);
+  const result = post(
+    `/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForPoint`,
+    params,
+  );
   return result;
 }
 

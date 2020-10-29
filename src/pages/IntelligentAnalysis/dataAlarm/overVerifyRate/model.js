@@ -12,7 +12,7 @@ import {
   ExportDefectDataSummary,
   ExportDefectPointDetail,
   GetDefectPointDetail,
-  GetPollutantByType
+  GetPollutantByType,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -21,7 +21,7 @@ export default Model.extend({
   state: {
     exloading: false,
     loading: false,
-    
+
     overVerifyRateForm: {
       beginTime: moment()
         .subtract(1, 'months')
@@ -29,18 +29,18 @@ export default Model.extend({
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: undefined,
       RegionCode: undefined,
-      PollutantType:'1',
-      PollutantList :[],
-      Rate :1,
-      EntCode:''
+      PollutantType: '1',
+      PollutantList: [],
+      Rate: 1,
+      EntCode: '',
     },
     divisorList: [],
     tableDatas: [],
     total: '',
-    attentionList:[],
+    attentionList: [],
     priseList: [],
-    airList:[],
-    tableDatil:[]
+    airList: [],
+    tableDatil: [],
   },
   subscriptions: {},
   effects: {
@@ -81,7 +81,7 @@ export default Model.extend({
         });
       }
     },
-    *exportDefectDataSummary({callback, payload }, { call, put, update, select }) {
+    *exportDefectDataSummary({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出  报警核实率首页
       const response = yield call(ExportDefectDataSummary, { ...payload });
@@ -94,7 +94,7 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-    *exportDefectPointDetail({callback, payload }, { call, put, update, select }) {
+    *exportDefectPointDetail({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出  报警核实率  详情
       const response = yield call(ExportDefectPointDetail, { ...payload });
@@ -107,18 +107,17 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-     // 根据企业类型查询监测因子
-     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
+    // 根据企业类型查询监测因子
+    *getPollutantByType({ payload, callback }, { call, put, update, select }) {
       const response = yield call(GetPollutantByType, { ...payload });
       if (response.IsSuccess) {
         yield update({
           divisorList: response.Datas,
         });
-        callback && callback(response.Datas)
+        callback && callback(response.Datas);
       } else {
-        message.error(response.Message)
+        message.error(response.Message);
       }
     },
-    
   },
 });
