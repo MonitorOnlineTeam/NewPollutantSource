@@ -111,8 +111,8 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: '工单类型',
-            dataIndex: 'TaskType',
-            key: 'TaskType',
+            dataIndex: 'TaskTypeName',
+            key: 'TaskTypeName',
             align: 'center',
             render: (text, record) => {
               return text? text : '-';
@@ -236,10 +236,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, workNumQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookSta',
+      payload: { ...workNumQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
         },

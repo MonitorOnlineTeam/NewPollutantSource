@@ -1451,6 +1451,12 @@ export default {
                         './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
                     },
                     {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
                       /** 运维工单统计-空气站 */
                       name: 'AirWorkOrderStatistics',
                       path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
@@ -1495,33 +1501,6 @@ export default {
                   path:
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                },
-                {
-                  name: 'operationWorkStatis', //运维工单统计
-                  path: '/Intelligentanalysis/operationWorkStatis',
-                  routes: [
-                    {
-                      path: '/Intelligentanalysis/operationWorkStatis',
-                      redirect: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics',
-                    },
-                    // {
-                    //   name:'',
-                    //   path:'',
-                    //   component:''
-                    // },
-                    {
-                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                    },
-                    {
-                      name: 'noAccountStatisticsAir', //无台账上传统计 空气站
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/air',
-                    },
-                  ],
                 },
               ],
             },
@@ -1604,6 +1583,11 @@ export default {
                   name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
                   path: '/dataSearch/exceedDataDispositionRecord',
                   component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                },
+                {
+                  name: 'entAbnormalRecord', //企业异常记录
+                  path: '/dataSearch/entAbnormalRecord',
+                  component: './dataSearch/entAbnormalRecord',
                 },
               ],
             },

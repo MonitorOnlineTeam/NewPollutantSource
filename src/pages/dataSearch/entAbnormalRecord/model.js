@@ -14,7 +14,7 @@ import {
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'noAccountStatistics',
+  namespace: 'entAbnormalRecord',
   state: {
     exloading: false,
     loading: true,

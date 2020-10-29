@@ -232,10 +232,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, entNumQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookSta',
+      payload: { ...entNumQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -245,7 +245,7 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
   
 
-    const { pointName, dispatch,queryPar:{EntCode} } = this.props;
+    const { pointName, dispatch,entNumQueryPar:{EntCode} } = this.props;
 
       this.getTableData();
 

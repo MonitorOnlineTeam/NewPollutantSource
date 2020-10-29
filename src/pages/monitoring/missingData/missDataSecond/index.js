@@ -93,7 +93,7 @@ export default class Index extends Component {
        },
       },
       {
-        title: <span>首次报警时间</span>,
+        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次超标时间' : '首次缺失时间' }</span>,
         dataIndex: 'firstTime',
         key: 'firstTime',
         // width: '10%',
@@ -157,7 +157,11 @@ export default class Index extends Component {
   detail=(record)=>{
 
      this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
-       this.setState({visible:true})
+
+      setTimeout(()=>{
+        this.setState({visible:true})
+
+      })
      })
   }
   componentDidMount() {

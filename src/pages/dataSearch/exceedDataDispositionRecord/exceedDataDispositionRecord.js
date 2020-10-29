@@ -1027,7 +1027,7 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次报警时间",
+                title: "首次超标时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,

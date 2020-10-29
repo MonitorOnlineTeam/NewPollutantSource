@@ -206,7 +206,7 @@ class index extends PureComponent {
         key: 'DataType',
       },
       {
-        title: '首次报警时间',
+        title: '首次异常时间',
         dataIndex: 'FirstTime',
         key: 'FirstTime',
       },
