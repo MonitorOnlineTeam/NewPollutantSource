@@ -97,4 +97,10 @@ export async function CreatQRCode(params) {
   } : result;
 }
 
+// 根据mn号获取站点下的所有污染物因子
+export async function getPollutantListByDgimn(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  return result;
+}
+
 

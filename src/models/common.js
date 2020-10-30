@@ -20,6 +20,7 @@ export default Model.extend({
     priseList: [],
     attentionList: [],
     pointListByEntCode: [],
+    pollutantListByDgimn: [],
   },
 
   effects: {
@@ -188,6 +189,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pointListByEntCode: result.Datas,
+        });
+      }
+    },
+    // 根据mn号获取站点下的所有污染物因子
+    *getPollutantListByDgimn({ payload }, { call, update }) {
+      const result = yield call(services.getPollutantListByDgimn, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pollutantListByDgimn: result.Datas,
         });
       }
     },
