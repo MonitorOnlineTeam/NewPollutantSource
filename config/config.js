@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -937,10 +937,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videopreview/hkvideo/index'
-                    : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -959,10 +960,11 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videoMonitor/videopreview/hkvideo'
-                    : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -1437,18 +1439,24 @@ export default {
                     },
                     {
                       //行政区运维工单统计（企业）
-                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
                     },
                     {
                       //企业运维工单统计（企业）
-                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                     },
                     {
                       //站点运维工单统计（企业）
-                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
                     },
                     /* 缺失台账工单统计 */
                     {
