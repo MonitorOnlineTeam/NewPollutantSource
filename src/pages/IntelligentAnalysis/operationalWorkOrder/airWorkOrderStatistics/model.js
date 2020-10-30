@@ -1,8 +1,8 @@
 /*
- * @Description:
+ * @Description: 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 16:38:28
- * @LastEditTime: 2020-10-28 14:53:30
+ * @LastEditTime: 2020-10-30 13:49:25
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/model.js
  */
 import Model from '@/utils/model';
