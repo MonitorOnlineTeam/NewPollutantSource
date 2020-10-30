@@ -31,7 +31,8 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
-
+import Region from '../noAccountAirStatisticsDetails/noAccountAirStatisticsDetails';
+import Photo from '../noAccountAirStatisticsPhoto/noAccountAirStatisticsPhoto';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -56,33 +57,46 @@ export default class airMissing extends Component {
     super(props);
 
     this.state = {
+      regionVisible: false,
+      photoVisible: false,
       columns: [
         {
           title: <span>行政区</span>,
           dataIndex: 'Region',
           key: 'Region',
           align: 'center',
-
           render: (text, record) => {
             return (
-              <Link
-                to={{
-                  pathname:
-                    '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                  query: {
-                    Region: record.Region,
-                    requestData: JSON.stringify({
-                      RegionCode: record.RegionCode,
-                      BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
-                      EndTime: this.props.noAccountAirStatisticsForm.EndTime,
-                    }),
-                  },
+              <a
+                onClick={() => {
+                  this.regionDetail(record);
                 }}
               >
                 {text}
-              </Link>
+              </a>
             );
           },
+          // render: (text, record) => {
+          //   return (
+
+          //     <Link
+          //       to={{
+          //         pathname:
+          //           '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+          //         query: {
+          //           Region: record.Region,
+          //           requestData: JSON.stringify({
+          //             RegionCode: record.RegionCode,
+          //             BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+          //             EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+          //           }),
+          //         },
+          //       }}
+          //     >
+          //       {text}
+          //     </Link>
+          //   );
+          // },
         },
         {
           title: <span>{'运维空气监测点'}</span>,
@@ -129,24 +143,35 @@ export default class airMissing extends Component {
               align: 'center',
               render: (text, record) => {
                 return (
-                  <Link
-                    to={{
-                      pathname:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                      query: {
-                        Region: record.Region,
-                        requestData: JSON.stringify({
-                          RegionCode: record.RegionCode,
-                          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
-                          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
-                        }),
-                      },
+                  <a
+                    onClick={() => {
+                      this.photonDetail(record);
                     }}
                   >
                     {text}
-                  </Link>
+                  </a>
                 );
               },
+              // render: (text, record) => {
+              //   return (
+              //     <Link
+              //       to={{
+              //         pathname:
+              //           '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+              //         query: {
+              //           Region: record.Region,
+              //           requestData: JSON.stringify({
+              //             RegionCode: record.RegionCode,
+              //             BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+              //             EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+              //           }),
+              //         },
+              //       }}
+              //     >
+              //       {text}
+              //     </Link>
+              //   );
+              // },
             },
           ],
         },
@@ -170,24 +195,35 @@ export default class airMissing extends Component {
               dataIndex: 'CalibrationNotNum',
               key: 'CalibrationNotNum',
               align: 'center',
+              // render: (text, record) => {
+              //   return (
+              //     <Link
+              //       to={{
+              //         pathname:
+              //           '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+              //         query: {
+              //           Region: record.Region,
+              //           requestData: JSON.stringify({
+              //             RegionCode: record.RegionCode,
+              //             BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+              //             EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+              //           }),
+              //         },
+              //       }}
+              //     >
+              //       {text}
+              //     </Link>
+              //   );
+              // },
               render: (text, record) => {
                 return (
-                  <Link
-                    to={{
-                      pathname:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                      query: {
-                        Region: record.Region,
-                        requestData: JSON.stringify({
-                          RegionCode: record.RegionCode,
-                          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
-                          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
-                        }),
-                      },
+                  <a
+                    onClick={() => {
+                      this.photonDetail(record);
                     }}
                   >
                     {text}
-                  </Link>
+                  </a>
                 );
               },
             },
@@ -196,7 +232,33 @@ export default class airMissing extends Component {
       ],
     };
   }
+  photonDetail = record => {
+    
+    setTimeout(() => {
+      this.setState({
+        photoVisible: true,
+        requestData: JSON.stringify({
+          RegionCode: record.RegionCode,
+          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+        }),
+      });
+    });
+  };
+  regionDetail = record => {
+   
 
+    setTimeout(() => {
+      this.setState({
+        regionVisible: true,
+        requestData: JSON.stringify({
+          RegionCode: record.RegionCode,
+          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+        }),
+      });
+    });
+  };
   componentDidMount() {
     this.updateQueryState({ ModelType: 'All', RegionCode: undefined });
     setTimeout(() => {
@@ -259,11 +321,30 @@ export default class airMissing extends Component {
       },
       exloading,
     } = this.props;
+    const { regionVisible, photoVisible, workNumVisible, requestData } = this.state;
     return (
       <Card
         bordered={false}
         title={
           <Form layout="inline">
+            {regionVisible ? (
+              <Region
+                requestData={requestData}
+                regionVisible={regionVisible}
+                regionCancel={() => {
+                  this.setState({ regionVisible: false });
+                }}
+              />
+            ) : null}
+            {photoVisible ? (
+              <Photo
+                requestData={requestData}
+                photoVisible={photoVisible}
+                photoCancel={() => {
+                  this.setState({ photoVisible: false });
+                }}
+              />
+            ) : null}
             <Row>
               <Form.Item>
                 日期查询：
