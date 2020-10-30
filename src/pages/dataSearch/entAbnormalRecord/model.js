@@ -6,12 +6,15 @@
 
 import Model from '@/utils/model';
 import {
-  GetTaskFormBookSta,
+  GetExceptionReportedList,
+  GetExceptionReportedView,
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportTaskFormBookSta,
   GetEmissionsEntPointPollutant
 } from './service';
+
+
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
@@ -20,14 +23,14 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:'1',
-      ModelType: "All",
-      DGIMN:''
+      ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      ExceptionEBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionEEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      DGIMN: "",
+      RegionCode: "",
+      EntCode: "",
+      Status: ""
     },
     entQueryPar: {  },
     entNumQueryPar: { },
@@ -52,45 +55,20 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getTaskFormBookSta({callback, payload }, { call, put, update, select }) {
-      //无台账工单统计（企业） 列表
+    
+    *getExceptionReportedList({callback, payload }, { call, put, update, select }) {
+      //企业异常记录查询 列表
 
-
-      payload.ModelType==='All'? yield update({ loading:true })   : payload.ModelType==='Region'? yield update({ Regionloading:true }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:true }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:true }) :  yield update({ TaskNumsloading:true })
-
-       const response = yield call(GetTaskFormBookSta, { ...payload });
+       const response = yield call(GetExceptionReportedList, { ...payload });
       if (response.IsSuccess) {
-        if(payload.ModelType==='All'){
           yield update({
             tableDatas:response.Datas,
             loading:false  
           });
-        }else{
-          payload.ModelType==='Region'? yield update({ Regionloading:false }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:false }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:false }) :  yield update({ TaskNumsloading:false })
-        }
         callback(response.Datas)
       }else{
       
         yield update({ loading:false }); 
-      }
-    },
-    *getEmissionsEntPointPollutant({ callback,payload }, { call, put, update, select }) {
-      //获取参数列表
-
-      const  parmarType = yield select(_ =>_.emissionsChange.parmarType)
-      const  queryPar = yield select(_ =>_.emissionsChange.queryPar)
-
-      const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
-      if (response.IsSuccess) {
-        if(parmarType==='RegionCode'){
-          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantList:[]} });
-        }
-        if(parmarType==='EntCode'){
-          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantList:[]}});
-        }
-        if( parmarType==='DGIMN'){
-          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:[]}});
-        }
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {

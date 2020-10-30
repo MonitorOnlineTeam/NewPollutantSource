@@ -1,19 +1,36 @@
 import { post } from '@/utils/request';
 
-/**
- * 缺失数据
- *
- */
-export async function GetSewageHistoryList(params) {
+
+//超标率
+export async function GetOverDataRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetSewageHistoryList',
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetOverDataRate',
     params,
     null,
   );
 
   return result;
 }
+//运转率
+export async function GetSewageHistoryList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetOverDataRate',
+    params,
+    null,
+  );
 
+  return result;
+}
+//故障率
+export async function GetExceptionDataRate(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetExceptionDataRate',
+    params,
+    null,
+  );
+
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
