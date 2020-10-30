@@ -57,9 +57,9 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'entAbnormalRecord/updateState',
-  getData: 'entAbnormalRecord/getTaskFormBookSta',
+  getData: 'entAbnormalRecord/getExceptionReportedList',
 };
-@connect(({ loading, entAbnormalRecord,autoForm }) => ({
+@connect(({ loading,common, entAbnormalRecord,autoForm }) => ({
   priseList: entAbnormalRecord.priseList,
   exloading:entAbnormalRecord.exloading,
   loading: entAbnormalRecord.loading,
@@ -75,7 +75,7 @@ const pageUrl = {
   entName:entAbnormalRecord.entName,
   pollutantList:entAbnormalRecord.pollutantList,
   EntList: entAbnormalRecord.EntList,
-  PointList:entAbnormalRecord.PointList
+  pointList:common.pointListByEntCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -196,14 +196,18 @@ export default class EntTransmissionEfficiency extends Component {
 
  
      dispatch({ type: 'entAbnormalRecord/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+
+     dispatch({  type: 'common/getPointByEntCode',  payload: {  EntCode: ''} });  //获取排口
+
      this.updateQueryState({
-      beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:"1",
-      ModelType: "All"
+      ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      ExceptionEBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionEEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      DGIMN: "",
+      RegionCode: "",
+      EntCode: "",
+      Status: ""
     });
    
     setTimeout(() => {
@@ -236,30 +240,16 @@ export default class EntTransmissionEfficiency extends Component {
 
 
 
-  children = () => { //企业列表
-    const { EntList } = this.props;
 
-    const selectList = [];
-    if (EntList.length > 0) {
-      EntList.map(item => {
-        selectList.push(
-          <Option key={item[0].EntCode} value={item[0].EntCode} title={item[0].EntName}>
-            {item[0].EntName}
-          </Option>,
-        );
-      });
-      return selectList;
-    }
-  };
   pointChildren=()=>{ //监测点列表
-    const { PointList } = this.props;
+    const { pointList } = this.props;
 
     const selectList = [];
-    if (PointList.length > 0) {
-      PointList.map(item => {
+    if (pointList.length > 0) {
+      pointList.map(item => {
         selectList.push(
-          <Option key={item[0].DGIMN} value={item[0].DGIMN}  title={item[0].PointName}>
-            {item[0].PointName}
+          <Option key={item.DGIMN} value={item.DGIMN}  title={item.PointName}>
+            {item.PointName}
           </Option>,
         );
       });
@@ -278,12 +268,8 @@ export default class EntTransmissionEfficiency extends Component {
     const {dispatch } = this.props;
     this.updateQueryState({
       RegionCode: value,
+      EntCode: '',
     });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { parmarType: 'RegionCode'},
-    });
-    dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { RegionCode: value }});//获取参数列表
   };
 
   changeEnt=(value,data)=>{ //企业事件
@@ -291,12 +277,12 @@ export default class EntTransmissionEfficiency extends Component {
     
     this.updateQueryState({
       EntCode: value,
+      DGIMN: '',
     });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { parmarType: 'EntCode'},
+    this.props.dispatch({
+      type: 'common/getPointByEntCode',
+      payload: { EntCode:value, PollutantTypeCode:''}
     });
-    dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { EntCode: value }});//获取参数列表 监测点
   }
 
 
@@ -306,14 +292,9 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       DGIMN: value,
     });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { parmarType: 'DGIMN'},
-    });
+
 
       dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { DGIMN: value }});//获取参数列表 监测因子
-
-
   }
 
   changePoll=(value)=>{ //污染物改变事件
@@ -321,6 +302,11 @@ export default class EntTransmissionEfficiency extends Component {
       PollutantCode: value,
     });
 
+  } 
+  statusChange=(value)=>{  //凭证改变事件
+    this.updateQueryState({
+      Status: value,
+    });
   }
   //创建并获取模板   导出
   template = () => {
@@ -385,9 +371,6 @@ export default class EntTransmissionEfficiency extends Component {
    }
 
 
-  onChange3=(e)=>{
-   console.log(e)
-  }
   entDetail=(row)=>{
     const { dispatch,queryPar } = this.props;
     dispatch({
@@ -403,7 +386,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantTypeCode,DGIMN },
+      queryPar: {ExceptionBBtime,ExceptionBEtime, ExceptionEBtime, ExceptionEEtime, DGIMN,RegionCode, EntCode,Status},
 
     } = this.props;
 
@@ -420,36 +403,20 @@ export default class EntTransmissionEfficiency extends Component {
               { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
               <Row>
               <Form.Item label='异常开始时间'>
-               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='异常截止时间'>
-               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionEBtime),moment(ExceptionEEtime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 </Row>
             <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-               {/* <Form.Item label='企业列表'>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
-                </Form.Item>  
-              <Form.Item label='监测点'>
-               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item> > */}
                 <Form.Item label='企业列表'>
-                 <Select
-                //  allowClear
-                 showSearch
-                 optionFilterProp="children"
-                 placeholder="企业列表"
-                 onChange={this.changeEnt}
-                 value={EntCode ? EntCode : undefined}
-                 style={{width:'200px'}}
-                >
-                 {this.children()}
-                  </Select>
-                </Form.Item>
+                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} />
+                </Form.Item>  
                 <Form.Item label='监测点'>
                  <Select
                     placeholder="监测点名称"
@@ -464,12 +431,12 @@ export default class EntTransmissionEfficiency extends Component {
               <Select
                  allowClear
                  placeholder="凭证状态"
-                //  onChange={typeChange}
-                //  value={PollutantType?PollutantType:undefined}
+                 onChange={this.statusChange}
+                 value={Status?Status:undefined}
                 style={{ width: 150 }}
                  >
                  <Option value="1">有凭证</Option>
-                  <Option value="2">缺失凭证</Option>
+                  <Option value="0">缺失凭证</Option>
                  </Select>
               </Form.Item>
 
@@ -492,7 +459,7 @@ export default class EntTransmissionEfficiency extends Component {
           }
         >
           <div id='entAbnormalRecord'>
-             {/* <SdlTable
+              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={this.columns}
@@ -504,7 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
                 total: this.props.total,
                 defaultPageSize:20
               }}
-            /> */}
+            /> 
           </div>
          
         </Card>

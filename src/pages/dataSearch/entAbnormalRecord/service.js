@@ -1,12 +1,22 @@
 import { post } from '@/utils/request';
 
 /**
- * 无台账工单统计（企业） 列表
+ * 企业异常记录 列表
  *
  */
-export async function GetTaskFormBookSta(params) {
+export async function GetExceptionReportedList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookSta',
+    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedList',
+    params,
+    null,
+  );
+
+  return result;
+}
+//异常记录详情
+export async function GetExceptionReportedView(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedView',
     params,
     null,
   );

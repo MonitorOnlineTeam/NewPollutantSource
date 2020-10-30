@@ -54,6 +54,14 @@ export default class Index extends Component {
  
   
    }
+   componentDidUpdate(props) {
+    const { type,dispatch,regionCode } = this.props;
+
+    if (props.regionCode !== regionCode) {
+       type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
+
+    }
+  }
   render() {
       const {EntCode,changeEnt,type} = this.props
     return (
