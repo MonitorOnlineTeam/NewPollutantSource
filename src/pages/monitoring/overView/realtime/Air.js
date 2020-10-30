@@ -86,6 +86,9 @@ class index extends Component {
         align: 'center',
         wrw: item.wrw !== undefined ? item.wrw : true,
         render: (text, record) => {
+          // if (record.outPutFlag == 1) {
+          //   return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
+          // }
           if (item.field === 'AQI') {
             return AQIPopover(text, record);
           }
@@ -126,6 +129,9 @@ class index extends Component {
           fixed,
           show: true,
           render: (value, record, index) => {
+            // if (record.outPutFlag == 1) {
+            //   return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
+            // }
             const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
             const color = airLevelObj.color || '#999999';
             return (
@@ -152,7 +158,7 @@ class index extends Component {
           key: 'entName',
           fixed,
           show: true,
-          align: 'center',
+          // align: 'center',
         },
         {
           title: '监测点',
@@ -161,7 +167,7 @@ class index extends Component {
           key: 'pointName',
           fixed,
           show: true,
-          align: 'center',
+          // align: 'center',
           render: (text, record) => {
             if (this.state.pollutantCode == 5) {
               return (
@@ -186,6 +192,12 @@ class index extends Component {
           fixed,
           show: true,
           align: 'center',
+          // render: (text, record) => {
+          //   if (record.outPutFlag == 1) {
+          //     return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
+          //   }
+          //   return text
+          // }
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
         },
@@ -477,7 +489,7 @@ class index extends Component {
                                     return;
                                   }
                                   const newColumns = columns;
-                                  const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+                                  const num = (pollutantCode == 5 || pollutantCode == 12) ? 9 : 4;
                                   newColumns[index + num].show = e.target.checked;
                                   this.setState({
                                     columns: newColumns,
@@ -519,16 +531,16 @@ class index extends Component {
               {
                 statusList.map(item => {
                   return <CheckableTag
-                    style={{ backgroundColor: selectedTags.includes(item.value) ? item.color : "", padding: "2px 10px", cursor: 'pointer', borderRadius: 0, marginRight: 0 }}
+                    style={{ backgroundColor: selectedTags.includes(item.value) ? "transparent" : item.color, padding: "2px 10px", cursor: 'pointer', borderRadius: 0, marginRight: 0 }}
                     key={item.value}
                     checked={selectedTags.includes(item.value)}
                     onChange={checked => this.onTagChange(item.value, checked)}
                   >
                     <i style={{
-                      backgroundColor: item.color, width: 4, height: 4, display: selectedTags.includes(item.value) ? "none" : 'inline-block',
+                      backgroundColor: item.color, width: 4, height: 4, display: selectedTags.includes(item.value) ? 'inline-block' : "none",
                       borderRadius: "50%", margin: "0 4px 4px 0",
                     }}></i>
-                    <span style={{ fontSize: 14, color: selectedTags.includes(item.value) ? "#fff" : item.color, fontWeight: "bold" }}>{item.label}</span>
+                    <span style={{ fontSize: 14, color: selectedTags.includes(item.value) ? item.color : "#fff", fontWeight: "bold" }}>{item.label}</span>
                   </CheckableTag>
                 })
               }
