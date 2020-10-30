@@ -230,11 +230,12 @@ export default {
               name: 'home',
               path: '/home',
               component: './newHome',
-            }, // {
-            //   name: 'test',
-            //   path: '/test',
-            //   component: './Test/Test',
-            // },
+            },
+            {
+              name: 'test',
+              path: '/test',
+              component: './Test/Test',
+            },
             {
               name: 'homepage',
               path: '/newHomePage',
@@ -930,7 +931,8 @@ export default {
                 {
                   name: 'mapview',
                   path: '/monitoring/mapview',
-                  component: './monitoring/mapview',
+                  // component: './monitoring/mapview',
+                  component: './newHome',
                 },
                 {
                   name: 'videopreview',

@@ -555,7 +555,7 @@ class index extends Component {
                 statusList.map(item => {
                   return <CheckableTag
                     style={{ backgroundColor: selectedTags.includes(item.value) ? item.color : "", padding: "2px 10px", cursor: 'pointer', borderRadius: 0, marginRight: 0 }}
-                    key={item.value}
+                    key={item.value} 
                     checked={selectedTags.includes(item.value)}
                     onChange={checked => this.onTagChange(item.value, checked)}
                   >

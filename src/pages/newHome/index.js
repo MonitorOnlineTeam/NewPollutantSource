@@ -997,57 +997,52 @@ class NewHome extends PureComponent {
         </header> */}
         <Spin style={{ zIndex: 9999 }} spinning={loading}>
           <div className={styles.pageContainer}>
-            <Drawer
-              // getContainer={false}
-              zIndex={1}
-              placement="left"
-              closable={false}
-              width={340}
-              mask={false}
-              visible={leftVisible}
-              style={{ marginTop: 64 }}
-              bodyStyle={{ padding: 0 }}
-            >
-              <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
-                <Icon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
-              </div>
-              <Spin spinning={isLeftLoading}>
-                <div className={styles.content}>
-                  {/* 监控现状 */}
-                  <Monitoring RegionCode={RegionCode} />
-                  {/* 运行分析 */}
-                  <RunAndAnalysis RegionCode={RegionCode} />
-                  {/* 报警响应情况 */}
-                  <AlarmResponse RegionCode={RegionCode} month={this.state.month} />
-                </div>
-              </Spin>
-            </Drawer>
-            <Drawer
-              // getContainer={false}
-              zIndex={1}
-              placement="right"
-              closable={false}
-              width={340}
-              mask={false}
-              visible={rightVisible}
-              style={{ marginTop: 64 }}
-              bodyStyle={{ padding: 0 }}
-            >
-              <div
-                className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`}
-                onClick={() => this.toggle()}
+            {/* <>
+              <Drawer
+                zIndex={1}
+                placement="left"
+                closable={false}
+                width={340}
+                mask={false}
+                visible={leftVisible}
+                style={{ marginTop: 64 }}
+                bodyStyle={{ padding: 0 }}
               >
-                <Icon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
-              </div>
-              <Spin spinning={isRightLoading}>
-                <div className={styles.content}>
-                  {/* 运维分析 */}
-                  <Operations RegionCode={RegionCode} />
-                  {/* 水平衡差 */}
-                  <DiffHorizontal RegionCode={RegionCode} />
+                <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
+                  <Icon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
                 </div>
-              </Spin>
-            </Drawer>
+                <Spin spinning={isLeftLoading}>
+                  <div className={styles.content}>
+                    <Monitoring RegionCode={RegionCode} />
+                    <RunAndAnalysis RegionCode={RegionCode} />
+                    <AlarmResponse RegionCode={RegionCode} month={this.state.month} />
+                  </div>
+                </Spin>
+              </Drawer>
+              <Drawer
+                zIndex={1}
+                placement="right"
+                closable={false}
+                width={340}
+                mask={false}
+                visible={rightVisible}
+                style={{ marginTop: 64 }}
+                bodyStyle={{ padding: 0 }}
+              >
+                <div
+                  className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`}
+                  onClick={() => this.toggle()}
+                >
+                  <Icon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
+                </div>
+                <Spin spinning={isRightLoading}>
+                  <div className={styles.content}>
+                    <Operations RegionCode={RegionCode} />
+                    <DiffHorizontal RegionCode={RegionCode} />
+                  </div>
+                </Spin>
+              </Drawer>
+            </> */}
             <div className={styles.mapContent}>
               <div className={styles.mapInnerBox}>
                 {displayType === 1 && (
@@ -1106,7 +1101,7 @@ class NewHome extends PureComponent {
                     }, 0)
                   }}>返回上级</Button>
                 } */}
-                <MonthPicker
+                {/* <MonthPicker
                   defaultValue={moment()}
                   allowClear={false}
                   className={styles.monthPicker}
@@ -1118,7 +1113,7 @@ class NewHome extends PureComponent {
                     }
                     this.reloadPageData(date.format('YYYY-MM-01 00:00:00'), endTime);
                   }}
-                />
+                /> */}
                 {displayType === 0 && (
                   <Select
                     className={styles.selectShowType}
@@ -1222,19 +1217,19 @@ class NewHome extends PureComponent {
                             全部
                           </li>
                           {constructionCorpsList.map(item => (
-                              <li
-                                className={
-                                  clickedDivision &&
-                                  clickedDivision.title === item.title &&
-                                  styles.current
-                                }
-                                onClick={() => {
-                                  this.divisionClick(item);
-                                }}
-                              >
-                                {item.title}
-                              </li>
-                            ))}
+                            <li
+                              className={
+                                clickedDivision &&
+                                clickedDivision.title === item.title &&
+                                styles.current
+                              }
+                              onClick={() => {
+                                this.divisionClick(item);
+                              }}
+                            >
+                              {item.title}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     )}
@@ -1399,12 +1394,12 @@ class NewHome extends PureComponent {
                 } */}
               </Map>
             </div>
-          </div>
-        </Spin>
-        {officeVisible && <OfficeModal title={modalTitle} SparePartsStationCode={SparePartsStationCode}/>}
+          </div >
+        </Spin >
+        { officeVisible && <OfficeModal title={modalTitle} SparePartsStationCode={SparePartsStationCode} />}
         {/* {true && <OfficeModal />} */}
-        {siteDetailsVisible && <SiteDetailsModal data={currentClickObj} />}
-      </div>
+        { siteDetailsVisible && <SiteDetailsModal data={currentClickObj} />}
+      </div >
     );
   }
 }
