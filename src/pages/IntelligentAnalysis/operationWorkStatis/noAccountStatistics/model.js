@@ -43,7 +43,9 @@ export default Model.extend({
     Regionloading:false,
     EntNumloading:false,
     EntNameloading:false,
-    TaskNumsloading:false
+    TaskNumsloading:false,
+    RegionName:'',
+    EntName:''
   },
   subscriptions: {},
   effects: {

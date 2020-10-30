@@ -70,7 +70,8 @@ const pageUrl = {
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
   pollutantList:noAccountStatistics.pollutantList,
-  entQueryPar:noAccountStatistics.entQueryPar
+  entQueryPar:noAccountStatistics.entQueryPar,
+  EntName:noAccountStatistics.EntName
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -299,6 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
       Entloading,
       entQueryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       entVisible,
+      EntName,
       entCancel
     } = this.props;
     const { TabPane } = Tabs;
@@ -306,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     return (
         <Modal
-          title="这是企业"
+          title={`${EntName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}缺失台账照片统计信息`}
           footer={null}
           width='95%'
           visible={entVisible}  

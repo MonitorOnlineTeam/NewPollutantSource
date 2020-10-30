@@ -13,7 +13,16 @@ export async function GetTaskFormBookSta(params) {
 
   return result;
 }
+// 参数列表
+export async function GetEmissionsEntPointPollutant(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
+    params,
+    null,
+  );
 
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(

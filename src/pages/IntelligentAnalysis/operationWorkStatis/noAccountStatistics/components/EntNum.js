@@ -71,7 +71,8 @@ const pageUrl = {
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
   pollutantList:noAccountStatistics.pollutantList,
-  entNumQueryPar:noAccountStatistics.entNumQueryPar
+  entNumQueryPar:noAccountStatistics.entNumQueryPar,
+  RegionName:noAccountStatistics.RegionName
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -299,7 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch,queryPar } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { entQueryPar: { ...queryPar,ModelType:"Ent", EntCode:row.EntCode } },
+      payload: { entQueryPar: { ...queryPar,ModelType:"Ent", EntCode:row.EntCode },EntName:row.EntName },
     });
     setTimeout(()=>{
       this.setState({entVisible:true})
@@ -309,8 +310,9 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       EntNumloading,
-      entNumQueryPar: {  EntCode, RegionCode },
+      entNumQueryPar: {  EntCode, RegionCode,beginTime,endTime },
       entNumVisible,
+      RegionName,
       entNumCancel
     } = this.props;
     const { TabPane } = Tabs;
@@ -318,7 +320,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     return (
         <Modal
-          title="这是企业"
+          title={`${RegionName=='全部合计'?'所有行政区':RegionName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}企业缺失台账照片统计信息`}
           footer={null}
           width='95%'
           visible={entNumVisible}  
