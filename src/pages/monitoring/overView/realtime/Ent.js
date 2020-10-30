@@ -559,6 +559,10 @@ class index extends Component {
                     checked={selectedTags.includes(item.value)}
                     onChange={checked => this.onTagChange(item.value, checked)}
                   >
+                    <i style={{
+                      backgroundColor: item.color, width: 4, height: 4, display: selectedTags.includes(item.value) ? "none" : 'inline-block',
+                      borderRadius: "50%", margin: "0 4px 4px 0",
+                    }}></i>
                     <span style={{ fontSize: 14, color: selectedTags.includes(item.value) ? "#fff" : item.color, fontWeight: "bold" }}>{item.label}</span>
                   </CheckableTag>
                 })
