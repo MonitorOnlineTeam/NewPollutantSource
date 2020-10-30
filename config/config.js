@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -913,6 +913,11 @@ export default {
                   component: './monitoring/overView/realtime/Ent',
                 },
                 {
+                  name: 'air',
+                  path: '/monitoring/realtimedata/air',
+                  component: './monitoring/overView/realtime/Air',
+                },
+                {
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
                   component: './monitoring/overView/realtime',
@@ -930,11 +935,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -953,11 +957,10 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videoMonitor/videopreview/hkvideo'
-                      : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videoMonitor/videopreview/hkvideo'
+                    : './monitoring/videoMonitor/videopreview/ysyvideo'
+                    }`,
                 },
                 {
                   //视频监控 企业

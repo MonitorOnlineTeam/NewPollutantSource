@@ -19,7 +19,7 @@ const { CheckableTag } = Tag;
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
-const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2, label: "超标", color: "#f04d4d" }, { value: 0, label: "离线", color: "#999999" }, { value: 3, label: "异常", color: "#e94" }];
+const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 0, label: "离线", color: "#999999" }];
 
 @connect(({ loading, overview, global, autoForm }) => ({
   noticeList: global.notices,
@@ -36,6 +36,7 @@ class index extends Component {
     this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
     this.state = {
       columns: [],
+      // pollutantCode: "5",
       selectedTags: [],
       stopStatus: ['0', '1'],
       fixed: false,
@@ -125,16 +126,14 @@ class index extends Component {
           fixed,
           show: true,
           render: (value, record, index) => {
-            // if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
-            //   const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
-            //   const color = airLevelObj.color || '#999999';
-            //   return (
-            //     <div className={styles.airStatus}>
-            //       <span style={{ backgroundColor: color }} />
-            //     </div>
-            //   );
-            // }
-            return getPointStatusImg(record, this.props.noticeList);
+            const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
+            const color = airLevelObj.color || '#999999';
+            return (
+              <div className={styles.airStatus}>
+                <span style={{ backgroundColor: color }} />
+              </div>
+            );
+            // return getPointStatusImg(record, this.props.noticeList);
           },
         },
         {
@@ -238,9 +237,9 @@ class index extends Component {
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
-        stopStatus: stopStatus,
-        regionCode: regionCode,
-        entCode: entCode,
+        // stopStatus: stopStatus,
+        // regionCode: regionCode,
+        // entCode: entCode,
         status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3]
       },
     });
@@ -354,10 +353,10 @@ class index extends Component {
             <>
               <Row>
                 <SelectPollutantType
-                  style={{ float: 'left', marginRight: 10 }}
+                  style={{ float: 'left', marginRight: 10, display: 'none' }}
                   showType="radio"
                   value={this.state.pollutantCode}
-                  onlyShowEnt
+                  onlyShowAir
                   onChange={e => {
                     this.getPageData(e.target.value);
                     let dataType = this.state.currentDataType;
@@ -420,11 +419,11 @@ class index extends Component {
                     <Radio.Button key={1} value="RealTimeData">
                       实时
                     </Radio.Button>
-                    {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
-                      <Radio.Button key={2} value="MinuteData">
-                        分钟
+                    {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && ( */}
+                    <Radio.Button key={2} value="MinuteData">
+                      分钟
                       </Radio.Button>
-                    )}
+                    {/* )} */}
                     <Radio.Button key={3} value="HourData">
                       小时
                   </Radio.Button>
@@ -502,50 +501,16 @@ class index extends Component {
 
               </Row>
               <Row style={{ marginTop: 10 }}>
-                <Select style={{ width: 140 }} allowClear placeholder="请选择行政区" onChange={(value) => {
-                  this.setState({
-                    regionCode: value
-                  }, () => {
-                    this.getEntByRegion(value);
-                    this.getRealTimeDataView()
-                  })
-                }}>
+                <ul>
                   {
-                    _regionList.map(item => {
-                      return <Option key={item.key} value={item.value}>
-                        {item.title}
-                      </Option>
+                    airLevel.map(item => {
+                      return <li style={{ float: 'left', fontSize: 14, marginRight: 10 }}>
+                        <span style={{ width: 16, height: 10, backgroundColor: item.color, marginRight: 6, display: 'inline-block' }}></span>
+                        <span style={{ fontWeight: "normal" }}>{item.text}</span>
+                      </li>
                     })
                   }
-                </Select>
-                <Select style={{ width: 200, marginLeft: 10 }} allowClear placeholder="请选择企业列表" onChange={(value) => {
-                  this.setState({
-                    entCode: value
-                  }, () => {
-                    this.getRealTimeDataView()
-                  })
-                }}>
-                  {
-                    entListByRegion.map(item => {
-                      return <Option key={item.EntCode} value={item.EntCode}>
-                        {item.EntName}
-                      </Option>
-                    })
-                  }
-                </Select>
-                <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
-                  console.log("value=", value)
-                  if (!value.length) {
-                    message.error("至少勾选一个！");
-                    return
-                  }
-                  this.setState({ stopStatus: value }, () => {
-                    this.getRealTimeDataView()
-                  })
-                }}>
-                  <Checkbox value="0">正常</Checkbox>
-                  <Checkbox value="1">停运</Checkbox>
-                </Checkbox.Group>
+                </ul>
               </Row>
             </>
           }

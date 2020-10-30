@@ -20,7 +20,7 @@ class SelectPollutantType extends PureComponent {
     };
   }
   componentDidMount() {
-    const { onlyShowEnt, onShowAir } = this.props;
+    const { onlyShowEnt, onlyShowAir } = this.props;
     this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {
@@ -28,15 +28,16 @@ class SelectPollutantType extends PureComponent {
       },
       showAll: this.props.showAll,
       callback: (data) => {
-        let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
-        this.props.initCallback && this.props.initCallback(defaultPollutantCode)
         let pollutantTypelist = data;
         if (onlyShowEnt) {
           pollutantTypelist = data.filter(item => item.pollutantTypeCode != 5);
         }
-        if (onShowAir) {
+        if (onlyShowAir) {
           pollutantTypelist = data.filter(item => item.pollutantTypeCode == 5);
         }
+        debugger
+        let defaultPollutantCode = pollutantTypelist[0] && pollutantTypelist[0]['pollutantTypeCode'];
+        this.props.initCallback && this.props.initCallback(defaultPollutantCode)
         this.setState({
           pollutantTypelist: pollutantTypelist,
           defaultPollutantCode: defaultPollutantCode
