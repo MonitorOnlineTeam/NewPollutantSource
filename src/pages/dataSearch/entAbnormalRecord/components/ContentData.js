@@ -42,7 +42,9 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
 import { EnumPropellingAlarmSourceType } from '@/utils/enum';
+import AttachmentView from '@/components/AttachmentView';
 
+import { getAttachmentDataSource } from '../../../AutoFormManager/utils'
 
 import Ent from './Ent'
 
@@ -71,7 +73,9 @@ const pageUrl = {
   chartImport:entAbnormalRecord.chartImport,
   chartTime:entAbnormalRecord.chartTime,
   entName:entAbnormalRecord.entName,
-  pollutantList:entAbnormalRecord.pollutantList
+  pollutantList:entAbnormalRecord.pollutantList,
+  EntList: entAbnormalRecord.EntList,
+  PointList:entAbnormalRecord.PointList
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -130,6 +134,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'Region',
         key: 'Region',
         align: 'center',
+        width:100
       },  
       {
         title: '异常监测因子',
@@ -152,7 +157,8 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Region',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={()=>{this.regionDetail(record)}}>{text}</a>;
+          const attachmentDataSource = getAttachmentDataSource(text);
+          return  <AttachmentView dataSource={attachmentDataSource} />;
         },
       },  
       {
@@ -173,7 +179,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Region',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={()=>{this.entDetail(record)}}>查看</a>;
+          return <a onClick={()=>{this.entDetail(record)}}>{text}</a>;
         },
       },
     ]
@@ -231,20 +237,35 @@ export default class EntTransmissionEfficiency extends Component {
 
 
   children = () => { //企业列表
-    const { priseList } = this.props;
+    const { EntList } = this.props;
 
     const selectList = [];
-    if (priseList.length > 0) {
-      priseList.map(item => {
+    if (EntList.length > 0) {
+      EntList.map(item => {
         selectList.push(
-          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-            {item.EntName}
+          <Option key={item[0].EntCode} value={item[0].EntCode} title={item[0].EntName}>
+            {item[0].EntName}
           </Option>,
         );
       });
       return selectList;
     }
   };
+  pointChildren=()=>{ //监测点列表
+    const { PointList } = this.props;
+
+    const selectList = [];
+    if (PointList.length > 0) {
+      PointList.map(item => {
+        selectList.push(
+          <Option key={item[0].DGIMN} value={item[0].DGIMN}  title={item[0].PointName}>
+            {item[0].PointName}
+          </Option>,
+        );
+      });
+      return selectList;
+    }
+  }
 
   typeChange = value => {
     this.updateQueryState({
@@ -253,20 +274,45 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+      
+    const {dispatch } = this.props;
     this.updateQueryState({
       RegionCode: value,
     });
-  };
-  changeAttent=(value)=>{
-    this.updateQueryState({
-      AttentionCode: value,
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType: 'RegionCode'},
     });
-  }
+    dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { RegionCode: value }});//获取参数列表
+  };
+
   changeEnt=(value,data)=>{ //企业事件
+    const {dispatch } = this.props;
+    
     this.updateQueryState({
       EntCode: value,
     });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType: 'EntCode'},
+    });
+    dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { EntCode: value }});//获取参数列表 监测点
+  }
+
+
+  changePoint=(value)=>{ //监测点名称
+    const {dispatch } = this.props;
+
+    this.updateQueryState({
+      DGIMN: value,
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType: 'DGIMN'},
+    });
+
+      dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { DGIMN: value }});//获取参数列表 监测因子
+
 
   }
 
@@ -357,7 +403,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantTypeCode },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantTypeCode,DGIMN },
 
     } = this.props;
 
@@ -372,25 +418,61 @@ export default class EntTransmissionEfficiency extends Component {
             <>
               <Form layout="inline">
               { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
-
-              <Form.Item label=''>
+              <Row>
+              <Form.Item label='异常开始时间'>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
-              <Form.Item label=''>
+                <Form.Item label='异常截止时间'>
+               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                </Form.Item>
+                </Row>
+            <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-              
-              <Form.Item label=''>
+               {/* <Form.Item label='企业列表'>
+                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
+                </Form.Item>  
+              <Form.Item label='监测点'>
                <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item>
-              <Form.Item label=''>
-               <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
+              </Form.Item> > */}
+                <Form.Item label='企业列表'>
+                 <Select
+                //  allowClear
+                 showSearch
+                 optionFilterProp="children"
+                 placeholder="企业列表"
+                 onChange={this.changeEnt}
+                 value={EntCode ? EntCode : undefined}
+                 style={{width:'200px'}}
+                >
+                 {this.children()}
+                  </Select>
+                </Form.Item>
+                <Form.Item label='监测点'>
+                 <Select
+                    placeholder="监测点名称"
+                    onChange={this.changePoint}
+                    value={DGIMN? DGIMN :undefined }
+                    style={{ width: 150  }}
+                  >
+                  {this.pointChildren()}
+                  </Select> 
+                </Form.Item>
+              <Form.Item label='凭证状态'>
+              <Select
+                 allowClear
+                 placeholder="凭证状态"
+                //  onChange={typeChange}
+                //  value={PollutantType?PollutantType:undefined}
+                style={{ width: 150 }}
+                 >
+                 <Option value="1">有凭证</Option>
+                  <Option value="2">缺失凭证</Option>
+                 </Select>
               </Form.Item>
 
-                {/* <Form.Item label='企业列表'>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
-                </Form.Item> */}
 
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -410,24 +492,19 @@ export default class EntTransmissionEfficiency extends Component {
           }
         >
           <div id='entAbnormalRecord'>
-             <SdlTable
+             {/* <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={this.columns}
-              // bordered={false}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
-                // sorter: true,
                 total: this.props.total,
                 defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
-            />
+            /> */}
           </div>
          
         </Card>

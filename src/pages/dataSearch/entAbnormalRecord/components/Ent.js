@@ -50,30 +50,32 @@ const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
+const { TabPane } = Tabs;
 
 const pageUrl = {
-  updateState: 'noAccountStatistics/updateState',
-  getData: 'noAccountStatistics/getTaskFormBookSta',
+  updateState: 'entAbnormalRecord/updateState',
+  getData: 'entAbnormalRecord/getTaskFormBookSta',
 };
-@connect(({ loading, noAccountStatistics,autoForm }) => ({
-  priseList: noAccountStatistics.priseList,
-  exloading:noAccountStatistics.exloading,
-  Entloading: noAccountStatistics.Entloading,
-  total: noAccountStatistics.total,
-  tableDatas: noAccountStatistics.tableDatas,
-  queryPar: noAccountStatistics.queryPar,
+@connect(({ loading, entAbnormalRecord,autoForm }) => ({
+  priseList: entAbnormalRecord.priseList,
+  exloading:entAbnormalRecord.exloading,
+  Entloading: entAbnormalRecord.Entloading,
+  total: entAbnormalRecord.total,
+  tableDatas: entAbnormalRecord.tableDatas,
+  queryPar: entAbnormalRecord.queryPar,
   regionList: autoForm.regionList,
-  attentionList:noAccountStatistics.attentionList,
-  pointName:noAccountStatistics.pointName,
-  chartExport:noAccountStatistics.chartExport,
-  chartImport:noAccountStatistics.chartImport,
-  chartTime:noAccountStatistics.chartTime,
-  entName:noAccountStatistics.entName,
-  pollutantList:noAccountStatistics.pollutantList,
-  entQueryPar:noAccountStatistics.entQueryPar
+  attentionList:entAbnormalRecord.attentionList,
+  pointName:entAbnormalRecord.pointName,
+  chartExport:entAbnormalRecord.chartExport,
+  chartImport:entAbnormalRecord.chartImport,
+  chartTime:entAbnormalRecord.chartTime,
+  entName:entAbnormalRecord.entName,
+  pollutantList:entAbnormalRecord.pollutantList,
+  entQueryPar:entAbnormalRecord.entQueryPar
 }))
+
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -82,63 +84,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     };
     
-    this.columns = [
-      {
-        title: '排口类型',
-        dataIndex: 'PollutantTypeCode',
-        key: 'PollutantTypeCode',
-        align: 'center',
-      },
-      {
-        title: '监测点名称',
-            dataIndex: 'PointName',
-            key: 'PointName',
-            align: 'center',
-            render:(text,record)=>{
-                return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>;
-            }
-      },
-      {
-        title: '巡检工单',
-        width:300,
-        children: [
-          {
-            title:'完成工单数',
-            dataIndex: 'InspectionNum',
-            key: 'InspectionNum',
-            align: 'center',
-            width:150,
-          },
-          {
-            title:'缺失台账工单数',
-            dataIndex: 'InspectionNotNum',
-            key: 'InspectionNotNum',
-            align: 'center',
-            width:150,
-          },        
-      ]
-      },   
-      {
-        title: '校准工单',
-        width:300,
-        children: [
-          {
-            title:'完成工单数',
-            dataIndex: 'CalibrationNum',
-            key: 'CalibrationNum',
-            align: 'center',
-            width:150,
-          },
-          {
-            title:'缺失台账工单数',
-            dataIndex: 'CalibrationNotNum',
-            key: 'CalibrationNotNum',
-            align: 'center',
-            width:150,
-          },        
-      ]
-      },             
-    ]
+
   }
 
   componentDidMount() {
@@ -229,7 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, entQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportTaskFormBookSta',
+      type: 'entAbnormalRecord/exportTaskFormBookSta',
       payload: { ...entQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
@@ -289,7 +235,7 @@ export default class EntTransmissionEfficiency extends Component {
    }
 
 
-  onChange3=(e)=>{
+   tabChange=(e)=>{
    console.log(e)
   }
 
@@ -302,7 +248,15 @@ export default class EntTransmissionEfficiency extends Component {
       entCancel
     } = this.props;
     const { TabPane } = Tabs;
-
+      let columns =[]
+      columns = [
+      {
+        title: '监测时间',
+        dataIndex: 'PollutantTypeCode',
+        key: 'PollutantTypeCode',
+        align: 'center',
+      },            
+    ]
 
     return (
         <Modal
@@ -312,25 +266,41 @@ export default class EntTransmissionEfficiency extends Component {
           visible={entVisible}  
           onCancel={entCancel}
         >          
-          <div id='noAccountStatistics'>
-             <SdlTable
+          <div id='entAbnormalRecord'>
+            <Row> <span>异常开始时间：</span> <span style={{paddingLeft:50}}>异常结束时间：</span></Row>
+            <Row style={{paddingTop:10}}> <span>异常描述：</span></Row>
+          <Tabs defaultActiveKey="HourData" onChange={this.tabChange}>
+          <TabPane tab="小时数据" key="HourData">
+          <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={Entloading}
-              columns={this.columns}
-              // bordered={false}
+              columns={columns}
               dataSource={this.state.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
-                // sorter: true,
                 total: this.props.total,
                 defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
+              style={{paddingTop:10}}
             />
+        </TabPane>
+       <TabPane tab="日均数据" key="DayData">
+        <SdlTable
+              rowKey={(record, index) => `complete${index}`}
+              loading={Entloading}
+              columns={columns}
+              dataSource={this.state.tableDatas}
+              pagination={{
+                showSizeChanger: true,
+                showQuickJumper: true,
+                total: this.props.total,
+                defaultPageSize:20
+              }}
+              style={{paddingTop:10}}
+            />
+        </TabPane>
+      </Tabs>
           </div>
         </Modal>
     );

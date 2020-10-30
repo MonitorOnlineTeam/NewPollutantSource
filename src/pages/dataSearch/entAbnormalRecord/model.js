@@ -10,6 +10,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportTaskFormBookSta,
+  GetEmissionsEntPointPollutant
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -25,7 +26,8 @@ export default Model.extend({
       EntCode: '',
       RegionCode: '',
       PollutantTypeCode:'1',
-      ModelType: "All"
+      ModelType: "All",
+      DGIMN:''
     },
     entQueryPar: {  },
     entNumQueryPar: { },
@@ -43,7 +45,10 @@ export default Model.extend({
     Regionloading:false,
     EntNumloading:false,
     EntNameloading:false,
-    TaskNumsloading:false
+    TaskNumsloading:false,
+    EntList:[],
+    PointList:[],
+    parmarType:'RegionCode',
   },
   subscriptions: {},
   effects: {
@@ -67,6 +72,25 @@ export default Model.extend({
       }else{
       
         yield update({ loading:false }); 
+      }
+    },
+    *getEmissionsEntPointPollutant({ callback,payload }, { call, put, update, select }) {
+      //获取参数列表
+
+      const  parmarType = yield select(_ =>_.emissionsChange.parmarType)
+      const  queryPar = yield select(_ =>_.emissionsChange.queryPar)
+
+      const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
+      if (response.IsSuccess) {
+        if(parmarType==='RegionCode'){
+          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantList:[]} });
+        }
+        if(parmarType==='EntCode'){
+          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantList:[]}});
+        }
+        if( parmarType==='DGIMN'){
+          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:[]}});
+        }
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
