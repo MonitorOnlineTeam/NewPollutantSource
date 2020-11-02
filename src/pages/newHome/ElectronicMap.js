@@ -996,7 +996,7 @@ class NewHome extends PureComponent {
           }}>系统功能</a>
         </header> */}
         <Spin style={{ zIndex: 9999 }} spinning={loading}>
-          <div className={styles.pageContainer}>
+          <div className={`${styles.pageContainer} ${styles.dzMap}`}>
             {/* <>
               <Drawer
                 zIndex={1}
