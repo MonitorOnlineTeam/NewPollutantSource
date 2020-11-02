@@ -67,6 +67,9 @@ export default class airMissing extends Component {
           key: 'EntName',
 
           align: 'center',
+          render: (text, record) => {
+            return  <div style={{textAlign:'left',width:'100%'}} >{text}</div>;
+        },
         },
         {
           title: <span>缺失台账监测点名称</span>,
@@ -74,6 +77,9 @@ export default class airMissing extends Component {
           key: 'PointName',
           width: 210,
           align: 'center',
+          render: (text, record) => {
+            return  <div style={{textAlign:'left',width:'100%'}} >{text}</div>;
+        },
         },
         {
           title: <span>工单类型</span>,
@@ -175,6 +181,13 @@ export default class airMissing extends Component {
   };
   render() {
     return (
+        <Modal
+        title={``}
+        footer={null}
+        width='95%'
+        visible={this.props.photoVisible}  
+        onCancel={this.props.photoCancel}
+      >
       <Card
         bordered={false}
         title={
@@ -207,6 +220,7 @@ export default class airMissing extends Component {
           }}
         />
       </Card>
+      </Modal>
     );
   }
 }
