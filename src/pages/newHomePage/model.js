@@ -1,7 +1,7 @@
 /**
- * 功  能：去除分析率
+ * 功  能：故障率 运转率 超标率
  * 创建人：贾安波
- * 创建时间：2020.10.09
+ * 创建时间：2020.10.30
  */
 
 import Model from '@/utils/model';
@@ -19,16 +19,12 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantCode:['011','060','101','065'],
-      PollutantType:'',
-      dataType:'HourData'
+      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [],
+      ModelType: ""
     },
     pointName:'COD',
     tableDatas: [],
