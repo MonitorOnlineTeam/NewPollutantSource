@@ -1,20 +1,21 @@
 /**
- * 功  能：首页
+ * 功  能：运转率 故障率 超标率
  * 创建人：贾安波
- * 创建时间：2020.10
+ * 创建时间：2020.11
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RegionData from './faultOverWorkRate/components/Region'
 import { connect } from 'dva';
-
-
+import  moment from 'moment';
+import styles from './style.less'
 const pageUrl = {
   updateState: 'home/updateState',
 };
 @connect(({ home }) => ({
 
   isWorkRate:home.isWorkRate,
+  queryPar:home.queryPar
 }))
 export default class Index extends Component {
   constructor(props) {
@@ -30,11 +31,28 @@ export default class Index extends Component {
 
   
    }
-   workNextPage=(type)=>{
-    const { dispatch } = this.props;
+   updateQueryState = payload => {
+    const { queryPar, dispatch } = this.props;
+
     dispatch({
       type: pageUrl.updateState,
-      payload: { isWorkRate: true,Atmosphere:type=='air'?true:false},
+      payload: { queryPar: { ...queryPar, ...payload } },
+    });
+  };
+   workNextPage=(type)=>{ //运转率
+    const { dispatch,location } = this.props;
+
+    this.updateQueryState({
+      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [],
+      ModelType: "All"
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isWorkRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -44,9 +62,17 @@ export default class Index extends Component {
 
    faultNextPage=(type)=>{ //故障率
     const { dispatch } = this.props;
+    this.updateQueryState({
+      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [],
+      ModelType: "All"
+    });
     dispatch({
       type: pageUrl.updateState,
-      payload: { isFaultRate: true,Atmosphere:type=='air'?true:false},
+      payload: { isFaultRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -55,9 +81,17 @@ export default class Index extends Component {
    }
    overNextPage=(type)=>{ //超标率
     const { dispatch } = this.props;
+    this.updateQueryState({
+      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [],
+      ModelType: "All"
+    });
     dispatch({
       type: pageUrl.updateState,
-      payload: { isOverRate: true,Atmosphere:type=='air'?true:false},
+      payload: { isOverRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -73,10 +107,7 @@ export default class Index extends Component {
     });
      this.setState({regionVisible:false})
    }
-  render() {
-    const { regionVisible } = this.state;
-    return (
-        <BreadcrumbWrapper title="首页">
+           /* <BreadcrumbWrapper title="首页">
           <a href='#' onClick={this.workNextPage} style={{paddingLeft:10}}>运转率</a>
           <a href='#' onClick={()=>{this.workNextPage("air")}} style={{paddingLeft:10}}>运转率空气站</a>
           <a href='#' onClick={this.faultNextPage} style={{paddingLeft:10}}>故障率</a>
@@ -84,7 +115,18 @@ export default class Index extends Component {
           <a href='#' onClick={this.overNextPage} style={{paddingLeft:10}}>超标率</a>
           <a href='#' onClick={()=>{this.overNextPage('air')}} style={{paddingLeft:10}}>超标率空气站</a>
           {regionVisible?  <RegionData regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
-        </BreadcrumbWrapper>
+
+            <div className={styles.homeContent}>
+           </div>
+        </BreadcrumbWrapper> */
+  render() {
+    const { regionVisible } = this.state;
+    return (
+      <div className={styles.pageContainer}>
+         <div style={{height:'1900px',background:'red'}}>
+           1111
+          </div>
+       </div> 
     );
   }
 }

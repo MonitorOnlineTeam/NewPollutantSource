@@ -42,7 +42,7 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
 import { EnumPropellingAlarmSourceType } from '@/utils/enum';
-import AttachmentView from '@/components/AttachmentView';
+import AttachmentView from '../AttachmentView';
 
 import { getAttachmentDataSource } from '../../../AutoFormManager/utils'
 
@@ -89,14 +89,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.columns = [
       {
         title: '行政区',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         align: 'center',
       },
       {
         title: '企业名称',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'EntName',
+        key: 'EntName',
         align: 'center',
         render: (text, record) => {
           return <div  style={{textAlign:'left',width:'100%'}}>{text}</div>;
@@ -104,8 +104,8 @@ export default class EntTransmissionEfficiency extends Component {
       },  
       {
         title: '监测点名称',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'PointName',
+        key: 'PointName',
         align: 'center',
         render: (text, record) => {
           return <div  style={{textAlign:'left',width:'100%'}}>{text}</div>;
@@ -113,39 +113,41 @@ export default class EntTransmissionEfficiency extends Component {
       },  
       {
         title: '排口类型',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'PollutantType',
+        key: 'PollutantType',
         align: 'center',
       },  
       {
         title: '异常开始时间',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'BeginTime',
+        key: 'BeginTime',
         align: 'center',
       },  
       {
         title: '异常截止时间',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'EndTime',
+        key: 'EndTime',
         align: 'center',
       }, 
       {
         title: '异常数据类型',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'DataType',
+        key: 'DataType',
         align: 'center',
-        width:100
+        render: (text, record) => {
+          return <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>;
+        },
       },  
       {
         title: '异常监测因子',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'PollutantNames',
+        key: 'PollutantNames',
         align: 'center',
       },    
       {
         title: '异常描述',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'Msg',
+        key: 'Msg',
         align: 'center',
         render: (text, record) => {
           return <div  style={{textAlign:'left',width:'100%'}}>{text}</div>;
@@ -153,24 +155,24 @@ export default class EntTransmissionEfficiency extends Component {
       },  
       {
         title: '凭证',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'Attachment',
+        key: 'Attachment',
         align: 'center',
         render: (text, record) => {
-          const attachmentDataSource = getAttachmentDataSource(text);
+          const attachmentDataSource = this.getAttachmentDataSource(text);
           return  <AttachmentView dataSource={attachmentDataSource} />;
         },
       },  
       {
         title: '上报人',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'ReportName',
+        key: 'ReportName',
         align: 'center',
       },  
       {
         title: '上报时间',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'ReportTime',
+        key: 'ReportTime',
         align: 'center',
       },
       {
@@ -179,7 +181,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Region',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={()=>{this.entDetail(record)}}>{text}</a>;
+          return <a onClick={()=>{this.entDetail(record)}}>查看</a>;
         },
       },
     ]
@@ -187,6 +189,16 @@ export default class EntTransmissionEfficiency extends Component {
 
   componentDidMount() {
     this.initData();
+  }
+  getAttachmentDataSource(value) {
+    const fileInfo = value ? value.split(';') : [];
+    return fileInfo.map(item => {
+      const itemList = item.split('|');
+      return {
+        name: itemList[0],
+        attach: itemList[0]
+      }
+    })
   }
   initData = () => {
     const { dispatch, location } = this.props;
@@ -197,7 +209,7 @@ export default class EntTransmissionEfficiency extends Component {
  
      dispatch({ type: 'entAbnormalRecord/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
 
-     dispatch({  type: 'common/getPointByEntCode',  payload: {  EntCode: ''} });  //获取排口
+     
 
      this.updateQueryState({
       ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
@@ -267,8 +279,8 @@ export default class EntTransmissionEfficiency extends Component {
       
     const {dispatch } = this.props;
     this.updateQueryState({
-      RegionCode: value,
-      EntCode: '',
+      RegionCode: value? value:'',
+     
     });
   };
 
@@ -276,13 +288,11 @@ export default class EntTransmissionEfficiency extends Component {
     const {dispatch } = this.props;
     
     this.updateQueryState({
-      EntCode: value,
-      DGIMN: '',
+      EntCode: value? value:'',
+      DGIMN:''
     });
-    this.props.dispatch({
-      type: 'common/getPointByEntCode',
-      payload: { EntCode:value, PollutantTypeCode:''}
-    });
+
+    dispatch({  type: 'common/getPointByEntCode',  payload: {  EntCode: value? value:''} });  //获取排口
   }
 
 
@@ -290,32 +300,30 @@ export default class EntTransmissionEfficiency extends Component {
     const {dispatch } = this.props;
 
     this.updateQueryState({
-      DGIMN: value,
+      DGIMN: value? value:'',
     });
 
-
-      dispatch({ type: 'entAbnormalRecord/getEmissionsEntPointPollutant', payload: { DGIMN: value }});//获取参数列表 监测因子
   }
 
   changePoll=(value)=>{ //污染物改变事件
     this.updateQueryState({
-      PollutantCode: value,
+      PollutantCode: value? value:'',
     });
 
   } 
   statusChange=(value)=>{  //凭证改变事件
     this.updateQueryState({
-      Status: value,
+      Status: value? value:'',
     });
   }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'entAbnormalRecord/exportTaskFormBookSta',
+      type: 'entAbnormalRecord/exportExceptionReported',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`${data}`);
         },
     });
   };
@@ -323,10 +331,8 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
   
 
-    const { pointName, dispatch,queryPar:{EntCode} } = this.props;
-
+      const { pointName, dispatch,queryPar:{DGIMN} } = this.props;
       this.getTableData();
-
   };
 
 
@@ -362,20 +368,25 @@ export default class EntTransmissionEfficiency extends Component {
 
   dateChange=(date)=>{
       this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        ExceptionBBtime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        ExceptionBEtime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
-    dateOk=()=>{ 
-
-   }
+    dateChange2=(date)=>{
+      this.updateQueryState({
+        ExceptionEBtime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        ExceptionEEtime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }
 
 
   entDetail=(row)=>{
     const { dispatch,queryPar } = this.props;
+
+    
     dispatch({
       type: pageUrl.updateState,
-      payload: { entQueryPar: { ...queryPar,ModelType:"Ent", EntCode:row.EntCode } },
+      payload: { entQueryPar: {ID:row.ID},nextData:{startTime:row.BeginTime,endTimes:row.EndTime,msg:row.Msg} },
     });
     setTimeout(()=>{
       this.setState({entVisible:true})
@@ -394,6 +405,10 @@ export default class EntTransmissionEfficiency extends Component {
     const { TabPane } = Tabs;
    
     const {  regionVisible, entNumVisible, workNumVisible} = this.state;
+
+
+    
+
     return (
         <Card
           bordered={false}
@@ -408,7 +423,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 <Form.Item label='异常截止时间'>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionEBtime),moment(ExceptionEEtime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              callback={(dates, dataType)=>this.dateChange2(dates, dataType)}/>
                 </Form.Item>
                 </Row>
             <Form.Item label='行政区'>
@@ -465,6 +480,7 @@ export default class EntTransmissionEfficiency extends Component {
               columns={this.columns}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
+              scroll={{ x: '115%' }} 
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,

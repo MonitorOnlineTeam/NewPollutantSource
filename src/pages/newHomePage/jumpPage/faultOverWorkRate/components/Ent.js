@@ -12,7 +12,7 @@ import {
   Progress,
   Row,
   Popover,
-  Col,
+  Col, 
   Icon,
   Badge,
   Modal,
@@ -42,10 +42,9 @@ import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
-import { EnumPropellingAlarmSourceType } from '@/utils/enum';
+import { EnumPropellingAlarmSourceType } from '@/utils/enum'
 
-import EntData from './Ent'
-import { getAllEnterprise } from '@/pages/Test/service';
+import MonPoint from './MonPoint'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -55,7 +54,9 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'home/updateState',
-  getData: 'home/getSewageHistoryList',
+  getOverDataRate: 'home/getOverDataRate',
+  getDeviceDataRate: 'home/getDeviceDataRate',
+  getExceptionDataRate: 'home/getExceptionDataRate',
 };
 @connect(({ loading, home,autoForm }) => ({
   priseList: home.priseList,
@@ -71,9 +72,14 @@ const pageUrl = {
   chartImport:home.chartImport,
   chartTime:home.chartTime,
   entName:home.entName,
-  pollutantList:home.pollutantList,
   isWorkRate:home.isWorkRate,
-  Atmosphere:home.Atmosphere
+  isFaultRate:home.isFaultRate,
+  isOverRate:home.isOverRate,
+  Atmosphere:home.Atmosphere,
+  entQuery:home.entQuery,
+  entTableDatas:home.entTableDatas,
+  regionName:home.regionName,
+  regionCode:home.regionCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -81,43 +87,42 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      entVisible:false
+      pointVisible:false
 
     };
     
     this.columns = [
       {
         title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render:(text)=>{
-        return <a href='#' onClick={this.nextPage}>{text}</a>
-        }
-      },
-      {
-        title: <span>企业数</span>,
-        dataIndex: 'entName',
-        key: 'entName',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         align: 'center',
       },
       {
-        title: <span>{this.props.Atmosphere?  '空气监测点数':'监测点数'}</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
+        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'center',
+        render: (text, record) => {     
+          return  <a href='#'  onClick={()=>{this.nextPage(record)}} style={{textAlign:'left',width:'100%'}}>{text}</a>
+       },
+      },
+      {
+        title: <span>监测点数</span>,
+        dataIndex: 'PointNum',
+        key: 'PointNum',
         align: 'center',
       },
       {
         title: <span>运转率</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        dataIndex: 'Rate',
+        key: 'Rate',
         align: 'center',
         render: (text, record) => {
           if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }
           const percent = interceptTwo(Number(text) * 100);
-          if(this.props.isWorkRate){ // 运转率 
           if (percent >= 90) {
             return <div>
                 <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
@@ -128,30 +133,8 @@ export default class EntTransmissionEfficiency extends Component {
               <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
                 style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
             </div>
-         }else{
-          <div>
-          <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-            style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
-        </div>
-         }
-
-
-        }
-      },
-      {
-        title: <span>低于90%的监测点个数</span>,
-        dataIndex: 'LowerTransmissionEffectiveRateCount',
-        key: 'LowerTransmissionEffectiveRateCount',
-        width: 145,
-        align: 'center',
-        render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }else{
-          return <span>{text}</span>
-          }
-        },
-      },
+         },
+      }
     ];
   }
 
@@ -159,24 +142,26 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,isWorkRate } = this.props;
+    let { dispatch, location,queryPar,entQuery,regionCode} = this.props;
     
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-     this.updateQueryState({
-      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      dataType:'HourData',
-      PollutantCode:['011','060','101','065','007'],
-    });
+    //  dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  this.updateQueryState({
+    //   BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+    //   EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+    //   EntCode: "",
+    //   RegionCode: "",
+    //   PollutantTypeCode: [],
+    //   ModelType: "All"
+    // });
+    entQuery = {...queryPar,ModelType:'Region',RegionCode:regionCode}
+
+
     setTimeout(() => {
-      this.getTableData();
+      this.getTableData(entQuery);
     });
   
 
@@ -184,17 +169,19 @@ export default class EntTransmissionEfficiency extends Component {
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
 
+
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { entQuery: { ...entQuery, ...payload } },
     });
   };
 
-  getTableData = () => { 
-    const { dispatch, queryPar } = this.props;
+  getTableData = (entQuery) => { 
+    const { dispatch,isWorkRate,isFaultRate,isOverRate } = this.props;
+
     dispatch({
-      type: pageUrl.getData,
-      payload: { ...queryPar },
+      type: isWorkRate? pageUrl.getDeviceDataRate : isOverRate ? pageUrl.getOverDataRate : pageUrl.getExceptionDataRate,
+      payload: { ...entQuery },
     });
   };
 
@@ -237,7 +224,6 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       EntCode: value,
     });
-    data&&data.props? sessionStorage.setItem("entName", data.props.title) : null;
 
   }
   //查询事件
@@ -277,88 +263,44 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  dateChange=(date)=>{
-    this.updateQueryState({
-      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-    });
-  }
-  nextPage=()=>{
-    const { isWorkRate,dispatch } = this.props;
-    setTimeout(()=>{
-      this.setState({entVisible:true})
-    })
-  }
+  
 
-  entCancel=()=>{
-    this.setState({entVisible:false})
-  }
-  //创建并获取模板   导出
-  template = () => {
-    const { dispatch, queryPar } = this.props;
+  nextPage=(row)=>{
+    const { dispatch } = this.props;
     dispatch({
-      type: 'abnormalStandard/exportExceptionStandValue',
-      payload: { ...queryPar },
-      callback: data => {
-          downloadFile(`/upload${data}`);
-        },
-    });
-  };
+      type: pageUrl.updateState,
+      payload: { ModelType: 'EntName',entName:row.EntName },
+   });
+    this.setState({pointVisible:true}) 
+  }
 
+  
+  pointCancel=()=>{
+    this.setState({pointVisible:false})
+  }
   render() {
     const {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       Atmosphere,
-      regionVisible,
-      regionCancel,
-      isWorkRate
+      entVisible,
+      isWorkRate,
+      entCancel,
+      regionName
     } = this.props;
-    const { TabPane } = Tabs;
-   
-    const { entVisible } = this.state;
+
+    const { pointVisible }  = this.state;
     return (
-       <div>
+        <div>
         <Modal
-          // title={isWorkRate?
+          title={regionName}
           footer={null}
           width='95%'
-          visible={regionVisible}  
-          onCancel={regionCancel}
+          visible={entVisible}  
+          onCancel={entCancel}
         >
-            <>
-              <Form layout="inline" style={{paddingBottom:10}}>
-              <Row>
-              <Form.Item label='查询日期'>
-              <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-                   </Form.Item>     
-              <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-                <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-                <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
-                </Row>
-              </Form>
-            </>
-          <div id=''>
-          {isWorkRate?
+           {isWorkRate?
            <div style={{ paddingBottom: 10 }}>
                 <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
@@ -369,20 +311,23 @@ export default class EntTransmissionEfficiency extends Component {
                   ≤90%未达标
                 </span>
               </div>
-            :null
-          }
+              :
+              null
+           }
+          <div id=''>
+
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={this.columns}
               // bordered={false}
-              dataSource={this.props.tableDatas}
+              dataSource={this.props.entTableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
+                // total: this.props.total,
                 defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
@@ -391,9 +336,8 @@ export default class EntTransmissionEfficiency extends Component {
             />
           </div>
           </Modal>
-
-          <EntData entVisible={entVisible} entCancel={this.entCancel}/>
-          </div>
+       {pointVisible ?  <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/> : null}
+       </div>
     );
   }
 }
