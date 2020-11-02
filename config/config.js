@@ -932,7 +932,7 @@ export default {
                   name: 'mapview',
                   path: '/monitoring/mapview',
                   // component: './monitoring/mapview',
-                  component: './newHome',
+                  component: './electronicMap',
                 },
                 {
                   name: 'videopreview',
