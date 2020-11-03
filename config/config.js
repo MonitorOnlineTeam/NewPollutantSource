@@ -902,6 +902,12 @@ export default {
                   path: '/monitoring',
                   redirect: '/monitoring/mapview/realtimeDataView',
                 },
+                // 企业异常上报
+                {
+                  name: 'entExceptionReported',
+                  path: '/monitoring/entExceptionReported',
+                  component: './monitoring/entExceptionReported',
+                },
                 {
                   name: 'realtimedata',
                   path: '/monitoring/realtimedata',
