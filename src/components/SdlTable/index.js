@@ -103,7 +103,7 @@ class SdlTable extends PureComponent {
       } if (title.indexOf('状态') != -1) {
         return col.width || 150;
       } if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
-        return  col.width || 80;
+        return col.width || 80;
       } if (title == '行政区') {
         return col.width || 200;
       } if (title == '企业名称') {
@@ -193,7 +193,7 @@ class SdlTable extends PureComponent {
         <Table
           ref={table => { this.sdlTable = table }}
           id="sdlTable"
-          rowKey={(record,index) => record.id || record.ID || index}
+          rowKey={(record, index) => record.id || record.ID || index}
           size="middle"
           components={resizable ? this.components : undefined}
           // className={styles.dataTable}
@@ -208,7 +208,14 @@ class SdlTable extends PureComponent {
             }
           }
           bordered
-          pagination={{ pageSize: 20 }}
+          pagination={{
+            defaultCurrent: 1,
+            pageSize: 20,
+            showQuickJumper: true,
+            total: this.props.dataSource.length,
+            showSizeChanger: true,
+            pageSizeOptions: ['20', '30', '40', '100'],
+          }}
           {...this.props}
           defaultWidth={80}
           scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollY }}
