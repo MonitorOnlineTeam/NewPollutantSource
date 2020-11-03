@@ -83,7 +83,7 @@ class RegionDetails extends PureComponent {
           render: (text, record) => {
             if (record.TaskId && record.DGIMN) {
               return <a onClick={() => {
-                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN, visible: true })
+                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => { this.setState({ visible: true }) })
               }}>详情</a>
             }
             return "-"
@@ -142,7 +142,7 @@ class RegionDetails extends PureComponent {
             <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
-            <Button onClick={() => router.push("/dataquerymanager/exceptionrecord")}>
+            <Button onClick={() => router.push("/monitoring/missingData/exceptionrecord")}>
               <Icon type="rollback" />
               返回
             </Button>
@@ -154,6 +154,7 @@ class RegionDetails extends PureComponent {
             footer={false}
             width="100vw"
             height="100vh"
+            destroyOnClose
             bodyStyle={{ padding: 0 }}
             onCancel={() => this.setState({ visible: false })}
           >

@@ -103,7 +103,7 @@ class SdlTable extends PureComponent {
       } if (title.indexOf('状态') != -1) {
         return col.width || 150;
       } if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
-        return 80;
+        return  col.width || 80;
       } if (title == '行政区') {
         return col.width || 200;
       } if (title == '企业名称') {

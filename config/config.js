@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -521,6 +521,30 @@ export default {
                 //   path: '/report/summary/:reportType',
                 //   component: './report/summaryReportPage',
                 // },
+                // 综合指数报表
+                {
+                  name: 'report',
+                  path: '/report/airReport/zhzs/:type',
+                  component: './dataAnalyze/Report',
+                },
+                // 综合指数范围报表
+                {
+                  name: 'compositeIndexReport',
+                  path: '/report/airReport/compositeIndex/:reportType',
+                  component: './dataAnalyze/CompositeIndexReport',
+                },
+                // 综合指数对比
+                {
+                  name: 'compositeIndexRangeReport',
+                  path: '/report/airReport/compositeIndexRange',
+                  component: './dataAnalyze/CompositeRangeReport',
+                },
+                // 季度有效数据捕集率
+                {
+                  name: 'compositeIndexContrast',
+                  path: '/report/airReport/compositeIndexContrast',
+                  component: './dataAnalyze/CompositeIndexContrast',
+                },
                 {
                   name: 'wryReport',
                   path: '/report/wry',
@@ -859,19 +883,9 @@ export default {
               routes: [
                 {
                   path: '/dataquerymanager',
-                  redirect: '/dataquerymanager/exceptionrecord',
+                  redirect: '/monitoring/dataquerymanager/exceptionrecord',
                 },
-                {
-                  name: 'exceptionrecord',
-                  path: '/dataquerymanager/exceptionrecord',
-                  // component: './monitoring/exceptionrecord',
-                  component: './monitoring/exceptionrecordNew',
-                },
-                {
-                  name: 'exceptionrecordDetails',
-                  path: '/dataquerymanager/exceptionrecord/details',
-                  component: './monitoring/exceptionrecordNew/RegionDetails',
-                },
+
                 {
                   name: 'overrecord',
                   path: '/dataquerymanager/overrecord',
@@ -901,6 +915,17 @@ export default {
                 {
                   path: '/monitoring',
                   redirect: '/monitoring/mapview/realtimeDataView',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/monitoring/missingData/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
+                },
+                {
+                  name: 'exceptionrecordDetails',
+                  path: '/monitoring/missingData/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
                 },
                 // 企业异常上报
                 {
@@ -943,11 +968,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -966,11 +990,10 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videoMonitor/videopreview/hkvideo'
-                      : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videoMonitor/videopreview/hkvideo'
+                    : './monitoring/videoMonitor/videopreview/ysyvideo'
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -1318,26 +1341,10 @@ export default {
                   path: '/Intelligentanalysis/dataGainRatePage',
                   component: './dataAnalyze/DataGainRatePage',
                 }, // 数据获取率`
-                {
-                  name: 'report',
-                  path: '/Intelligentanalysis/report/:type',
-                  component: './dataAnalyze/Report',
-                }, // 综合指数报表
-                {
-                  name: 'compositeIndexReport',
-                  path: '/Intelligentanalysis/compositeIndex/:reportType',
-                  component: './dataAnalyze/CompositeIndexReport',
-                }, // 综合指数范围报表
-                {
-                  name: 'compositeIndexRangeReport',
-                  path: '/Intelligentanalysis/compositeIndexRange',
-                  component: './dataAnalyze/CompositeRangeReport',
-                }, // 综合指数对比
-                {
-                  name: 'compositeIndexContrast',
-                  path: '/Intelligentanalysis/compositeIndexContrast',
-                  component: './dataAnalyze/CompositeIndexContrast',
-                }, // 季度有效数据捕集率
+
+
+
+
                 {
                   name: 'quartDataCaptureRate',
                   path: '/Intelligentanalysis/quartDataCaptureRate',

@@ -207,12 +207,12 @@ class EditPollutant extends Component {
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警描述">
                     {getFieldDecorator('AlarmDescription')(
-                      <TextArea rows={2} style={{ width: '100' }} />,
+                      <TextArea rows={2} style={{ width: '100' }} maxLength={50} />
                     )}
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="是否参数考核">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="是否参与考核">
                     {getFieldDecorator('IsStatisti', {
                       initialValue: 1,
                     })(
