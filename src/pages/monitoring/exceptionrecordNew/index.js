@@ -68,9 +68,9 @@ class index extends PureComponent {
         render: (text, record) => {
           return <a onClick={() => {
             let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode;
+            queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
             queryCondition = JSON.stringify(queryCondition)
-            router.push(`/dataquerymanager/exceptionrecord/details?queryCondition=${queryCondition}`);
+            router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
       },
@@ -104,7 +104,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                this.onTableClick(record.RegionCode, '1', undefined)
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, '1', undefined)
               }}>{text}</a>
             }
           },
@@ -117,7 +118,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                this.onTableClick(record.RegionCode, "1", '1')
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "1", '1')
               }}>{text}</a>
             }
           },
@@ -130,8 +132,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-
-                this.onTableClick(record.RegionCode, "1", '0')
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "1", '0')
               }}>{text}</a>
             }
           },
@@ -149,8 +151,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-
-                this.onTableClick(record.RegionCode, "2", undefined)
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "2", undefined)
               }}>{text}</a>
             }
           },
@@ -163,8 +165,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-
-                this.onTableClick(record.RegionCode, "2", '1')
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "2", '1')
               }}>{text}</a>
             }
           },
@@ -177,7 +179,8 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                this.onTableClick(record.RegionCode, "2", '0')
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "2", '0')
               }}>{text}</a>
             }
           },
@@ -206,7 +209,7 @@ class index extends PureComponent {
         key: 'DataType',
       },
       {
-        title: '首次报警时间',
+        title: '首次异常时间',
         dataIndex: 'FirstTime',
         key: 'FirstTime',
       },

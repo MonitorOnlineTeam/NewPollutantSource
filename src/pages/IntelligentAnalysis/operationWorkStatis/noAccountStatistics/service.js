@@ -27,9 +27,9 @@ export async function GetAttentionDegreeList(params) {
 
 //导出
 
-export async function ExportSewageHistoryList(params) {
+export async function ExportTaskFormBookSta(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/ExportSewageHistoryList',
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
     params,
     null,
   );

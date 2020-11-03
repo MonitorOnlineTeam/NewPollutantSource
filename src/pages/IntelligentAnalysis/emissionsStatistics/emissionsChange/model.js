@@ -18,7 +18,7 @@ export default Model.extend({
   namespace: 'emissionsChange',
   state: {
     exloading: false,
-    loading: true,
+    loading: false,
     queryPar: {
       DGIMN:'',
       RegionCode: "",
@@ -46,7 +46,9 @@ export default Model.extend({
     EntList:[],
     PointList:[],
     PollutantList:[],
-    parmarType:'RegionCode'
+    parmarType:'RegionCode',
+    column:[],
+    timeList:[]
   },
   subscriptions: {},
   effects: {
@@ -57,22 +59,13 @@ export default Model.extend({
       const response = yield call(GetEmissionsTrendList, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          tableDatas: response.Datas,
-          total: response.Total,
-        });
-        const chartExport = [], chartImport=[], chartTime=[];
-        response.Datas.map(item=>{
-          chartExport.push(item.exportValue);
-          chartImport.push(item.importValue);
-          chartTime.push(moment(item.MonitorTime).format('YYYY-MM-DD HH:mm'))
-        })
-        yield update({
-          chartExport:chartExport,
-          chartImport:chartImport,
-          chartTime:chartTime,
+          tableDatas: response.Datas.data,
+          column:response.Datas.chart,
+          timeList:response.Datas.times,
           loading:false
         });
       }else{
+        message.warning(response.Message);
         yield update({ loading:false }); 
       }
     },
@@ -94,13 +87,13 @@ export default Model.extend({
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
         if(parmarType==='RegionCode'){
-          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantCode:''} });
+          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantList:[]} });
         }
         if(parmarType==='EntCode'){
-          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantCode:''}});
+          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantList:[]}});
         }
         if( parmarType==='DGIMN'){
-          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantCode:''}});
+          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:[]}});
         }
       }
     },

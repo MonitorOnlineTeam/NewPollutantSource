@@ -73,7 +73,8 @@ const pageUrl = {
   chartImport:noAccountStatistics.chartImport,
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
-  pollutantList:noAccountStatistics.pollutantList
+  pollutantList:noAccountStatistics.pollutantList,
+  RegionName:noAccountStatistics.RegionName
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -290,7 +291,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
+      type: 'noAccountStatistics/exportTaskFormBookSta',
       payload: { ...queryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
@@ -356,7 +357,9 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch,queryPar } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { regQueryPar: { ...queryPar,ModelType:"Region", RegionCode:row.RegionCode } },
+      payload: { regQueryPar: { ...queryPar,ModelType:"Region", RegionCode:row.RegionCode },
+         RegionName:row.Region,
+        },
     });
     setTimeout(()=>{
       this.setState({regionVisible:true})
@@ -367,7 +370,9 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch,queryPar} = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { entNumQueryPar: { ...queryPar,ModelType:"EntNum", RegionCode:row.RegionCode } },
+      payload: { entNumQueryPar: { ...queryPar,ModelType:"EntNum", RegionCode:row.RegionCode },
+      RegionName:row.Region,
+     },
     });
     setTimeout(()=>{
       this.setState({entNumVisible:true})
@@ -378,7 +383,8 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch,queryPar } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { workNumQueryPar: { ...queryPar,ModelType:"TaskNums", RegionCode:row.RegionCode } },
+      payload: { workNumQueryPar: { ...queryPar,ModelType:"TaskNums", RegionCode:row.RegionCode },
+      RegionName:row.Region,},
     });
     setTimeout(()=>{
       this.setState({workNumVisible:true})

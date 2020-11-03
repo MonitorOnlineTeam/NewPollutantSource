@@ -35,7 +35,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile,GetDataType,toDecimal3} from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
-import { blue,red,green,gold,grey} from '@ant-design/colors';
+import { blue,red,green,gold,purple,grey,magenta} from '@ant-design/colors';
 import PageLoading from '@/components/PageLoading'
 import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
@@ -70,7 +70,9 @@ const pageUrl = {
   chartTime:emissionsChange.chartTime,
   entName:emissionsChange.entName,
   PointList:emissionsChange.PointList,
-  PollutantList:emissionsChange.PollutantList
+  PollutantList:emissionsChange.PollutantList,
+  column:emissionsChange.column,
+  chartTime:emissionsChange.timeList,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -91,8 +93,6 @@ export default class EntTransmissionEfficiency extends Component {
   initData = () => {
     const { dispatch, location,queryPar } = this.props;
     
-     sessionStorage.setItem("pointName", 'COD')
-     sessionStorage.setItem("entName", '')
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -104,19 +104,17 @@ export default class EntTransmissionEfficiency extends Component {
 
      this.child.onDataTypeChange('hour')
      this.updateQueryState({
-      beginTime: moment()
-      .subtract(1, 'day')
-      .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      DataType:'HourData',
-      PollutantList:[],
+      PollutantTypeCode:'1',
+      ModelType: "All"
     });
-    setTimeout(() => {
-      this.getTableData();
-    });
+    // setTimeout(() => {
+      // this.getTableData();
+    // });
   
 
   };
@@ -326,21 +324,18 @@ export default class EntTransmissionEfficiency extends Component {
    }
    getChartData=()=>{
 
-    const { queryPar:{PollutantCode},chartExport,chartImport,chartTime,entName,PollutantList} = this.props;
+    const {chartExport,chartImport,chartTime,entName,PollutantList,column} = this.props;
 
    let pollSelect = [],pollName=[]
-  //  if(PollutantList.length>0){
-  //  PollutantList.map(item=>{
-  //   PollutantCode.map(items=>{
-  //     if(item.value===items){
-  //       pollSelect.push({ name: `${item.name}(${item.unit})`, type: 'line', data: chartImport,})
-  //       pollName.push( `${item.name}(${item.unit})`)
-  //     }
-  //   })
-  //  }) 
-  // }
+
+   if(column.length>0){
+    column.map(item=>{
+        pollSelect.push({ name: `${item.PollutantName}(${item.Unit})`, type: 'line', data: item.data.map(items=>{return items.DischargeVolume}),})
+        pollName.push( `${item.PollutantName}(${item.Unit})`)  
+   }) 
+  }
     return {
-      color:[blue[5],red[5],green[5],gold[5],grey[5]],
+      color:[blue[5],red[5],green[5],gold[5],purple[5],grey[5],magenta[5]],
       title:{
         // text:entName,//图表标题文本内
         textStyle:{//标题内容的样式
@@ -393,30 +388,33 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: { RegionCode,EntCode,ImportantType,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantCode,DGIMN},
+      queryPar: { RegionCode,EntCode,ImportantType,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantList,DGIMN},
+      column
     } = this.props;
     const { TabPane } = Tabs;
 
-    let columns = [
-      {
-        title: '监测时间',
-        dataIndex: 'MonitorTime',
-        key: 'MonitorTime',
+    let columns = [{
+      title: `监测时间`,
+      dataIndex: 'DateTime',
+      key: 'DateTime',
+      align: 'center',
+    },{
+      title: `是否停运`,
+      dataIndex: `IsStop`,
+      key: `IsStop`,
+      align: 'center'
+    }];
+    
+    if(column&&column.length>0){
+      column.map(item=>{
+       columns.splice(1,0,{
+        title: `${item.PollutantName}(${item.Unit})`,
+        dataIndex: `${item.PollutantCode}_DischargeVolume`,
+        key: `${item.PollutantCode}_DischargeVolume`,
         align: 'center',
-        render: (text, record) => {
-          return <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span>;
-        },
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'pointName',
-        key: 'pointName',
-        align: 'center',
-        render: (text, record) => {
-          return text? text : '-';
-        },
-      },
-    ]
+      })
+    })
+  }
     return (
         <Card
           bordered={false}
@@ -508,7 +506,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Row>
                 <Row>
                 <Form.Item label='监测因子'>
-                  <Checkbox.Group  onChange={this.changePoll} defaultValue={PollutantCode}>
+                  <Checkbox.Group  onChange={this.changePoll}>
                      {this.pollListChildren()}
                  </Checkbox.Group>
                  </Form.Item>
@@ -536,7 +534,7 @@ export default class EntTransmissionEfficiency extends Component {
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
-              columns={columns}
+              columns={columns.length>1?columns:[]}
               // bordered={false}
               dataSource={this.props.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 

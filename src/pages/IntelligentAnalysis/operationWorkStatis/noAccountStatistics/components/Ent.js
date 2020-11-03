@@ -70,7 +70,8 @@ const pageUrl = {
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
   pollutantList:noAccountStatistics.pollutantList,
-  entQueryPar:noAccountStatistics.entQueryPar
+  entQueryPar:noAccountStatistics.entQueryPar,
+  EntName:noAccountStatistics.EntName
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -227,10 +228,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, entQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookSta',
+      payload: { ...entQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -240,7 +241,7 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
   
 
-    const { pointName, dispatch,queryPar:{EntCode} } = this.props;
+    const { pointName, dispatch,entQueryPar:{EntCode} } = this.props;
 
       this.getTableData();
 
@@ -297,8 +298,9 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       Entloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      entQueryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       entVisible,
+      EntName,
       entCancel
     } = this.props;
     const { TabPane } = Tabs;
@@ -306,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     return (
         <Modal
-          title="这是企业"
+          title={`${EntName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}缺失台账照片统计信息`}
           footer={null}
           width='95%'
           visible={entVisible}  

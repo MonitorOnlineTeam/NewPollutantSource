@@ -70,7 +70,8 @@ const pageUrl = {
   chartTime:noAccountStatistics.chartTime,
   entName:noAccountStatistics.entName,
   pollutantList:noAccountStatistics.pollutantList,
-  workNumQueryPar:noAccountStatistics.workNumQueryPar
+  workNumQueryPar:noAccountStatistics.workNumQueryPar,
+  RegionName:noAccountStatistics.RegionName
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -111,8 +112,8 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: '工单类型',
-            dataIndex: 'TaskType',
-            key: 'TaskType',
+            dataIndex: 'TaskTypeName',
+            key: 'TaskTypeName',
             align: 'center',
             render: (text, record) => {
               return text? text : '-';
@@ -236,10 +237,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, workNumQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookSta',
+      payload: { ...workNumQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -306,16 +307,17 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       TaskNumsloading,
-      workNumQueryPar: {  RegionCode,EntCode},
+      workNumQueryPar: {  RegionCode,EntCode,beginTime,endTime},
       workNumVisible,
-      workNumCancel
+      workNumCancel,
+      RegionName
     } = this.props;
     const { TabPane } = Tabs;
 
 
     return (
         <Modal
-          title="这是企业"
+         title={`${RegionName=='全部合计'?'所有行政区':RegionName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}缺失台账照片工单记录`}
           footer={null}
           width='95%'
           visible={workNumVisible}  

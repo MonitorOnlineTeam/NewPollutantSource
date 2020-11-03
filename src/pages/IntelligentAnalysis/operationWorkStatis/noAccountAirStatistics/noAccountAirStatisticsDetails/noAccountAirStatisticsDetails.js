@@ -67,6 +67,9 @@ export default class airMissing extends Component {
           key: 'EntName',
 
           align: 'center',
+          render: (text, record) => {
+            return  <div style={{textAlign:'left',width:'100%'}} >{text}</div>;
+        },
         },
         {
           title: <span>缺失台账监测点名称</span>,
@@ -74,6 +77,10 @@ export default class airMissing extends Component {
           key: 'PointName',
           width: 210,
           align: 'center',
+          render: (text, record) => {
+            return  <div style={{textAlign:'left',width:'100%'}} >{text}</div>;
+        },
+
         },
         {
           title: <span>巡检工单</span>,
@@ -154,7 +161,7 @@ let requestData = JSON.parse(this.props.requestData)
     const { dispatch, noAccountAirStatisticsForm } = this.props;
     dispatch({
       type: 'noAccountAirStatistics/exportDefectDataSummary',
-      payload: { ...noAccountAirStatisticsForm },
+      payload: {  ...requestData, ...{ModelType:'Region'}  },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -171,6 +178,13 @@ let requestData = JSON.parse(this.props.requestData)
 
   render() {
     return (
+        <Modal
+          title={``}
+          footer={null}
+          width='95%'
+          visible={this.props.regionVisible}  
+          onCancel={this.props.regionCancel}
+        >
       <Card
         bordered={false}
         title={
@@ -202,6 +216,7 @@ let requestData = JSON.parse(this.props.requestData)
           }}
         />
       </Card>
+      </Modal>
     );
   }
 }

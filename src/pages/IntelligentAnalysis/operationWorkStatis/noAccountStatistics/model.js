@@ -1,7 +1,7 @@
 /**
- * 功  能：台账
+ * 功  能：企业异常记录
  * 创建人：贾安波
- * 创建时间：2020.10.09
+ * 创建时间：2020.10.29
  */
 
 import Model from '@/utils/model';
@@ -9,7 +9,7 @@ import {
   GetTaskFormBookSta,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportSewageHistoryList,
+  ExportTaskFormBookSta,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -43,7 +43,9 @@ export default Model.extend({
     Regionloading:false,
     EntNumloading:false,
     EntNameloading:false,
-    TaskNumsloading:false
+    TaskNumsloading:false,
+    RegionName:'',
+    EntName:''
   },
   subscriptions: {},
   effects: {
@@ -65,6 +67,7 @@ export default Model.extend({
         }
         callback(response.Datas)
       }else{
+      
         yield update({ loading:false }); 
       }
     },
@@ -88,10 +91,10 @@ export default Model.extend({
         callback(response.Datas[0].EntCode)
       }
     },
-    *exportSewageHistoryList({callback, payload }, { call, put, update, select }) {
+    *exportTaskFormBookSta({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出
-      const response = yield call(ExportSewageHistoryList, { ...payload });
+      const response = yield call(ExportTaskFormBookSta, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

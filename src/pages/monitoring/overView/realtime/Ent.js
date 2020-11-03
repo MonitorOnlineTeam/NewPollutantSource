@@ -15,10 +15,11 @@ import moment from 'moment';
 import $ from 'jquery'
 import styles from '../index.less';
 
+const { CheckableTag } = Tag;
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
-
+const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2, label: "超标", color: "#f04d4d" }, { value: 0, label: "离线", color: "#999999" }, { value: 3, label: "异常", color: "#e94" }];
 
 @connect(({ loading, overview, global, autoForm }) => ({
   noticeList: global.notices,
@@ -35,6 +36,8 @@ class index extends Component {
     this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
     this.state = {
       columns: [],
+      selectedTags: [],
+      stopStatus: ['0', '1'],
       fixed: false,
       currentDataType: 'HourData',
       realTimeDataView: [],
@@ -82,6 +85,9 @@ class index extends Component {
         align: 'center',
         wrw: item.wrw !== undefined ? item.wrw : true,
         render: (text, record) => {
+          if (record.outPutFlag == 1) {
+            return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
+          }
           if (item.field === 'AQI') {
             return AQIPopover(text, record);
           }
@@ -122,15 +128,15 @@ class index extends Component {
           fixed,
           show: true,
           render: (value, record, index) => {
-            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
-              const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
-              const color = airLevelObj.color || '#999999';
-              return (
-                <div className={styles.airStatus}>
-                  <span style={{ backgroundColor: color }} />
-                </div>
-              );
-            }
+            // if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
+            //   const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
+            //   const color = airLevelObj.color || '#999999';
+            //   return (
+            //     <div className={styles.airStatus}>
+            //       <span style={{ backgroundColor: color }} />
+            //     </div>
+            //   );
+            // }
             return getPointStatusImg(record, this.props.noticeList);
           },
         },
@@ -150,7 +156,7 @@ class index extends Component {
           key: 'entName',
           fixed,
           show: true,
-          align: 'center',
+          // align: 'center',
         },
         {
           title: '监测点',
@@ -159,18 +165,19 @@ class index extends Component {
           key: 'pointName',
           fixed,
           show: true,
-          align: 'center',
+          // align: 'center',
           render: (text, record) => {
+
             if (this.state.pollutantCode == 5) {
               return (
                 <span>
-                  {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                  {text}
                 </span>
               );
             }
             return (
               <span>
-                {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                {text}
               </span>
             );
           },
@@ -184,6 +191,12 @@ class index extends Component {
           fixed,
           show: true,
           align: 'center',
+          render: (text, record) => {
+            if (record.outPutFlag == 1) {
+              return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
+            }
+            return text
+          }
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
         },
@@ -217,7 +230,7 @@ class index extends Component {
 
   // 获取表格数据
   getRealTimeDataView = () => {
-    const { pointName, currentDataType, pollutantCode, time, dayTime } = this.state;
+    const { pointName, currentDataType, pollutantCode, time, dayTime, regionCode, entCode, stopStatus, selectedTags } = this.state;
     let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
@@ -235,6 +248,10 @@ class index extends Component {
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
+        stopStatus: stopStatus,
+        regionCode: regionCode,
+        entCode: entCode,
+        status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3]
       },
     });
   };
@@ -318,8 +335,17 @@ class index extends Component {
     </>
   }
 
+  onTagChange(tag, checked) {
+    const { selectedTags } = this.state;
+    const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
+    console.log('You are interested in: ', nextSelectedTags);
+    this.setState({ selectedTags: nextSelectedTags }, () => {
+      this.getRealTimeDataView()
+    });
+  }
+
   render() {
-    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
+    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode, stopStatus, selectedTags } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading, entListByRegion, regionList } = this.props;
 
@@ -341,6 +367,7 @@ class index extends Component {
                   style={{ float: 'left', marginRight: 10 }}
                   showType="radio"
                   value={this.state.pollutantCode}
+                  onlyShowEnt
                   onChange={e => {
                     this.getPageData(e.target.value);
                     let dataType = this.state.currentDataType;
@@ -461,7 +488,7 @@ class index extends Component {
                                     return;
                                   }
                                   const newColumns = columns;
-                                  const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
+                                  const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 6;
                                   newColumns[index + num].show = e.target.checked;
                                   this.setState({
                                     columns: newColumns,
@@ -489,7 +516,8 @@ class index extends Component {
                   this.setState({
                     regionCode: value
                   }, () => {
-                    this.getEntByRegion(value)
+                    this.getEntByRegion(value);
+                    this.getRealTimeDataView()
                   })
                 }}>
                   {
@@ -500,7 +528,21 @@ class index extends Component {
                     })
                   }
                 </Select>
-                <Select style={{ width: 200, marginLeft: 10 }} allowClear placeholder="请选择企业列表1">
+                <Select
+                  style={{ width: 200, marginLeft: 10 }}
+                  allowClear
+                  placeholder="请选择企业列表"
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                  onChange={(value) => {
+                    this.setState({
+                      entCode: value
+                    }, () => {
+                      this.getRealTimeDataView()
+                    })
+                  }}>
                   {
                     entListByRegion.map(item => {
                       return <Option key={item.EntCode} value={item.EntCode}>
@@ -509,15 +551,42 @@ class index extends Component {
                     })
                   }
                 </Select>
-                <Checkbox.Group style={{ width: 180, textAlign: 'center' }}>
-                  <Checkbox value="1">正常</Checkbox>
-                  <Checkbox value="0">停运</Checkbox>
+                <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
+                  console.log("value=", value)
+                  if (!value.length) {
+                    message.error("至少勾选一个！");
+                    return
+                  }
+                  this.setState({ stopStatus: value }, () => {
+                    this.getRealTimeDataView()
+                  })
+                }}>
+                  <Checkbox value="0">正常</Checkbox>
+                  <Checkbox value="1">停运</Checkbox>
                 </Checkbox.Group>
               </Row>
             </>
           }
           extra={
-            <div></div>
+            <div>
+              {
+                statusList.map(item => {
+                  return <CheckableTag
+                    style={{ backgroundColor: selectedTags.includes(item.value) ? "transparent" : item.color, padding: "2px 10px", cursor: 'pointer', borderRadius: 0, marginRight: 0 }}
+                    key={item.value}
+                    checked={selectedTags.includes(item.value)}
+                    onChange={checked => this.onTagChange(item.value, checked)}
+                  >
+                    <i style={{
+                      backgroundColor: item.color, width: 4, height: 4, display: selectedTags.includes(item.value) ? 'inline-block' : "none",
+                      borderRadius: "50%", margin: "0 4px 4px 0",
+                    }}></i>
+                    <span style={{ fontSize: 14, color: selectedTags.includes(item.value) ? item.color : "#fff", fontWeight: "bold" }}>{item.label}</span>
+                  </CheckableTag>
+                })
+              }
+
+            </div>
           }
         >
           <SdlTable

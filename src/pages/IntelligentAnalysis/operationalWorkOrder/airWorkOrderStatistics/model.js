@@ -1,8 +1,8 @@
 /*
- * @Description:
+ * @Description: 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 16:38:28
- * @LastEditTime: 2020-10-28 14:53:30
+ * @LastEditTime: 2020-10-30 17:06:11
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/model.js
  */
 import Model from '@/utils/model';
@@ -121,12 +121,14 @@ export default Model.extend({
       }
     },
     // 排口（企业） 运维工单统计 数据    运维企业工单统计
-    *getTaskStatic4Point({ payload }, { call, put, update, select }) {
+    *getTaskStatic4Point({ payload, callback = () => {} }, { call, put, update, select }) {
+      console.log('callback = ', callback);
       const response = yield call(services.GetTaskStatic4Point, { ...payload });
       if (response.IsSuccess) {
         yield update({
           pointTaskStatic: response.Datas,
         });
+        callback();
       } else {
         message.error(response.Message);
       }

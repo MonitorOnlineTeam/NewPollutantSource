@@ -71,6 +71,7 @@ const pageUrl = {
   entName:noAccountStatistics.entName,
   pollutantList:noAccountStatistics.pollutantList,
   regQueryPar: noAccountStatistics.regQueryPar,
+  RegionName:noAccountStatistics.RegionName
   
 }))
 @Form.create()
@@ -237,10 +238,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, regQueryPar } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportSewageHistoryList',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookSta',
+      payload: { ...regQueryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -250,7 +251,7 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
   
 
-    const { pointName, dispatch,queryPar:{EntCode} } = this.props;
+    const { pointName, dispatch,regQueryPar:{EntCode} } = this.props;
 
       this.getTableData();
 
@@ -306,15 +307,16 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       Regionloading,
-      regQueryPar: {  EntCode, RegionCode},
+      regQueryPar: {  EntCode, RegionCode,beginTime,endTime},
       regionVisible,
-      regionCancel
+      regionCancel,
+      RegionName
     } = this.props;
     const { TabPane } = Tabs;
 
     return (
         <Modal
-          title="这是企业"
+          title={`${RegionName=='全部合计'?'所有行政区':RegionName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}企业监测点缺失台账照片统计信息`}
           footer={null}
           width='95%'
           visible={regionVisible}  
