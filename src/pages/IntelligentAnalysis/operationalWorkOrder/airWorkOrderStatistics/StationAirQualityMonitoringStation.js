@@ -233,14 +233,14 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
                 >
                   返回
                 </Button>
-                <Button
+                {/* <Button
                   style={{ marginLeft: 10 }}
                   icon="export"
                   onClick={this.exportAlarmManagementRate}
                   loading={alarmManagementRateExportLoading}
                 >
                   导出
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Form>
