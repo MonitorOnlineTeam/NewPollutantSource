@@ -12,7 +12,7 @@ import {
   Progress,
   Row,
   Popover,
-  Col, 
+  Col,
   Icon,
   Badge,
   Modal,
@@ -42,9 +42,9 @@ import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
-import { EnumPropellingAlarmSourceType } from '@/utils/enum'
+import { EnumPropellingAlarmSourceType } from '@/utils/enum';
 
-import MonPoint from './MonPoint'
+
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -54,7 +54,9 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'home/updateState',
-  getData: 'home/getSewageHistoryList',
+  getOverDataRate: 'home/getOverDataRate',
+  getDeviceDataRate: 'home/getDeviceDataRate',
+  getExceptionDataRate: 'home/getExceptionDataRate',
 };
 @connect(({ loading, home,autoForm }) => ({
   priseList: home.priseList,
@@ -70,8 +72,15 @@ const pageUrl = {
   chartImport:home.chartImport,
   chartTime:home.chartTime,
   entName:home.entName,
+  pollutantList:home.pollutantList,
   isWorkRate:home.isWorkRate,
-  Atmosphere:home.Atmosphere
+  isFaultRate:home.isFaultRate,
+  isOverRate:home.isOverRate,
+  Atmosphere:home.Atmosphere,
+  entQuery:home.entQuery,
+  pointQuery:home.pointQuery,
+  pointTableDatas:home.pointTableDatas,
+  entCode:home.EntCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -79,36 +88,27 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      pointVisible:false
+
 
     };
     
     this.columns = [
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: <span>监测点类型</span>,
+        dataIndex: 'PointType',
+        key: 'PointType',
         align: 'center',
       },
       {
-        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
-        dataIndex: 'entName',
-        key: 'entName',
-        align: 'center',
-        render: (text, record) => {     
-          return  <a href='#'  onClick={this.nextPage} style={{textAlign:'left',width:'100%'}}>{text}</a>
-       },
-      },
-      {
-        title: <span>监测点数</span>,
-        dataIndex: 'pointName',
-        key: 'pointName',
+        title: <span>监测点名称</span>,
+        dataIndex: 'PointName',
+        key: 'PointName',
         align: 'center',
       },
       {
         title: <span>运转率</span>,
-        dataIndex: 'defectCount',
-        key: 'defectCount',
+        dataIndex: 'Rate',
+        key: 'Rate',
         align: 'center',
         render: (text, record) => {
           if (record.ShouldNumber==0) {
@@ -134,42 +134,36 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location } = this.props;
+    let { dispatch, location,queryPar,pointQuery,entCode } = this.props;
     
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    pointQuery = {...queryPar,ModelType:'EntName',EntCode:entCode}
 
- 
-     dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-     this.updateQueryState({
-      beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      dataType:'HourData',
-      PollutantCode:['011','060','101','065','007'],
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { pointQuery: { ...pointQuery} },
     });
     setTimeout(() => {
-      this.getTableData();
+      this.getTableData(pointQuery);
     });
   
 
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { pointQuery, dispatch } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { pointQuery: { ...pointQuery, ...payload } },
     });
   };
 
-  getTableData = () => { 
-    const { dispatch, queryPar } = this.props;
+  getTableData = (pointQuery) => { 
+    const { dispatch,isWorkRate,isFaultRate,isOverRate } = this.props;
+
     dispatch({
-      type: pageUrl.getData,
-      payload: { ...queryPar },
+      type: isWorkRate? pageUrl.getDeviceDataRate : isOverRate ? pageUrl.getOverDataRate : pageUrl.getExceptionDataRate,
+      payload: { ...pointQuery },
     });
   };
 
@@ -254,50 +248,47 @@ export default class EntTransmissionEfficiency extends Component {
   }
   
 
-  nextPage=()=>{
-    this.setState({pointVisible:true}) 
-  }
 
-  
-  pointCancel=()=>{
-    this.setState({pointVisible:false})
-  }
   render() {
     const {
       exloading,
       loading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
       Atmosphere,
-      entVisible,
+      pointVisible,
       isWorkRate,
-      entCancel
+      pointCancel,
+      entName
     } = this.props;
+    const { TabPane } = Tabs;
 
-    const { pointVisible }  = this.state;
     return (
-        <div>
         <Modal
-          title="这是企业"
-          footer={null}
+          title={
+            <Row type="flex" justify="space-between">
+         <div>{entName}</div>  
+         {isWorkRate?
+         <div style={{paddingRight:30}}>
+            <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
+            <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+              ≥90%达标
+            </span>
+            <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
+            <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+              ≤90%未达标
+            </span>
+          </div> 
+          :
+          null
+         }   
+            </Row>
+          }
           width='95%'
-          visible={entVisible}  
-          onCancel={entCancel}
+          footer={null}
+          visible={pointVisible}  
+          onCancel={pointCancel}
         >
-           {isWorkRate?
-           <div style={{ paddingBottom: 10 }}>
-                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≥90%达标
-                </span>
-                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
-                </span>
-              </div>
-              :
-              null
-           }
-              <a href='javascript:;' onClick={this.nextPage}>下级页面</a>
+
           <div id=''>
 
              <SdlTable
@@ -305,13 +296,13 @@ export default class EntTransmissionEfficiency extends Component {
               loading={loading}
               columns={this.columns}
               // bordered={false}
-              dataSource={this.props.tableDatas}
+              dataSource={this.props.pointTableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
+                // total: this.props.total,
                 defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
@@ -320,8 +311,6 @@ export default class EntTransmissionEfficiency extends Component {
             />
           </div>
           </Modal>
-        <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/>
-       </div>
     );
   }
 }

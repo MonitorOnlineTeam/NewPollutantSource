@@ -398,19 +398,19 @@ export default class EntTransmissionEfficiency extends Component {
       dataIndex: 'DateTime',
       key: 'DateTime',
       align: 'center',
+    },{
+      title: `是否停运`,
+      dataIndex: `IsStop`,
+      key: `IsStop`,
+      align: 'center'
     }];
     
     if(column&&column.length>0){
       column.map(item=>{
-       columns.push({
+       columns.splice(1,0,{
         title: `${item.PollutantName}(${item.Unit})`,
         dataIndex: `${item.PollutantCode}_DischargeVolume`,
         key: `${item.PollutantCode}_DischargeVolume`,
-        align: 'center',
-      },{
-        title: `是否停运`,
-        dataIndex: `${item.PollutantCode}_IsStop`,
-        key: `${item.PollutantCode}_IsStop`,
         align: 'center',
       })
     })

@@ -46,9 +46,9 @@ export async function GetAttentionDegreeList(params) {
 
 //导出
 
-export async function ExportTaskFormBookSta(params) {
+export async function ExportExceptionReported(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
+    '/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionReported',
     params,
     null,
   );

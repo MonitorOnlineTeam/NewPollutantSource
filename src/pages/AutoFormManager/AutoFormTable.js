@@ -414,7 +414,7 @@ class AutoFormTable extends PureComponent {
                 }
               }
             }
-            return <TableText content={text} {...porps} />
+            // return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
           return text && <div className={styles.ellipsisText}>

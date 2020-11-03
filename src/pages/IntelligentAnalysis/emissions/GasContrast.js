@@ -590,7 +590,6 @@ class GasContrast extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
-
             </Row>
             <Row>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>
