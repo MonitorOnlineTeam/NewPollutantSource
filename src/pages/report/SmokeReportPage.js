@@ -57,6 +57,7 @@ class SmokeReportPage extends PureComponent {
     super(props);
     this.state = {
       dataSource: [],
+      msg:'排放量为小时均值*小时流量',
       columns:  [
         {
           title: '时间',
@@ -283,6 +284,7 @@ class SmokeReportPage extends PureComponent {
   switchInfo = (reportType, flag) => {
     let beginTime;
     let endTime;
+    let strMsg;
     switch (reportType) {
       case 'day':
         this.title = '小时平均日报表';
@@ -293,7 +295,8 @@ class SmokeReportPage extends PureComponent {
         this.unit2 = 'm³/h';
         beginTime = moment().format('YYYY-MM-DD 01:00:00');
         endTime = moment().add(1, 'day').format('YYYY-MM-DD 00:00:00');
-        reportType = 'dayanddate'
+        reportType = 'dayanddate';
+        strMsg='排放量为小时均值*小时流量'
         break;
       case 'month':
         this.title = '日平均月报表';
@@ -304,6 +307,7 @@ class SmokeReportPage extends PureComponent {
         this.unit2 = '×10⁴m³/h';
         beginTime = moment().format('YYYY-MM-01 00:00:00');
         endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        strMsg='排放量为日均值*小时流量'
         break;
       case 'quarter':
         this.title = '月平均季报表';
@@ -324,6 +328,7 @@ class SmokeReportPage extends PureComponent {
           beginTime = moment().format('YYYY-10-01 00:00:00');
           endTime = moment().format('YYYY-12-31 23:59:59')
         }
+        strMsg='排放量为日均值*小时流量';
         break;
       case 'year':
         this.title = '月平均年报表';
@@ -337,7 +342,8 @@ class SmokeReportPage extends PureComponent {
         // />
         beginTime = moment().format('YYYY-01-01 00:00:00');
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        this.tableFooter = ''
+        this.tableFooter = '';
+        strMsg='排放量为日均值*小时流量';
         break;
     }
     this.props.dispatch({
@@ -349,6 +355,9 @@ class SmokeReportPage extends PureComponent {
         },
       },
     })
+    this.setState({
+      msg:strMsg
+  })
     this.props.form.setFieldsValue({ "time": moment() })
     this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
   }
@@ -641,7 +650,7 @@ class SmokeReportPage extends PureComponent {
                 </FormItem>
                 <Button type="primary" style={{ marginRight: 10 }} onClick={() => {this.getSmokeReportData()}}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                <span style={{ fontSize: 14, color: 'red' }}>排放量为小时均值*小时流量</span>
+                <span style={{ fontSize: 14, color: 'red' }}>{this.state.msg}</span>
               </div>
             </Row>
           </Form>
