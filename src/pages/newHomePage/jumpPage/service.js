@@ -12,9 +12,9 @@ export async function GetOverDataRate(params) {
   return result;
 }
 //运转率
-export async function GetSewageHistoryList(params) {
+export async function GetDeviceDataRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetOverDataRate',
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetDeviceDataRate',
     params,
     null,
   );

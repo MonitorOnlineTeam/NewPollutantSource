@@ -6,7 +6,9 @@
 
 import Model from '@/utils/model';
 import {
-  GetSewageHistoryList,
+  GetOverDataRate,
+  GetDeviceDataRate,
+  GetExceptionDataRate,
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
@@ -28,6 +30,8 @@ export default Model.extend({
     },
     pointName:'COD',
     tableDatas: [],
+    entTableDatas:[],
+    pointTableDatas:[],
     total: '',
     attentionList:[],
     priseList: [],
@@ -39,33 +43,75 @@ export default Model.extend({
     isWorkRate:false,
     isFaultRate:false,
     isOverRate:false,
-    Atmosphere:false
-
+    Atmosphere:false,
+    entQuery:{},
+    pointQuery:{},
+    ModelType:'All',
+    regionName:'',
+    regionCode:'',
+    entCode:''
   },
   subscriptions: {},
   effects: {
-    *getSewageHistoryList({ payload }, { call, put, update, select }) {
-      //列表
+    *getOverDataRate({ payload }, { call, put, update, select }) {
+      //列表  超标率
 
       yield update({ loading:true }); 
-      const response = yield call(GetSewageHistoryList, { ...payload });
+      const response = yield call(GetOverDataRate, { ...payload });
+      let { ModelType } = yield select(_ => _.home);
+
       if (response.IsSuccess) {
-        yield update({
-          tableDatas: response.Datas,
-          total: response.Total,
-        });
-        const chartExport = [], chartImport=[], chartTime=[];
-        response.Datas.map(item=>{
-          chartExport.push(item.exportValue);
-          chartImport.push(item.importValue);
-          chartTime.push(moment(item.MonitorTime).format('YYYY-MM-DD HH:mm'))
-        })
-        yield update({
-          chartExport:chartExport,
-          chartImport:chartImport,
-          chartTime:chartTime,
-          loading:false
-        });
+
+        if(ModelType=='All'){
+          yield update({ tableDatas: response.Datas, loading:false });
+        }else if(ModelType=='Region'){
+          yield update({ entTableDatas: response.Datas,  loading:false });
+        }else{
+          yield update({ pointTableDatas: response.Datas, loading:false }); 
+        }
+
+      }else{
+        yield update({ loading:false }); 
+      }
+    },
+    *getDeviceDataRate({ payload }, { call, put, update, select }) {
+      //列表  运转率
+
+      yield update({ loading:true }); 
+      const response = yield call(GetDeviceDataRate, { ...payload });
+      let { ModelType } = yield select(_ => _.home);
+
+      if (response.IsSuccess) {
+
+        if(ModelType=='All'){
+          yield update({ tableDatas: response.Datas, loading:false });
+        }else if(ModelType=='Region'){
+          yield update({ entTableDatas: response.Datas,  loading:false });
+        }else{
+          yield update({ pointTableDatas: response.Datas, loading:false }); 
+        }
+
+      }else{
+        yield update({ loading:false }); 
+      }
+    },
+    *getExceptionDataRate({ payload }, { call, put, update, select }) {
+      //列表  异常率
+
+      yield update({ loading:true }); 
+      const response = yield call(GetExceptionDataRate, { ...payload });
+      let { ModelType } = yield select(_ => _.home);
+
+      if (response.IsSuccess) {
+
+        if(ModelType=='All'){
+          yield update({ tableDatas: response.Datas, loading:false });
+        }else if(ModelType=='Region'){
+          yield update({ entTableDatas: response.Datas,  loading:false });
+        }else{
+          yield update({ pointTableDatas: response.Datas, loading:false }); 
+        }
+
       }else{
         yield update({ loading:false }); 
       }

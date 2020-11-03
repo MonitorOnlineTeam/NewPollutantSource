@@ -10,7 +10,7 @@ import {
   GetExceptionReportedView,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportTaskFormBookSta,
+  ExportExceptionReported,
   GetEmissionsEntPointPollutant
 } from './service';
 
@@ -22,6 +22,7 @@ export default Model.extend({
   state: {
     exloading: false,
     loading: true,
+    Entloading:false,
     queryPar: {
       ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
       ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
@@ -52,13 +53,17 @@ export default Model.extend({
     EntList:[],
     PointList:[],
     parmarType:'RegionCode',
+    entTableDatas:[],
+    nextData:{}
   },
   subscriptions: {},
   effects: {
     
     *getExceptionReportedList({callback, payload }, { call, put, update, select }) {
       //企业异常记录查询 列表
-
+      yield update({
+          loading:true  
+      });
        const response = yield call(GetExceptionReportedList, { ...payload });
       if (response.IsSuccess) {
           yield update({
@@ -69,6 +74,24 @@ export default Model.extend({
       }else{
       
         yield update({ loading:false }); 
+      }
+    },
+    *getExceptionReportedView({callback, payload }, { call, put, update, select }) {
+      //企业异常记录查询 详情
+
+       const response = yield call(GetExceptionReportedView, { ...payload });
+       yield update({
+        Entloading:true  
+      });
+      if (response.IsSuccess) {
+          yield update({
+            entTableDatas:response.Datas,
+            Entloading:false  
+          });
+        callback(response.Datas)
+      }else{
+      
+        yield update({ Entloading:false }); 
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -91,10 +114,10 @@ export default Model.extend({
         callback(response.Datas[0].EntCode)
       }
     },
-    *exportTaskFormBookSta({callback, payload }, { call, put, update, select }) {
+    *exportExceptionReported({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出
-      const response = yield call(ExportTaskFormBookSta, { ...payload });
+      const response = yield call(ExportExceptionReported, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

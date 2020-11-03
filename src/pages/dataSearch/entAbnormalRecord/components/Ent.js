@@ -54,7 +54,7 @@ const { TabPane } = Tabs;
 
 const pageUrl = {
   updateState: 'entAbnormalRecord/updateState',
-  getData: 'entAbnormalRecord/getTaskFormBookSta',
+  getData: 'entAbnormalRecord/getExceptionReportedView',
 };
 @connect(({ loading, entAbnormalRecord,autoForm }) => ({
   priseList: entAbnormalRecord.priseList,
@@ -71,7 +71,9 @@ const pageUrl = {
   chartTime:entAbnormalRecord.chartTime,
   entName:entAbnormalRecord.entName,
   pollutantList:entAbnormalRecord.pollutantList,
-  entQueryPar:entAbnormalRecord.entQueryPar
+  entQueryPar:entAbnormalRecord.entQueryPar,
+  entTableDatas:entAbnormalRecord.entTableDatas,
+  nextData:entAbnormalRecord.nextData
 }))
 
 @Form.create()
@@ -244,19 +246,29 @@ export default class Index extends Component {
       exloading,
       Entloading,
       entQueryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      nextData:{startTime,endTimes,msg},
+      entTableDatas,
       entVisible,
       entCancel
     } = this.props;
     const { TabPane } = Tabs;
-      let columns =[]
-      columns = [
-      {
-        title: '监测时间',
-        dataIndex: 'PollutantTypeCode',
-        key: 'PollutantTypeCode',
+    let columns = [{
+      title: `监测时间`,
+      dataIndex: 'DateTime',
+      key: 'DateTime',
+      align: 'center',
+    }];
+    
+    if(entTableDatas.cloumn&&entTableDatas.cloumn.length>0){
+      entTableDatas.cloumn.map(item=>{
+       columns.push({
+        title: `${item.PollutantName}(${item.Unit})`,
+        dataIndex: `${item.PollutantCode}_DischargeVolume`,
+        key: `${item.PollutantCode}_DischargeVolume`,
         align: 'center',
-      },            
-    ]
+      })
+    })
+  }
 
     return (
         <Modal
@@ -267,15 +279,15 @@ export default class Index extends Component {
           onCancel={entCancel}
         >          
           <div id='entAbnormalRecord'>
-            <Row> <span>异常开始时间：</span> <span style={{paddingLeft:50}}>异常结束时间：</span></Row>
-            <Row style={{paddingTop:10}}> <span>异常描述：</span></Row>
+         <Row> <span>异常开始时间：{startTime}</span> <span style={{paddingLeft:50}}>异常结束时间：{endTimes}</span></Row>
+         <Row style={{paddingTop:10}}> <span>异常描述：{msg}</span></Row>
           <Tabs defaultActiveKey="HourData" onChange={this.tabChange}>
           <TabPane tab="小时数据" key="HourData">
           <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={Entloading}
-              columns={columns}
-              dataSource={this.state.tableDatas}
+              columns={columns.length>1?columns:[]}
+              dataSource={entTableDatas.hourList}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
@@ -289,8 +301,8 @@ export default class Index extends Component {
         <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={Entloading}
-              columns={columns}
-              dataSource={this.state.tableDatas}
+              columns={columns.length>1?columns:[]}
+              dataSource={entTableDatas.dayList}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,

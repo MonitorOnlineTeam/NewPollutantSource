@@ -232,14 +232,14 @@ export default {
               component: './newHome',
             },
             {
+              name: 'homepage',
+              path: '/newHomePage',
+              component: './newHomePage/jumpPage',
+            },
+            {
               name: 'test',
               path: '/test',
               component: './Test/Test',
-            },
-            {
-              name: 'homepage',
-              path: '/newHomePage',
-              component: './newHomePage',
             },
             {
               path: '/:parentcode/autoformmanager/:configId',
