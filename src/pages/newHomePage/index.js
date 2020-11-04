@@ -1,14 +1,17 @@
 /**
- * 功  能：运转率 故障率 超标率
+ * 功  能：首页 
  * 创建人：贾安波
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import RegionData from './faultOverWorkRate/components/Region'
+import RegionData from './components/jumpPage/faultOverWorkRate/Region'
 import { connect } from 'dva';
 import  moment from 'moment';
 import styles from './style.less'
+import RealTimeAlarm from './components/RealTimeAlarm'
+import BrokenLine from './components/BrokenLine'
+import WasteWaterPoint from './components/WasteWaterPoint'
 const pageUrl = {
   updateState: 'home/updateState',
 };
@@ -107,24 +110,19 @@ export default class Index extends Component {
     });
      this.setState({regionVisible:false})
    }
-           /* <BreadcrumbWrapper title="首页">
-          <a href='#' onClick={this.workNextPage} style={{paddingLeft:10}}>运转率</a>
-          <a href='#' onClick={()=>{this.workNextPage("air")}} style={{paddingLeft:10}}>运转率空气站</a>
-          <a href='#' onClick={this.faultNextPage} style={{paddingLeft:10}}>故障率</a>
-          <a href='#' onClick={()=>{this.faultNextPage("air")}} style={{paddingLeft:10}}>故障率空气站</a>
-          <a href='#' onClick={this.overNextPage} style={{paddingLeft:10}}>超标率</a>
-          <a href='#' onClick={()=>{this.overNextPage('air')}} style={{paddingLeft:10}}>超标率空气站</a>
-          {regionVisible?  <RegionData regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
 
-            <div className={styles.homeContent}>
-           </div>
-        </BreadcrumbWrapper> */
   render() {
     const { regionVisible } = this.state;
     return (
-      <div className={styles.pageContainer}>
-         <div style={{height:'1900px',background:'red'}}>
-           1111
+      <div  id='newHomePage' className={styles.pageContainer}>
+         <div>
+         <RealTimeAlarm />
+         </div>
+         <div style={{marginTop:10}}>
+         <BrokenLine />
+          </div>
+          <div style={{marginTop:10}}>
+            <WasteWaterPoint />
           </div>
        </div> 
     );

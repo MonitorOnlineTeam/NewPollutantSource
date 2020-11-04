@@ -234,7 +234,7 @@ export default {
             {
               name: 'homepage',
               path: '/newHomePage',
-              component: './newHomePage/jumpPage',
+              component: './newHomePage',
             },
             {
               name: 'test',
