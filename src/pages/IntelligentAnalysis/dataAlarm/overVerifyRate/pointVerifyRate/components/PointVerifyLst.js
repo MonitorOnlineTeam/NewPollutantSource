@@ -190,7 +190,7 @@ export default class PointVerifyLst extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: 'overVerifyRate/exportDefectPointDetail',
-      payload: { ...overVerifyRateForm },
+      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
