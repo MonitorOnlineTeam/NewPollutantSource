@@ -2,7 +2,7 @@
  * @Description:运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-26 10:52:49
- * @LastEditTime: 2020-10-28 17:33:11
+ * @LastEditTime: 2020-11-03 14:35:02
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/index.js
  */
 import React, { PureComponent } from 'react';
@@ -271,14 +271,14 @@ export default class index extends PureComponent {
                 >
                   查询
                 </Button>
-                <Button
+                {/* <Button
                   style={{ marginLeft: 10 }}
                   icon="export"
                   onClick={this.exportAlarmManagementRate}
                   loading={alarmManagementRateExportLoading}
                 >
                   导出
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Form>
