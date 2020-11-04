@@ -120,7 +120,7 @@ class index extends Component {
           render: (value, record, index) => index + 1,
         },
         {
-          title: '状态',
+          title: '设备状态',
           dataIndex: 'Status',
           key: 'Status',
           width: 70,
@@ -133,7 +133,7 @@ class index extends Component {
             //   return <span style={{ color: "#969696", fontWeight: "bold" }}>停运</span>
             // }
             const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
-            const color = airLevelObj.color || '#999999';
+            const color = value === 1 ? "#34c066" : '#999999';
             return (
               <div className={styles.airStatus}>
                 <span style={{ backgroundColor: color }} />

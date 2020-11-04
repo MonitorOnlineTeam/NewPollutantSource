@@ -16,6 +16,7 @@ import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import CheckboxGroup from 'antd/lib/checkbox/Group';
 import style from '@/pages/dataSearch/tableClass.less'
+import point from '@/models/point';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -42,12 +43,18 @@ const pageUrl = {
     PageSize:exceedDataModel.PageSize,
     PageIndex:exceedDataModel.PageIndex,
     total:exceedDataModel.total,
+    RegionPageIndex:exceedDataModel.RegionPageIndex,
+    ReginPageSize:exceedDataModel.ReginPageSize,
+    RegionTotal:exceedDataModel.RegionTotal,
     RegionDataList:exceedDataModel.RegionDataList,
     EntCountList:exceedDataModel.EntCountList,
     ExceedNumList:exceedDataModel.ExceedNumList,
     ModalPageSize:exceedDataModel.ModalPageSize,
     ModalPageIndex:exceedDataModel.ModalPageIndex,
     Modaltotal:exceedDataModel.Modaltotal,
+    ExceedPageSize:exceedDataModel.ExceedPageSize,
+    ExceedPageIndex: exceedDataModel.ExceedPageIndex,
+    ExceedTotal: exceedDataModel.ExceedTotal,
 }))
 class index extends PureComponent {
     
@@ -72,6 +79,7 @@ class index extends PureComponent {
             enterpriseValue:'',
             selectPollution:[],
             RegionCode: '',
+            ModelRcode:'',
             AttentionCode: '',
             PollutantTypeCode: '',
             DataType: '',
@@ -84,9 +92,12 @@ class index extends PureComponent {
             modalSelectPollution:[],
             modalPollutantList:[],
             modalSelectPollution2:[],
+            modalregionCode:'',
             entModalTitle:'',
             entCountModalTotle:'',
             entCountModalTotle2:'',
+            pagePollutantType:'',
+            
 
         };
     }
@@ -133,6 +144,7 @@ class index extends PureComponent {
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
                     selectPollution.push(pollution)
+                    debugger
                     if(values[item.PollutantCode+'Min'] != undefined)
                     {
                         Min = values[item.PollutantCode+'Min']
@@ -264,7 +276,7 @@ class index extends PureComponent {
                     EndTime: values.dateTime[1],
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
-                    PageSize:25,
+                    PageSize:20,
                     PageIndex:1
                 }
             })
@@ -286,13 +298,12 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: region,
                 PollutantList: PollutantList,
-                PageSize:10,
-                PageIndex:1
+                //PageSize:10,
+                //PageIndex:1
             }
         }).then(()=>{
             if(this.props.RegionDataList.length > 0)
             {
-
                 const fixed = false
                 const columns = [
                     {
@@ -304,7 +315,7 @@ class index extends PureComponent {
                         key: 'Region',
                     },
                     {
-                        title: "企业数",
+                        title: "企业名称",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
@@ -351,7 +362,7 @@ class index extends PureComponent {
                                 dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
                                 key: 'PollutantData.ExceedNum-'+item.PollutantCode,
                                 render: (text,record) => {
-                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode)}>{text}</a>
+                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>{text}</a>
                                 }
                             },
                             {
@@ -382,15 +393,24 @@ class index extends PureComponent {
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
-                        pagination={{
-                            showSizeChanger: true,
-                            showQuickJumper: true,
-                            pageSize: this.props.PageSize,
-                            current: this.props.PageIndex,
-                            onChange: this.RegiononChange,
-                            pageSizeOptions: ['25', '30', '40', '100'],
-                            total: this.props.total,
-                          }}
+                        pagination={
+                            {
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                defaultPageSize:20,
+                                pageSizeOptions: ['20', '30', '40', '50'],
+                            }
+                        }
+                        // pagination={{
+                        //     showSizeChanger: true,
+                        //     showQuickJumper: true,
+                        //     pageSize: this.props.ReginPageSize,
+                        //     current: this.props.RegionPageIndex,
+                        //     onChange: this.RegiononChange,
+                        //     onShowSizeChange: this.onShowSizeChange,
+                        //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                        //     total: this.props.RegionTotal,
+                        //   }}
                         />, key: key, closable: true
                     }
 
@@ -400,15 +420,24 @@ class index extends PureComponent {
                 if (key == '') {
                     panes.push({
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
-                        pagination={{
-                            showSizeChanger: true,
-                            showQuickJumper: true,
-                            pageSize: this.props.PageSize,
-                            current: this.props.PageIndex,
-                            onChange: this.RegiononChange,
-                            pageSizeOptions: ['25', '30', '40', '100'],
-                            total: this.props.total,
-                          }}
+                        pagination={
+                            {
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                defaultPageSize:20,
+                                pageSizeOptions: ['20', '30', '40', '50'],
+                            }
+                        }
+                        // pagination={{
+                        //     showSizeChanger: true,
+                        //     showQuickJumper: true,
+                        //     pageSize: this.props.ReginPageSize,
+                        //     current: this.props.RegionPageIndex,
+                        //     onChange: this.RegiononChange,
+                        //     onShowSizeChange: this.onShowSizeChange,
+                        //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                        //     total: this.props.RegionTotal,
+                        //   }}
                         />, key: activeKey, closable: true
                     });
                     this.setState({ panes, activeKey,regionCode:region });
@@ -421,6 +450,7 @@ class index extends PureComponent {
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
         this.setState({
             visible:true,
+           
         })
         let arr = []
         PollutantList.map(item=>{
@@ -440,8 +470,9 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode },
+            payload: { RegionCode: rCode=='All'?'':rCode },
         });
+        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -453,37 +484,56 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: rCode,
                 PollutantList: arr,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1,
                 EntCode:''
             }
         }).then(()=>{
             if(this.props.EntCountList.length >0)
             {
+                let title = ''
+                if(rCode == 'All')
+                {
+                    title = '全部合计'
+                }
+                else{
+                    title = this.props.EntCountList[0].Region
+                }
+                
                 this.setState({
                     
                     modalSelectPollution:modalSelectPollution,
                     modalPollutantList:arr,
                     regionCode:rCode,
-                    entModalTitle:this.props.EntCountList[0].Region + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
+                    entModalTitle:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
+                })
+            }
+            else
+            {
+                this.setState({
+                    
+                    modalSelectPollution:modalSelectPollution,
+                    entModalTitle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
                 })
             }
         })
     }
     //超标次数弹框
-    exCountHandle=(pointCode,rCode,flag,EntCode)=>{
+    exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
         if(flag)
         {
             this.setState({
-                visibleEnt:true
+                visibleEnt:true,
+                modalregionCode:rCode
             })
         }
         if(!flag){
             this.setState({
-                visibleMoni:true
+                visibleMoni:true,
+                modalregionCode:rCode
             })
         }
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode} = this.state
         let arr = []
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
@@ -492,42 +542,87 @@ class index extends PureComponent {
             }
         })
         let modalSelectPollution  = []
-        selectPollution.map(item=>{
-            if(item.PollutantCode == arr[0].PollutantCode)
+        let pollutantTypeCode = ''
+        if(arr.length > 0)
+        {
+            selectPollution.map(item=>{
+                if(item.PollutantCode == arr[0].PollutantCode)
+                {
+                    return modalSelectPollution.push(item)
+                }
+            }) 
+            pollutantTypeCode = PollutantTypeCode
+            this.setState({
+                pagePollutantType:pollutantTypeCode
+            })
+        }
+        else{
+            modalSelectPollution.push({
+                PollutantName:name
+            })
+            arr.push({
+                PollutantCode:pointCode
+            })
+            if(PollutantTypeCode == '1')
             {
-                return modalSelectPollution.push(item)
+                pollutantTypeCode = '2'
             }
-        })  
+            else
+            {
+                pollutantTypeCode = '1'
+            }
+            this.setState({
+                pagePollutantType:pollutantTypeCode
+            })
+        } 
+        this.setState({
+            ModelRcode:rCode == 'All' ? '':rCode,
+        })
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode },
+            payload: { RegionCode: rCode=='All'?'':rCode },
         });
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 RegionCode: rCode == 'All' ? '':rCode,
                 AttentionCode: AttentionCode,
-                PollutantTypeCode: PollutantTypeCode,
+                PollutantTypeCode: pollutantTypeCode,
                 DataType: DataType,
                 BeginTime: BeginTime,
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: arr,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1,
                 EntCode:EntCode == '' ?'':EntCode
             }
         }).then(()=>{
             if(this.props.ExceedNumList.length >0)
             {
+                let title = ''
+                if(rCode == 'All')
+                {
+                    title = '全部合计'
+                }
+                else{
+                    if(flag)
+                    {
+                        title = this.props.ExceedNumList[0].EntName
+                    }
+                    else{
+                        title = this.props.ExceedNumList[0].RegionName
+                    }
+                    
+                }
                 if(flag)
                 {
                     this.setState({
                         //visibleEnt:true,
                         modalSelectPollution2:modalSelectPollution,
                         modalPollutantList:arr,
-                        entCountModalTotle2:this.props.ExceedNumList[0].EntName + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                        entCountModalTotle2:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     }) 
                 }
                 else{
@@ -535,10 +630,27 @@ class index extends PureComponent {
                         //visibleMoni:true,
                         modalSelectPollution2:modalSelectPollution,
                         modalPollutantList:arr,
-                        entCountModalTotle:this.props.ExceedNumList[0].RegionName + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                        entCountModalTotle:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     })
                 }
-                
+            }
+            else
+            {
+                if(flag)
+                {
+                    this.setState({
+                        //visibleEnt:true,
+                        modalSelectPollution2:modalSelectPollution,
+                        entCountModalTotle2:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                    }) 
+                }
+                else{
+                    this.setState({
+                        //visibleMoni:true,
+                        modalSelectPollution2:modalSelectPollution,
+                        entCountModalTotle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                    })
+                }
             }
         })
     }
@@ -627,7 +739,7 @@ class index extends PureComponent {
                         }
 
                     </Form.Item>
-                    <Form.Item label="关注度" >
+                    <Form.Item label="关注程度" >
                         {
                             getFieldDecorator('attention', {
 
@@ -635,7 +747,7 @@ class index extends PureComponent {
                                 <Select
                                     allowClear
                                     style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                    placeholder="关注度"
+                                    placeholder="关注程度"
                                     maxTagCount={2}
                                     maxTagTextLength={5}
                                     maxTagPlaceholder="..."
@@ -654,7 +766,6 @@ class index extends PureComponent {
                                 initialValue: '1'
                             })(
                                 <Select
-                                    allowClear
                                     style={{ width: 200, marginLeft: 10, marginRight: 20 }}
                                     //defaultValue={'1'}
                                     placeholder="企业类型"
@@ -667,6 +778,9 @@ class index extends PureComponent {
                                             payload: {
                                                 type: value
                                             }
+                                        })
+                                        this.setState({
+                                            entType:value
                                         })
                                     }}>
                                     <Option value="1">废水</Option>
@@ -700,7 +814,7 @@ class index extends PureComponent {
                             getFieldDecorator('dateTime', {
                                 initialValue: this.state.time
                             })(
-                                <RangePicker_ onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                     (dates, dataType) => {
                                         this.setState({
                                             time: dates
@@ -745,7 +859,9 @@ class index extends PureComponent {
                                                             getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                                 <span style={{ marginLeft: -10 }}>
                                                                     <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }}  onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
                                                                     <span style={{ fontSize: 14 }}>至</span>
                                                                 </span>
                                                             )
@@ -784,7 +900,9 @@ class index extends PureComponent {
                                                         getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                             <span style={{ marginLeft: -10 }}>
                                                                 <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
                                                                 <span style={{ fontSize: 14 }}>至</span>
                                                             </span>
                                                         )
@@ -825,7 +943,7 @@ class index extends PureComponent {
                                                 }
                                             </Form.Item>
                                             <Form.Item>
-                                                {
+                                                {/* {
                                                     getFieldDecorator(item.PollutantCode + 'Value', {})(
                                                         <span>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
@@ -834,7 +952,27 @@ class index extends PureComponent {
                                                             <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
                                                         </span>
                                                     )
-                                                }
+                                                } */}
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
                                             </Form.Item>
 
                                         </span>
@@ -856,7 +994,7 @@ class index extends PureComponent {
                                                 }
                                             </Form.Item>
                                             <Form.Item>
-                                                {
+                                                {/* {
                                                     getFieldDecorator(item.PollutantCode + 'Value', {})(
                                                         <span>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
@@ -865,7 +1003,27 @@ class index extends PureComponent {
                                                             <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
                                                         </span>
                                                     )
-                                                }
+                                                } */}
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
                                             </Form.Item>
 
                                         </span>
@@ -880,7 +1038,6 @@ class index extends PureComponent {
     }
     RegiononChange =(PageIndex, PageSize) => {
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
-
         this.props.dispatch({
             type:pageUrl.GetExceedDataList,
             payload:{
@@ -897,9 +1054,9 @@ class index extends PureComponent {
             }
         })
     }
-    onChange = (PageIndex, PageSize) => {
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution} = this.state
 
+    onShowSizeChange= (PageIndex, PageSize) => {
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution} = this.state
         this.props.dispatch({
             type:pageUrl.GetExceedDataList,
             payload:{
@@ -916,6 +1073,25 @@ class index extends PureComponent {
             }
         })
     }
+    onChange = (PageIndex, PageSize) => {
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution} = this.state
+        this.props.dispatch({
+            type:pageUrl.GetExceedDataList,
+            payload:{
+                RegionCode: RegionCode,
+                AttentionCode: AttentionCode,
+                PollutantTypeCode: PollutantTypeCode,
+                DataType: DataType,
+                BeginTime: BeginTime,
+                EndTime: EndTime,
+                TabType: TabType,
+                PollutantList: PollutantList,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
+    }
+
     onChangeHandle=(activeKey)=>{
         this.setState({ activeKey });
     }
@@ -949,7 +1125,12 @@ class index extends PureComponent {
         
         const {ExceedDataList ,loading} = this.props
         const {selectPollution} = this.state
-
+        console.log('props=',ExceedDataList)
+        console.log('state=',selectPollution)
+        if(selectPollution.length==0)
+        {
+            return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+        }
         const columns = [
             {
                 title: "行政区",
@@ -1021,7 +1202,7 @@ class index extends PureComponent {
                         dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         key: 'PollutantData.ExceedNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,'')}>{text}</a>
+                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,'',item.PollutantName)}>{text}</a>
                         }
                     },
                     {
@@ -1051,15 +1232,16 @@ class index extends PureComponent {
             >
                 <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
                     {
-                        loading ? <PageLoading /> :
                             <SdlTable columns={columns} dataSource={ExceedDataList}
+                            loading={loading}
                                 pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props.PageSize,
                                     current: this.props.PageIndex,
                                     onChange: this.onChange,
-                                    pageSizeOptions: ['25', '30', '40', '100'],
+                                    onShowSizeChange:this.onShowSizeChange,
+                                    pageSizeOptions: ['20', '30', '40', '100'],
                                     total: this.props.total,
                                 }}
                             />
@@ -1081,13 +1263,13 @@ class index extends PureComponent {
     CancelHandel = () => {
         this.setState({
             visible: false,
-            visibleMoni: false
+            visibleMoni: false,
+            enterpriseValue:undefined
         })
     }
     //超标次数弹框
     entExCountHandle = ()=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -1100,7 +1282,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1
             }
         })
@@ -1130,7 +1312,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1
             }
         })
@@ -1155,6 +1337,26 @@ class index extends PureComponent {
     }
     //企业数查询分页
     EntButtonCountHandlePageChange =(PageIndex, PageSize)=>{
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,modalregionCode} = this.state
+       
+        this.props.dispatch({
+            type:pageUrl.GetMoalExceedDataList,
+            payload:{
+                EntCode:enterpriseValue,
+                RegionCode: RegionCode,
+                AttentionCode: AttentionCode,
+                PollutantTypeCode: PollutantTypeCode,
+                DataType: DataType,
+                BeginTime: BeginTime,
+                EndTime: EndTime,
+                TabType: regionCode,
+                PollutantList: modalPollutantList,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
+    }
+    EntButtonCountShowSizeChange=(PageIndex, PageSize)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
        
         this.props.dispatch({
@@ -1176,13 +1378,13 @@ class index extends PureComponent {
     }
     //超标次数按钮查询
     ExButtonCountHandle =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
       
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1190,19 +1392,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1
             }
         })
     }
     //超标次数按钮导出
     ExButtonCountHandleExport =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1215,15 +1417,35 @@ class index extends PureComponent {
     }
     //超标次数按钮分页
     ExButtonCountHandlePageChange=(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-      
-        this.props.dispatch({
+        const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType} = this.state
+
+      this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
-                PollutantTypeCode: PollutantTypeCode,
+                PollutantTypeCode: pagePollutantType,
+                DataType: DataType,
+                BeginTime: BeginTime,
+                EndTime: EndTime,
+                TabType: '',
+                PollutantList: modalPollutantList,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
+    }
+
+    ExButtonCountShowSizeChange=(PageIndex, PageSize)=>{
+        const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType} = this.state
+         this.props.dispatch({
+            type:pageUrl.GetExceedNum,
+            payload:{
+                EntCode:enterpriseValue,
+                RegionCode: modalregionCode,
+                AttentionCode: AttentionCode,
+                PollutantTypeCode: pagePollutantType,
                 DataType: DataType,
                 BeginTime: BeginTime,
                 EndTime: EndTime,
@@ -1235,12 +1457,12 @@ class index extends PureComponent {
         })
     }
     EntexportReport =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
          this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1253,12 +1475,31 @@ class index extends PureComponent {
     }
     //分页
     EntPageChange=(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,enterpriseValue} = this.state
          this.props.dispatch({
-            type:pageUrl.ExportExceedNum,
+            type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: modalregionCode,
+                AttentionCode: AttentionCode,
+                PollutantTypeCode: PollutantTypeCode,
+                DataType: DataType,
+                BeginTime: BeginTime,
+                EndTime: EndTime,
+                TabType: '',
+                PollutantList: modalPollutantList,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
+    }
+    EntPageShowSizeChange = (PageIndex, PageSize)=>{
+        const {  AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue} = this.state
+         this.props.dispatch({
+            type:pageUrl.GetExceedNum,
+            payload:{
+                EntCode:enterpriseValue,
+                RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1272,8 +1513,7 @@ class index extends PureComponent {
         })
     }
     render() {
-        const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount} = this.props
-        console.log(ExceedNumList)
+        const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount,RegionPageIndex} = this.props
         const {modalSelectPollution,modalSelectPollution2} = this.state
         const fixed = false
         const columns = [
@@ -1374,7 +1614,7 @@ class index extends PureComponent {
             {
                 title: "监测点名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'PointName',
                 key: 'PointName',
@@ -1465,6 +1705,7 @@ class index extends PureComponent {
                             footer={null}
                             width={1300}
                             onCancel={this.CancelHandel}
+                            destroyOnClose
                         >
                             <div style={{marginBottom:10}}>
                                 <Select
@@ -1494,14 +1735,15 @@ class index extends PureComponent {
                                 <Button onClick={this.EntButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingEnt?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns} dataSource={EntCountList} pagination={{
+                                <SdlTable scroll={{ y: 500 }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
-                                    pageSize: this.props. ModalPageSize,
-                                    current: this.props. ModalPageIndex,
+                                    pageSize: this.props. ExceedPageSize,
+                                    current: this.props. ExceedPageIndex,
                                     onChange: this.EntButtonCountHandlePageChange,
-                                    pageSizeOptions: ['10','20', '30', '40', '100'],
-                                    total: this.props. Modaltotal,
+                                    onShowSizeChange:this.EntButtonCountShowSizeChange,
+                                    pageSizeOptions: ['20', '30', '40', '100'],
+                                    total: this.props. ExceedTotal,
                                   }} />
                             }
                             
@@ -1514,6 +1756,7 @@ class index extends PureComponent {
                             footer={null}
                             width={1300}
                             onCancel={this.CancelHandel}
+                            destroyOnClose
                         >
                             <div style={{marginBottom:10}}>
                                 <Select
@@ -1543,14 +1786,15 @@ class index extends PureComponent {
                                 <Button onClick={this.ExButtonCountHandleExport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingCount?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
                                     current: this.props. ModalPageIndex,
                                     onChange: this.ExButtonCountHandlePageChange,
-                                    pageSizeOptions: ['10','20', '30', '40', '100'],
-                                    total: this.props. Modaltotal,
+                                    onShowSizeChange:this.ExButtonCountShowSizeChange,
+                                    pageSizeOptions: ['20', '30', '40', '100'],
+                                    total: this.props.Modaltotal,
                                   }} />
                             }
                             
@@ -1567,13 +1811,14 @@ class index extends PureComponent {
                                 <Button onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingCount?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ModalPageSize,
                                     current: this.props. ModalPageIndex,
                                     onChange: this.EntPageChange,
-                                    pageSizeOptions: ['10','20', '30', '40', '100'],
+                                    onShowSizeChange:this.EntPageShowSizeChange,
+                                    pageSizeOptions: ['20', '30', '40', '100'],
                                     total: this.props. Modaltotal,
                                   }} />
                             }

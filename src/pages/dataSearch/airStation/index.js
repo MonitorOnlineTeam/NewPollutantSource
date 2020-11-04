@@ -53,12 +53,11 @@ class index extends PureComponent {
           RegionCode:''
       },
   });
-    //获取行政区列表
     this.props.dispatch({
       type: pageUrl.GetPointSummary,
       payload: {
         RegionCode: '',
-        PageSize: 25,
+        PageSize: 20,
         PageIndex: 1,
         EntType: 2
       },
@@ -85,7 +84,7 @@ class index extends PureComponent {
       type: pageUrl.GetPointSummary,
       payload: {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
-        PageSize: 10,
+        PageSize: 20,
         PageIndex: 1,
         EntType: 2
       },
@@ -102,6 +101,18 @@ class index extends PureComponent {
             EntType:2
         }
     })
+}
+onChangeHandle=(PageIndex, PageSize)=>{
+  this.props.dispatch({
+      
+      type: pageUrl.GetPointSummary,
+      payload: {
+          RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
+          PageSize:PageSize,
+          PageIndex:PageIndex,
+          EntType:2
+      }
+  })
 }
   children = () => {
     const { regionList } = this.props;
@@ -211,14 +222,16 @@ class index extends PureComponent {
     ]
 
     return <>{
-      loading?<PageLoading/>:
-      <SdlTable columns={columns} dataSource={airStationList} pagination={{
+      <SdlTable columns={columns} dataSource={airStationList}
+       loading={loading}
+       pagination={{
         showSizeChanger: true,
         showQuickJumper: true,
         pageSize: this.props.PageSize,
         current: this.props.PageIndex,
         onChange: this.onChange,
-        pageSizeOptions: ['10','20', '30', '40', '100'],
+        onShowSizeChange: this.onChangeHandle,
+        pageSizeOptions: ['20', '30', '40', '100'],
         total: this.props.total,
       }} />
     }

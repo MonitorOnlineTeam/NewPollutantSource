@@ -17,12 +17,18 @@ export default Model.extend({
     DataType: '',
     BeginTime: moment().add(-24, 'hour'),
     EndTime: moment(),
-    PageSize: 10,
+    PageSize: 20,
     PageIndex: 1,
     total: 0,
-    ModalPageSize:10,
+    ReginPageSize:0,
+    RegionPageIndex:0,
+    RegionTotal:0,
+    ModalPageSize:20,
     ModalPageIndex: 1,
     Modaltotal: 0,
+    ExceedPageSize:20,
+    ExceedPageIndex: 1,
+    ExceedTotal: 0,
     ExceedDataList: [],
     RegionDataList: [],
     EntCountList: [],
@@ -81,7 +87,8 @@ export default Model.extend({
         yield update({
           ExceedNumList: result.Datas,
           Modaltotal: result.Total,
-          ModalPageIndex: payload.PageIndex || 1
+          ModalPageIndex: payload.PageIndex || 1,
+          ModalPageSize:payload.PageSize
         })
       }
       else {
@@ -103,8 +110,8 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
-        PageIndex: payload.PageIndex,
-        PageSize: payload.PageSize
+        //PageIndex: payload.PageIndex,
+        //PageSize: payload.PageSize
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
@@ -112,15 +119,13 @@ export default Model.extend({
 
           yield update({
             ExceedDataList: result.Datas,
-            total: result.Total,
-            PageIndex: payload.PageIndex || 1
           })
         }
         else {
           yield update({
             RegionDataList: result.Datas,
-            total: result.Total,
-            PageIndex: payload.PageIndex || 1
+            RegionTotal: result.Total,
+            //RegionPageIndex: payload.PageIndex || 1
           })
         }
 
@@ -128,8 +133,8 @@ export default Model.extend({
       else {
         yield update({
           ExceedDataList: [],
-          total: 0,
-          PageIndex: payload.PageIndex || 1
+          RegionTotal: 0,
+          RegionPageIndex: payload.PageIndex || 1
         })
       }
     },//弹框企业超标数据
@@ -152,8 +157,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           EntCountList: result.Datas,
-          Modaltotal: result.Total,
-          ModalPageIndex: payload.PageIndex || 1
+          ExceedTotal: result.Total,
+          ExceedPageIndex: payload.PageIndex || 1,
+          ExceedPageSize:payload.ModalPageSize
         })
       }
       else {
