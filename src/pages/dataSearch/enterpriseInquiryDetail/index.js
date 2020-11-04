@@ -54,12 +54,11 @@ class index extends PureComponent {
         });
 
         this.props.dispatch({
-            //获取企业列表
             type: pageUrl.GetPointSummary,
             payload: { 
                 RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 EntCode:'',
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1,
                 EntType:1
              },
@@ -87,7 +86,7 @@ class index extends PureComponent {
             payload: {
                 EntCode: this.state.enterpriseValue ==undefined?'':this.state.enterpriseValue.toString(),
                 RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1,
                 EntType:1
             }
@@ -143,6 +142,19 @@ class index extends PureComponent {
         )
     }
     onChange =(PageIndex, PageSize)=>{
+        this.props.dispatch({
+            
+            type: pageUrl.GetPointSummary,
+            payload: {
+                EntCode: this.state.enterpriseValue ==undefined?'':this.state.enterpriseValue.toString(),
+                RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
+                PageSize:PageSize,
+                PageIndex:PageIndex,
+                EntType:1
+            }
+        })
+    }
+    onChangeHandle=(PageIndex, PageSize)=>{
         this.props.dispatch({
             
             type: pageUrl.GetPointSummary,
@@ -234,15 +246,16 @@ class index extends PureComponent {
             },
         ]
         return <>{
-            loading ?<PageLoading/>:
             <SdlTable columns={columns} dataSource={pointSummaryList} 
+            loading={loading}
             pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 pageSize: this.props.PageSize,
                 current: this.props.PageIndex,
                 onChange: this.onChange,
-                pageSizeOptions: ['10','20', '30', '40', '100'],
+                onShowSizeChange: this.onChangeHandle,
+                pageSizeOptions: ['20', '30', '40', '100'],
                 total: this.props.total,
               }}
             />

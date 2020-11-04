@@ -18,7 +18,7 @@ export default Model.extend({
         RegionCode: '',
         AttentionCode: '',
         PollutantType: '',
-        PageSize:10,
+        PageSize:20,
         PageIndex:1,
         total:0,
         EntOrPointDetail:[]
@@ -140,13 +140,13 @@ export default Model.extend({
                 EntType:payload.EntType
             }
             const result = yield call(GetPointSummary,body,null)
-            console.log(result)
             if(result.IsSuccess)
             {
                 yield update({
                     pointSummaryList:result.Datas,
                     total:result.Total,
                     PageIndex: payload.PageIndex || 1,
+                    PageSize:payload.PageSize
                 })
             }
             else
@@ -155,6 +155,7 @@ export default Model.extend({
                     pointSummaryList:[],
                     total:0,
                     PageIndex: payload.PageIndex || 1,
+                    PageSize:payload.PageSize
                 })
             }
         },
@@ -164,9 +165,9 @@ export default Model.extend({
                 RegionCode: payload.RegionCode,
                 HasData:payload.HasData,
                 EntCode:payload.EntCode,
-                EntType:payload.EntType
+                EntType:payload.EntType,
+                PollutantType:payload.PollutantType,
             }
-            console.log(body)
             const result = yield call(GetEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {

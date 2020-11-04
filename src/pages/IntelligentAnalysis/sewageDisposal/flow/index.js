@@ -93,10 +93,10 @@ class index extends PureComponent {
       type: pageUrl.GetFlowList,
       payload: {
         EntCode:this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
-        BeginTime: moment(this.state.time[0]),
-        EndTime: moment(this.state.time[1]),
+        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
-        PageSize:10,
+        PageSize:20,
         PageIndex:1,
       }
     })
@@ -104,7 +104,6 @@ class index extends PureComponent {
 
   children = () => {
     const { priseList } = this.props;
-    console.log(priseList)
     const selectList = [];
     if (priseList.length > 0) {
       priseList.map(item => {
@@ -170,7 +169,7 @@ class index extends PureComponent {
       </>
     )
   }
-  onChange = (PageIndex, PageSize) => {
+  onChange = (current,pageSize) => {
     this.props.dispatch({
       type: pageUrl.GetFlowList,
       payload: {
@@ -178,8 +177,21 @@ class index extends PureComponent {
         BeginTime: moment(this.state.time[0]),
         EndTime: moment(this.state.time[1]),
         DataType: this.state.dataType == 'Hour' ? 'HourData' : 'DayData',
-        PageSize: PageSize,
-        PageIndex: PageIndex,
+        PageSize: pageSize,
+        PageIndex: current,
+      }
+    })
+  }
+  onChangeHandle= (current,pageSize) => {
+    this.props.dispatch({
+      type: pageUrl.GetFlowList,
+      payload: {
+        EntCode: this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
+        BeginTime: moment(this.state.time[0]),
+        EndTime: moment(this.state.time[1]),
+        DataType: this.state.dataType == 'Hour' ? 'HourData' : 'DayData',
+        PageSize: pageSize,
+        PageIndex: current,
       }
     })
   }
@@ -203,7 +215,7 @@ class index extends PureComponent {
             backValue.push(0)
           }
           else {
-            backValue.push(item.backValue)
+            backValue.push(Number(item.backValue))
           }
         }
         if (item.exportValue != '-') {
@@ -211,7 +223,7 @@ class index extends PureComponent {
             exportValue.push(0)
           }
           else {
-            exportValue.push(item.exportValue)
+            exportValue.push(Number(item.exportValue))
           }
         }
         if (item.importValue != '-') {
@@ -219,7 +231,7 @@ class index extends PureComponent {
             importValue.push(0)
           }
           else {
-            importValue.push(item.importValue)
+            importValue.push(Number(item.importValue))
           }
         }
         hourTime.push(item.MonitorTime)
@@ -230,7 +242,6 @@ class index extends PureComponent {
         series.push({
           name: '回水口-流量',
           type: 'line',
-          stack: '总量',
           data: backValue
         })
       }
@@ -240,8 +251,12 @@ class index extends PureComponent {
         series.push({
           name: '进水口-流量',
           type: 'line',
-          stack: '总量',
-          data: importValue
+          data: importValue,
+          itemStyle:{
+            normal:{
+                color:'red'
+            }
+        },
         })
       }
       if(exportValue.length > 0)
@@ -250,8 +265,12 @@ class index extends PureComponent {
         series.push({
           name: '出水口-流量',
           type: 'line',
-          stack: '总量',
-          data: exportValue
+          data: exportValue,
+          itemStyle:{
+            normal:{
+              color:'black'
+            }
+          }
         })
       }
     }
@@ -260,24 +279,20 @@ class index extends PureComponent {
       series.push({
         name: '进水口-流量',
         type: 'line',
-        stack: '总量',
         data: importValue
       },
       {
         name: '回水口-流量',
         type: 'line',
-        stack: '总量',
         data: backValue
       },
       {
         name: '出水口-流量',
         type: 'line',
-        stack: '总量',
         data: exportValue
       },
       )
     }
-
       const option = {
         title: {
             //text: this.state.pollutantValue
@@ -310,7 +325,6 @@ class index extends PureComponent {
         },
         series: series
       }  
-
       const fixed = false
       const columns = [
         {
@@ -437,17 +451,18 @@ class index extends PureComponent {
                 </TabPane>
                 <TabPane tab="数据详情" key="2">
                     {
-                      !loading ?
-                        <SdlTable columns={columns} dataSource={FlowList} pagination={{
+                        <SdlTable columns={columns} dataSource={FlowList}
+                        loading={loading}
+                        pagination={{
                           showSizeChanger: true,
                           showQuickJumper: true,
                           pageSize: this.props.PageSize,
                           current: this.props.PageIndex,
-                          onChange: this.onChange,
-                          pageSizeOptions: ['10','20', '30', '40', '100'],
+                          onChange:this.onChangeHandle,
+                          onShowSizeChange: this.onChange,
+                          pageSizeOptions: ['20', '30', '40', '100'],
                           total: this.props.total,
                         }} />
-                        :<PageLoading />
                     }
                 </TabPane>
             </Tabs>

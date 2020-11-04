@@ -851,6 +851,16 @@ export default {
                   path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
                 },
+                {
+                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                  path: '/alarmmanager/exceedDataAlarmRecord',
+                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                },
+                {
+                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                  path: '/alarmmanager/exceedDataDispositionRecord',
+                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                },
               ],
             },
             {
@@ -1607,16 +1617,6 @@ export default {
                   name: 'exceedData', //超标数据查询
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
-                },
-                {
-                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
-                  path: '/dataSearch/exceedDataAlarmRecord',
-                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
-                },
-                {
-                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
-                  path: '/dataSearch/exceedDataDispositionRecord',
-                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
                 },
                 {
                   name: 'entAbnormalRecord', //企业异常记录

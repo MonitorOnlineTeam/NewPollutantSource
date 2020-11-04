@@ -110,7 +110,7 @@ class index extends PureComponent {
                 EntCode: entValue== undefined ?'':entValue,
                 DGIMN: pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
-                PageSize:10,
+                PageSize:20,
                 PageIndex:1
             }
         })
@@ -310,6 +310,25 @@ class index extends PureComponent {
             }
         })
     }
+    ShowSizeChange= (PageIndex, PageSize) => {
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
+
+        this.props.dispatch({
+            type:pageUrl.GetStopList,
+            payload:{
+                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                RegionCode: regionValue == undefined ?'':regionValue,
+                EntCode: entValue== undefined ?'':entValue,
+                DGIMN: pointValue== undefined ?'':pointValue,
+                Status: voucher== undefined ?'':voucher,
+                PageSize:PageSize,
+                PageIndex:PageIndex
+            }
+        })
+    }
 
     lookChange=(fileList)=>{
         console.log(fileList)
@@ -425,15 +444,16 @@ class index extends PureComponent {
             },
         ]
         return <>{
-            loading?<PageLoading/>:
             <SdlTable columns={columns} dataSource={StopList}
+            loading={loading}
                 pagination={{
                     showSizeChanger: true,
                     showQuickJumper: true,
-                    pageSize: this.props.pageSize,
+                    pageSize: this.props.PageSize,
                     current: this.props.PageIndex,
                     onChange: this.onChange,
-                    pageSizeOptions: ['10','20', '30', '40', '100'],
+                    onShowSizeChange: this.ShowSizeChange,
+                    pageSizeOptions: ['20', '30', '40', '100'],
                     total: this.props.total,
                 }} 
             />
@@ -466,7 +486,7 @@ class index extends PureComponent {
                             className={style.dataTable}
                         >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
+                             {this.pageContent()}
                         </Card>
                         <Modal
                         centered
@@ -480,7 +500,7 @@ class index extends PureComponent {
                                 this.state.fileArr.length > 0 ?
                                     this.state.fileArr.map(arr =>
                                         <a onClick={this.onClick.bind(this, arr.FileName)}>{arr.FileName}</a>)
-                                    : ''
+                                    : '无'
 
                             }
                         </Modal>

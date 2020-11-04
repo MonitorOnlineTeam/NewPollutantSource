@@ -16,7 +16,7 @@ export default Model.extend({
     PointByEntList: [],
     BeginTime: moment().add(-24, 'hour'),
     EndTime: moment(),
-    PageSize: 10,
+    PageSize: 20,
     PageIndex: 1,
     total: 0,
     StopList:[]
@@ -51,14 +51,13 @@ export default Model.extend({
           PageSize: payload.PageSize,
           PageIndex: payload.PageIndex,
         }
-        console.log(body)
         const result = yield call(GetStopList, body, null)
-        console.log(result)
         if (result.IsSuccess) {
           yield update({
             StopList: result.Datas,
             total:result.Total,
-            PageIndex:payload.PageIndex || 1
+            PageIndex:payload.PageIndex || 1,
+            PageSize:payload.PageSize
           })
         }
         else {
