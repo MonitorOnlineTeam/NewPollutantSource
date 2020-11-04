@@ -41,7 +41,7 @@ const ImportantTypeList = [
 @Form.create()
 class Gas extends PureComponent {
   state = {
-    time: [moment().subtract(1, 'days').startOf("day"), moment().endOf("day")],
+    time: [moment().startOf("day"), moment().endOf("day")],
     DataType: "region",
   }
   _SELF_ = {
@@ -211,7 +211,7 @@ class Gas extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        // width: 150,
+        width: 150,
       },
       {
         title: '序号',
@@ -225,13 +225,13 @@ class Gas extends PureComponent {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
-        // width: 200,
+        width: 200,
       },
       {
         title: '关注程度',
         dataIndex: 'AttentionName',
         key: 'AttentionName',
-        // width: 150,
+        width: 150,
       },
       {
         title: '重点类别',
@@ -242,8 +242,8 @@ class Gas extends PureComponent {
             return ImportantTypeList.find(item => item.value == text)["text"]
           }
           return "-"
-        }
-        // width: 200,
+        },
+        width: 180,
       },
       {
         title: '行业',
@@ -251,8 +251,8 @@ class Gas extends PureComponent {
         key: 'TradeName',
         render: (text, record) => {
           return text ? text : "-"
-        }
-        // width: 200,
+        },
+        width: 200,
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
@@ -298,12 +298,12 @@ class Gas extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        // width: 150,
+        width: 130,
       },
       {
         title: '序号',
         key: 'index',
-        width: 80,
+        width: 70,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -312,18 +312,19 @@ class Gas extends PureComponent {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
-        // width: 200,
+        width: 220,
       },
       {
         title: '关注程度',
         dataIndex: 'AttentionName',
         key: 'AttentionName',
-        // width: 150,
+        width: 150,
       },
       {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
+        width: 180,
         render: (text, record) => {
           if (text && text != "0") {
             return ImportantTypeList.find(item => item.value == text)["text"]
@@ -337,14 +338,14 @@ class Gas extends PureComponent {
         key: 'TradeName',
         render: (text, record) => {
           return text ? text : "-"
-        }
-        // width: 200,
+        },
+        width: 200,
       },
       {
         title: '监测点',
         dataIndex: 'PointName',
         key: 'PointName',
-        // width: 200,
+        width: 220,
       },
       {
         title: '是否参与企业排放量计算',
@@ -355,11 +356,12 @@ class Gas extends PureComponent {
             return text == 0 ? "否" : "是"
           }
           return "-"
-        }
-        // width: 200,
+        },
+        width: 180,
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
+        width: 980,
         children: [
           {
             title: '排放量（kg）',
@@ -368,21 +370,21 @@ class Gas extends PureComponent {
                 title: '烟尘',
                 dataIndex: 'SmokeEmissionsValue',
                 key: 'SmokeEmissionsValue',
-                width: 180,
+                width: 140,
                 align: 'center',
               },
               {
                 title: '二氧化硫',
                 dataIndex: 'So2EmissionsValue',
                 key: 'So2EmissionsValue',
-                width: 180,
+                width: 140,
                 align: 'center',
               },
               {
                 title: '氮氧化物',
                 dataIndex: 'NOXEmissionsValue',
                 key: 'NOXEmissionsValue',
-                width: 180,
+                width: 140,
                 align: 'center',
               },
             ]
@@ -394,7 +396,7 @@ class Gas extends PureComponent {
                 title: '烟尘',
                 dataIndex: 'SmokeAVGValue',
                 key: 'SmokeAVGValue',
-                width: 180,
+                width: 140,
                 align: 'center',
                 render: (text, record) => {
                   return text ? text : "-"
@@ -404,7 +406,7 @@ class Gas extends PureComponent {
                 title: '二氧化硫',
                 dataIndex: 'So2AVGValue',
                 key: 'So2AVGValue',
-                width: 180,
+                width: 140,
                 align: 'center',
                 render: (text, record) => {
                   return text ? text : "-"
@@ -414,7 +416,7 @@ class Gas extends PureComponent {
                 title: '氮氧化物',
                 dataIndex: 'NOXAVGValue',
                 key: 'NOXAVGValue',
-                width: 180,
+                width: 140,
                 align: 'center',
                 render: (text, record) => {
                   return text ? text : "-"
@@ -427,7 +429,7 @@ class Gas extends PureComponent {
             dataIndex: 'FlowValue',
             key: 'FlowValue',
             align: 'center',
-            width: 180,
+            width: 140,
           },
         ]
       },
@@ -435,7 +437,7 @@ class Gas extends PureComponent {
         title: '生产天数',
         dataIndex: 'CountDay',
         key: 'CountDay',
-        // width: 200,
+        width: 120,
       },
     ]
     return (

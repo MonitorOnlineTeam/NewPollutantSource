@@ -257,7 +257,7 @@ class index extends PureComponent {
                     placeholder="企业列表"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    defaultValue={this.state.entValue}
+                    // defaultValue={this.state.entValue}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
                         //获取企业列表
@@ -282,7 +282,7 @@ class index extends PureComponent {
                         placeholder="监测点列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        defaultValue={this.state.pointValue}
+                        // defaultValue={this.state.pointValue}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({

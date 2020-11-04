@@ -73,6 +73,8 @@ class index extends PureComponent {
             type: pageUrl.GetEntByRegion,
             payload: { RegionCode: '' },
         });
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state;
+        this.loadData(0,0);
     };
 
 
@@ -83,10 +85,10 @@ class index extends PureComponent {
         this.props.dispatch({
             type:pageUrl.ExportStopList,
             payload:{
-                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTime:Begintime[0]? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'):null,
+                BeginTimeEnd:Begintime[1]? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
+                EndTime: Endtime[0]?moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'):null,
+                EndTimeEnd: Endtime[1]?moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
                 DGIMN: pointValue== undefined ?'':pointValue,
@@ -114,6 +116,7 @@ class index extends PureComponent {
                 PageIndex:1
             }
         })
+       this.loadData(0,0);
     }
     //行政区
     children = () => {
@@ -186,6 +189,7 @@ class index extends PureComponent {
             <>
                 <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
+                        debugger;
                         this.setState({
                             Begintime: dates
                         })
@@ -242,7 +246,7 @@ class index extends PureComponent {
                             }
                         }}
                         onChange={(value) => {
-
+debugger
                             //获取监测点
                             this.props.dispatch({
                                 type: pageUrl.GetPointByEntCode,
@@ -284,31 +288,36 @@ class index extends PureComponent {
                         <Option value='1'>有凭证</Option>
                         <Option value='0'>缺失凭证</Option>
                     </Select>
-                    <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                    <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
+                    <Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
+                    <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 </div>
             </>
         )
     }
 
-    onChange = (PageIndex, PageSize) => {
+    loadData=(PageIndex, PageSize)=>{
+        
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
-
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
-                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTime:Begintime[0]? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'):null,
+                BeginTimeEnd:Begintime[1]? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
+                EndTime: Endtime[0]?moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'):null,
+                EndTimeEnd: Endtime[1]?moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
                 DGIMN: pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
-                PageSize:PageSize,
-                PageIndex:PageIndex
+                PageSize:PageSize==0?10:PageSize,
+                PageIndex:PageIndex==0?1:PageIndex
             }
         })
+
+    }
+
+    onChange = (PageIndex, PageSize) => {
+        this.loadData(PageIndex,PageSize);
     }
     ShowSizeChange= (PageIndex, PageSize) => {
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
@@ -400,7 +409,7 @@ class index extends PureComponent {
                 key: 'endTime',
             },
             {
-                title: "停运时长",
+                title: "停运时长（小时）",
                 width: 100,
                 align: 'center',
                 fixed: fixed,

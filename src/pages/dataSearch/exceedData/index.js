@@ -79,6 +79,7 @@ class index extends PureComponent {
             enterpriseValue:'',
             selectPollution:[],
             RegionCode: '',
+            ModelRcode:'',
             AttentionCode: '',
             PollutantTypeCode: '',
             DataType: '',
@@ -143,6 +144,7 @@ class index extends PureComponent {
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
                     selectPollution.push(pollution)
+                    debugger
                     if(values[item.PollutantCode+'Min'] != undefined)
                     {
                         Min = values[item.PollutantCode+'Min']
@@ -448,6 +450,7 @@ class index extends PureComponent {
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
         this.setState({
             visible:true,
+           
         })
         let arr = []
         PollutantList.map(item=>{
@@ -467,8 +470,9 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode },
+            payload: { RegionCode: rCode=='All'?'':rCode },
         });
+        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -570,11 +574,14 @@ class index extends PureComponent {
             this.setState({
                 pagePollutantType:pollutantTypeCode
             })
-        }
+        } 
+        this.setState({
+            ModelRcode:rCode == 'All' ? '':rCode,
+        })
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode },
+            payload: { RegionCode: rCode=='All'?'':rCode },
         });
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
@@ -732,7 +739,7 @@ class index extends PureComponent {
                         }
 
                     </Form.Item>
-                    <Form.Item label="关注度" >
+                    <Form.Item label="关注程度" >
                         {
                             getFieldDecorator('attention', {
 
@@ -740,7 +747,7 @@ class index extends PureComponent {
                                 <Select
                                     allowClear
                                     style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                    placeholder="关注度"
+                                    placeholder="关注程度"
                                     maxTagCount={2}
                                     maxTagTextLength={5}
                                     maxTagPlaceholder="..."
@@ -807,7 +814,7 @@ class index extends PureComponent {
                             getFieldDecorator('dateTime', {
                                 initialValue: this.state.time
                             })(
-                                <RangePicker_ onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                     (dates, dataType) => {
                                         this.setState({
                                             time: dates
@@ -852,7 +859,9 @@ class index extends PureComponent {
                                                             getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                                 <span style={{ marginLeft: -10 }}>
                                                                     <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }}  onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
                                                                     <span style={{ fontSize: 14 }}>至</span>
                                                                 </span>
                                                             )
@@ -891,7 +900,9 @@ class index extends PureComponent {
                                                         getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                             <span style={{ marginLeft: -10 }}>
                                                                 <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} />
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
                                                                 <span style={{ fontSize: 14 }}>至</span>
                                                             </span>
                                                         )
@@ -932,7 +943,7 @@ class index extends PureComponent {
                                                 }
                                             </Form.Item>
                                             <Form.Item>
-                                                {
+                                                {/* {
                                                     getFieldDecorator(item.PollutantCode + 'Value', {})(
                                                         <span>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
@@ -941,7 +952,27 @@ class index extends PureComponent {
                                                             <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
                                                         </span>
                                                     )
-                                                }
+                                                } */}
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
                                             </Form.Item>
 
                                         </span>
@@ -963,7 +994,7 @@ class index extends PureComponent {
                                                 }
                                             </Form.Item>
                                             <Form.Item>
-                                                {
+                                                {/* {
                                                     getFieldDecorator(item.PollutantCode + 'Value', {})(
                                                         <span>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
@@ -972,7 +1003,27 @@ class index extends PureComponent {
                                                             <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
                                                         </span>
                                                     )
-                                                }
+                                                } */}
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                                }}/>
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
                                             </Form.Item>
 
                                         </span>
@@ -1074,7 +1125,12 @@ class index extends PureComponent {
         
         const {ExceedDataList ,loading} = this.props
         const {selectPollution} = this.state
-
+        console.log('props=',ExceedDataList)
+        console.log('state=',selectPollution)
+        if(selectPollution.length==0)
+        {
+            return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+        }
         const columns = [
             {
                 title: "行政区",
@@ -1207,13 +1263,13 @@ class index extends PureComponent {
     CancelHandel = () => {
         this.setState({
             visible: false,
-            visibleMoni: false
+            visibleMoni: false,
+            enterpriseValue:undefined
         })
     }
     //超标次数弹框
     entExCountHandle = ()=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -1322,13 +1378,13 @@ class index extends PureComponent {
     }
     //超标次数按钮查询
     ExButtonCountHandle =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
       
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1343,12 +1399,12 @@ class index extends PureComponent {
     }
     //超标次数按钮导出
     ExButtonCountHandleExport =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1383,6 +1439,7 @@ class index extends PureComponent {
 
     ExButtonCountShowSizeChange=(PageIndex, PageSize)=>{
         const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
       
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
@@ -1402,12 +1459,12 @@ class index extends PureComponent {
         })
     }
     EntexportReport =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
          this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: RegionCode,
+                RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
@@ -1420,7 +1477,7 @@ class index extends PureComponent {
     }
     //分页
     EntPageChange=(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution,modalregionCode ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,enterpriseValue} = this.state
          this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
@@ -1650,6 +1707,7 @@ class index extends PureComponent {
                             footer={null}
                             width={1300}
                             onCancel={this.CancelHandel}
+                            destroyOnClose
                         >
                             <div style={{marginBottom:10}}>
                                 <Select
@@ -1700,6 +1758,7 @@ class index extends PureComponent {
                             footer={null}
                             width={1300}
                             onCancel={this.CancelHandel}
+                            destroyOnClose
                         >
                             <div style={{marginBottom:10}}>
                                 <Select

@@ -259,7 +259,7 @@ class index extends PureComponent {
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
-                    value={this.state.entValue}
+                    // value={this.state.entValue}
                     optionFilterProp="children"
                     filterOption={(input, option) => {
                         if (option && option.props && option.props.title) {
@@ -279,7 +279,7 @@ class index extends PureComponent {
                         });    
                         this.setState({
                             entValue: value,
-                            pointValue:''
+                            // pointValue:''
                         })
                     }}>
                     {this.entList()}
@@ -291,7 +291,7 @@ class index extends PureComponent {
                         placeholder="监测点列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        value={this.state.pointValue}
+                        // value={this.state.pointValue}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({

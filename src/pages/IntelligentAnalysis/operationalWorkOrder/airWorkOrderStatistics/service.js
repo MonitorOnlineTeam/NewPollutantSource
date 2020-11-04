@@ -2,7 +2,7 @@
  * @Description:运维工单统计 sercive
  * @LastEditors: hxf
  * @Date: 2020-10-27 16:33:44
- * @LastEditTime: 2020-10-28 13:55:30
+ * @LastEditTime: 2020-11-03 14:35:18
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/service.js
  */
 import { post, get } from '@/utils/request';

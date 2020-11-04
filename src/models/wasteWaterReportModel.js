@@ -89,7 +89,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAllTypeDataListWater, body, null)
         if (result.IsSuccess) {
-          downloadFile(`/upload${result.Datas}`)
+          downloadFile(`${result.Datas}`)
         }
       },
   },

@@ -128,13 +128,13 @@ class MonitoringStandard extends Component {
         });
     };
 
-    changeUseStatisti = (record) => {
+    changeUseStatisti = (record, Enalbe) => {
         this.props.dispatch({
             type: 'standardLibrary/changeUseStatisti',
             payload: {
                 DGIMN: this.state.DGIMN,
                 PollutantCode: record.PollutantCode,
-                Enalbe: record.IsStatisti == 1 ? 0 : 1
+                Enalbe: Enalbe ? Enalbe : (record.IsStatisti == 1 ? 0 : 1)
             }
         })
     }
@@ -146,7 +146,7 @@ class MonitoringStandard extends Component {
                 title: '污染物编号',
                 dataIndex: 'PollutantCode',
                 key: 'PollutantCode',
-                width: '10%',
+                // width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -154,7 +154,7 @@ class MonitoringStandard extends Component {
                 title: '污染物名称',
                 dataIndex: 'PollutantName',
                 key: 'PollutantName',
-                width: '10%',
+                // width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -163,7 +163,7 @@ class MonitoringStandard extends Component {
                 title: '报警类型',
                 dataIndex: 'AlarmType',
                 key: 'AlarmType',
-                width: '10%',
+                // width: 200,
                 render: (text, record) => {
                     if (text === 0) {
                         return (
@@ -203,7 +203,7 @@ class MonitoringStandard extends Component {
                 title: '检出上限',
                 dataIndex: 'AbnormalUpperLimit',
                 key: 'AbnormalUpperLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => text,
             },
@@ -211,7 +211,7 @@ class MonitoringStandard extends Component {
                 title: '检出下限',
                 dataIndex: 'AbnormalLowerLimit',
                 key: 'AbnormalLowerLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => text,
             },
@@ -219,7 +219,7 @@ class MonitoringStandard extends Component {
                 title: '报警上限',
                 dataIndex: 'UpperLimit',
                 key: 'UpperLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -233,7 +233,7 @@ class MonitoringStandard extends Component {
                 title: '报警下限',
                 dataIndex: 'LowerLimit',
                 key: 'LowerLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -247,7 +247,7 @@ class MonitoringStandard extends Component {
                 title: '标准值',
                 dataIndex: 'StandardValue',
                 key: 'StandardValue',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === 0) {
@@ -261,7 +261,7 @@ class MonitoringStandard extends Component {
                 title: '监测状态',
                 dataIndex: 'IsUse',
                 key: 'IsUse',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -271,24 +271,31 @@ class MonitoringStandard extends Component {
                                     <a
                                         title="单击设置为监测中"
                                         style={{ color: '#D1D1D1' }}
-                                        onClick={() => this.IsEnabled(1, record)}
+                                        onClick={() => {
+                                            this.IsEnabled(1, record);
+                                            // this.changeUseStatisti(record, 0);
+                                        }
+                                        }
                                     >
                                         <Icon type="exclamation-circle" /> 未监测
-                  </a>
+                                    </a>
                                 </Button>
-                            </span>
+                            </span >
                         );
                     }
                     return (
                         <span>
-                            {' '}
-                            <Button size="small" color="blue">
+                            { ' '}
+                            < Button size="small" color="blue" >
                                 {' '}
-                                <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
+                                <a a title="单击从监测中移除" onClick={() => {
+                                    // this.changeUseStatisti(record, 1);
+                                    this.IsEnabled(0, record)
+                                }}>
                                     <Icon type="setting" spin={true} /> 监测中
-                </a>
-                            </Button>
-                        </span>
+                                </a >
+                            </Button >
+                        </span >
                     );
                 },
             },
@@ -296,7 +303,7 @@ class MonitoringStandard extends Component {
                 title: '是否参与考核',
                 dataIndex: 'IsStatisti',
                 key: 'IsStatisti',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     return <Switch onChange={() => {
@@ -306,7 +313,7 @@ class MonitoringStandard extends Component {
             },
             {
                 title: '操作',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (record.IsUse === '1') {

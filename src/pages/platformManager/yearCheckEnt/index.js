@@ -211,6 +211,7 @@ class yearCheckEnt extends Component {
             },
         });
         this.getEntData();
+        this.initData('');
     }
 
     onChangeTranTable = nextTargetKeys => {
@@ -551,6 +552,7 @@ class yearCheckEnt extends Component {
                                 this.props.dispatch({
                                     type: 'yearCheckEnt/ExportAnnualAssessmentEnt',
                                     payload: {
+                                        
                                     }
                                 })
                             }}><Icon type="export" />导出</Button>
