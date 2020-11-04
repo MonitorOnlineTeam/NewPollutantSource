@@ -41,7 +41,7 @@ const ImportantTypeList = [
 @Form.create()
 class Water extends PureComponent {
   state = {
-    time: [moment().subtract(1, 'days').startOf("day"), moment().endOf("day")],
+    time: [moment().startOf("day"), moment().endOf("day")],
     DataType: "region",
   }
   _SELF_ = {
@@ -312,7 +312,7 @@ class Water extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        // width: 150,
+        width: 150,
       },
       {
         title: '序号',
@@ -326,13 +326,13 @@ class Water extends PureComponent {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
-        // width: 200,
+        width: 220,
       },
       {
         title: '关注程度',
         dataIndex: 'AttentionName',
         key: 'AttentionName',
-        // width: 150,
+        width: 140,
       },
       {
         title: '重点类别',
@@ -351,14 +351,14 @@ class Water extends PureComponent {
         key: 'TradeName',
         render: (text, record) => {
           return text ? text : "-"
-        }
-        // width: 200,
+        },
+        width: 200,
       },
       {
         title: '监测点',
         dataIndex: 'PointName',
         key: 'PointName',
-        // width: 200,
+        width: 220,
       },
       {
         title: '是否参与企业排放量计算',
@@ -369,14 +369,16 @@ class Water extends PureComponent {
             return text == 0 ? "否" : "是"
           }
           return "-"
-        }
-        // width: 200,
+        },
+        width: 200,
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
+        width: 1300,
         children: [
           {
             title: '排放量（kg）',
+            width: 560,
             children: [
               {
                 title: 'COD',
@@ -410,6 +412,7 @@ class Water extends PureComponent {
           },
           {
             title: '平均浓度（mg/m³）',
+            width: 560,
             children: [
               {
                 title: 'COD',
@@ -466,7 +469,7 @@ class Water extends PureComponent {
         title: '生产天数',
         dataIndex: 'CountDay',
         key: 'CountDay',
-        // width: 200,
+        width: 140,
       },
     ]
     return (
