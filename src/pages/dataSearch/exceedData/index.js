@@ -1439,9 +1439,7 @@ class index extends PureComponent {
 
     ExButtonCountShowSizeChange=(PageIndex, PageSize)=>{
         const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType} = this.state
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-      
-        this.props.dispatch({
+         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
