@@ -34,15 +34,26 @@ export default class Index extends Component  {
 
 
     render() {
+          const { column,type } = this.props;
+
+         let lengths = column.length;
 
         return (<div className={styles.scrollTable}>
             <div className='ceShiTable'>
                 <div className='ceShiTable-title'>
-                    <span className='ceShiTable-text2'>12</span>
+                     {/* <span className='ceShiTable-text2'>12</span>
                     <span className='ceShiTable-text2'>123</span>
                     <span className='ceShiTable-text2'>1234</span>
                     <span className='ceShiTable-text2'>12334</span>
-                    <span className='ceShiTable-text2'>12345</span>
+                    <span className='ceShiTable-text2'>12345</span>  */}
+                    {
+                        column&&column.length>0?
+                        column.map(item=>{
+                        return <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>{item}</span>
+                        })
+                        :
+                        null
+                    }
                 </div>
                 <div
                     ref='newDiv'
@@ -68,22 +79,25 @@ export default class Index extends Component  {
     }
 
     tableBody = (item, index) => {
+        const { type } = this.props;
+        // wasteWater wasteGas airStatistics
         return (
             <li key={index}>
-                <span className='ceShiTable-text2'>
-                    123
+                {/* <span className='ceShiTable-text2'>
+                 <img style={{height:'18px'}} src='/chao.png'/> 
+                  <span className='chao'>超</span>
+                </span> */}
+                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
+                <span className='chao'>超</span> {item.value}
                 </span>
-                <span className='ceShiTable-text2'>
-                    123
+                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
+                  {item.name}
                 </span>
-                <span className='ceShiTable-text2'>
-                    123
-                </span>
-                <span className='ceShiTable-text2'>
-                    123
-                </span>
-                <span className='ceShiTable-text2'>
-                    123
+                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
+                  {item.label}
+                 </span>
+                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
+                 {item.title}
                 </span>
 
             </li>

@@ -87,7 +87,7 @@ cardTitle2=()=>{
     const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
            <span>近七日超标废水监测点</span>
-           <Radio.Group value={"large"} onChange={this.btnChange}>
+           <Radio.Group value={"large"} onChange={this.btnChange} size='small'>
           <Radio.Button value="large">小时</Radio.Button>
           <Radio.Button value="default">日均</Radio.Button>
         </Radio.Group>
@@ -209,7 +209,7 @@ getChartData=(type)=>{
         <Col span={12}  className={styles.sevenCard}>  
          <Card title={this.cardTitle2()} bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-           <ScrollTable  data={[1,2,3,4,6,6,7,7,8,89]}/>
+           <ScrollTable  type='wasteGas' data={[1,2,3,4,6,6,7,7,8,89]} column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
         </Col>
@@ -247,7 +247,7 @@ getChartData=(type)=>{
                   option={this.getChartData(3)}
                         className="echarts-for-echarts"
                         theme="my_theme"
-                        style ={{width:'100%',height:120}}
+                        style ={{width:'100%',height:122}}
                       />
                  <div>
                 <div className={styles.title1}>核实率</div>
