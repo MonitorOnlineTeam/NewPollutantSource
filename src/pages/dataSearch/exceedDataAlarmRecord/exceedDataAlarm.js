@@ -83,6 +83,7 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
+            exportRegion:''
         };
     }
 
@@ -155,20 +156,37 @@ class index extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        if(exportRegion != '1')
+        {
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmVerifyRateDetail,
+                payload: {
+                    RegionCode: exportRegion,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
+        else{
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmVerifyRate,
+                payload: {
+                    RegionCode: regionValue == undefined?'':regionValue,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
         
-        this.props.dispatch({
-            type:pageUrl.ExportAlarmVerifyRate,
-            payload: {
-                RegionCode: regionValue == undefined?'':regionValue,
-                attentionCode: attentionValue == undefined?'':attentionValue,
-                PollutantType: outletValue == undefined?'':outletValue,
-                DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
-                PollutantCodeList: pollutantCodeList,
-            }
-        })
     }
 
     //查询数据
@@ -551,7 +569,7 @@ class index extends PureComponent {
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
-        const activeKey = `newTab${this.newTabIndex++}`;
+        const activeKey = `${region}newTab${this.newTabIndex++}`;
         
         
         this.props.dispatch({
@@ -563,8 +581,8 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 11,
-                PageIndex: 1,
+                //PageSize: 20,
+                //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
         }).then(()=>{
@@ -656,13 +674,15 @@ class index extends PureComponent {
                 })
                 
                 let key = ''
-                let index = 0
+                let indexx = 0
                 panes.map((item, index) => {
                     if (item.title == text) {
-                        index = index
+                        indexx = index
                         return key = item.key
                     }
                 })
+                console.log(key)
+                console.log(activeKey)
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
@@ -686,8 +706,8 @@ class index extends PureComponent {
                         />, key: key, closable: true
                     }
         
-                    panes.splice(index, 1, obj);
-                    this.setState({ panes, activeKey: key, regionCode: region});
+                    panes.splice(indexx, 1, obj);
+                    this.setState({ panes, activeKey: key, regionCode: region,exportRegion:region});
                 }
                 if (key == '') {
                     panes.push({
@@ -711,7 +731,7 @@ class index extends PureComponent {
                             // }}
                         />, key: activeKey, closable: true
                     });
-                    this.setState({ panes, activeKey,regionCode:region});
+                    this.setState({ panes, activeKey,regionCode:region,exportRegion:region});
                 }
             }
         })
@@ -740,7 +760,8 @@ class index extends PureComponent {
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
-        this.setState({ activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ activeKey,exportRegion:arr[0] });
     }
     onEdit=(targetKey, action)=>{
         this[action](targetKey);

@@ -97,7 +97,7 @@ class index extends PureComponent {
             entCountModalTotle:'',
             entCountModalTotle2:'',
             pagePollutantType:'',
-            
+            exportRegion:''
 
         };
     }
@@ -292,7 +292,6 @@ class index extends PureComponent {
                   TabType: values.outlet == undefined ? '' : values.outlet,
                   PollutantList: pollutionData
               })
-
             this.props.dispatch({
                 type:pageUrl.ExportExceedDataList,
                 payload:{
@@ -304,8 +303,6 @@ class index extends PureComponent {
                     EndTime: values.dateTime[1],
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
-                    PageSize:20,
-                    PageIndex:1
                 }
             })
           }
@@ -314,7 +311,8 @@ class index extends PureComponent {
 
     paneAdd = (region,text)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution} = this.state
-        const activeKey = `newTab${this.newTabIndex++}`;
+        const activeKey = `${region}newTab${this.newTabIndex++}`;
+        
         this.props.dispatch({
             type:pageUrl.GetExceedDataList,
             payload:{
@@ -443,7 +441,7 @@ class index extends PureComponent {
                     }
 
                     panes.splice(indexx,1,obj);
-                    this.setState({ panes, activeKey:key,regionCode:region });
+                    this.setState({ panes, activeKey:key,regionCode:region,exportRegion:region });
                 }
                 if (key == '') {
                     panes.push({
@@ -468,7 +466,7 @@ class index extends PureComponent {
                         //   }}
                         />, key: activeKey, closable: true
                     });
-                    this.setState({ panes, activeKey,regionCode:region });
+                    this.setState({ panes, activeKey,regionCode:region ,exportRegion:region});
                 }
             }
         })
@@ -1121,7 +1119,8 @@ class index extends PureComponent {
     }
 
     onChangeHandle=(activeKey)=>{
-        this.setState({ activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ activeKey,exportRegion:arr[0] });
     }
     onEdit=(targetKey, action)=>{
         this[action](targetKey);
@@ -1265,8 +1264,6 @@ class index extends PureComponent {
         let scrollWith = widthArr.reduce((prev,curr)=>{
             return prev + curr
         })
-        
-        console.log(scrollWith)
         return <>{
             <Tabs 
             hideAdd
