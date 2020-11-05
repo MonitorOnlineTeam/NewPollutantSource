@@ -121,96 +121,63 @@ tabCallback=(value)=>{
   console.log(value)
 }
 
-getChartData=()=>{
- let  color = ['#64b0fd','#9d6ff1','#42dab8']
-  let option = {
-    color:['#64b0fd','#9d6ff1','#42dab8'],
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-    legend: {
-        data: ['已完成', '未完成'],
-        right:0,
-        bottom:0,
-        icon:'rect',
-        itemWidth:20,//图例的宽度
-        itemHeight:10,//图例的高度
-        textStyle:{//图例文字的样式
-            color:'#333',
-        }
-    },
-    grid: {
-      top:20,
-      left: 0,
-      right: 20,
-      bottom: 30,
-      containLabel: true,
-  },
-    xAxis: {
-        type: 'value',
-        show:false,//不显示坐标轴线、坐标轴刻度线和坐标轴上的文字
-    },
-    yAxis: {
-        type: 'category',
-        data: ['巡检', '校准', '维修维护', '校验测试'],
-        // show:false,//不显示坐标轴线、坐标轴刻度线和坐标轴上的文字
-        axisTick:{
-              show:false//不显示坐标轴刻度线
+getChartData=(type)=>{
+    let color1 = ["#42dab8","#7ef1d7"],
+        color2 = ["#fdcb31",'#fde290'],
+        color3 = ['#3b4b85','#56659c']
+    let option = {
+        tooltip: {
+            show:false,
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
         },
-        axisLine: {
-              show: false,//不显示坐标轴线
+        color:type==1? color1 : type==2? color2 : color3 ,
+        title:{
+            text:"80%",
+            left:"center",
+            top:"45%",
+            textStyle:{
+                color: type==1? color1[1] : type==2? color2[1] : color3[1],
+                fontSize:16,
+                align:"center"
+            }
         },
-        // boundaryGap: true,
-        axisLabel: {
-              // show: false,//不显示坐标轴上的文字
-              margin: 50, //刻度与轴线之间的距离
-        },
-    },
-    series: [
-        {
-            name: '已完成',
-            type: 'bar',
-            stack: '总量',
-            barWidth : 25,//柱子宽度
-            label: {
-                show: true,
-                position: 'left',
-                textStyle:{
-                  color:color[0],
-              },
-              formatter: (params) => {
-                if (params.value === 0) { return "" } else { return params.value }
-              }
-            },
-            data: [320, 302, 301, 334, 390, 330, 320],
-        },
-        {
-            name: '未完成',
-            type: 'bar',
-            stack: '总量',
-            barWidth : 25,//柱子宽度
-            label: {
-                show: true,
-                position: 'right',
-                textStyle:{
-                  color:color[1],
-              },
-              formatter: (params) => {
-                if (params.value === 0) { return "" } else { return params.value }
-              }
-            },
-            
-            position:'right',
-            data: [120, 132, 101, 134, 90, 230, 210]
-        },
-
-    ]
-};
- 
-return option;
+        // graphic:{
+        //     type:"text",
+        //     left:"center",
+        //     top:"20%",
+        //     style:{
+        //         text:"运动达标率",
+        //         textAlign:"center",
+        //         fill:"#333",
+        //         fontSize:20,
+        //         fontWeight:700
+        //     }
+        // },
+        series: [
+            {
+                name: type==1?'数据超标报警核实率':type==2? '数据异常报警响应率' : '数据缺失报警响应率',
+                type: 'pie',
+                // center: ['50%', '50%'],
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                   
+                },
+                
+                data: [
+                    { value: 80, name: '已完成' },
+                    { value: 20, name: '未完成' },
+                   
+                ]
+            }
+        ]
+    };
+    return option;
 }
   render() {
     const {
@@ -247,14 +214,47 @@ return option;
         </Card>
         </Col>
         <Col span={6}>  
-         <Card title={this.cardTitle3()}  bordered={false} >
+         <Card title={this.cardTitle3()} className={styles.alarmCard}  bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-             <ReactEcharts
-                 option={this.getChartData()}
+        
+             <Row type='flex' align='middle' justify='space-between'>
+              <Col span={8} align='middle'>
+               <ReactEcharts
+                  option={this.getChartData(1)}
                         className="echarts-for-echarts"
                         theme="my_theme"
-                        style ={{height:215}}
+                        style ={{width:'100%',height:120}}
                       />
+                 <div>
+                <div className={styles.title1}>核实率</div>
+                <div className={styles.title2}>数据超标报警</div>
+                </div>
+                </Col>
+                <Col span={8} align='middle'>
+               <ReactEcharts
+                  option={this.getChartData(2)}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                        style ={{width:'100%',height:120}}
+                      />
+                 <div>
+                <div className={styles.title1}>核实率</div>
+                <div className={styles.title2}>数据超标报警</div>
+                </div>
+                </Col>
+                <Col span={8} align='middle'>
+               <ReactEcharts
+                  option={this.getChartData(3)}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                        style ={{width:'100%',height:120}}
+                      />
+                 <div>
+                <div className={styles.title1}>核实率</div>
+                <div className={styles.title2}>数据超标报警</div>
+                </div>
+                </Col>
+            </Row>
           </Skeleton>
         </Card>
         </Col>

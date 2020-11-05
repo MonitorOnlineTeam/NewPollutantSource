@@ -82,13 +82,13 @@ initData=()=>{
     scroll_end.innerHTML = scroll_begin.innerHTML;
 
 
-    myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    scroll_div.onmouseover = function() {
-        clearInterval(myMar);
-    }
-    scroll_div.onmouseout = function() {
-        myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    }
+    // myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
+    // scroll_div.onmouseover = function() {
+    //     clearInterval(myMar);
+    // }
+    // scroll_div.onmouseout = function() {
+    //     myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
+    // }
  
 }
 componentWillUnmount(){
