@@ -49,7 +49,8 @@ export default Model.extend({
     ModelType:'All',
     regionName:'',
     regionCode:'',
-    entCode:''
+    entCode:'',
+    realTimeAlarmLoading:false,
   },
   subscriptions: {},
   effects: {

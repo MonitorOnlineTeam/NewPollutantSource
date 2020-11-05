@@ -24,7 +24,7 @@ export default Model.extend({
     DataType: '',
     BeginTime: moment().add(-24, 'hour'),
     EndTime: moment(),
-    PageSize: 10,
+    PageSize: 20,
     PageIndex: 1,
     total: 0,
   },
@@ -41,7 +41,7 @@ export default Model.extend({
         PageIndex: payload.PageIndex,
       }
       const result = yield call(GetSewageFlowList, body, null)
-
+      console.log(result)
       const body2 = {
         EntCode: payload.EntCode,
         DataType: payload.DataType,
@@ -68,6 +68,7 @@ export default Model.extend({
           FlowList: result.Datas,
           total: result.Total,
           PageIndex: payload.PageIndex || 1,
+          PageSize:payload.PageSize
         })
       }
       else {
@@ -75,6 +76,7 @@ export default Model.extend({
           FlowList: [],
           total: 0,
           PageIndex: payload.PageIndex || 1,
+          PageSize:payload.PageSize
         })
       }
     },

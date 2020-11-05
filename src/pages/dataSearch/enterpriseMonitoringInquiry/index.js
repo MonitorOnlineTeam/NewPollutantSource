@@ -242,7 +242,8 @@ class index extends PureComponent {
                 RegionCode: regionCode == '0'?'':regionCode,
                 HasData: hasData,
                 EntCode: '',
-                EntType: 1
+                EntType: 1,
+                PollutantType:this.state.outletValue
             }
         }).then(() => {
             console.log(this.props.EntOrPointDetail)
@@ -262,7 +263,8 @@ class index extends PureComponent {
                 RegionCode: regionCode == '0'?'':regionCode,
                 HasData: hasData,
                 EntCode: '1',
-                EntType: 1
+                EntType: 1,
+                PollutantType:this.state.outletValue
             }
         }).then(() => {
             console.log(this.props.EntOrPointDetail)

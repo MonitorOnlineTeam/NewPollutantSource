@@ -308,7 +308,7 @@ class MonitoringStandard extends Component {
                 render: (text, record) => {
                     return <Switch onChange={() => {
                         this.changeUseStatisti(record)
-                    }} disabled={record.IsUse === '0'} checkedChildren="是" unCheckedChildren="否" defaultChecked={text == 1} />
+                    }} disabled={record.IsUse === '0'} checkedChildren="是" unCheckedChildren="否" checked={text == 1} />
                 },
             },
             {
