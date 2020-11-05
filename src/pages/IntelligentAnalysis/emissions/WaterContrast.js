@@ -529,7 +529,7 @@ class WaterContrast extends PureComponent {
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>时间段2</span>}>
                 {getFieldDecorator('time2', {
-                  initialValue: [moment().subtract(6, 'days'), moment()]
+                  initialValue: [moment().subtract(6, 'days'), moment().subtract(1, 'days')]
                 })(
                   <RangePicker />
                 )}
