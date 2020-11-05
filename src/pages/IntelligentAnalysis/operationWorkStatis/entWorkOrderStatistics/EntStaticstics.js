@@ -79,6 +79,11 @@ class EntStaticstics extends PureComponent {
 
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
 
+    this.props.dispatch({
+      type:'entWorkOrderStatistics/updateState',
+      payload:{fourTableTitleData:[],fourTableDataSource:[],}
+    })
+
     // 获取一级数据标题头
     this.props.dispatch({
       type: 'entWorkOrderStatistics/getFourTableTitleData',
@@ -119,7 +124,7 @@ class EntStaticstics extends PureComponent {
             return <a onClick={()=>{
               this.setState({
                 showModal:true,
-                modalTitle:`${text}（${BeginTime}-${EndTime}）`,
+                modalTitle:`${text}（${BeginTime.slice(0,10)}-${EndTime.slice(0,10)}）`,
               })
               this.getChildTableDataSource(record['00_EntCode'])
             }}>{text}</a>
