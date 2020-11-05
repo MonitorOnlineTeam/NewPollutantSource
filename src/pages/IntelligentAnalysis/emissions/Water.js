@@ -411,7 +411,7 @@ class Water extends PureComponent {
             ]
           },
           {
-            title: '平均浓度（mg/m³）',
+            title: '平均浓度（L）',
             width: 560,
             children: [
               {
