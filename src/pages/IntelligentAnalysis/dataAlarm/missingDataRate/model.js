@@ -30,7 +30,8 @@ export default Model.extend({
       RegionCode: '',
       // Atmosphere:'',
       PollutantType:'',
-      EntType:''
+      EntType:'',
+      Rate:"1"
       // dataType:'HourData'
     },
     tableDatas: [],

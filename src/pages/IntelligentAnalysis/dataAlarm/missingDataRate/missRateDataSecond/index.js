@@ -371,12 +371,14 @@ export default class EntTransmissionEfficiency extends Component {
   </Form.Item> 
   }
   render() {
-    const {
-      queryPar: { EntCode,PollutantType },
-      type
-    } = this.props;
+    // const {
+    // // location:{ queryPar: { EntCode,PollutantType }},
+    //   type
+    // } = this.props;
+  //  debugger;
+    
     return (
-        <BreadcrumbWrapper title={JSON.parse(location.query.queryPar).EntType==='1'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)"}>
+        <BreadcrumbWrapper title={this.props.location.query.queryPar? JSON.parse(this.props.location.query.queryPar).EntType==='1'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)":""}>
         <Card
           bordered={false}
           title={

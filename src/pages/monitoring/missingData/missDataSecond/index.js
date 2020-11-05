@@ -119,7 +119,7 @@ export default class Index extends Component {
         dataIndex: 'status',
         key: 'status',
         align: 'center',
-        render:(text,record)=>{return text==0?'未响应':'已响应'}
+        render:(text,record)=>{return text==0?'待响应':'已响应'}
       },
       {
         title: <span>响应人</span>,
