@@ -30,12 +30,12 @@ class RegionStaticstics extends PureComponent {
       payload: { RegionCode: RegionCode },
     });
 
-    this.getTableDataSource();
+    this.getTableDataSource('');
   }
 
 
   // 获取标题标题头及数据
-  getTableDataSource = () => {
+  getTableDataSource = (entCode='') => {
 
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
 
@@ -55,7 +55,7 @@ class RegionStaticstics extends PureComponent {
         PollutantTypeCode,
         AttentionCode,
         RegionCode,
-        EntCode: values.EntCode?values.EntCode:'',
+        EntCode: entCode,
         BeginTime,
         EndTime,
       },
@@ -93,13 +93,16 @@ class RegionStaticstics extends PureComponent {
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
                 <FormItem  label="企业">
-                    {getFieldDecorator('EntCode', {
-                      getValueFromEvent:e=>{
-                        this.getTableDataSource();
-                        return e;
-                      }
-                    })(
-                    <Select style={{ width: 200 }} allowClear placeholder="请选择企业">
+                    {getFieldDecorator('EntCode', {})
+                    (
+                    <Select 
+                        showSearch 
+                        filterOption={
+                          (input, option) =>option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        } 
+                        style={{ width: 200 }} 
+                        onChange={v=>{this.getTableDataSource(v)}} 
+                        allowClear placeholder="请选择企业">
                         {
                           entList.map((item,index) => <Option key={'entList${index}'} value={item.EntCode}>
                             {item.EntName}
@@ -111,6 +114,8 @@ class RegionStaticstics extends PureComponent {
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                   <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
+                  {
+                    /*       
                     <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
@@ -119,6 +124,9 @@ class RegionStaticstics extends PureComponent {
                     >
                         导出
                     </Button>
+                    */
+                  }
+
                 </div>
             </Row>
           </Form>

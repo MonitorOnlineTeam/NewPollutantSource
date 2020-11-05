@@ -9,6 +9,7 @@ import { Link,router } from 'umi'
 
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import PointStaticstics from './PointStaticstics';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -23,6 +24,14 @@ const { Option } = Select;
 @Form.create()
 class EntStaticstics extends PureComponent {
   
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal:false,
+      modalTitle:'--'
+    };
+  }
+
   componentDidMount() {
     // 获取企业列表
     const {location:{query:{RegionCode}}} = this.props;
@@ -32,12 +41,12 @@ class EntStaticstics extends PureComponent {
       payload: { RegionCode: RegionCode },
     });
 
-    this.getTableDataSource();
+    this.getTableDataSource('');
   }
 
 
   // 获取标题标题头及数据
-  getTableDataSource = () => {
+  getTableDataSource = (entCode) => {
 
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
 
@@ -57,12 +66,39 @@ class EntStaticstics extends PureComponent {
         PollutantTypeCode,
         AttentionCode,
         RegionCode,
-        EntCode: values.EntCode?values.EntCode:'',
+        EntCode: entCode,
         BeginTime,
         EndTime,
       },
     });
   }
+  
+
+  // 获取站点表单的标题标题头及数据
+  getChildTableDataSource = (EntCode) => {
+
+    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
+
+    // 获取一级数据标题头
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/getFourTableTitleData',
+      payload: { PollutantTypeCode: PollutantTypeCode },
+    });
+
+    // 获取一级数据
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/getFourTableDataSource',
+      payload: { 
+        PollutantTypeCode,
+        AttentionCode,
+        RegionCode,
+        EntCode,
+        BeginTime,
+        EndTime,
+      },
+    });
+  }
+
 
   // 导出
   onExport = () => {
@@ -72,6 +108,7 @@ class EntStaticstics extends PureComponent {
   getColumns=()=>{
     const columns = [];
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
+    
     this.props.thirdTableTitleData.map((item,index)=>{
       if(item.ID=='00_EntName'){
         columns.push({
@@ -79,17 +116,13 @@ class EntStaticstics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           render: (text, record) => { 
-            const query={
-              RegionCode,            
-              PollutantTypeCode,
-              AttentionCode,
-              BeginTime,
-              EndTime,
-              EntCode: record['00_EntCode'],
-            }
-            return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',query}} >
-                     {text}
-                 </Link>
+            return <a onClick={()=>{
+              this.setState({
+                showModal:true,
+                modalTitle:`${text}（${BeginTime}-${EndTime}）`,
+              })
+              this.getChildTableDataSource(record['00_EntCode'])
+            }}>{text}</a>
           },
           width: 120,
         });
@@ -112,6 +145,8 @@ class EntStaticstics extends PureComponent {
 } = this.props;
 
     const columns = this.getColumns();
+
+    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -119,12 +154,16 @@ class EntStaticstics extends PureComponent {
             <Row>
                 <FormItem  label="企业">
                     {getFieldDecorator('EntCode', {
-                      getValueFromEvent:e=>{
-                        this.getTableDataSource();
-                        return e;
-                      }
+                     
                     })(
-                    <Select style={{ width: 200 }} allowClear placeholder="请选择企业">
+                    <Select 
+                        showSearch 
+                        filterOption={
+                          (input, option) =>option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        } 
+                        style={{ width: 200 }} 
+                        onChange={v=>{this.getTableDataSource(v)}} 
+                        allowClear placeholder="请选择企业">
                         {
                           entList.map((item,index) => <Option key={'entList${index}'} value={item.EntCode}>
                             {item.EntName}
@@ -136,6 +175,8 @@ class EntStaticstics extends PureComponent {
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                     <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
+                    {
+                      /*   
                     <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
@@ -144,11 +185,21 @@ class EntStaticstics extends PureComponent {
                     >
                         导出
                     </Button>
+                    */
+                   }
                 </div>
             </Row>
           </Form>
           <SdlTable align="center" dataSource={thirdTableDataSource} columns={columns} loading={loading} />
         </Card>
+
+        <PointStaticstics title = {this.state.modalTitle} showModal = {this.state.showModal}
+          onCloseListener ={()=>{
+            this.setState({showModal:false});
+          }}
+        >
+        </PointStaticstics>
+
       </BreadcrumbWrapper>
     );
   }
