@@ -230,6 +230,7 @@ class SdlTable extends PureComponent {
 SdlTable.defaultProps = {
   defaultWidth: 130,
   resizable: false,
+  dataSource: [],
 }
 
 export default SdlTable;

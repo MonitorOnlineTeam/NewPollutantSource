@@ -24,7 +24,7 @@ export default class Ent extends Component {
   
 
     return (
-      <BreadcrumbWrapper title="有效传输率">
+      <BreadcrumbWrapper >
         <DefectData Atmosphere={true}/>
       </BreadcrumbWrapper>
     );
