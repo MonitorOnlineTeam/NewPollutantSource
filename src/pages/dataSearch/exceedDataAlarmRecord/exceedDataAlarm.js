@@ -114,6 +114,22 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
+                const {outletValue,dataType,time} = this.state
+        
+                this.props.dispatch({
+                    type: pageUrl.GetAlarmVerifyRate,
+                    payload: {
+                        RegionCode: '',
+                        attentionCode: '',
+                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: time[0],
+                        EndTime: time[1],
+                        PageSize: 20,
+                        PageIndex: 1,
+                        PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
+                    }
+                })
                 this.setState({
                     pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
@@ -168,7 +184,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 10,
+                PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -426,7 +442,6 @@ class index extends PureComponent {
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
         const {attentionValue,outletValue,dataType,time,regionCode} = this.state
 
-        console.log(regionCode)
         let deal = ''
         if(status == '')
         {
@@ -500,7 +515,7 @@ class index extends PureComponent {
         })
     }
     //行政区 已核实报警次数=>详情
-    DetailsHandle2 =()=>{
+    DetailsHandle2 =(verifyImage,remark)=>{
         let filename = ''
         if(verifyImage == null || verifyImage == '')
         {
@@ -1335,7 +1350,18 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text == '0'?'待核实':'已核实'
                     }
-            }
+            } ,
+            {
+                title: "核实详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
         const columns5 = [
             {
@@ -1443,7 +1469,18 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text=='0'?'待核实':'已核实'
                 }
-            }
+            },
+            {
+                title: "核实详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                }
+            },
         ]
         return (
             <>

@@ -114,6 +114,22 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
+                const {outletValue,dataType,time} = this.state
+        
+                this.props.dispatch({
+                    type: pageUrl.GetAlarmManagementRate,
+                    payload: {
+                        RegionCode: '',
+                        attentionCode: '',
+                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: time[0],
+                        EndTime: time[1],
+                        PageSize: 20,
+                        PageIndex: 1,
+                        PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
+                    }
+                })
                 this.setState({
                     pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
@@ -167,7 +183,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 11,
+                PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -1249,7 +1265,7 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    return <a onClick={this.DetailsHandle2.bind(this,record.verifyImage,record.remark)}>详情</a>
                     }
             },
         ]
@@ -1287,6 +1303,14 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
+                title: "首次报警时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'firstTime',
+                key: 'firstTime',
+            },
+            {
                 title: "报警因子",
                 width: 100,
                 align: 'center',
@@ -1314,6 +1338,17 @@ class index extends PureComponent {
                     }
             },
             {
+                title: "处置时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifyTime',
+                key: 'verifyTime',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
                 title: "处置状态",
                 width: 100,
                 align: 'center',
@@ -1323,7 +1358,29 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text == '0'?'待处置':'已处置'
                     }
-            }
+            },
+            {
+                title: "处置结果",
+                width: 90,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
+                title: "处置详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
 
         const columns5 = [
@@ -1401,6 +1458,17 @@ class index extends PureComponent {
                 }
             },
             {
+                title: "处置时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifyTime',
+                key: 'verifyTime',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
                 title: "处置状态",
                 width: 100,
                 align: 'center',
@@ -1410,7 +1478,28 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text=='0'?'待处置':'已处置'
                 }
-            }
+            },
+            {
+                title: "处置结果",
+                width: 90,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },{
+                title: "处置详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
         return (
             <>

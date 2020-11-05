@@ -218,7 +218,8 @@ export default Model.extend({
                 RegionCode: payload.RegionCode,
                 HasData:payload.HasData,
                 EntCode:payload.EntCode,
-                EntType:payload.EntType
+                EntType:payload.EntType,
+                PollutantType:payload.PollutantType
             }
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)
