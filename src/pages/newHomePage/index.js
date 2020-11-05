@@ -12,6 +12,8 @@ import styles from './style.less'
 import RealTimeAlarm from './components/RealTimeAlarm'
 import BrokenLine from './components/BrokenLine'
 import WasteWaterPoint from './components/WasteWaterPoint'
+import WasteGas from './components/WasteGas'
+import AirStatistics from './components/AirStatistics'
 const pageUrl = {
   updateState: 'home/updateState',
 };
@@ -123,6 +125,12 @@ export default class Index extends Component {
           </div>
           <div style={{marginTop:10}}>
             <WasteWaterPoint />
+          </div>
+          <div style={{marginTop:10}}>
+            <WasteGas />
+          </div>
+          <div style={{marginTop:10}}>
+         <AirStatistics />
           </div>
        </div> 
     );

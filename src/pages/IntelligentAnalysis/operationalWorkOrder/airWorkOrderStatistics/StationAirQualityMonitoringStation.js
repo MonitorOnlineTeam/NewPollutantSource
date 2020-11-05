@@ -2,7 +2,7 @@
  * @Description:单区域 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 10:20:28
- * @LastEditTime: 2020-10-30 17:28:53
+ * @LastEditTime: 2020-11-05 10:39:14
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation.js
  */
 
@@ -38,7 +38,7 @@ const { RangePicker } = DatePicker;
   enterpriseTaskStatic: airWorkOrderStatistics.enterpriseTaskStatic,
   pointTitle: airWorkOrderStatistics.pointTitle,
   pointTaskStatic: airWorkOrderStatistics.pointTaskStatic,
-  loading: loading.effects['airWorkOrderStatistics/getTaskStatic4Region'],
+  loading: loading.effects['airWorkOrderStatistics/getTaskStatic4Enterprise'],
   mLoading: loading.effects['airWorkOrderStatistics/getTaskStatic4Point'],
 }))
 @Form.create()

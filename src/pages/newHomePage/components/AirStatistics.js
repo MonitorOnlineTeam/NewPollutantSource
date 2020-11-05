@@ -2,7 +2,7 @@
 /**
  * 功  能：首页
  * 创建人：贾安波
- * 创建时间：2020.11
+ * 创建时间：2020.10
  */
 import React, { Component } from 'react';
 import {
@@ -34,7 +34,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
-
+import ScrollTable from './ScrollTable'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -74,47 +74,48 @@ componentDidUpdate() {
 initData=()=>{
 
 }
- menu = ()=>{
-   return  <Menu>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-          1st menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-          2nd menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-          3rd menu item
-        </a>
-      </Menu.Item>
-    </Menu>
+btnChange=(e)=>{
+  console.log(e.target.value)
+}
+ cardTitle1=()=>{
+   return <Row type='flex' justify='space-between'> 
+           <span style={{color:'#fff'}}>空气日报统计</span>
+            <span style={{color:'#fff',fontWeight:'bold'}}>{`${2020-10-28}`}</span>
+         </Row>
  }
-cardTitle=()=>{
-
+cardTitle2=()=>{
+    const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
-            <Dropdown overlay={this.menu()} trigger={['click']}>
-            <span  onClick={e => e.preventDefault()}>
-              点击我 <Icon type="caret-down" style={{color:'#cbcbcb'}}/>
-             </span>
-          </Dropdown>
+           <span>空气质量实时数据</span>
+           <Radio.Group value={"large"} onChange={this.btnChange}>
+          <Radio.Button value="large">小时</Radio.Button>
+          <Radio.Button value="default">日均</Radio.Button>
+        </Radio.Group>
           <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
-             <TabPane tab="近7天" key="1">
+             <TabPane tab="实时" key="1">
              </TabPane>
-             <TabPane tab="近30天" key="2">
-                </TabPane>
+             <TabPane tab="日报" key="2">
+            </TabPane>
             </Tabs>
             
           </Row>
 }
+cardTitle3=()=>{
 
+    return  <Row type='flex' align="middle" justify='space-between'> 
+               <span>污水处理厂流量分析</span>
+            <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
+            <TabPane tab="近30天" key="1">
+             </TabPane>
+              </Tabs>
+              
+            </Row>
+  }
 tabCallback=(value)=>{
   console.log(value)
 }
-getChartData=()=>{
+
+getLineChartData=()=>{
 
     let color=['#64b0fd','#9d6ff1','#42dab8']
  let  option = {
@@ -134,7 +135,7 @@ getChartData=()=>{
             }
         },
         grid: {
-            top:20,
+            top:30,
             left: 0,
             right: 20,
             bottom: 30,
@@ -157,6 +158,10 @@ getChartData=()=>{
             },
         },
         yAxis: {
+            name: '(m³)          ',
+            nameTextStyle:{
+                color:'#999',
+            },
             type: 'value',
             axisLine: {show:false, }, //y轴
             axisTick: {show:false}, 
@@ -181,22 +186,65 @@ getChartData=()=>{
                 type: 'line',
                 data: [120, 132, 101, 134, 90, 230, 210],
                 showSymbol: false,//隐藏所有数据点
-                smooth: true,
+                // smooth: true,
             },
             {
                 name: '联盟广告',
                 type: 'line',
                 data: [220, 182, 191, 234, 290, 330, 310],
                 showSymbol: false,
-                smooth: true,
+                // smooth: true,
             },
             {
                 name: '视频广告',
                 type: 'line',
                 data: [150, 232, 201, 154, 190, 330, 410],
                 showSymbol: false,
-                smooth: true,
+                // smooth: true,
             },
+        ]
+    };
+    return option;
+}
+getPancakeChartData=()=>{
+   let option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 10,
+            data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+        },
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {value: 335, name: '直接访问'},
+                    {value: 310, name: '邮件营销'},
+                    {value: 234, name: '联盟广告'},
+                    {value: 135, name: '视频广告'},
+                    {value: 1548, name: '搜索引擎'}
+                ]
+            }
         ]
     };
     return option;
@@ -209,35 +257,37 @@ getChartData=()=>{
   const { list } = this.state;
 
     return (
-        <div style={{width:'100%'}} className={styles.brokenLine}  >
-         <Row type='flex' justify='space-between'>
+        <div style={{width:'100%'}} className={styles.airStatistics}  >
+         <Row type='flex' justify='space-between' >
+
          <Col span={6}>  
-         <Card title={this.cardTitle()} className={styles.lineCard} bordered={false} >
+         <Card  title={this.cardTitle1()} className={styles.airCard}  bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-             <ReactEcharts
-                 option={this.getChartData()}
+          <ReactEcharts
+                 option={this.getPancakeChartData()}
                         className="echarts-for-echarts"
                         theme="my_theme"
-                        style ={{height:220}}
+                        style ={{height:215}}
                       />
           </Skeleton>
         </Card>
         </Col>
-        <Col span={6}  style={{padding:'0 10px'}}>  
-        <Card title={this.cardTitle() } className={styles.lineCard} bordered={false} >
+        <Col span={12}  className={styles.airTableCard}>  
+         <Card title={this.cardTitle2()}  bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-          </Skeleton>
-        </Card>
-        </Col>
-        <Col style={{paddingRight:'10px'}} span={6}>  
-        <Card title={this.cardTitle() } className={styles.lineCard} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+           <ScrollTable  data={[1,2,3,4,6,6,7,7,8,89]}/>
           </Skeleton>
         </Card>
         </Col>
         <Col span={6}>  
-        <Card title={this.cardTitle() } className={styles.lineCard}  bordered={false} >
+         <Card title={this.cardTitle3()}  bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
+             <ReactEcharts
+                 option={this.getLineChartData()}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                        style ={{height:215}}
+                      />
           </Skeleton>
         </Card>
         </Col>
