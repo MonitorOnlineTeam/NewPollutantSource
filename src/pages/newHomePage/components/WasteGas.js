@@ -79,7 +79,7 @@ btnChange=(e)=>{
 }
  cardTitle1=()=>{
    return <Row type='flex' justify='space-between'> 
-           <span style={{color:'#fff'}}>废水监测点</span>
+           <span style={{color:'#fff'}}>废气监测点</span>
             <span style={{color:'#fff',fontWeight:'bold'}}>{`${15}个`}</span>
          </Row>
  }
@@ -220,11 +220,11 @@ return option;
   const { list } = this.state;
 
     return (
-        <div style={{width:'100%'}} className={styles.wasteWaterPoint}  >
+        <div style={{width:'100%'}}  className={`${styles.wasteWaterPoint} ${styles.wasteGasPoint}`}  >
          <Row type='flex' justify='space-between' >
 
          <Col span={6}>  
-         <Card  title={this.cardTitle1()} className={styles.wasteWateCard} bordered={false} >
+         <Card  title={this.cardTitle1()} className={`${styles.wasteWateCard} ${styles.wasteGasCard}`} bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
             <ul className={styles.listSty}>
               <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>40</span></Row></li>

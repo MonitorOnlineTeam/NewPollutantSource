@@ -3,7 +3,8 @@
 .pageContainer{
   // display: flex;
   color:@titleColor;
-  height: 100vh;
+  // height: 100vh;
+  height: calc(100vh - 64px);
   // width: 100%;
   transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
   min-width: 1366px;
@@ -128,4 +129,40 @@
       }
     }
   }
+}
+.wasteGasPoint{
+  .wasteGasCard{
+    :global{
+      .ant-card-head{
+        background-color:#9d6ff1;
+       
+      }
+   }
+  }
+}
+.airStatistics{
+  .airCard{
+  :global{
+    .ant-card-head{
+      background-color:#42dab8;
+      color: #fff;
+      padding-right: 50px;
+     
+    }
+    .ant-card-body{
+      padding: 0;
+    }
+  }
+}
+
+.airTableCard{
+  :global{
+    .ant-card{
+      margin: 0 10px;
+    }
+    .ant-card-body{
+       padding: 0;
+    }
+  }
+ }
 }
