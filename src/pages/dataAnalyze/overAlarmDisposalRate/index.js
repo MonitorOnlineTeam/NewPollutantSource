@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-11-03 17:13:09
+ * @LastEditTime: 2020-11-05 10:44:30
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -206,6 +206,7 @@ class index extends PureComponent {
     pollutantColumn.map((item, key) => {
       titlePollutant.push({
         title: item.PollutantName,
+        width: 400,
         children: [
           {
             title: '报警次数',
@@ -251,7 +252,6 @@ class index extends PureComponent {
           title: '行政区',
           dataIndex: 'regionName',
           key: 'regionName',
-          fixed: 'left',
           align: 'center',
           render: (text, record) => {
             return (
@@ -387,7 +387,7 @@ class index extends PureComponent {
                       format={format}
                       style={{ width: '100%' }}
                       onChange={(dates, dateStrings) => {
-                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -409,7 +409,7 @@ class index extends PureComponent {
                       allowClear
                       placeholder="请选择行政区"
                       onChange={value => {
-                        this.setState({ RegionCode: value }, () => {});
+                        this.setState({ RegionCode: value }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -437,7 +437,7 @@ class index extends PureComponent {
                     <Select
                       placeholder="请选择关注程度"
                       onChange={value => {
-                        this.setState({ AttentionCode: value }, () => {});
+                        this.setState({ AttentionCode: value }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -459,7 +459,7 @@ class index extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={16}>
+            <Row gutter={24}>
               <Col md={4} style={{ marginTop: 10 }}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
@@ -485,8 +485,8 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={12} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                <div class="ant-form-item-label" style={{ width: 72, marginLeft: 26 }}>
+              <Col md={20} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+                <div class="ant-form-item-label" style={{ width: 70, marginLeft: 26, marginRight: 8 }}>
                   <label for="RegionCode" class="" title="监测因子">
                     监测因子
                   </label>

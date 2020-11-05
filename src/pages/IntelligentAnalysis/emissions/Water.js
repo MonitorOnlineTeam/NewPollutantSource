@@ -41,7 +41,7 @@ const ImportantTypeList = [
 @Form.create()
 class Water extends PureComponent {
   state = {
-    time: [moment().startOf("day"), moment().endOf("day")],
+    time: [moment().subtract(1, 'days').startOf("day"), moment().subtract(1, 'days').endOf("day")],
     DataType: "region",
   }
   _SELF_ = {
@@ -411,7 +411,7 @@ class Water extends PureComponent {
             ]
           },
           {
-            title: '平均浓度（mg/m³）',
+            title: '平均浓度（mg/L）',
             width: 560,
             children: [
               {

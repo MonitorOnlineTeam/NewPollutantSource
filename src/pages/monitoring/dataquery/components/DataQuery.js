@@ -207,7 +207,7 @@ class DataQuery extends Component {
           onChange={this.handlePollutantChange}
           placeholder="请选择污染物"
           maxTagCount={3}
-          maxTagTextLength={5}  
+          maxTagTextLength={5}
           maxTagPlaceholder="..."
           style={{ width: 350 }}
         />
@@ -371,8 +371,8 @@ class DataQuery extends Component {
     });
     historyparams = {
       ...historyparams,
-      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: dates[0] ? dates[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+      endTime: dates[1] ? dates[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
       datatype: dataType,
     };
     dispatch({
