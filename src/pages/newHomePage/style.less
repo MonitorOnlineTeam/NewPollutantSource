@@ -1,8 +1,9 @@
 @titleColor: #333333;
-@blue:#64b0fb;
-.pageContainer{
+@blue: #64b0fb;
+
+.pageContainer {
   // display: flex;
-  color:@titleColor;
+  color: @titleColor;
   // height: 100vh;
   height: calc(100vh - 64px);
   // width: 100%;
@@ -11,51 +12,61 @@
   background-color: #f2f2f2;
   margin: -24px;
   overflow: auto;
-  padding:10px 15px;
+  padding: 10px 15px;
 
-  :global{
-    .ant-card-head{
-      border-bottom:0;
+  :global {
+    .ant-card-head {
+      border-bottom: 0;
       margin-bottom: 0;
       min-height: 44px;
       line-height: 44px;
     }
-    .ant-card-head-title{
-      padding:0;
+
+    .ant-card-head-title {
+      padding: 0;
       color: @titleColor;
     }
-    .ant-card-body{
-      padding:0 24px  24px;
+
+    .ant-card-body {
+      padding: 0 24px 24px;
     }
 
   }
-  :global{
-    .ant-card-head .ant-tabs{
-      margin-bottom:0;
+
+  :global {
+    .ant-card-head .ant-tabs {
+      margin-bottom: 0;
     }
-    .ant-card-head .ant-tabs-bar{
+
+    .ant-card-head .ant-tabs-bar {
       border-bottom: 0 !important;
     }
-    .ant-tabs-nav .ant-tabs-tab:active,.ant-tabs-nav .ant-tabs-tab-active{
-      color:@titleColor
+
+    .ant-tabs-nav .ant-tabs-tab:active,
+    .ant-tabs-nav .ant-tabs-tab-active {
+      color: @titleColor
     }
-    .ant-tabs-nav .ant-tabs-tab{
-      
-      padding:10px  5px 8px 5px;
+
+    .ant-tabs-nav .ant-tabs-tab {
+
+      padding: 10px 5px 8px 5px;
       font-size: 12px;
     }
   }
 }
-.realTimeAlarm{
+
+.realTimeAlarm {
   overflow-x: hidden;
-  :global{
-    .ant-card-body{
+
+  :global {
+    .ant-card-body {
       // padding:0 0 24px  24px;
     }
   }
 
 }
-.alarmTotal{
+
+.alarmTotal {
   width: calc(100% / 3);
   position: relative;
   flex-wrap: nowrap;
@@ -63,7 +74,8 @@
   // flex-basis: calc(100% / 3);
   flex-shrink: 0;
 }
-.alarmContent{
+
+.alarmContent {
   font-size: 14px;
   color: #666666;
   padding-left: 24px;
@@ -71,7 +83,8 @@
   width: 58%;
 
 }
-.hr{
+
+.hr {
   background-color: #bdc4cc;
   height: 56px;
   width: 1px;
@@ -79,90 +92,105 @@
   right: 24px;
 }
 
-.brokenLine{
-  .lineCard{
+.brokenLine {
+  .lineCard {
     // width:200px;
     // width: calc( (100% - 20px) / 4) 
   }
 
 }
 
-.wasteWaterPoint{
+.wasteWaterPoint {
 
-  .wasteWateCard{
-    :global{
-      .ant-card-head{
-        background-color:@blue;
+  .wasteWateCard {
+    :global {
+      .ant-card-head {
+        background-color: @blue;
         color: #fff;
         padding-right: 50px;
-       
+
       }
-      .ant-card-body{
+
+      .ant-card-body {
         padding: 0;
       }
     }
-    .listSty{
-      li{
-        padding:11px 50px;
+
+    .listSty {
+      li {
+        padding: 11px 50px;
         border-bottom: 1px dashed #e0e0e0;
-        img{
-          padding-right:10px
+
+        img {
+          padding-right: 10px
         }
       }
-      li:last-child{border:none}
-      .colorBlock{
-        width:40px;
+
+      li:last-child {
+        border: none
+      }
+
+      .colorBlock {
+        width: 40px;
         height: 24px;
-        color:#fff;
+        color: #fff;
         text-align: center;
         font-weight: bold;
       }
     }
   }
-  .sevenCard{
-    :global{
-      .ant-card{
+
+  .sevenCard {
+    :global {
+      .ant-card {
         margin: 0 10px;
       }
-      .ant-card-body{
-         padding: 0;
+
+      .ant-card-body {
+        padding: 0;
       }
-    }
-  }
-}
-.wasteGasPoint{
-  .wasteGasCard{
-    :global{
-      .ant-card-head{
-        background-color:#9d6ff1;
-       
-      }
-   }
-  }
-}
-.airStatistics{
-  .airCard{
-  :global{
-    .ant-card-head{
-      background-color:#42dab8;
-      color: #fff;
-      padding-right: 50px;
-     
-    }
-    .ant-card-body{
-      padding: 0;
     }
   }
 }
 
-.airTableCard{
-  :global{
-    .ant-card{
-      margin: 0 10px;
-    }
-    .ant-card-body{
-       padding: 0;
+.wasteGasPoint {
+  .wasteGasCard {
+    :global {
+      .ant-card-head {
+        background-color: #9d6ff1;
+
+      }
     }
   }
- }
+}
+
+.airStatistics {
+  .airCard {
+    height: 100%;
+    :global { 
+      .ant-card-head {
+        background-color: #42dab8;
+        color: #fff;
+        padding-right: 50px;
+
+      }
+
+      .ant-card-body {
+        padding: 0;
+        padding-top: 4px;
+      }
+    }
+  }
+
+  .airTableCard {
+    :global {
+      .ant-card {
+        margin: 0 10px;
+      }
+
+      .ant-card-body {
+        padding: 0;
+      }
+    }
+  }
 }
