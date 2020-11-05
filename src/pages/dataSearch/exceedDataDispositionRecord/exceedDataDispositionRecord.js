@@ -128,9 +128,9 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.AlarmDealTypeList.length > 0)
             {
-                this.setState({
-                    AlarmDealTypeList:this.props.AlarmDealTypeList.map(poll=>poll.code)
-                })
+                // this.setState({
+                //     AlarmDealTypeList:this.props.AlarmDealTypeList.map(poll=>poll.code)
+                // })
             }
         })
     };
@@ -210,6 +210,7 @@ class index extends PureComponent {
         this.childrenHand = ref;
       }
     checkBoxChange =(checkedValues)=>{
+        console.log(checkedValues)
         this.setState({
             pollutantCodeList:checkedValues
         })
@@ -217,6 +218,8 @@ class index extends PureComponent {
     cardTitle = () => {
         const { time} = this.state;
         const {pollutantCodeList} = this.props
+        console.log(pollutantCodeList)
+        console.log(this.state.pollutantCodeList)
         return (
             < >
                 <Select
@@ -245,7 +248,7 @@ class index extends PureComponent {
                 <Select
                     allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="关注度"
+                    placeholder="关注程度"
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
@@ -257,7 +260,6 @@ class index extends PureComponent {
                     {this.attention()}
                 </Select>
                 <Select
-                    allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                     placeholder="排口类型"
                     maxTagCount={2}
@@ -281,7 +283,7 @@ class index extends PureComponent {
                         this.setState({
                             outletValue: value,
                         })
-                    }}>
+                    }}>    
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                 </Select>
@@ -296,7 +298,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                 </Radio.Group>
 
-                <RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                     (dates, dataType) => {
                         this.setState({
                             time: dates
@@ -422,8 +424,8 @@ class index extends PureComponent {
         
     }
     // 企业弹框
-    EntAlarmHandle =(regionCode,entCode,status,PollutantCode,entName,pointName)=>{
-        const {attentionValue,outletValue,dataType,time} = this.state
+    EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
+        const {attentionValue,outletValue,dataType,time,regionCode} = this.state
         let deal = ''
         if(status == '')
         {
@@ -437,17 +439,29 @@ class index extends PureComponent {
         {
             deal = '已处置情况'
         }
-        this.setState({
-            entVisible: true,
-            ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
-            entCode:entCode,
-            regionCode:regionCode,
-            PollutantCode:PollutantCode
-        })
+
+        if(entCode == undefined)
+        {
+            this.setState({
+                entVisible: true,
+                ModalTitle: '全部合计于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                PollutantCode:PollutantCode
+            })
+        }
+        else{
+            this.setState({
+                entVisible: true,
+                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                entCode:entCode,
+                regionCode:reCode,
+                PollutantCode:PollutantCode
+            })
+        }
+        
         this.props.dispatch({
             type:pageUrl.GetAlarmManagementDetail,
             payload: {
-                RegionCode: regionCode,
+                RegionCode: reCode == ''?regionCode:reCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
@@ -457,7 +471,7 @@ class index extends PureComponent {
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:status,
-                EntCode:entCode
+                EntCode:entCode == undefined?'':entCode
             }
         })
         
@@ -465,7 +479,7 @@ class index extends PureComponent {
     //行政区 报警次数=>详情
     DetailsHandle =(verifyImage,remark)=>{
         let filename = ''
-        if(verifyImage == "")
+        if(verifyImage == null || verifyImage == '')
         {
             filename = ''
         }
@@ -481,7 +495,7 @@ class index extends PureComponent {
     //行政区 已处置报警次数=>详情
     DetailsHandle2 =(verifyImage,remark)=>{
         let filename = ''
-        if(verifyImage == "")
+        if(verifyImage == null || verifyImage == '')
         {
             filename = ''
         }
@@ -530,8 +544,8 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 10,
-                PageIndex: 1,
+                //PageSize: 10,
+                //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
         }).then(()=>{
@@ -633,15 +647,24 @@ class index extends PureComponent {
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
-                            pagination={{
+                        pagination={
+                            {
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props.PageSize,
-                                current: this.props.PageIndex,
-                                onChange: this.ExceedonChange,
-                                pageSizeOptions: ['10','20', '30', '40', '100'],
-                                total: this.props.total,
-                            }}
+                                defaultPageSize:20,
+                               // total:this.props.total,
+                                pageSizeOptions: ['20', '30', '40', '50'],
+                            }
+                        } 
+                            // pagination={{
+                            //     showSizeChanger: true,
+                            //     showQuickJumper: true,
+                            //     pageSize: this.props.PageSize,
+                            //     current: this.props.PageIndex,
+                            //     onChange: this.ExceedonChange,
+                            //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                            //     total: this.props.total,
+                            // }}
                         />, key: key, closable: true
                     }
         
@@ -651,15 +674,24 @@ class index extends PureComponent {
                 if (key == '') {
                     panes.push({
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
-                            pagination={{
+                        pagination={
+                            {
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props.PageSize,
-                                current: this.props.PageIndex,
-                                onChange: this.ExceedonChange,
-                                pageSizeOptions: ['10','20','30', '40', '100'],
-                                total: this.props.total,
-                            }}
+                                defaultPageSize:20,
+                                //total:this.props.total,
+                                pageSizeOptions: ['20', '30', '40', '50'],
+                            }
+                        } 
+                            // pagination={{
+                            //     showSizeChanger: true,
+                            //     showQuickJumper: true,
+                            //     pageSize: this.props.PageSize,
+                            //     current: this.props.PageIndex,
+                            //     onChange: this.ExceedonChange,
+                            //     pageSizeOptions: ['10','20','30', '40', '100'],
+                            //     total: this.props.total,
+                            // }}
                         />, key: activeKey, closable: true
                     });
                     this.setState({ panes, activeKey,regionCode:region });
@@ -884,7 +916,7 @@ class index extends PureComponent {
             }
         })
     }
-    //已核实报警按钮查询信息
+    //已处置报警按钮查询信息
     AlreadyButtonCountHandle=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
         this.props.dispatch({
@@ -905,7 +937,7 @@ class index extends PureComponent {
             }
         })
     }
-    //已核实报警   导出
+    //已处置报警   导出
     AlreadyButtonHandleExpor=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
         this.props.dispatch({
@@ -924,7 +956,7 @@ class index extends PureComponent {
             }
         })
     }
-    ////待核实报警按钮查询信息
+    ////待处置报警按钮查询信息
     StayButtonCountHandle=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
         this.props.dispatch({
@@ -945,7 +977,7 @@ class index extends PureComponent {
             }
         })
     }
-     //待核实报警   导出
+     //待处置报警   导出
      StayButtonHandleExpor=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
         this.props.dispatch({
@@ -1036,7 +1068,7 @@ class index extends PureComponent {
             },
             {
                 title: "报警因子",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'pollutantName',
@@ -1052,7 +1084,7 @@ class index extends PureComponent {
             },
             {
                 title: "处置人",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'dealPerson',
@@ -1074,18 +1106,18 @@ class index extends PureComponent {
             },
             {
                 title: "处置状态",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
                 key: 'status',
                 render:(text)=>{
-                    return text == ''?'-':text == 0?'待核实':'已核实'
+                    return text == ''?'-':text == 0?'待处置':'已处置'
                     }
             },
             {
                 title: "处置结果",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'verifymessage',
@@ -1102,7 +1134,7 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
                     }
             },
         ]
@@ -1151,7 +1183,7 @@ class index extends PureComponent {
             },
             {
                 title: "报警因子",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'pollutantName',
@@ -1168,7 +1200,7 @@ class index extends PureComponent {
             {
                 title: "处置人",
                 width: 100,
-                align: 'center',
+                align: '90',
                 fixed: fixed,
                 dataIndex: 'dealPerson',
                 key: 'dealPerson',
@@ -1189,7 +1221,7 @@ class index extends PureComponent {
             },
             {
                 title: "处置状态",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
@@ -1200,7 +1232,7 @@ class index extends PureComponent {
             },
             {
                 title: "处置结果",
-                width: 100,
+                width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'verifymessage',
@@ -1440,7 +1472,7 @@ class index extends PureComponent {
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-                                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(poll => poll.code)} onChange={this.AlarmDealCheckBoxChange}>
+                                    <Checkbox.Group  onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>
@@ -1489,7 +1521,7 @@ class index extends PureComponent {
                                 <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
                                 <div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-                                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(poll => poll.code)} onChange={this.AlarmDealCheckBoxChange}>
+                                    <Checkbox.Group  onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>

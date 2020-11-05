@@ -82,8 +82,8 @@ export default Model.extend({
               DataType: payload.DataType,
               BeginTime: payload.BeginTime,
               EndTime: payload.EndTime,
-              PageSize: payload.PageSize,
-              PageIndex: payload.PageIndex,
+              //PageSize: payload.PageSize,
+              //PageIndex: payload.PageIndex,
               PollutantCodeList: payload.PollutantCodeList,
           }
           const result = yield call(GetAlarmManagementRateDetail, body, null)
@@ -92,7 +92,7 @@ export default Model.extend({
                   AlarmDetailList: result.Datas.data,
                   column: result.Datas.column,
                   total:result.Total,
-                  PageIndex:payload.PageIndex || 1
+                  //PageIndex:payload.PageIndex || 1
               })
           }
           else {
@@ -100,7 +100,7 @@ export default Model.extend({
                   AlarmDetailList: [],
                   column: [],
                   total:0,
-                  PageIndex:payload.PageIndex || 1
+                  //PageIndex:payload.PageIndex || 1
               })
           }
       },//超标报警处置详细
