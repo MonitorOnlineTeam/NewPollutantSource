@@ -52,6 +52,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   beginTime: newtransmissionefficiency.beginTime,
   endTime: newtransmissionefficiency.endTime,
   pollutantType: newtransmissionefficiency.pollutantType,
+  assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
 }))
 @Form.create()
@@ -157,6 +158,12 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
+  asseChange = value => {
+    this.updateState({
+      assessment: value,
+    });
+  };
+
   changeRegion = value => {
     this.updateState({
       RegionCode: value,
@@ -222,7 +229,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => { 
            return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                       query: { RegionCode:text=='全部合计'? '': record.RegionCode },
+                       query: { RegionCode:text=='全部合计'? '': record.RegionCode},
                        }}
                        >
                     {text}
@@ -388,6 +395,17 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item>
+                  <Select
+                    placeholder="请选择考核类型"
+                    onChange={this.asseChange}
+                    value={this.props.assessment}
+                    style={{ width: 200, marginLeft: 10 }}
+                  >
+                    <Option value="1">国家考核</Option>
+                    <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>
