@@ -99,25 +99,29 @@ class index extends PureComponent {
     }
     // 导出
     EntexportReport = () => {
+        const {outletValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
                 RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '',
-                EntType: 1
+                EntType: 1,
+                PollutantType:outletValue == undefined ?'':outletValue
             }
         })
     }
     // 导出
     PointexportReport = () => {
+        const {outletValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
                 RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '1',
-                EntType: 1
+                EntType: 1,
+                PollutantType:outletValue == undefined ?'':outletValue
             }
         })
     }

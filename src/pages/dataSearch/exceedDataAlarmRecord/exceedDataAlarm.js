@@ -83,6 +83,7 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
+            exportRegion:''
         };
     }
 
@@ -114,6 +115,22 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
+                const {outletValue,dataType,time} = this.state
+        
+                this.props.dispatch({
+                    type: pageUrl.GetAlarmVerifyRate,
+                    payload: {
+                        RegionCode: '',
+                        attentionCode: '',
+                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: time[0],
+                        EndTime: time[1],
+                        PageSize: 20,
+                        PageIndex: 1,
+                        PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
+                    }
+                })
                 this.setState({
                     pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
@@ -139,20 +156,37 @@ class index extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        if(exportRegion != '1')
+        {
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmVerifyRateDetail,
+                payload: {
+                    RegionCode: exportRegion,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
+        else{
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmVerifyRate,
+                payload: {
+                    RegionCode: regionValue == undefined?'':regionValue,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
         
-        this.props.dispatch({
-            type:pageUrl.ExportAlarmVerifyRate,
-            payload: {
-                RegionCode: regionValue == undefined?'':regionValue,
-                attentionCode: attentionValue == undefined?'':attentionValue,
-                PollutantType: outletValue == undefined?'':outletValue,
-                DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
-                PollutantCodeList: pollutantCodeList,
-            }
-        })
     }
 
     //查询数据
@@ -168,7 +202,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 10,
+                PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -426,7 +460,6 @@ class index extends PureComponent {
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
         const {attentionValue,outletValue,dataType,time,regionCode} = this.state
 
-        console.log(regionCode)
         let deal = ''
         if(status == '')
         {
@@ -500,7 +533,7 @@ class index extends PureComponent {
         })
     }
     //行政区 已核实报警次数=>详情
-    DetailsHandle2 =()=>{
+    DetailsHandle2 =(verifyImage,remark)=>{
         let filename = ''
         if(verifyImage == null || verifyImage == '')
         {
@@ -536,7 +569,7 @@ class index extends PureComponent {
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
-        const activeKey = `newTab${this.newTabIndex++}`;
+        const activeKey = `${region}newTab${this.newTabIndex++}`;
         
         
         this.props.dispatch({
@@ -548,8 +581,8 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 11,
-                PageIndex: 1,
+                //PageSize: 20,
+                //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
         }).then(()=>{
@@ -641,13 +674,15 @@ class index extends PureComponent {
                 })
                 
                 let key = ''
-                let index = 0
+                let indexx = 0
                 panes.map((item, index) => {
                     if (item.title == text) {
-                        index = index
+                        indexx = index
                         return key = item.key
                     }
                 })
+                console.log(key)
+                console.log(activeKey)
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
@@ -671,8 +706,8 @@ class index extends PureComponent {
                         />, key: key, closable: true
                     }
         
-                    panes.splice(index, 1, obj);
-                    this.setState({ panes, activeKey: key, regionCode: region});
+                    panes.splice(indexx, 1, obj);
+                    this.setState({ panes, activeKey: key, regionCode: region,exportRegion:region});
                 }
                 if (key == '') {
                     panes.push({
@@ -696,7 +731,7 @@ class index extends PureComponent {
                             // }}
                         />, key: activeKey, closable: true
                     });
-                    this.setState({ panes, activeKey,regionCode:region});
+                    this.setState({ panes, activeKey,regionCode:region,exportRegion:region});
                 }
             }
         })
@@ -725,7 +760,8 @@ class index extends PureComponent {
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
-        this.setState({ activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ activeKey,exportRegion:arr[0] });
     }
     onEdit=(targetKey, action)=>{
         this[action](targetKey);
@@ -1335,7 +1371,18 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text == '0'?'待核实':'已核实'
                     }
-            }
+            } ,
+            {
+                title: "核实详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
         const columns5 = [
             {
@@ -1443,7 +1490,18 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text=='0'?'待核实':'已核实'
                 }
-            }
+            },
+            {
+                title: "核实详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                }
+            },
         ]
         return (
             <>
