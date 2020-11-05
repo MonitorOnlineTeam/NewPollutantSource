@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-11-03 17:13:09
+ * @LastEditTime: 2020-11-05 10:17:28
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -251,7 +251,6 @@ class index extends PureComponent {
           title: '行政区',
           dataIndex: 'regionName',
           key: 'regionName',
-          fixed: 'left',
           align: 'center',
           render: (text, record) => {
             return (
@@ -387,7 +386,7 @@ class index extends PureComponent {
                       format={format}
                       style={{ width: '100%' }}
                       onChange={(dates, dateStrings) => {
-                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -409,7 +408,7 @@ class index extends PureComponent {
                       allowClear
                       placeholder="请选择行政区"
                       onChange={value => {
-                        this.setState({ RegionCode: value }, () => {});
+                        this.setState({ RegionCode: value }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -437,7 +436,7 @@ class index extends PureComponent {
                     <Select
                       placeholder="请选择关注程度"
                       onChange={value => {
-                        this.setState({ AttentionCode: value }, () => {});
+                        this.setState({ AttentionCode: value }, () => { });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
