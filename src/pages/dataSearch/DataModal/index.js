@@ -23,6 +23,7 @@ class index extends PureComponent {
     super(props);
     this.state = {
         alarmVisible:false,
+        alarmType:'1',
         exceedVisible:false,
         dateTime:[moment().add(-48, "hour"), moment()],
         exceedType:'',
@@ -74,7 +75,7 @@ class index extends PureComponent {
       })
   }
   render() {
-      const {alarmVisible,dateTime,exceedVisible,exceedType,exceedTime,flowVisible,flowTime,flowEntCode} = this.state
+      const {alarmVisible,alarmType,dateTime,exceedVisible,exceedType,exceedTime,flowVisible,flowTime,flowEntCode} = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
@@ -90,8 +91,9 @@ class index extends PureComponent {
 
                 参数:
                 dateTime  时间参数
+                alarmType 企业类型    '1'是废水  '2' 是废气
               */}
-                {alarmVisible? <ExceedDataAlarm dateTime={dateTime}  alarmVisible={alarmVisible} alarmCancle={()=>{
+                {alarmVisible? <ExceedDataAlarm dateTime={dateTime} alarmType={alarmType}  alarmVisible={alarmVisible} alarmCancle={()=>{
                     this.setState({alarmVisible:false});
                 }}/>:null}
             {/* 超标废水监测点  和  超标废气监测点
