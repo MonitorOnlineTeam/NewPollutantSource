@@ -13,7 +13,7 @@ import {
   ExportDefectPointDetail,
   GetDefectPointDetail,
   GetPollutantByType,
-} from './service';
+} from '../services/overVerifyRateApi';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
