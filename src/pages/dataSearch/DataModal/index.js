@@ -1,8 +1,4 @@
-/**
- * 功  能：空气站查询
- * 创建人：胡孟弟
- * 创建时间：2020.10.13
- */
+
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Icon, Modal } from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
