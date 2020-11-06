@@ -177,6 +177,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
     alarmManagementRateDetailcolumn.map((item, key) => {
       titlePollutant.push({
         title: item.PollutantName,
+        width:500,
         children: [
           {
             title: '报警次数',
@@ -237,9 +238,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
       ...titlePollutant,
     ];
     return (
-      <BreadcrumbWrapper
-        title={`${params.regionName}${params.beginTime}至${params.endTime}工艺超标超标报警处置情况`}
-      >
+      <BreadcrumbWrapper >
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={16}>

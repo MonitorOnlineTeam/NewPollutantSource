@@ -2,7 +2,7 @@
  * @Description:单区域 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 10:20:28
- * @LastEditTime: 2020-11-05 10:39:14
+ * @LastEditTime: 2020-11-06 17:20:19
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation.js
  */
 
@@ -113,10 +113,10 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
                     EndTime: moment(params.endTime).format('YYYY-MM-DD 23:59:59'),
                   },
                   callback: () => {
-                    this.setState({ stationName: record['00_StationName'] });
-                    this.showModal();
                   },
                 });
+                this.setState({ stationName: record['00_StationName'] });
+                this.showModal();
               }}
             >
               {text}
@@ -159,16 +159,25 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
   };
 
   handleOk = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = e => {
-    console.log(e);
+    const {
+      dispatch,
+    } = this.props;
+
     this.setState({
       visible: false,
+    });
+
+    dispatch({
+      type: 'airWorkOrderStatistics/updateState',
+      payload: {
+        pointTaskStatic: [],
+      },
     });
   };
 
@@ -218,9 +227,7 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
       }
     });
     return (
-      <BreadcrumbWrapper
-        title={`${params.regionName}运维大气站（${params.beginTime} - ${params.endTime}）运维工单统计`}
-      >
+      <BreadcrumbWrapper >
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={24}>
@@ -253,11 +260,10 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
         </Card>
         <Modal
           width={'90%'}
-          centered
           title={`${this.state.stationName}（${params.beginTime} - ${params.endTime}）运维工单统计`}
           visible={this.state.visible}
-          onOk={this.handleOk}
           onCancel={this.handleCancel}
+          footer={null}
         >
           <SdlTable
             scroll={{ xScroll: 'scroll' }}

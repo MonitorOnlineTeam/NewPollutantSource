@@ -17,6 +17,7 @@ import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
 import { compose } from 'redux';
+import FileDown from '@/components/AttachmentView/index'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -386,7 +387,8 @@ class index extends PureComponent {
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:'',
-                EntCode:''
+                EntCode:'',
+                VerifyStatus:[]
             }
         })
         
@@ -419,7 +421,8 @@ class index extends PureComponent {
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:'1',
-                EntCode:''
+                EntCode:'',
+                VerifyStatus:[]
             }
         })
         
@@ -451,7 +454,8 @@ class index extends PureComponent {
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:'0',
-                EntCode:''
+                EntCode:'',
+                VerifyStatus:[]
             }
         })
         
@@ -509,7 +513,8 @@ class index extends PureComponent {
                // PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:status,
-                EntCode:entCode == undefined?'':entCode
+                EntCode:entCode == undefined?'':entCode,
+                VerifyStatus:[]
             }
         })
         
@@ -922,7 +927,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList
             }
         })
     }
@@ -941,7 +946,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList
             }
         })
     }
@@ -962,7 +967,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList
             }
         })
     }
@@ -1162,7 +1167,23 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                //return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
                 }
             },
         ]
@@ -1275,7 +1296,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle2.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1380,7 +1416,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1499,7 +1550,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                    if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                    {
+                       sourc = []
+                    }
+                    else
+                    {
+                       record.verifyImage.map(item=>{
+                           let obj = {
+                               name:item.FileName,
+                               attach:item.FileName
+                           }
+                           sourc.push(obj)
+                       })
+                    }
+                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                 }
             },
         ]
@@ -1518,7 +1584,7 @@ class index extends PureComponent {
                             className={style.dataTable}
                         >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
+                            {this.pageContent()}
                         </Card>
                         <Modal
                             centered
@@ -1575,7 +1641,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns2} dataSource={ManagementDetail} pagination={false} />
+                               <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
                             }
                         </Modal>
                         <Modal
@@ -1624,7 +1690,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1664,7 +1730,7 @@ class index extends PureComponent {
                                 <Button onClick={this.StayButtonHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns4} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1680,7 +1746,7 @@ class index extends PureComponent {
                                 <Button onClick={this.ButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>

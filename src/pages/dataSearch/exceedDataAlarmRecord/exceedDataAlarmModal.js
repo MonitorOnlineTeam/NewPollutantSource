@@ -15,8 +15,8 @@ import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
-import Group from 'antd/lib/input/Group';
 import { downloadFile } from '@/utils/utils';
+import { compose } from 'redux';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -24,34 +24,34 @@ const { TabPane } = Tabs;
 const pageUrl = {
     GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
     getRegions: 'autoForm/getRegions',
-    GetEntByRegion:'exceedDataDispositionModel/GetEntByRegion',
-    GetAlarmManagementRate:'exceedDataDispositionModel/GetAlarmManagementRate',
-    GetAlarmManagementRateDetail:'exceedDataDispositionModel/GetAlarmManagementRateDetail',
-    GetAlarmManagementDetail:'exceedDataDispositionModel/GetAlarmManagementDetail',
-    GetPollutantCodeList:'exceedDataDispositionModel/GetPollutantCodeList',
-    GetAlarmDealType:'exceedDataDispositionModel/GetAlarmDealType',
-    ExportAlarmManagementRate:'exceedDataDispositionModel/ExportAlarmManagementRate',
-    ExportAlarmManagementRateDetail:'exceedDataDispositionModel/ExportAlarmManagementRateDetail',
-    ExportAlarmManagementDetail:'exceedDataDispositionModel/ExportAlarmManagementDetail',
+    GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
+    GetAlarmVerifyRate:'exceedDataAlarmModel/GetAlarmVerifyRate',
+    GetAlarmVerifyRateDetail:'exceedDataAlarmModel/GetAlarmVerifyRateDetail',
+    GetAlarmVerifyDetail:'exceedDataAlarmModel/GetAlarmVerifyDetail',
+    GetPollutantCodeList:'exceedDataAlarmModel/GetPollutantCodeList',
+    GetOverToExamineOperation:'exceedDataAlarmModel/GetOverToExamineOperation',
+    ExportAlarmVerifyRate:'exceedDataAlarmModel/ExportAlarmVerifyRate',
+    ExportAlarmVerifyRateDetail:'exceedDataAlarmModel/ExportAlarmVerifyRateDetail',
+    ExportAlarmVerifyDetail:'exceedDataAlarmModel/ExportAlarmVerifyDetail',
 }
-@connect(({ loading, autoForm, exceedDataDispositionModel ,enterpriseMonitoringModel}) => ({
-    loading: loading.effects['exceedDataDispositionModel/GetAlarmManagementRate'],
-    loadingRateDetail:loading.effects['exceedDataDispositionModel/GetAlarmManagementRateDetail'],
-    loadingDetail:loading.effects['exceedDataDispositionModel/GetAlarmManagementDetail'],
+@connect(({ loading, autoForm, enterpriseMonitoringModel ,exceedDataAlarmModel}) => ({
+    loading: loading.effects['exceedDataAlarmModel/GetAlarmVerifyRate'],
+    loadingRateDetail:loading.effects['exceedDataAlarmModel/GetAlarmVerifyRateDetail'],
+    loadingDetail:loading.effects['exceedDataAlarmModel/GetAlarmVerifyDetail'],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
-    priseList: exceedDataDispositionModel.priseList,
-    total: exceedDataDispositionModel.total,
-    PageSize: exceedDataDispositionModel.PageSize,
-    PageIndex: exceedDataDispositionModel.PageIndex,
-    AlarmList:exceedDataDispositionModel.AlarmList,
-    column:exceedDataDispositionModel.column,
-    AlarmDetailList:exceedDataDispositionModel.AlarmDetailList,
-    pollutantCodeList:exceedDataDispositionModel.pollutantCodeList,
-    AlarmDealTypeList:exceedDataDispositionModel.AlarmDealTypeList,
-    ManagementDetail:exceedDataDispositionModel.ManagementDetail,
+    total: enterpriseMonitoringModel.total,
+    PageSize: enterpriseMonitoringModel.PageSize,
+    PageIndex: enterpriseMonitoringModel.PageIndex,
+    AlarmList:exceedDataAlarmModel.AlarmList,
+    column:exceedDataAlarmModel.column,
+    AlarmDetailList:exceedDataAlarmModel.AlarmDetailList,
+    pollutantCodeList:exceedDataAlarmModel.pollutantCodeList,
+    AlarmDealTypeList:exceedDataAlarmModel.AlarmDealTypeList,
+    ManagementDetail:exceedDataAlarmModel.ManagementDetail,
+    priseList:exceedDataAlarmModel.priseList,
 }))
-class index extends PureComponent {
+class exceedDataAlarmModal extends PureComponent {
     constructor(props) {
         super(props);
         this.newTabIndex = 0
@@ -116,16 +116,17 @@ class index extends PureComponent {
             if(this.props.pollutantCodeList.length > 0)
             {
                 const {outletValue,dataType,time} = this.state
-        
+                const {dateTime,alarmType}= this.props
+                console.log(dateTime)
                 this.props.dispatch({
-                    type: pageUrl.GetAlarmManagementRate,
+                    type: pageUrl.GetAlarmVerifyRate,
                     payload: {
                         RegionCode: '',
                         attentionCode: '',
-                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        PollutantType: alarmType,
                         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                        BeginTime: time[0],
-                        EndTime: time[1],
+                        BeginTime: dateTime[0],
+                        EndTime: dateTime[1],
                         PageSize: 20,
                         PageIndex: 1,
                         PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
@@ -136,9 +137,9 @@ class index extends PureComponent {
                 })
             }
         })
-        //获取处置结果
+        //获取核实结果
         this.props.dispatch({
-            type: pageUrl.GetAlarmDealType,
+            type: pageUrl.GetOverToExamineOperation,
             payload: {
                 PollutantType:''
             },
@@ -150,17 +151,17 @@ class index extends PureComponent {
                 // })
             }
         })
+
     };
 
 
     // 导出
     exportReport = () => {
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
-        
-        if(exportRegion!='1')
+        if(exportRegion != '1')
         {
             this.props.dispatch({
-                type:pageUrl.ExportAlarmManagementRate,
+                type:pageUrl.ExportAlarmVerifyRateDetail,
                 payload: {
                     RegionCode: exportRegion,
                     attentionCode: attentionValue == undefined?'':attentionValue,
@@ -174,7 +175,7 @@ class index extends PureComponent {
         }
         else{
             this.props.dispatch({
-                type:pageUrl.ExportAlarmManagementRate,
+                type:pageUrl.ExportAlarmVerifyRate,
                 payload: {
                     RegionCode: regionValue == undefined?'':regionValue,
                     attentionCode: attentionValue == undefined?'':attentionValue,
@@ -194,7 +195,7 @@ class index extends PureComponent {
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementRate,
+            type:pageUrl.GetAlarmVerifyRate,
             payload: {
                 RegionCode: regionValue == undefined?'':regionValue,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -210,6 +211,7 @@ class index extends PureComponent {
         this.setState({
             entType:outletValue
         })
+
     }
 
     children = () => {
@@ -241,22 +243,19 @@ class index extends PureComponent {
             return selectList;
         }
     }
-    onRef1 = (ref) => {
-        this.childrenHand = ref;
-      }
     checkBoxChange =(checkedValues)=>{
-        console.log(checkedValues)
         this.setState({
             pollutantCodeList:checkedValues
         })
     }
+    onRef1 = (ref) => {
+        this.childrenHand = ref;
+      }
     cardTitle = () => {
         const { time} = this.state;
-        const {pollutantCodeList} = this.props
-        console.log(pollutantCodeList)
-        console.log(this.state.pollutantCodeList)
+        const {pollutantCodeList,dateTime,alarmType} = this.props
         return (
-            < >
+            <>
                 <Select
                     allowClear
                     showSearch
@@ -299,7 +298,7 @@ class index extends PureComponent {
                     placeholder="排口类型"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    defaultValue={this.state.entType}
+                    defaultValue={alarmType}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
                         //获取监测因子列表
@@ -318,22 +317,22 @@ class index extends PureComponent {
                         this.setState({
                             outletValue: value,
                         })
-                    }}>    
+                    }}>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                 </Select>
                 <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
                     this.setState({
-                        dataType: e.target.value,
-                        time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
+                      dataType: e.target.value,
+                      time:e.target.value === 'Day' ?[moment().add(-1, "month")]:[moment().add(-24, "hour"), moment()]
                     })
-                    e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                }}>
+                    e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                  }}>
                     <Radio.Button value="Hour">小时</Radio.Button>
                     <Radio.Button value="Day">日均</Radio.Button>
-                </Radio.Group>
+                  </Radio.Group>
 
-                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={dateTime} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                     (dates, dataType) => {
                         this.setState({
                             time: dates
@@ -343,21 +342,21 @@ class index extends PureComponent {
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <div style={{ marginTop: 10 }}>
-                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-                    <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
-                        {
-                            pollutantCodeList.map(poll =>
-                                <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
-                            )
-                        }
+                    <label style={{ fontSize: 14 ,marginRight:10,marginLeft:10}}>监测因子:</label>
+                    <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+                    {
+                        pollutantCodeList.map(poll=>
+                        <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
+                        )
+                    }
                     </Checkbox.Group>
-                    <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标预警,由监管人员进行处置</span>
+                    <span style={{ fontSize: 14, color: 'red' }}>已核实指监测点运维负责人已核实超标信息</span>
                 </div>
-                
             </>
         )
     }
 
+    
     onChange = (PageIndex, PageSize) => {
 
     }
@@ -376,7 +375,7 @@ class index extends PureComponent {
             ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警情况'
         })
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -394,14 +393,14 @@ class index extends PureComponent {
         
 
     }
-    //行政区 已处置报警次数
+    //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
         const {regionValue,attentionValue,outletValue,dataType,time} = this.state
         this.setState({
             regVisibleAlready:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
-            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警已处置情况'
+            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警已核实情况'
         })
         this.props.dispatch({
             //获取企业列表
@@ -409,7 +408,7 @@ class index extends PureComponent {
             payload: { RegionCode: regionCode },
         });
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -426,7 +425,7 @@ class index extends PureComponent {
         })
         
     }
-    //行政区 待处置报警次数
+    //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
         const {regionValue,attentionValue,outletValue,dataType,time} = this.state
         this.props.dispatch({
@@ -438,10 +437,10 @@ class index extends PureComponent {
             regVisibleStay:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
-            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警待处置情况'
+            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警待核实情况'
         })
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -461,49 +460,54 @@ class index extends PureComponent {
     // 企业弹框
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
         const {attentionValue,outletValue,dataType,time,regionCode} = this.state
+
         let deal = ''
         if(status == '')
         {
-            deal = '处置情况'
+            deal = '核实情况'
         }
         if(status == '0')
         {
-            deal = '待处置情况'
+            deal = '待核实情况'
         }
         if(status == '1')
         {
-            deal = '已处置情况'
+            deal = '已核实情况'
         }
-
         if(entCode == undefined)
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: '全部合计于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+                status:status,
                 PollutantCode:PollutantCode
+    
             })
         }
-        else{
+        else
+        {
             this.setState({
                 entVisible: true,
                 ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+                status:status,
                 entCode:entCode,
                 regionCode:reCode,
                 PollutantCode:PollutantCode
+    
             })
         }
         
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
-                RegionCode: reCode == ''?regionCode:reCode,
+                RegionCode: reCode == ""?regionCode:reCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
                 //PageSize: 10,
-                //PageIndex: 1,
+               // PageIndex: 1,
                 PollutantCode: PollutantCode,
                 Status:status,
                 EntCode:entCode == undefined?'':entCode
@@ -511,6 +515,8 @@ class index extends PureComponent {
         })
         
     }
+
+
     //行政区 报警次数=>详情
     DetailsHandle =(verifyImage,remark)=>{
         let filename = ''
@@ -527,7 +533,7 @@ class index extends PureComponent {
             filePath:filename
         })
     }
-    //行政区 已处置报警次数=>详情
+    //行政区 已核实报警次数=>详情
     DetailsHandle2 =(verifyImage,remark)=>{
         let filename = ''
         if(verifyImage == null || verifyImage == '')
@@ -560,18 +566,15 @@ class index extends PureComponent {
         }
     };
 
-    ExceedonChange=()=>{
-        
-    }
-
     //添加标签
     paneAdd = (text,region)=>{
-        const {column,AlarmDetailList} = this.props
+        const {column,AlarmDetailList,loadingRateDetail} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
-
+        
+        
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementRateDetail,
+            type:pageUrl.GetAlarmVerifyRateDetail,
             payload: {
                 RegionCode: region,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -645,7 +648,7 @@ class index extends PureComponent {
                                 }
                             },
                             {
-                                title: "已处置报警次数",
+                                title: "已核实报警次数",
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
@@ -656,7 +659,7 @@ class index extends PureComponent {
                                 }
                             },
                             {
-                                title: "待处置报警次数",
+                                title: "待核实报警次数",
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
@@ -681,61 +684,56 @@ class index extends PureComponent {
                 })
                 if (key != '') {
                     let obj = {
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
+                        title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={this.props.AlarmDetailList}
                         pagination={
                             {
                                 showSizeChanger: true,
                                 showQuickJumper: true,
                                 defaultPageSize:20,
-                               // total:this.props.total,
                                 pageSizeOptions: ['20', '30', '40', '50'],
                             }
-                        } 
-                            // pagination={{
+                        }    
+                        // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,
                             //     pageSize: this.props.PageSize,
                             //     current: this.props.PageIndex,
-                            //     onChange: this.ExceedonChange,
-                            //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                            //     onChange: this.RegiononChange,
+                            //     pageSizeOptions: ['25', '30', '40', '100'],
                             //     total: this.props.total,
                             // }}
                         />, key: key, closable: true
                     }
         
                     panes.splice(indexx, 1, obj);
-                    this.setState({ panes, activeKey: key, regionCode: region,exportRegion:region });
+                    this.setState({ panes, activeKey: key, regionCode: region,exportRegion:region});
                 }
                 if (key == '') {
                     panes.push({
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
+                        title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={this.props.AlarmDetailList}
                         pagination={
                             {
                                 showSizeChanger: true,
                                 showQuickJumper: true,
                                 defaultPageSize:20,
-                                //total:this.props.total,
                                 pageSizeOptions: ['20', '30', '40', '50'],
                             }
-                        } 
-                            // pagination={{
+                        }    
+                        // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,
                             //     pageSize: this.props.PageSize,
                             //     current: this.props.PageIndex,
-                            //     onChange: this.ExceedonChange,
-                            //     pageSizeOptions: ['10','20','30', '40', '100'],
+                            //     onChange: this.RegiononChange,
+                            //     pageSizeOptions: ['25', '30', '40', '100'],
                             //     total: this.props.total,
                             // }}
                         />, key: activeKey, closable: true
                     });
-                    this.setState({ panes, activeKey,regionCode:region ,exportRegion:region});
+                    this.setState({ panes, activeKey,regionCode:region,exportRegion:region});
                 }
             }
         })
-
-
-        
     }
     //删除标签
     remove = targetKey => {
@@ -762,7 +760,7 @@ class index extends PureComponent {
       //切换标签
     onChangeHandle=(activeKey)=>{
         let arr = activeKey.split('new')
-        this.setState({ activeKey,exportRegion:arr[0]  });
+        this.setState({ activeKey,exportRegion:arr[0] });
     }
     onEdit=(targetKey, action)=>{
         this[action](targetKey);
@@ -826,7 +824,7 @@ class index extends PureComponent {
                         }
                     },
                     {
-                        title: "已处置报警次数",
+                        title: "已核实报警次数",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
@@ -837,7 +835,7 @@ class index extends PureComponent {
                         }
                     },
                     {
-                        title: "待处置报警次数",
+                        title: "待核实报警次数",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
@@ -854,44 +852,40 @@ class index extends PureComponent {
 
         return <>{
 
-            <Tabs
-                hideAdd
-                type="editable-card"
-                onChange={this.onChangeHandle}
-                activeKey={this.state.activeKey}
-                onEdit={this.onEdit}
+            <Tabs 
+            hideAdd
+            type="editable-card"
+            onChange={this.onChangeHandle}
+            activeKey={this.state.activeKey}
+            onEdit={this.onEdit}
             >
+                <TabPane tab={this.state.entType == '1'?'废水':'废气'} key='1' closable={false}>
+                    <SdlTable columns={columns} dataSource={AlarmList}
+                    loading={loading}
+                        // pagination={{
+                        //     showSizeChanger: true,
+                        //     showQuickJumper: true,
+                        //     pageSize: this.props.pageSize,
+                        //     current: this.props.PageIndex,
+                        //     onChange: this.onChange,
+                        //     pageSizeOptions: ['20', '30', '40', '100'],
+                        //     total: this.props.total,
+                        // }} 
+                        pagination={
+                            false
+                        }
+                    />
+                </TabPane>
                 {
-                    loading ? <PageLoading /> :
-                        <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
-                            <SdlTable columns={columns} dataSource={AlarmList}
-                                // pagination={{
-                                //     showSizeChanger: true,
-                                //     showQuickJumper: true,
-                                //     pageSize: this.props.pageSize,
-                                //     current: this.props.PageIndex,
-                                //     onChange: this.onChange,
-                                //     pageSizeOptions: ['20', '30', '40', '100'],
-                                //     total: this.props.total,
-                                // }} 
-                                pagination={
-                                    false
-                                }
-                            />
+                    this.state.panes.map(pane=>(
+                        <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+                            {pane.content}
                         </TabPane>
-                }
-
-                {
-                    loadingRateDetail ? <PageLoading /> :
-                        this.state.panes.map(pane => (
-                            <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-                                {pane.content}
-                            </TabPane>
-                        ))
-                }
+                    ))
+            }
             </Tabs>
 
-
+            
         }
         </>
         //
@@ -915,7 +909,7 @@ class index extends PureComponent {
     AlertsButtonHandle =()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -935,9 +929,8 @@ class index extends PureComponent {
     //报警次数数据   导出
     ButtonHandleExpor=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
-        console.log(DealType)
         this.props.dispatch({
-            type:pageUrl.ExportAlarmManagementDetail,
+            type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -952,11 +945,11 @@ class index extends PureComponent {
             }
         })
     }
-    //已处置报警按钮查询信息
+    //已核实报警按钮查询信息
     AlreadyButtonCountHandle=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -973,11 +966,11 @@ class index extends PureComponent {
             }
         })
     }
-    //已处置报警   导出
+    //已核实报警   导出
     AlreadyButtonHandleExpor=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
         this.props.dispatch({
-            type:pageUrl.ExportAlarmManagementDetail,
+            type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -992,11 +985,11 @@ class index extends PureComponent {
             }
         })
     }
-    ////待处置报警按钮查询信息
+    ////待核实报警按钮查询信息
     StayButtonCountHandle=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
         this.props.dispatch({
-            type:pageUrl.GetAlarmManagementDetail,
+            type:pageUrl.GetAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -1013,11 +1006,11 @@ class index extends PureComponent {
             }
         })
     }
-     //待处置报警   导出
-     StayButtonHandleExpor=()=>{
+     //待核实报警   导出
+    StayButtonHandleExpor=()=>{
         const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
         this.props.dispatch({
-            type:pageUrl.ExportAlarmManagementDetail,
+            type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -1035,7 +1028,7 @@ class index extends PureComponent {
     ButtonCountHandleExpor=()=>{
         const {attentionValue,outletValue,dataType,time,regionCode,PollutantCode,status,entCode} = this.state
         this.props.dispatch({
-            type:pageUrl.ExportAlarmManagementDetail,
+            type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
                 RegionCode: regionCode,
                 attentionCode: attentionValue == undefined?'':attentionValue,
@@ -1049,7 +1042,6 @@ class index extends PureComponent {
             }
         })
     }
-
     AlarmDealCheckBoxChange =(checkedValues)=>{
         this.setState({
             AlarmDealTypeList:checkedValues
@@ -1060,6 +1052,7 @@ class index extends PureComponent {
     }
     render() {
         const { loading,priseList ,AlarmDealTypeList,ManagementDetail,loadingDetail} = this.props
+        const {alarmVisible,alarmCancle} = this.props
         const fixed = false
         const columns2 = [
             {
@@ -1095,7 +1088,7 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次超标时间",
+                title: "首次报警时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1119,7 +1112,7 @@ class index extends PureComponent {
                 key: 'message',
             },
             {
-                title: "处置人",
+                title: "核实人",
                 width: 90,
                 align: 'center',
                 fixed: fixed,
@@ -1130,7 +1123,7 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置时间",
+                title: "核实时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1141,18 +1134,18 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置状态",
+                title: "核实状态",
                 width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
                 key: 'status',
                 render:(text)=>{
-                    return text == ''?'-':text == 0?'待处置':'已处置'
+                    return text == ''?'-':text == 0?'待核实':'已核实'
                     }
             },
             {
-                title: "处置结果",
+                title: "核实结果",
                 width: 90,
                 align: 'center',
                 fixed: fixed,
@@ -1163,7 +1156,7 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置详情",
+                title: "核实详情",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1171,26 +1164,24 @@ class index extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
-                     {
-                        sourc = []
-                     }
-                     else
-                     {
-                        record.verifyImage.map(item=>{
-                            let obj = {
-                                name:item.FileName,
-                                attach:item.FileName
-                            }
-                            sourc.push(obj)
-                        })
-                     }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                    {
+                       sourc = []
                     }
+                    else
+                    {
+                       record.verifyImage.map(item=>{
+                           let obj = {
+                               name:item.FileName,
+                               attach:item.FileName
+                           }
+                           sourc.push(obj)
+                       })
+                    }
+                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                }
             },
         ]
-
-
         const columns3 = [
             {
                 title: "行政区",
@@ -1249,9 +1240,9 @@ class index extends PureComponent {
                 key: 'message',
             },
             {
-                title: "处置人",
-                width: 100,
-                align: '90',
+                title: "核实人",
+                width: 90,
+                align: 'center',
                 fixed: fixed,
                 dataIndex: 'dealPerson',
                 key: 'dealPerson',
@@ -1260,7 +1251,7 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置时间",
+                title: "核实时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1271,18 +1262,18 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置状态",
+                title: "核实状态",
                 width: 90,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
                 key: 'status',
                 render:(text)=>{
-                    return text == ''?'-':text == '0'?'待处置':'已处置'
+                    return text == ''?'-':text == '0'?'待核实':'已核实'
                     }
             },
             {
-                title: "处置结果",
+                title: "核实结果",
                 width: 90,
                 align: 'center',
                 fixed: fixed,
@@ -1293,7 +1284,7 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置详情",
+                title: "核实详情",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1353,14 +1344,6 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次报警时间",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'firstTime',
-                key: 'firstTime',
-            },
-            {
                 title: "报警因子",
                 width: 100,
                 align: 'center',
@@ -1377,7 +1360,7 @@ class index extends PureComponent {
                 key: 'message',
             },
             {
-                title: "处置人",
+                title: "核实人",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1388,7 +1371,18 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置时间",
+                title: "核实结果",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
+                title: "核实时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1399,29 +1393,18 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置状态",
+                title: "核实状态",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
                 key: 'status',
                 render:(text)=>{
-                    return text == ''?'-':text == '0'?'待处置':'已处置'
+                    return text == ''?'-':text == '0'?'待核实':'已核实'
                     }
-            },
+            } ,
             {
-                title: "处置结果",
-                width: 90,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'verifymessage',
-                key: 'verifymessage',
-                render:(text)=>{
-                    return text == ''?'-':text
-                    }
-            },
-            {
-                title: "处置详情",
+                title: "核实详情",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1447,7 +1430,6 @@ class index extends PureComponent {
                     }
             },
         ]
-
         const columns5 = [
             {
                 title: "行政区",
@@ -1488,7 +1470,7 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次报警时间",
+                title: "首次超标时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1512,7 +1494,7 @@ class index extends PureComponent {
                 key: 'message',
             },
             {
-                title: "处置人",
+                title: "核实人",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1523,7 +1505,18 @@ class index extends PureComponent {
                 }
             },
             {
-                title: "处置时间",
+                title: "核实结果",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
+                title: "核实时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1534,28 +1527,18 @@ class index extends PureComponent {
                     }
             },
             {
-                title: "处置状态",
+                title: "核实状态",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'status',
                 key: 'status',
                 render:(text)=>{
-                    return text == ''?'-':text=='0'?'待处置':'已处置'
+                    return text == ''?'-':text=='0'?'待核实':'已核实'
                 }
             },
             {
-                title: "处置结果",
-                width: 90,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'verifymessage',
-                key: 'verifymessage',
-                render:(text)=>{
-                    return text == ''?'-':text
-                    }
-            },{
-                title: "处置详情",
+                title: "核实详情",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1563,39 +1546,54 @@ class index extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
-                     {
-                        sourc = []
-                     }
-                     else
-                     {
-                        record.verifyImage.map(item=>{
-                            let obj = {
-                                name:item.FileName,
-                                attach:item.FileName
-                            }
-                            sourc.push(obj)
-                        })
-                     }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                    {
+                       sourc = []
                     }
+                    else
+                    {
+                       record.verifyImage.map(item=>{
+                           let obj = {
+                               name:item.FileName,
+                               attach:item.FileName
+                           }
+                           sourc.push(obj)
+                       })
+                    }
+                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                }
             },
         ]
         return (
             <>
                 <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="超标数据报警处置记录查询">
+                        
+                    <Modal
+                        centered
+                        title='实时报警'
+                        visible={alarmVisible}
+                        footer={null}
+                        width={1600}
+                        onCancel={alarmCancle}
+                    >
                         <Card
-                            extra={
-                                <>
-                                    {this.cardTitle()}
-                                </>
-                            }
-                            className={style.dataTable}
-                        >
+                        extra={
+                            <>
+                                {
+                                    this.cardTitle()
+                                }
+                            </>
+                        }
+                        className={style.dataTable}
+                    >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
+                            {this.pageContent()}
                         </Card>
+                    </Modal>
+
+                    
+
+                       
                         <Modal
                             centered
                             title={this.state.ModalTitle}
@@ -1636,11 +1634,11 @@ class index extends PureComponent {
                                     })
                                 }}>
                                     <Radio.Button value="2">全部</Radio.Button>
-                                    <Radio.Button value="1">已处置</Radio.Button>
-                                    <Radio.Button value="0">待处置</Radio.Button>
+                                    <Radio.Button value="1">已核实</Radio.Button>
+                                    <Radio.Button value="0">待核实</Radio.Button>
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
+                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
                                     <Checkbox.Group  onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
@@ -1651,7 +1649,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
+                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns2} dataSource={ManagementDetail} pagination={false} />
                             }
                         </Modal>
                         <Modal
@@ -1689,8 +1687,8 @@ class index extends PureComponent {
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
                                 <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
                                 <div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-                                    <Checkbox.Group  onChange={this.AlarmDealCheckBoxChange}>
+                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
+                                    <Checkbox.Group onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>
@@ -1700,7 +1698,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
+                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1740,7 +1738,7 @@ class index extends PureComponent {
                                 <Button onClick={this.StayButtonHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                <SdlTable loading={loadingDetail} scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
+                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1756,7 +1754,7 @@ class index extends PureComponent {
                                 <Button onClick={this.ButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
+                                loadingDetail?<PageLoading/>:<SdlTable columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1798,12 +1796,12 @@ class index extends PureComponent {
                                 </div>
                             </div>
                         </Modal>
-                    </BreadcrumbWrapper>
+                    
                 </div>
             </>
         );
     }
 }
 
-export default index;
+export default exceedDataAlarmModal;
 

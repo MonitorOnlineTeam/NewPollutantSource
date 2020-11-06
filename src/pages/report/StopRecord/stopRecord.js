@@ -4,7 +4,7 @@
  * 创建时间：2020.10.22
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon ,List} from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon ,List, Popover } from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -17,6 +17,7 @@ import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
+import FileDown from '@/components/AttachmentView/index'
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { MonthPicker } = DatePicker;
@@ -44,14 +45,15 @@ class index extends PureComponent {
         super(props);
         this.newTabIndex = 0
         this.state = {
-            Begintime: [moment().add(-1, "month"), moment()],
-            Endtime: [moment().add(-1, "month"), moment()],
+            Begintime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            Endtime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
             regionValue: '',
             entValue:'',
             voucher:'',
             pointValue:'',
             visible:false,
-            fileArr:[]
+            fileArr:[],
+            popVisible:false
         };
     }
 
@@ -189,7 +191,6 @@ class index extends PureComponent {
             <>
                 <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
-                        debugger;
                         this.setState({
                             Begintime: dates
                         })
@@ -266,7 +267,7 @@ debugger
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                         placeholder="监测点列表"
                         maxTagCount={2}
-                        value={this.state.pointValue}
+                        value={this.state.pointValue==''?undefined:this.state.pointValue}
                         maxTagTextLength={5}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
@@ -356,6 +357,17 @@ debugger
         })
 
     }
+    onVisibleChange=(visible)=>{
+        this.setState({
+            popVisible:visible
+        })
+    }
+    onPopCancelChange=()=>{
+        this.setState({
+            popVisible:false
+        })
+    }
+    
     pageContent = () => {
         const { StopList ,loading} = this.props
         const fixed = false
@@ -432,7 +444,24 @@ debugger
                 dataIndex: 'vouche',
                 key: 'vouche',
                 render:(text,record)=>{
-                    return <a onClick={this.lookChange.bind(this,record.field)}>查看</a>
+                     let sourc = []
+                     if(record.field == null)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.field.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                    //<a onClick={this.lookChange.bind(this,record.field)}>查看</a>
+                    
                 }
             },
             {

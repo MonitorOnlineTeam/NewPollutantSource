@@ -4,7 +4,7 @@
  * 创建时间：2020.10.10
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon} from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon, Modal} from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -36,7 +36,6 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      defalutPollutantType: props.match.params.type,
       pollutantValue: [],
       time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
@@ -49,6 +48,7 @@ class index extends PureComponent {
   }
 
   initData = () => {
+      const {flowEntCode,flowTime} = this.props
     this.props.dispatch({
       //获取企业列表
       type: 'flowanalysisModel/getEntByRegion',
@@ -57,7 +57,12 @@ class index extends PureComponent {
     this.props.dispatch({
         type:pageUrl.GetFlowList,
         payload:{
-
+            EntCode:flowEntCode,
+            BeginTime: moment(flowTime[0]).format("YYYY-MM-DD HH:mm:ss"),
+            EndTime: moment(flowTime[1]).format("YYYY-MM-DD HH:mm:ss"),
+            DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
+            PageSize:20,
+            PageIndex:1,
         }
     })
 
@@ -118,7 +123,7 @@ class index extends PureComponent {
   };
   cardTitle = () => {
     const { pollutantValue, time, dataType, format } = this.state;
-
+    const {flowTime,flowEntCode} = this.props
     return (
       <>
         <Select
@@ -127,6 +132,7 @@ class index extends PureComponent {
           style={{ width: 200, marginLeft: 10,marginRight: 10}}
           placeholder="污水处理厂列表"
           maxTagCount={2}
+          defaultValue={flowEntCode}
           maxTagTextLength={5}
           maxTagPlaceholder="..."
           optionFilterProp="children"
@@ -156,7 +162,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={flowTime} callback={
             (dates, dataType)=>{
                 this.setState({
                     time:dates
@@ -443,7 +449,7 @@ class index extends PureComponent {
                         <ReactEcharts
                           option={option}
                           lazyUpdate={true}
-                          style={{ height: 'calc(100vh - 250px)', width: '100%' }}
+                          style={{ height: 500, width: '100%' }}
                           className="echarts-for-echarts"
                           theme="my_theme"
                       />:<PageLoading />
@@ -451,7 +457,7 @@ class index extends PureComponent {
                 </TabPane>
                 <TabPane tab="数据详情" key="2">
                     {
-                        <SdlTable columns={columns} dataSource={FlowList}
+                        <SdlTable columns={columns} scroll={{ y: 500 }} dataSource={FlowList}
                         loading={loading}
                         pagination={{
                           showSizeChanger: true,
@@ -471,22 +477,28 @@ class index extends PureComponent {
       //
   }
   render() {
+      const {flowVisible,flowCancle} = this.props
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-          <BreadcrumbWrapper title="流量对比分析">
+            <Modal
+            centered
+            title='污水处理厂流量分析'
+            visible={flowVisible}
+            footer={null}
+            width={1600}
+            onCancel={flowCancle}>
             <Card
               extra={
                 <>
-                                    {this.cardTitle()}
+                  {this.cardTitle()}
                 </>
               }
-              className="contentContainer"
+              className={style.dataTable}
             >
               {this.pageContent()}
             </Card>
-
-          </BreadcrumbWrapper>
+            </Modal>
         </div>
       </>
     );

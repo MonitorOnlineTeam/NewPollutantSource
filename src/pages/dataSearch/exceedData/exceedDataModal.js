@@ -107,6 +107,7 @@ class index extends PureComponent {
     }
 
     initData = () => {
+        const {exceedType,exceedTime} = this.props
         //获取行政区列表
         this.props.dispatch({
             type: pageUrl.getRegions,
@@ -124,7 +125,7 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetPollutantByType,
             payload: {
-                type:'1'
+                type:exceedType
             },
         }).then(()=>{
             console.log(this.props.PollutantByType)
@@ -137,20 +138,22 @@ class index extends PureComponent {
                     selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
                 })
                 
+                //首页弹框参数
+                //const {exceedType,exceedTime} = this.props
                 this.setState({
                     selectPollution:selectPollution
                 })
-                const { entType, dataType, time } = this.state
+                const {  dataType } = this.state
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
                     payload: {
                         RegionCode: '',
                         AttentionCode: '',
-                        PollutantTypeCode: entType,
+                        PollutantTypeCode: exceedType,
                         DataType: dataType == 'Hour'?'HourData':'DayData',
-                        BeginTime: time[0],
-                        EndTime: time[1],
-                        TabType: entType,
+                        BeginTime: exceedTime[0],
+                        EndTime: exceedTime[1],
+                        TabType: exceedType,
                         PollutantList: pollutantList
                     }
                 })
@@ -539,7 +542,6 @@ class index extends PureComponent {
                 this.setState({
                     
                     modalSelectPollution:modalSelectPollution,
-                    regionCode:rCode,
                     entModalTitle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
                 })
             }
@@ -667,7 +669,6 @@ class index extends PureComponent {
                 {
                     this.setState({
                         //visibleEnt:true,
-                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle2:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     }) 
@@ -675,7 +676,6 @@ class index extends PureComponent {
                 else{
                     this.setState({
                         //visibleMoni:true,
-                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     })
@@ -733,6 +733,8 @@ class index extends PureComponent {
 
     cardTitle = () => {
         const { PollutantByType } = this.props
+        //首页弹框参数
+        const {exceedType,exceedTime} = this.props
         const { getFieldDecorator  } = this.props.form;
         return (
             <>
@@ -792,7 +794,7 @@ class index extends PureComponent {
                     <Form.Item label="企业类型" >
                         {
                             getFieldDecorator('outlet', {
-                                initialValue: '1'
+                                initialValue: exceedType
                             })(
                                 <Select
                                     style={{ width: 200, marginLeft: 10, marginRight: 20 }}
@@ -843,7 +845,7 @@ class index extends PureComponent {
                             getFieldDecorator('dateTime', {
                                 initialValue: this.state.time
                             })(
-                                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={exceedTime} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                     (dates, dataType) => {
                                         this.setState({
                                             time: dates
@@ -1563,7 +1565,9 @@ class index extends PureComponent {
     render() {
         const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount,RegionPageIndex} = this.props
         const {modalSelectPollution,modalSelectPollution2} = this.state
+        const {exceedVisible,exceedCancle} = this.props 
         const fixed = false
+
         const columns = [
             {
                 title: "行政区",
@@ -1733,19 +1737,27 @@ class index extends PureComponent {
         return (
             <>
                 <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="超标数据查询">
+                    <Modal
+                    centered
+                    title='近七日超标废水监测点'
+                    visible={exceedVisible}
+                    footer={null}
+                    width={1600}
+                    onCancel={exceedCancle}>
                         <Card
                             extra={
                                 <>
-                                        {
-                                            this.cardTitle()
-                                        }
+                                    {
+                                        this.cardTitle()
+                                    }
                                 </>
                             }
                             className={style.dataTable}
                         >
-                            {loading ? <PageLoading /> : this.pageContent()}
+                            {this.pageContent()}
                         </Card>
+                    </Modal>
+
                         <Modal
                             centered
                             title={this.state.entModalTitle}
@@ -1872,7 +1884,6 @@ class index extends PureComponent {
                             }
                             
                         </Modal>
-                    </BreadcrumbWrapper>
                 </div>
             </>
         );
