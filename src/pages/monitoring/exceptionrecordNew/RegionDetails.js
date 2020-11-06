@@ -131,7 +131,7 @@ class RegionDetails extends PureComponent {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
     const { columns, DGIMN, TaskID } = this.state;
     return (
-      <BreadcrumbWrapper title="异常数据报警详情">
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="异常数据报警详情">
         <Card>
           <Row style={{ marginBottom: 10 }}>
             <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
@@ -142,7 +142,9 @@ class RegionDetails extends PureComponent {
             <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
-            <Button onClick={() => router.push("/monitoring/missingData/exceptionrecord")}>
+            <Button onClick={() => {
+              this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
+            }}>
               <Icon type="rollback" />
               返回
             </Button>

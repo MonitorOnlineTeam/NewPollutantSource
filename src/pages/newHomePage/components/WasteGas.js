@@ -57,12 +57,15 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
+      overListPar: {
+        PollutantType: 2,
+        BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
       gasOverListPar:{
         PollutantType:2,
         BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-        pollutantCode:'01',
-        DataType:'HourData'
+        pollutantCode: '01',
+        DataType: 'HourData'
       }
     }
 
@@ -77,12 +80,12 @@ export default class Index extends Component {
   }
   componentDidUpdate() {
 
-}
-initData=()=>{
-  const {dataQueryPar,dispatch} = this.props;
-  let pointStatusPar ={ ...dataQueryPar,PollutantType:2};
-  dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar },  });//监测点状态
-  dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'),   } });//数据报警响应
+  }
+  initData = () => {
+    const { dataQueryPar, dispatch } = this.props;
+    let pointStatusPar = { ...dataQueryPar, PollutantType: 2 };
+    dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
+    dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'), } });//数据报警响应
 
 
   const { gasOverListPar } = this.state;
@@ -145,7 +148,6 @@ initData=()=>{
         <TabPane tab="近30天" key="2">
         </TabPane>
       </Tabs>
-
     </Row>
   }
 tabCallback1=(value)=>{
@@ -159,87 +161,87 @@ tabCallback1=(value)=>{
 }
 tabCallback2=(value)=>{
   const { dispatch,dataQueryPar } = this.props;
-
+  this.setState({ currentTabKey: value })
   let parData ={ ...dataQueryPar,
     BeginTime:value==1?moment().add('day',-7).format('YYYY-MM-DD 00:00:00'):moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
     EndTime: moment().format('YYYY-MM-DD 23:59:59'),
   };
 
 
-  dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
+    dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
 
-}
-percentage=(data)=>{
-  return `${data}%`
-}
-getChartData=(type)=>{
-   const { alarmResponseList } = this.props;
-    let color1 = ["#42dab8","#7ef1d7"],
-        color2 = ["#fdcb31",'#fde290'],
-        color3 = ['#5169c5','#889be2']
+  }
+  percentage = (data) => {
+    return `${data}%`
+  }
+  getChartData = (type) => {
+    const { alarmResponseList } = this.props;
+    let color1 = ["#42dab8", "#7ef1d7"],
+      color2 = ["#fdcb31", '#fde290'],
+      color3 = ['#5169c5', '#889be2']
     let option = {
-        tooltip: {
-            show:false,
-            trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-        },
-        color:type==1? color1 : type==2? color2 : color3 ,
-        title:{
-            text: type==1?this.percentage(alarmResponseList.operationRate) : type==2?  this.percentage(alarmResponseList.exceptionRate): this.percentage(alarmResponseList.missRate),
-            left:"center",
-            top:"42%",
-            textStyle:{
-                color: type==1? color1[1] : type==2? color2[1] : color3[1],
-                fontSize:16,
-                align:"center",
-                fontWeight:400
-            }
-        },
-        // graphic:{
-        //     type:"text",
-        //     left:"center",
-        //     top:"20%",
-        //     style:{
-        //         text:"运动达标率",
-        //         textAlign:"center",
-        //         fill:"#333",
-        //         fontSize:20,
-        //         fontWeight:700
-        //     }
-        // },
-        series: [
-            {
-                name: type==1?'数据超标报警核实率':type==2? '数据异常报警响应率' : '数据缺失报警响应率',
-                type: 'pie',
-                // center: ['50%', '50%'],
-                radius: ['50%', '70%'],
-                avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show: false,
-                        position: 'center'
-                    },
+      tooltip: {
+        show: false,
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+      },
+      color: type == 1 ? color1 : type == 2 ? color2 : color3,
+      title: {
+        text: type == 1 ? this.percentage(alarmResponseList.operationRate) : type == 2 ? this.percentage(alarmResponseList.exceptionRate) : this.percentage(alarmResponseList.missRate),
+        left: "center",
+        top: "42%",
+        textStyle: {
+          color: type == 1 ? color1[1] : type == 2 ? color2[1] : color3[1],
+          fontSize: 16,
+          align: "center",
+          fontWeight: 400
+        }
+      },
+      // graphic:{
+      //     type:"text",
+      //     left:"center",
+      //     top:"20%",
+      //     style:{
+      //         text:"运动达标率",
+      //         textAlign:"center",
+      //         fill:"#333",
+      //         fontSize:20,
+      //         fontWeight:700
+      //     }
+      // },
+      series: [
+        {
+          name: type == 1 ? '数据超标报警核实率' : type == 2 ? '数据异常报警响应率' : '数据缺失报警响应率',
+          type: 'pie',
+          // center: ['50%', '50%'],
+          radius: ['50%', '70%'],
+          avoidLabelOverlap: false,
+          label: {
+            normal: {
+              show: false,
+              position: 'center'
+            },
 
-                },
+          },
 
-                data: [
-                    { value: type==1?alarmResponseList.operationRate : type==2?  alarmResponseList.exceptionRate: alarmResponseList.missRate, name: '已完成' },
-                    { value: type==1?(100-alarmResponseList.operationRate) : type==2?  (100-alarmResponseList.exceptionRate): (100-alarmResponseList.missRate), name: '未完成' },
+          data: [
+            { value: type == 1 ? alarmResponseList.operationRate : type == 2 ? alarmResponseList.exceptionRate : alarmResponseList.missRate, name: '已完成' },
+            { value: type == 1 ? (100 - alarmResponseList.operationRate) : type == 2 ? (100 - alarmResponseList.exceptionRate) : (100 - alarmResponseList.missRate), name: '未完成' },
 
-                ]
-            }
-        ]
+          ]
+        }
+      ]
     };
     return option;
   }
 
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-    console.log("1111")
     this.setState({
       clicktStatus: type,
       stopStatus: stopStatus,
-      visible_WJQ: true
+      visible_WJQ: true,
+      time: undefined
     })
   }
 
@@ -252,7 +254,7 @@ getChartData=(type)=>{
       alarmResponseLoading,
     } = this.props;
 
-    const { clicktStatus, stopStatus, visible_WJQ, XYLTime } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey } = this.state;
 
     return (
       <div style={{ width: '100%' }} className={`${styles.wasteWaterPoint} ${styles.wasteGasPoint}`}  >
@@ -302,8 +304,12 @@ getChartData=(type)=>{
                       theme="my_theme"
                       onEvents={{
                         click: (event) => {
+                          let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
                           // 响应率
-
+                          this.setState({
+                            ECXYLTime: time,
+                            visible_WJQ: true
+                          })
                         }
                       }}
                       style={{ width: '100%', height: 120 }}
@@ -331,7 +337,7 @@ getChartData=(type)=>{
           </Col>
         </Row>
         {
-          visible_WJQ && <DetailsModal_WJQ time={XYLTime} status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={2} onCancel={() => {
+          visible_WJQ && <DetailsModal_WJQ time={ECXYLTime} status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={2} onCancel={() => {
             this.setState({
               visible_WJQ: false
             })
