@@ -13,42 +13,45 @@ import style from '@/pages/dataSearch/tableClass.less'
 import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
 import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
 import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
+import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage/index"
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-@connect(({ loading}) => ({
+@connect(({ loading }) => ({
 }))
 class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-        alarmVisible:false,
-        exceedVisible:false,
-        dateTime:[moment().add(-48, "hour"), moment()],
-        exceedType:'',
-        exceedTime:[moment().add(-7, "day"), moment()],
-        flowVisible:false,
-        flowTime:[moment().add(-30, "day"), moment()],
-        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018'
+      alarmVisible: false,
+      exceedVisible: false,
+      TVisible: false,
+      dateTime: [moment().add(-48, "hour"), moment()],
+      exceedType: '',
+      exceedTime: [moment().add(-7, "day"), moment()],
+      flowVisible: false,
+      flowTime: [moment().add(-30, "day"), moment()],
+      flowEntCode: '00557cc5-53d5-4bd2-81d5-1b81deba7018'
     };
   }
 
-  getChartAndTableData=()=>{
+  getChartAndTableData = () => {
     this.setState({
-      alarmVisible:true,
-  })
-  }
-
-  water=()=>{
-    this.setState({
-      exceedVisible: true,
-      exceedType:'1'
+      alarmVisible: true,
     })
   }
-  gas=()=>{
+
+  water = () => {
     this.setState({
       exceedVisible: true,
-      exceedType:'2'
+      exceedType: '1'
+    })
+  }
+  gas = () => {
+    this.setState({
+      exceedVisible: true,
+      exceedType: '2'
     })
   }
   flow = () => {
@@ -56,7 +59,11 @@ class index extends PureComponent {
       flowVisible: true,
     })
   }
-
+  Tra = () => {
+    this.setState({
+      TVisible: true,
+    })
+  }
   cardTitle = () => {
 
     return (
@@ -65,35 +72,36 @@ class index extends PureComponent {
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.water}>七日超标废水</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.gas}>七日超标废气</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.flow}>流量对比分析</Button>
+        <Button type="primary" style={{ marginRight: 10 }} onClick={this.Tra}>有效传输率</Button>
       </>
     )
   }
-  onCancelChange =()=>{
-      this.setState({
-          alarmVisible:false
-      })
+  onCancelChange = () => {
+    this.setState({
+      alarmVisible: false
+    })
   }
   render() {
-      const {alarmVisible,dateTime,exceedVisible,exceedType,exceedTime,flowVisible,flowTime,flowEntCode} = this.state
+    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-            <Card
-              extra={
-                <>
-                    {this.cardTitle()}
-                </>
-              }
-              className="contentContainer"
-            >
-              {/* 实时数据
+          <Card
+            extra={
+              <>
+                {this.cardTitle()}
+              </>
+            }
+            className="contentContainer"
+          >
+            {/* 实时数据
 
                 参数:
                 dateTime  时间参数
               */}
-                {alarmVisible? <ExceedDataAlarm dateTime={dateTime}  alarmVisible={alarmVisible} alarmCancle={()=>{
-                    this.setState({alarmVisible:false});
-                }}/>:null}
+            {alarmVisible ? <ExceedDataAlarm dateTime={dateTime} alarmVisible={alarmVisible} alarmCancle={() => {
+              this.setState({ alarmVisible: false });
+            }} /> : null}
             {/* 超标废水监测点  和  超标废气监测点
                 参数:
                 exceedTime  时间参数  默认是7天
@@ -114,7 +122,31 @@ class index extends PureComponent {
               this.setState({ flowVisible: false });
             }} /> : null}
 
-            </Card>
+            {/* 有效传输有效率
+                参数:
+                flowTime  时间参数  默认是30天
+                flowEntCode  污水处理厂编码EntCode
+
+              */}
+            {
+              TVisible ?
+                <TransmissionefficiencyModal 
+                flowTime={flowTime}
+                 flowEntCode={flowEntCode} 
+                 TVisible={TVisible} 
+                 TCancle={() => {
+                  this.setState({ TVisible: false });
+                }} 
+                // onRegionClick={(RegionCode) => {
+                //   this.setState({
+                //     RegionCode: RegionCode,
+                //     TVisible: false
+                //   })
+                // }}
+                /> : null}
+
+            
+          </Card>
         </div>
       </>
     );
