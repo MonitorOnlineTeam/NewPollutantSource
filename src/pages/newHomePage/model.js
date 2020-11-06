@@ -14,14 +14,13 @@ import {
   ExportSewageHistoryList,
   GetPointStatusList,
   GetOverList,
-  GetOperationWorkOrderList
+  GetOperationWorkOrderList,
   getAirDayReportData,
   getAlarmDataList,
   getGZRateList,
   getCBRateList,
   getYZRateList,
   getCSYXRateList,
-  getAirDayReportData,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
