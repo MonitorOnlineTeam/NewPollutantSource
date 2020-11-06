@@ -24,7 +24,7 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="无账台工单记录(企业)">
+        <BreadcrumbWrapper >
           <ContentData />
         </BreadcrumbWrapper>
     );
