@@ -44,8 +44,11 @@ const pageUrl = {
 @connect(({ loading, home,autoForm }) => ({
  pointStatusLoading:home.pointStatusLoading,
  dataQueryPar:home.dataQueryPar,
- wasteGasStatusList:home.wasteGasStatusList
-
+ wasteGasStatusList:home.wasteGasStatusList,
+ overWasteGasLoading:home.overWasteGasLoading,
+ overWasteGasList:home.overWasteGasList,
+ alarmResponseList:home.alarmResponseList,
+ alarmResponseLoading:home.alarmResponseLoading
 }))
 @Form.create()
 export default class Index extends Component {
@@ -53,13 +56,13 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      list:[
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-
-      ]
+      overListPar:{
+        PollutantType:1,
+        BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
+        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+        pollutantCode:'011',
+        DataType:'HourData'
+      }
     }
     
 }
@@ -78,9 +81,29 @@ initData=()=>{
   const {dataQueryPar,dispatch} = this.props;
   let pointStatusPar ={ ...dataQueryPar,PollutantType:2};
   dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar },  });//监测点状态
+
+  const { overListPar } = this.state;
+  
+
+  this.getTableData(overListPar);
 }
+
+getTableData=(par)=>{
+  const { dispatch } = this.props;
+  dispatch({ type: 'home/getOverList', payload: { ...par },  });//超标监测点
+}
+
 btnChange=(e)=>{
-  console.log(e.target.value)
+  btnChange=(e)=>{
+
+    const { overListPar } = this.state;
+    
+    let parData = {...overListPar,DataType:e.target.value}
+    
+     this.setState({overListPar:parData},()=>{
+       this.getTableData(parData) ;
+     })
+  }
 }
  cardTitle1=()=>{
    const { wasteGasStatusList } = this.props;
@@ -97,12 +120,12 @@ cardTitle2=()=>{
           <Radio.Button value="large">小时</Radio.Button>
           <Radio.Button value="default">日均</Radio.Button>
         </Radio.Group>
-          <Tabs defaultActiveKey="1" onChange={this.tabCallback1}>
-             <TabPane tab="烟尘" key="1">
+          <Tabs defaultActiveKey="01" onChange={this.tabCallback1}>
+             <TabPane tab="烟尘" key="01">
              </TabPane>
-             <TabPane tab="废气" key="2">
+             <TabPane tab="二氧化硫" key="02">
             </TabPane>
-            <TabPane tab="空气站" key="5">
+            <TabPane tab="二氧化氮" key="03">
             </TabPane>
             </Tabs>
             
@@ -122,13 +145,21 @@ cardTitle3=()=>{
             </Row>
   }
 tabCallback1=(value)=>{
-  console.log(value)
+  const { overListPar } = this.state;
+  
+  let parData = {...overListPar,pollutantCode:value}
+  
+   this.setState({overListPar:parData},()=>{
+     this.getTableData(parData);
+   })
 }
 tabCallback2=(value)=>{
   console.log(value)
 }
 
 getChartData=(type)=>{
+
+   const { alarmResponseList } = this.props;
     let color1 = ["#42dab8","#7ef1d7"],
         color2 = ["#fdcb31",'#fde290'],
         color3 = ['#3b4b85','#56659c']
@@ -189,7 +220,10 @@ getChartData=(type)=>{
   render() {
     const {
       pointStatusLoading,
-        wasteGasStatusList,
+      wasteGasStatusList,
+      overWasteGasLoading,
+      overWasteGasList,
+      alarmResponseLoading
     } = this.props;
 
   const { list } = this.state;
@@ -200,7 +234,7 @@ getChartData=(type)=>{
 
          <Col span={6}>  
          <Card  title={this.cardTitle1()} className={`${styles.wasteWateCard} ${styles.wasteGasCard}`} bordered={false} >
-          <Skeleton loading={pointStatusLoading}  active>
+          <Skeleton loading={pointStatusLoading}  active paragraph={{ rows: 5   }}>
             <ul className={styles.listSty}>
     <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>{wasteGasStatusList.alarmCount}</span></Row></li>
               <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span style={{background:'#f0565d'}} className={styles.colorBlock}>{wasteGasStatusList.overCount}</span></Row></li>
@@ -216,14 +250,14 @@ getChartData=(type)=>{
         </Col>
         <Col span={12}  className={styles.sevenCard}>  
          <Card title={this.cardTitle2()} bordered={false} >
-          <Skeleton loading={pointStatusLoading}  active>
-           <ScrollTable  type='wasteGas' data={[1,2,3,4,6,6,7,7,8,89]} column={['市师','企业名称','监测点名称','最大超标倍数']}/>
+          <Skeleton loading={overWasteGasLoading}  active paragraph={{ rows: 5   }}>
+           <ScrollTable  type='wasteGas' data={overWasteGasList} column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
         </Col>
         <Col span={6}>  
          <Card title={this.cardTitle3()} className={styles.alarmCard}  bordered={false} >
-          <Skeleton loading={pointStatusLoading}  active>
+          <Skeleton loading={alarmResponseLoading}  active paragraph={{ rows: 5   }}>
         
              <Row type='flex' align='middle' justify='space-between'>
               <Col span={8} align='middle'>
