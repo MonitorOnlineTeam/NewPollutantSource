@@ -39,8 +39,8 @@ const pageUrl = {
 };
 let myMar = null;
 @connect(({ loading, home, autoForm }) => ({
-  realTimeAlarmLoading: home.realTimeAlarmLoading,
-  alarmDataList: home.alarmDataList
+  alarmDataList: home.alarmDataList,
+  loading: loading.effects["home/getAlarmDataList"]
 }))
 @Form.create()
 export default class Index extends Component {
@@ -64,7 +64,7 @@ export default class Index extends Component {
     this.props.dispatch({
       type: "home/getAlarmDataList",
       payload: {
-        BeginTime: moment().subtract(1, "month").format("YYYY-MM-DD 00:00:00"),
+        BeginTime: moment().subtract(1, "day").format("YYYY-MM-DD 00:00:00"),
         EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       }
     })
@@ -72,7 +72,13 @@ export default class Index extends Component {
 
   initData = () => {
     this.getAlarmDataList();
-    this.scrollImgLeft()
+    // this.scrollImgLeft()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.loading === false && prevProps.loading === true && this.props.alarmDataList.length) {
+      this.scrollImgLeft()
+    }
   }
 
   // 横向滚动
@@ -83,16 +89,17 @@ export default class Index extends Component {
     let scroll_begin = document.getElementById("scroll_begin");
     let scroll_end = document.getElementById("scroll_end");
     let scroll_div = document.getElementById("scroll_div");
-    scroll_end.innerHTML = scroll_begin.innerHTML;
+    if(scroll_begin && scroll_end){
+      scroll_end.innerHTML = scroll_begin.innerHTML;
 
-    myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    scroll_div.onmouseover = function() {
+      myMar = setInterval(_this.marquee.bind(_this, scroll_end, scroll_div, scroll_begin), speed);
+      scroll_div.onmouseover = function () {
         clearInterval(myMar);
+      }
+      scroll_div.onmouseout = function () {
+        myMar = setInterval(_this.marquee.bind(_this, scroll_end, scroll_div, scroll_begin), speed);
+      }
     }
-    scroll_div.onmouseout = function() {
-        myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    }
-
   }
 
   componentWillUnmount() {
@@ -109,16 +116,15 @@ export default class Index extends Component {
 
   render() {
     const {
-      realTimeAlarmLoading,
-      alarmDataList
+      alarmDataList,
+      loading
     } = this.props;
 
-    const { list } = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.realTimeAlarm}>
 
         <Card title="当日超额报警" style={{ width: '100%' }} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+          <Skeleton loading={loading} avatar active>
             <Row id='scroll_div' type="flex" style={{ overflowX: 'hidden', flexFlow: 'row nowrap', flexShrink: 0 }}>
               <div id='scroll_begin'>
                 <Row type="flex" style={{ width: 'calc(100vw - 80px)', flexFlow: 'row nowrap' }}>
