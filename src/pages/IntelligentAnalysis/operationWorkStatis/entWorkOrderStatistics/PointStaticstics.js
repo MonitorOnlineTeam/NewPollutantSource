@@ -58,11 +58,12 @@ class PointStaticstics extends PureComponent {
       onCancel={onCloseListener}
       footer={null}
     >
+                {/* 
+
           <div>
+
             <Row>
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                  <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
-                  {/* 
                   <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
@@ -71,11 +72,12 @@ class PointStaticstics extends PureComponent {
                   >
                       导出
                   </Button>
-                  */}  
                   
                 </div>
             </Row>
           </div>
+        */}
+
           <SdlTable align="center" dataSource={fourTableDataSource} columns={columns} loading={loading} />
       </Modal>
     );
