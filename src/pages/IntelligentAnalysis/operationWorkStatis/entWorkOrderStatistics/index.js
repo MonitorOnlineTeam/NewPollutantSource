@@ -248,6 +248,8 @@ class index extends PureComponent {
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                     <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button>
+                    {
+                      /*     
                     <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
@@ -256,6 +258,8 @@ class index extends PureComponent {
                     >
                         导出
                     </Button>
+                    */
+                   }
                 </div>
             </Row>
 
