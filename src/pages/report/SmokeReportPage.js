@@ -42,6 +42,7 @@ const pageUrl = {
 @connect(({ loading, report, enterpriseMonitoringModel, autoForm, wasteWaterReportModel }) => ({
   smokeReportFrom: report.smokeReportFrom,
   entAndPointList: report.entAndPointList,
+  msg:report.msg,
   regionList: autoForm.regionList,
   attention: enterpriseMonitoringModel.attention,
   defaultEntAndPoint: report.defaultEntAndPoint,
@@ -57,7 +58,7 @@ class SmokeReportPage extends PureComponent {
     super(props);
     this.state = {
       dataSource: [],
-      msg:'排放量为小时均值*小时流量',
+      
       columns:  [
         {
           title: '时间',
@@ -285,6 +286,7 @@ class SmokeReportPage extends PureComponent {
     let beginTime;
     let endTime;
     let strMsg;
+    console.log('reportType=',reportType)
     switch (reportType) {
       case 'day':
         this.title = '小时平均日报表';
@@ -353,11 +355,9 @@ class SmokeReportPage extends PureComponent {
           beginTime,
           endTime,
         },
+        msg:strMsg
       },
     })
-    this.setState({
-      msg:strMsg
-  })
     this.props.form.setFieldsValue({ "time": moment() })
     this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
   }
@@ -650,7 +650,7 @@ class SmokeReportPage extends PureComponent {
                 </FormItem>
                 <Button type="primary" style={{ marginRight: 10 }} onClick={() => {this.getSmokeReportData()}}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                <span style={{ fontSize: 14, color: 'red' }}>{this.state.msg}</span>
+                <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
               </div>
             </Row>
           </Form>
