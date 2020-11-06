@@ -73,6 +73,7 @@
   min-height: 90px;
   // flex-basis: calc(100% / 3);
   flex-shrink: 0;
+  min-width: 470px;
 }
 
 .alarmContent {
@@ -81,6 +82,7 @@
   padding-left: 24px;
   word-break: break-all;
   width: 58%;
+  min-width: 246px;
 
 }
 
@@ -160,37 +162,58 @@
         background-color: #9d6ff1;
 
       }
+
+      .ant-card-body{
+        padding: 0;
+      }
+   }
+  }
+  .alarmCard{
+    :global{
+      .ant-card-body{
+        padding: 30px 0 40px 0;
+      } 
+     }
+    .title1{
+      font-size: 18px;
+      color: #333;
+    }
+    .title2{
+      font-size: 14px;
+      color: #333;
     }
   }
 }
-
-.airStatistics {
-  .airCard {
-    height: 100%;
-    :global { 
-      .ant-card-head {
-        background-color: #42dab8;
-        color: #fff;
-        padding-right: 50px;
-
-      }
-
-      .ant-card-body {
-        padding: 0;
-        padding-top: 4px;
-      }
+.airStatistics{
+  .airCard{
+  :global{
+    .ant-card-head{
+      background-color:#42dab8;
+      color: #fff;
+      padding-right: 50px;
+     
+    }
+    .ant-card-body{
+      padding: 0;
+      padding-top: 1px;
     }
   }
-
-  .airTableCard {
-    :global {
-      .ant-card {
-        margin: 0 10px;
-      }
-
-      .ant-card-body {
-        padding: 0;
-      }
+}
+.airTableCard{
+  :global{
+    .ant-card-body{
+      padding: 0;
+    }
+    .ant-card {
+      margin: 0 10px;
+    }
+    }
+  }
+}
+.airLineCard{
+  :global{
+    .ant-card-body{
+      padding-bottom: 3px;
     }
   }
 }

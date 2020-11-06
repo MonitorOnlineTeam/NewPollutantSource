@@ -53,6 +53,13 @@ export default Model.extend({
     regionCode: '',
     entCode: '',
     realTimeAlarmLoading: false,
+    wasteWaterTable:
+    [{value:'1',name:'哈哈哈',label:'666',title:'有了'},
+    {value:'2',name:'呵呵',label:'666',title:'有了'},
+    {value:'2',name:'呵呵',label:'666',title:'有了'},
+    {value:'2',name:'呵呵',label:'666',title:'有了'},
+    {value:'2',name:'呵呵',label:'666',title:'有了'},
+  ],
     // ---------wjq-----------
     airDayReportData: {
       datas: [

@@ -108,10 +108,6 @@ export default class Index extends Component {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
       <span>空气质量实时数据</span>
-      <Radio.Group value={"large"} onChange={this.btnChange}>
-        <Radio.Button value="large">小时</Radio.Button>
-        <Radio.Button value="default">日均</Radio.Button>
-      </Radio.Group>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
         <TabPane tab="实时" key="1">
         </TabPane>
@@ -331,7 +327,16 @@ export default class Index extends Component {
     };
     return option;
   }
-
+  children=()=>{
+    const children = [];
+     for (let i = 10; i < 36; i++) {
+     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+    }
+    return children;
+  }
+  handleChange=(value)=>{
+    console.log(`Selected: ${value}`);
+  }
   render() {
     const { realTimeAlarmLoading } = this.props;
 
@@ -346,7 +351,7 @@ export default class Index extends Component {
                   option={this.getPancakeChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 234 }}
+                  style={{ height: 235 }}
                 />
               </Skeleton>
             </Card>
@@ -354,18 +359,23 @@ export default class Index extends Component {
           <Col span={12} className={styles.airTableCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={realTimeAlarmLoading} avatar active>
-                <ScrollTable data={[1, 2, 3, 4, 6, 6, 7, 7, 8, 89]} />
+                <ScrollTable type='airStatistics' data={[1, 2, 3, 4, 6, 6, 7, 7, 8, 89]}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
               </Skeleton>
             </Card>
           </Col>
           <Col span={6}>
-            <Card title={this.cardTitle3()} bordered={false} >
+            <Card title={this.cardTitle3()} bordered={false} className={styles.airLineCard}>
               <Skeleton loading={realTimeAlarmLoading} avatar active>
+               <Row type='flex' justify='end'>
+              <Select size={'small'} defaultValue="a1" onChange={this.handleChange} style={{ width: 200 }}>
+                {this.children()}
+               </Select>
+               </Row>
                 <ReactEcharts
                   option={this.getLineChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 215 }}
+                  style={{ height: 210 }}
                 />
               </Skeleton>
             </Card>

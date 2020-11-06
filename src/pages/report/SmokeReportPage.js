@@ -307,7 +307,7 @@ class SmokeReportPage extends PureComponent {
         this.unit2 = '×10⁴m³/h';
         beginTime = moment().format('YYYY-MM-01 00:00:00');
         endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        strMsg='排放量为日均值*小时流量'
+        strMsg='排放量为日均值*日流量'
         break;
       case 'quarter':
         this.title = '月平均季报表';
@@ -328,7 +328,7 @@ class SmokeReportPage extends PureComponent {
           beginTime = moment().format('YYYY-10-01 00:00:00');
           endTime = moment().format('YYYY-12-31 23:59:59')
         }
-        strMsg='排放量为日均值*小时流量';
+        strMsg='排放量为日均值*日流量';
         break;
       case 'year':
         this.title = '月平均年报表';
@@ -343,7 +343,7 @@ class SmokeReportPage extends PureComponent {
         beginTime = moment().format('YYYY-01-01 00:00:00');
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
         this.tableFooter = '';
-        strMsg='排放量为日均值*小时流量';
+        strMsg='排放量为日均值*日流量';
         break;
     }
     this.props.dispatch({
