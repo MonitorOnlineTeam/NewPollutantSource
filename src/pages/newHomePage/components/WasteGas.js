@@ -48,7 +48,7 @@ const pageUrl = {
  overWasteGasLoading:home.overWasteGasLoading,
  overWasteGasList:home.overWasteGasList,
  alarmResponseList:home.alarmResponseList,
- alarmResponseLoading:home.alarmResponseLoading
+ alarmResponseLoading:home.alarmResponseLoading,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -57,10 +57,10 @@ export default class Index extends Component {
 
     this.state = {
       overListPar:{
-        PollutantType:1,
+        PollutantType:2,
         BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-        pollutantCode:'011',
+        pollutantCode:'01',
         DataType:'HourData'
       }
     }
@@ -81,10 +81,10 @@ initData=()=>{
   const {dataQueryPar,dispatch} = this.props;
   let pointStatusPar ={ ...dataQueryPar,PollutantType:2};
   dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar },  });//监测点状态
+  dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'),   } });//数据报警响应
 
-  const { overListPar } = this.state;
   
-
+  const { overListPar } = this.state;
   this.getTableData(overListPar);
 }
 
@@ -154,15 +154,25 @@ tabCallback1=(value)=>{
    })
 }
 tabCallback2=(value)=>{
-  console.log(value)
+  const { dispatch,dataQueryPar } = this.props;
+  
+  let parData ={ ...dataQueryPar,
+    BeginTime:value==1?moment().add('day',-7).format('YYYY-MM-DD 00:00:00'):moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
+    EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+  };
+
+
+  dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
+
 }
-
+percentage=(data)=>{
+  return `${data}%`
+}
 getChartData=(type)=>{
-
    const { alarmResponseList } = this.props;
     let color1 = ["#42dab8","#7ef1d7"],
         color2 = ["#fdcb31",'#fde290'],
-        color3 = ['#3b4b85','#56659c']
+        color3 = ['#5169c5','#889be2']
     let option = {
         tooltip: {
             show:false,
@@ -171,13 +181,14 @@ getChartData=(type)=>{
         },
         color:type==1? color1 : type==2? color2 : color3 ,
         title:{
-            text:"80%",
+            text: type==1?this.percentage(alarmResponseList.operationRate) : type==2?  this.percentage(alarmResponseList.exceptionRate): this.percentage(alarmResponseList.missRate),
             left:"center",
-            top:"45%",
+            top:"42%",
             textStyle:{
                 color: type==1? color1[1] : type==2? color2[1] : color3[1],
                 fontSize:16,
-                align:"center"
+                align:"center",
+                fontWeight:400
             }
         },
         // graphic:{
@@ -208,8 +219,8 @@ getChartData=(type)=>{
                 },
                 
                 data: [
-                    { value: 80, name: '已完成' },
-                    { value: 20, name: '未完成' },
+                    { value: type==1?alarmResponseList.operationRate : type==2?  alarmResponseList.exceptionRate: alarmResponseList.missRate, name: '已完成' },
+                    { value: type==1?(100-alarmResponseList.operationRate) : type==2?  (100-alarmResponseList.exceptionRate): (100-alarmResponseList.missRate), name: '未完成' },
                    
                 ]
             }
@@ -257,7 +268,7 @@ getChartData=(type)=>{
         </Col>
         <Col span={6}>  
          <Card title={this.cardTitle3()} className={styles.alarmCard}  bordered={false} >
-          <Skeleton loading={alarmResponseLoading}  active paragraph={{ rows: 5   }}>
+          <Skeleton loading={alarmResponseLoading}  active paragraph={{ rows: 4   }}>
         
              <Row type='flex' align='middle' justify='space-between'>
               <Col span={8} align='middle'>
@@ -280,8 +291,8 @@ getChartData=(type)=>{
                         style ={{width:'100%',height:120}}
                       />
                  <div>
-                <div className={styles.title1}>核实率</div>
-                <div className={styles.title2}>数据超标报警</div>
+                <div className={styles.title1}>响应率</div>
+                <div className={styles.title2}>数据异常报警</div>
                 </div>
                 </Col>
                 <Col span={8} align='middle'>
@@ -292,8 +303,8 @@ getChartData=(type)=>{
                         style ={{width:'100%',height:122}}
                       />
                  <div>
-                <div className={styles.title1}>核实率</div>
-                <div className={styles.title2}>数据超标报警</div>
+                <div className={styles.title1}>响应率</div>
+                <div className={styles.title2}>数据缺失报警</div>
                 </div>
                 </Col>
             </Row>

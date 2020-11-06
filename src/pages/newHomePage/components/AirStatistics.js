@@ -41,9 +41,14 @@ const pageUrl = {
   updateState: 'home/updateState',
   getData: 'home/getOverDataRate',
 };
-@connect(({ loading, home, autoForm }) => ({
-  realTimeAlarmLoading: home.realTimeAlarmLoading,
-  airDayReportData: home.airDayReportData
+@connect(({ loading, home, autoForm,removalFlowRate }) => ({
+  airDayReportData: home.airDayReportData,
+  getAQIList:home.getAQIList,
+  getAQILoading: home.getAQILoading,
+  airDayReportloading:home.airDayReportloading,
+  priseList: home.priseList,
+  getSewageFlowList: home.getSewageFlowList,
+  getSewageFlowLoading: home.getSewageFlowLoading,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -51,7 +56,7 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-
+      EntCode:''
     }
 
   }
@@ -65,6 +70,17 @@ export default class Index extends Component {
 
   initData = () => {
     this.getAirDayReportData();
+    this.props.dispatch({
+      type: 'home/getEntByRegion',
+      payload: { RegionCode: '' },
+      callback: (code) => {
+        this.setState({EntCode:code},()=>{
+          this.getLineData(code);
+        })
+      }
+
+    });//获取企业列表
+   
   }
 
   // 获取空气日报统计数据
@@ -75,8 +91,24 @@ export default class Index extends Component {
         MonitorTime: moment().format("YYYY-MM-DD HH:mm:ss")
       }
     })
+    this.props.dispatch({
+      type: "home/getAQIList",
+      payload: {
+        DataType: 'HourData'
+      }
+    })
   }
 
+  getLineData=(data)=>{
+    let parData ={
+      BeginTime:moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+    };
+    this.props.dispatch({
+      type: "home/getSewageFlowList",
+      payload: {  ...parData,EntCode:data}
+    })
+  }
   /**
  * @introduction 把数组中key值相同的那一项提取出来，组成一个对象
  * @description 详细描述
@@ -93,9 +125,7 @@ export default class Index extends Component {
     return resObj
   }
 
-  btnChange = (e) => {
-    console.log(e.target.value)
-  }
+
 
   cardTitle1 = () => {
     return <Row type='flex' justify='space-between'>
@@ -109,9 +139,9 @@ export default class Index extends Component {
     return <Row type='flex' align="middle" justify='space-between'>
       <span>空气质量实时数据</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
-        <TabPane tab="实时" key="1">
+        <TabPane tab="实时" key="HourData">
         </TabPane>
-        <TabPane tab="日报" key="2">
+        <TabPane tab="日报" key="DayData">
         </TabPane>
       </Tabs>
 
@@ -121,7 +151,7 @@ export default class Index extends Component {
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
       <span>污水处理厂流量分析</span>
-      <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
+      <Tabs defaultActiveKey="1">
         <TabPane tab="近30天" key="1">
         </TabPane>
       </Tabs>
@@ -130,10 +160,17 @@ export default class Index extends Component {
   }
 
   tabCallback = (value) => {
-    console.log(value)
+    this.props.dispatch({
+      type: "home/getAQIList",
+      payload: {
+        DataType: value
+      }
+    })
   }
 
   getLineChartData = () => {
+
+    const { getSewageFlowList } = this.props;
     let color = ['#64b0fd', '#9d6ff1', '#42dab8']
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
@@ -141,7 +178,7 @@ export default class Index extends Component {
         trigger: 'axis'
       },
       legend: {
-        data: ['邮件营销', '联盟广告', '视频广告'],
+        data: ['进水口', '回水口', '出水口'],
         left: 'center',
         bottom: 0,
         icon: 'rect',
@@ -199,21 +236,21 @@ export default class Index extends Component {
       series: [
 
         {
-          name: '邮件营销',
+          name: '进水口',
           type: 'line',
           data: [120, 132, 101, 134, 90, 230, 210],
           showSymbol: false,//隐藏所有数据点
           // smooth: true,
         },
         {
-          name: '联盟广告',
+          name: '回水口',
           type: 'line',
           data: [220, 182, 191, 234, 290, 330, 310],
           showSymbol: false,
           // smooth: true,
         },
         {
-          name: '视频广告',
+          name: '出水口',
           type: 'line',
           data: [150, 232, 201, 154, 190, 330, 410],
           showSymbol: false,
@@ -327,26 +364,40 @@ export default class Index extends Component {
     };
     return option;
   }
-  children=()=>{
-    const children = [];
-     for (let i = 10; i < 36; i++) {
-     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-    }
-    return children;
-  }
-  handleChange=(value)=>{
-    console.log(`Selected: ${value}`);
-  }
-  render() {
-    const { realTimeAlarmLoading } = this.props;
 
-    const { } = this.state;
+
+    children = () => { //企业列表
+      const { priseList } = this.props;
+  
+      const selectList = [];
+      if (priseList.length > 0) {
+        priseList.map(item => {
+          selectList.push(
+            <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
+              {item.EntName}
+            </Option>,
+          );
+        });
+        return selectList;
+      }
+    };
+  
+  changeEnt=(value)=>{
+    this.setState({EntCode:code},()=>{
+      this.getLineData(value)
+    })
+   
+  }
+
+  render() {
+    const { realTimeAlarmLoading,getAQIList,getAQILoading,airDayReportloading,getSewageFlowLoading} = this.props;
+    const {EntCode } = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.airStatistics}  >
         <Row type='flex' justify='space-between' >
           <Col span={6}>
             <Card title={this.cardTitle1()} className={styles.airCard} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+              <Skeleton loading={airDayReportloading} paragraph={{ rows: 5   }} active>
                 <ReactEcharts
                   option={this.getPancakeChartData()}
                   className="echarts-for-echarts"
@@ -358,18 +409,26 @@ export default class Index extends Component {
           </Col>
           <Col span={12} className={styles.airTableCard}>
             <Card title={this.cardTitle2()} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
-                <ScrollTable type='airStatistics' data={[1, 2, 3, 4, 6, 6, 7, 7, 8, 89]}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
+              <Skeleton loading={getAQILoading} paragraph={{ rows: 5   }} active>
+                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
               </Skeleton>
             </Card>
           </Col>
           <Col span={6}>
             <Card title={this.cardTitle3()} bordered={false} className={styles.airLineCard}>
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+              <Skeleton loading={getSewageFlowLoading} paragraph={{ rows: 5   }}  active>
                <Row type='flex' justify='end'>
-              <Select size={'small'} defaultValue="a1" onChange={this.handleChange} style={{ width: 200 }}>
-                {this.children()}
-               </Select>
+                  <Select
+                    size={'small'} 
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="污水处理厂名称"
+                    onChange={this.changeEnt}
+                    value={EntCode ? EntCode : undefined}
+                    style={{ width: 200 }}
+                  >
+                    {this.children()}
+                  </Select>
                </Row>
                 <ReactEcharts
                   option={this.getLineChartData()}

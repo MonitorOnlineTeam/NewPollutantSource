@@ -67,6 +67,17 @@ export async function GetEntByRegion(params) {
 
   return result;
 }
+ //污水处理厂流量分析
+export async function GetSewageFlowList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/MonDataApi/GetSewageFlowList',
+    params,
+    null,
+  );
+
+  return result;
+}
+
 //监测点状态
 export async function GetPointStatusList(params) {
   const result = post(
@@ -99,6 +110,15 @@ export async function GetOperationWorkOrderList(params) {
 export async function GetAlarmResponse(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/XJHomeApi/GetAlarmResponse',
+    params,
+    null,
+  );
+  return result;
+}
+//空气质量实时数据
+export async function GetAQIList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetAQIList',
     params,
     null,
   );
