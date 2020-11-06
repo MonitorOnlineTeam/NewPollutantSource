@@ -51,9 +51,9 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   pageIndex: newtransmissionefficiency.pageIndex,
   tableDatas: newtransmissionefficiency.entTableDatas,
   regionList: autoForm.regionList,
-  beginTime: newtransmissionefficiency.beginTime,
-  endTime: newtransmissionefficiency.endTime,
-  pollutantType: newtransmissionefficiency.pollutantType,
+  // beginTime: newtransmissionefficiency.beginTime,
+  // endTime: newtransmissionefficiency.endTime,
+  // pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
 }))
@@ -63,8 +63,6 @@ export default class EntIndexModal extends Component {
     super(props);
 
     this.state = {
-      beginTime: moment(new Date()).subtract(1, 'months'),
-      endTime: moment(new Date()),
       EnterpriseCode: '',
       EnterpriseName: '',
       visible: false,
@@ -73,6 +71,9 @@ export default class EntIndexModal extends Component {
       effectiveVisible: false,
       effectiveLoading: false,
       TTVisible:false,
+      PollutantType: props.pollutantType,
+      beginTime:props.beginTime,
+      endTime:props.endTime,
     };
   }
 
@@ -97,6 +98,9 @@ export default class EntIndexModal extends Component {
   getTableData = () => {
     this.props.dispatch({
       type: pageUrl.getData,
+      payload: {
+        PollutantType: this.state.PollutantType
+      }
     });
   };
 
@@ -156,6 +160,7 @@ export default class EntIndexModal extends Component {
   });
 
   typeChange = value => {
+    this.setState({PollutantType: value})
     this.updateState({
       pollutantType: value,
     });
@@ -190,6 +195,10 @@ export default class EntIndexModal extends Component {
   };
   dateCallback = date => {
     // console.log(date[0].format("YYYY-MM-DD"))
+    this.setState({
+      beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    })
     this.updateState({
       beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
       endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -397,7 +406,7 @@ export default class EntIndexModal extends Component {
                   查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
-                    dateValue={[moment(this.props.beginTime), moment(this.props.endTime)]}
+                    dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
                     format="YYYY-MM-DD"
                     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                     allowClear={false}
@@ -407,7 +416,7 @@ export default class EntIndexModal extends Component {
                   <Select
                     placeholder="请选择企业类型"
                     onChange={this.typeChange}
-                    value={this.props.pollutantType}
+                    value={this.state.PollutantType}
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     <Option value="">全部</Option>
@@ -517,13 +526,19 @@ export default class EntIndexModal extends Component {
           title='有效传输率'
           visible={TVisible}
           footer={null}
-          width={1600}
+          width={'95%'}
+          destroyOnClose
           onCancel={TCancle}>
             {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <QutPage location={{ query: { RegionCode: this.state.RegionCode } }} />
+              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} onBack={() => {
+                this.setState({
+                  showDetails: false,
+                  RegionCode: undefined
+                })
+              }} />
             }
           </Modal>
       </div>

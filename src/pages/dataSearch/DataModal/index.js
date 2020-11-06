@@ -32,7 +32,10 @@ class index extends PureComponent {
         exceedTime:[moment().add(-7, "day"), moment()],
         flowVisible:false,
         flowTime:[moment().add(-30, "day"), moment()],
-        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018'
+        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018',
+        pollutantType:'1',
+        TBeginTime:moment().add(-7, "day"),
+        TEndTime:moment(),
     };
   }
 
@@ -82,7 +85,7 @@ class index extends PureComponent {
     })
   }
   render() {
-    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible } = this.state
+    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
@@ -125,19 +128,20 @@ class index extends PureComponent {
 
             {/* 有效传输有效率
                 参数:
-                flowTime  时间参数  默认是30天
+                pollutantType  污染物类型  
                 flowEntCode  污水处理厂编码EntCode
 
               */}
             {
               TVisible ?
                 <TransmissionefficiencyModal 
-                flowTime={flowTime}
-                 flowEntCode={flowEntCode} 
+                 beginTime={TBeginTime}
+                 endTime={TEndTime}
                  TVisible={TVisible} 
                  TCancle={() => {
                   this.setState({ TVisible: false });
                 }} 
+                pollutantType={pollutantType}
                 // onRegionClick={(RegionCode) => {
                 //   this.setState({
                 //     RegionCode: RegionCode,

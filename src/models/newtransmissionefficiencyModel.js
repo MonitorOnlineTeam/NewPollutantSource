@@ -75,6 +75,7 @@ export default Model.extend({
         Assessment:assessment,
         // PageSize: pageSize,
         // PageIndex: pageIndex,
+        ...payload
       };
       const response = yield call(GetTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
