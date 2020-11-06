@@ -66,12 +66,12 @@ export default Model.extend({
     regionCode: '',
     entCode: '',
     realTimeAlarmLoading: false,
-    wasteWaterTable: [],
-    pointStatusList:{},
-    wasteGasStatusList:{},
-    wasteGasStatusLoading:true,
-    pointStatusLoading:true,
-    dataQueryPar:{
+    wasteWaterTable:[],
+    pointStatusList: {},
+    wasteGasStatusList: {},
+    wasteGasStatusLoading: true,
+    pointStatusLoading: true,
+    dataQueryPar: {
       BeginTime: "",
       EndTime: "",
       DataType: "",
@@ -79,14 +79,14 @@ export default Model.extend({
       MonitorTime: "",
       pollutantCode: ""
     },
-    overWasteWaterLoading:true,
+    overWasteWaterLoading: true,
     overWasteWaterList: [],
-    overWasteGasLoading:true,
-    overWasteGasList:[],
-    workOrderLoading:true,
-    workOrderList:{},
-    alarmResponseLoading:[],
-    alarmResponseList:{},
+    overWasteGasLoading: true,
+    overWasteGasList: [],
+    workOrderLoading: true,
+    workOrderList: {},
+    alarmResponseLoading: [],
+    alarmResponseList: {},
     getAQIList:[],
     getAQILoading: true,
     airDayReportloading:true,
@@ -119,6 +119,9 @@ export default Model.extend({
     // 传输有效率
     CSYXRateDataList: [],
     CSYXRateX: [],
+    // 详情弹窗
+    detailsModalVisible_WJQ: false,
+    // ---------wjq-----------
   },
   subscriptions: {},
   effects: {
@@ -132,16 +135,16 @@ export default Model.extend({
       });
       const response = yield call(GetPointStatusList, { ...payload });
       if (response.IsSuccess) {
-        if(payload.PollutantType==1){
+        if (payload.PollutantType == 1) {
           yield update({
             pointStatusList: response.Datas,
             pointStatusLoading: false,
           });
-        }else{
+        } else {
           yield update({
             wasteGasStatusList: response.Datas,
             wasteGasStatusLoading: false,
-           });
+          });
         }
 
       }
@@ -156,30 +159,30 @@ export default Model.extend({
       });
       const response = yield call(GetOverList, { ...payload });
       if (response.IsSuccess) {
-        if(payload.PollutantType==1){
+        if (payload.PollutantType == 1) {
           yield update({
             overWasteWaterList: response.Datas,
             overWasteWaterLoading: false,
           });
-        }else{
+        } else {
           yield update({
             overWasteGasList: response.Datas,
             overWasteGasLoading: false,
-           });
+          });
         }
 
       }
     },
     *getOperationWorkOrderList({ payload }, { call, put, update, select }) {
       //运维工单统计
-      yield update({ workOrderLoading: true});
+      yield update({ workOrderLoading: true });
       const response = yield call(GetOperationWorkOrderList, { ...payload });
       if (response.IsSuccess) {
-          yield update({
-            workOrderList: response.Datas,
-            workOrderLoading: false,
-          });
-        }else{
+        yield update({
+          workOrderList: response.Datas,
+          workOrderLoading: false,
+        });
+      } else {
 
 
       }
@@ -226,7 +229,7 @@ export default Model.extend({
 
       }
     },
-    
+
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
 
@@ -325,7 +328,7 @@ export default Model.extend({
     // 获取空气日报统计数据 - wjq
     *getAirDayReportData({ payload }, { call, put, update, select }) {
       yield update({airDayReportloading: true });
-      const result = yield call(getAirDayReportData, { ...payload });    
+      const result = yield call(getAirDayReportData, { ...payload });
       if (result.IsSuccess) {
         let data = result.Datas;
         let airDayReportData = {
@@ -370,7 +373,7 @@ export default Model.extend({
             smooth: true,
           }
         })
-        let GZRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        let GZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ GZRateDataList: GZRateDataList, GZRateX })
       } else {
         message.error(result.Message);
@@ -391,7 +394,7 @@ export default Model.extend({
             }
           }
         })
-        let CBRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        let CBRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ CBRateDataList, CBRateX })
       } else {
         message.error(result.Message);
@@ -410,7 +413,7 @@ export default Model.extend({
             smooth: true,
           }
         })
-        let YZRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        let YZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ YZRateDataList, YZRateX })
       } else {
         message.error(result.Message);
@@ -431,7 +434,7 @@ export default Model.extend({
             }
           }
         })
-        let CSYXRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        let CSYXRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ CSYXRateDataList, CSYXRateX })
       } else {
         message.error(result.Message);

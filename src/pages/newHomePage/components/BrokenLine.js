@@ -51,6 +51,10 @@ const pageUrl = {
   YZRateX: home.YZRateX,
   CSYXRateDataList: home.CSYXRateDataList,
   CSYXRateX: home.CSYXRateX,
+  CSYXLoading: loading.effects["home/getCSYXRateList"],
+  YZLoading: loading.effects["home/getYZRateList"],
+  CBLoading: loading.effects["home/getCBRateList"],
+  GZLoading: loading.effects["home/getGZRateList"],
 }))
 @Form.create()
 export default class Index extends Component {
@@ -291,15 +295,16 @@ export default class Index extends Component {
   }
   render() {
     const {
-      realTimeAlarmLoading
+      CSYXLoading,
+      YZLoading, CBLoading, GZLoading
     } = this.props;
 
     return (
       <div style={{ width: '100%' }} className={styles.brokenLine}  >
         <Row type='flex' justify='space-between'>
           <Col span={6}>
-            <Card title={this.cardTitle("传输有效率", "CSYX")} className={styles.lineCard} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+            <Card title={this.cardTitle("传输有效率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+              <Skeleton loading={CSYXLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
                   option={this.getChartData("CSYX")}
                   className="echarts-for-echarts"
@@ -310,8 +315,8 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6} style={{ padding: '0 10px' }}>
-            <Card title={this.cardTitle("运转率", "YZ")} className={styles.lineCard} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+            <Card title={this.cardTitle("运转率", "YZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+              <Skeleton loading={YZLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
                   option={this.getChartData("YZ")}
                   className="echarts-for-echarts"
@@ -322,8 +327,8 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col style={{ paddingRight: '10px' }} span={6}>
-            <Card title={this.cardTitle("超标率", "CB")} className={styles.lineCard} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+            <Card title={this.cardTitle("超标率", "CB")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+              <Skeleton loading={CBLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
                   option={this.getChartData("CB")}
                   className="echarts-for-echarts"
@@ -334,8 +339,8 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6}>
-            <Card title={this.cardTitle("故障率")} className={styles.lineCard} bordered={false} >
-              <Skeleton loading={realTimeAlarmLoading} avatar active>
+            <Card title={this.cardTitle("故障率")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+              <Skeleton loading={GZLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
                   option={this.getChartData("GZ", "GZ")}
                   className="echarts-for-echarts"
