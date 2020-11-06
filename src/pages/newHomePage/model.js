@@ -12,14 +12,22 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
-  getAirDayReportData,
   GetPointStatusList,
   GetOverList,
   GetOperationWorkOrderList
+  getAirDayReportData,
+  getAlarmDataList,
+  getGZRateList,
+  getCBRateList,
+  getYZRateList,
+  getCSYXRateList,
+  getAirDayReportData,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 import { result } from 'lodash';
+
+
 export default Model.extend({
   namespace: 'home',
   state: {
@@ -56,6 +64,13 @@ export default Model.extend({
     regionCode: '',
     entCode: '',
     realTimeAlarmLoading: false,
+    wasteWaterTable:
+      [{ value: '1', name: '哈哈哈', label: '666', title: '有了' },
+      { value: '2', name: '呵呵', label: '666', title: '有了' },
+      { value: '2', name: '呵呵', label: '666', title: '有了' },
+      { value: '2', name: '呵呵', label: '666', title: '有了' },
+      { value: '2', name: '呵呵', label: '666', title: '有了' },
+      ],
     pointStatusList:{},
     wasteGasStatusList:{},
     wasteGasStatusLoading:true,
@@ -86,13 +101,26 @@ export default Model.extend({
         { value: 0, rate: 0, name: '爆表' },
       ],
       allCount: 0
-    }
+    },
+    alarmDataList: [],
+    // 故障率
+    GZRateDataList: [],
+    GZRateX: [],
+    // 超标率
+    CBRateDataList: [],
+    CBRateX: [],
+    // 运转率
+    YZRateDataList: [],
+    YZRateX: [],
+    // 传输有效率
+    CSYXRateDataList: [],
+    CSYXRateX: [],
   },
   subscriptions: {},
   effects: {
     *getPointStatusList({ payload }, { call, put, update, select }) {
 
-    
+
       //监测点状态
       yield update({
         pointStatusLoading: true,
@@ -116,7 +144,7 @@ export default Model.extend({
     },
     *getOverList({ payload }, { call, put, update, select }) {
 
-    
+
       //超标监测点
       yield update({
         overWasteWaterLoading: true,
@@ -152,7 +180,7 @@ export default Model.extend({
 
       }
     },
-    
+
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
 
@@ -267,6 +295,98 @@ export default Model.extend({
           allCount: data.allCount
         }
         yield update({ airDayReportData })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取实时报警数据 - wjq
+    *getAlarmDataList({ payload }, { call, put, update, select }) {
+      const result = yield call(getAlarmDataList, { ...payload });
+      if (result.IsSuccess) {
+        let alarmDataList = result.Datas.map(item => {
+          return { content: item.AlarmMsg, verify: !!item.OperationVerifyID }
+        })
+        yield update({ alarmDataList })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取故障率 - wjq
+    *getGZRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getGZRateList, { ...payload });
+      if (result.IsSuccess) {
+        let GZRateDataList = result.Datas.map(item => {
+          return {
+            name: item.pollutantTypeName,
+            type: 'line',
+            data: item.dataList.map(itm => itm.failureRate),
+            showSymbol: false,//隐藏所有数据点
+            smooth: true,
+          }
+        })
+        let GZRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        yield update({ GZRateDataList: GZRateDataList, GZRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取超标率 - wjq
+    *getCBRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getCBRateList, { ...payload });
+      if (result.IsSuccess) {
+        let CBRateDataList = result.Datas.map(item => {
+          if (item.pollutantTypeCode != 5) {
+            return {
+              name: item.pollutantTypeName,
+              type: 'line',
+              data: item.dataList.map(itm => itm.overStandardRate),
+              showSymbol: false,//隐藏所有数据点
+              smooth: true,
+            }
+          }
+        })
+        let CBRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        yield update({ CBRateDataList, CBRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取超标率 - wjq
+    *getYZRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getYZRateList, { ...payload });
+      if (result.IsSuccess) {
+        let YZRateDataList = result.Datas.map(item => {
+          return {
+            name: item.pollutantTypeName,
+            type: 'line',
+            data: item.dataList.map(itm => itm.deviceOperationRate),
+            showSymbol: false,//隐藏所有数据点
+            smooth: true,
+          }
+        })
+        let YZRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        yield update({ YZRateDataList, YZRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 传输有效率 - wjq
+    *getCSYXRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getCSYXRateList, { ...payload });
+      if (result.IsSuccess) {
+        let CSYXRateDataList = result.Datas.map(item => {
+          if (item.pollutantTypeCode != 5) {
+            return {
+              name: item.pollutantTypeName,
+              type: 'line',
+              data: item.dataList.map(itm => itm.effectiveTransmissionRate),
+              showSymbol: false,//隐藏所有数据点
+              smooth: true,
+            }
+          }
+        })
+        let CSYXRateX = result.Datas[0].dataList.map(item => item.monitorTime)
+        yield update({ CSYXRateDataList, CSYXRateX })
       } else {
         message.error(result.Message);
       }

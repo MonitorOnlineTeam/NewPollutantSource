@@ -111,7 +111,7 @@ class Operations extends PureComponent {
           label: {
             show: true,
             position: 'right',
-            formatter: (params) => {
+            formatter: (params) => { 
               if (params.value === 0) { return "" } else { return params.value }
             }
           },
