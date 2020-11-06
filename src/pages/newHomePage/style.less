@@ -30,7 +30,9 @@
     .ant-card-body {
       padding: 0 24px 24px;
     }
-
+    .ant-skeleton{
+      padding:  0 24px 24px;
+    }
   }
 
   :global {
@@ -96,6 +98,7 @@
 
 .brokenLine {
   .lineCard {
+    background-color: #fff;
     // width:200px;
     // width: calc( (100% - 20px) / 4) 
   }
@@ -103,7 +106,12 @@
 }
 
 .wasteWaterPoint {
-
+  
+  :global{
+    .ant-skeleton{
+      height: 236px;
+    }
+  }
   .wasteWateCard {
     :global {
       .ant-card-head {
@@ -116,6 +124,7 @@
       .ant-card-body {
         padding: 0;
       }
+
     }
 
     .listSty {
@@ -138,6 +147,7 @@
         color: #fff;
         text-align: center;
         font-weight: bold;
+        cursor: pointer;
       }
     }
   }
@@ -152,6 +162,14 @@
         padding: 0;
       }
     }
+  }
+  .workOrderStatCard{
+    :global{
+      .ant-skeleton{
+      padding: 0;
+      height: 212px;
+    }
+   }
   }
 }
 
@@ -173,6 +191,10 @@
       .ant-card-body{
         padding: 30px 0 40px 0;
       } 
+      .ant-skeleton{
+        padding-bottom: 0;
+        height: 12px;
+      }
      }
     .title1{
       font-size: 18px;
@@ -185,6 +207,11 @@
   }
 }
 .airStatistics{
+  :global{
+    .ant-skeleton{
+      padding-bottom: 34px;
+  }
+  }
   .airCard{
   :global{
     .ant-card-head{
@@ -207,6 +234,9 @@
     .ant-card {
       margin: 0 10px;
     }
+    .ant-skeleton{
+      padding-bottom: 36px;
+    }
     }
   }
 }
@@ -215,5 +245,6 @@
     .ant-card-body{
       padding-bottom: 3px;
     }
-  }
+
+}
 }

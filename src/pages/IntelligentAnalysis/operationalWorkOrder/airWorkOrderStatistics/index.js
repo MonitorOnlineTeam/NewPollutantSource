@@ -2,7 +2,7 @@
  * @Description:运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-26 10:52:49
- * @LastEditTime: 2020-11-03 14:35:02
+ * @LastEditTime: 2020-11-06 14:42:50
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/index.js
  */
 import React, { PureComponent } from 'react';
@@ -220,7 +220,7 @@ export default class index extends PureComponent {
                       format={format}
                       style={{ width: '100%' }}
                       onChange={(dates, dateStrings) => {
-                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
                         dispatch({
                           type: 'airWorkOrderStatistics/updateState',
                           payload: {
@@ -242,7 +242,7 @@ export default class index extends PureComponent {
                       allowClear
                       placeholder="请选择行政区"
                       onChange={value => {
-                        this.setState({ RegionCode: value }, () => {});
+                        this.setState({ RegionCode: value }, () => { });
                         dispatch({
                           type: 'airWorkOrderStatistics/updateState',
                           payload: {

@@ -137,7 +137,7 @@ export default class OverVerifyLst extends Component {
             title: <span>{item.PollutantName}</span>,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
-
+            width: 420,
             align: 'center',
             children: [
               {
@@ -176,7 +176,6 @@ export default class OverVerifyLst extends Component {
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
-          fixed: 'right',
         });
         this.setState(
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },

@@ -21,7 +21,7 @@ import {
   getRealTimeColumn,
   getRealTimeDataView,
   getEntByRegion,
-} from './services';
+} from '@/services/overview_Api';
 import Model from '@/utils/model';
 import { isNullOrUndefined } from 'util';
 import { formatPollutantPopover } from '@/utils/utils';
