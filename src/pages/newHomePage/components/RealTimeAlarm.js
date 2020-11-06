@@ -85,13 +85,13 @@ export default class Index extends Component {
     let scroll_div = document.getElementById("scroll_div");
     scroll_end.innerHTML = scroll_begin.innerHTML;
 
-    // myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    // scroll_div.onmouseover = function() {
-    //     clearInterval(myMar);
-    // }
-    // scroll_div.onmouseout = function() {
-    //     myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
-    // }
+    myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
+    scroll_div.onmouseover = function() {
+        clearInterval(myMar);
+    }
+    scroll_div.onmouseout = function() {
+        myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
+    }
 
   }
 
@@ -103,7 +103,7 @@ export default class Index extends Component {
     if (scroll_end.offsetWidth - scroll_div.scrollLeft <= 0) { //当滚动至scroll_begin与scroll_end交界时
       scroll_div.scrollLeft -= scroll_begin.offsetWidth; //scroll_div 跳到最左端
     } else {
-      scroll_div.scrollLeft++;
+      scroll_div.scrollLeft = scroll_div.scrollLeft + 1;
     }
   }
 
@@ -129,7 +129,7 @@ export default class Index extends Component {
                       {
                         item.verify && <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
                       }
-                      {index == 0 || index == 1 ? <div className={styles.hr}></div> : null}
+                      { index < alarmDataList.length ? <div className={styles.hr}></div> : null}
                     </Row>
                   })}
                 </Row>

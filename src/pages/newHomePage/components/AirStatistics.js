@@ -91,18 +91,27 @@ export default class Index extends Component {
         MonitorTime: moment().format("YYYY-MM-DD HH:mm:ss")
       }
     })
+
+    // let time = moment().add('hour',-2).format("YYYY-MM-DD HH:mm:ss");
+    let time = "2020-11-01 00:00:00";
+    let dataType ='HourData'
+    this.getAQIList(time,dataType);
+   
+  }
+  getAQIList=(time,type)=>{
     this.props.dispatch({
       type: "home/getAQIList",
       payload: {
-        DataType: 'HourData'
+        MonitorTime: time,
+        DataType:type
       }
     })
   }
-
   getLineData=(data)=>{
     let parData ={
       BeginTime:moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DataType:'DayData',
     };
     this.props.dispatch({
       type: "home/getSewageFlowList",
@@ -160,10 +169,12 @@ export default class Index extends Component {
   }
 
   tabCallback = (value) => {
+  let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
     this.props.dispatch({
       type: "home/getAQIList",
       payload: {
-        DataType: value
+        MonitorTime: time,
+        DataType:value
       }
     })
   }
@@ -171,6 +182,19 @@ export default class Index extends Component {
   getLineChartData = () => {
 
     const { getSewageFlowList } = this.props;
+
+     let backValue = getSewageFlowList.map(item=>{
+        return item.backValue
+    }) 
+    let exportValue = getSewageFlowList.map(item=>{
+      return item.exportValue
+     }) 
+     let importValue = getSewageFlowList.map(item=>{
+      return item.importValue
+     }) 
+     let MonitorTime = getSewageFlowList.map(item=>{
+      return moment(item.MonitorTime).format("MM.DD")
+     }) 
     let color = ['#64b0fd', '#9d6ff1', '#42dab8']
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
@@ -198,7 +222,7 @@ export default class Index extends Component {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        data: MonitorTime,
         axisLine: { //x轴
           lineStyle: {
             color: '#d9d9d9',
@@ -238,21 +262,21 @@ export default class Index extends Component {
         {
           name: '进水口',
           type: 'line',
-          data: [120, 132, 101, 134, 90, 230, 210],
+          data: importValue,
           showSymbol: false,//隐藏所有数据点
           // smooth: true,
         },
         {
           name: '回水口',
           type: 'line',
-          data: [220, 182, 191, 234, 290, 330, 310],
+          data: backValue,
           showSymbol: false,
           // smooth: true,
         },
         {
           name: '出水口',
           type: 'line',
-          data: [150, 232, 201, 154, 190, 330, 410],
+          data: exportValue,
           showSymbol: false,
           // smooth: true,
         },
@@ -263,7 +287,7 @@ export default class Index extends Component {
 
   getPancakeChartData = () => {
     let objData = this.array2obj(this.props.airDayReportData.datas, 'name')
-    console.log("objData-", objData)
+    // console.log("objData-", objData)
     let option = {
       color: ["#4bd075", "#fdd22b", "#f39d16", "#f17170", "#d15695", "#a14458", "#000000"],
       grid: {
@@ -383,7 +407,7 @@ export default class Index extends Component {
     };
   
   changeEnt=(value)=>{
-    this.setState({EntCode:code},()=>{
+    this.setState({EntCode:value},()=>{
       this.getLineData(value)
     })
    

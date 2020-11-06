@@ -78,27 +78,44 @@ export default class Index extends Component  {
 
     tableBody = (item, index) => {
         const { type } = this.props;
-        // wasteWater wasteGas airStatistics
+
+        let airLevel = {
+              '优': "#4bd075",
+              '良': "#fdd22b",
+              '轻度污染': "#f39d16",
+              '中度污染': "#f17170",
+              '重度污染': "#d15695",
+              '严重污染': "#a14458",
+              '爆表':"#000000"
+            };
+ 
         return (
+            type==='wasteWater' || type === 'wasteGas'?
             <li key={index}>
-                {/* <span className='ceShiTable-text2'>
-                 <img style={{height:'18px'}} src='/chao.png'/> 
-                  <span className='chao'>超</span>
-                </span> */}
-                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
-                <span className='chao'>超</span> {item.value}
+                <span className='ceShiTable-text2' style={{width:  '25%'}}>
+                <span className='chao'>超</span> {item.regionName}
                 </span>
-                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
-                  {item.name}
+                <span title={item.entName} className='ceShiTable-text2 textOverflow' style={{width: '25%'}}>
+                  {item.entName}
                 </span>
-                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
-                  {item.label}
+                <span title={item.pointName} className='ceShiTable-text2 textOverflow' style={{width: '25%'}}>
+                  {item.pointName}
                  </span>
-                <span className='ceShiTable-text2' style={{width: type=='airStatistics'? '20%' : '25%'}}>
-                 {item.title}
+                <span className='ceShiTable-text2' style={{width: '25%'}}>
+                 {item.maxMultiple}
                 </span>
 
-            </li>
+            </li>:
+            <li key={index}>
+             <span className='ceShiTable-text2 textOverflow' title={item.stationName} style={{width:'20%' }}> {item.stationName}</span>
+             <span className='ceShiTable-text2 textOverflow' title={item.pointName} style={{width:'20%' }}> {item.pointName}</span>
+            <span className='ceShiTable-text2' style={{width:'20%' }}> {item.pollutantName} </span>
+            <span className='ceShiTable-text2'  style={{width:'20%'}}>
+                <span style={{background:airLevel[item.airQuality],color:'#fff',padding:'3px 15px',borderRadius:30}}> {item.airQuality} </span>
+             </span>
+            <span className='ceShiTable-text2' style={{width:'20%' }} >  {item.aqiValue}  </span>
+
+        </li>
         );
     }
 
