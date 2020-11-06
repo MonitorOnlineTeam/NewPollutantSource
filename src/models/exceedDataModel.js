@@ -159,7 +159,7 @@ export default Model.extend({
           EntCountList: result.Datas,
           ExceedTotal: result.Total,
           ExceedPageIndex: payload.PageIndex || 1,
-          ExceedPageSize:payload.ModalPageSize
+          ExceedPageSize:payload.PageSize
         })
       }
       else {

@@ -42,7 +42,8 @@ const pageUrl = {
   getData: 'home/getOverDataRate',
 };
 @connect(({ loading, home,autoForm }) => ({
- realTimeAlarmLoading: home.realTimeAlarmLoading
+ realTimeAlarmLoading: home.realTimeAlarmLoading,
+ wasteWaterTable:home.wasteWaterTable
 }))
 @Form.create()
 export default class Index extends Component {
@@ -87,7 +88,7 @@ cardTitle2=()=>{
     const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
            <span>近七日超标废水监测点</span>
-           <Radio.Group value={"large"} onChange={this.btnChange}>
+           <Radio.Group value={"large"} onChange={this.btnChange} size='small'>
           <Radio.Button value="large">小时</Radio.Button>
           <Radio.Button value="default">日均</Radio.Button>
         </Radio.Group>
@@ -214,11 +215,13 @@ return option;
 }
   render() {
     const {
-        realTimeAlarmLoading
+        realTimeAlarmLoading,
+        wasteWaterTable
     } = this.props;
 
   const { list } = this.state;
-
+  console.log(22222)
+  console.log(wasteWaterTable)
     return (
         <div style={{width:'100%'}} className={styles.wasteWaterPoint}  >
          <Row type='flex' justify='space-between' >
@@ -242,7 +245,7 @@ return option;
         <Col span={12}  className={styles.sevenCard}>  
          <Card title={this.cardTitle2()} bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-           <ScrollTable  data={[1,2,3,4,6,6,7,7,8,89]}/>
+           <ScrollTable  type='wasteWater' data={wasteWaterTable}  column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
         </Col>

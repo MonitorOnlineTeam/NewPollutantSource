@@ -253,7 +253,7 @@ export default class enterpriseEfficiency extends Component {
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
-        sorter: true,
+        sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
           if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;

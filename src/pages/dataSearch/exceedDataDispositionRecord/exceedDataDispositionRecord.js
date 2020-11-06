@@ -82,7 +82,8 @@ class index extends PureComponent {
             remark:'',
             filePath:'',
             entCode:'',
-            status:''
+            status:'',
+            exportRegion:''
         };
     }
 
@@ -114,6 +115,22 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
+                const {outletValue,dataType,time} = this.state
+        
+                this.props.dispatch({
+                    type: pageUrl.GetAlarmManagementRate,
+                    payload: {
+                        RegionCode: '',
+                        attentionCode: '',
+                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: time[0],
+                        EndTime: time[1],
+                        PageSize: 20,
+                        PageIndex: 1,
+                        PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
+                    }
+                })
                 this.setState({
                     pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
                 })
@@ -138,20 +155,38 @@ class index extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
         
-        this.props.dispatch({
-            type:pageUrl.ExportAlarmManagementRate,
-            payload: {
-                RegionCode: regionValue == undefined?'':regionValue,
-                attentionCode: attentionValue == undefined?'':attentionValue,
-                PollutantType: outletValue == undefined?'':outletValue,
-                DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
-                PollutantCodeList: pollutantCodeList,
-            }
-        })
+        if(exportRegion!='1')
+        {
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmManagementRate,
+                payload: {
+                    RegionCode: exportRegion,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
+        else{
+            this.props.dispatch({
+                type:pageUrl.ExportAlarmManagementRate,
+                payload: {
+                    RegionCode: regionValue == undefined?'':regionValue,
+                    attentionCode: attentionValue == undefined?'':attentionValue,
+                    PollutantType: outletValue == undefined?'':outletValue,
+                    DataType: dataType == 'Hour'?'HourData':'DayData',
+                    BeginTime: time[0],
+                    EndTime: time[1],
+                    PollutantCodeList: pollutantCodeList,
+                }
+            })
+        }
+        
     }
 
     //查询数据
@@ -167,7 +202,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                PageSize: 11,
+                PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -338,7 +373,7 @@ class index extends PureComponent {
             regVisible:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
-            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'工艺超标报警情况'
+            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警情况'
         })
         this.props.dispatch({
             type:pageUrl.GetAlarmManagementDetail,
@@ -366,7 +401,7 @@ class index extends PureComponent {
             regVisibleAlready:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
-            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'工艺超标报警已处置情况'
+            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警已处置情况'
         })
         this.props.dispatch({
             //获取企业列表
@@ -403,7 +438,7 @@ class index extends PureComponent {
             regVisibleStay:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
-            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'工艺超标报警待处置情况'
+            ModalTitle:regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至'+moment(time[1]).format('YYYY年MM月DD号HH时')+'超标报警待处置情况'
         })
         this.props.dispatch({
             type:pageUrl.GetAlarmManagementDetail,
@@ -444,14 +479,14 @@ class index extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: '全部合计于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: '全部合计于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 PollutantCode:PollutantCode
             })
         }
         else{
             this.setState({
                 entVisible: true,
-                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 entCode:entCode,
                 regionCode:reCode,
                 PollutantCode:PollutantCode
@@ -533,7 +568,7 @@ class index extends PureComponent {
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
-        const activeKey = `newTab${this.newTabIndex++}`;
+        const activeKey = `${region}newTab${this.newTabIndex++}`;
 
         this.props.dispatch({
             type:pageUrl.GetAlarmManagementRateDetail,
@@ -544,7 +579,7 @@ class index extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0],
                 EndTime: time[1],
-                //PageSize: 10,
+                //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
             }
@@ -637,10 +672,10 @@ class index extends PureComponent {
                 })
                 
                 let key = ''
-                let index = 0
+                let indexx = 0
                 panes.map((item, index) => {
                     if (item.title == text) {
-                        index = index
+                        indexx = index
                         return key = item.key
                     }
                 })
@@ -668,8 +703,8 @@ class index extends PureComponent {
                         />, key: key, closable: true
                     }
         
-                    panes.splice(index, 1, obj);
-                    this.setState({ panes, activeKey: key, regionCode: region });
+                    panes.splice(indexx, 1, obj);
+                    this.setState({ panes, activeKey: key, regionCode: region,exportRegion:region });
                 }
                 if (key == '') {
                     panes.push({
@@ -694,7 +729,7 @@ class index extends PureComponent {
                             // }}
                         />, key: activeKey, closable: true
                     });
-                    this.setState({ panes, activeKey,regionCode:region });
+                    this.setState({ panes, activeKey,regionCode:region ,exportRegion:region});
                 }
             }
         })
@@ -726,7 +761,8 @@ class index extends PureComponent {
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
-        this.setState({ activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ activeKey,exportRegion:arr[0]  });
     }
     onEdit=(targetKey, action)=>{
         this[action](targetKey);
@@ -747,7 +783,7 @@ class index extends PureComponent {
                 }
             },
             {
-                title: "工艺超标报警企业数",
+                title: "超标报警企业数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -755,7 +791,7 @@ class index extends PureComponent {
                 key: 'entCount',
             },
             {
-                title: "工艺超标报警监测点数",
+                title: "超标报警监测点数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1249,7 +1285,7 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    return <a onClick={this.DetailsHandle2.bind(this,record.verifyImage,record.remark)}>详情</a>
                     }
             },
         ]
@@ -1287,6 +1323,14 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
+                title: "首次报警时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'firstTime',
+                key: 'firstTime',
+            },
+            {
                 title: "报警因子",
                 width: 100,
                 align: 'center',
@@ -1314,6 +1358,17 @@ class index extends PureComponent {
                     }
             },
             {
+                title: "处置时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifyTime',
+                key: 'verifyTime',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
                 title: "处置状态",
                 width: 100,
                 align: 'center',
@@ -1323,7 +1378,29 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text == '0'?'待处置':'已处置'
                     }
-            }
+            },
+            {
+                title: "处置结果",
+                width: 90,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
+                title: "处置详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
 
         const columns5 = [
@@ -1401,6 +1478,17 @@ class index extends PureComponent {
                 }
             },
             {
+                title: "处置时间",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifyTime',
+                key: 'verifyTime',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },
+            {
                 title: "处置状态",
                 width: 100,
                 align: 'center',
@@ -1410,7 +1498,28 @@ class index extends PureComponent {
                 render:(text)=>{
                     return text == ''?'-':text=='0'?'待处置':'已处置'
                 }
-            }
+            },
+            {
+                title: "处置结果",
+                width: 90,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'verifymessage',
+                key: 'verifymessage',
+                render:(text)=>{
+                    return text == ''?'-':text
+                    }
+            },{
+                title: "处置详情",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'remark',
+                key: 'remark',
+                render:(text,record)=>{
+                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    }
+            },
         ]
         return (
             <>
