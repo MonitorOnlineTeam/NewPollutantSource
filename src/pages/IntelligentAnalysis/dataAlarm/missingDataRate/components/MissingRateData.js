@@ -68,7 +68,8 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
+          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+          query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
                    {text}
                </Link>
                  
