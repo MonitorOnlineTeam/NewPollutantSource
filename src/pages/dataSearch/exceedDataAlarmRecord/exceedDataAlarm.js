@@ -477,7 +477,7 @@ class index extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 status:status,
                 PollutantCode:PollutantCode
     
@@ -487,7 +487,7 @@ class index extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 status:status,
                 entCode:entCode,
                 regionCode:reCode,
@@ -782,7 +782,7 @@ class index extends PureComponent {
                 }
             },
             {
-                title: "工艺超标报警企业数",
+                title: "超标报警企业数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -790,7 +790,7 @@ class index extends PureComponent {
                 key: 'entCount',
             },
             {
-                title: "工艺超标报警监测点数",
+                title: "超标报警监测点数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
