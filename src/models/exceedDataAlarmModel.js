@@ -116,7 +116,7 @@ export default Model.extend({
           PollutantCode: payload.PollutantCode,
           Status:payload.Status,
           EntCode:payload.EntCode,
-          PollutantCodeList:payload.PollutantCodeList,
+          VerifyStatus:payload.VerifyStatus,
       }
       console.log(body)
       const result = yield call(GetAlarmVerifyDetail, body, null)

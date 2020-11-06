@@ -205,7 +205,7 @@ export default class EntTransmissionEfficiency extends Component {
      dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
      this.updateQueryState({
       beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',

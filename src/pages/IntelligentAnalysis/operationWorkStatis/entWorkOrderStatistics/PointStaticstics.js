@@ -53,7 +53,7 @@ class PointStaticstics extends PureComponent {
     return (
       <Modal
       title={title}
-      width={'80%'}
+      width={'90%'}
       visible={showModal}
       onCancel={onCloseListener}
       footer={null}

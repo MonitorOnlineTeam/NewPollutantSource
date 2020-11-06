@@ -12,7 +12,7 @@ import {
   GetEntByRegion,
   ExportTransmissionEfficiencyForRegion,
   ExportTransmissionEfficiencyForEnt,
-} from './service';
+} from '../services/newtransmissionefficiencyApi';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

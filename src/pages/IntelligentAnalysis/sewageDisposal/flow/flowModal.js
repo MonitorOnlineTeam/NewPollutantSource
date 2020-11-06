@@ -491,10 +491,10 @@ class index extends PureComponent {
             <Card
               extra={
                 <>
-                                    {this.cardTitle()}
+                  {this.cardTitle()}
                 </>
               }
-              className="contentContainer"
+              className={style.dataTable}
             >
               {this.pageContent()}
             </Card>

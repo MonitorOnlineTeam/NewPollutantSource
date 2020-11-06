@@ -539,6 +539,7 @@ class index extends PureComponent {
                 this.setState({
                     
                     modalSelectPollution:modalSelectPollution,
+                    regionCode:rCode,
                     entModalTitle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
                 })
             }
@@ -666,6 +667,7 @@ class index extends PureComponent {
                 {
                     this.setState({
                         //visibleEnt:true,
+                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle2:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     }) 
@@ -673,6 +675,7 @@ class index extends PureComponent {
                 else{
                     this.setState({
                         //visibleMoni:true,
+                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     })

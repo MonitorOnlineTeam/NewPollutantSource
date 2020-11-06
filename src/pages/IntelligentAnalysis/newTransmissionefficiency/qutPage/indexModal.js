@@ -382,7 +382,6 @@ export default class EntTransmissionEfficiency extends Component {
     ];
 
     return (
-      <BreadcrumbWrapper title="有效传输率" hide>
         <Card
           bordered={false}
           title={
@@ -514,8 +513,6 @@ export default class EntTransmissionEfficiency extends Component {
             </Modal>
           </>
         </Card>
-        {/* </div> */}
-      </BreadcrumbWrapper>
     );
   }
 }
