@@ -111,3 +111,33 @@ export async function getAirDayReportData(params) {
   return result;
 }
 
+// 获取实时报警数据 - wjq
+export async function getAlarmDataList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetRealAlarmDataList', params);
+  return result;
+}
+
+// 获取故障率 - wjq
+export async function getGZRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetFailureRateList', params);
+  return result;
+}
+
+// 获取超标率 - wjq
+export async function getCBRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetOverStandardRateList', params);
+  return result;
+}
+
+// 获取运转率 - wjq
+export async function getYZRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetDeviceOperationRateList', params);
+  return result;
+}
+
+// 获取传输有效 - wjq
+export async function getCSYXRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetEffectiveTransmissionRateList ', params);
+  return result;
+}
+
