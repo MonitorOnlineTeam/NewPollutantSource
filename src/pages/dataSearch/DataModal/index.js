@@ -13,10 +13,12 @@ import style from '@/pages/dataSearch/tableClass.less'
 import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
 import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
 import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
+import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage/index"
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-@connect(({ loading}) => ({
+@connect(({ loading }) => ({
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -30,26 +32,29 @@ class index extends PureComponent {
         exceedTime:[moment().add(-7, "day"), moment()],
         flowVisible:false,
         flowTime:[moment().add(-30, "day"), moment()],
-        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018'
+        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018',
+        pollutantType:'1',
+        TBeginTime:moment().add(-7, "day"),
+        TEndTime:moment(),
     };
   }
 
-  getChartAndTableData=()=>{
+  getChartAndTableData = () => {
     this.setState({
-      alarmVisible:true,
-  })
-  }
-
-  water=()=>{
-    this.setState({
-      exceedVisible: true,
-      exceedType:'1'
+      alarmVisible: true,
     })
   }
-  gas=()=>{
+
+  water = () => {
     this.setState({
       exceedVisible: true,
-      exceedType:'2'
+      exceedType: '1'
+    })
+  }
+  gas = () => {
+    this.setState({
+      exceedVisible: true,
+      exceedType: '2'
     })
   }
   flow = () => {
@@ -57,7 +62,11 @@ class index extends PureComponent {
       flowVisible: true,
     })
   }
-
+  Tra = () => {
+    this.setState({
+      TVisible: true,
+    })
+  }
   cardTitle = () => {
 
     return (
@@ -66,28 +75,29 @@ class index extends PureComponent {
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.water}>七日超标废水</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.gas}>七日超标废气</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.flow}>流量对比分析</Button>
+        <Button type="primary" style={{ marginRight: 10 }} onClick={this.Tra}>有效传输率</Button>
       </>
     )
   }
-  onCancelChange =()=>{
-      this.setState({
-          alarmVisible:false
-      })
+  onCancelChange = () => {
+    this.setState({
+      alarmVisible: false
+    })
   }
   render() {
-      const {alarmVisible,alarmType,dateTime,exceedVisible,exceedType,exceedTime,flowVisible,flowTime,flowEntCode} = this.state
+    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-            <Card
-              extra={
-                <>
-                    {this.cardTitle()}
-                </>
-              }
-              className="contentContainer"
-            >
-              {/* 实时数据
+          <Card
+            extra={
+              <>
+                {this.cardTitle()}
+              </>
+            }
+            className="contentContainer"
+          >
+            {/* 实时数据
 
                 参数:
                 dateTime  时间参数
@@ -116,7 +126,32 @@ class index extends PureComponent {
               this.setState({ flowVisible: false });
             }} /> : null}
 
-            </Card>
+            {/* 有效传输有效率
+                参数:
+                pollutantType  污染物类型  
+                flowEntCode  污水处理厂编码EntCode
+
+              */}
+            {
+              TVisible ?
+                <TransmissionefficiencyModal 
+                 beginTime={TBeginTime}
+                 endTime={TEndTime}
+                 TVisible={TVisible} 
+                 TCancle={() => {
+                  this.setState({ TVisible: false });
+                }} 
+                pollutantType={pollutantType}
+                // onRegionClick={(RegionCode) => {
+                //   this.setState({
+                //     RegionCode: RegionCode,
+                //     TVisible: false
+                //   })
+                // }}
+                /> : null}
+
+            
+          </Card>
         </div>
       </>
     );

@@ -153,10 +153,7 @@ export default Model.extend({
 
 
       //超标监测点
-      yield update({
-        overWasteWaterLoading: true,
-        overWasteGasLoading: true,
-      });
+      payload.PollutantType == 1?  yield update({ overWasteWaterLoading: true}) :   yield update({   overWasteGasLoading: true}) ;
       const response = yield call(GetOverList, { ...payload });
       if (response.IsSuccess) {
         if (payload.PollutantType == 1) {

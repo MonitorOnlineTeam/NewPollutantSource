@@ -57,7 +57,7 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      overListPar:{
+      gasOverListPar:{
         PollutantType:2,
         BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
@@ -85,8 +85,8 @@ initData=()=>{
   dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'),   } });//数据报警响应
 
 
-  const { overListPar } = this.state;
-  this.getTableData(overListPar);
+  const { gasOverListPar } = this.state;
+  this.getTableData(gasOverListPar);
 }
 
   getTableData = (par) => {
@@ -94,18 +94,16 @@ initData=()=>{
     dispatch({ type: 'home/getOverList', payload: { ...par }, });//超标监测点
   }
 
-  btnChange = (e) => {
     btnChange = (e) => {
 
-      const { overListPar } = this.state;
+      const { gasOverListPar } = this.state;
 
-      let parData = { ...overListPar, DataType: e.target.value }
+      let parData = { ...gasOverListPar, DataType: e.target.value }
 
-      this.setState({ overListPar: parData }, () => {
+      this.setState({ gasOverListPar: parData }, () => {
         this.getTableData(parData);
       })
     }
-  }
   cardTitle1 = () => {
     const { wasteGasStatusList } = this.props;
     return <Row type='flex' justify='space-between'>
@@ -122,9 +120,9 @@ initData=()=>{
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
       <span>近七日超标废气监测点</span>
-      <Radio.Group value={"large"} onChange={this.btnChange} size='small'>
-        <Radio.Button value="large">小时</Radio.Button>
-        <Radio.Button value="default">日均</Radio.Button>
+      <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
+        <Radio.Button value="HourData">小时</Radio.Button>
+        <Radio.Button value="DayData">日均</Radio.Button>
       </Radio.Group>
       <Tabs defaultActiveKey="01" onChange={this.tabCallback1}>
         <TabPane tab="烟尘" key="01">
@@ -151,11 +149,11 @@ initData=()=>{
     </Row>
   }
 tabCallback1=(value)=>{
-  const { overListPar } = this.state;
+  const { gasOverListPar } = this.state;
 
-  let parData = {...overListPar,pollutantCode:value}
+  let parData = {...gasOverListPar,pollutantCode:value}
 
-   this.setState({overListPar:parData},()=>{
+   this.setState({gasOverListPar:parData},()=>{
      this.getTableData(parData);
    })
 }
