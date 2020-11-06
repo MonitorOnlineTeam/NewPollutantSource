@@ -590,12 +590,6 @@ export default {
                   path: '/report/YearReport',
                   component: './report/YearReport/YearReport',
                 },
-                //停运记录
-                {
-                  name: 'StopRecord',
-                  path: '/report/StopRecord',
-                  component: './report/StopRecord/stopRecord',
-                },
                 {
                   name: 'smokeReportPage',
                   path: '/report/smoke',
@@ -1625,10 +1619,21 @@ export default {
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
                 },
+                //停运记录
+                {
+                  name: 'StopRecord',
+                  path: '/dataSearch/StopRecord',
+                  component: './report/StopRecord/stopRecord',
+                },
                 {
                   name: 'entAbnormalRecord', //企业异常记录
                   path: '/dataSearch/entAbnormalRecord',
                   component: './dataSearch/entAbnormalRecord',
+                },
+                {
+                  name: 'components', //弹框
+                  path: '/dataSearch/DataModal',
+                  component: './dataSearch/DataModal',
                 },
               ],
             },

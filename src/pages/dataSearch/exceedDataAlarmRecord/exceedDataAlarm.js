@@ -477,7 +477,7 @@ class index extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 status:status,
                 PollutantCode:PollutantCode
     
@@ -487,7 +487,7 @@ class index extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '工艺超标报警' + deal,
+                ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
                 status:status,
                 entCode:entCode,
                 regionCode:reCode,
@@ -782,7 +782,7 @@ class index extends PureComponent {
                 }
             },
             {
-                title: "工艺超标报警企业数",
+                title: "超标报警企业数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -790,7 +790,7 @@ class index extends PureComponent {
                 key: 'entCount',
             },
             {
-                title: "工艺超标报警监测点数",
+                title: "超标报警监测点数",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
@@ -1518,7 +1518,7 @@ class index extends PureComponent {
                             className={style.dataTable}
                         >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
+                            {this.pageContent()}
                         </Card>
                         <Modal
                             centered
@@ -1575,7 +1575,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns2} dataSource={ManagementDetail} pagination={false} />
+                               <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
                             }
                         </Modal>
                         <Modal
@@ -1624,7 +1624,7 @@ class index extends PureComponent {
                                 </div>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns3} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1664,7 +1664,7 @@ class index extends PureComponent {
                                 <Button onClick={this.StayButtonHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns4} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>
@@ -1680,7 +1680,7 @@ class index extends PureComponent {
                                 <Button onClick={this.ButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                loadingDetail?<PageLoading/>:<SdlTable columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
+                                <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
                             }
                             
                         </Modal>

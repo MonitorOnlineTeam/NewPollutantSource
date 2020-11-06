@@ -389,10 +389,14 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       loading,
       queryPar: { RegionCode,EntCode,ImportantType,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantList,DGIMN},
-      column
+      column,
+      EntList,
+      PointList
     } = this.props;
     const { TabPane } = Tabs;
-
+    console.log(EntCode);
+    console.log(EntList);
+    console.log(EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined));
     let columns = [{
       title: `监测时间`,
       dataIndex: 'DateTime',
@@ -431,7 +435,7 @@ export default class EntTransmissionEfficiency extends Component {
                <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
               </Form.Item>
               <Form.Item label='企业类型'>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} />
+               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} PollutantType="1" />
               </Form.Item>
 
                 <Form.Item label='重点类型'>
@@ -456,7 +460,7 @@ export default class EntTransmissionEfficiency extends Component {
                  optionFilterProp="children"
                  placeholder="企业列表"
                  onChange={this.changeEnt}
-                 value={EntCode ? EntCode : undefined}
+                 value={EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined)}
                  style={{width:'200px'}}
                 >
                  {this.children()}
@@ -468,7 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Select
                     placeholder="监测点名称"
                     onChange={this.changePoint}
-                    value={DGIMN? DGIMN :undefined }
+                    value={DGIMN? DGIMN :  ( PointList.length>0?PointList[0][0].DGIMN: undefined )}
                     style={{ width: 150  }}
                   >
                   {this.pointChildren()}

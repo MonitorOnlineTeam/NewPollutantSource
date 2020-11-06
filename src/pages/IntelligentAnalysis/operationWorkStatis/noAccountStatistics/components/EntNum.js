@@ -300,7 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch,queryPar } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { entQueryPar: { ...queryPar,ModelType:"Ent", EntCode:row.EntCode },EntName:row.EntName },
+      payload: { entQueryPar: { ...queryPar,ModelType:"EntName", EntCode:row.EntCode },EntName:row.EntName },
     });
     setTimeout(()=>{
       this.setState({entVisible:true})

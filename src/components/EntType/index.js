@@ -27,7 +27,7 @@ export default class Index extends Component {
        allowClear
        placeholder="企业类型"
        onChange={typeChange}
-       value={PollutantType?PollutantType:undefined}
+       defaultValue={PollutantType?PollutantType:undefined}
        style={{ width: 150 }}
        {...this.props}
      >
