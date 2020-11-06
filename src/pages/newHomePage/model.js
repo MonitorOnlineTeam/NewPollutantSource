@@ -74,6 +74,8 @@ export default Model.extend({
     overWasteGasList:[],
     workOrderLoading:true,
     workOrderList:{},
+    alarmResponseLoading:[],
+    alarmResponseList:{},
     // ---------wjq-----------
     airDayReportData: {
       datas: [
@@ -146,6 +148,20 @@ export default Model.extend({
           yield update({
             workOrderList: response.Datas,
             workOrderLoading: false,
+          });
+        }else{
+
+
+      }
+    },
+    *getAlarmResponse({ payload }, { call, put, update, select }) {
+      //数据报警响应统计
+      yield update({ workOrderLoading: true});
+      const response = yield call(GetAlarmResponse, { ...payload });
+      if (response.IsSuccess) {
+          yield update({
+            alarmResponseList: response.Datas,
+            alarmResponseLoading: false,
           });
         }else{
 

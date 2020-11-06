@@ -95,6 +95,15 @@ export async function GetOperationWorkOrderList(params) {
   );
   return result;
 }
+//数据响应报警统计
+export async function GetAlarmResponse(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetAlarmResponse',
+    params,
+    null,
+  );
+  return result;
+}
 
 // 空气日报统计 - wjq
 export async function getAirDayReportData(params) {

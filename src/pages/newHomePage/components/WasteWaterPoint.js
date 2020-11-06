@@ -137,7 +137,7 @@ cardTitle2=()=>{
     const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
            <span>近七日超标废水监测点</span>
-           <Radio.Group value={"HourData"} onChange={this.btnChange} size='small'>
+           <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
           <Radio.Button value="HourData">小时</Radio.Button>
           <Radio.Button value="DayData">日均</Radio.Button>
         </Radio.Group>
@@ -297,8 +297,8 @@ return option;
         </Card>
         </Col>
         <Col span={12}  className={styles.sevenCard}>  
-         <Card title={this.cardTitle2()} bordered={false} paragraph={{ rows: 5 }}>
-          <Skeleton loading={overWasteWaterLoading}  active>
+         <Card title={this.cardTitle2()} bordered={false} >
+          <Skeleton loading={overWasteWaterLoading}  active  paragraph={{ rows: 5   }}>
            <ScrollTable  type='wasteWater' data={overWasteWaterList}  column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
