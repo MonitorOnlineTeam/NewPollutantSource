@@ -1,7 +1,7 @@
 /**
- * 功  能：故障率 运转率 超标率
+ * 功  能：首页
  * 创建人：贾安波
- * 创建时间：2020.10.30
+ * 创建时间：2020.11
  */
 
 import Model from '@/utils/model';
@@ -12,7 +12,10 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
-  getAirDayReportData
+  getAirDayReportData,
+  GetPointStatusList,
+  GetOverList,
+  GetOperationWorkOrderList
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -53,13 +56,24 @@ export default Model.extend({
     regionCode: '',
     entCode: '',
     realTimeAlarmLoading: false,
-    wasteWaterTable:
-    [{value:'1',name:'哈哈哈',label:'666',title:'有了'},
-    {value:'2',name:'呵呵',label:'666',title:'有了'},
-    {value:'2',name:'呵呵',label:'666',title:'有了'},
-    {value:'2',name:'呵呵',label:'666',title:'有了'},
-    {value:'2',name:'呵呵',label:'666',title:'有了'},
-  ],
+    pointStatusList:{},
+    wasteGasStatusList:{},
+    wasteGasStatusLoading:true,
+    pointStatusLoading:true,
+    dataQueryPar:{
+      BeginTime: "",
+      EndTime: "",
+      DataType: "",
+      PollutantType: "",
+      MonitorTime: "",
+      pollutantCode: ""
+    },
+    overWasteWaterLoading:true,
+    overWasteWaterList: [],
+    overWasteGasLoading:true,
+    overWasteGasList:[],
+    workOrderLoading:true,
+    workOrderList:{},
     // ---------wjq-----------
     airDayReportData: {
       datas: [
@@ -76,6 +90,69 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
+    *getPointStatusList({ payload }, { call, put, update, select }) {
+
+    
+      //监测点状态
+      yield update({
+        pointStatusLoading: true,
+        wasteGasStatusLoading: true,
+      });
+      const response = yield call(GetPointStatusList, { ...payload });
+      if (response.IsSuccess) {
+        if(payload.PollutantType==1){
+          yield update({
+            pointStatusList: response.Datas,
+            pointStatusLoading: false,
+          });
+        }else{
+          yield update({
+            wasteGasStatusList: response.Datas,
+            wasteGasStatusLoading: false,
+           });
+        }
+
+      }
+    },
+    *getOverList({ payload }, { call, put, update, select }) {
+
+    
+      //超标监测点
+      yield update({
+        overWasteWaterLoading: true,
+        overWasteGasLoading: true,
+      });
+      const response = yield call(GetOverList, { ...payload });
+      if (response.IsSuccess) {
+        if(payload.PollutantType==1){
+          yield update({
+            overWasteWaterList: response.Datas,
+            overWasteWaterLoading: false,
+          });
+        }else{
+          yield update({
+            overWasteGasList: response.Datas,
+            overWasteGasLoading: false,
+           });
+        }
+
+      }
+    },
+    *getOperationWorkOrderList({ payload }, { call, put, update, select }) {
+      //运维工单统计
+      yield update({ workOrderLoading: true});
+      const response = yield call(GetOperationWorkOrderList, { ...payload });
+      if (response.IsSuccess) {
+          yield update({
+            workOrderList: response.Datas,
+            workOrderLoading: false,
+          });
+        }else{
+
+
+      }
+    },
+    
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
 

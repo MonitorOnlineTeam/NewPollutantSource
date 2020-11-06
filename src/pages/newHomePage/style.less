@@ -30,7 +30,9 @@
     .ant-card-body {
       padding: 0 24px 24px;
     }
-
+    .ant-skeleton{
+      padding:  0 24px 24px;
+    }
   }
 
   :global {
@@ -103,7 +105,12 @@
 }
 
 .wasteWaterPoint {
-
+  
+  :global{
+    .ant-skeleton{
+      height: 236px;
+    }
+  }
   .wasteWateCard {
     :global {
       .ant-card-head {
@@ -116,6 +123,7 @@
       .ant-card-body {
         padding: 0;
       }
+
     }
 
     .listSty {
@@ -152,6 +160,14 @@
         padding: 0;
       }
     }
+  }
+  .workOrderStatCard{
+    :global{
+      .ant-skeleton{
+      padding: 0;
+      height: 212px;
+    }
+   }
   }
 }
 

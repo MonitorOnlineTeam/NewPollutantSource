@@ -42,7 +42,10 @@ const pageUrl = {
   getData: 'home/getOverDataRate',
 };
 @connect(({ loading, home,autoForm }) => ({
- realTimeAlarmLoading: home.realTimeAlarmLoading
+ pointStatusLoading:home.pointStatusLoading,
+ dataQueryPar:home.dataQueryPar,
+ wasteGasStatusList:home.wasteGasStatusList
+
 }))
 @Form.create()
 export default class Index extends Component {
@@ -72,31 +75,34 @@ componentDidUpdate() {
 
 }
 initData=()=>{
-
+  const {dataQueryPar,dispatch} = this.props;
+  let pointStatusPar ={ ...dataQueryPar,PollutantType:2};
+  dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar },  });//监测点状态
 }
 btnChange=(e)=>{
   console.log(e.target.value)
 }
  cardTitle1=()=>{
+   const { wasteGasStatusList } = this.props;
    return <Row type='flex' justify='space-between'> 
            <span style={{color:'#fff'}}>废气监测点</span>
-            <span style={{color:'#fff',fontWeight:'bold'}}>{`${15}个`}</span>
+            <span style={{color:'#fff',fontWeight:'bold'}}>{`${wasteGasStatusList.totalCount?wasteGasStatusList.totalCount:0}个`}</span>
          </Row>
  }
 cardTitle2=()=>{
     const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
-           <span>近七日超标废水监测点</span>
+           <span>近七日超标废气监测点</span>
            <Radio.Group value={"large"} onChange={this.btnChange} size='small'>
           <Radio.Button value="large">小时</Radio.Button>
           <Radio.Button value="default">日均</Radio.Button>
         </Radio.Group>
-          <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
-             <TabPane tab="废水" key="1">
+          <Tabs defaultActiveKey="1" onChange={this.tabCallback1}>
+             <TabPane tab="烟尘" key="1">
              </TabPane>
              <TabPane tab="废气" key="2">
             </TabPane>
-            <TabPane tab="空气站" key="3">
+            <TabPane tab="空气站" key="5">
             </TabPane>
             </Tabs>
             
@@ -105,19 +111,20 @@ cardTitle2=()=>{
 cardTitle3=()=>{
 
     return  <Row type='flex' align="middle" justify='space-between'> 
-               <span>运维工单统计</span>
-            <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
-            <TabPane tab="废水" key="1">
+               <span>数据报警响应统计</span>
+            <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
+            <TabPane tab="近7天" key="1">
              </TabPane>
-             <TabPane tab="废气" key="2">
-            </TabPane>
-            <TabPane tab="空气站" key="3">
+             <TabPane tab="近30天" key="2">
             </TabPane>
               </Tabs>
               
             </Row>
   }
-tabCallback=(value)=>{
+tabCallback1=(value)=>{
+  console.log(value)
+}
+tabCallback2=(value)=>{
   console.log(value)
 }
 
@@ -181,7 +188,8 @@ getChartData=(type)=>{
 }
   render() {
     const {
-        realTimeAlarmLoading
+      pointStatusLoading,
+        wasteGasStatusList,
     } = this.props;
 
   const { list } = this.state;
@@ -192,15 +200,15 @@ getChartData=(type)=>{
 
          <Col span={6}>  
          <Card  title={this.cardTitle1()} className={`${styles.wasteWateCard} ${styles.wasteGasCard}`} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+          <Skeleton loading={pointStatusLoading}  active>
             <ul className={styles.listSty}>
-              <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>40</span></Row></li>
-              <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span style={{background:'#f0565d'}} className={styles.colorBlock}>40</span></Row></li>
+    <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>{wasteGasStatusList.alarmCount}</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span style={{background:'#f0565d'}} className={styles.colorBlock}>{wasteGasStatusList.overCount}</span></Row></li>
 
-              <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span style={{background:'#f5a86a'}} className={styles.colorBlock}>40</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span style={{background:'#f5a86a'}} className={styles.colorBlock}>{wasteGasStatusList.unLine}</span></Row></li>
 
-              <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />故障</div> <span style={{background:'#bdc4cc'}} className={styles.colorBlock}>40</span></Row></li>
-              <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span style={{background:'#40474e'}} className={styles.colorBlock}>40</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span style={{background:'#bdc4cc'}} className={styles.colorBlock}>{wasteGasStatusList.exceptionCount}</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span style={{background:'#40474e'}} className={styles.colorBlock}>{wasteGasStatusList.stopCount}</span></Row></li>
 
             </ul>
           </Skeleton>
@@ -208,14 +216,14 @@ getChartData=(type)=>{
         </Col>
         <Col span={12}  className={styles.sevenCard}>  
          <Card title={this.cardTitle2()} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+          <Skeleton loading={pointStatusLoading}  active>
            <ScrollTable  type='wasteGas' data={[1,2,3,4,6,6,7,7,8,89]} column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
         </Col>
         <Col span={6}>  
          <Card title={this.cardTitle3()} className={styles.alarmCard}  bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+          <Skeleton loading={pointStatusLoading}  active>
         
              <Row type='flex' align='middle' justify='space-between'>
               <Col span={8} align='middle'>

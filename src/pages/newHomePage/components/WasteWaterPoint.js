@@ -42,8 +42,14 @@ const pageUrl = {
   getData: 'home/getOverDataRate',
 };
 @connect(({ loading, home,autoForm }) => ({
- realTimeAlarmLoading: home.realTimeAlarmLoading,
- wasteWaterTable:home.wasteWaterTable
+  pointStatusLoading: home.pointStatusLoading,
+ wasteWaterTable:home.wasteWaterTable,
+ dataQueryPar:home.dataQueryPar,
+ pointStatusList:home.pointStatusList,
+ overWasteWaterLoading:home.overWasteWaterLoading,
+ overWasteWaterList:home.overWasteWaterList,
+ workOrderList: home.workOrderList,
+ workOrderLoading: home.workOrderLoading,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -51,13 +57,13 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      list:[
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-
-      ]
+      overListPar:{
+        PollutantType:1,
+        BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
+        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+        pollutantCode:'011',
+        DataType:'HourData'
+      }
     }
     
 }
@@ -73,31 +79,78 @@ componentDidUpdate() {
 
 }
 initData=()=>{
+   const { dispatch,dataQueryPar } = this.props;
+
+   let pointStatusPar ={ ...dataQueryPar,PollutantType:1};
+   dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar },  });//监测点状态
+   dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...pointStatusPar },  });//运维工单统计
+
+   const { overListPar } = this.state;
+  
+
+    this.getTableData(overListPar);
+}
+
+getTableData=(par)=>{
+  const { dispatch } = this.props;
+  dispatch({ type: 'home/getOverList', payload: { ...par },  });//超标监测点
+}
+
+tabCallback1=(value)=>{
+
+  const { overListPar } = this.state;
+  
+  let parData = {...overListPar,pollutantCode:value}
+  
+   this.setState({overListPar:parData},()=>{
+     this.getTableData(parData);
+   })
+
 
 }
+tabCallback2=(value)=>{
+  const { dispatch,dataQueryPar } = this.props;
+  
+  let parData ={ ...dataQueryPar,PollutantType:value};
+   
+   dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...parData },  });//运维工单统计
+}
+
 btnChange=(e)=>{
-  console.log(e.target.value)
+
+  const { overListPar } = this.state;
+  
+  let parData = {...overListPar,DataType:e.target.value}
+  
+   this.setState({overListPar:parData},()=>{
+     this.getTableData(parData) ;
+   })
 }
  cardTitle1=()=>{
+   const { pointStatusList } = this.props;
    return <Row type='flex' justify='space-between'> 
            <span style={{color:'#fff'}}>废水监测点</span>
-            <span style={{color:'#fff',fontWeight:'bold'}}>{`${15}个`}</span>
+            <span style={{color:'#fff',fontWeight:'bold'}}>{`${pointStatusList.totalCount?pointStatusList.totalCount:0}个`}</span>
          </Row>
  }
 cardTitle2=()=>{
     const ButtonGroup = Button.Group;
   return  <Row type='flex' align="middle" justify='space-between'> 
            <span>近七日超标废水监测点</span>
-           <Radio.Group value={"large"} onChange={this.btnChange} size='small'>
-          <Radio.Button value="large">小时</Radio.Button>
-          <Radio.Button value="default">日均</Radio.Button>
+           <Radio.Group value={"HourData"} onChange={this.btnChange} size='small'>
+          <Radio.Button value="HourData">小时</Radio.Button>
+          <Radio.Button value="DayData">日均</Radio.Button>
         </Radio.Group>
-          <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
-             <TabPane tab="废水" key="1">
+          <Tabs defaultActiveKey="1" onChange={this.tabCallback1}>
+             <TabPane tab="COD" key="011">
              </TabPane>
-             <TabPane tab="废气" key="2">
+             <TabPane tab="氨氮" key="060">
             </TabPane>
-            <TabPane tab="空气站" key="3">
+            <TabPane tab="总磷" key="101">
+            </TabPane>
+            <TabPane tab="总氮" key="065">
+            </TabPane>
+            <TabPane tab="PH值" key="001">
             </TabPane>
             </Tabs>
             
@@ -107,22 +160,21 @@ cardTitle3=()=>{
 
     return  <Row type='flex' align="middle" justify='space-between'> 
                <span>运维工单统计</span>
-            <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
+            <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
             <TabPane tab="废水" key="1">
              </TabPane>
              <TabPane tab="废气" key="2">
             </TabPane>
-            <TabPane tab="空气站" key="3">
+            <TabPane tab="空气站" key="5">
             </TabPane>
               </Tabs>
               
             </Row>
   }
-tabCallback=(value)=>{
-  console.log(value)
-}
+
 
 getChartData=()=>{
+  const { workOrderList } = this.props;
  let  color = ['#64b0fd','#9d6ff1','#42dab8']
   let option = {
     color:['#64b0fd','#9d6ff1','#42dab8'],
@@ -156,7 +208,7 @@ getChartData=()=>{
     },
     yAxis: {
         type: 'category',
-        data: ['巡检', '校准', '维修维护', '校验测试'],
+        data: ['巡检', '维修维护','校准',  '校验测试'],
         // show:false,//不显示坐标轴线、坐标轴刻度线和坐标轴上的文字
         axisTick:{
               show:false//不显示坐标轴刻度线
@@ -186,7 +238,7 @@ getChartData=()=>{
                 if (params.value === 0) { return "" } else { return params.value }
               }
             },
-            data: [320, 302, 301, 334, 390, 330, 320],
+            data: [workOrderList.calibrationComplete, workOrderList.calibrationComplete,workOrderList.maintenanceRepairComplete, workOrderList.onSiteInspectionComplete],
         },
         {
             name: '未完成',
@@ -205,7 +257,7 @@ getChartData=()=>{
             },
             
             position:'right',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [workOrderList.calibrationUnfinished, workOrderList.calibrationUnfinished,workOrderList.maintenanceRepairUnfinished, workOrderList.onSiteInspectionUnfinished]
         },
 
     ]
@@ -215,43 +267,45 @@ return option;
 }
   render() {
     const {
-        realTimeAlarmLoading,
-        wasteWaterTable
+        pointStatusLoading,
+        wasteWaterTable,
+        overWasteWaterLoading,
+        overWasteWaterList,
+        workOrderLoading
     } = this.props;
 
   const { list } = this.state;
-  console.log(22222)
-  console.log(wasteWaterTable)
+  const { pointStatusList } = this.props;
     return (
         <div style={{width:'100%'}} className={styles.wasteWaterPoint}  >
          <Row type='flex' justify='space-between' >
 
          <Col span={6}>  
          <Card  title={this.cardTitle1()} className={styles.wasteWateCard} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+          <Skeleton loading={pointStatusLoading} active paragraph={{ rows: 5 }} >
             <ul className={styles.listSty}>
-              <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>40</span></Row></li>
-              <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span style={{background:'#f0565d'}} className={styles.colorBlock}>40</span></Row></li>
+    <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{background:'#f25fc7'}} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span style={{background:'#f0565d'}} className={styles.colorBlock}>{pointStatusList.overCount}</span></Row></li>
 
-              <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span style={{background:'#f5a86a'}} className={styles.colorBlock}>40</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span style={{background:'#f5a86a'}} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
 
-              <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />故障</div> <span style={{background:'#bdc4cc'}} className={styles.colorBlock}>40</span></Row></li>
-              <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span style={{background:'#40474e'}} className={styles.colorBlock}>40</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span style={{background:'#bdc4cc'}} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
+              <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span style={{background:'#40474e'}} className={styles.colorBlock}>{pointStatusList.stopCount}</span></Row></li>
 
             </ul>
           </Skeleton>
         </Card>
         </Col>
         <Col span={12}  className={styles.sevenCard}>  
-         <Card title={this.cardTitle2()} bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
-           <ScrollTable  type='wasteWater' data={wasteWaterTable}  column={['市师','企业名称','监测点名称','最大超标倍数']}/>
+         <Card title={this.cardTitle2()} bordered={false} paragraph={{ rows: 5 }}>
+          <Skeleton loading={overWasteWaterLoading}  active>
+           <ScrollTable  type='wasteWater' data={overWasteWaterList}  column={['市师','企业名称','监测点名称','最大超标倍数']}/>
           </Skeleton>
         </Card>
         </Col>
         <Col span={6}>  
-         <Card title={this.cardTitle3()}  bordered={false} >
-          <Skeleton loading={realTimeAlarmLoading} avatar active>
+         <Card title={this.cardTitle3()} className={styles.workOrderStatCard}  bordered={false} >
+          <Skeleton loading={workOrderLoading}  active paragraph={{ rows: 5   }}>
              <ReactEcharts
                  option={this.getChartData()}
                         className="echarts-for-echarts"

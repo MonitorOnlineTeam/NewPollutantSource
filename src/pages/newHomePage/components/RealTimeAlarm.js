@@ -130,7 +130,6 @@ marquee(scroll_end,scroll_div,scroll_begin) {
                    <div id='scroll_end'>
                   </div> 
                    
-
                 </Row>
           </Skeleton>
         </Card>
