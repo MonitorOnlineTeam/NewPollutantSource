@@ -60,24 +60,22 @@ export default class Index extends Component {
       overListPar: {
         PollutantType: 2,
         BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
-      gasOverListPar:{
-        PollutantType:2,
-        BeginTime:moment().add('day',-7).format('YYYY-MM-DD 00:00:00'),
-        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-        pollutantCode: '01',
-        DataType: 'HourData'
+        gasOverListPar: {
+          PollutantType: 2,
+          BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
+          EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+          pollutantCode: '01',
+          DataType: 'HourData'
+        }
       }
+
     }
-
   }
-
   componentDidMount() {
 
     this.initData()
-
-
-
   }
+  
   componentDidUpdate() {
 
   }
@@ -88,25 +86,25 @@ export default class Index extends Component {
     dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'), } });//数据报警响应
 
 
-  const { gasOverListPar } = this.state;
-  this.getTableData(gasOverListPar);
-}
+    const { gasOverListPar } = this.state;
+    this.getTableData(gasOverListPar);
+  }
 
   getTableData = (par) => {
     const { dispatch } = this.props;
     dispatch({ type: 'home/getOverList', payload: { ...par }, });//超标监测点
   }
 
-    btnChange = (e) => {
+  btnChange = (e) => {
 
-      const { gasOverListPar } = this.state;
+    const { gasOverListPar } = this.state;
 
-      let parData = { ...gasOverListPar, DataType: e.target.value }
+    let parData = { ...gasOverListPar, DataType: e.target.value }
 
-      this.setState({ gasOverListPar: parData }, () => {
-        this.getTableData(parData);
-      })
-    }
+    this.setState({ gasOverListPar: parData }, () => {
+      this.getTableData(parData);
+    })
+  }
   cardTitle1 = () => {
     const { wasteGasStatusList } = this.props;
     return <Row type='flex' justify='space-between'>
@@ -150,22 +148,23 @@ export default class Index extends Component {
       </Tabs>
     </Row>
   }
-tabCallback1=(value)=>{
-  const { gasOverListPar } = this.state;
+  tabCallback1 = (value) => {
+    const { gasOverListPar } = this.state;
 
-  let parData = {...gasOverListPar,pollutantCode:value}
+    let parData = { ...gasOverListPar, pollutantCode: value }
 
-   this.setState({gasOverListPar:parData},()=>{
-     this.getTableData(parData);
-   })
-}
-tabCallback2=(value)=>{
-  const { dispatch,dataQueryPar } = this.props;
-  this.setState({ currentTabKey: value })
-  let parData ={ ...dataQueryPar,
-    BeginTime:value==1?moment().add('day',-7).format('YYYY-MM-DD 00:00:00'):moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
-    EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-  };
+    this.setState({ gasOverListPar: parData }, () => {
+      this.getTableData(parData);
+    })
+  }
+  tabCallback2 = (value) => {
+    const { dispatch, dataQueryPar } = this.props;
+    this.setState({ currentTabKey: value })
+    let parData = {
+      ...dataQueryPar,
+      BeginTime: value == 1 ? moment().add('day', -7).format('YYYY-MM-DD 00:00:00') : moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+    };
 
 
     dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
