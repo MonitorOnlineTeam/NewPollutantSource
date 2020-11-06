@@ -1170,7 +1170,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1285,7 +1300,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle2.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1398,7 +1428,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1517,7 +1562,22 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]

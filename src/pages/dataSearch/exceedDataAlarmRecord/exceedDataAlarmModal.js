@@ -116,14 +116,14 @@ class exceedDataAlarmModal extends PureComponent {
             if(this.props.pollutantCodeList.length > 0)
             {
                 const {outletValue,dataType,time} = this.state
-                const {dateTime}= this.props
+                const {dateTime,alarmType}= this.props
                 console.log(dateTime)
                 this.props.dispatch({
                     type: pageUrl.GetAlarmVerifyRate,
                     payload: {
                         RegionCode: '',
                         attentionCode: '',
-                        PollutantType: outletValue == undefined ? '' : outletValue,
+                        PollutantType: alarmType,
                         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
                         BeginTime: dateTime[0],
                         EndTime: dateTime[1],
@@ -253,7 +253,7 @@ class exceedDataAlarmModal extends PureComponent {
       }
     cardTitle = () => {
         const { time} = this.state;
-        const {pollutantCodeList,dateTime} = this.props
+        const {pollutantCodeList,dateTime,alarmType} = this.props
         return (
             <>
                 <Select
@@ -298,7 +298,7 @@ class exceedDataAlarmModal extends PureComponent {
                     placeholder="排口类型"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    defaultValue={this.state.entType}
+                    defaultValue={alarmType}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
                         //获取监测因子列表
@@ -1163,7 +1163,22 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                    {
+                       sourc = []
+                    }
+                    else
+                    {
+                       record.verifyImage.map(item=>{
+                           let obj = {
+                               name:item.FileName,
+                               attach:item.FileName
+                           }
+                           sourc.push(obj)
+                       })
+                    }
+                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                 }
             },
         ]
@@ -1276,7 +1291,22 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return <a onClick={this.DetailsHandle2.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1381,7 +1411,22 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        record.verifyImage.map(item=>{
+                            let obj = {
+                                name:item.FileName,
+                                attach:item.FileName
+                            }
+                            sourc.push(obj)
+                        })
+                     }
+                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1500,7 +1545,22 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    let sourc = []
+                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                    {
+                       sourc = []
+                    }
+                    else
+                    {
+                       record.verifyImage.map(item=>{
+                           let obj = {
+                               name:item.FileName,
+                               attach:item.FileName
+                           }
+                           sourc.push(obj)
+                       })
+                    }
+                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                 }
             },
         ]

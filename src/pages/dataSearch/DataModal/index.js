@@ -24,15 +24,15 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      alarmVisible: false,
-      exceedVisible: false,
-      TVisible: false,
-      dateTime: [moment().add(-48, "hour"), moment()],
-      exceedType: '',
-      exceedTime: [moment().add(-7, "day"), moment()],
-      flowVisible: false,
-      flowTime: [moment().add(-30, "day"), moment()],
-      flowEntCode: '00557cc5-53d5-4bd2-81d5-1b81deba7018'
+        alarmVisible:false,
+        alarmType:'1',
+        exceedVisible:false,
+        dateTime:[moment().add(-48, "hour"), moment()],
+        exceedType:'',
+        exceedTime:[moment().add(-7, "day"), moment()],
+        flowVisible:false,
+        flowTime:[moment().add(-30, "day"), moment()],
+        flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018'
     };
   }
 
@@ -98,10 +98,11 @@ class index extends PureComponent {
 
                 参数:
                 dateTime  时间参数
+                alarmType 企业类型    '1'是废水  '2' 是废气
               */}
-            {alarmVisible ? <ExceedDataAlarm dateTime={dateTime} alarmVisible={alarmVisible} alarmCancle={() => {
-              this.setState({ alarmVisible: false });
-            }} /> : null}
+                {alarmVisible? <ExceedDataAlarm dateTime={dateTime} alarmType={alarmType}  alarmVisible={alarmVisible} alarmCancle={()=>{
+                    this.setState({alarmVisible:false});
+                }}/>:null}
             {/* 超标废水监测点  和  超标废气监测点
                 参数:
                 exceedTime  时间参数  默认是7天

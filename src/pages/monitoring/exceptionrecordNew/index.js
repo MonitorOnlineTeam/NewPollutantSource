@@ -53,6 +53,7 @@ class index extends PureComponent {
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
+    exceptionTime: this.props.time || this.props.exceptionTime,
   }
   _SELF_ = {
     formLayout: {
@@ -250,6 +251,7 @@ class index extends PureComponent {
     ],
   }
 
+
   componentDidMount() {
     // 获取行政区列表
     this.props.dispatch({
@@ -263,7 +265,7 @@ class index extends PureComponent {
       payload: { RegionCode: '' }
     });
 
-    this.getExceptionList();
+    this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
   onTableClick = (RegionCode, ExceptionType, ResponseStatus) => {
@@ -304,7 +306,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
-    values.time = this.props.exceptionTime;
+    values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -338,7 +340,7 @@ class index extends PureComponent {
   exportExceptionAlarm = () => {
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
-    values.time = this.props.exceptionTime;
+    values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -388,13 +390,16 @@ class index extends PureComponent {
         exceptionTime: date,
       },
     })
+    this.setState({
+      exceptionTime: date
+    })
   }
 
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, exceptionTime, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")

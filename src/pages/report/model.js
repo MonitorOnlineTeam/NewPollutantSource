@@ -27,6 +27,7 @@ export default Model.extend({
       beginTime: null,
       endTime: null,
     },
+    msg:'排放量为小时均值*小时流量',
     entAndPontList: [],
     pollutantList: [],
     pollutantTypeList: [],

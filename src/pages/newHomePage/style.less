@@ -98,6 +98,7 @@
 
 .brokenLine {
   .lineCard {
+    background-color: #fff;
     // width:200px;
     // width: calc( (100% - 20px) / 4) 
   }
@@ -146,6 +147,7 @@
         color: #fff;
         text-align: center;
         font-weight: bold;
+        cursor: pointer;
       }
     }
   }
@@ -189,6 +191,10 @@
       .ant-card-body{
         padding: 30px 0 40px 0;
       } 
+      .ant-skeleton{
+        padding-bottom: 0;
+        height: 12px;
+      }
      }
     .title1{
       font-size: 18px;
@@ -201,6 +207,11 @@
   }
 }
 .airStatistics{
+  :global{
+    .ant-skeleton{
+      padding-bottom: 34px;
+  }
+  }
   .airCard{
   :global{
     .ant-card-head{
@@ -223,6 +234,9 @@
     .ant-card {
       margin: 0 10px;
     }
+    .ant-skeleton{
+      padding-bottom: 36px;
+    }
     }
   }
 }
@@ -231,5 +245,6 @@
     .ant-card-body{
       padding-bottom: 3px;
     }
-  }
+
+}
 }
