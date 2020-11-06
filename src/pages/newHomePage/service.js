@@ -60,10 +60,45 @@ export async function ExportSewageHistoryList(params) {
 export async function GetEntByRegion(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
-      params.RegionCode,
+    params.RegionCode,
     null,
     null,
   );
 
   return result;
 }
+//监测点状态
+export async function GetPointStatusList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetPointStatusList',
+    params,
+    null,
+  );
+
+  return result;
+}
+//超标监测点
+export async function GetOverList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetOverList',
+    params,
+    null,
+  );
+  return result;
+}
+//运维工单统计
+export async function GetOperationWorkOrderList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetOperationWorkOrderList',
+    params,
+    null,
+  );
+  return result;
+}
+
+// 空气日报统计 - wjq
+export async function getAirDayReportData(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetAQIStatistics', params);
+  return result;
+}
+

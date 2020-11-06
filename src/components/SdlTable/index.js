@@ -71,14 +71,11 @@ class SdlTable extends PureComponent {
       if (!this._calledComponentWillUnmount) {
         // let otherHeight = this.props.pagination ? 136 : 96;
 
-        this.setState(
-          {
-            computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
-          },
-          () => {
-            // console.log("computeHeight=", this.state.computeHeight)
-          },
-        );
+        this.setState({
+          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0),
+        }, () => {
+          // console.log("computeHeight=", this.state.computeHeight)
+        });
       }
     }, 50);
   }
@@ -154,7 +151,7 @@ class SdlTable extends PureComponent {
         {
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         },
-        () => {},
+        () => { },
       );
     }
 
@@ -166,7 +163,7 @@ class SdlTable extends PureComponent {
         {
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         },
-        () => {},
+        () => { },
       );
     }
   }
@@ -193,8 +190,8 @@ class SdlTable extends PureComponent {
       this.props.scroll && this.props.scroll.y
         ? this.props.scroll.y
         : fixedHeight
-        ? clientHeight - fixedHeight - headAndFooterHeight
-        : '';
+          ? clientHeight - fixedHeight - headAndFooterHeight
+          : '';
     // 没有分页高度 + 40
     const scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
@@ -235,7 +232,7 @@ class SdlTable extends PureComponent {
             defaultCurrent: 1,
             pageSize: 20,
             showQuickJumper: true,
-            total: this.props.dataSource.length,
+            total: this.props.dataSource ? this.props.dataSource.length : 0,
             showSizeChanger: true,
             pageSizeOptions: ['20', '30', '40', '100'],
           }}
@@ -256,6 +253,7 @@ class SdlTable extends PureComponent {
 SdlTable.defaultProps = {
   defaultWidth: 130,
   resizable: false,
-};
+  dataSource: [],
+}
 
 export default SdlTable;

@@ -223,6 +223,9 @@ export default class OverVerifyLst extends Component {
       PollutantType: value,
     });
     this.getPollutantByType(value, this.getExceptionList);
+    setTimeout(() => {
+      this.getTableData();
+    });
   };
 
   changeRegion = value => {

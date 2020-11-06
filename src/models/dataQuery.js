@@ -455,7 +455,6 @@ export default Model.extend({
           i++;
         }
       });
-      debugger;
       result.map((item1, key) => {
         switch (historyparams.datatype) {
           case 'month':
@@ -670,6 +669,19 @@ export default Model.extend({
           });
         }
         columns = columns.concat(pollutantcols);
+
+        if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
+        {
+          tablewidth=tablewidth+50
+          columns=columns.concat({
+            title: '是否停产',
+            dataIndex: 'stop',
+            key: 'stop',
+            width: 50,
+            // fixed: 'left',
+            align: 'center',
+          });
+        }
       }
       let option = null;
       if (arr && arr.length > 0) {

@@ -44,8 +44,8 @@ class index extends PureComponent {
         super(props);
         this.newTabIndex = 0
         this.state = {
-            Begintime: [moment().add(-1, "month"), moment()],
-            Endtime: [moment().add(-1, "month"), moment()],
+            Begintime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            Endtime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
             regionValue: '',
             entValue:'',
             voucher:'',
@@ -189,7 +189,6 @@ class index extends PureComponent {
             <>
                 <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
-                        debugger;
                         this.setState({
                             Begintime: dates
                         })
@@ -266,7 +265,7 @@ debugger
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                         placeholder="监测点列表"
                         maxTagCount={2}
-                        value={this.state.pointValue}
+                        value={this.state.pointValue==''?undefined:this.state.pointValue}
                         maxTagTextLength={5}
                         maxTagPlaceholder="..."
                         onChange={(value) => {

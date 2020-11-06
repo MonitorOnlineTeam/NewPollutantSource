@@ -52,7 +52,9 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   pageSize: newtransmissionefficiency.pageSize,
   pageIndex: newtransmissionefficiency.pageIndex,
   beginTime:newtransmissionefficiency.beginTime,
-  endTime:newtransmissionefficiency.endTime
+  endTime:newtransmissionefficiency.endTime,
+  pollutantType: newtransmissionefficiency.pollutantType,
+  assessment: newtransmissionefficiency.assessment,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -85,7 +87,8 @@ export default class EntTransmissionEfficiency extends Component {
       PageIndex: 1,
       PageSize: 20,
       EntCode: '',
-      PollutantType: '',
+      PollutantType: this.props.pollutantType,
+      Assessment:this.props.assessment
     });
 
     dispatch({
@@ -153,6 +156,7 @@ export default class EntTransmissionEfficiency extends Component {
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
+
     });
   };
 
@@ -193,16 +197,17 @@ export default class EntTransmissionEfficiency extends Component {
     //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode,Assessment },
       entName,
     } = this.props;
 
     let priseQueryPar = {
       beginTime: beginTime,
       endTime: endTime,
-      PollutantType: '',
+      PollutantType: PollutantType,
       RegionCode: RegionCode,
       EntCode: row.EntCode,
+      Assessment:Assessment
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -383,9 +388,8 @@ export default class EntTransmissionEfficiency extends Component {
           title={
             <>
               <Form layout="inline">
-                <Form.Item>
+                {/* <Form.Item>
                   时间选择：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(beginTime), moment(endTime)]}
                     format="YYYY-MM-DD"
@@ -404,7 +408,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Select
                     showSearch

@@ -151,9 +151,7 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'InspectionNum',
             align: 'center',
             width:150,
-            render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
-            },
+          
           },
           {
             title:'缺失台账工单数',
@@ -161,6 +159,9 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'InspectionNotNum',
             align: 'center',
             width:150,
+            render: (text, record) => {
+              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
+            },
           },        
       ]
       },   
@@ -174,9 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'CalibrationNum',
             align: 'center',
             width:150,
-            render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
-            },
+           
           },
           {
             title:'缺失台账工单数',
@@ -184,6 +183,9 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'CalibrationNotNum',
             align: 'center',
             width:150,
+            render: (text, record) => {
+              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
+            },
           },        
       ]
       },             

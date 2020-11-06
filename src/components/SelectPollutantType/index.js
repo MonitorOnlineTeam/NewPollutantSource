@@ -35,7 +35,6 @@ class SelectPollutantType extends PureComponent {
         if (onlyShowAir) {
           pollutantTypelist = data.filter(item => item.pollutantTypeCode == 5);
         }
-        debugger
         let defaultPollutantCode = pollutantTypelist[0] && pollutantTypelist[0]['pollutantTypeCode'];
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
         this.setState({
