@@ -2,7 +2,7 @@
  * @Description:单区域 运维工单统计-空气站 排口
  * @LastEditors: hxf
  * @Date: 2020-10-27 10:15:25
- * @LastEditTime: 2020-10-30 09:43:28
+ * @LastEditTime: 2020-11-06 17:12:14
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation.js
  */
 
@@ -106,9 +106,7 @@ export default class RegionAirQualityMonitoringStation extends PureComponent {
     });
 
     return (
-      <BreadcrumbWrapper
-        title={`${params.regionName}${params.beginTime}至${params.endTime}运维工单统计`}
-      >
+      <BreadcrumbWrapper >
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row gutter={24}>

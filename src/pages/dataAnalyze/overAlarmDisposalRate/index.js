@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-11-05 10:44:30
+ * @LastEditTime: 2020-11-06 17:09:10
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -206,7 +206,7 @@ class index extends PureComponent {
     pollutantColumn.map((item, key) => {
       titlePollutant.push({
         title: item.PollutantName,
-        width: 400,
+        width: 500,
         children: [
           {
             title: '报警次数',
