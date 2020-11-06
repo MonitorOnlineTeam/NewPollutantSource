@@ -381,7 +381,7 @@ class DataQuery extends Component {
         historyparams,
       },
     });
-    this.reloaddatalist(historyparams);
+  this.reloaddatalist(historyparams);
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;

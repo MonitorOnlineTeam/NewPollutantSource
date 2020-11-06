@@ -33,11 +33,12 @@ const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2,
 class index extends Component {
   constructor(props) {
     super(props);
-    this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
+    // this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
+    this.config = undefined;
     this.state = {
       columns: [],
-      selectedTags: [],
-      stopStatus: ['0', '1'],
+      selectedTags: this.props.selectedTags || [],
+      stopStatus: this.props.stopStatus || ['0', '1'],
       fixed: false,
       currentDataType: 'HourData',
       realTimeDataView: [],
@@ -358,7 +359,7 @@ class index extends Component {
 
 
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card
           title={
             <>
@@ -399,7 +400,8 @@ class index extends Component {
                   }
                   }
                   initCallback={defaultPollutantCode => {
-                    this.getPageData(defaultPollutantCode);
+                    console.log("123123123123")
+                    this.getPageData(this.props.defaultPollutantCode || defaultPollutantCode);
                   }}
                 // defaultValue={selectpollutantTypeCode}
                 />

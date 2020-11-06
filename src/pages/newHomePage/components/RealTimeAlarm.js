@@ -12,7 +12,7 @@ import {
   Progress,
   Row,
   Popover,
-  Col, 
+  Col,
   Icon,
   Badge,
   Modal,
@@ -38,8 +38,9 @@ const pageUrl = {
   getData: 'home/getOverDataRate',
 };
 let myMar = null;
-@connect(({ loading, home,autoForm }) => ({
- realTimeAlarmLoading: home.realTimeAlarmLoading
+@connect(({ loading, home, autoForm }) => ({
+  realTimeAlarmLoading: home.realTimeAlarmLoading,
+  alarmDataList: home.alarmDataList
 }))
 @Form.create()
 export default class Index extends Component {
@@ -47,32 +48,35 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      list:[
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-        {url:'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',content:'Ant Design, a design language for background applications, is refined by Ant UED Team'},
-
-      ]
     }
-    
-}
+  }
 
-componentDidMount () {
+  componentDidMount() {
+    this.initData()
+  }
 
-  this.initData()
+  componentDidUpdate() {
 
+  }
 
+  // 获取实时报警数据
+  getAlarmDataList = () => {
+    this.props.dispatch({
+      type: "home/getAlarmDataList",
+      payload: {
+        BeginTime: moment().subtract(1, "month").format("YYYY-MM-DD 00:00:00"),
+        EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      }
+    })
+  }
 
-}
-componentDidUpdate() {
+  initData = () => {
+    this.getAlarmDataList();
+    this.scrollImgLeft()
+  }
 
-}
-initData=()=>{
-  this.scrollImgLeft()
-}
   // 横向滚动
- scrollImgLeft() {
+  scrollImgLeft() {
     let _this = this;
     let speed = 50; //滚动速度
 
@@ -81,7 +85,6 @@ initData=()=>{
     let scroll_div = document.getElementById("scroll_div");
     scroll_end.innerHTML = scroll_begin.innerHTML;
 
-
     // myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
     // scroll_div.onmouseover = function() {
     //     clearInterval(myMar);
@@ -89,52 +92,54 @@ initData=()=>{
     // scroll_div.onmouseout = function() {
     //     myMar = setInterval(_this.marquee.bind(_this,scroll_end,scroll_div,scroll_begin), speed);
     // }
- 
-}
-componentWillUnmount(){
-  clearInterval(myMar);
-}
-marquee(scroll_end,scroll_div,scroll_begin) {
-  if (scroll_end.offsetWidth - scroll_div.scrollLeft <= 0){ //当滚动至scroll_begin与scroll_end交界时 
-    scroll_div.scrollLeft -= scroll_begin.offsetWidth; //scroll_div 跳到最左端 
-  }else{
-    scroll_div.scrollLeft ++;
+
   }
-}
+
+  componentWillUnmount() {
+    clearInterval(myMar);
+  }
+
+  marquee(scroll_end, scroll_div, scroll_begin) {
+    if (scroll_end.offsetWidth - scroll_div.scrollLeft <= 0) { //当滚动至scroll_begin与scroll_end交界时
+      scroll_div.scrollLeft -= scroll_begin.offsetWidth; //scroll_div 跳到最左端
+    } else {
+      scroll_div.scrollLeft++;
+    }
+  }
+
   render() {
     const {
-        realTimeAlarmLoading
+      realTimeAlarmLoading,
+      alarmDataList
     } = this.props;
 
-  const { list } = this.state;
+    const { list } = this.state;
     return (
-        <div style={{width:'100%'}} className={styles.realTimeAlarm}>
-         
-        <Card title="实时报警" style={{ width:'100%' }} bordered={false} >
+      <div style={{ width: '100%' }} className={styles.realTimeAlarm}>
+
+        <Card title="当日超额报警" style={{ width: '100%' }} bordered={false} >
           <Skeleton loading={realTimeAlarmLoading} avatar active>
-        <Row id='scroll_div' type="flex" style={{overflowX:'hidden',flexFlow:'row nowrap', flexShrink: 0}}>
-        
-               <div  id='scroll_begin' >
-                     <Row  type="flex" style={{width:'calc(100vw - 80px)',flexFlow:'row nowrap'}}>
-                       {list.map((item,index)=>{
-                         return <Row type="flex" align='middle' className={styles.alarmTotal}>
-                                <Avatar size={64} src={'/overalarm.png'} />
-                          <div className={styles.alarmContent}>{item.content}</div>
-                         <img src='/verify.png' style={{padding:'0 0 10px 5px'}}/>
-                         { index==0 || index ==1 ? <div className={styles.hr}></div> : null}
-                       </Row>
-                       })}
-                      </Row>
-                 </div>
-                  
-                   <div id='scroll_end'>
-                  </div> 
-                   
+            <Row id='scroll_div' type="flex" style={{ overflowX: 'hidden', flexFlow: 'row nowrap', flexShrink: 0 }}>
+              <div id='scroll_begin'>
+                <Row type="flex" style={{ width: 'calc(100vw - 80px)', flexFlow: 'row nowrap' }}>
+                  {alarmDataList.map((item, index) => {
+                    return <Row type="flex" align='middle' className={styles.alarmTotal}>
+                      <Avatar size={64} src={'/overalarm.png'} />
+                      <div className={styles.alarmContent}>{item.content}</div>
+                      {
+                        item.verify && <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
+                      }
+                      {index == 0 || index == 1 ? <div className={styles.hr}></div> : null}
+                    </Row>
+                  })}
                 </Row>
+              </div>
+              <div id='scroll_end'>
+              </div>
+            </Row>
           </Skeleton>
         </Card>
-
-       </div>
+      </div>
     );
   }
 }

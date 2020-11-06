@@ -12,14 +12,24 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
-  getAirDayReportData,
   GetPointStatusList,
   GetOverList,
-  GetOperationWorkOrderList
+  GetAQIList,
+  GetAlarmResponse,
+  GetSewageFlowList,
+  GetOperationWorkOrderList,
+  getAirDayReportData,
+  getAlarmDataList,
+  getGZRateList,
+  getCBRateList,
+  getYZRateList,
+  getCSYXRateList,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 import { result } from 'lodash';
+
+
 export default Model.extend({
   namespace: 'home',
   state: {
@@ -56,11 +66,12 @@ export default Model.extend({
     regionCode: '',
     entCode: '',
     realTimeAlarmLoading: false,
-    pointStatusList:{},
-    wasteGasStatusList:{},
-    wasteGasStatusLoading:true,
-    pointStatusLoading:true,
-    dataQueryPar:{
+    wasteWaterTable:[],
+    pointStatusList: {},
+    wasteGasStatusList: {},
+    wasteGasStatusLoading: true,
+    pointStatusLoading: true,
+    dataQueryPar: {
       BeginTime: "",
       EndTime: "",
       DataType: "",
@@ -68,12 +79,20 @@ export default Model.extend({
       MonitorTime: "",
       pollutantCode: ""
     },
-    overWasteWaterLoading:true,
+    overWasteWaterLoading: true,
     overWasteWaterList: [],
-    overWasteGasLoading:true,
-    overWasteGasList:[],
-    workOrderLoading:true,
-    workOrderList:{},
+    overWasteGasLoading: true,
+    overWasteGasList: [],
+    workOrderLoading: true,
+    workOrderList: {},
+    alarmResponseLoading: [],
+    alarmResponseList: {},
+    getAQIList:[],
+    getAQILoading: true,
+    airDayReportloading:true,
+    priseList:[],
+    getSewageFlowList: [],
+    getSewageFlowLoading: true,
     // ---------wjq-----------
     airDayReportData: {
       datas: [
@@ -86,13 +105,29 @@ export default Model.extend({
         { value: 0, rate: 0, name: '爆表' },
       ],
       allCount: 0
-    }
+    },
+    alarmDataList: [],
+    // 故障率
+    GZRateDataList: [],
+    GZRateX: [],
+    // 超标率
+    CBRateDataList: [],
+    CBRateX: [],
+    // 运转率
+    YZRateDataList: [],
+    YZRateX: [],
+    // 传输有效率
+    CSYXRateDataList: [],
+    CSYXRateX: [],
+    // 详情弹窗
+    detailsModalVisible_WJQ: false,
+    // ---------wjq-----------
   },
   subscriptions: {},
   effects: {
     *getPointStatusList({ payload }, { call, put, update, select }) {
 
-    
+
       //监测点状态
       yield update({
         pointStatusLoading: true,
@@ -100,23 +135,23 @@ export default Model.extend({
       });
       const response = yield call(GetPointStatusList, { ...payload });
       if (response.IsSuccess) {
-        if(payload.PollutantType==1){
+        if (payload.PollutantType == 1) {
           yield update({
             pointStatusList: response.Datas,
             pointStatusLoading: false,
           });
-        }else{
+        } else {
           yield update({
             wasteGasStatusList: response.Datas,
             wasteGasStatusLoading: false,
-           });
+          });
         }
 
       }
     },
     *getOverList({ payload }, { call, put, update, select }) {
 
-    
+
       //超标监测点
       yield update({
         overWasteWaterLoading: true,
@@ -124,35 +159,77 @@ export default Model.extend({
       });
       const response = yield call(GetOverList, { ...payload });
       if (response.IsSuccess) {
-        if(payload.PollutantType==1){
+        if (payload.PollutantType == 1) {
           yield update({
             overWasteWaterList: response.Datas,
             overWasteWaterLoading: false,
           });
-        }else{
+        } else {
           yield update({
             overWasteGasList: response.Datas,
             overWasteGasLoading: false,
-           });
+          });
         }
 
       }
     },
     *getOperationWorkOrderList({ payload }, { call, put, update, select }) {
       //运维工单统计
-      yield update({ workOrderLoading: true});
+      yield update({ workOrderLoading: true });
       const response = yield call(GetOperationWorkOrderList, { ...payload });
       if (response.IsSuccess) {
+        yield update({
+          workOrderList: response.Datas,
+          workOrderLoading: false,
+        });
+      } else {
+
+
+      }
+    },
+    *getAlarmResponse({ payload }, { call, put, update, select }) {
+      //数据报警响应统计
+      yield update({ alarmResponseLoading: true});
+      const response = yield call(GetAlarmResponse, { ...payload });
+      if (response.IsSuccess) {
           yield update({
-            workOrderList: response.Datas,
-            workOrderLoading: false,
+            alarmResponseList: response.Datas,
+            alarmResponseLoading: false,
           });
         }else{
 
 
       }
     },
-    
+    *getAQIList({ payload }, { call, put, update, select }) {
+      //空气实时数据
+      yield update({ getAQILoading: true});
+      const response = yield call(GetAQIList, { ...payload });
+      if (response.IsSuccess) {
+          yield update({
+            getAQIList: response.Datas,
+            getAQILoading: false,
+          });
+        }else{
+
+
+      }
+    },
+    *getSewageFlowList({ payload }, { call, put, update, select }) {
+      //污水处理厂流量分析
+      yield update({ getSewageFlowLoading: true});
+      const response = yield call(GetSewageFlowList, { ...payload });
+      if (response.IsSuccess) {
+          yield update({
+            getSewageFlowList: response.Datas,
+            getSewageFlowLoading: false,
+          });
+        }else{
+
+
+      }
+    },
+
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
 
@@ -226,14 +303,13 @@ export default Model.extend({
       }
     },
     *getEntByRegion({ callback, payload }, { call, put, update, select }) {
-      const { queryPar } = yield select(state => state.removalFlowRate);
       //获取所有污水处理厂
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
           priseList: response.Datas,
         });
-        callback(response.Datas[0].EntCode)
+        response.Datas.length>0? callback(response.Datas[0].EntCode) : null
       }
     },
     *exportSewageHistoryList({ callback, payload }, { call, put, update, select }) {
@@ -251,6 +327,7 @@ export default Model.extend({
     },
     // 获取空气日报统计数据 - wjq
     *getAirDayReportData({ payload }, { call, put, update, select }) {
+      yield update({airDayReportloading: true });
       const result = yield call(getAirDayReportData, { ...payload });
       if (result.IsSuccess) {
         let data = result.Datas;
@@ -266,7 +343,99 @@ export default Model.extend({
           ],
           allCount: data.allCount
         }
-        yield update({ airDayReportData })
+        yield update({ airDayReportData,airDayReportloading: false })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取实时报警数据 - wjq
+    *getAlarmDataList({ payload }, { call, put, update, select }) {
+      const result = yield call(getAlarmDataList, { ...payload });
+      if (result.IsSuccess) {
+        let alarmDataList = result.Datas.map(item => {
+          return { content: item.AlarmMsg, verify: !!item.OperationVerifyID }
+        })
+        yield update({ alarmDataList })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取故障率 - wjq
+    *getGZRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getGZRateList, { ...payload });
+      if (result.IsSuccess) {
+        let GZRateDataList = result.Datas.map(item => {
+          return {
+            name: item.pollutantTypeName,
+            type: 'line',
+            data: item.dataList.map(itm => itm.failureRate),
+            showSymbol: false,//隐藏所有数据点
+            smooth: true,
+          }
+        })
+        let GZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
+        yield update({ GZRateDataList: GZRateDataList, GZRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取超标率 - wjq
+    *getCBRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getCBRateList, { ...payload });
+      if (result.IsSuccess) {
+        let CBRateDataList = result.Datas.map(item => {
+          if (item.pollutantTypeCode != 5) {
+            return {
+              name: item.pollutantTypeName,
+              type: 'line',
+              data: item.dataList.map(itm => itm.overStandardRate),
+              showSymbol: false,//隐藏所有数据点
+              smooth: true,
+            }
+          }
+        })
+        let CBRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
+        yield update({ CBRateDataList, CBRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取超标率 - wjq
+    *getYZRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getYZRateList, { ...payload });
+      if (result.IsSuccess) {
+        let YZRateDataList = result.Datas.map(item => {
+          return {
+            name: item.pollutantTypeName,
+            type: 'line',
+            data: item.dataList.map(itm => itm.deviceOperationRate),
+            showSymbol: false,//隐藏所有数据点
+            smooth: true,
+          }
+        })
+        let YZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
+        yield update({ YZRateDataList, YZRateX })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 传输有效率 - wjq
+    *getCSYXRateList({ payload }, { call, put, update, select }) {
+      const result = yield call(getCSYXRateList, { ...payload });
+      if (result.IsSuccess) {
+        let CSYXRateDataList = result.Datas.map(item => {
+          if (item.pollutantTypeCode != 5) {
+            return {
+              name: item.pollutantTypeName,
+              type: 'line',
+              data: item.dataList.map(itm => itm.effectiveTransmissionRate),
+              showSymbol: false,//隐藏所有数据点
+              smooth: true,
+            }
+          }
+        })
+        let CSYXRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
+        yield update({ CSYXRateDataList, CSYXRateX })
       } else {
         message.error(result.Message);
       }

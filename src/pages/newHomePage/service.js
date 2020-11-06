@@ -67,6 +67,17 @@ export async function GetEntByRegion(params) {
 
   return result;
 }
+ //污水处理厂流量分析
+export async function GetSewageFlowList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/MonDataApi/GetSewageFlowList',
+    params,
+    null,
+  );
+
+  return result;
+}
+
 //监测点状态
 export async function GetPointStatusList(params) {
   const result = post(
@@ -95,10 +106,58 @@ export async function GetOperationWorkOrderList(params) {
   );
   return result;
 }
+//数据响应报警统计
+export async function GetAlarmResponse(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetAlarmResponse',
+    params,
+    null,
+  );
+  return result;
+}
+//空气质量实时数据
+export async function GetAQIList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/XJHomeApi/GetAQIList',
+    params,
+    null,
+  );
+  return result;
+}
 
 // 空气日报统计 - wjq
 export async function getAirDayReportData(params) {
   const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetAQIStatistics', params);
+  return result;
+}
+
+// 获取实时报警数据 - wjq
+export async function getAlarmDataList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetRealAlarmDataList', params);
+  return result;
+}
+
+// 获取故障率 - wjq
+export async function getGZRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetFailureRateList', params);
+  return result;
+}
+
+// 获取超标率 - wjq
+export async function getCBRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetOverStandardRateList', params);
+  return result;
+}
+
+// 获取运转率 - wjq
+export async function getYZRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetDeviceOperationRateList', params);
+  return result;
+}
+
+// 获取传输有效 - wjq
+export async function getCSYXRateList(params) {
+  const result = post('/api/rest/PollutantSourceApi/XJHomeApi/GetEffectiveTransmissionRateList ', params);
   return result;
 }
 

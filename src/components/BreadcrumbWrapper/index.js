@@ -15,7 +15,7 @@ class index extends Component {
       return <>{this.props.children}</>
     }
     return (
-      <PageHeaderWrapper title={this.props.title} className={!webConfig.isShowBreadcrumb ? "hideBreadcrumb" : ""}>
+      <PageHeaderWrapper title={this.props.title} className={this.props.hideBreadcrumb ? "hideBreadcrumb" : ""}>
         {this.props.children}
       </PageHeaderWrapper>
     );
