@@ -2,7 +2,7 @@
  * @Description:运维工单统计-空气站 模态窗
  * @LastEditors: hxf
  * @Date: 2020-10-26 10:52:49
- * @LastEditTime: 2020-11-06 14:32:04
+ * @LastEditTime: 2020-11-06 15:31:17
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/AirWorkOrderStatisticsModal.js
  */
 import React, { PureComponent } from 'react';
@@ -176,7 +176,6 @@ export default class index extends PureComponent {
             loading = false,
             airWorkOrderVisible = false,
             airWorkOrderCancelFun = () => { },
-            airWorkOrderOkFun = () => { }
         } = this.props;
         const { formLayout } = this._SELF_;
         const { format, showTime } = this.state;
@@ -204,11 +203,10 @@ export default class index extends PureComponent {
         return (
             <Modal
                 width={'90%'}
-                centered
                 title={'运维工单统计（空气站）'}
                 visible={airWorkOrderVisible}
-                onOk={airWorkOrderOkFun}
                 onCancel={airWorkOrderCancelFun}
+                footer={null}
             >
                 <Card>
                     <Form layout="inline" style={{ marginBottom: 20 }}>
