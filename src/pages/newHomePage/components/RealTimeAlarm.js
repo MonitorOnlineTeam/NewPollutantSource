@@ -72,11 +72,11 @@ export default class Index extends Component {
 
   initData = () => {
     this.getAlarmDataList();
-    // this.scrollImgLeft()
+    this.scrollImgLeft()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(this.props.loading === false && prevProps.loading === true && this.props.alarmDataList.length) {
+    if(this.props.loading === false && prevProps.loading === true && this.props.alarmDataList.length>3) {
       this.scrollImgLeft()
     }
   }
@@ -89,15 +89,15 @@ export default class Index extends Component {
     let scroll_begin = document.getElementById("scroll_begin");
     let scroll_end = document.getElementById("scroll_end");
     let scroll_div = document.getElementById("scroll_div");
-    if(scroll_begin && scroll_end){
-      scroll_end.innerHTML = scroll_begin.innerHTML;
+    if(scroll_begin){
+      // scroll_end.innerHTML = scroll_begin.innerHTML;
 
-      myMar = setInterval(_this.marquee.bind(_this, scroll_end, scroll_div, scroll_begin), speed);
+      myMar = setInterval(_this.marquee.bind(_this, scroll_begin, scroll_div, scroll_begin), speed);
       scroll_div.onmouseover = function () {
         clearInterval(myMar);
       }
       scroll_div.onmouseout = function () {
-        myMar = setInterval(_this.marquee.bind(_this, scroll_end, scroll_div, scroll_begin), speed);
+        myMar = setInterval(_this.marquee.bind(_this, scroll_begin, scroll_div, scroll_begin), speed);
       }
     }
   }
@@ -108,7 +108,8 @@ export default class Index extends Component {
 
   marquee(scroll_end, scroll_div, scroll_begin) {
     if (scroll_end.offsetWidth - scroll_div.scrollLeft <= 0) { //当滚动至scroll_begin与scroll_end交界时
-      scroll_div.scrollLeft -= scroll_begin.offsetWidth; //scroll_div 跳到最左端
+      // scroll_div.scrollLeft = 0; //scroll_div 跳到最左端
+      scroll_div.scrollLeft = scroll_div.scrollLeft - scroll_end.offsetWidth
     } else {
       scroll_div.scrollLeft = scroll_div.scrollLeft + 1;
     }
@@ -127,7 +128,7 @@ export default class Index extends Component {
           <Skeleton loading={loading} avatar active>
             <Row id='scroll_div' type="flex" style={{ overflowX: 'hidden', flexFlow: 'row nowrap', flexShrink: 0 }}>
               <div id='scroll_begin'>
-                <Row type="flex" style={{ width: 'calc(100vw - 80px)', flexFlow: 'row nowrap' }}>
+                <Row type="flex" style={{flexFlow: 'row nowrap', flexShrink: 0, width: 'calc(100vw - 80px)'}}>
                   {alarmDataList.map((item, index) => {
                     return <Row type="flex" align='middle' className={styles.alarmTotal}>
                       <Avatar size={64} src={'/overalarm.png'} />
@@ -135,13 +136,28 @@ export default class Index extends Component {
                       {
                         item.verify && <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
                       }
-                      { index < alarmDataList.length ? <div className={styles.hr}></div> : null}
+                      { index+1 < alarmDataList.length? <div className={styles.hr}></div> : null}
                     </Row>
                   })}
                 </Row>
               </div>
-              <div id='scroll_end'>
+              {/* { alarmDataList.length>3? */}
+              <div id='scroll_end'> 
+                {/* <Row   type="flex" style={{ flexFlow: 'row nowrap', flexShrink: 0, width: 'calc(100vw - 80px)' }}>
+                   {alarmDataList.map((item, index) => {
+                    return <Row type="flex" align='middle' className={styles.alarmTotal}>
+                      <Avatar size={64} src={'/overalarm.png'} />
+                      <div className={styles.alarmContent}>{item.content}</div>
+                      {
+                        item.verify && <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
+                      }
+                       <div className={styles.hr}></div>
+                    </Row>
+                  })}
+                </Row> */}
               </div>
+              {/* : */}
+              {/* null}  */}
             </Row>
           </Skeleton>
         </Card>

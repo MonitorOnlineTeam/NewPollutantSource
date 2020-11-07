@@ -61,7 +61,7 @@ const pageUrl = {
 @connect(({ loading, home,autoForm }) => ({
   priseList: home.priseList,
   exloading:home.exloading,
-  loading: home.loading,
+  loading: home.regionLoading,
   total: home.total,
   tableDatas: home.tableDatas,
   queryPar: home.queryPar,
@@ -119,20 +119,28 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Rate',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }
-          const percent = interceptTwo(Number(text) * 100);
-          if (percent >= 90) {
-            return <div>
-                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+          // const percent = interceptTwo(Number(text) * 100);
+          const percent = text;
+          if(this.props.isWorkRate){ // 运转率 
+            if (percent >= 90) {
+              return <div>
+                  <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
+                    format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+                </div>
+            }else{
+            return  <div>
+                <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+                  style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent==0?'0.00':percent}%</span>} />
               </div>
-          }
-          return  <div>
-              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
-            </div>
+            }
+  
+           }else{
+
+            return  <div>
+            <Progress successPercent={0}   percent={percent}  status="exception"   size="small"
+              style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+          </div>
+           }
          },
       }
     ];

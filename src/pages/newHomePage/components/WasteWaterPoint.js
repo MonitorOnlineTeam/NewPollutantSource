@@ -51,6 +51,7 @@ const pageUrl = {
   overWasteWaterList: home.overWasteWaterList,
   workOrderList: home.workOrderList,
   workOrderLoading: home.workOrderLoading,
+  gasOverListPar:home.gasOverListPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -82,9 +83,11 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, dataQueryPar } = this.props;
 
-    let pointStatusPar = { ...dataQueryPar, PollutantType: 1 };
+    let pointStatusPar = { ...dataQueryPar, PollutantType: 1, };
     dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
-    dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...pointStatusPar }, });//运维工单统计
+    dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...pointStatusPar,
+      BeginTime: moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'), }, });//运维工单统计
 
     const { overListPar } = this.state;
 
@@ -98,7 +101,7 @@ export default class Index extends Component {
   }
 
   tabCallback1 = (value) => {
-
+    
     const { overListPar } = this.state;
 
     let parData = { ...overListPar, pollutantCode: value }
@@ -112,7 +115,8 @@ export default class Index extends Component {
   tabCallback2 = (value) => {
     const { dispatch, dataQueryPar } = this.props;
 
-    let parData = { ...dataQueryPar, PollutantType: value };
+    let parData = { ...dataQueryPar, PollutantType: value,BeginTime: moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+    EndTime: moment().format('YYYY-MM-DD 23:59:59'),};
 
     dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...parData }, });//运维工单统计
   }
@@ -179,7 +183,7 @@ export default class Index extends Component {
 
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-    console.log("1111")
+   
     this.setState({
       clicktStatus: type,
       stopStatus: stopStatus,

@@ -34,6 +34,10 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
+
+
+import Region from '../components/jumpPage/faultOverWorkRate/Region'
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -55,6 +59,7 @@ const pageUrl = {
   YZLoading: loading.effects["home/getYZRateList"],
   CBLoading: loading.effects["home/getCBRateList"],
   GZLoading: loading.effects["home/getGZRateList"],
+  queryPar:home.queryPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -65,6 +70,10 @@ export default class Index extends Component {
       CBRateTime: [moment().subtract(7, "days"), moment()],
       YZRateTime: [moment().subtract(7, "days"), moment()],
       CSYXRateTime: [moment().subtract(7, "days"), moment()],
+      TVisible:false,
+      TBpollutantType:"1",
+      regionVisible:false,
+      title:''
     }
   }
 
@@ -130,31 +139,126 @@ export default class Index extends Component {
       }
     })
   }
+  transmission=(type)=>{
+    this.setState({
+      TBpollutantType:type
+    },()=>{
+      this.setState({
+        TVisible: true,
+      })
+    })
+
+  }
+  updateQueryState = payload => {
+    const { queryPar, dispatch } = this.props;
+
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { queryPar: { ...queryPar, ...payload } },
+    });
+  };
+  work=(type)=>{
+    const { dispatch } = this.props;
+    const { YZRateTime } = this.state;
+    this.updateQueryState({
+      BeginTime:  moment(YZRateTime[0]).format('YYYY-MM-DD 00:00:00'),
+      EndTime:  moment(YZRateTime[1]).format('YYYY-MM-DD 23:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [type],
+      ModelType: "All"
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isWorkRate: true,Atmosphere:type=='5'?true:false,ModelType:'All'},
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+      
+    })
+  }
+  over=(type)=>{
 
 
-  menu = () => {
-    return <Menu>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-          1st menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-          2nd menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-          3rd menu item
-        </a>
-      </Menu.Item>
+    const { dispatch } = this.props;
+    const { CBRateTime } = this.state;
+    this.updateQueryState({
+      BeginTime: moment(CBRateTime[0]).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment(CBRateTime[1]).format('YYYY-MM-DD 23:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [type],
+      ModelType: "All"
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isOverRate: true,Atmosphere:type=='5'?true:false,ModelType:'All'},
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+      
+    })
+  }
+  fault=(type)=>{
+    const { dispatch } = this.props;
+    const { GZRateTime } = this.state;
+    this.updateQueryState({
+      BeginTime: moment(GZRateTime[0]).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment(GZRateTime[1]).format('YYYY-MM-DD 23:59:59'),
+      EntCode: "",
+      RegionCode: "",
+      PollutantTypeCode: [type],
+      ModelType: "All"
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isFaultRate: true,Atmosphere:type=='5'?true:false,ModelType:'All'},
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+      
+    })
+  }
+  regionCancel=()=>{ //行政区页面
+    const { dispatch } = this.props;
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { isWorkRate: false,isFaultRate:false,isOverRate:false},
+    });
+     this.setState({regionVisible:false})
+   }
+  menu = (title) => {
+    if(title=='传输有效率'){
+      return <Menu>
+      <Menu.Item onClick={this.transmission.bind(this,'1') }>传输有效率(废水)</Menu.Item>
+      <Menu.Item  onClick={this.transmission.bind(this,'2') }>传输有效率(废气)</Menu.Item>
     </Menu>
+    }
+    if(title=='运转率'){
+      return <Menu>
+      <Menu.Item onClick={this.work.bind(this,'1')} >运转率(废水)</Menu.Item>
+      <Menu.Item  onClick={this.work.bind(this,'2')} >运转率(废气)</Menu.Item>
+      <Menu.Item  onClick={this.work.bind(this,'5')}>运转率(空气站)</Menu.Item>
+    </Menu>
+    }
+    if(title=='超标率'){
+      return <Menu>
+      <Menu.Item  onClick={this.over.bind(this,'1')}>超标率(废水)</Menu.Item>
+      <Menu.Item onClick={this.over.bind(this,'2')}>超标率(废气)</Menu.Item>
+    </Menu>
+    }
+    if(title=='故障率'){
+      return <Menu>
+      <Menu.Item onClick={this.fault.bind(this,'1')}>故障率(废水)</Menu.Item>
+      <Menu.Item onClick={this.fault.bind(this,'2')}>故障率(废气)</Menu.Item>
+      <Menu.Item onClick={this.fault.bind(this,'5')}>故障率(空气站)</Menu.Item>
+    </Menu>
+    }
   }
 
   cardTitle = (title, type) => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <Dropdown overlay={this.menu()} trigger={['click']}>
+      <Dropdown overlay={this.menu(title)} trigger={['click']}>
         <span onClick={e => e.preventDefault()}>
           {title} <Icon type="caret-down" style={{ color: '#cbcbcb' }} />
         </span>
@@ -296,11 +400,24 @@ export default class Index extends Component {
   render() {
     const {
       CSYXLoading,
-      YZLoading, CBLoading, GZLoading
+      YZLoading, CBLoading, GZLoading,
+      
     } = this.props;
-
+    const {CSYXRateTime,TVisible,TBpollutantType,regionVisible} = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.brokenLine}  >
+           {
+              TVisible ?
+                <TransmissionefficiencyModal 
+                 beginTime={moment(CSYXRateTime[0]).format("YYYY-MM-DD 00:00:00")}
+                 endTime={moment(CSYXRateTime[1]).format("YYYY-MM-DD 23:59:59")}
+                 TVisible={TVisible} 
+                 TCancle={() => {
+                  this.setState({ TVisible: false });
+                }} 
+                pollutantType={TBpollutantType}
+                /> : null}
+              {regionVisible?  <Region  regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         <Row type='flex' justify='space-between'>
           <Col span={6}>
             <Card title={this.cardTitle("传输有效率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >

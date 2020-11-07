@@ -36,6 +36,7 @@ import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
+import AlarmCard from './AlarmCard'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -50,6 +51,7 @@ const pageUrl = {
   overWasteGasList: home.overWasteGasList,
   alarmResponseList: home.alarmResponseList,
   alarmResponseLoading: home.alarmResponseLoading,
+  gasOverListPar:home.gasOverListPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -57,9 +59,6 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      overListPar: {
-        PollutantType: 2,
-        BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
         gasOverListPar: {
           PollutantType: 2,
           BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
@@ -67,7 +66,7 @@ export default class Index extends Component {
           pollutantCode: '01',
           DataType: 'HourData'
         }
-      }
+
 
     }
   }
@@ -100,7 +99,7 @@ export default class Index extends Component {
     const { gasOverListPar } = this.state;
 
     let parData = { ...gasOverListPar, DataType: e.target.value }
-
+     
     this.setState({ gasOverListPar: parData }, () => {
       this.getTableData(parData);
     })
@@ -173,66 +172,55 @@ export default class Index extends Component {
   percentage = (data) => {
     return `${data}%`
   }
-  getChartData = (type) => {
-    const { alarmResponseList } = this.props;
-    let color1 = ["#42dab8", "#7ef1d7"],
-      color2 = ["#fdcb31", '#fde290'],
-      color3 = ['#5169c5', '#889be2']
-    let option = {
-      tooltip: {
-        show: false,
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-      },
-      color: type == 1 ? color1 : type == 2 ? color2 : color3,
-      title: {
-        text: type == 1 ? this.percentage(alarmResponseList.operationRate) : type == 2 ? this.percentage(alarmResponseList.exceptionRate) : this.percentage(alarmResponseList.missRate),
-        left: "center",
-        top: "42%",
-        textStyle: {
-          color: type == 1 ? color1[1] : type == 2 ? color2[1] : color3[1],
-          fontSize: 16,
-          align: "center",
-          fontWeight: 400
-        }
-      },
-      // graphic:{
-      //     type:"text",
-      //     left:"center",
-      //     top:"20%",
-      //     style:{
-      //         text:"运动达标率",
-      //         textAlign:"center",
-      //         fill:"#333",
-      //         fontSize:20,
-      //         fontWeight:700
-      //     }
-      // },
-      series: [
-        {
-          name: type == 1 ? '数据超标报警核实率' : type == 2 ? '数据异常报警响应率' : '数据缺失报警响应率',
-          type: 'pie',
-          // center: ['50%', '50%'],
-          radius: ['50%', '70%'],
-          avoidLabelOverlap: false,
-          label: {
-            normal: {
-              show: false,
-              position: 'center'
-            },
+  // getChartData = (type) => {
 
-          },
+  //   const { alarmResponseList } = this.props;
+  //   let color1 = ["#42dab8", "#7ef1d7"],
+  //     color2 = ["#fdcb31", '#fde290'],
+  //     color3 = ['#5169c5', '#889be2']
+  //   let option = {
+  //     tooltip: {
+  //       show: false,
+  //       trigger: 'item',
+  //       formatter: "{a} <br/>{b}: {c} ({d}%)"
+  //     },
+  //     color: type == 1 ? color1 : type == 2 ? color2 : color3,
+  //     title: {
+  //       text: type == 1 ? this.percentage(alarmResponseList.operationRate) : type == 2 ? this.percentage(alarmResponseList.exceptionRate) : this.percentage(alarmResponseList.missRate),
+  //       left: "center",
+  //       top: "42%",
+  //       textStyle: {
+  //         color: type == 1 ? color1[1] : type == 2 ? color2[1] : color3[1],
+  //         fontSize: 16,
+  //         align: "center",
+  //         fontWeight: 400
+  //       }
+  //     },
+  //     series: [
+  //       {
+  //         name: type == 1 ? '数据超标报警核实率' : type == 2 ? '数据异常报警响应率' : '数据缺失报警响应率',
+  //         type: 'pie',
+  //         // center: ['50%', '50%'],
+  //         radius: ['50%', '70%'],
+  //         avoidLabelOverlap: false,
+  //         label: {
+  //           normal: {
+  //             show: false,
+  //             position: 'center'
+  //           },
 
-          data: [
-            { value: type == 1 ? alarmResponseList.operationRate : type == 2 ? alarmResponseList.exceptionRate : alarmResponseList.missRate, name: '已完成' },
-            { value: type == 1 ? (100 - alarmResponseList.operationRate) : type == 2 ? (100 - alarmResponseList.exceptionRate) : (100 - alarmResponseList.missRate), name: '未完成' },
+  //         },
 
-          ]
-        }
-      ]
-    };
-    return option;
-  }
+  //         data: [
+  //           { value: type == 1 ? alarmResponseList.operationRate : type == 2 ? alarmResponseList.exceptionRate : alarmResponseList.missRate, name: '已完成' },
+  //           { value: type == 1 ? (100 - alarmResponseList.operationRate) : type == 2 ? (100 - alarmResponseList.exceptionRate) : (100 - alarmResponseList.missRate), name: '未完成' },
+
+  //         ]
+  //       }
+  //     ]
+  //   };
+  //   return option;
+  // }
 
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
@@ -281,8 +269,9 @@ export default class Index extends Component {
           </Col>
           <Col span={6}>
             <Card title={this.cardTitle3()} className={styles.alarmCard} bordered={false} >
-              <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
 
+            <AlarmCard />
+              {/* <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
                 <Row type='flex' align='middle' justify='space-between'>
                   <Col span={8} align='middle'>
                     <ReactEcharts
@@ -331,7 +320,7 @@ export default class Index extends Component {
                     </div>
                   </Col>
                 </Row>
-              </Skeleton>
+              </Skeleton> */}
             </Card>
           </Col>
         </Row>

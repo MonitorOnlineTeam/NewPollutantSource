@@ -92,8 +92,8 @@ export default class Index extends Component {
       }
     })
 
-    // let time = moment().add('hour',-2).format("YYYY-MM-DD HH:mm:ss");
-    let time = "2020-11-01 00:00:00";
+    let time = moment().add('hour',-2).format("YYYY-MM-DD 00:00:00");
+    // let time = "2020-11-01 00:00:00";
     let dataType ='HourData'
     this.getAQIList(time,dataType);
    
@@ -434,7 +434,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.airTableCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={getAQILoading} paragraph={{ rows: 5   }} active>
-                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
+                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','监测点','首要污染物','等级','AQI']}/>
               </Skeleton>
             </Card>
           </Col>
