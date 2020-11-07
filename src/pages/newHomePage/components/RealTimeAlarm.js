@@ -84,7 +84,7 @@ export default class Index extends Component {
   // 横向滚动
   scrollImgLeft() {
     let _this = this;
-    let speed = 50; //滚动速度
+    let speed = 30; //滚动速度
 
     let scroll_begin = document.getElementById("scroll_begin");
     let scroll_end = document.getElementById("scroll_end");
