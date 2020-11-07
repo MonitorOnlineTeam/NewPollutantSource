@@ -121,8 +121,8 @@ class index extends Component {
         },
         {
           title: '设备状态',
-          dataIndex: 'Status',
-          key: 'Status',
+          dataIndex: 'status',
+          key: 'status',
           width: 70,
           // width: 120,
           align: 'center',
