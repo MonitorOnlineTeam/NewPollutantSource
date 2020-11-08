@@ -228,10 +228,10 @@ export default class Index extends Component {
      this.setState({regionVisible:false})
    }
   menu = (title) => {
-    if(title=='传输有效率'){
+    if(title=='有效传输率'){
       return <Menu>
-      <Menu.Item onClick={this.transmission.bind(this,'1') }>传输有效率(废水)</Menu.Item>
-      <Menu.Item  onClick={this.transmission.bind(this,'2') }>传输有效率(废气)</Menu.Item>
+      <Menu.Item onClick={this.transmission.bind(this,'1') }>有效传输率(废水)</Menu.Item>
+      <Menu.Item  onClick={this.transmission.bind(this,'2') }>有效传输率(废气)</Menu.Item>
     </Menu>
     }
     if(title=='运转率'){
@@ -420,7 +420,7 @@ export default class Index extends Component {
               {regionVisible?  <Region  regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         <Row type='flex' justify='space-between'>
           <Col span={6}>
-            <Card title={this.cardTitle("传输有效率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+            <Card title={this.cardTitle("有效传输率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={CSYXLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
                   option={this.getChartData("CSYX")}

@@ -104,7 +104,9 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {     
-          return  <a href='#'  onClick={()=>{this.nextPage(record)}} style={{textAlign:'left',width:'100%'}}>{text}</a>
+          return  <div  style={{textAlign:'left'}}> 
+            <a href='#'  onClick={()=>{this.nextPage(record)}} >{text}</a>
+          </div>
        },
       },
       {
@@ -114,10 +116,11 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
           // const percent = interceptTwo(Number(text) * 100);
           const percent = text;
@@ -277,7 +280,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { ModelType: 'EntName',entName:row.EntName },
+      payload: { ModelType: 'EntName',entName:row.EntName,entCode:row.EntCode },
    });
     this.setState({pointVisible:true}) 
   }
@@ -316,7 +319,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </span>
                 <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
+                {`<90%未达标`}
                 </span>
               </div>
               :

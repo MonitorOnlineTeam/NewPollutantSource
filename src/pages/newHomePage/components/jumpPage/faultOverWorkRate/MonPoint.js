@@ -104,12 +104,16 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
+        render:(text,row)=>{
+              return <div style={{textAlign:'left'}}>{text}</div>
+        }
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
           // const percent = interceptTwo(Number(text) * 100);
           const percent = text;
@@ -282,7 +286,7 @@ export default class EntTransmissionEfficiency extends Component {
             </span>
             <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
             <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-              ≤90%未达标
+            {`<90%未达标`}
             </span>
           </div> 
           :

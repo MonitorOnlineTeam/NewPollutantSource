@@ -242,7 +242,6 @@ export default Model.extend({
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
       let { ModelType } = yield select(_ => _.home);
-
       ModelType == 'All'?  yield update({ loading: true  }):
        ModelType == 'Region'? yield update({ regionLoading: true  })
        :yield update({ pointLoading: true  })
@@ -260,49 +259,52 @@ export default Model.extend({
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getDeviceDataRate({ payload }, { call, put, update, select }) {
       //列表  运转率
-
-      yield update({ loading: true });
-      const response = yield call(GetDeviceDataRate, { ...payload });
       let { ModelType } = yield select(_ => _.home);
+      ModelType == 'All'?  yield update({ loading: true  }):
+      ModelType == 'Region'? yield update({ regionLoading: true  })
+      :yield update({ pointLoading: true  });
+      const response = yield call(GetDeviceDataRate, { ...payload });
 
       if (response.IsSuccess) {
 
         if (ModelType == 'All') {
           yield update({ tableDatas: response.Datas, loading: false });
         } else if (ModelType == 'Region') {
-          yield update({ entTableDatas: response.Datas, loading: false });
+          yield update({ entTableDatas: response.Datas, regionLoading: false });
         } else {
-          yield update({ pointTableDatas: response.Datas, loading: false });
+          yield update({ pointTableDatas: response.Datas, pointLoading: false });
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getExceptionDataRate({ payload }, { call, put, update, select }) {
       //列表  异常率
 
-      yield update({ loading: true });
-      const response = yield call(GetExceptionDataRate, { ...payload });
       let { ModelType } = yield select(_ => _.home);
+      ModelType == 'All'?  yield update({ loading: true  }):
+      ModelType == 'Region'? yield update({ regionLoading: true  })
+      :yield update({ pointLoading: true  });
+      const response = yield call(GetExceptionDataRate, { ...payload });
 
       if (response.IsSuccess) {
 
         if (ModelType == 'All') {
           yield update({ tableDatas: response.Datas, loading: false });
         } else if (ModelType == 'Region') {
-          yield update({ entTableDatas: response.Datas, loading: false });
+          yield update({ entTableDatas: response.Datas, regionLoading: false });
         } else {
-          yield update({ pointTableDatas: response.Datas, loading: false });
+          yield update({ pointTableDatas: response.Datas, pointLoading: false });
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {

@@ -112,12 +112,16 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'PointNum',
         key: 'PointNum',
         align: 'center',
+        render: (text, record) => {
+           return text? text : '-'
+        }
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
           // const percent = interceptTwo(Number(text) * 100);
           const percent = text;
@@ -146,6 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: <span>低于90%的监测点个数</span>,
+        sorter: (a, b) => a.LittlePoint - b.LittlePoint,
         dataIndex: 'LittlePoint',
         key: 'LittlePoint',
         width: 145,
@@ -165,10 +170,12 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,isWorkRate } = this.props;
+    const { dispatch, location,isWorkRate,Atmosphere } = this.props;
     
     !isWorkRate? this.columns.pop() : null;
-
+    Atmosphere? this.columns.splice(1,1) : null;
+    
+    this.columns
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
@@ -347,15 +354,19 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline" style={{paddingBottom:10}}>
               <Row>
               <Form.Item label='查询日期'>
-              <RangePicker_  allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
+              <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                    </Form.Item>     
               <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-                <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
+              {!Atmosphere?
+                <Form.Item label={'企业类型'}>
+                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                 </Form.Item>
+                :
+                null
+              }
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
@@ -381,7 +392,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </span>
                 <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
+                  {`<90%未达标`}
                 </span>
               </div>
             :null

@@ -124,7 +124,7 @@ export default class Index extends Component {
     return (
       <div style={{ width: '100%' }} className={styles.realTimeAlarm}>
 
-        <Card title="当日超额报警" style={{ width: '100%' }} bordered={false} >
+        <Card title="当日超标报警" style={{ width: '100%' }} bordered={false} >
           <Skeleton loading={loading} avatar active>
             <Row id='scroll_div' type="flex" style={{ overflowX: 'hidden', flexFlow: 'row nowrap', flexShrink: 0 }}>
               <div id='scroll_begin'>
