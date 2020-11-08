@@ -113,7 +113,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'PointNum',
         align: 'center',
         render: (text, record) => {
-           return text? text : '-'
+           return text? text : ''
         }
       },
       {
@@ -233,7 +233,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantType: value,
+      PollutantTypeCode: [value],
     });
   };
 
@@ -350,6 +350,10 @@ export default class EntTransmissionEfficiency extends Component {
           visible={regionVisible}  
           onCancel={regionCancel}
         >
+         { entVisible?
+          <EntData entVisible={entVisible} onBack={this.entCancel}/>
+           : 
+            <div>
             <>
               <Form layout="inline" style={{paddingBottom:10}}>
               <Row>
@@ -416,9 +420,10 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
+          </div>
+          }
           </Modal>
 
-         { entVisible? <EntData entVisible={entVisible} entCancel={this.entCancel}/> : null}
           </div>
     );
   }

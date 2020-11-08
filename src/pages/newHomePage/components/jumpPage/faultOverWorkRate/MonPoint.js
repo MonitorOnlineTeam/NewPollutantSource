@@ -196,11 +196,11 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
+  // typeChange = value => {
+  //   this.updateQueryState({
+  //     PollutantType: value,
+  //   });
+  // };
 
   changeRegion = (value) => { //行政区事件
     
@@ -264,7 +264,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      queryPar: {  BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType },
       Atmosphere,
       pointVisible,
       isWorkRate,

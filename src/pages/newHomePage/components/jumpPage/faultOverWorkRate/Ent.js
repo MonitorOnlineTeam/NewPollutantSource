@@ -214,11 +214,11 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
+  // typeChange = value => {
+  //   this.updateQueryState({
+  //     PollutantType: value,
+  //   });
+  // };
 
   changeRegion = (value) => { //行政区事件
     
@@ -295,7 +295,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      queryPar: {BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType },
       Atmosphere,
       entVisible,
       isWorkRate,
@@ -306,13 +306,14 @@ export default class EntTransmissionEfficiency extends Component {
     const { pointVisible }  = this.state;
     return (
         <div>
-        <Modal
+        {/* <Modal
           title={regionName}
           footer={null}
           width='95%'
           visible={entVisible}  
           onCancel={entCancel}
-        >
+        > */}
+           <Row type='flex' align='middle'>
            {isWorkRate?
            <div style={{ paddingBottom: 10 }}>
                 <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
@@ -327,6 +328,16 @@ export default class EntTransmissionEfficiency extends Component {
               :
               null
            }
+             <Button
+                  style={{ marginBottom: 10,marginLeft:isWorkRate?10 : 0 }}
+                    onClick={() => {
+                      this.props.onBack()
+                     } }
+                  >
+                    <Icon type="rollback" />
+                    返回
+                  </Button>
+                  </Row>
           <div id=''>
 
              <SdlTable
@@ -348,7 +359,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
-          </Modal>
+          {/* </Modal> */}
        {pointVisible ?  <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/> : null}
        </div>
     );
