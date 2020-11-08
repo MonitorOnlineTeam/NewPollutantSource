@@ -231,9 +231,9 @@ export default Model.extend({
       const response = yield call(GetSewageFlowList, { ...payload });
       if (response.IsSuccess) {
           yield update({
-            getSewageFlowList: response.Datas,
+            getSewageFlowList: response.Datas.data,
             getSewageFlowLoading: false,
-            waterType:response.waterType
+            waterType:response.Datas.waterType
           });
         }else{
 

@@ -204,17 +204,30 @@ export default class Index extends Component {
 
   getLineChartData = () => {
 
-    const { getSewageFlowList,waterType } = this.props;
+    let { getSewageFlowList,waterType } = this.props;
+   
+    let backValue ='',exportValue='', importValue=''
+    waterType&&waterType.length>0?waterType.map(item=>{
+      if(item=='回水口'){
+        backValue = getSewageFlowList.map(item=>{
+          return item.backValue
+       })
+      }
+      if(item=='出水口'){
+        exportValue = getSewageFlowList.map(item=>{
+          return item.exportValue
+         })
+      }
 
-     let backValue = getSewageFlowList.map(item=>{
-        return item.backValue
-    }) 
-    let exportValue = getSewageFlowList.map(item=>{
-      return item.exportValue
-     }) 
-     let importValue = getSewageFlowList.map(item=>{
-      return item.importValue
-     }) 
+      if(item=='进水口'){
+        importValue = getSewageFlowList.map(item=>{
+          return item.importValue
+         })
+      }
+    }):null;
+     
+  
+
      let MonitorTime = getSewageFlowList.map(item=>{
       return moment(item.MonitorTime).format("MM.DD")
      }) 
@@ -225,7 +238,7 @@ export default class Index extends Component {
         trigger: 'axis'
       },
       legend: {
-        data: waterType&&waterType.length>=0? waterType:['进水口', '回水口', '出水口'],
+        data: waterType&&waterType.length>=0? waterType:[],
         left: 'center',
         bottom: 0,
         icon: 'rect',
