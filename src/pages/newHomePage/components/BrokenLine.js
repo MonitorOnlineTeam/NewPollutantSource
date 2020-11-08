@@ -456,7 +456,7 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6}>
-            <Card title={this.cardTitle("故障率")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+            <Card title={this.cardTitle("故障率", "GZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={GZLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
                   option={this.getChartData("GZ", "GZ")}
