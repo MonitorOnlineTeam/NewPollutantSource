@@ -59,7 +59,7 @@ export default class Index extends Component {
     this.state = {
       EntCode:'',
       dataTypes:'HourData',
-      airTime:moment().format('YYYY-MM-DD HH:mm:ss'),
+      airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss'),
       airDate:moment().add('day',-1).format("YYYY-MM-DD")
     }
 
@@ -87,7 +87,7 @@ export default class Index extends Component {
      let _this = this;
       this.timer=setInterval(()=>{
           _this.setState({
-            airTime:moment().format('YYYY-MM-DD HH:mm:ss')
+            airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss')
           })
     },1000)
   }
@@ -350,8 +350,10 @@ export default class Index extends Component {
         itemWidth: 18,
         itemHeight: 10,
         borderRadius: 0,
+        icon: 'rect',
         right: 10,
-        itemGap: 21,
+        itemGap: 12,
+        y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
           return `{title|${name}}{shu||}{rate|${objData[name].rate}%}{value|${objData[name].value}个}`
