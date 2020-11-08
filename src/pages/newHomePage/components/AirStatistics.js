@@ -158,7 +158,7 @@ export default class Index extends Component {
     const ButtonGroup = Button.Group;
     const {dataTypes,airTime,airDate} = this.state;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>空气质量实时数据</span>
+      <span>{dataTypes=='HourData'? '空气质量实时数据' :'空气质量日数据'}</span>
       <span style={{color:'#666'}}>{dataTypes=='HourData'? airTime:airDate}</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
         <TabPane tab="实时" key="HourData">
