@@ -282,7 +282,9 @@ export default class EntTransmissionEfficiency extends Component {
       type: pageUrl.updateState,
       payload: { ModelType: 'EntName',entName:row.EntName,entCode:row.EntCode },
    });
+   setTimeout(()=>{
     this.setState({pointVisible:true}) 
+   })
   }
 
   

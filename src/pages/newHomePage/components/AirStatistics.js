@@ -49,6 +49,7 @@ const pageUrl = {
   priseList: home.priseList,
   getSewageFlowList: home.getSewageFlowList,
   getSewageFlowLoading: home.getSewageFlowLoading,
+  waterType:home.waterType
 }))
 @Form.create()
 export default class Index extends Component {
@@ -56,7 +57,10 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      EntCode:''
+      EntCode:'',
+      dataTypes:'HourData',
+      airTime:moment().format('YYYY-MM-DD HH:mm:ss'),
+      airDate:moment().add('day',-1).format("YYYY-MM-DD")
     }
 
   }
@@ -80,9 +84,16 @@ export default class Index extends Component {
       }
 
     });//获取企业列表
-   
+     let _this = this;
+      this.timer=setInterval(()=>{
+          _this.setState({
+            airTime:moment().format('YYYY-MM-DD HH:mm:ss')
+          })
+    },1000)
   }
-
+ componentWillUnmount(){
+   clearInterval(this.timer)
+ }
   // 获取空气日报统计数据
   getAirDayReportData = () => {
     this.props.dispatch({
@@ -145,8 +156,10 @@ export default class Index extends Component {
 
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
+    const {dataTypes,airTime,airDate} = this.state;
     return <Row type='flex' align="middle" justify='space-between'>
       <span>空气质量实时数据</span>
+      <span style={{color:'#666'}}>{dataTypes=='HourData'? airTime:airDate}</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
         <TabPane tab="实时" key="HourData">
         </TabPane>
@@ -170,7 +183,15 @@ export default class Index extends Component {
 
   tabCallback = (value) => {
   let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
-    this.props.dispatch({
+   
+  if(value == 'HourData'){
+   this.setState({dataTypes:'HourData'})
+  }else{
+    this.setState({dataTypes:'DayData'})
+
+  }
+   
+  this.props.dispatch({
       type: "home/getAQIList",
       payload: {
         MonitorTime: time,
@@ -181,7 +202,7 @@ export default class Index extends Component {
 
   getLineChartData = () => {
 
-    const { getSewageFlowList } = this.props;
+    const { getSewageFlowList,waterType } = this.props;
 
      let backValue = getSewageFlowList.map(item=>{
         return item.backValue
@@ -202,7 +223,7 @@ export default class Index extends Component {
         trigger: 'axis'
       },
       legend: {
-        data: ['进水口', '回水口', '出水口'],
+        data: waterType&&waterType.length>=0? waterType:['进水口', '回水口', '出水口'],
         left: 'center',
         bottom: 0,
         icon: 'rect',

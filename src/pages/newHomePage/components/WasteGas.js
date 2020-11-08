@@ -263,7 +263,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.sevenCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={overWasteGasLoading} active paragraph={{ rows: 5 }}>
-                <ScrollTable type='wasteGas' data={overWasteGasList} column={['市师', '企业名称', '监测点名称', '最大超标倍数']} />
+                <ScrollTable type='wasteGas' data={overWasteGasList} column={['师市', '企业名称', '监测点名称', '最大超标倍数']} />
               </Skeleton>
             </Card>
           </Col>

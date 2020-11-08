@@ -80,7 +80,7 @@ const pageUrl = {
   entQuery:home.entQuery,
   pointQuery:home.pointQuery,
   pointTableDatas:home.pointTableDatas,
-  entCode:home.EntCode
+  entCode:home.entCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {

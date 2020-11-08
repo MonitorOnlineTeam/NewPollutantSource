@@ -65,7 +65,8 @@ export default class Index extends Component {
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
         pollutantCode: '011',
         DataType: 'HourData'
-      }
+      },
+      pollutantType:'1'
     }
 
   }
@@ -114,7 +115,7 @@ export default class Index extends Component {
   }
   tabCallback2 = (value) => {
     const { dispatch, dataQueryPar } = this.props;
-
+    this.setState({pollutantType:value})
     let parData = { ...dataQueryPar, PollutantType: value,BeginTime: moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
     EndTime: moment().format('YYYY-MM-DD 23:59:59'),};
 
@@ -193,6 +194,7 @@ export default class Index extends Component {
 
   getChartData = () => {
     const { workOrderList } = this.props;
+    const { pollutantType } = this.state;
     let color = ['#64b0fd', '#9d6ff1', '#42dab8']
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
@@ -226,7 +228,7 @@ export default class Index extends Component {
       },
       yAxis: {
         type: 'category',
-        data: ['巡检', '维修维护', '校准', '校验测试'],
+        data:pollutantType=='5'?['维修维护', '质控', '巡检']: ['校验测试', '维修维护', '校准', '巡检'],
         // show:false,//不显示坐标轴线、坐标轴刻度线和坐标轴上的文字
         axisTick: {
           show: false//不显示坐标轴刻度线
@@ -256,7 +258,11 @@ export default class Index extends Component {
               if (params.value === 0) { return "" } else { return params.value }
             }
           },
-          data: [workOrderList.calibrationComplete, workOrderList.calibrationComplete, workOrderList.maintenanceRepairComplete, workOrderList.onSiteInspectionComplete],
+          data:pollutantType=='5'?
+           [workOrderList.maintenanceRepairComplete, workOrderList.qualityControlComplete, workOrderList.onSiteInspectionComplete]
+           :
+           [workOrderList.verificationTestComplete, workOrderList.maintenanceRepairComplete,workOrderList.calibrationComplete,  workOrderList.onSiteInspectionComplete]
+           ,
         },
         {
           name: '未完成',
@@ -275,7 +281,10 @@ export default class Index extends Component {
           },
 
           position: 'right',
-          data: [workOrderList.calibrationUnfinished, workOrderList.calibrationUnfinished, workOrderList.maintenanceRepairUnfinished, workOrderList.onSiteInspectionUnfinished]
+          data:pollutantType=='5'?
+          [workOrderList.maintenanceRepairUnfinished, workOrderList.qualityControlUnfinished, workOrderList.onSiteInspectionUnfinished]
+          :
+          [workOrderList.verificationTestUnfinished, workOrderList.maintenanceRepairUnfinished,workOrderList.calibrationUnfinished,  workOrderList.onSiteInspectionUnfinished]
         },
 
       ]
@@ -314,7 +323,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.sevenCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={overWasteWaterLoading} active paragraph={{ rows: 5 }}>
-                <ScrollTable type='wasteWater' data={overWasteWaterList} column={['市师', '企业名称', '监测点名称', '最大超标倍数']} />
+                <ScrollTable type='wasteWater' data={overWasteWaterList} column={['师市', '企业名称', '监测点名称', '最大超标倍数']} />
               </Skeleton>
             </Card>
           </Col>

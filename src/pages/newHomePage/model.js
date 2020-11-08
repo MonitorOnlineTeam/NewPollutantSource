@@ -105,6 +105,7 @@ export default Model.extend({
     priseList:[],
     getSewageFlowList: [],
     getSewageFlowLoading: true,
+    waterType:[],
     // ---------wjq-----------
     airDayReportData: {
       datas: [
@@ -232,6 +233,7 @@ export default Model.extend({
           yield update({
             getSewageFlowList: response.Datas,
             getSewageFlowLoading: false,
+            waterType:response.waterType
           });
         }else{
 
