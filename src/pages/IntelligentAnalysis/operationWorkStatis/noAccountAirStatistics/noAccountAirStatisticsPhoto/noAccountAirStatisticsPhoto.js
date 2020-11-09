@@ -138,6 +138,7 @@ export default class airMissing extends Component {
 
   //创建并获取模板   导出
   template = () => {
+    let requestData = JSON.parse(this.props.requestData)
     const { dispatch, noAccountAirStatisticsForm } = this.props;
     dispatch({
       type: 'noAccountAirStatistics/exportDefectDataSummary',

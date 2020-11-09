@@ -125,7 +125,6 @@ export default class airMissing extends Component {
           title: <span>巡检工单</span>,
           dataIndex: 'pointCount',
           key: 'pointCount',
-          width: 210,
           align: 'center',
           children: [
             {
@@ -179,7 +178,6 @@ export default class airMissing extends Component {
           title: <span>质控工单</span>,
           dataIndex: 'pointCount',
           key: 'pointCount',
-          width: 210,
           align: 'center',
           children: [
             {
@@ -349,8 +347,8 @@ export default class airMissing extends Component {
               <Form.Item>
                 日期查询：
                 <RangePicker_
-                  onRef={this.onRef1}
                   dataType={dataType}
+                  allowClear={false}
                   style={{ minWidth: '200px', marginRight: '10px' }}
                   dateValue={[moment(BeginTime), moment(EndTime)]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
