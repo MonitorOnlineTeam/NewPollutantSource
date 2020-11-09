@@ -97,8 +97,8 @@ class index extends PureComponent {
             entCountModalTotle:'',
             entCountModalTotle2:'',
             pagePollutantType:'',
-            exportRegion:''
-
+            exportRegion:'',
+            modalEntCode:''
         };
     }
 
@@ -547,17 +547,21 @@ class index extends PureComponent {
     }
     //超标次数弹框
     exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
+        console.log(EntCode)
         if(flag)
         {
             this.setState({
                 visibleEnt:true,
-                modalregionCode:rCode
+                modalregionCode:rCode,
+                modalEntCode:EntCode
+
             })
         }
         if(!flag){
             this.setState({
                 visibleMoni:true,
-                modalregionCode:rCode
+                modalregionCode:rCode,
+                modalEntCode:EntCode
             })
         }
         const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode} = this.state
@@ -1404,7 +1408,7 @@ class index extends PureComponent {
     }
     EntButtonCountShowSizeChange=(PageIndex, PageSize)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-       
+        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -1424,12 +1428,12 @@ class index extends PureComponent {
     }
     //超标次数按钮查询
     ExButtonCountHandle =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
       
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1445,11 +1449,11 @@ class index extends PureComponent {
     }
     //超标次数按钮导出
     ExButtonCountHandleExport =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode,modalEntCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1503,12 +1507,11 @@ class index extends PureComponent {
         })
     }
     EntexportReport =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-        console.log(modalregionCode)
+        const { panes,ModelRcode,modalEntCode,modalregionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1522,11 +1525,11 @@ class index extends PureComponent {
     }
     //分页
     EntPageChange=(PageIndex, PageSize)=>{
-        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,modalEntCode} = this.state
          this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1541,12 +1544,12 @@ class index extends PureComponent {
         })
     }
     EntPageShowSizeChange = (PageIndex, PageSize)=>{
-        const {  AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue} = this.state
+        const {  AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue} = this.state
         
          this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,

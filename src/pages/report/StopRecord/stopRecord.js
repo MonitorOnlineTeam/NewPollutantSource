@@ -310,7 +310,7 @@ debugger
                 EntCode: entValue== undefined ?'':entValue,
                 DGIMN: pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
-                PageSize:PageSize==0?10:PageSize,
+                PageSize:PageSize==0?20:PageSize,
                 PageIndex:PageIndex==0?1:PageIndex
             }
         })
