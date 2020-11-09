@@ -31,6 +31,8 @@ export async function GetExceptionDataRate(params) {
 
   return result;
 }
+
+
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
@@ -42,18 +44,37 @@ export async function GetAttentionDegreeList(params) {
   return result;
 }
 
-//导出
-
-export async function ExportSewageHistoryList(params) {
+//导出 
+// ExportOverDataRate  超标率导出
+// ExportDeviceDataRate  运转率导出
+// ExportExceptionDataRate  故障率导出 
+export async function ExportOverDataRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonDataApi/ExportSewageHistoryList',
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportOverDataRate',
     params,
     null,
   );
 
   return result;
 }
+export async function ExportDeviceDataRate(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportDeviceDataRate',
+    params,
+    null,
+  );
 
+  return result;
+}
+export async function ExportExceptionDataRate(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionDataRate',
+    params,
+    null,
+  );
+
+  return result;
+}
 
 //根据行政区获取 污水处理厂
 

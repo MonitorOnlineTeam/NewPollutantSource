@@ -14,7 +14,7 @@ import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedData
 import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
 import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
 import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
-import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage/index"
+import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -36,6 +36,7 @@ class index extends PureComponent {
         pollutantType:'1',
         TBeginTime:moment().add(-7, "day"),
         TEndTime:moment(),
+        OverVisible:false,
     };
   }
 
@@ -67,6 +68,11 @@ class index extends PureComponent {
       TVisible: true,
     })
   }
+  Over = () => {
+    this.setState({
+      OverVisible: true,
+    })
+  }
   cardTitle = () => {
 
     return (
@@ -76,6 +82,7 @@ class index extends PureComponent {
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.gas}>七日超标废气</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.flow}>流量对比分析</Button>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.Tra}>有效传输率</Button>
+        <Button type="primary" style={{ marginRight: 10 }} onClick={this.Over}>超标报警核实率</Button>
       </>
     )
   }
@@ -85,7 +92,7 @@ class index extends PureComponent {
     })
   }
   render() {
-    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime } = this.state
+    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime,OverVisible } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
@@ -129,7 +136,8 @@ class index extends PureComponent {
             {/* 有效传输有效率
                 参数:
                 pollutantType  污染物类型  
-                flowEntCode  污水处理厂编码EntCode
+                beginTime  开始时间
+                endTime 结束时间
 
               */}
             {
@@ -142,14 +150,23 @@ class index extends PureComponent {
                   this.setState({ TVisible: false });
                 }} 
                 pollutantType={pollutantType}
-                // onRegionClick={(RegionCode) => {
-                //   this.setState({
-                //     RegionCode: RegionCode,
-                //     TVisible: false
-                //   })
-                // }}
                 /> : null}
+                {/* 超标报警核实率
+                参数:
+                beginTime  开始时间
+                endTime 结束时间
 
+              */}
+            {
+              OverVisible ?
+                <OverVerifyLstModal 
+                 beginTime={TBeginTime}
+                 endTime={TEndTime}
+                 TVisible={OverVisible} 
+                 TCancle={() => {
+                  this.setState({ OverVisible: false });
+                }} 
+                /> : null}
             
           </Card>
         </div>

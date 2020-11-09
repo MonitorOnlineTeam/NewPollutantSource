@@ -61,7 +61,7 @@ const pageUrl = {
 @connect(({ loading, home,autoForm }) => ({
   priseList: home.priseList,
   exloading:home.exloading,
-  loading: home.loading,
+  loading: home.regionLoading,
   total: home.total,
   tableDatas: home.tableDatas,
   queryPar: home.queryPar,
@@ -104,7 +104,9 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {     
-          return  <a href='#'  onClick={()=>{this.nextPage(record)}} style={{textAlign:'left',width:'100%'}}>{text}</a>
+          return  <div  style={{textAlign:'left'}}> 
+            <a href='#'  onClick={()=>{this.nextPage(record)}} >{text}</a>
+          </div>
        },
       },
       {
@@ -114,25 +116,34 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }
-          const percent = interceptTwo(Number(text) * 100);
-          if (percent >= 90) {
-            return <div>
-                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+          // const percent = interceptTwo(Number(text) * 100);
+          const percent = text;
+          if(this.props.isWorkRate){ // 运转率 
+            if (percent >= 90) {
+              return <div>
+                  <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
+                    format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+                </div>
+            }else{
+            return  <div>
+                <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+                  style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent==0?'0.00':percent}%</span>} />
               </div>
-          }
-          return  <div>
-              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
-            </div>
+            }
+  
+           }else{
+
+            return  <div>
+            <Progress successPercent={0}   percent={percent}  status="exception"   size="small"
+              style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+          </div>
+           }
          },
       }
     ];
@@ -203,11 +214,11 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
+  // typeChange = value => {
+  //   this.updateQueryState({
+  //     PollutantType: value,
+  //   });
+  // };
 
   changeRegion = (value) => { //行政区事件
     
@@ -269,9 +280,11 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { ModelType: 'EntName',entName:row.EntName },
+      payload: { ModelType: 'EntName',entName:row.EntName,entCode:row.EntCode },
    });
+   setTimeout(()=>{
     this.setState({pointVisible:true}) 
+   })
   }
 
   
@@ -282,7 +295,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      queryPar: {BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType },
       Atmosphere,
       entVisible,
       isWorkRate,
@@ -293,13 +306,14 @@ export default class EntTransmissionEfficiency extends Component {
     const { pointVisible }  = this.state;
     return (
         <div>
-        <Modal
+        {/* <Modal
           title={regionName}
           footer={null}
           width='95%'
           visible={entVisible}  
           onCancel={entCancel}
-        >
+        > */}
+           <Row type='flex' align='middle'>
            {isWorkRate?
            <div style={{ paddingBottom: 10 }}>
                 <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
@@ -308,12 +322,22 @@ export default class EntTransmissionEfficiency extends Component {
                 </span>
                 <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
+                {`<90%未达标`}
                 </span>
               </div>
               :
               null
            }
+             <Button
+                  style={{ marginBottom: 10,marginLeft:isWorkRate?10 : 0 }}
+                    onClick={() => {
+                      this.props.onBack()
+                     } }
+                  >
+                    <Icon type="rollback" />
+                    返回
+                  </Button>
+                  </Row>
           <div id=''>
 
              <SdlTable
@@ -335,7 +359,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
-          </Modal>
+          {/* </Modal> */}
        {pointVisible ?  <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/> : null}
        </div>
     );

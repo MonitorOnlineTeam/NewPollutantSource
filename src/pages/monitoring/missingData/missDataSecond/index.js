@@ -155,7 +155,7 @@ export default class Index extends Component {
   }
 
   detail=(record)=>{
-
+debugger;
      this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
 
       setTimeout(()=>{
@@ -544,6 +544,7 @@ handleTableChange = (pagination, filters, sorter) => {
           width='100%'
           style={{hegiht:'90%'}}
           footer={null}
+          destroyOnClose={true}
           onCancel={()=>{this.setState({visible:false})}}
         >
             <EmergencyDetailInfo DGIMN={this.state.DGIMN}  TaskID={this.state.TaskID}/>

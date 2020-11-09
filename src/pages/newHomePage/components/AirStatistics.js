@@ -49,6 +49,7 @@ const pageUrl = {
   priseList: home.priseList,
   getSewageFlowList: home.getSewageFlowList,
   getSewageFlowLoading: home.getSewageFlowLoading,
+  waterType:home.waterType
 }))
 @Form.create()
 export default class Index extends Component {
@@ -56,7 +57,10 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      EntCode:''
+      EntCode:'',
+      dataTypes:'HourData',
+      airTime:moment().add('hour',-1).format('YYYY-MM-DD HH:00:00'),
+      airDate:moment().add('day',-1).format("YYYY-MM-DD")
     }
 
   }
@@ -80,9 +84,16 @@ export default class Index extends Component {
       }
 
     });//获取企业列表
-   
+    //  let _this = this;
+    //   this.timer=setInterval(()=>{
+    //       _this.setState({
+    //         airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss')
+    //       })
+    // },1000)
   }
-
+ componentWillUnmount(){
+   clearInterval(this.timer)
+ }
   // 获取空气日报统计数据
   getAirDayReportData = () => {
     this.props.dispatch({
@@ -92,8 +103,8 @@ export default class Index extends Component {
       }
     })
 
-    // let time = moment().add('hour',-2).format("YYYY-MM-DD HH:mm:ss");
-    let time = "2020-11-01 00:00:00";
+    let time = moment().add('hour',-2).format("YYYY-MM-DD 00:00:00");
+    // let time = "2020-11-01 00:00:00";
     let dataType ='HourData'
     this.getAQIList(time,dataType);
    
@@ -145,14 +156,18 @@ export default class Index extends Component {
 
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
+    const {dataTypes,airTime,airDate} = this.state;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>空气质量实时数据</span>
+      <span>{dataTypes=='HourData'? '空气质量实时数据' :'空气质量日数据'}</span>
+      <Row type='flex' align="middle" >
+      <span style={{color:'#666',paddingRight:20}}>{dataTypes=='HourData'? airTime:airDate}</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
         <TabPane tab="实时" key="HourData">
         </TabPane>
         <TabPane tab="日报" key="DayData">
         </TabPane>
       </Tabs>
+      </Row>
 
     </Row>
   }
@@ -170,7 +185,15 @@ export default class Index extends Component {
 
   tabCallback = (value) => {
   let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
-    this.props.dispatch({
+   
+  if(value == 'HourData'){
+   this.setState({dataTypes:'HourData'})
+  }else{
+    this.setState({dataTypes:'DayData'})
+
+  }
+   
+  this.props.dispatch({
       type: "home/getAQIList",
       payload: {
         MonitorTime: time,
@@ -181,17 +204,30 @@ export default class Index extends Component {
 
   getLineChartData = () => {
 
-    const { getSewageFlowList } = this.props;
+    let { getSewageFlowList,waterType } = this.props;
+   
+    let backValue ='',exportValue='', importValue=''
+    waterType&&waterType.length>0&&getSewageFlowList&&getSewageFlowList.length>0?waterType.map(item=>{
+      if(item=='回水口'){
+        backValue = getSewageFlowList.map(item=>{
+          return item.backValue
+       }) 
+      }
+      if(item=='出水口'){
+        exportValue = getSewageFlowList.map(item=>{
+          return item.exportValue
+         })
+      }
 
-     let backValue = getSewageFlowList.map(item=>{
-        return item.backValue
-    }) 
-    let exportValue = getSewageFlowList.map(item=>{
-      return item.exportValue
-     }) 
-     let importValue = getSewageFlowList.map(item=>{
-      return item.importValue
-     }) 
+      if(item=='进水口'){
+        importValue = getSewageFlowList.map(item=>{
+          return item.importValue
+         })
+      }
+    }):null;
+     
+  
+
      let MonitorTime = getSewageFlowList.map(item=>{
       return moment(item.MonitorTime).format("MM.DD")
      }) 
@@ -202,7 +238,7 @@ export default class Index extends Component {
         trigger: 'axis'
       },
       legend: {
-        data: ['进水口', '回水口', '出水口'],
+        data: waterType&&waterType.length>=0? waterType:[],
         left: 'center',
         bottom: 0,
         icon: 'rect',
@@ -329,8 +365,10 @@ export default class Index extends Component {
         itemWidth: 18,
         itemHeight: 10,
         borderRadius: 0,
+        icon: 'rect',
         right: 10,
-        itemGap: 21,
+        itemGap: 12,
+        y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
           return `{title|${name}}{shu||}{rate|${objData[name].rate}%}{value|${objData[name].value}个}`
@@ -339,7 +377,7 @@ export default class Index extends Component {
           rich: {
             shu: {
               color: '#d2d2d2',
-              padding: [0, 4, 0, 4]
+              padding: [0, 2, 0, 2]
             },
             title: {
               width: 30,
@@ -349,7 +387,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 14, 0, 10]
+              padding: [0, 7, 0, 9]
             },
             value: {
               color: '#000',
@@ -434,7 +472,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.airTableCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={getAQILoading} paragraph={{ rows: 5   }} active>
-                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
+                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','监测点','首要污染物','等级','AQI']}/>
               </Skeleton>
             </Card>
           </Col>

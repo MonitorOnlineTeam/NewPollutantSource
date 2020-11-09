@@ -71,7 +71,8 @@ class index extends PureComponent {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
             queryCondition = JSON.stringify(queryCondition)
-            router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
+            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+              router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
       },
@@ -423,7 +424,7 @@ class index extends PureComponent {
     }
 
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
@@ -521,7 +522,7 @@ class index extends PureComponent {
           title={modelTitle}
           visible={this.state.visible}
           footer={false}
-          width={"100vw"}
+          width={"90vw"}
           maskClosable={false}
           onCancel={() => { this.setState({ visible: false }) }}
         >

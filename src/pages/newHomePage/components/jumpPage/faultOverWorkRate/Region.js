@@ -112,32 +112,36 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'PointNum',
         key: 'PointNum',
         align: 'center',
+        render: (text, record) => {
+           return text? text : ''
+        }
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }
-          const percent = interceptTwo(Number(text) * 100);
+          // const percent = interceptTwo(Number(text) * 100);
+          const percent = text;
           if(this.props.isWorkRate){ // 运转率 
           if (percent >= 90) {
             return <div>
                 <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
               </div>
-          }
+          }else{
           return  <div>
               <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent==0?'0.00':percent}%</span>} />
             </div>
+          }
+
          }else{
-          <div>
-          <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-            style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+          return <div>
+           <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+            style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} /> 
         </div>
          }
 
@@ -146,6 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: <span>低于90%的监测点个数</span>,
+        sorter: (a, b) => a.LittlePoint - b.LittlePoint,
         dataIndex: 'LittlePoint',
         key: 'LittlePoint',
         width: 145,
@@ -165,9 +170,12 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,isWorkRate } = this.props;
+    const { dispatch, location,isWorkRate,Atmosphere } = this.props;
     
-
+    !isWorkRate? this.columns.pop() : null;
+    Atmosphere? this.columns.splice(1,1) : null;
+    
+    this.columns
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
@@ -225,7 +233,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantType: value,
+      PollutantTypeCode: [value],
     });
   };
 
@@ -312,9 +320,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,isWorkRate,isOverRate } = this.props;
     dispatch({
-      type: 'abnormalStandard/exportExceptionStandValue',
+      type:  isWorkRate? 'home/exportDeviceDataRate':isOverRate?'home/exportOverDataRate'
+                       :'home/exportExceptionDataRate',
       payload: { ...queryPar },
       callback: data => {
           downloadFile(`/upload${data}`);
@@ -327,7 +336,7 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       loading,
       queryPar: { BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType},
-      Atmosphere, regionVisible,regionCancel, isWorkRate
+      Atmosphere, regionVisible,regionCancel, isWorkRate,isOverRate
     } = this.props;
     const { TabPane } = Tabs;
    
@@ -335,37 +344,45 @@ export default class EntTransmissionEfficiency extends Component {
     return (
        <div>
         <Modal
-          // title={isWorkRate?
+          title={isWorkRate?"运转率":isOverRate?"超标率":'故障率'}
           footer={null}
           width='95%'
           visible={regionVisible}  
           onCancel={regionCancel}
         >
+         { entVisible?
+          <EntData entVisible={entVisible} onBack={this.entCancel}/>
+           : 
+            <div>
             <>
               <Form layout="inline" style={{paddingBottom:10}}>
               <Row>
               <Form.Item label='查询日期'>
-              <RangePicker_  allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
+              <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                    </Form.Item>     
               <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-                <Form.Item label={Atmosphere?'大气站列表':'企业列表'}>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} type={Atmosphere?2:1}/>
+              {!Atmosphere?
+                <Form.Item label={'企业类型'}>
+                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                 </Form.Item>
+                :
+                null
+              }
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
-                   <Button
+                    <Button
                     style={{ margin: '0 5px' }}
                     icon="export"
                     onClick={this.template}
                     loading={exloading}
                   >
                     导出
-                  </Button> 
+                  </Button>  
                 </Form.Item>
                 </Row>
               </Form>
@@ -379,7 +396,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </span>
                 <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≤90%未达标
+                  {`<90%未达标`}
                 </span>
               </div>
             :null
@@ -403,9 +420,10 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </div>
+          </div>
+          }
           </Modal>
 
-         { entVisible? <EntData entVisible={entVisible} entCancel={this.entCancel}/> : null}
           </div>
     );
   }
