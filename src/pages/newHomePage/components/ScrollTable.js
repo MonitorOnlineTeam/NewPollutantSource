@@ -117,7 +117,10 @@ export default class Index extends Component  {
             type==='wasteWater' || type === 'wasteGas'?
             <li key={index}>
                 <span className='ceShiTable-text2' style={{width:  '25%'}}>
-                <span className='chao'>超</span> {item.regionName}
+                    <div style={{width:'100px',textAlign:'left',display:'inline-block'}}>
+                <span className='chao'>超</span>
+                 <span >{item.regionName}</span>
+                 </div>
                 </span>
                 <span title={item.entName} className='ceShiTable-text2 textOverflow' style={{width: '25%',textAlign:'left'}}>
                   {item.entName}

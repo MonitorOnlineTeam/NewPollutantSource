@@ -59,7 +59,7 @@ export default class Index extends Component {
     this.state = {
       EntCode:'',
       dataTypes:'HourData',
-      airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss'),
+      airTime:moment().add('hour',-1).format('YYYY-MM-DD HH:00:00'),
       airDate:moment().add('day',-1).format("YYYY-MM-DD")
     }
 
@@ -84,12 +84,12 @@ export default class Index extends Component {
       }
 
     });//获取企业列表
-     let _this = this;
-      this.timer=setInterval(()=>{
-          _this.setState({
-            airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss')
-          })
-    },1000)
+    //  let _this = this;
+    //   this.timer=setInterval(()=>{
+    //       _this.setState({
+    //         airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss')
+    //       })
+    // },1000)
   }
  componentWillUnmount(){
    clearInterval(this.timer)
@@ -207,11 +207,11 @@ export default class Index extends Component {
     let { getSewageFlowList,waterType } = this.props;
    
     let backValue ='',exportValue='', importValue=''
-    waterType&&waterType.length>0?waterType.map(item=>{
+    waterType&&waterType.length>0&&getSewageFlowList&&getSewageFlowList.length>0?waterType.map(item=>{
       if(item=='回水口'){
         backValue = getSewageFlowList.map(item=>{
           return item.backValue
-       })
+       }) 
       }
       if(item=='出水口'){
         exportValue = getSewageFlowList.map(item=>{

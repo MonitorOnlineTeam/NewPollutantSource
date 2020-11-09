@@ -66,10 +66,10 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      GZRateTime: [moment().subtract(7, "days"), moment()],
-      CBRateTime: [moment().subtract(7, "days"), moment()],
-      YZRateTime: [moment().subtract(7, "days"), moment()],
-      CSYXRateTime: [moment().subtract(7, "days"), moment()],
+      GZRateTime: [moment().subtract(7, "days"), moment().subtract(1, "days")],
+      CBRateTime: [moment().subtract(7, "days"), moment().subtract(1, "days")],
+      YZRateTime: [moment().subtract(7, "days"), moment().subtract(1, "days")],
+      CSYXRateTime: [moment().subtract(7, "days"), moment().subtract(1, "days")],
       TVisible:false,
       TBpollutantType:"1",
       regionVisible:false,
@@ -280,28 +280,28 @@ export default class Index extends Component {
     switch (type) {
       case "GZ": // 故障
         this.setState({
-          GZRateTime: [moment().subtract(value, "days"), moment()]
+          GZRateTime: [moment().subtract(value, "days"), moment().subtract(1, "days")]
         }, () => {
           this.getGZRateList();
         })
         break;
       case "CB": // 超标
         this.setState({
-          CBRateTime: [moment().subtract(value, "days"), moment()],
+          CBRateTime: [moment().subtract(value, "days"), moment().subtract(1, "days")],
         }, () => {
           this.getCBRateList();
         })
         break;
       case "YZ": // 运转
         this.setState({
-          YZRateTime: [moment().subtract(value, "days"), moment()],
+          YZRateTime: [moment().subtract(value, "days"), moment().subtract(1, "days")],
         }, () => {
           this.getYZRateList();
         })
         break;
       case "CSYX": // 传输有效
         this.setState({
-          CSYXRateTime: [moment().subtract(value, "days"), moment()],
+          CSYXRateTime: [moment().subtract(value, "days"),moment().subtract(1, "days")],
         }, () => {
           this.getCSYXRateList();
         })
@@ -456,7 +456,7 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6}>
-            <Card title={this.cardTitle("故障率", "GZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+            <Card title={this.cardTitle("故障率")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={GZLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
                   option={this.getChartData("GZ", "GZ")}

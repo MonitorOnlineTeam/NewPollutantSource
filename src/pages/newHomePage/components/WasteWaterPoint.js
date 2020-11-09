@@ -169,7 +169,7 @@ export default class Index extends Component {
   }
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>运维工单统计</span>
+      <span>近30日运维工单统计</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
         <TabPane tab="废水" key="1">
         </TabPane>
@@ -313,8 +313,8 @@ export default class Index extends Component {
                 <ul className={styles.listSty}>
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{ background: '#f25fc7' }} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span onClick={() => this.onPointStatusClick(2)} style={{ background: '#f0565d' }} className={styles.colorBlock}>{pointStatusList.overCount}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#f5a86a' }} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)}  style={{ background: '#f5a86a' }} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span onClick={() => this.onPointStatusClick(undefined, "1")} style={{ background: '#40474e' }} className={styles.colorBlock}>{pointStatusList.stopCount}</span></Row></li>
                 </ul>
               </Skeleton>

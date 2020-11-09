@@ -134,7 +134,8 @@ export default class Index extends Component {
                       <Avatar size={64} src={'/overalarm.png'} />
                       <div className={styles.alarmContent}>{item.content}</div>
                       {
-                        item.verify && <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
+                        item.verify ? <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
+                        : <img src='/daiheshi.png' style={{ padding: '0 0 10px 5px' }} />
                       }
                       { index+1 < alarmDataList.length? <div className={styles.hr}></div> : null}
                     </Row>
