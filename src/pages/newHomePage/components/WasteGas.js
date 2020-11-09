@@ -39,7 +39,6 @@ import DetailsModal_WJQ from "./DetailsModal_WJQ"
 import AlarmCard from './AlarmCard'
 import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
 import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
-
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
