@@ -98,9 +98,35 @@ export default Model.extend({
       yield update({ QCAResultLoading: true })
       const result = yield call(services.sendQCACheckCMD, payload);
       if (result.IsSuccess) {
+        yield update({
+          // 质控仪流程图
+          qualityControlName: null, // 质控仪名称
+          CEMSOpen: undefined,// CEMS阀门状态
+          CEMSStatus: undefined,
+          valveStatus: {}, // 阀门状态
+          p2Pressure: {},
+          p1Pressure: {},
+          p3Pressure: {},
+          p4Pressure: {},
+          QCStatus: undefined, // 质控仪状态
+          standardValue: undefined,
+          standardValueUtin: null, // 单位
+          totalFlow: undefined,
+          pollutantValueListInfo: [],
+          realtimeStabilizationTime: {},
+          QCAResultLoading: false, // 质控结果loading
+          // QCLogsStart: {},
+          QCLogsAnswer: {},
+          QCLogsResult: {
+            Data: {},
+          },
+          timeList: [],
+          valueList: [],
+          standardValueList: [],
+        })
+        callback && callback()
         message.success("命令发送成功");
         yield update({ QCAResultLoading: true })
-        // callback && callback()
       } else {
         yield update({ QCAResultLoading: false })
         message.error(result.Message)

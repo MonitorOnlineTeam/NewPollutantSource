@@ -87,10 +87,29 @@ const request = extend({
   timeout: 30000,
   headers: {
     Accept: 'application/json',
-    Authorization: (ssoToken != "null" && ssoToken != "") && `Bearer ${ssoToken}`,
+    Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,
     'Content-Type': 'application/json',
   },
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
+});
+
+request.interceptors.request.use(async (url, options) => {
+  if (
+    options.method === 'post' ||
+    options.method === 'put' ||
+    options.method === 'delete' ||
+    options.method === 'get'
+  ) {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,
+    };
+    return {
+      url,
+      options: { ...options, headers },
+    };
+  }
 });
 export default request;

@@ -102,7 +102,7 @@ class AutoFormViewItems extends Component {
             longitude={formData.Longitude}
             latitude={formData.Latitude}
             path={showText}
-            handleMarker
+            // handleMarker
             handlePolygon
             style={{ height: 400 }}
             zoom={12}

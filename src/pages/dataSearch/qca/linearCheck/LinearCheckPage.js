@@ -606,7 +606,7 @@ class LinearCheckPage extends PureComponent {
             <Spin spinning={!!loading} delay={500}>
               <Space size={44} style={{ marginBottom: 24 }}>
                 <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
-                <span>线性系数：{currentRowData.Ratio}{currentRowData.Unit}</span>
+                <span>线性系数：{currentRowData.Ratio}</span>
                 <span>示值误差：{currentRowData.MaxOffset}{currentRowData.Unit}</span>
                 <span>标准要求：{currentRowData.standard}</span>
                 <span>工作模式：{workMode[currentRowData.WorkMode]}</span>

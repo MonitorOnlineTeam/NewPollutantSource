@@ -341,7 +341,7 @@ class ViewQCProcess extends PureComponent {
 
   // 折线图配置项
   lineOption = () => {
-    const { valueList, timeList, standardValueList } = this.props;
+    const { valueList, timeList, standardValueList, standardValueUtin } = this.props;
     return {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -354,6 +354,29 @@ class ViewQCProcess extends PureComponent {
           label: {
             backgroundColor: '#6a7985',
           }
+        },
+        formatter: (params) => {
+          return `
+            ${params[0].name}
+            <br />
+            ${params[0].marker}
+            ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
+            <br />
+            ${params[1].marker}
+            ${params[1].seriesName}：${params[1].value}${standardValueUtin ? standardValueUtin : ""}
+          `
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          dataView: { readOnly: false },
+          // magicType: {type: ['line', 'bar']},
+          // restore: {},
+          saveAsImage: {}
         }
       },
       grid: {
@@ -375,7 +398,7 @@ class ViewQCProcess extends PureComponent {
       },
       yAxis: {
         type: 'value',
-        name: '',
+        name: standardValueUtin ? standardValueUtin : "",
       },
       dataZoom: [{
         type: 'inside',
@@ -419,7 +442,7 @@ class ViewQCProcess extends PureComponent {
 
   // 获取质控结果
   getQCAResult = () => {
-    if(this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result) {
+    if (this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result) {
       console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
       switch (this.props.QCLogsResult.Data.Result + "") {
         case "0":

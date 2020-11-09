@@ -361,8 +361,7 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/dataSearch/videoMonitor/index',
-                  component: `${
-                    config.VideoServer === 0
+                  component: `${config.VideoServer === 0
                       ? './dataSearch/videoMonitor/videopreview/hkvideo'
                       : './dataSearch/videoMonitor/videopreview/ysyvideo'
                     }`,
@@ -420,6 +419,12 @@ export default {
                       name: 'siteInfo',
                       path: '/dataSearch/siteData/siteInfo',
                       component: './dataSearch/siteData/siteInfoPage',
+                    },
+                    {
+                      // 停运日志
+                      name: 'outageLog',
+                      path: '/dataSearch/siteData/outageLog',
+                      component: './dataSearch/siteData/outageLog',
                     },
                   ]
                 }
@@ -1048,7 +1053,7 @@ export default {
                 },
               ],
             },
-            
+
             // {
             //   path: '/overview',
             //   name: 'overview',
@@ -1156,8 +1161,7 @@ export default {
                 {
                   name: 'videopreview', //视频监控
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
+                  component: `${config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
                     }`,

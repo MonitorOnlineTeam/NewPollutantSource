@@ -224,7 +224,7 @@ class index extends PureComponent {
                 longitude={siteData.Longitude}
                 latitude={siteData.Latitude}
                 path={siteData.CoordinateSet}
-                handleMarker
+                // handleMarker
                 handlePolygon
                 style={{ height: 300 }}
                 zoom={12}

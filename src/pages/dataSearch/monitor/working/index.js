@@ -19,12 +19,12 @@ class working extends Component {
       DGIMN: ""
     };
   }
-  changeDgimn = (value, selectItem)=> {
+  changeDgimn = (value, selectItem) => {
     this.setState({
       DGIMN: value,
       entName: selectItem.title
     })
-}
+  }
   componentDidMount() {
 
   }
@@ -33,12 +33,12 @@ class working extends Component {
     const { DGIMN, entName } = this.state;
     return (
       <>
-        <NavigationTree domId="working" onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} />
+        <NavigationTree domId="working" onTreeSelect={(value, selectItem) => { this.changeDgimn(value, selectItem) }} />
         <BreadcrumbWrapper extraName={entName} id="working">
           <Card>
             <Tabs type="card">
               <TabPane tab="数据可视化" key="1">
-                { DGIMN ?<FlowChart DGIMN={DGIMN}/> : <PageLoading />   }
+                {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
               </TabPane>
               <TabPane tab="系统参数" key="2">
                 {

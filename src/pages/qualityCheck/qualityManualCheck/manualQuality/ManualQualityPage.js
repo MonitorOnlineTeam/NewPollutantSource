@@ -165,11 +165,6 @@ class ManualQualityPage extends Component {
     //   message.warning("")
     // }
     this.updateModalState({ currentPollutantCode: PollutantCode })
-    // 重置数据
-    this.props.dispatch({
-      type: "qcManual/resetModalState",
-      payload: {}
-    })
     this.setState({ QCAType: QCAType })
     this.props.dispatch({
       type: "qcManual/sendQCACheckCMD",
@@ -181,7 +176,12 @@ class ManualQualityPage extends Component {
         StandardValue: StandardValue
       },
       callback: () => {
-
+        this.setState({ MYVisible: false })
+        // // 重置数据
+        // this.props.dispatch({
+        //   type: "qcManual/resetModalState",
+        //   payload: {}
+        // })
       }
     })
   }
@@ -195,38 +195,63 @@ class ManualQualityPage extends Component {
         PollutantCode: PollutantCode
       },
       callback: (res) => {
+        this.setState({
+          MYMin: res.min,
+          MYMax: res.max,
+          MYVisible: true,
+          PollutantCode: PollutantCode,
+          QCAType: QCAType,
+        })
         let that = this;
-        confirm({
-          title: '盲样核查',
-          okText: "确认",
-          cancelText: "取消",
-          icon: <ExclamationCircleOutlined />,
-          content: <div>
-            <InputNumber style={{ width: '100%', marginBottom: 4 }} min={res.min} max={res.max} placeholder="请输入盲样核查浓度" onChange={(value) => {
-              this.setState({
-                value: value
-              })
-            }} />
-            <span style={{ color: "#656565", fontSize: 13 }}>
-              <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${res.min}-${res.max} 】之间`}
-            </span>
-          </div>,
-          onOk() {
-            if (!that.state.value) {
-              message.error("请输入盲样核查浓度");
-              return;
-            } else {
-              that.sendQCACheckCMD(PollutantCode, QCAType, that.state.value);
-            }
-          },
-          onCancel() {
-            that.setState({
-              value: undefined
-            })
-          },
-        });
+        // confirm({
+        //   title: '盲样核查',
+        //   okText: "确认",
+        //   cancelText: "取消",
+        //   icon: <ExclamationCircleOutlined />,
+        //   content: <div>
+        //     <InputNumber style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
+        //       this.setState({
+        //         value: value
+        //       })
+        //     }} />
+        //     <span style={{ color: "#656565", fontSize: 13 }}>
+        //       <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${res.min}-${res.max} 】之间`}
+        //     </span>
+        //   </div>,
+        //   onOk() {
+        //     if (that.state.value > res.max || that.state.value < res.min) {
+        //       message.error(`浓度范围应在【 ${res.min}-${res.max} 】之间，请重新输入`);
+        //       return false;
+        //     }
+        //     if (!that.state.value) {
+        //       message.error("请输入盲样核查浓度");
+        //       return;
+        //     } else {
+        //       that.sendQCACheckCMD(PollutantCode, QCAType, that.state.value);
+        //     }
+        //   },
+        //   onCancel() {
+        //     that.setState({
+        //       value: undefined
+        //     })
+        //   },
+        // });
       }
     })
+  }
+
+  onMYClick = () => {
+    const { value, MYMin, MYMax, PollutantCode, QCAType } = this.state;
+    if (value > MYMax || value < MYMin) {
+      message.error(`浓度范围应在【 ${MYMin}-${MYMax} 】之间，请重新输入`);
+      return false;
+    }
+    if (!value) {
+      message.error("请输入盲样核查浓度");
+      return;
+    } else {
+      this.sendQCACheckCMD(PollutantCode, QCAType, value);
+    }
   }
 
   getAnswer = (QCLogsAnswer) => {
@@ -334,7 +359,7 @@ class ManualQualityPage extends Component {
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin } = this.state;
     return (
       <Card>
         <Row>
@@ -452,6 +477,23 @@ class ManualQualityPage extends Component {
         {/* 质控过程弹窗 */}
         {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} />}
         {/*{true && <ViewQCProcess />}*/}
+        <Modal
+          title="盲样核查"
+          visible={this.state.MYVisible}
+          onOk={this.onMYClick}
+          onCancel={() => this.setState({ MYVisible: false })}
+        >
+          <div>
+            <InputNumber style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
+              this.setState({
+                value: value
+              })
+            }} />
+            <span style={{ color: "#656565", fontSize: 13 }}>
+              <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${MYMin}-${MYMax} 】之间`}
+            </span>
+          </div>
+        </Modal>
       </Card>
     );
   }
