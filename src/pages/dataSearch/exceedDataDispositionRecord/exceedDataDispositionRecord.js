@@ -761,7 +761,8 @@ class index extends PureComponent {
         else{
             activeKey = '1'
         }
-        this.setState({ panes, activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ panes, activeKey ,exportRegion:arr[0]});
       };
       //切换标签
     onChangeHandle=(activeKey)=>{

@@ -206,7 +206,7 @@ class index extends PureComponent {
     const legend = []
     const series=[]
     
-
+    console.log(FlowList)
     if(FlowListArr.length >0 )
     {
       FlowListArr.map(item => {
