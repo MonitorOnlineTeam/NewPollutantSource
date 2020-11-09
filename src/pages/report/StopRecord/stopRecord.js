@@ -454,7 +454,7 @@ debugger
                         record.field.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })

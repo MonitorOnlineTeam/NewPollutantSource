@@ -83,7 +83,7 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:''
+            exportRegion:'1'
         };
     }
 
@@ -160,7 +160,7 @@ class index extends PureComponent {
         if(exportRegion!='1')
         {
             this.props.dispatch({
-                type:pageUrl.ExportAlarmManagementRate,
+                type:pageUrl.ExportAlarmManagementRateDetail,
                 payload: {
                     RegionCode: exportRegion,
                     attentionCode: attentionValue == undefined?'':attentionValue,
@@ -1186,7 +1186,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1316,7 +1316,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1444,7 +1444,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1578,7 +1578,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })

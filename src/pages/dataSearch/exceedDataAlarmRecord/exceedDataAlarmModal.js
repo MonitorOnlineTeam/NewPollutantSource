@@ -83,7 +83,7 @@ class exceedDataAlarmModal extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:''
+            exportRegion:'1'
         };
     }
 
@@ -1179,7 +1179,7 @@ class exceedDataAlarmModal extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })
@@ -1307,7 +1307,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1427,7 +1427,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1561,7 +1561,7 @@ class exceedDataAlarmModal extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })
