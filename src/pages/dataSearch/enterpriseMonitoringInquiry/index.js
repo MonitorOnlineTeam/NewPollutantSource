@@ -239,10 +239,11 @@ class index extends PureComponent {
     }
 
     GetEntDetail = (regionCode, hasData) => {
-        const {regionValue} = this.state
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
+                AttentionCode:attentionValue,
                 RegionCode: regionCode == '0'? (regionValue==undefined?'':regionValue) :regionCode,
                 HasData: hasData,
                 EntCode: '',
@@ -250,7 +251,6 @@ class index extends PureComponent {
                 PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 EntList: this.props.EntOrPointDetail,
                 visible: true,
@@ -261,10 +261,11 @@ class index extends PureComponent {
     }
 
     GetPointDetail = (regionCode, hasData) => {
-        const {regionValue} = this.state
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
+                AttentionCode:attentionValue,
                 RegionCode: regionCode == '0'?(regionValue==undefined?'':regionValue):regionCode,
                 HasData: hasData,
                 EntCode: '1',
@@ -272,7 +273,6 @@ class index extends PureComponent {
                 PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 PointList: this.props.EntOrPointDetail,
                 visibleMoni: true,
