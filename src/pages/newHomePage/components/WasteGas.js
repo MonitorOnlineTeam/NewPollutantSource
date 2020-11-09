@@ -323,7 +323,7 @@ export default class Index extends Component {
                     this.setState({gasAlarmVisible:false});
                 }}/>:null}
        {/**近七日废气超标监测点*/}
-        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={gasExceedVisible} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
+        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={gasExceedVisible} exceedDataType={gasOverListPar.DataType=='HourData' ? 'Hour' : 'Day'}  exceedPollutant={gasOverListPar.pollutantCode} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
               this.setState({ gasExceedVisible: false });
             }} /> : null}
         {

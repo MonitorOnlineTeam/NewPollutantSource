@@ -282,7 +282,7 @@ export default class EntTransmissionEfficiency extends Component {
     return (
       <div>
               <Form layout="inline"> 
-              <Row>
+              <Row style={{paddingBottom:15}}>
                 <Form.Item>
                   日期查询：
                   <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
