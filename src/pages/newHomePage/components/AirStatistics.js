@@ -387,7 +387,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 9, 0, 9]
+              padding: [0, 7, 0, 9]
             },
             value: {
               color: '#000',

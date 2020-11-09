@@ -334,7 +334,7 @@ export default class Index extends Component {
                   option={this.getChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 215 }}
+                  style={{ height: 214 }}
                 />
               </Skeleton>
             </Card>
