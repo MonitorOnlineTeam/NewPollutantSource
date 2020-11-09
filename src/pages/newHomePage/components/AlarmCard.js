@@ -45,12 +45,14 @@ import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
 import { EnumPropellingAlarmSourceType } from '@/utils/enum'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
+import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 
 import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+const { TabPane } = Tabs
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
@@ -60,6 +62,7 @@ const pageUrl = {
 @connect(({ loading, home, autoForm }) => ({
   alarmResponseList: home.alarmResponseList,
   alarmResponseLoading: home.alarmResponseLoading,
+  dataQueryPar:home.dataQueryPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -67,7 +70,11 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-
+      OverVisible:false,
+      TBeginTime:  moment().subtract(7, "days").startOf("day"),
+      TEndTime: moment().endOf("day"),
+      OverVisible: false,
+      currentTabKey:'1'
     };
 
   }
@@ -132,15 +139,39 @@ export default class Index extends Component {
     };
     return option;
   }
+  tabCallback2 = (value) => {
+    const { dispatch, dataQueryPar } = this.props;
+    this.setState({ currentTabKey: value })
+    let parData = {
+      ...dataQueryPar,
+      BeginTime: value == 1 ? moment().add('day', -7).format('YYYY-MM-DD 00:00:00') : moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+    };
+
+
+    dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
+
+  }
+  cardTitle3 = () => {
+    return <Row type='flex' align="middle" justify='space-between'>
+      <span>数据报警响应统计</span>
+      <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
+        <TabPane tab="近7天" key="1">
+        </TabPane>
+        <TabPane tab="近30天" key="2">
+        </TabPane>
+      </Tabs>
+    </Row>
+  }
   render() {
     const {
       alarmResponseLoading
     } = this.props;
-    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey,OverVisible,TBeginTime,TEndTime } = this.state;
 
     return (
-      <>
-        <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
+      <Card title={this.cardTitle3()} className={styles.alarmCard} bordered={false} >
+        <Skeleton loading={alarmResponseLoading} active paragraph={{ rows:4 }}>
 
           <Row type='flex' align='middle' justify='space-between'>
             <Col span={8} align='middle'>
@@ -149,6 +180,17 @@ export default class Index extends Component {
                 className="echarts-for-echarts"
                 theme="my_theme"
                 style={{ width: '100%', height: 120 }}
+                onEvents={{
+                  click: (event) => {
+                    let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+                    // 响应率
+                    this.setState({
+                      TBeginTime: time[0],
+                      TEndTime:time[1],
+                      OverVisible: true
+                    })
+                  }
+                }}
               />
               <div>
                 <div className={styles.title1}>核实率</div>
@@ -191,6 +233,17 @@ export default class Index extends Component {
             </Col>
           </Row>
         </Skeleton>
+                {/**超标报警核实率 */}
+                {
+              OverVisible ?
+                <OverVerifyLstModal 
+                 beginTime={TBeginTime}
+                 endTime={TEndTime}
+                 TVisible={OverVisible} 
+                 TCancle={() => {
+                  this.setState({ OverVisible: false });
+                }} 
+                /> : null}
         {
           visible_WJQ && <DetailsModal_WJQ time={ECXYLTime} onCancel={() => {
             this.setState({
@@ -198,7 +251,7 @@ export default class Index extends Component {
             })
           }} />
         }
-      </>
+     </Card>
     );
   }
 }

@@ -36,6 +36,12 @@ import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
+import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
+import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
+
+import EntWorkOrderModal from '@/pages/IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/EntWorkOrderModal'
+
+import AirWorkOrderStatisticsModal from '@/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/AirWorkOrderStatisticsModal'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -60,13 +66,17 @@ export default class Index extends Component {
 
     this.state = {
       overListPar: {
-        PollutantType: 1,
+        PollutantType: "1",
         BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
         pollutantCode: '011',
         DataType: 'HourData'
       },
-      pollutantType:'1'
+      pollutantType:'1',
+      exceedVisible:false,
+      waterAlarmVisible:false,
+      orderModalVisible:false,
+      airWorkOrderVisible:false
     }
 
   }
@@ -147,7 +157,7 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>近七日超标废水监测点</span>
+      <span style={{cursor:'pointer'}} onClick={this.overWasteWater}>近七日超标废水监测点</span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -169,7 +179,7 @@ export default class Index extends Component {
   }
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>近30日运维工单统计</span>
+      <span style={{cursor:'pointer'}} onClick={this.workOrder}>近30日运维工单统计</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
         <TabPane tab="废水" key="1">
         </TabPane>
@@ -181,15 +191,33 @@ export default class Index extends Component {
 
     </Row>
   }
+  workOrder=()=>{
+  const { pollutantType } = this.state;
 
+   if(pollutantType =='5'){
+    this.setState({
+      airWorkOrderVisible:true
+    })
+   }else{
+    this.setState({
+      orderModalVisible:true
+    })
+   }
+
+  }
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-   
+    if(type==1){
+      this.setState({
+        waterAlarmVisible: true
+      }) 
+    }else{
     this.setState({
       clicktStatus: type,
       stopStatus: stopStatus,
       visible_WJQ: true
     })
+  }
   }
 
   getChartData = () => {
@@ -292,6 +320,9 @@ export default class Index extends Component {
 
     return option;
   }
+  overWasteWater=()=>{
+   this.setState({exceedVisible:true})
+  }
   render() {
     const {
       pointStatusLoading,
@@ -299,9 +330,10 @@ export default class Index extends Component {
       overWasteWaterLoading,
       overWasteWaterList,
       workOrderLoading,
+      
     } = this.props;
 
-    const { clicktStatus, stopStatus, visible_WJQ } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ,overListPar,waterAlarmVisible,pollutantType,airWorkOrderVisible,exceedVisible,orderModalVisible } = this.state;
     const { pointStatusList } = this.props;
     return (
       <div style={{ width: '100%' }} className={styles.wasteWaterPoint}  >
@@ -311,7 +343,7 @@ export default class Index extends Component {
             <Card title={this.cardTitle1()} className={styles.wasteWateCard} bordered={false} >
               <Skeleton loading={pointStatusLoading} active paragraph={{ rows: 5 }} >
                 <ul className={styles.listSty}>
-                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{ background: '#f25fc7' }} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span onClick={() => this.onPointStatusClick(1)} style={{ background: '#f25fc7' }} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span onClick={() => this.onPointStatusClick(2)} style={{ background: '#f0565d' }} className={styles.colorBlock}>{pointStatusList.overCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)}  style={{ background: '#f5a86a' }} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
@@ -340,6 +372,23 @@ export default class Index extends Component {
             </Card>
           </Col>
         </Row>
+        {orderModalVisible?
+        <EntWorkOrderModal
+          showModal={orderModalVisible}
+          onCloseListener={()=>{this.setState({orderModalVisible:false})}}
+          pollutantTypeCode={pollutantType}
+        /> : null}
+       {airWorkOrderVisible? <AirWorkOrderStatisticsModal airWorkOrderVisible={airWorkOrderVisible} airWorkOrderCancelFun={()=>{this.setState({airWorkOrderVisible:false})}}/> : null}
+        {/**近七日废水超标监测点*/}
+        {exceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={exceedVisible} exceedType={overListPar.PollutantType} exceedCancle={() => {
+              this.setState({ exceedVisible: false });
+            }} /> : null}
+            {/**超标报警*/}
+          {waterAlarmVisible? <ExceedDataAlarm
+           dateTime={[moment().subtract(1, "hour"),
+               moment()]} alarmType={pollutantType}  alarmVisible={waterAlarmVisible} alarmCancle={()=>{
+                    this.setState({waterAlarmVisible:false});
+                }}/>:null}
         {
           visible_WJQ && <DetailsModal_WJQ status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={1} onCancel={() => {
             this.setState({

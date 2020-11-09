@@ -92,7 +92,7 @@ class index extends PureComponent {
     })
   }
   render() {
-    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime,OverVisible } = this.state
+    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime,OverVisible,alarmType } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>

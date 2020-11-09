@@ -53,7 +53,7 @@ export default Model.extend({
       if(result2.IsSuccess)
       {
         yield update({
-          FlowListArr:result2.Datas.data
+          FlowListArr:result2.Datas
         })
       }
       else{

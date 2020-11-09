@@ -1575,7 +1575,7 @@ class exceedDataAlarmModal extends PureComponent {
                         
                     <Modal
                         centered
-                        title='实时报警'
+                        title='超标报警'
                         visible={alarmVisible}
                         footer={null}
                         width={1600}

@@ -37,6 +37,9 @@ import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
 import AlarmCard from './AlarmCard'
+import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
+import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
+
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -60,13 +63,15 @@ export default class Index extends Component {
 
     this.state = {
         gasOverListPar: {
-          PollutantType: 2,
+          PollutantType: "2",
           BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
           EndTime: moment().format('YYYY-MM-DD 23:59:59'),
           pollutantCode: '01',
           DataType: 'HourData'
-        }
-
+        },
+        OverVisible:false,
+        gasAlarmVisible:false,
+        gasExceedVisible:false
 
     }
   }
@@ -78,6 +83,9 @@ export default class Index extends Component {
   componentDidUpdate() {
 
   }
+  overWasteGas=()=>{
+    this.setState({gasExceedVisible:true})
+   }
   initData = () => {
     const { dataQueryPar, dispatch } = this.props;
     let pointStatusPar = { ...dataQueryPar, PollutantType: 2 };
@@ -119,7 +127,7 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>近七日超标废气监测点</span>
+      <span style={{cursor:'pointer'}} onClick={this.overWasteGas}>近七日超标废气监测点</span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -136,17 +144,7 @@ export default class Index extends Component {
     </Row>
   }
 
-  cardTitle3 = () => {
-    return <Row type='flex' align="middle" justify='space-between'>
-      <span>数据报警响应统计</span>
-      <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
-        <TabPane tab="近7天" key="1">
-        </TabPane>
-        <TabPane tab="近30天" key="2">
-        </TabPane>
-      </Tabs>
-    </Row>
-  }
+
   tabCallback1 = (value) => {
     const { gasOverListPar } = this.state;
 
@@ -156,19 +154,7 @@ export default class Index extends Component {
       this.getTableData(parData);
     })
   }
-  tabCallback2 = (value) => {
-    const { dispatch, dataQueryPar } = this.props;
-    this.setState({ currentTabKey: value })
-    let parData = {
-      ...dataQueryPar,
-      BeginTime: value == 1 ? moment().add('day', -7).format('YYYY-MM-DD 00:00:00') : moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-    };
 
-
-    dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
-
-  }
   percentage = (data) => {
     return `${data}%`
   }
@@ -224,12 +210,19 @@ export default class Index extends Component {
 
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-    this.setState({
-      clicktStatus: type,
-      stopStatus: stopStatus,
-      visible_WJQ: true,
-      time: undefined
-    })
+    if(type==1){
+      this.setState({
+        gasAlarmVisible: true
+      }) 
+    }else{
+      this.setState({
+        clicktStatus: type,
+        stopStatus: stopStatus,
+        visible_WJQ: true,
+        time: undefined
+      })
+    }
+
   }
 
   render() {
@@ -241,7 +234,7 @@ export default class Index extends Component {
       alarmResponseLoading,
     } = this.props;
 
-    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey,gasAlarmVisible,pollutantType,gasOverListPar,gasExceedVisible } = this.state;
 
     return (
       <div style={{ width: '100%' }} className={`${styles.wasteWaterPoint} ${styles.wasteGasPoint}`}  >
@@ -251,7 +244,7 @@ export default class Index extends Component {
             <Card title={this.cardTitle1()} className={`${styles.wasteWateCard} ${styles.wasteGasCard}`} bordered={false} >
               <Skeleton loading={pointStatusLoading} active paragraph={{ rows: 5 }}>
                 <ul className={styles.listSty}>
-                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{ background: '#f25fc7' }} className={styles.colorBlock}>{wasteGasStatusList.alarmCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{ background: '#f25fc7' }} onClick={() => this.onPointStatusClick(1)} className={styles.colorBlock}>{wasteGasStatusList.alarmCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span onClick={() => this.onPointStatusClick(2)} style={{ background: '#f0565d' }} className={styles.colorBlock}>{wasteGasStatusList.overCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{wasteGasStatusList.unLine}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)} style={{ background: '#f5a86a' }} className={styles.colorBlock}>{wasteGasStatusList.exceptionCount}</span></Row></li>
@@ -268,7 +261,7 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6}>
-            <Card title={this.cardTitle3()} className={styles.alarmCard} bordered={false} >
+           
 
             <AlarmCard />
               {/* <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
@@ -321,9 +314,19 @@ export default class Index extends Component {
                   </Col>
                 </Row>
               </Skeleton> */}
-            </Card>
+           
           </Col>
         </Row>
+        {/**超标报警*/}
+        {gasAlarmVisible? <ExceedDataAlarm
+           dateTime={[moment().subtract(1, "hour"),
+               moment()]} alarmType={pollutantType}  alarmVisible={gasAlarmVisible} alarmCancle={()=>{
+                    this.setState({gasAlarmVisible:false});
+                }}/>:null}
+       {/**近七日废气超标监测点*/}
+        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={gasExceedVisible} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
+              this.setState({ gasExceedVisible: false });
+            }} /> : null}
         {
           visible_WJQ && <DetailsModal_WJQ time={ECXYLTime} status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={2} onCancel={() => {
             this.setState({
