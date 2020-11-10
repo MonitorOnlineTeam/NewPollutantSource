@@ -144,6 +144,7 @@ export default class airMissing extends Component {
                 return (
                   <a
                     onClick={() => {
+                      record.TaskType='0',
                       this.photonDetail(record);
                     }}
                   >
@@ -217,6 +218,7 @@ export default class airMissing extends Component {
                 return (
                   <a
                     onClick={() => {
+                      record.TaskType='1',
                       this.photonDetail(record);
                     }}
                   >
@@ -231,11 +233,11 @@ export default class airMissing extends Component {
     };
   }
   photonDetail = record => {
-    
     setTimeout(() => {
       this.setState({
         photoVisible: true,
         requestData: JSON.stringify({
+          TaskType:record.TaskType,
           RegionCode: record.RegionCode,
           BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
           EndTime: this.props.noAccountAirStatisticsForm.EndTime,

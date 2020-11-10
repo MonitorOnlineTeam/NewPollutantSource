@@ -152,7 +152,7 @@ let requestData = JSON.parse(this.props.requestData)
     const {  dispatch } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...requestData, ...{ModelType:'Region'} },
+      payload: { ...requestData, ...{ModelType:'Region',} },
     });
   };
 
